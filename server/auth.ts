@@ -42,15 +42,15 @@ export function setupAuth(app: Express) {
   app.use(
     session({
       secret: process.env.SESSION_SECRET || "acqpro-secret-key-change-in-prod-2024",
-      resave: false,
+      resave: true,
       saveUninitialized: false,
+      rolling: true, // reset cookie expiry on every request
       store: sessionStore,
       cookie: {
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-        secure: process.env.NODE_ENV === "production",
+        secure: false, // let Railway handle HTTPS termination — don't enforce secure flag
         httpOnly: true,
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        proxy: true,
+        sameSite: "lax", // lax works reliably across all browsers on same-origin requests
       },
     })
   );
