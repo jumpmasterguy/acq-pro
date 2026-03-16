@@ -227,7 +227,7 @@ function AppContent() {
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed left-0 top-0 h-full w-64 bg-sidebar text-sidebar-foreground border-r border-sidebar-border z-40 flex flex-col transition-transform duration-300",
+        "fixed left-0 top-0 h-full w-64 bg-sidebar text-sidebar-foreground border-r border-sidebar-border z-40 flex flex-col transition-transform duration-300 safe-top",
         sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
         {/* Logo */}
@@ -352,7 +352,7 @@ function AppContent() {
       {/* Main content */}
       <div className="flex-1 lg:ml-64 flex flex-col min-h-screen">
         {/* Top Bar */}
-        <header className="h-14 border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-20 flex items-center justify-between px-4 lg:px-6">
+        <header className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-20 flex items-center justify-between px-4 lg:px-6 safe-top" style={{minHeight: '3.5rem'}}>
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-muted-foreground hover:text-foreground"

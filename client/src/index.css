@@ -145,11 +145,15 @@
   }
   body {
     @apply font-sans antialiased bg-background text-foreground;
-    /* Respect iPhone notch / Dynamic Island / home indicator */
-    padding-top: env(safe-area-inset-top);
+    /* Left/right/bottom safe area — but NOT top (handled per sticky header) */
     padding-bottom: env(safe-area-inset-bottom);
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
+  }
+
+  /* Sticky headers must sit BELOW the notch/Dynamic Island */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
   }
 }
 

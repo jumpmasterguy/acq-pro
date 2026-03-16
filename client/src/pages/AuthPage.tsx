@@ -110,7 +110,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack }: AuthPage
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-background flex flex-col lg:flex-row safe-top">
       {/* Left panel — branding */}
       <div className="hidden lg:flex flex-col justify-between w-[45%] bg-sidebar text-sidebar-foreground p-10">
         {/* Logo */}

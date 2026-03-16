@@ -42,7 +42,7 @@ export default function Landing({ onGetStarted }: LandingProps) {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Nav */}
-      <header className="border-b border-border/50 bg-card/80 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-border/50 bg-card/80 backdrop-blur-sm sticky top-0 z-50 safe-top">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
