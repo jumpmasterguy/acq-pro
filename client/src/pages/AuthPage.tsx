@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Shield, Eye, EyeOff, Zap, Lock, BookOpen, Award } from "lucide-react";
+import { Shield, Eye, EyeOff, Zap, Lock, BookOpen, Award, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -40,6 +40,7 @@ export interface AuthUser {
 interface AuthPageProps {
   onAuthenticated: (user: AuthUser) => void;
   darkMode: boolean;
+  onBack?: () => void;
 }
 
 const highlights = [
@@ -49,7 +50,7 @@ const highlights = [
   { icon: Lock, label: "Secure, private progress" },
 ];
 
-export default function AuthPage({ onAuthenticated, darkMode }: AuthPageProps) {
+export default function AuthPage({ onAuthenticated, darkMode, onBack }: AuthPageProps) {
   const [tab, setTab] = useState<"login" | "register">("register");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -160,6 +161,19 @@ export default function AuthPage({ onAuthenticated, darkMode }: AuthPageProps) {
 
       {/* Right panel — auth form */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
+        {/* Back button */}
+        {onBack && (
+          <div className="w-full max-w-md mb-2">
+            <button
+              onClick={onBack}
+              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </button>
+          </div>
+        )}
+
         {/* Mobile logo */}
         <div className="flex items-center gap-2.5 mb-8 lg:hidden">
           <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">

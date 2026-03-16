@@ -201,7 +201,13 @@ function AppContent() {
 
   // Auth page (no sidebar)
   if (view.type === 'auth' || authState.status === 'unauthenticated') {
-    return <AuthPage onAuthenticated={handleAuthenticated} darkMode={darkMode} />;
+    return (
+      <AuthPage
+        onAuthenticated={handleAuthenticated}
+        darkMode={darkMode}
+        onBack={view.type === 'auth' ? () => setView({ type: 'landing' }) : undefined}
+      />
+    );
   }
 
   // Authenticated views
