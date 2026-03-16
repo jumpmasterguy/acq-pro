@@ -9,7 +9,7 @@ export interface Lesson {
 }
 
 export interface LessonContent {
-  type: 'text' | 'callout' | 'list' | 'table' | 'formula' | 'tip' | 'warning';
+  type: 'text' | 'callout' | 'list' | 'table' | 'formula' | 'tip' | 'warning' | 'risk_chart';
   heading?: string;
   body?: string;
   items?: string[];
@@ -21,10 +21,16 @@ export interface LessonContent {
 
 export interface QuizQuestion {
   id: string;
+  type?: 'multiple_choice' | 'drag_match' | 'drag_order';
   question: string;
+  // multiple_choice fields
   options: string[];
   correct: number;
   explanation: string;
+  // drag_match fields: match left items to right items by index
+  pairs?: { left: string; right: string }[];
+  // drag_order fields: items to be sorted into correct order
+  orderedItems?: string[];
 }
 
 export interface KeyTerm {
@@ -183,6 +189,34 @@ export const modules: Module[] = [
             options: ['Procure commercial off-the-shelf items rapidly', 'Address urgent warfighter needs within 2 years using streamlined approval processes', 'Develop and test new defense systems through rapid prototyping', 'Acquire defense business systems using commercial software'],
             correct: 1,
             explanation: "The Urgent Capability Acquisition pathway is designed to rapidly meet urgent warfighter needs, typically within 2 years. It uses streamlined oversight and accelerated approvals, often in response to combatant command urgent requests or unforeseen operational requirements."
+          },
+          {
+            id: 'q11',
+            type: 'drag_order',
+            question: "Place these DoD acquisition milestones in the correct sequence from earliest to latest:",
+            options: [],
+            correct: 0,
+            explanation: "The standard MDA pathway flows: Milestone A (approve entry into Technology Maturation) → Milestone B (approve entry into Engineering & Manufacturing Development) → Milestone C (approve entry into Production & Deployment) → Full-Rate Production Decision. Each milestone requires a formal review and documented approval.",
+            orderedItems: [
+              "Milestone A — Materiel Development Decision",
+              "Milestone B — Engineering & Manufacturing Development",
+              "Milestone C — Production & Deployment",
+              "Full-Rate Production (FRP) Decision"
+            ]
+          },
+          {
+            id: 'q12',
+            type: 'drag_match',
+            question: "Match each DoD process to its primary function:",
+            options: [],
+            correct: 0,
+            explanation: "JCIDS generates requirements (what the military needs). PPBE allocates funding (how it's paid for). The Acquisition System procures the capability (how it's bought). These three processes must stay synchronized for a program to succeed.",
+            pairs: [
+              { left: 'JCIDS', right: 'Generates validated warfighter requirements' },
+              { left: 'PPBE', right: 'Allocates and manages defense funding' },
+              { left: 'Acquisition System', right: 'Procures and delivers the capability' },
+              { left: 'DAWIA', right: 'Sets workforce training & certification standards' }
+            ]
           }
         ]
       },
@@ -455,6 +489,34 @@ export const modules: Module[] = [
             options: ['Appropriations Act', 'National Defense Authorization Act (NDAA)', 'Continuing Resolution', 'Omnibus Spending Bill'],
             correct: 1,
             explanation: "The NDAA authorizes programs, policy, and force structure but does NOT appropriate money. A separate annual Appropriations Act (or Omnibus bill) provides the actual spending authority. Programs can be authorized but not funded if Congress passes an NDAA without a corresponding appropriation."
+          },
+          {
+            id: 'q11',
+            type: 'drag_order',
+            question: "Place the PPBE phases in the correct order as they occur in the annual DoD budget cycle:",
+            options: [],
+            correct: 0,
+            explanation: "The PPBE cycle flows: Planning (strategic guidance) → Programming (POM/RMD development) → Budgeting (President's Budget submission) → Execution (obligation and expenditure of appropriated funds). Each phase feeds the next; execution data feeds back into next year's planning.",
+            orderedItems: [
+              "Planning — Issue DPG strategic guidance",
+              "Programming — Services submit Program Objectives Memorandum (POM)",
+              "Budgeting — OSD/OMB review; President's Budget submitted to Congress",
+              "Execution — Obligate and expend appropriated funds"
+            ]
+          },
+          {
+            id: 'q12',
+            type: 'drag_match',
+            question: "Match each appropriation type to its standard period of availability:",
+            options: [],
+            correct: 0,
+            explanation: "Knowing the period of availability is critical for PMs — O&M is 1-year (use it or lose it each fiscal year), Procurement is 3-year (for major equipment), RDT&E is 2-year (research and development), and MILCON is 5-year (construction projects take time).",
+            pairs: [
+              { left: 'O&M (Operations & Maintenance)', right: '1 Year' },
+              { left: 'RDT&E (Research, Dev, Test & Eval)', right: '2 Years' },
+              { left: 'Procurement', right: '3 Years' },
+              { left: 'MILCON (Military Construction)', right: '5 Years' }
+            ]
           }
         ]
       },
@@ -1023,6 +1085,35 @@ export const modules: Module[] = [
             options: ['T&M → CPFF → FPIF → FFP', 'FFP → FPIF → CPIF → CPFF → T&M', 'CPFF → FFP → T&M', 'CPIF → FFP → CPFF → T&M'],
             correct: 1,
             explanation: "The FAR preference order moves from maximum contractor risk (FFP) to maximum government risk (T&M/CPFF): FFP → FPI → Cost-Reimbursable (CPIF, CPFF, CPAF) → T&M/LH. Each step requires additional justification and imposes greater government oversight obligations."
+          },
+          {
+            id: 'q11',
+            type: 'drag_order',
+            question: "Order these contract types from HIGHEST contractor risk to LOWEST contractor risk:",
+            options: [],
+            correct: 0,
+            explanation: "FFP places 100% cost risk on the contractor — they absorb every dollar over budget. FPIF shares risk via a formula up to the ceiling/PTA. CPIF reimburses all costs with incentive fee adjustments. CPAF reimburses all costs with subjective award fee. T&M reimburses hours + materials with no ceiling unless set — government bears virtually all cost risk.",
+            orderedItems: [
+              "FFP — Firm-Fixed-Price (Contractor 100%)",
+              "FPIF — Fixed-Price Incentive Firm (Shared, formula-based)",
+              "CPIF — Cost-Plus-Incentive-Fee (Mostly Government)",
+              "CPAF — Cost-Plus-Award-Fee (Mostly Government, subjective)",
+              "T&M — Time & Materials (Government ~100%)"
+            ]
+          },
+          {
+            id: 'q12',
+            type: 'drag_match',
+            question: "Match each contract type to the scenario where it is MOST appropriate:",
+            options: [],
+            correct: 0,
+            explanation: "Contract type selection must match the risk environment. FFP works when requirements are stable and competition exists. FPIF works when some cost uncertainty remains but a ceiling is feasible. CPFF works for early R&D where you truly can't estimate cost. T&M requires a D&F and is the last resort when effort is completely undefined.",
+            pairs: [
+              { left: 'FFP', right: 'Stable requirements, mature design, competitive market' },
+              { left: 'FPIF', right: 'Design mostly mature; some cost uncertainty remains' },
+              { left: 'CPFF', right: 'Early R&D; cost cannot be estimated with any confidence' },
+              { left: 'T&M', right: 'Undefined hours/effort; last resort; D&F required' }
+            ]
           }
         ]
       },
