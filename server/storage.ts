@@ -184,6 +184,18 @@ export class MemStorage implements IStorage {
 
 // ─── Export — auto-select based on DATABASE_URL ─────────────────────────────
 
-export const storage: IStorage = process.env.DATABASE_URL
-  ? new DrizzleStorage(process.env.DATABASE_URL)
-  : new MemStorage();
+function createStorage(): IStorage {
+  if (process.env.DATABASE_URL) {
+    try {
+      console.log("[storage] Using PostgreSQL (DrizzleStorage)");
+      return new DrizzleStorage(process.env.DATABASE_URL);
+    } catch (err: any) {
+      console.error(`[storage] Failed to init Postgres, falling back to memory: ${err.message}`);
+    }
+  } else {
+    console.log("[storage] No DATABASE_URL — using MemStorage (data resets on restart)");
+  }
+  return new MemStorage();
+}
+
+export const storage: IStorage = createStorage();

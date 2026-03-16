@@ -31,21 +31,29 @@ export function setupAuth(app: Express) {
 
   // Build session store — use Postgres if available, otherwise memory
   let sessionStore: session.Store;
-  if (process.env.DATABASE_URL) {
-    const connectPgSimple = require("connect-pg-simple")(session);
-    const { Pool } = require("pg");
-    const pgPool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false },
-    });
-    sessionStore = new connectPgSimple({
-      pool: pgPool,
-      tableName: "session",
-      createTableIfMissing: true, // auto-creates the session table
-    });
-  } else {
+  try {
+    if (process.env.DATABASE_URL) {
+      const connectPgSimple = require("connect-pg-simple")(session);
+      const { Pool } = require("pg");
+      const pgPool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false },
+        // Don't let a bad DB connection crash the server
+        connectionTimeoutMillis: 5000,
+      });
+      sessionStore = new connectPgSimple({
+        pool: pgPool,
+        tableName: "session",
+        createTableIfMissing: true,
+      });
+      console.log("[session] Using PostgreSQL session store");
+    } else {
+      throw new Error("No DATABASE_URL");
+    }
+  } catch (err: any) {
+    console.log(`[session] Falling back to memory store: ${err.message}`);
     sessionStore = new MemoryStoreSession({
-      checkPeriod: 86400000, // prune expired entries every 24h
+      checkPeriod: 86400000,
     });
   }
 
