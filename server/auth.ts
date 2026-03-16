@@ -29,33 +29,14 @@ export function setupAuth(app: Express) {
   // Trust Railway's reverse proxy so secure cookies work over HTTPS
   app.set("trust proxy", 1);
 
-  // Build session store — use Postgres if available, otherwise memory
-  let sessionStore: session.Store;
-  try {
-    if (process.env.DATABASE_URL) {
-      const connectPgSimple = require("connect-pg-simple")(session);
-      const { Pool } = require("pg");
-      const pgPool = new Pool({
-        connectionString: process.env.DATABASE_URL,
-        ssl: { rejectUnauthorized: false },
-        // Don't let a bad DB connection crash the server
-        connectionTimeoutMillis: 5000,
-      });
-      sessionStore = new connectPgSimple({
-        pool: pgPool,
-        tableName: "session",
-        createTableIfMissing: true,
-      });
-      console.log("[session] Using PostgreSQL session store");
-    } else {
-      throw new Error("No DATABASE_URL");
-    }
-  } catch (err: any) {
-    console.log(`[session] Falling back to memory store: ${err.message}`);
-    sessionStore = new MemoryStoreSession({
-      checkPeriod: 86400000,
-    });
-  }
+  // Always use MemoryStore for sessions — reliable, no external dependency
+  // Sessions are 30 days, so users stay logged in across normal usage
+  // Only lost on a server restart (which is rare with Railway)
+  const sessionStore = new MemoryStoreSession({
+    checkPeriod: 86400000, // prune expired entries every 24h
+  });
+
+  console.log("[session] Using MemoryStore for sessions");
 
   // Session configuration
   app.use(
