@@ -887,12 +887,15 @@ export const modules: Module[] = [
         duration: '16 min',
         description: 'Understand the spectrum of contract types from FFP to Cost-Plus, and when to use each.',
         keyTerms: [
-          { term: 'FFP', definition: 'Firm-Fixed-Price — the most preferred contract type; price is fixed, risk is on the contractor.' },
-          { term: 'FPIF', definition: 'Fixed-Price Incentive Firm — fixed ceiling with incentives for cost/schedule performance.' },
-          { term: 'CPFF', definition: 'Cost-Plus-Fixed-Fee — government pays all allowable costs plus a fixed fee; highest government risk.' },
-          { term: 'CPIF', definition: 'Cost-Plus-Incentive-Fee — cost reimbursable with performance incentives.' },
-          { term: 'T&M', definition: 'Time & Materials — hours at set labor rates plus materials at cost; used when effort cannot be predetermined.' },
-          { term: 'Share Ratio', definition: 'In incentive contracts, the government/contractor split of cost savings or overruns (e.g., 80/20 = gov pays 80% of overrun).' },
+          { term: 'FFP', definition: 'Firm-Fixed-Price — price is set at award and does not change. Contractor bears 100% of cost risk. Most preferred by FAR. Used when requirements are well-defined and market competition exists. (FAR 16.202)' },
+          { term: 'FPIF', definition: 'Fixed-Price Incentive (Firm Target) — has a target cost, target fee, ceiling price, and share ratio. Contractor and government share cost savings/overruns up to the ceiling. Above the Point of Total Assumption (PTA), contractor absorbs 100%. (FAR 16.403-1)' },
+          { term: 'CPFF', definition: 'Cost-Plus-Fixed-Fee — government reimburses all allowable costs plus a fixed fee that does not change with cost performance. Contractor has no financial incentive to control costs. Used for R&D and early development where costs cannot be estimated. (FAR 16.306)' },
+          { term: 'CPIF', definition: 'Cost-Plus-Incentive-Fee — government reimburses all allowable costs, and the fee adjusts based on cost performance against a target. If the contractor beats the target cost, fee goes up; if they overspend, fee goes down. Still cost-reimbursable — government pays all costs regardless. (FAR 16.304)' },
+          { term: 'CPAF', definition: 'Cost-Plus-Award-Fee — government reimburses all allowable costs plus a base fee, with additional award fee determined subjectively by a Fee Determining Official (FDO) based on periodic performance evaluations. Unlike CPIF, the award fee is not tied to a formula — it is a judgment call. Used when performance quality matters more than cost control. (FAR 16.305)' },
+          { term: 'T&M', definition: 'Time & Materials — contractor is paid fixed hourly labor rates plus actual material costs. Government bears essentially all cost risk since there is no ceiling on hours. Requires CO surveillance and a not-to-exceed ceiling. D&F required to justify use. (FAR 16.601)' },
+          { term: 'Share Ratio', definition: 'In incentive contracts, the split of cost savings or overruns between government and contractor (e.g., 80/20 means government absorbs 80¢ and contractor keeps/loses 20¢ of every dollar above/below target cost).' },
+          { term: 'PTA', definition: 'Point of Total Assumption — on an FPIF contract, the cost level at which the contractor has lost all its fee and begins absorbing 100% of additional costs. Above the PTA, the contract behaves like FFP.' },
+          { term: 'D&F', definition: 'Determination and Findings — a documented government decision required to justify use of certain contract types (e.g., T&M, cost-reimbursable) or acquisition actions that deviate from standard FAR policy.' },
         ],
         content: [
           {
@@ -903,13 +906,26 @@ export const modules: Module[] = [
           {
             type: 'table',
             heading: "The Contract Type Spectrum",
-            headers: ['Type', 'Who Bears Risk?', 'Best Used When', 'FAR Reference'],
+            headers: ['Type', 'Full Name', 'Who Bears Risk?', 'Best Used When', 'FAR Ref'],
             rows: [
-              ['FFP', 'Contractor (100%)', 'Well-defined requirements; competitive market; stable design', 'FAR 16.202'],
-              ['FPI(F)', 'Shared (negotiated)', 'Design fairly mature but some uncertainty remains', 'FAR 16.403'],
-              ['CPFF', 'Government (100%)', 'High tech risk; level-of-effort type work', 'FAR 16.306'],
-              ['CPIF', 'Shared (incentive)', 'Development with some cost predictability', 'FAR 16.304'],
-              ['T&M', 'Government (100%)', 'Cannot define hours/effort upfront; use sparingly', 'FAR 16.601'],
+              ['FFP',    'Firm-Fixed-Price',                  'Contractor (100%)',  'Well-defined requirements; stable design; competitive market', 'FAR 16.202'],
+              ['FPIF',   'Fixed-Price Incentive (Firm)',       'Shared via formula', 'Design fairly mature; some cost uncertainty remains', 'FAR 16.403'],
+              ['CPIF',   'Cost-Plus-Incentive-Fee',           'Shared via formula', 'Development programs where cost targets can be set', 'FAR 16.304'],
+              ['CPAF',   'Cost-Plus-Award-Fee',               'Mostly Government',  'Complex services where performance quality is hard to quantify', 'FAR 16.305'],
+              ['CPFF',   'Cost-Plus-Fixed-Fee',               'Government (100%)',  'Early R&D; high tech risk; level-of-effort work', 'FAR 16.306'],
+              ['T&M',    'Time & Materials',                  'Government (100%)',  'Cannot define hours/effort upfront; last resort; D&F required', 'FAR 16.601'],
+            ]
+          },
+          {
+            type: 'list',
+            heading: 'Contract Type Definitions — Know These Cold',
+            items: [
+              'FFP (Firm-Fixed-Price): Price locked at award. Contractor eats every dollar over budget. Government pays nothing extra. Maximum incentive for contractor efficiency.',
+              'FPIF (Fixed-Price Incentive Firm): Starts like FFP with a target cost and ceiling price. Cost savings/overruns are shared via a ratio (e.g., 80/20) until the Point of Total Assumption (PTA), where contractor absorbs 100%.',
+              'CPIF (Cost-Plus-Incentive-Fee): Government pays all allowable costs. Contractor fee goes up if they beat the target cost, down if they overspend — but they always get reimbursed. Incentive is on cost performance.',
+              'CPAF (Cost-Plus-Award-Fee): Government pays all allowable costs plus a base fee. Additional award fee is determined subjectively by a Fee Determining Official (FDO) after each evaluation period. No formula — purely judgment-based. Incentive is on performance quality.',
+              'CPFF (Cost-Plus-Fixed-Fee): Government pays all allowable costs plus a fixed fee that never changes regardless of actual cost. No financial incentive for contractor to control costs. Used for early R&D where cost estimation is impossible.',
+              'T&M (Time & Materials): Government pays hourly labor rates plus materials at cost. No cap on hours unless a ceiling is set. Least preferred — requires a D&F that no other type is suitable and active CO surveillance.',
             ]
           },
           {

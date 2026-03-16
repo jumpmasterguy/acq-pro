@@ -258,11 +258,12 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
             if (block.type === 'risk_chart') {
               const contracts = [
-                { name: 'FFP',    contractorRisk: 100, govRisk: 0,   costRisk: 'Contractor', perfRisk: 'Contractor', color: '#16a34a' },
-                { name: 'FPIF',   contractorRisk: 70,  govRisk: 30,  costRisk: 'Shared',     perfRisk: 'Contractor', color: '#65a30d' },
-                { name: 'CPIF',   contractorRisk: 30,  govRisk: 70,  costRisk: 'Shared',     perfRisk: 'Shared',    color: '#d97706' },
-                { name: 'CPFF',   contractorRisk: 10,  govRisk: 90,  costRisk: 'Government', perfRisk: 'Shared',    color: '#dc2626' },
-                { name: 'T&M',    contractorRisk: 5,   govRisk: 95,  costRisk: 'Government', perfRisk: 'Government',color: '#991b1b' },
+                { name: 'FFP',  full: 'Firm-Fixed-Price',             contractorRisk: 100, govRisk: 0,  costRisk: 'Contractor', perfRisk: 'Contractor', color: '#16a34a' },
+                { name: 'FPIF', full: 'Fixed-Price Incentive (Firm)', contractorRisk: 70,  govRisk: 30, costRisk: 'Shared',     perfRisk: 'Contractor', color: '#65a30d' },
+                { name: 'CPIF', full: 'Cost-Plus-Incentive-Fee',      contractorRisk: 25,  govRisk: 75, costRisk: 'Government', perfRisk: 'Shared',     color: '#d97706' },
+                { name: 'CPAF', full: 'Cost-Plus-Award-Fee',          contractorRisk: 15,  govRisk: 85, costRisk: 'Government', perfRisk: 'Gov (FDO)',  color: '#ea580c' },
+                { name: 'CPFF', full: 'Cost-Plus-Fixed-Fee',          contractorRisk: 10,  govRisk: 90, costRisk: 'Government', perfRisk: 'Shared',     color: '#dc2626' },
+                { name: 'T&M',  full: 'Time & Materials',             contractorRisk: 5,   govRisk: 95, costRisk: 'Government', perfRisk: 'Government', color: '#991b1b' },
               ];
               return (
                 <div key={i} className="bg-card border border-border rounded-xl overflow-hidden">
@@ -280,7 +281,10 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     {contracts.map((c) => (
                       <div key={c.name} className="space-y-1.5">
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-bold w-12" style={{ color: c.color }}>{c.name}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold w-10" style={{ color: c.color }}>{c.name}</span>
+                            <span className="text-muted-foreground text-[10px] hidden sm:inline">{c.full}</span>
+                          </div>
                           <span className="text-muted-foreground text-[10px]">Cost: <span className="font-medium text-foreground">{c.costRisk}</span> · Perf: <span className="font-medium text-foreground">{c.perfRisk}</span></span>
                         </div>
                         <div className="flex h-6 rounded-lg overflow-hidden w-full gap-0.5">
