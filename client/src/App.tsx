@@ -6,6 +6,7 @@ import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { FREE_MODULES, getModuleProgress } from "@/lib/progress";
+import { isNativeApp } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
 import { Shield, LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -321,7 +322,7 @@ function AppContent() {
 
         {/* Bottom */}
         <div className="px-3 py-4 border-t border-sidebar-border space-y-1">
-          {!isPremium && (
+          {!isPremium && !isNativeApp() && (
             <button
               onClick={() => { setView({ type: 'upgrade' }); setSidebarOpen(false); }}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-sidebar-primary/10 text-sidebar-primary hover:bg-sidebar-primary/20 transition-colors"

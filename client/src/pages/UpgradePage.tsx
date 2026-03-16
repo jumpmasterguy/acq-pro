@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { modules, getTotalLessons } from "@/lib/curriculum";
-import { ArrowLeft, CheckCircle, Shield, Award, Zap, Lock, CreditCard, ExternalLink } from "lucide-react";
+import { ArrowLeft, CheckCircle, Shield, Award, Zap, Lock, CreditCard, ExternalLink, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { isNativeApp } from "@/lib/platform";
 
 interface UpgradePageProps {
   onBack: () => void;
@@ -15,6 +16,7 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
   const totalLessons = getTotalLessons();
   const [loadingLifetime, setLoadingLifetime] = useState(false);
   const [loadingMonthly, setLoadingMonthly] = useState(false);
+  const nativeApp = isNativeApp();
   const { toast } = useToast();
 
   const proFeatures = [
@@ -138,54 +140,81 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
             ))}
           </ul>
 
-          {/* Lifetime CTA */}
-          <Button
-            className="w-full gap-1.5 mb-2"
-            onClick={() => handleCheckout("lifetime")}
-            disabled={loadingLifetime || loadingMonthly}
-            data-testid="upgrade-lifetime"
-          >
-            {loadingLifetime ? (
-              <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-            ) : (
-              <CreditCard className="w-4 h-4" />
-            )}
-            Get Lifetime Access — $149
-          </Button>
+          {nativeApp ? (
+            /* ── iOS native: no payment buttons (Apple policy) ── */
+            <div className="bg-muted/40 rounded-xl p-4 text-center space-y-3">
+              <Globe className="w-8 h-8 text-primary mx-auto" />
+              <p className="text-sm font-semibold">Purchase on the Web</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                To unlock Pro access, visit{" "}
+                <span className="font-medium text-primary">acq-pro-production.up.railway.app</span>{" "}
+                in your browser and complete your purchase there.
+                Your account unlocks instantly — just sign back in here.
+              </p>
+              <Button variant="outline" className="w-full gap-1.5 text-sm" asChild>
+                <a
+                  href="https://acq-pro-production.up.railway.app/#/upgrade"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Go to Website to Purchase
+                </a>
+              </Button>
+            </div>
+          ) : (
+            /* ── Web: full Stripe checkout ── */
+            <>
+              <Button
+                className="w-full gap-1.5 mb-2"
+                onClick={() => handleCheckout("lifetime")}
+                disabled={loadingLifetime || loadingMonthly}
+                data-testid="upgrade-lifetime"
+              >
+                {loadingLifetime ? (
+                  <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                ) : (
+                  <CreditCard className="w-4 h-4" />
+                )}
+                Get Lifetime Access — $149
+              </Button>
 
-          {/* Monthly CTA */}
-          <Button
-            variant="outline"
-            className="w-full gap-1.5 text-sm"
-            onClick={() => handleCheckout("monthly")}
-            disabled={loadingLifetime || loadingMonthly}
-            data-testid="upgrade-monthly"
-          >
-            {loadingMonthly ? (
-              <span className="w-4 h-4 border-2 border-border border-t-foreground rounded-full animate-spin" />
-            ) : (
-              <Zap className="w-4 h-4" />
-            )}
-            Start Monthly — $29/mo
-          </Button>
+              <Button
+                variant="outline"
+                className="w-full gap-1.5 text-sm"
+                onClick={() => handleCheckout("monthly")}
+                disabled={loadingLifetime || loadingMonthly}
+                data-testid="upgrade-monthly"
+              >
+                {loadingMonthly ? (
+                  <span className="w-4 h-4 border-2 border-border border-t-foreground rounded-full animate-spin" />
+                ) : (
+                  <Zap className="w-4 h-4" />
+                )}
+                Start Monthly — $29/mo
+              </Button>
 
-          <p className="text-xs text-muted-foreground text-center mt-2">
-            Secured by Stripe · 30-day money-back guarantee
-          </p>
+              <p className="text-xs text-muted-foreground text-center mt-2">
+                Secured by Stripe · 30-day money-back guarantee
+              </p>
+            </>
+          )}
         </div>
       </div>
 
-      {/* Manage Billing (for paid users) */}
-      <div className="text-center">
-        <button
-          onClick={handleManageBilling}
-          className="text-xs text-muted-foreground underline flex items-center gap-1 mx-auto hover:text-foreground transition-colors"
-          data-testid="manage-billing"
-        >
-          <ExternalLink className="w-3 h-3" />
-          Manage billing &amp; subscription
-        </button>
-      </div>
+      {/* Manage Billing (for paid users — web only) */}
+      {!nativeApp && (
+        <div className="text-center">
+          <button
+            onClick={handleManageBilling}
+            className="text-xs text-muted-foreground underline flex items-center gap-1 mx-auto hover:text-foreground transition-colors"
+            data-testid="manage-billing"
+          >
+            <ExternalLink className="w-3 h-3" />
+            Manage billing &amp; subscription
+          </button>
+        </div>
+      )}
 
       {/* Module Preview */}
       <div>
