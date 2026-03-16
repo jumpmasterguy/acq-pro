@@ -5,6 +5,7 @@ import passport from "passport";
 import { storage } from "./storage";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema } from "@shared/schema";
+import { sendWelcomeEmail } from "./email";
 
 // Initialize Stripe — will be undefined if key not set
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
@@ -49,6 +50,9 @@ export async function registerRoutes(
     // Hash password and create user
     const passwordHash = await hashPassword(password);
     const user = await storage.createUser({ username, email, passwordHash });
+
+    // Send welcome email (non-blocking)
+    sendWelcomeEmail(user.email, user.username).catch(() => {});
 
     // Auto-login after registration
     req.login(toPassportUser(user), (err) => {
@@ -316,6 +320,31 @@ export async function registerRoutes(
       }
     }
   );
+
+  // ─── Admin Routes ──────────────────────────────────────────────────
+
+  // Grant Pro access to a user by email — protected by ADMIN_SECRET env var
+  // Usage: POST /api/admin/make-pro  { email: "friend@example.com", secret: "<ADMIN_SECRET>" }
+  app.post("/api/admin/make-pro", async (req: Request, res: Response) => {
+    const adminSecret = process.env.ADMIN_SECRET;
+    if (!adminSecret) {
+      return res.status(503).json({ message: "Admin endpoint not configured" });
+    }
+    const { email, secret, plan } = req.body;
+    if (secret !== adminSecret) {
+      return res.status(403).json({ message: "Invalid admin secret" });
+    }
+    if (!email) {
+      return res.status(400).json({ message: "email is required" });
+    }
+    const user = await storage.getUserByEmail(email);
+    if (!user) {
+      return res.status(404).json({ message: `No user found with email: ${email}` });
+    }
+    const status = plan === "lifetime" ? "lifetime" : "active";
+    await storage.updateUserSubscription(user.id, { subscriptionStatus: status });
+    return res.json({ message: `${email} is now ${status} (Pro)`, userId: user.id });
+  });
 
   return httpServer;
 }
