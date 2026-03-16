@@ -913,6 +913,9 @@ export const modules: Module[] = [
             ]
           },
           {
+            type: 'risk_chart',
+          },
+          {
             type: 'callout',
             heading: "The FAR's Hierarchy of Preference",
             body: "FAR 16.103(d) requires the contracting officer to document the contract type selection rationale in the written acquisition plan. The presumption is FFP. Every step away from FFP must be justified. An undocumented contract type decision is a significant finding in a contract audit."

@@ -256,6 +256,68 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               );
             }
 
+            if (block.type === 'risk_chart') {
+              const contracts = [
+                { name: 'FFP',    contractorRisk: 100, govRisk: 0,   costRisk: 'Contractor', perfRisk: 'Contractor', color: '#16a34a' },
+                { name: 'FPIF',   contractorRisk: 70,  govRisk: 30,  costRisk: 'Shared',     perfRisk: 'Contractor', color: '#65a30d' },
+                { name: 'CPIF',   contractorRisk: 30,  govRisk: 70,  costRisk: 'Shared',     perfRisk: 'Shared',    color: '#d97706' },
+                { name: 'CPFF',   contractorRisk: 10,  govRisk: 90,  costRisk: 'Government', perfRisk: 'Shared',    color: '#dc2626' },
+                { name: 'T&M',    contractorRisk: 5,   govRisk: 95,  costRisk: 'Government', perfRisk: 'Government',color: '#991b1b' },
+              ];
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl overflow-hidden">
+                  <div className="px-5 py-3.5 border-b border-border bg-muted/30">
+                    <h3 className="font-semibold text-sm">Risk Allocation by Contract Type</h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">Who absorbs cost overruns, performance failures, and technical risk</p>
+                  </div>
+                  <div className="p-5 space-y-5">
+                    {/* Legend */}
+                    <div className="flex items-center gap-5 text-xs">
+                      <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-primary inline-block" />Contractor Risk</div>
+                      <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-muted-foreground/30 inline-block" />Government Risk</div>
+                    </div>
+                    {/* Risk bars */}
+                    {contracts.map((c) => (
+                      <div key={c.name} className="space-y-1.5">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-bold w-12" style={{ color: c.color }}>{c.name}</span>
+                          <span className="text-muted-foreground text-[10px]">Cost: <span className="font-medium text-foreground">{c.costRisk}</span> · Perf: <span className="font-medium text-foreground">{c.perfRisk}</span></span>
+                        </div>
+                        <div className="flex h-6 rounded-lg overflow-hidden w-full gap-0.5">
+                          <div
+                            className="flex items-center justify-center text-[10px] font-bold text-white transition-all"
+                            style={{ width: `${c.contractorRisk}%`, backgroundColor: c.color, minWidth: c.contractorRisk > 0 ? '2px' : '0' }}
+                          >
+                            {c.contractorRisk >= 20 ? `${c.contractorRisk}%` : ''}
+                          </div>
+                          <div
+                            className="flex items-center justify-center text-[10px] font-bold text-white bg-slate-400 dark:bg-slate-600 transition-all"
+                            style={{ width: `${c.govRisk}%`, minWidth: c.govRisk > 0 ? '2px' : '0' }}
+                          >
+                            {c.govRisk >= 20 ? `${c.govRisk}%` : ''}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    {/* Risk type breakdown */}
+                    <div className="border-t border-border pt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {[
+                        { label: '💰 Cost Risk', desc: 'Who pays for cost overruns above the target/ceiling price?' },
+                        { label: '⚙️ Performance Risk', desc: 'Who absorbs losses if the deliverable underperforms or needs rework?' },
+                        { label: '🔬 Technical Risk', desc: 'Who bears the burden if the technology proves harder than expected?' },
+                      ].map(({ label, desc }) => (
+                        <div key={label} className="bg-muted/30 rounded-lg p-3">
+                          <div className="text-xs font-semibold mb-1">{label}</div>
+                          <div className="text-[11px] text-muted-foreground leading-relaxed">{desc}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-[11px] text-muted-foreground italic">FAR 16.103(a): The contract type must be appropriate for the circumstances — risk must be commensurate with the government's ability to define requirements and manage performance.</p>
+                  </div>
+                </div>
+              );
+            }
+
             return null;
           })}
 
