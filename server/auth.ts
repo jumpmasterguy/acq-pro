@@ -26,6 +26,9 @@ declare global {
 }
 
 export function setupAuth(app: Express) {
+  // Trust Railway's reverse proxy so secure cookies work over HTTPS
+  app.set("trust proxy", 1);
+
   // Session configuration
   app.use(
     session({
@@ -40,6 +43,7 @@ export function setupAuth(app: Express) {
         secure: process.env.NODE_ENV === "production",
         httpOnly: true,
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        proxy: true,
       },
     })
   );
