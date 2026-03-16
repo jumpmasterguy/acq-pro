@@ -18,7 +18,6 @@ import ModulePage from "@/pages/ModulePage";
 import LessonPage from "@/pages/LessonPage";
 import UpgradePage from "@/pages/UpgradePage";
 import AuthPage, { type AuthUser } from "@/pages/AuthPage";
-import PerplexityAttribution from "@/components/PerplexityAttribution";
 import { apiRequest } from "@/lib/queryClient";
 
 // View types
@@ -414,9 +413,7 @@ function AppContent() {
           )}
         </main>
 
-        <footer className="px-4 lg:px-6 py-3 border-t border-border">
-          <PerplexityAttribution />
-        </footer>
+
       </div>
     </div>
   );
