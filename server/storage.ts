@@ -9,6 +9,7 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   getUserByStripeCustomerId(customerId: string): Promise<User | undefined>;
+  getAllUsers(): Promise<User[]>;
   createUser(user: InsertUser): Promise<User>;
   updateUserSubscription(
     userId: string,
@@ -51,6 +52,12 @@ export class MemStorage implements IStorage {
   async getUserByStripeCustomerId(customerId: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find(
       (user) => user.stripeCustomerId === customerId,
+    );
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return Array.from(this.users.values()).sort(
+      (a, b) => a.email.localeCompare(b.email)
     );
   }
 

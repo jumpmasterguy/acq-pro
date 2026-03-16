@@ -8,7 +8,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { FREE_MODULES, getModuleProgress } from "@/lib/progress";
 import { isNativeApp } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
-import { Shield, LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User } from "lucide-react";
+import { Shield, LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -18,6 +18,7 @@ import ModulePage from "@/pages/ModulePage";
 import LessonPage from "@/pages/LessonPage";
 import UpgradePage from "@/pages/UpgradePage";
 import AuthPage, { type AuthUser } from "@/pages/AuthPage";
+import AdminPage from "@/pages/AdminPage";
 import { apiRequest } from "@/lib/queryClient";
 
 // View types
@@ -27,7 +28,8 @@ type View =
   | { type: 'dashboard' }
   | { type: 'module'; moduleId: string }
   | { type: 'lesson'; lessonId: string }
-  | { type: 'upgrade' };
+  | { type: 'upgrade' }
+  | { type: 'admin' };
 
 // Auth state
 type AuthState =
@@ -211,6 +213,7 @@ function AppContent() {
 
   // Authenticated views
   const user = (authState as { status: 'authenticated'; user: AuthUser }).user;
+  const isAdmin = user.isAdmin === true;
   const xp = progress.xp;
   const completedCount = completedLessons.size;
 
@@ -286,6 +289,22 @@ function AppContent() {
             <LayoutDashboard className="w-4 h-4" />
             Dashboard
           </button>
+
+          {isAdmin && (
+            <button
+              onClick={() => { setView({ type: 'admin' }); setSidebarOpen(false); }}
+              className={cn(
+                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                view.type === 'admin'
+                  ? "bg-sidebar-accent text-sidebar-foreground"
+                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+              )}
+              data-testid="nav-admin"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              Admin Panel
+            </button>
+          )}
 
           <div className="text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/40 px-3 pt-3 pb-1.5">
             Modules
@@ -410,6 +429,9 @@ function AppContent() {
               onBack={() => setView({ type: 'dashboard' })}
               onUpgrade={handleUpgrade}
             />
+          )}
+          {view.type === 'admin' && isAdmin && (
+            <AdminPage />
           )}
         </main>
 

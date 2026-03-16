@@ -35,6 +35,7 @@ export interface AuthUser {
   subscriptionStatus: string;
   completedLessons: string[];
   quizScores: Record<string, number>;
+  isAdmin?: boolean;
 }
 
 interface AuthPageProps {

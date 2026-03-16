@@ -123,6 +123,7 @@ export async function registerRoutes(
       subscriptionStatus: user.subscriptionStatus,
       completedLessons: user.completedLessons ?? [],
       quizScores: user.quizScores ?? {},
+      isAdmin: isAdmin(req),
     });
   });
 
@@ -323,27 +324,52 @@ export async function registerRoutes(
 
   // ─── Admin Routes ──────────────────────────────────────────────────
 
-  // Grant Pro access to a user by email — protected by ADMIN_SECRET env var
-  // Usage: POST /api/admin/make-pro  { email: "friend@example.com", secret: "<ADMIN_SECRET>" }
-  app.post("/api/admin/make-pro", async (req: Request, res: Response) => {
-    const adminSecret = process.env.ADMIN_SECRET;
-    if (!adminSecret) {
-      return res.status(503).json({ message: "Admin endpoint not configured" });
+  // Helper: check if the requesting session user is an admin
+  function isAdmin(req: Request): boolean {
+    if (!req.isAuthenticated() || !req.user) return false;
+    const adminEmails = (process.env.ADMIN_EMAILS || "")
+      .split(",")
+      .map(e => e.trim().toLowerCase())
+      .filter(Boolean);
+    return adminEmails.includes(req.user.email.toLowerCase());
+  }
+
+  // List all users — admin only
+  app.get("/api/admin/users", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
+    const users = await storage.getAllUsers();
+    return res.json(users.map(u => ({
+      id: u.id,
+      username: u.username,
+      email: u.email,
+      subscriptionStatus: u.subscriptionStatus,
+      completedLessons: (u.completedLessons ?? []).length,
+    })));
+  });
+
+  // Grant/revoke Pro — admin only (by user id or email)
+  app.post("/api/admin/make-pro", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isAdmin(req)) {
+      // Legacy: also allow ADMIN_SECRET header for curl usage
+      const adminSecret = process.env.ADMIN_SECRET;
+      const { secret } = req.body;
+      if (!adminSecret || secret !== adminSecret) {
+        return res.status(403).json({ message: "Forbidden" });
+      }
     }
-    const { email, secret, plan } = req.body;
-    if (secret !== adminSecret) {
-      return res.status(403).json({ message: "Invalid admin secret" });
+    const { email, userId, plan } = req.body;
+    let user;
+    if (userId) {
+      user = await storage.getUser(userId);
+    } else if (email) {
+      user = await storage.getUserByEmail(email);
     }
-    if (!email) {
-      return res.status(400).json({ message: "email is required" });
-    }
-    const user = await storage.getUserByEmail(email);
     if (!user) {
-      return res.status(404).json({ message: `No user found with email: ${email}` });
+      return res.status(404).json({ message: "User not found" });
     }
-    const status = plan === "lifetime" ? "lifetime" : "active";
+    const status = plan === "free" ? "free" : plan === "lifetime" ? "lifetime" : "active";
     await storage.updateUserSubscription(user.id, { subscriptionStatus: status });
-    return res.json({ message: `${email} is now ${status} (Pro)`, userId: user.id });
+    return res.json({ message: `${user.email} is now ${status}`, userId: user.id });
   });
 
   return httpServer;
