@@ -255,7 +255,7 @@ export default function Landing({ onGetStarted }: LandingProps) {
                 <span className="text-3xl font-bold">$149</span>
                 <span className="text-muted-foreground text-sm mb-1">lifetime</span>
               </div>
-              <div className="text-xs text-muted-foreground mb-4">or $29/month</div>
+              <div className="text-xs text-muted-foreground mb-4">or $4.99/month</div>
               <ul className="space-y-2.5 mb-7">
                 {[
                   'All 6 modules — complete access',
