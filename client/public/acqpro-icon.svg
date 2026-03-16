@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="230" fill="#1e3a5f"/>
+  <!-- Shield -->
+  <path d="M512 180 L740 280 L740 520 C740 660 640 760 512 820 C384 760 284 660 284 520 L284 280 Z" fill="#2d5a8e" stroke="#c8932a" stroke-width="18"/>
+  <!-- Star -->
+  <polygon points="512,320 545,420 650,420 567,478 598,578 512,520 426,578 457,478 374,420 479,420" fill="#f0b429" stroke="#c8932a" stroke-width="4"/>
+</svg>
