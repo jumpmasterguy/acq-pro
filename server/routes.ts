@@ -23,6 +23,11 @@ export async function registerRoutes(
   // Setup passport + sessions
   setupAuth(app);
 
+  // Health check — Railway uses this to confirm the app is alive
+  app.get("/api/health", (_req, res) => {
+    res.json({ status: "ok" });
+  });
+
   // ─── Auth Routes ───────────────────────────────────────────────────
 
   // Register
