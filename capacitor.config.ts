@@ -13,6 +13,15 @@ const config: CapacitorConfig = {
     contentInset: 'automatic',
     backgroundColor: '#1e3a5f',
     limitsNavigationsToAppBoundDomains: true,
+    scrollEnabled: true,
+    keyboardDisplayRequiresUserAction: false,
+  },
+  plugins: {
+    Keyboard: {
+      resize: 'body',
+      style: 'default',
+      resizeOnFullScreen: true,
+    },
   },
 };
 
