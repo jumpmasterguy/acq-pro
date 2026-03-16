@@ -26,6 +26,7 @@ export interface IStorage {
     completedLessons: string[],
     quizScores: Record<string, number>
   ): Promise<User | undefined>;
+  updateUserPassword(userId: string, passwordHash: string): Promise<User | undefined>;
 }
 
 // ─── Postgres Storage (production) ─────────────────────────────────────────
@@ -112,6 +113,15 @@ export class DrizzleStorage implements IStorage {
       .returning();
     return result[0];
   }
+
+  async updateUserPassword(userId: string, passwordHash: string): Promise<User | undefined> {
+    const result = await this.db
+      .update(users)
+      .set({ passwordHash })
+      .where(eq(users.id, userId))
+      .returning();
+    return result[0];
+  }
 }
 
 // ─── In-Memory Storage (fallback when no DATABASE_URL) ─────────────────────
@@ -177,6 +187,14 @@ export class MemStorage implements IStorage {
     const user = this.users.get(userId);
     if (!user) return undefined;
     const updated = { ...user, completedLessons, quizScores };
+    this.users.set(userId, updated);
+    return updated;
+  }
+
+  async updateUserPassword(userId: string, passwordHash: string): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const updated = { ...user, passwordHash };
     this.users.set(userId, updated);
     return updated;
   }

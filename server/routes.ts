@@ -347,6 +347,18 @@ export async function registerRoutes(
     })));
   });
 
+  // Reset password — admin only
+  app.post("/api/admin/reset-password", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
+    const { email, newPassword } = req.body;
+    if (!email || !newPassword) return res.status(400).json({ message: "email and newPassword required" });
+    const user = await storage.getUserByEmail(email);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    const passwordHash = await hashPassword(newPassword);
+    await storage.updateUserPassword(user.id, passwordHash);
+    return res.json({ message: `Password reset for ${email}` });
+  });
+
   // Grant/revoke Pro — admin only (by user id or email)
   app.post("/api/admin/make-pro", requireAuth as any, async (req: Request, res: Response) => {
     if (!isAdmin(req)) {
