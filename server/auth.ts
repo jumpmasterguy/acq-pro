@@ -29,15 +29,33 @@ export function setupAuth(app: Express) {
   // Trust Railway's reverse proxy so secure cookies work over HTTPS
   app.set("trust proxy", 1);
 
+  // Build session store — use Postgres if available, otherwise memory
+  let sessionStore: session.Store;
+  if (process.env.DATABASE_URL) {
+    const connectPgSimple = require("connect-pg-simple")(session);
+    const { Pool } = require("pg");
+    const pgPool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false },
+    });
+    sessionStore = new connectPgSimple({
+      pool: pgPool,
+      tableName: "session",
+      createTableIfMissing: true, // auto-creates the session table
+    });
+  } else {
+    sessionStore = new MemoryStoreSession({
+      checkPeriod: 86400000, // prune expired entries every 24h
+    });
+  }
+
   // Session configuration
   app.use(
     session({
       secret: process.env.SESSION_SECRET || "acqpro-secret-key-change-in-prod-2024",
       resave: false,
       saveUninitialized: false,
-      store: new MemoryStoreSession({
-        checkPeriod: 86400000, // prune expired entries every 24h
-      }),
+      store: sessionStore,
       cookie: {
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
         secure: process.env.NODE_ENV === "production",

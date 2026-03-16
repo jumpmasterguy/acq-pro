@@ -60,6 +60,52 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Run database migrations if DATABASE_URL is set
+  if (process.env.DATABASE_URL) {
+    try {
+      log("Running database migrations...", "db");
+      const { migrate } = await import("drizzle-orm/node-postgres/migrator");
+      const { drizzle } = await import("drizzle-orm/node-postgres");
+      const { Pool } = await import("pg");
+      const pool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false },
+      });
+      const db = drizzle(pool);
+      await migrate(db, { migrationsFolder: "./migrations" });
+      log("Database migrations complete", "db");
+    } catch (err: any) {
+      // If no migrations folder yet, create table directly
+      log(`Migration note: ${err.message} — attempting direct schema push`, "db");
+      try {
+        const { Pool } = await import("pg");
+        const pool = new Pool({
+          connectionString: process.env.DATABASE_URL,
+          ssl: { rejectUnauthorized: false },
+        });
+        await pool.query(`
+          CREATE TABLE IF NOT EXISTS users (
+            id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
+            username TEXT NOT NULL UNIQUE,
+            email TEXT NOT NULL UNIQUE,
+            password_hash TEXT NOT NULL,
+            stripe_customer_id TEXT,
+            subscription_status TEXT NOT NULL DEFAULT 'free',
+            subscription_id TEXT,
+            completed_lessons TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[],
+            quiz_scores JSONB NOT NULL DEFAULT '{}'::JSONB
+          );
+        `);
+        log("Users table ensured via direct SQL", "db");
+        await pool.end();
+      } catch (sqlErr: any) {
+        log(`DB setup error: ${sqlErr.message}`, "db");
+      }
+    }
+  } else {
+    log("No DATABASE_URL — using in-memory storage (data lost on restart)", "db");
+  }
+
   await registerRoutes(httpServer, app);
 
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
@@ -86,9 +132,6 @@ app.use((req, res, next) => {
   }
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || "5000", 10);
   httpServer.listen(
     {
