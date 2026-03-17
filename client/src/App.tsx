@@ -50,6 +50,30 @@ function buildProgressFromUser(user: AuthUser) {
   };
 }
 
+const VIEW_STORAGE_KEY = 'acqpro_last_view';
+
+function saveView(v: View) {
+  // Only persist meaningful authenticated views
+  if (v.type === 'landing' || v.type === 'auth') return;
+  try { sessionStorage.setItem(VIEW_STORAGE_KEY, JSON.stringify(v)); } catch {}
+}
+
+function loadSavedView(): View | null {
+  try {
+    const raw = sessionStorage.getItem(VIEW_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as View;
+    // Validate it's a known view type
+    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin'];
+    if (!valid.includes(parsed.type)) return null;
+    return parsed;
+  } catch { return null; }
+}
+
+function clearSavedView() {
+  try { sessionStorage.removeItem(VIEW_STORAGE_KEY); } catch {}
+}
+
 function AppContent() {
   const [view, setView] = useState<View>({ type: 'landing' });
   const [darkMode, setDarkMode] = useState(() =>
@@ -86,19 +110,40 @@ function AppContent() {
   }, [darkMode]);
   const toggleDark = () => setDarkMode(d => !d);
 
-  // Check session on mount
+  // Persist view changes to sessionStorage
+  useEffect(() => {
+    if (authState.status === 'authenticated') {
+      saveView(view);
+    }
+  }, [view, authState.status]);
+
+  // Check session on mount — restore last view if session is still valid
   useEffect(() => {
     apiRequest("GET", "/api/auth/me")
       .then(async (res) => {
         if (res.ok) {
           const user: AuthUser = await res.json();
           setAuthState({ status: 'authenticated', user });
+          // Restore where the user was before the reload
+          const saved = loadSavedView();
+          if (saved) {
+            // If saved view was admin but user lost admin, fall back to dashboard
+            if (saved.type === 'admin' && !user.isAdmin) {
+              setView({ type: 'dashboard' });
+            } else {
+              setView(saved);
+            }
+          } else {
+            setView({ type: 'dashboard' });
+          }
         } else {
           setAuthState({ status: 'unauthenticated' });
+          clearSavedView();
         }
       })
       .catch(() => {
         setAuthState({ status: 'unauthenticated' });
+        clearSavedView();
       });
   }, []);
 
@@ -140,6 +185,7 @@ function AppContent() {
     try {
       await apiRequest("POST", "/api/auth/logout", {});
     } catch {}
+    clearSavedView();
     setAuthState({ status: 'unauthenticated' });
     setView({ type: 'landing' });
   }, []);
