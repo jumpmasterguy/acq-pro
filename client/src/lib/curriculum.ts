@@ -10,8 +10,24 @@ export interface Lesson {
 
 export type SkillLevel = 'novice' | 'intermediate' | 'advanced';
 
+export interface ExpandableItem {
+  label: string;          // The collapsed row label (e.g. "Qualification")
+  sublabel?: string;      // Optional short descriptor shown collapsed (e.g. "Gate review — 20-30% Pwin")
+  badge?: string;         // Optional badge text (e.g. "20-30% Pwin", "Pink Team")
+  badgeColor?: 'blue' | 'amber' | 'green' | 'red' | 'purple' | 'gray';
+  summary?: string;       // 1-2 sentence summary shown collapsed below the label
+  content: Array<{
+    heading?: string;
+    body?: string;
+    items?: string[];
+    type?: 'text' | 'bullets' | 'grid';
+    // For grid: columns is array of {label, value} pairs
+    grid?: Array<{ label: string; value: string }>;
+  }>;
+}
+
 export interface LessonContent {
-  type: 'text' | 'callout' | 'list' | 'table' | 'formula' | 'tip' | 'warning' | 'risk_chart';
+  type: 'text' | 'callout' | 'list' | 'table' | 'formula' | 'tip' | 'warning' | 'risk_chart' | 'expandable_list';
   heading?: string;
   body?: string;
   items?: string[];
@@ -19,6 +35,8 @@ export interface LessonContent {
   rows?: string[][];
   formula?: string;
   explanation?: string;
+  // For expandable_list type:
+  expandableItems?: ExpandableItem[];
   // Optional: restrict this block to a specific skill level.
   // If absent, the block shows to all levels.
   level?: SkillLevel;
@@ -3370,15 +3388,257 @@ export const modules: Module[] = [
             body: "Winning government contracts is not an accident — it's a disciplined process that begins years before the RFP is released. The best capture managers are already executing their win strategy while competitors are just becoming aware of the opportunity. Understanding this lifecycle helps both government PMs (who interact with BD teams) and industry professionals who want to build winning capture programs."
           },
           {
-            type: 'table',
+            type: 'expandable_list',
             heading: "The BD-to-Capture-to-Proposal Lifecycle",
-            headers: ['Phase', 'Activities', 'Key Deliverables', 'Pwin Range'],
-            rows: [
-              ['Opportunity Identification', 'Market research, relationship building, forecast monitoring', 'Opportunity Brief', '< 20%'],
-              ['Qualification', 'Gate review: strategic fit, competition, Pwin assessment', 'Go/No-Go Decision', '20-30%'],
-              ['Capture', 'Customer engagement, team formation, win strategy development', 'Capture Plan, Black Hat', '30-50%'],
-              ['Proposal Development', 'Writing, review cycles (Pink/Red/Gold teams), pricing', 'Compliant, compelling proposal', '50-70%'],
-              ['Negotiation/Award', 'BAFO, negotiations, award', 'Contract Award', 'Award or loss'],
+            body: "Each phase builds on the last. Tap any phase to see what it involves, who performs it, and what it produces.",
+            expandableItems: [
+              {
+                label: "Phase 1: Opportunity Identification",
+                badge: "< 20% Pwin",
+                badgeColor: 'gray',
+                sublabel: "Market research, relationship building, forecast monitoring",
+                summary: "The pipeline starts here. BD teams mine government forecasts and build customer relationships before any solicitation exists.",
+                content: [
+                  {
+                    heading: "What Is It?",
+                    type: 'text',
+                    body: "Opportunity Identification (OI) is the systematic process of finding potential contracts before they reach the market. At this stage, nothing has been formally competed — the government is still forming requirements or hasn't yet issued a solicitation. Pwin is low because the company hasn't yet assessed strategic fit or competitive position."
+                  },
+                  {
+                    heading: "How Is It Performed?",
+                    type: 'bullets',
+                    items: [
+                      "Monitoring government forecasting tools: SAM.gov, GovWin IQ, BGOV, USASpending.gov for expiring contracts and new programs",
+                      "Attending industry days, pre-solicitation conferences, and AFCEA/AUSA events",
+                      "Building relationships with government program offices, contracting officers, and requirements owners",
+                      "Tracking Congressional budget justification books (RDT&E, Procurement, O&M) for new program funding",
+                      "Analyzing incumbent contract expiration dates (recompete windows 12-24 months out)",
+                      "Receiving internal tips from employees embedded on program teams (CORs, ACOs, technical advisors)"
+                    ]
+                  },
+                  {
+                    heading: "Who Performs It?",
+                    type: 'bullets',
+                    items: [
+                      "Business Development (BD) Managers — primary owners of the pipeline",
+                      "Account Managers — relationship owners for specific government accounts",
+                      "Senior executives who have relationships with Program Executive Officers (PEOs) and Component Acquisition Executives (CAEs)",
+                      "Program alumni who transitioned from government to industry (must observe ethics cooling-off periods)"
+                    ]
+                  },
+                  {
+                    heading: "Key Outputs",
+                    type: 'grid',
+                    grid: [
+                      { label: 'Deliverable', value: 'Opportunity Brief / Pipeline Entry' },
+                      { label: 'Decision Gate', value: 'Pipeline Add / No-Add' },
+                      { label: 'Pwin Range', value: '< 20% (unqualified)' },
+                      { label: 'Resources Used', value: 'BD hours only — minimal investment' }
+                    ]
+                  }
+                ]
+              },
+              {
+                label: "Phase 2: Qualification (Gate Review)",
+                badge: "20–30% Pwin",
+                badgeColor: 'blue',
+                sublabel: "Go/No-Go decision — should we invest B&P dollars in this pursuit?",
+                summary: "The gate review is the company's governance checkpoint where leadership decides whether to commit real resources. A disciplined No-Go here saves far more money than a half-hearted proposal later.",
+                content: [
+                  {
+                    heading: "What Is It?",
+                    type: 'text',
+                    body: "Qualification is the formal internal review process to determine whether an opportunity is worth pursuing. It converts an unqualified pipeline entry into an active capture investment — or saves the company from wasting B&P on an unwinnable pursuit. This is the most strategically important gate in the capture process."
+                  },
+                  {
+                    heading: "How Is It Performed?",
+                    type: 'bullets',
+                    items: [
+                      "BD manager presents the opportunity to a Capture/Growth leadership team (often VP-level)",
+                      "Team scores the opportunity against qualification criteria: strategic fit, Pwin, customer relationship health, past performance relevance, competitive landscape",
+                      "Financial analysis: estimated contract value vs. required B&P investment; expected ROI",
+                      "Resource check: do we have the people, clearances, and facilities to perform this work?",
+                      "A formal Go/No-Go decision is documented — not a verbal agreement",
+                      "If 'Go': a Capture Manager is assigned and B&P budget is allocated"
+                    ]
+                  },
+                  {
+                    heading: "Who Performs It?",
+                    type: 'bullets',
+                    items: [
+                      "Capture Review Board or Growth Board — typically VP/Director-level leadership",
+                      "BD Manager — presents the opportunity brief",
+                      "Capture Manager (if already assigned) — provides early strategy assessment",
+                      "Finance — provides B&P budget analysis and ROI projection",
+                      "Contracts — reviews acquisition strategy, contract type, and competitive environment"
+                    ]
+                  },
+                  {
+                    heading: "Qualification Criteria (What Gets Scored)",
+                    type: 'bullets',
+                    items: [
+                      "Strategic alignment: Does this fit our core competencies and growth strategy?",
+                      "Customer relationship: Do we have meaningful access? Or are we starting cold?",
+                      "Competitive position: How many competitors? Is there an incumbent? What's our realistic Pwin?",
+                      "Past performance: Do we have relevant, recent past performance to reference?",
+                      "Resource availability: Can we staff this contract if we win? Do we have the clearances?",
+                      "Financial threshold: Is the expected TCV (Total Contract Value) worth the B&P investment?"
+                    ]
+                  },
+                  {
+                    heading: "Key Outputs",
+                    type: 'grid',
+                    grid: [
+                      { label: 'Deliverable', value: 'Go/No-Go Decision + Capture Assignment' },
+                      { label: 'B&P Approved', value: 'Yes (Go) or No (No-Go/Monitor)' },
+                      { label: 'Pwin Range', value: '20-30% (qualified but pre-strategy)' },
+                      { label: 'Timeline', value: 'Ideally 18-36 months before RFP' }
+                    ]
+                  }
+                ]
+              },
+              {
+                label: "Phase 3: Capture",
+                badge: "30–50% Pwin",
+                badgeColor: 'amber',
+                sublabel: "Customer engagement, win strategy, Black Hat, teaming",
+                summary: "This is where the real work happens. The Capture Manager drives customer intelligence, competitive analysis, and win strategy — shaping the opportunity before the RFP drops.",
+                content: [
+                  {
+                    heading: "What Is It?",
+                    type: 'text',
+                    body: "Capture is the sustained, resource-intensive effort to position your company to win a specific opportunity. It spans from the Go decision through RFP release. The goal: make the RFP read like your proposal. Every action in capture — customer meetings, white papers, demos, teaming agreements — is designed to improve competitive position before the competition formally starts."
+                  },
+                  {
+                    heading: "Key Capture Activities",
+                    type: 'bullets',
+                    items: [
+                      "Customer call plan: Scheduled visits with program office, COR, end users, contracting — understanding their real priorities (not just what's in the draft PWS)",
+                      "Competitive intelligence: Who will bid? What are their past performance strengths? What price will they target?",
+                      "Black Hat review: Your team role-plays as the primary competitor — developing their proposal strategy to expose your vulnerabilities",
+                      "Win strategy development: Define 3-5 win themes tied to customer hot buttons and competitor weaknesses",
+                      "Solution development: Technical approach concepts, staffing strategy, draft management approach",
+                      "Teaming decisions: Identify sub partners who add capability, vehicle access, or diversity credits",
+                      "Price-to-Win (PTW) analysis: What price will win? Build a competitor cost model",
+                      "Shaping activities: White papers, RFI responses, demo opportunities, industry day Q&A submissions"
+                    ]
+                  },
+                  {
+                    heading: "Who Performs It?",
+                    type: 'bullets',
+                    items: [
+                      "Capture Manager — overall strategy lead and customer engagement coordinator",
+                      "Technical SMEs — solution development, demo execution, white paper authoring",
+                      "Pricing Analysts — PTW model, rough order of magnitude (ROM) cost build",
+                      "Contracts/Legal — teaming agreement negotiation, OCI analysis",
+                      "BD Manager — executive-level relationship maintenance and intelligence",
+                      "Proposal Manager (if assigned early) — begins compliance planning"
+                    ]
+                  },
+                  {
+                    heading: "Key Outputs",
+                    type: 'grid',
+                    grid: [
+                      { label: 'Deliverable', value: 'Capture Plan (living document)' },
+                      { label: 'Also Produces', value: 'Black Hat results, PTW model, teaming agreements, win themes' },
+                      { label: 'Pwin Range', value: '30-50% (strategy defined)' },
+                      { label: 'B&P Burn Rate', value: 'Moderate-High — team hours accumulating' }
+                    ]
+                  }
+                ]
+              },
+              {
+                label: "Phase 4: Proposal Development",
+                badge: "50–70% Pwin",
+                badgeColor: 'green',
+                sublabel: "Writing, Pink/Red/Gold color team reviews, pricing, compliance",
+                summary: "The proposal phase converts the capture strategy into a compliant, compelling document. Color reviews (Pink, Red, Gold) are structured quality gates — each with a specific focus and audience.",
+                content: [
+                  {
+                    heading: "What Is It?",
+                    type: 'text',
+                    body: "Proposal development is the structured process of producing a compliant, persuasive response to the government's RFP. It's a high-intensity, deadline-driven effort involving technical writers, subject matter experts, pricing analysts, graphics artists, and senior reviewers. The best proposals tell a clear story: \"Here is your problem. Here is our solution. Here is why we're the best team to execute it.\""
+                  },
+                  {
+                    heading: "The Color Team Review Cycle",
+                    type: 'bullets',
+                    items: [
+                      "Pink Team (30-40% draft): Reviews outline and early narrative for compliance and strategy alignment. Catches structural problems before writing is complete. Reviewers: capture lead, proposal manager, one SME per volume.",
+                      "Red Team (75-90% draft): The most rigorous review. Evaluates the near-final proposal from the government evaluator's perspective — compliance, clarity, win themes, discriminators, ghost strategies. Reviewers: Senior staff not involved in writing (fresh eyes). Output: Red Team report with actionable findings.",
+                      "Gold Team (95-100%): Final senior leadership review. Not a line-edit — focuses on executive summary, win themes, overall narrative strength, and price strategy. Decision-makers verify the proposal represents the company's best value. Reviewers: VP/Director level, BD lead, capture manager.",
+                      "Pink-2 / White Glove (optional): Final production review for formatting, pagination, graphics quality, and printing/upload compliance."
+                    ]
+                  },
+                  {
+                    heading: "What Happens at a Red Team?",
+                    type: 'bullets',
+                    items: [
+                      "Reviewers receive the near-complete draft plus the RFP (Sections L & M) and evaluation criteria",
+                      "Each reviewer scores the proposal against Section M criteria independently, then compares findings",
+                      "The Red Team Lead facilitates a debrief session documenting strengths, weaknesses, and risks",
+                      "Output: A prioritized list of findings ranked by impact — not just 'make this better' but 'this will cost you the award'",
+                      "Proposal Manager translates findings into specific revision taskers with owners and due dates"
+                    ]
+                  },
+                  {
+                    heading: "Key Outputs",
+                    type: 'grid',
+                    grid: [
+                      { label: 'Deliverable', value: 'Final compliant proposal (all volumes)' },
+                      { label: 'Review Gates', value: 'Pink → Red → Gold → Production' },
+                      { label: 'Pwin Range', value: '50-70% (post-RFP, post-pricing)' },
+                      { label: 'B&P Burn Rate', value: 'Maximum — full team sprint' }
+                    ]
+                  }
+                ]
+              },
+              {
+                label: "Phase 5: Negotiation & Award",
+                badge: "Award or Loss",
+                badgeColor: 'purple',
+                sublabel: "BAFO, discussions, final proposal revision, award",
+                summary: "After evaluation, the government may open discussions. Best and Final Offer (BAFO) is your last chance to sharpen your position before award. Win or lose, the debrief is critical intelligence for the next pursuit.",
+                content: [
+                  {
+                    heading: "What Is It?",
+                    type: 'text',
+                    body: "After initial evaluation, the government may determine a competitive range and open discussions. Discussions are the government's opportunity to clarify deficiencies and significant weaknesses — and your opportunity to recover from proposal errors or sharpen your price. BAFO (Best and Final Offer, also called Final Proposal Revision in FAR terminology) is your final submission."
+                  },
+                  {
+                    heading: "The Discussion / BAFO Process",
+                    type: 'bullets',
+                    items: [
+                      "Government issues Evaluation Notices (ENs) identifying deficiencies, significant weaknesses, or clarifications",
+                      "Offerors respond to ENs — correcting errors and strengthening weak areas",
+                      "Price discussions may occur — government may signal price is too high or outside competitive range",
+                      "BAFO request issued: a specific due date for final revisions (technical and price)",
+                      "Proposal team prepares targeted revisions — no wholesale rewrites, only EN-driven changes",
+                      "Final price submission — this is the price you'll live with for the contract period"
+                    ]
+                  },
+                  {
+                    heading: "Post-Award: Whether You Win or Lose",
+                    type: 'bullets',
+                    items: [
+                      "Win: Transition plan execution, contract kickoff, staffing actions — capture team hands off to program team",
+                      "Loss: Request a debrief within 3 days of award notice (FAR 15.506 — government must provide a written debrief)",
+                      "Debrief intelligence: Government will tell you your evaluation scores, strengths, weaknesses, and winner's scores",
+                      "Loss analysis: Was the loss on technical, price, or past performance? This drives the next capture strategy",
+                      "Protest decision: Did the government follow proper procedures? GAO protest deadline is 10 days after debrief"
+                    ]
+                  },
+                  {
+                    heading: "Key Outputs",
+                    type: 'grid',
+                    grid: [
+                      { label: 'Win Path', value: 'Contract award + transition' },
+                      { label: 'Loss Path', value: 'Debrief + lessons learned + next pursuit' },
+                      { label: 'Protest Window', value: '10 days post-debrief (GAO)' },
+                      { label: 'Pwin Realized', value: '100% (win) or 0% (loss)' }
+                    ]
+                  }
+                ]
+              }
             ]
           },
           {
@@ -3515,14 +3775,234 @@ export const modules: Module[] = [
             body: "A true discriminator is something you can do (or have done) that your competitors cannot match. \"20 years of experience\" is not a discriminator — every major defense firm has 20 years of experience. A discriminator sounds like: \"We hold the only cleared facility for this specific testing in the continental U.S.\" or \"Our team developed the predecessor system and holds all historical technical data.\" If your competitor could say the same thing, it's not a discriminator."
           },
           {
-            type: 'table',
-            heading: "Proposal Review Cycle",
-            headers: ['Review', 'When', 'Focus', 'Output'],
-            rows: [
-              ['Pink Team', '30-40% complete', 'Outline, approach, compliance check', 'Annotated outline feedback'],
-              ['Red Team', '80-90% complete', 'Full compliance, win themes, narrative quality', 'Detailed written evaluation vs. Section M'],
-              ['Gold Team', '95-100% complete', 'Senior leadership approval; win theme coherence', 'Final approval to submit'],
-              ['Price Review', 'Concurrent with volumes', 'Price-to-win, cost realism, assumptions', 'Final price decision'],
+            type: 'expandable_list',
+            heading: "Proposal Color Team Reviews",
+            body: "Each review is a structured quality gate. Tap any review to see who runs it, what's evaluated, what inputs are required, and what the output means for your proposal.",
+            expandableItems: [
+              {
+                label: "Pink Team Review",
+                badge: "30–40% Complete",
+                badgeColor: 'purple',
+                sublabel: "First structured review — outline, approach, and early compliance",
+                summary: "The Pink Team catches structural and strategic problems early, while the proposal is still malleable. Better to fix your outline at 30% than rewrite volumes at 85%.",
+                content: [
+                  {
+                    heading: "What Is It?",
+                    type: 'text',
+                    body: "The Pink Team is the first formal review, conducted when the proposal is roughly 30-40% written. Its purpose is not to red-line grammar — it's to validate that the outline, approach, and early narrative are compliant with Section L, aligned with win themes, and responsive to the customer's evaluation criteria (Section M). Structural problems caught at Pink save days of rework at Red."
+                  },
+                  {
+                    heading: "Required Inputs",
+                    type: 'bullets',
+                    items: [
+                      "The RFP (Sections L and M, plus the PWS/SOO/SOW)",
+                      "Proposal outline / annotated outline showing each Section L requirement and where it will be addressed",
+                      "Early draft narrative for at least the Technical and Management volumes",
+                      "Win themes and discriminators brief (from the Capture Plan)",
+                      "Compliance matrix (even if incomplete at this stage)"
+                    ]
+                  },
+                  {
+                    heading: "Who Is Involved?",
+                    type: 'bullets',
+                    items: [
+                      "Pink Team Lead — usually the Capture Manager or a senior proposal manager",
+                      "Volume Leads — one reviewer per major volume (Technical, Management, Past Performance)",
+                      "Capture Manager — validates strategy alignment",
+                      "NOT the writers — reviewers should be different from authors to provide objective eyes"
+                    ]
+                  },
+                  {
+                    heading: "What Gets Evaluated?",
+                    type: 'bullets',
+                    items: [
+                      "Compliance: Does the outline address every 'shall' and 'will' in Section L?",
+                      "Win theme placement: Are win themes visible in the section headers and opening paragraphs?",
+                      "Section M alignment: Does each major section address the evaluation criteria it will be scored against?",
+                      "Flow and logic: Does the narrative tell a coherent story, or is it a data dump?",
+                      "Ghost strategy: Are competitor weaknesses subtly addressed without naming competitors?"
+                    ]
+                  },
+                  {
+                    heading: "Outputs",
+                    type: 'grid',
+                    grid: [
+                      { label: 'Primary Output', value: 'Annotated outline with compliance gaps and strategy recommendations' },
+                      { label: 'Decision', value: 'Proceed to writing / Restructure required' },
+                      { label: 'Timeline', value: '1-2 days review + 1 day debrief and tasker assignment' },
+                      { label: 'Action Items', value: 'Specific outline changes, missing requirements, strategy adjustments' }
+                    ]
+                  }
+                ]
+              },
+              {
+                label: "Red Team Review",
+                badge: "80–90% Complete",
+                badgeColor: 'red',
+                sublabel: "Most rigorous review — scored against Section M criteria",
+                summary: "The Red Team is the single most important quality gate. Reviewers evaluate the near-final proposal exactly as government evaluators will, identifying everything that could cost you the award.",
+                content: [
+                  {
+                    heading: "What Is It?",
+                    type: 'text',
+                    body: "The Red Team is the most rigorous and consequential review in the proposal process. Reviewers approach the document exactly as a government Source Selection Evaluation Board (SSEB) would — scoring sections against the actual evaluation criteria in Section M, identifying compliance deficiencies, weaknesses, and risks. A great Red Team will tell you which specific items will cost you the award, not just what could be improved."
+                  },
+                  {
+                    heading: "Required Inputs",
+                    type: 'bullets',
+                    items: [
+                      "Near-complete proposal draft (80-90% written — all sections represented)",
+                      "RFP Sections L and M (mandatory — reviewers score against these)",
+                      "Compliance matrix (fully completed)",
+                      "Win themes and discriminators brief",
+                      "Competitive intelligence summary (what are competitors likely to offer?)",
+                      "Red Team evaluation scoresheet (pre-built to mirror Section M criteria)"
+                    ]
+                  },
+                  {
+                    heading: "Who Is Involved?",
+                    type: 'bullets',
+                    items: [
+                      "Red Team Lead — senior reviewer who facilitates and consolidates findings (must NOT have been involved in writing)",
+                      "Subject Matter Experts — one per major technical domain; must be independent of the writing team",
+                      "Contracts/Compliance reviewer — ensures every Section L requirement is addressed",
+                      "Senior executive (optional) — provides strategic perspective on win themes and discriminators",
+                      "Pricing reviewer — reviews if price strategy aligns with technical approach",
+                      "KEY RULE: No writer reviews their own section. Fresh eyes are mandatory."
+                    ]
+                  },
+                  {
+                    heading: "What Gets Evaluated?",
+                    type: 'bullets',
+                    items: [
+                      "Compliance: Every Section L requirement mapped and addressed? Any unresolved compliance issues?",
+                      "Technical merit: Is the approach sound, detailed enough, and differentiated from a generic response?",
+                      "Win themes: Are the 3-5 win themes visible, compelling, and customer-validated throughout the document?",
+                      "Ghost strategy: Does the proposal subtly contrast your strengths against competitor weaknesses without naming them?",
+                      "Past Performance: Are the examples relevant (same scope, size, contract type)? Are they well-documented with outcomes?",
+                      "Management approach: Does the proposed organizational structure and staffing plan inspire confidence?",
+                      "Risk: Does the proposal acknowledge realistic program risks and provide credible mitigations?"
+                    ]
+                  },
+                  {
+                    heading: "Outputs",
+                    type: 'grid',
+                    grid: [
+                      { label: 'Primary Output', value: 'Written Red Team Report with prioritized findings' },
+                      { label: 'Score Sheet', value: 'Section-by-section scores vs. Section M criteria' },
+                      { label: 'Critical Findings', value: 'Items that will cost the award if not fixed' },
+                      { label: 'Action Items', value: 'Specific revision taskers with owner and due date' }
+                    ]
+                  }
+                ]
+              },
+              {
+                label: "Gold Team Review",
+                badge: "95–100% Complete",
+                badgeColor: 'amber',
+                sublabel: "Senior leadership approval — strategy, win themes, price authorization",
+                summary: "Gold Team is not a line-edit. It's the final strategic review by decision-makers who verify the proposal tells a compelling story and that the price strategy is sound before submission.",
+                content: [
+                  {
+                    heading: "What Is It?",
+                    type: 'text',
+                    body: "The Gold Team is the final senior leadership review of an essentially complete proposal. Unlike Pink (structure) and Red (compliance/quality), Gold focuses on the big picture: Are our win themes coherent throughout the document? Does the executive summary capture our best arguments? Is our price strategy competitive and defensible? Gold Team is the go/no-go for submission."
+                  },
+                  {
+                    heading: "Required Inputs",
+                    type: 'bullets',
+                    items: [
+                      "Near-final complete proposal (all volumes — 95%+ complete)",
+                      "Red Team report and disposition (how were Red Team findings addressed?)",
+                      "Executive summary draft",
+                      "Pricing summary / price strategy memo",
+                      "Price-to-win analysis and competitive price range",
+                      "Final compliance matrix"
+                    ]
+                  },
+                  {
+                    heading: "Who Is Involved?",
+                    type: 'bullets',
+                    items: [
+                      "Division VP or Business Unit President — ultimate decision authority for submission",
+                      "BD Director or VP — validates customer relationship and strategic alignment",
+                      "Capture Manager — briefs win strategy and key discriminators",
+                      "Proposal Manager — presents proposal summary and compliance status",
+                      "CFO / Finance — approves pricing and profit margins",
+                      "Contracts VP — confirms pricing and terms are acceptable"
+                    ]
+                  },
+                  {
+                    heading: "What Gets Evaluated?",
+                    type: 'bullets',
+                    items: [
+                      "Executive summary: Does it capture our three most compelling win themes clearly and compellingly?",
+                      "Overall narrative: Does the proposal tell a coherent story, or does it read like sections written by different teams?",
+                      "Price: Is our proposed price competitive? Does it reflect our PTW analysis? Are we leaving money on the table or pricing ourselves out?",
+                      "Risk decisions: Are there any compliance gaps or risky technical commitments that require executive visibility?",
+                      "Discriminators: Do our true differentiators shine through, or are they buried?"
+                    ]
+                  },
+                  {
+                    heading: "Outputs",
+                    type: 'grid',
+                    grid: [
+                      { label: 'Primary Output', value: 'Submission authorization + final price approval' },
+                      { label: 'Final Changes', value: 'Only executive-level strategic adjustments (not line editing)' },
+                      { label: 'Timeline', value: '5-7 days before RFP due date' },
+                      { label: 'After Gold', value: 'Production: formatting, pagination, final graphics, upload' }
+                    ]
+                  }
+                ]
+              },
+              {
+                label: "Price Review",
+                badge: "Concurrent",
+                badgeColor: 'blue',
+                sublabel: "Cost/price volume — runs in parallel with technical volumes",
+                summary: "Pricing is reviewed on a separate track from technical content. The Price Review validates that the proposed price is competitive (PTW), realistic (cost realism), and internally consistent with the technical approach.",
+                content: [
+                  {
+                    heading: "What Is It?",
+                    type: 'text',
+                    body: "The Price Review is a dedicated review of the cost/price volume and pricing strategy, run by the pricing and finance team in parallel with technical volume development. It's not a single event — it's an ongoing discipline. The Price Review culminates at Gold Team with final price authorization."
+                  },
+                  {
+                    heading: "What Gets Reviewed?",
+                    type: 'bullets',
+                    items: [
+                      "Price-to-Win alignment: Is our proposed price consistent with our PTW analysis and competitive price range?",
+                      "Cost realism: Can the government challenge our costs as unrealistically low? (A risk on cost-type contracts — the government may evaluate your ability to actually perform at your proposed cost)",
+                      "Internal consistency: Does the price volume reflect the staffing, materials, and approach described in the technical volume?",
+                      "Labor category rates: Are LCAT rates in line with market data and DCAA-approved forward pricing rates?",
+                      "Wrap rates: Are indirect cost rates (fringe, overhead, G&A) current and supported by FPRA or provisional rates?",
+                      "Assumptions: Are pricing assumptions documented and defensible? Will they hold up in negotiations?",
+                      "Fee/profit: Is the proposed fee appropriate for the contract type and risk level? Is it competitive?"
+                    ]
+                  },
+                  {
+                    heading: "Who Is Involved?",
+                    type: 'bullets',
+                    items: [
+                      "Pricing Manager / Cost Volume Lead — owns the cost build and narrative",
+                      "PTW Analyst — validates price against competitive intelligence",
+                      "Finance / Controller — verifies rates are current and approved",
+                      "Contracts — ensures price narrative meets Section L requirements and is ready for negotiations",
+                      "CFO / BD VP — final price approval authority at Gold Team"
+                    ]
+                  },
+                  {
+                    heading: "Outputs",
+                    type: 'grid',
+                    grid: [
+                      { label: 'Primary Output', value: 'Approved cost/price volume + pricing strategy memo' },
+                      { label: 'Decision', value: 'Final price position approved by CFO/VP' },
+                      { label: 'Risk Item', value: 'Price too high → loses on cost; too low → margin destruction or future claim' },
+                      { label: 'Post-Award', value: 'Pricing assumptions become the basis for contract negotiations' }
+                    ]
+                  }
+                ]
+              }
             ]
           },
           {

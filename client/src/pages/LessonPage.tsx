@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { modules, type Lesson, type Module, type QuizQuestion, type SkillLevel } from "@/lib/curriculum";
+import { modules, type Lesson, type Module, type QuizQuestion, type SkillLevel, type ExpandableItem } from "@/lib/curriculum";
 import type { UserProgress } from "@/lib/progress";
 import {
   ArrowLeft, ChevronRight, CheckCircle, BookOpen, AlertTriangle,
@@ -22,6 +22,106 @@ const LEVEL_COLORS: Record<SkillLevel, string> = {
   intermediate: 'bg-amber-500/10 text-amber-400 border-amber-400/30',
   advanced: 'bg-emerald-500/10 text-emerald-400 border-emerald-400/30',
 };
+
+// ─── Expandable List Item Component ─────────────────────────────────────────
+const BADGE_COLORS: Record<string, string> = {
+  blue:   'bg-blue-500/10 text-blue-400 border border-blue-400/30',
+  amber:  'bg-amber-500/10 text-amber-400 border border-amber-400/30',
+  green:  'bg-emerald-500/10 text-emerald-400 border border-emerald-400/30',
+  red:    'bg-red-500/10 text-red-400 border border-red-400/30',
+  purple: 'bg-purple-500/10 text-purple-400 border border-purple-400/30',
+  gray:   'bg-muted/50 text-muted-foreground border border-border',
+};
+
+function ExpandableListItemCard({ item }: { item: ExpandableItem }) {
+  const [open, setOpen] = useState(false);
+  const badgeClass = BADGE_COLORS[item.badgeColor ?? 'gray'];
+  return (
+    <div className={cn(
+      "border rounded-xl overflow-hidden transition-all duration-200",
+      open ? "border-primary/40 bg-primary/5" : "border-border bg-card"
+    )}>
+      {/* Header row — always visible */}
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-start gap-3 px-5 py-4 text-left group"
+      >
+        <div className={cn(
+          "flex-shrink-0 mt-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors",
+          open ? "border-primary bg-primary/20" : "border-border group-hover:border-primary/50"
+        )}>
+          {open
+            ? <ChevronUp className="w-3 h-3 text-primary" />
+            : <ChevronDown className="w-3 h-3 text-muted-foreground group-hover:text-primary" />}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-semibold text-sm text-foreground">{item.label}</span>
+            {item.badge && (
+              <span className={cn("text-[11px] font-medium px-2 py-0.5 rounded-full", badgeClass)}>
+                {item.badge}
+              </span>
+            )}
+          </div>
+          {item.sublabel && (
+            <p className="text-xs text-muted-foreground mt-0.5">{item.sublabel}</p>
+          )}
+          {item.summary && !open && (
+            <p className="text-xs text-muted-foreground mt-1 leading-relaxed line-clamp-2">{item.summary}</p>
+          )}
+        </div>
+      </button>
+      {/* Expanded content */}
+      {open && (
+        <div className="px-5 pb-5 space-y-4 border-t border-border/60 pt-4">
+          {item.content.map((section, si) => (
+            <div key={si}>
+              {section.heading && (
+                <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+                  <span className="w-1 h-3.5 rounded-full bg-primary inline-block"></span>
+                  {section.heading}
+                </h4>
+              )}
+              {section.type === 'bullets' && section.items && (
+                <ul className="space-y-1.5">
+                  {section.items.map((item, ii) => (
+                    <li key={ii} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <ChevronRight className="w-3.5 h-3.5 text-primary flex-shrink-0 mt-0.5" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {section.type === 'grid' && section.grid && (
+                <div className="grid grid-cols-2 gap-2">
+                  {section.grid.map((cell, gi) => (
+                    <div key={gi} className="bg-muted/30 rounded-lg px-3 py-2">
+                      <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-0.5">{cell.label}</div>
+                      <div className="text-xs text-foreground">{cell.value}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {(section.type === 'text' || !section.type) && section.body && (
+                <p className="text-sm text-muted-foreground leading-relaxed">{section.body}</p>
+              )}
+              {(section.type === 'text' || !section.type) && section.items && (
+                <ul className="space-y-1.5 mt-2">
+                  {section.items.map((it, ii) => (
+                    <li key={ii} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <ChevronRight className="w-3.5 h-3.5 text-primary flex-shrink-0 mt-0.5" />
+                      {it}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 interface LessonPageProps {
   lessonId: string;
@@ -659,6 +759,22 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                   {block.explanation && (
                     <p className="text-xs text-muted-foreground leading-relaxed">{block.explanation}</p>
                   )}
+                </div>
+              );
+            }
+
+            if (block.type === 'expandable_list') {
+              return (
+                <div key={i} className="space-y-2">
+                  {block.heading && (
+                    <div className="px-1 mb-1">
+                      <h3 className="font-semibold text-sm text-foreground">{block.heading}</h3>
+                      {block.body && <p className="text-xs text-muted-foreground mt-0.5">{block.body}</p>}
+                    </div>
+                  )}
+                  {block.expandableItems?.map((item, ei) => (
+                    <ExpandableListItemCard key={ei} item={item} />
+                  ))}
                 </div>
               );
             }
