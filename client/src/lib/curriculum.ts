@@ -339,9 +339,21 @@ export const modules: Module[] = [
             type: 'tip',
             heading: "Breaking In",
             body: "Many successful acquisition professionals transition from the military (especially as O-3/O-4 officers), from technical engineering fields, or from federal service in adjacent roles. DoD's Pathways program and Defense Acquisition University offer entry-level pathways. Target GS-9 or GS-11 program analyst roles to build your foundation."
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Building Cross-Functional Credibility as a PM',
+          body: 'A mid-career PM sits at the intersection of the technical, contracting, and financial communities — but is authoritative over none of them. Your COR has more contract expertise. Your cost analyst understands EVM better. Your systems engineer owns the technical baseline. Your power comes from orchestration, not expertise. The key skill is knowing enough about each domain to ask the right questions, catch inconsistencies, and drive decisions. In practice: read every contract modification before signing, attend DCAA floor check briefings even when not required, and sit with the systems engineer during CDRs. The informal knowledge you build is what makes you credible when you challenge a contractor on cost realism.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'The PM as Program Architect — Shaping the Acquisition Before It Starts',
+          body: 'The most impactful PMs shape their programs before Milestone B — not after. At the senior level, your job is acquisition strategy: contract type selection, source selection criteria weighting, EVMS thresholds, and data rights. These decisions, made 18-24 months before contract award, determine whether your program is executable. A CPIF with a 70/30 share ratio on a software program with unstable requirements will give the contractor every incentive to slow-roll risk mitigation. A FFRDC study that locks in requirements before the market is ready will waste a year. Senior PMs think about incentive structures, competitive dynamics, and industrial base health — not just Gantt charts.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "What law established education, training, and experience standards for the DoD acquisition workforce?",
@@ -489,8 +501,20 @@ export const modules: Module[] = [
             heading: 'Tailoring — Use It, Don\'t Abuse It',
             body: 'Tailoring under DoDI 5000.02 allows PMs to adjust documentation, review, and reporting requirements based on program risk, complexity, and pathway. A small ACAT III program does not need a 200-page Acquisition Strategy or a full EVMS — tailoring allows appropriate scaling. However, tailoring is a two-way street: the MDA can also impose additional requirements if the program needs more oversight. The best tailoring approach is to clearly justify every decision to omit or reduce a requirement — not simply to skip paperwork but to demonstrate the program has equivalent risk management in place.',
           },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Managing Oversight Bodies as a Mid-Career PM',
+          body: 'ACAT level determines not just who approves your milestones, but who scrutinizes your program continuously. An ACAT I program will have OSD Cost Assessment and Program Evaluation (CAPE) producing independent cost estimates, DOT&E reviewing your test plans, and OUSD(R&E) evaluating technology maturity. Understanding what each oversight body cares about — and feeding them the data they need proactively — is a mid-career PM survival skill. CAPE cares about cost realism. DOT&E cares about whether testing is operationally realistic. OUSD(R&E) cares about TRL. Brief them early, brief them often, and never surprise them in a milestone review. Surprises at DAB reviews kill programs.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Tailoring Acquisition — What Senior PMs Actually Do at Milestone B',
+          body: 'The DoDI 5000 framework provides the default acquisition structure, but senior PMs know that almost everything can be tailored. At Milestone B, the MDA approves your Acquisition Program Baseline (APB), your contract strategy, and your tailoring decisions. Smart tailoring means: selecting the minimum oversight that still provides adequate risk visibility, adjusting milestone criteria to match your specific technology maturity, and requesting waivers for documentation requirements that add process burden without insight. The danger is tailoring away safeguards that exist for good reasons. ACAT I programs that waive IBR requirements or skip SEPs have consistently worse cost outcomes. Know which gates exist to protect the program — and which ones are just bureaucratic inertia.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: 'An ACAT I program (MDAP) requires which of the following that ACAT III programs do not?',
@@ -672,8 +696,20 @@ export const modules: Module[] = [
             heading: 'Practical OTA Uses for Today\'s PM',
             body: 'Modern defense PMs use OTAs for: AI/ML capability demonstrations with Silicon Valley firms; cybersecurity prototype testing with startups; rapid software prototyping with nontraditional vendors; cloud platform demonstrations. The key is ensuring your OTA is genuinely a prototype — a learning/demonstration activity — not production by another name. Work closely with your legal and contracting teams. The most common OTA mistake is treating it as a shortcut to sole-source production rather than a genuine innovation tool.',
           },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'OTA Strategy for Mid-Career PMs: When and How to Use Them',
+          body: 'Other Transaction Agreements under 10 U.S.C. § 4022 offer significant flexibility: no FAR applicability, no Cost Accounting Standards, and the ability to engage non-traditional defense contractors who won\'t bid on traditional contracts. For mid-career PMs, the critical skill is knowing when OTA fits — and when it doesn\'t. OTAs excel for prototype and rapid fielding work with commercial or non-traditional performers. They fail for programs requiring long-term cost accountability, competitive follow-on production (unless structured carefully), or sustained government oversight of contractor financials. An OTA that transitions to a sole-source production contract without competition will face legal scrutiny. Structure the prototype OTA from day one to enable competitive production awards.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'The Legal Boundaries of Streamlined Acquisition — Where Senior PMs Get Burned',
+          body: 'FAR Part 12 commercial item authority and OTAs are powerful tools, but senior PMs know the legal tripwires. Commercial item determinations require a market analysis demonstrating the item is sold to the general public in substantial quantities. Labeling something "commercial" without adequate justification creates GAO protest risk and audit exposure. For OTAs: the "significant non-traditional contractor involvement" requirement is frequently gamed but increasingly scrutinized — if your "non-traditional" partner is a JV with a traditional prime as the majority partner, a DoD IG audit will flag it. The OTA authority explicitly prohibits using them to circumvent the Clinger-Cohen Act or the Competition in Contracting Act for production. Know the statutory text, not just the guidance.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: 'What makes OTA (Other Transaction Authority) attractive to non-traditional defense contractors like tech startups?',
@@ -916,9 +952,21 @@ export const modules: Module[] = [
             type: 'warning',
             heading: "Anti-Deficiency Act",
             body: "Never obligate funds in excess of what is appropriated or in advance of appropriation. Violations of the Anti-Deficiency Act (31 U.S.C. §§ 1341, 1342) are federal crimes and career-ending events. Every PM must understand these constraints cold."
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'POM Execution: Managing Your Program Through the Budget Cycle',
+          body: 'Mid-career PMs live in two worlds simultaneously: executing the current year\'s approved budget and defending next year\'s POM submission. Your POM submission must be defensible with cost data, supported by your program\'s APB, and internally consistent with your contract structure. The most common POM mistake: projecting out-year costs that don\'t match your contract\'s performance schedule, or requesting procurement funding before RDT&E work is complete. Budget analysts at the Component and OSD level will catch these inconsistencies. Build your POM from the contract up — not from the budget down. Cross-walk your WBS to your budget line items. When the two don\'t align, you get reprogramming problems in execution.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Congressional Marks and Unfunded Priorities: The Hidden Budget Game',
+          body: 'The President\'s Budget Request is a starting position, not an ending position. Congress marks up every defense bill — adding earmarks, cutting programs, fencing funds pending reports. Senior PMs must track their program\'s budget through the NDAA markup process: House HASC mark, Senate SASC mark, conference report. Fenced funding (congressionally restricted) requires notifications or reports before obligation — failing to track these leads to Anti-Deficiency Act violations. Unfunded Priorities Lists (UPLs) are the Service Chiefs\' mechanism for asking Congress to add money above the budget request. If your program is on a UPL, it creates both opportunity (more money) and risk (congressional attention). Know where your program sits in the congressional priority stack — your program\'s survival may depend on it.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "What is the Future Years Defense Program (FYDP)?",
@@ -1071,9 +1119,21 @@ export const modules: Module[] = [
             type: 'tip',
             heading: "IPMR Reporting",
             body: "The Integrated Program Management Report (IPMR) replaced the CPR and CFSR. The IPMR has seven formats: Format 1 (WBS-based cost/schedule), Format 2 (Organizational), Format 3 (Baseline), Format 4 (Staffing), Format 5 (Problem Analysis), Format 6 (Milestone/IMS), and Format 7 (Explanations). Learn all seven — you'll review these monthly on every major program."
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Using EVM Data to Drive Contractor Behavior',
+          body: 'EVM data is only valuable if the government PM uses it to hold contractors accountable. Mid-career PMs should establish a monthly rhythm: review IPMR data within 5 days of receipt, convene a PMR within 10 days, and issue formal corrective action requests for threshold breaches within 15 days. The most powerful question you can ask a contractor at a PMR: "Your Format 5 says you\'ll recover 15 schedule days by end of quarter — what specific tasks will be completed early and by whom?" Vague recovery plans are not plans. Require specificity: named individuals, milestone dates, budget planned for the recovery effort. Document these commitments in meeting minutes so the contractor can\'t walk them back.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'EVM Compliance Surveillance and EVMS Acceptance — What Senior PMs Must Know',
+          body: 'DoDI 5000.02 requires EVMS on cost-type contracts over $20M and fixed-price over $50M. But having EVMS is not enough — the system must be compliant with ANSI/EIA-748. DCMA conducts EVMS surveillance and can issue non-compliance findings. A Level III finding (systemic noncompliance) can result in a compliance improvement plan, increased surveillance, and in extreme cases, withholding of fee. Senior PMs must understand their contractor\'s EVMS compliance status before accepting performance data. An EVMS system that rubber-baselines (retroactively adjusts PMB to reduce variances) produces data that is technically compliant but strategically meaningless. When CPI is suspiciously stable at 1.00 month after month on a complex development contract, question the system — not just the data.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "A program has: PV = $10M, EV = $8M, AC = $9M. What is the Cost Performance Index (CPI)?",
@@ -1243,9 +1303,21 @@ export const modules: Module[] = [
               '4. Is the contractor proposing the same LCATs they actually staff? Request key personnel resumes and verify job codes match proposed LCATs.',
               '5. What is the annual escalation rate applied to labor in out-years? Defense labor typically escalates 3-4% annually — proposals using 0% escalation are understating future costs.',
             ]
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Defending Your Cost Estimate in a CAPE Review',
+          body: 'The OSD Cost Assessment and Program Evaluation (CAPE) office produces Independent Cost Estimates (ICEs) for major programs at each milestone. When CAPE\'s ICE is significantly higher than your Program Office Estimate (POE), the MDA must choose which to use for the APB — and MDA almost always uses the higher one. Mid-career PMs need to understand how CAPE builds its ICEs: parametric models (SEER, PRICE, COCOMO for software) calibrated to historical analogues. To reduce the gap, you must document your differences with CAPE: what makes your program different from the analogues, what risk mitigations justify lower estimates, and what ground rules and assumptions diverge. The goal isn\'t to beat CAPE — it\'s to narrow the gap through credible technical justification.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Should-Cost vs. Will-Cost: The Senior PM\'s Most Powerful Tool',
+          body: 'Should-Cost analysis is a government-led deep dive into contractor cost structure to identify efficiencies — not just to project what costs will be, but to drive them down. DoDI 5000.02 requires Should-Cost management on major programs. In practice, should-cost teams examine contractor labor mix (are they using senior engineers where journeymen would do?), overhead allocation (is G&A allocation methodology favorable to the program?), and make-buy decisions. The results feed should-cost targets — negotiating positions for the next contract award. Senior PMs who run aggressive should-cost programs routinely achieve 10-15% cost reductions. The political challenge: your contractor will resist deeply, and your own program office staff (who work with the contractor daily) will resist disrupting the relationship. Push anyway.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "Which cost estimating method is most accurate but requires the most mature program design?",
@@ -1444,9 +1516,21 @@ export const modules: Module[] = [
             type: 'tip',
             heading: "Real Example: Buying a Radar System",
             body: "A new radar program follows this funding progression: Basic research uses RDT&E (3600 for AF). Engineering development and testing uses RDT&E. First production units use Procurement (3080 for AF). Fielded radar maintenance and upgrades use O&M (3400 for AF). Training operators uses O&M. Building a radar maintenance facility uses MILCON. The same physical system touches four different appropriation accounts over its life."
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Managing Color of Money Across a Complex Program',
+          body: 'Real programs use multiple appropriation types simultaneously. A typical ACAT II program in EMD might have RDT&E funding the development contract, O&M funding government lab support, and MILCON funding a test facility. Each appropriation has different obligation and expenditure rules. The most common mid-career mistake: using RDT&E to fund activities that have crossed into production (violates the appropriation\'s purpose), or letting O&M funds expire while trying to transfer them to RDT&E (not permitted). Your comptroller is your best friend — but you need to give them enough lead time to structure funding actions properly. Last-minute funding transfers almost always fail or create audit exposure.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Anti-Deficiency Act Violations and How They Happen to Good PMs',
+          body: 'The Anti-Deficiency Act (31 U.S.C. § 1341) prohibits obligating funds in excess of or in advance of appropriations. Violations are career-ending. They happen most often through: (1) continuing contract performance after a CR expires and before new appropriations are enacted without a proper Continuing Resolution Authority authorization; (2) using one appropriation to fund activities that belong to another ("purpose" violations); (3) obligating contracts before funds are available in USASpending. Senior PMs must build a personal funding calendar: when does each appropriation expire? When does the CR end? What is the period of availability for each line item? These are not comptroller problems — they are PM problems. The PM signs the obligation documents.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "What is the Air Force Treasury Account Symbol (TAS) for Operations & Maintenance funds?",
@@ -1596,8 +1680,20 @@ export const modules: Module[] = [
             heading: 'EAC vs. EAC at Completion vs. Contract EAC',
             body: 'Know the difference: (1) Contractor EAC — what the contractor reports in the IPMR Format 1. (2) Government EAC — what the PM\'s office independently calculates using the same data. These often differ. (3) AFCAA/Service Cost Center EAC — independent agency estimate. When all three diverge significantly, leadership loses confidence in the program. The PM must reconcile differences and explain them clearly.',
           },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'EAC Reconciliation: When Government and Contractor Disagree',
+          body: 'Every IPMR submission includes the contractor\'s EAC. The government PM should independently calculate a statistical EAC (BAC ÷ CPI, or BAC ÷ (0.2×SPI + 0.8×CPI)) and compare it to the contractor\'s number. A contractor EAC significantly below the statistical EAC is a red flag — the contractor may be sandbagging risk or building an optimistic recovery plan. When the gap exceeds 5-10%, require a written EAC reconciliation: line-by-line explanation of why the contractor\'s estimate differs from the statistical prediction, including what specific actions justify the optimism. Undocumented optimism in an EAC is a program risk, not a performance metric.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Over Target Baseline (OTB) and Over Target Schedule (OTS): The Nuclear Option',
+          body: 'When a program\'s EVM data has lost informational value because the baseline is so unrealistic that CPI and SV are meaningless, the government can authorize an Over Target Baseline (OTB) reprogramming. This resets the PMB — but does NOT change the contract price or schedule. It is a measurement reset, not a bailout. OTB requires MDA/SSA approval, a new Integrated Baseline Review, and a formal reprogramming plan. An OTS (Over Target Schedule) similarly resets time-phasing without changing the contract completion date. Senior PMs use OTB reluctantly — it signals that earlier oversight failed, creates congressional scrutiny, and is frequently reported in DAES and SARs. But refusing to authorize OTB when the baseline is clearly broken means making decisions based on meaningless data. Know when to pull the trigger.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: 'A program is 35% complete with CPI = 0.82 and BAC = $150M. Using the most statistically accurate EAC formula, what is the projected final cost?',
@@ -1791,8 +1887,20 @@ export const modules: Module[] = [
             heading: 'Unallowable Costs — The FAR Part 31 Trap',
             body: 'FAR Part 31 defines which costs are allowable on government contracts. Certain costs are expressly unallowable — meaning the contractor CANNOT bill them to government contracts, even if they are legitimately incurred. Key unallowable costs: entertainment and gifts, lobbying and political contributions, alcoholic beverages, certain advertising costs, costs of organizing or reorganizing the contractor\'s business, excessive executive compensation above the statutory cap (currently ~$600K/year for the 5 highest-paid executives), fines and penalties. If DCAA discovers unallowable costs in an incurred cost audit, the contractor must reimburse the government. PMs should flag unusually high G&A rates, which may indicate unallowable costs improperly bundled into cost pools.',
           },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Auditing Contractor Indirect Rates During Performance',
+          body: 'Mid-career PMs on cost-type contracts must understand that the rates billed on invoices are provisional — final rates are not established until DCAA audits and negotiates final billing rates, typically 2-3 years after the accounting period closes. This creates a reconciliation risk: if final rates are higher than provisional rates, the contractor gets a retroactive billing increase. Track your contractor\'s provisional vs. forward pricing rate agreements (FPRAs). When provisional rates diverge significantly from actuals, push for an FPRA update. PMs who ignore this find themselves in a final rate reconciliation dispute 3 years after contract closeout — when the contractor is trying to bill $2M in additional indirect costs that weren\'t budgeted.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Unallowable Costs, Direct Charging, and the DCAA Audit Trail',
+          body: 'FAR Part 31 defines cost allowability — what contractors can bill to the government. Unallowable costs (entertainment, lobbying, certain IR&D that doesn\'t qualify, executive compensation above the cap) must be segregated and excluded from billings. DCAA\'s job is to verify this segregation. What senior PMs need to know: if DCAA finds unallowable costs billed to your contract, the contractor must repay them with interest — and the PM has an obligation to pursue collection. The more dangerous scenario is "direct charging" problems: a contractor billing costs directly to your contract that should be in indirect pools (inflating the direct cost base artificially). This is fraud when intentional. Look for anomalous direct labor charges — senior executives billed at 100% direct to a single contract, or subcontractor pass-through markups that exceed the prime\'s normal margins.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: 'A contractor\'s Systems Engineer earns $70/hr direct labor. Fringe = 33%, Overhead = 55% of DLR, G&A = 13% of total cost input, Fee = 9%. What is the approximate wrap rate?',
@@ -1982,8 +2090,20 @@ export const modules: Module[] = [
             heading: 'Working With Your ACO — Practical Tips',
             body: 'The most effective PMs build a strong relationship with their DCMA ACO. Best practices: (1) Include the ACO in your monthly program reviews — they are your government ally at the contractor. (2) Read every DCMA report your ACO produces — they often contain early warnings before IPMR data shows problems. (3) Ensure your contract includes appropriate DCMA access clauses (FAR 52.246-2, 52.242-4). (4) Do not go around your ACO to address contractor performance issues — work through them. (5) For CPARS, get the ACO\'s performance input before finalizing your assessment — their daily visibility is invaluable.',
           },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Working the DCAA/DCMA Relationship to Your Advantage',
+          body: 'Mid-career PMs who treat DCAA and DCMA as adversaries are leaving oversight resources on the table. Both agencies work for the government — their findings protect your program, not the contractor. Establish a quarterly touchpoint with your ACO and DCAA auditor: share your program priorities, the highest-risk WBS elements, and any contractor behaviors that concern you. DCAA can target its audit resources to your hot spots if you tell them where to look. Request a floor check audit when your contractor reports a staffing surge that isn\'t reflected in performance. Ask DCMA to review the contractor\'s subcontract management practices when you see a subcontractor performance problem the prime isn\'t addressing. These agencies have authorities you don\'t — use them.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Withholding Payments and Disallowing Costs — When and How',
+          body: 'Senior PMs have mechanisms to financially pressure non-performing contractors that junior PMs rarely use. For cost-type contracts, DCAA can recommend disapproval of incurred cost submissions — triggering a withhold of up to 5% of billed costs pending resolution. For fixed-price contracts with performance milestones, you can withhold milestone payments when deliverables fail to meet contract requirements. The key: document the basis for the withhold in writing, citing specific contract clauses (FAR 52.232-7 for cost; the specific milestone clause for FP). Contractors will push back aggressively and threaten REAs. That\'s acceptable. What\'s not acceptable: using withholds as negotiating leverage for contract modifications (that\'s coercion). Withholds must be based on legitimate contract performance deficiencies, not as a tool to extract concessions.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: 'What is the primary mission of DCAA?',
@@ -2168,9 +2288,21 @@ export const modules: Module[] = [
             type: 'tip',
             heading: "Contract Type in Development Programs",
             body: "Defense development programs often evolve through contract types: CPFF or CPIF during early development (high technical risk), transitioning to FPIF as design matures, then FFP for production. This progression mirrors the risk reduction achieved through the acquisition lifecycle."
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Contract Type Strategy for Mid-Career PMs',
+          body: 'Contract type selection is one of the most consequential decisions a PM makes, and it\'s made during acquisition planning — before the contractor is even selected. Mid-career PMs must think beyond risk allocation (cost-type = government bears risk; fixed-price = contractor bears risk) to incentive design. A CPIF with a 80/20 share ratio incentivizes cost control; a 50/50 ratio gives the contractor less motivation to reduce costs since they keep more savings. For schedule incentives: use CPIF-CPAF combos where the fixed-fee portion covers profit at plan, the incentive fee rewards cost performance, and the award fee rewards schedule and technical performance. Complex programs often have multiple CLINs with different contract types — a development CLIN at CPFF and a production option at FFP. Design the structure so each CLIN type matches the risk profile of that work.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Undefinitized Contract Actions (UCAs): The Most Dangerous Contract Tool',
+          body: 'UCAs (contracts or modifications executed before price is agreed) are authorized by FAR 16.603 and DFARS 217.74, but they are the source of some of the worst cost outcomes in DoD acquisition. DFARS requires definitization within 180 days or 40% of not-to-exceed value obligated — whichever comes first. In practice, programs routinely miss these deadlines, and definitization happens after the contractor has incurred most costs, eliminating negotiating leverage. The contractor who knows you MUST definitize has no incentive to reduce costs during definitization. Senior PMs minimize UCAs, use them only when true urgency justifies starting before price is agreed, and definitize aggressively — before the contractor has spent their way into a position of strength.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "Which contract type places 100% of cost risk on the contractor and is most preferred by the FAR?",
@@ -2327,9 +2459,21 @@ export const modules: Module[] = [
             type: 'tip',
             heading: "Protest Risk Management",
             body: "GAO bid protest rates have risen steadily. Best practices to minimize protest risk: use clear, specific evaluation criteria in Section M; document all evaluation findings with specific proposal citations; ensure debriefs are conducted professionally within 5 days of request; never deviate from stated evaluation factors regardless of CO or PM preference."
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Shaping the Solicitation: What Mid-Career PMs Can Control',
+          body: 'By the time an RFP is released, the source selection outcome is largely determined by the evaluation criteria. Mid-career PMs who engage early in PWS/SOW development and Section M criteria weighting have the most influence. Push for evaluation factors that discriminate on the qualities that matter: management approach (how does the contractor plan to staff and manage the program?), cost realism (does their estimate reflect what the work actually costs?), and relevant past performance (not just any past performance). Weight price lower on high-complexity development work — the cheapest proposal is rarely the best value. The most common mistake: writing evaluation criteria so broad they discriminate on nothing, leading to a selection driven entirely by price.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Protest-Proofing Your Source Selection',
+          body: 'GAO sustains about 15-20% of bid protests it reviews. Most sustained protests result not from wrong decisions, but from inadequate documentation of correct decisions. Senior PMs preparing for a source selection must ensure: (1) the SSDD documents the SSA\'s independent judgment — not just a recitation of SSAC recommendations; (2) every strength and weakness is documented with specific proposal references; (3) the best-value tradeoff explicitly states why higher price is (or is not) worth better technical factors; (4) all offerors in the competitive range received equal treatment during discussions. The most protest-prone decision is the competitive range determination — excluding an offeror requires thorough documentation of why their proposal has no realistic chance of award. Assume every decision will be reviewed by a GAO attorney.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "Which RFP section describes the evaluation factors and their relative importance used to select the contractor?",
@@ -2459,9 +2603,21 @@ export const modules: Module[] = [
             type: 'tip',
             heading: "QASP and Surveillance",
             body: "Every services contract should have a Quality Assurance Surveillance Plan (QASP). The QASP defines how the government will monitor performance, what metrics are tracked, and what constitutes acceptable performance. A well-executed QASP provides the documentation needed to support negative past performance ratings, withhold award fees, or terminate for cause."
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'COR Oversight of High-Risk Performance Areas',
+          body: 'Mid-career PMs must direct their COR\'s oversight efforts to the highest-risk contract areas — not just routine deliverable acceptance. Risk areas that warrant enhanced COR attention: (1) subcontractor performance (prime contractors often absorb subcontractor failures rather than escalating to the government, masking systemic problems); (2) key personnel substitutions (contractors routinely propose senior experts who disappear post-award — CORs must verify key personnel presence); (3) Government-Furnished Equipment (GFE) receipt and accountability; and (4) cybersecurity compliance under DFARS 252.204-7012. A COR who only reviews deliverables is missing 80% of performance risk. Build a COR surveillance plan that maps oversight activities to contract risk, not just to deliverable schedules.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Cure Notices, Show Cause, and Termination for Default: The Escalation Ladder',
+          body: 'Senior PMs have a contract escalation ladder they must understand thoroughly. Cure Notice (FAR 49.607): when a contractor is in danger of default, the CO issues a cure notice giving typically 10 days to cure the condition. Show Cause Notice: when default appears imminent, requires contractor to explain why the contract should not be terminated. Termination for Default (T4D): the nuclear option — the government terminates, the contractor loses all rights to claim for termination costs, and the government can reprocure at the contractor\'s expense. T4D creates its own risks: contractors routinely convert T4D to Termination for Convenience through litigation by arguing the default was government-caused (weather, GFE delays, government-directed changes). Document government actions meticulously throughout performance — the paper trail determines whether T4D survives a challenge.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "Which individual is the ONLY person with authority to change a contract's scope, price, or delivery schedule?",
@@ -2618,9 +2774,21 @@ export const modules: Module[] = [
             type: 'tip',
             heading: "Task Order vs. Contract Modification — Don't Confuse Them",
             body: "A modification to a task order changes the scope, funding, or schedule of that specific task. A modification to the base IDIQ changes the contract-wide terms — labor rates, clauses, ceiling value, ordering period, or adding/removing CLINs. Most day-to-day changes (adding work, extending a PoP, adding funding) are task order mods. Changes to underlying pricing or terms require base contract modifications."
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'IDIQ Management: Ceiling vs. Scope vs. Competition',
+          body: 'Mid-career PMs using IDIQs and GWACs must navigate three overlapping constraints: (1) the IDIQ ceiling — you cannot exceed the maximum order value without a modification, but you can order below the minimum; (2) scope limitations — task orders must be within the IDIQ\'s scope (ordering outside scope violates CICA and creates protest risk); (3) competition requirements — most IDIQs require fair opportunity among all awardees for task orders above $3,500 (DARS 16.505). The most common mid-career mistake: treating an IDIQ as a preferred vehicle even when better-suited vehicles exist, or placing task orders that are technically "within scope" but stretch the scope definition to the breaking point. Contractors monitor IDIQ usage patterns and will protest if they believe scope is being stretched to steer work.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Bridge Contracts and Option Exercise Discipline',
+          body: 'Two of the most common contracting failures senior PMs face: bridge contracts and missed option windows. Bridge contracts (short-term extensions to maintain continuity between contracts) are legal but signal poor acquisition planning, attract GAO scrutiny, and often pay above-market rates because competition is waived. The bridge becomes a habit — some programs have been on "bridge" for 5+ years, paying a sole-source premium indefinitely. Option exercise discipline: options must be exercised before expiration — missed windows forfeit the option and require a new competition. With 12-24 month options, build a calendar trigger 90 days before each option expiration. The J&A required for a bridge after a missed option is a career embarrassment that documents your planning failure for the record.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "Under a Multiple Award IDIQ contract, what is the primary mechanism that actually authorizes a contractor to begin work and obligates government funding?",
@@ -2785,9 +2953,21 @@ export const modules: Module[] = [
             type: 'tip',
             heading: "FEDSIM vs. In-House — The Practical Decision",
             body: "Many DoD program offices consider FEDSIM when their own contracting office is understaffed or lacks experience with a particular acquisition type. FEDSIM brings deep expertise and established processes, but adds coordination overhead and fees. The practical question is: does your contracting office have the bandwidth and skills to run a full competitive acquisition on this vehicle? If not, FEDSIM or AAS-D is a legitimate and efficient alternative — used by major DoD agencies including Army, Air Force, and numerous defense agencies."
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'GSA OASIS+ and FEDSIM: Navigating the Competitive Order Process',
+          body: 'Mid-career PMs using OASIS+ must understand that the task order competition is where outcomes are determined — not at the MAC vehicle level. For orders above $10M, FEDSIM (the GSA competition office) conducts the competition on your behalf. The government PM\'s role: write a well-scoped PWS, establish meaningful evaluation criteria, and review the price analysis. Common pitfalls: (1) PWS written so broadly that every OASIS+ contractor can qualify, leading to a lowest-price competition; (2) past performance evaluation relying on contractor-provided references that are selectively positive; (3) underestimating transition risk when switching from an incumbent. Build transition requirements directly into the PWS — require a 60-day joint transition with the incumbent, with knowledge transfer milestones and penalties for transition failures.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'MAC Vehicle Strategy: When to Use Which and Protest Risk Management',
+          body: 'Senior acquisition professionals understand that MAC vehicle selection is itself a strategic decision. OASIS+ for complex professional services; ALLIANT 3 for IT services; SeaPort NxG for Navy; CIO-SP4 for HHS/civilian. The wrong vehicle creates protest risk: using a vehicle whose scope doesn\'t cover your requirement, or using a sole-source exception under a MAC vehicle when fair opportunity competition was required. The most legally dangerous pattern: steering task orders to preferred contractors by writing evaluation criteria tailored to a specific firm\'s past performance or unique capabilities. Experienced protesters know how to document this, and GAO has sustained numerous protests on exactly these grounds. Run your task order strategy through your legal team before release.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "What does OASIS+ stand for, and what type of services does it primarily cover?",
@@ -2981,8 +3161,20 @@ export const modules: Module[] = [
             heading: 'Accord & Satisfaction — Read Every Bilateral Mod Carefully',
             body: 'When a contractor signs a bilateral modification that includes "accord and satisfaction" language (or "full and final settlement"), they may be waiving their right to any future claim related to that change. Contractors sometimes sign these under time pressure without fully recognizing the financial waiver. As a PM working with the CO, be aware that modification language matters legally. Conversely, if you want to definitively close out all claims associated with a change, including "full and final settlement" language is appropriate — just ensure both parties understand what they are agreeing to.',
           },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Constructive Changes: The Most Expensive Undocumented Government Actions',
+          body: 'A constructive change occurs when government actions — without a formal modification — effectively change the contract\'s scope, schedule, or performance requirements. Examples: a government engineer verbally directing the contractor to add features not in the SOW; a COR demanding deliverables in a format not specified in the contract; unreasonable inspection failures that require rework not called for by contract quality standards. Contractors document every instance and compile them into REAs at contract closeout. Mid-career PMs prevent constructive changes by enforcing a single communication protocol: all direction goes through the CO, all informal guidance is labeled as "information only, not direction," and CORs are trained that they cannot direct scope changes. Track every verbal exchange with contractors at the technical level.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Armed Services Board of Contract Appeals: What Senior PMs Need to Know',
+          body: 'When REAs become claims and claims become disputes, they go to the Armed Services Board of Contract Appeals (ASBCA) or the Court of Federal Claims. Senior PMs are rarely ASBCA participants personally, but their decisions — and their documentation — become the evidence. ASBCA cases routinely turn on: (1) whether government direction was communicated in writing or only verbally; (2) whether the contractor provided timely notice of a changed condition (failure to provide REQ notice waives the right to recover); (3) whether government delay was "excusable" (sovereign acts, weather) or "compensable" (government failure to perform its obligations). Build a file culture from day one: every significant decision in writing, every government-caused delay documented with specific dates and contract references. The ASBCA judge reading your file 5 years from now is your actual audience.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: 'Which type of contract modification requires signatures from BOTH the contracting officer and the contractor?',
@@ -3151,9 +3343,21 @@ export const modules: Module[] = [
             type: 'tip',
             heading: "The Dashboard Design Rule",
             body: "A PM's dashboard should fit on one page and answer three questions at a glance: Are we on cost? Are we on schedule? Are we achieving technical performance? Any metric that doesn't answer one of those three questions is overhead noise — useful in deep dives but not in an executive dashboard."
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Designing a Meaningful KPI Framework for Your Program',
+          body: 'Mid-career PMs often inherit a metrics framework designed by someone else — or no framework at all. Building a good one requires discipline: limit leading indicators to 5-7 (more creates noise), ensure each KPI has a data owner responsible for accuracy, and tie thresholds to contract performance criteria not arbitrary round numbers. The most important distinction: leading indicators (staffing ramp, BCWP/BCWS trend, open action item age) predict future performance; lagging indicators (CPI, SPI, schedule slippage) confirm what already happened. Programs that only track lagging indicators are always reacting, never preventing. Build at least two leading indicators per major risk area. Review them weekly at the PM level, not just monthly at program reviews.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Metrics Manipulation: How Contractors Game KPIs and How to Catch It',
+          body: 'Experienced senior PMs know that any metric a contractor is evaluated on will eventually be gamed. The classic EVM manipulations: retroactive replanning (moving budget into periods where work was already done), schedule logic manipulation (adding constraints to remove negative float), and loading budget into early periods then underspending to generate positive CPI artificially. For technical metrics: systems that report "green" on readiness metrics by narrowing the denominator (counting only tested units, not all units required). The countermeasure: build cross-referencing requirements into your metrics framework. If CPI is 1.05 but cost-per-unit is rising, something is wrong. If schedule shows green but critical path items keep slipping, the schedule logic is suspect. Require contractors to explain anomalies — not just report metrics.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "A Technical Performance Measure (TPM) with a \"threshold\" value represents:",
@@ -3279,9 +3483,21 @@ export const modules: Module[] = [
               ['Technical parameter trend vs. target', 'Line chart with threshold/objective bands'],
               ['Comparing multiple programs', 'Radar/spider chart or normalized bar chart'],
             ]
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Presenting Data to Non-Technical Decision Makers',
+          body: 'Mid-career PMs spend a significant portion of their time briefing flag officers, SES officials, and congressional staff who have limited technical background. The most effective briefings for this audience: one chart per major message, direct headline titles that state the conclusion (not "CPI Trend" but "Cost Performance Is Recovering — CPI Up 0.08 in 90 Days"), and explicit "so what" statements. Avoid EVM jargon in flag-level briefings — translate: "negative SV" becomes "we are behind schedule"; "VAC" becomes "projected overrun at completion." Spend 80% of your preparation on the narrative, 20% on the charts. Decision makers who can\'t understand your data can\'t support your program.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Building a Program Data Architecture — From Contract to Dashboard',
+          body: 'Senior PMs on large programs should architect the data flow from the start: IPMR data → government EVMS analysis tool (SMART, Cobra, wInsight) → program office dashboard → leadership briefing. Each translation introduces error and delay; minimize handoffs. Define your data schema before contract award: what format does the contractor submit IPMR data in? What are your visualization requirements? For software programs, define your agile metrics pipeline: how does sprint velocity, defect backlog, and code coverage data flow from contractor dev tools (Jira, GitLab) to your dashboard? Programs that build data architecture retroactively spend 6-12 months cleaning inconsistent data before they can make it useful. Contract for the data architecture — not just the deliverable.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "An S-Curve for an EVM program plots which three curves?",
@@ -3570,8 +3786,20 @@ export const modules: Module[] = [
             heading: 'The Six Formulas You Must Know Cold',
             body: 'CV = BCWP − ACWP. SV = BCWP − BCWS. CPI = BCWP/ACWP. SPI = BCWP/BCWS. EAC = BAC/CPI (statistical). VAC = BAC − EAC. Everything else in EVM derives from these six.'
           },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Using EVM Indices Together: The 60-40 Rule and Beyond',
+          body: 'Mid-career PMs know that no single EVM index tells the full story. The most robust EAC formula weights CPI and SPI: EAC = BAC ÷ (0.2×SPI + 0.8×CPI). This formula reflects the empirical finding that cost performance has more predictive power than schedule performance for final cost outcomes. But use indices in combination: a program with CPI 0.95 and SPI 0.85 has both a cost problem and a schedule problem — the schedule pressure will likely drive overtime and accelerated work that further degrades CPI. Programs with CPI ≥ 1.00 but SPI < 0.85 are common: they appear cost-efficient but the schedule pressure is a leading indicator of future cost overruns. Don\'t let a healthy CPI lull you into ignoring a deteriorating SPI.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'The Cumulative CPI Stability Finding and What It Means for PMs',
+          body: 'Research by Christle, Bhatt and others (the "Christle Findings") established that once a program has expended 20% of its budget, the cumulative CPI rarely improves by more than 10%. This has profound implications: a program at 20% complete with a cumulative CPI of 0.85 will, with very high probability, complete at a CPI no better than 0.85 — meaning a 15%+ cost overrun is essentially locked in. Senior PMs use this finding to drive two actions: (1) early IBR — challenge cost realism before 20% is spent; (2) early OTB/EAC revision — if CPI is deteriorating before the 20% mark, don\'t wait for it to stabilize. The longer you wait to acknowledge an overrun, the more the sunk cost fallacy traps the program. The cumulative CPI stability finding is the empirical basis for "fix it early or pay double."',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: 'A program has BCWP = $800K, ACWP = $1,000K, BCWS = $900K. What is the CPI?',
@@ -3760,6 +3988,18 @@ export const modules: Module[] = [
             heading: 'IPMR Monthly Review Workflow',
             body: 'Step 1 — Check Format 1 total contract CPI and VAC trend (5 min). Step 2 — Identify top 3 WBS elements by worst CV and SV (10 min). Step 3 — Read Format 5 narratives for all threshold variances (15 min). Step 4 — Check Format 3 for any baseline changes (5 min). Step 5 — Cross-reference Format 4 staffing to confirm headcount supports recovery plans (5 min). Step 6 — Compare Format 6 critical path to milestone plan (10 min). Total: approximately 50 minutes for a thorough review.',
           },
+        {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Cross-Referencing IPMR Formats: The Monthly Analysis Workflow',
+          body: 'Mid-career PMs don\'t just read IPMR formats sequentially — they cross-reference them. The highest-value cross-references: (1) Format 1 variance WBS elements → Format 5 narrative: does the narrative actually address the Format 1 problem areas, or does it address different elements? Inconsistency means the Format 5 was written independently of the data; (2) Format 4 staffing gaps → Format 1 schedule variance: understaffed WBS elements should show negative SV — if they don\'t, the schedule logic is disconnected from staffing reality; (3) Format 5 corrective action commitments → next month\'s Format 1: are last month\'s corrective actions producing measurable improvement? If not, the corrective action was ineffective or was not actually executed. Build a monthly tracking sheet that captures the key cross-references from each IPMR submission.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'IPMR as Legal Documentation: What Senior PMs Must Preserve',
+          body: 'Senior PMs on large programs must understand that IPMR data is contractually required documentation and is discoverable in litigation. Format 5 narratives become exhibits in ASBCA cases — a contractor\'s written explanation that a variance is due to "government-caused delays" is the foundation of a future REA. The government PM\'s obligation: (1) preserve all IPMR submissions with receipt timestamps; (2) document government responses in writing — if you accepted an inadequate Format 5 narrative without objection, you may have waived your right to challenge the root cause later; (3) track OTB and reprogramming history — baseline changes require formal government approval and must be documented with the approving official\'s name and date. Programs that lose IPMR archives lose their ability to reconstruct performance history in claims disputes.',
+        },
       ],
       quiz: [
             {
@@ -4117,9 +4357,21 @@ export const modules: Module[] = [
             type: 'tip',
             heading: "Black Hat Reviews",
             body: "A \"Black Hat\" review is when your team role-plays as your competitor — developing their proposal strategy, win themes, and pricing approach as if you were them. This forces you to honestly assess your competitor\'s strengths and identify vulnerabilities in your own approach. The best black hats are brutal; if yours is comfortable, you\'re not being honest enough about the competition."
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Gate Review Discipline: When to Kill a Pursuit',
+          body: 'Mid-career BD professionals understand that the hardest decision in capture management is walking away. B&P budgets are finite; every dollar spent on a low-Pwin pursuit is a dollar not spent on a winnable one. Gate reviews must be decision events — not status updates where management hears bad news and says "let\'s see how it goes." Build gate criteria that force the decision: what is the minimum Pwin below which we do not pursue? What customer access requirements must be met by Stage 2? If a $50M opportunity has no customer access 90 days before RFP, the Pwin is probably below your threshold — and the BD team knows it. Create a gate review culture where "no pursue" decisions are celebrated as resource discipline, not treated as failures.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Pipeline Architecture: Building a Sustainable BD Engine',
+          body: 'Senior BD executives architect the pipeline to create predictable revenue — not just chase the next opportunity. A healthy pipeline has: (1) a 3-5x coverage ratio (pipeline value 3-5x annual revenue target); (2) stage-gate distribution — 40-50% in Stage 1 (early), 30-40% in Stage 2 (capture), 20-30% in Stage 3 (proposal); (3) diversification by customer, contract type, and competitive position (not 80% incumbent). The failure mode: a pipeline where 60% of value is in a single re-compete that has an incumbent advantage — if you lose it, revenue craters. Architect the pipeline with a forcing function: if any single opportunity represents more than 30% of your pipeline value, you have a concentration risk that needs immediate diversification.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "The \"shaping window\" in defense capture management refers to:",
@@ -4463,9 +4715,21 @@ export const modules: Module[] = [
             type: 'tip',
             heading: "The Ghost-Discriminate-Prove Framework",
             body: "Structure every key proposal section using three elements: (1) Ghost — hint at why your competitor\'s approach is riskier (\"Unlike approaches relying on commercial hardware not designed for military environments...\"). (2) Discriminate — state your advantage clearly (\"Our MIL-SPEC hardened components provide 3× the MTBF of commercial equivalents\"). (3) Prove — evidence that backs your claim (\"demonstrated on Contract #: X, achieving 99.7% availability in deployed conditions\")."
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Running an Effective Color Review',
+          body: 'Mid-career capture managers know that the value of a color review is entirely dependent on the quality of the reviewers and the specificity of the feedback. Pink Team: bring in functional experts (finance, technical, past performance) who are not on the proposal team — they catch assumptions the team has normalized. Red Team: requires evaluators who can simulate the government SSEB — ideally former contracting officers or program managers who have run source selections. The most common failure mode: Red Teams staffed with company employees who are reluctant to give negative feedback. Fix this by bringing in external Red Team members, pre-briefing reviewers on the evaluation criteria, and requiring scores on each factor using the adjectival rating scale the government will use.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Win Strategy Architecture: From Theme to Section M Score',
+          body: 'Senior capture professionals build win strategies backwards from Section M. For each evaluation factor, ask: what would an Outstanding/Blue rating require? Then work backwards to the proposal section: what text, graphics, and proof points substantiate that claim? Then work backwards to the solution: does our technical approach actually deliver what an Outstanding rating requires? If the answer is no, the problem is the solution — not the proposal. This "Section M backwards" discipline exposes the gap between what the proposal team wants to claim and what the technical team can actually deliver. Close that gap before the proposal starts, not during the Red Team. The most elegant proposal for a mediocre solution still loses.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "A compliance matrix in proposal development is used to:",
@@ -4668,8 +4932,20 @@ export const modules: Module[] = [
             heading: 'The Winning Proposal Process',
             body: 'Step 1: Read M first — identify every factor, sub-factor, and order of importance. Step 2: Build outline from M factors as section structure. Step 3: For each M sub-factor, draft 1-3 discriminating points. Step 4: Use L page limits to size investment — more pages to higher-weighted factors. Step 5: Compliance-check against L before submission.'
           },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Using Section L as a Compliance Matrix, Not Just Instructions',
+          body: 'Mid-career proposal managers build their proposal outline directly from Section L — every instruction becomes a heading, every deliverable requirement becomes a checklist item. But the compliance matrix is the floor, not the ceiling. The government wrote Section L to describe the minimum information needed; it didn\'t write it to describe a winning proposal. After ensuring 100% Section L compliance, ask: what information would a SSEB evaluator want that Section L didn\'t require? Discriminating proposals add value beyond compliance. The most common mid-career error: a proposal that is perfectly compliant but says nothing that an Outstanding evaluator would score above Acceptable. Compliance is table stakes; evaluation excellence is the goal.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Section M as a Negotiating Document — Shaping Evaluation Criteria Pre-RFP',
+          body: 'Senior BD professionals know that the best time to influence Section M is before the RFP is released. Industry Days, RFIs, and pre-solicitation meetings are opportunities to educate the government program office on what evaluation criteria will produce the best outcome. If you have a capability that competitors lack — a proven management approach, unique past performance, specific technical solution — you want the evaluation criteria to reward it. This is legal and expected; government contracting officers solicit industry input on acquisition strategy specifically because they lack full market knowledge. The line: you can advocate for evaluation criteria that discriminate on merit. You cannot suggest criteria designed to exclude a specific competitor by name or criteria that only your company could meet.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: 'Which section of the RFP contains the evaluation factors and their relative order of importance?',
@@ -4892,6 +5168,18 @@ export const modules: Module[] = [
               },
             ],
           },
+        {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Debriefs as Competitive Intelligence: Maximizing the Post-Award Debrief',
+          body: 'Mid-career capture professionals treat every debrief — win or lose — as the most valuable data point in their next proposal. In a post-award debrief, the government must reveal: your adjectival ratings by factor, the awardee\'s ratings by factor (not their scores), significant strengths and weaknesses identified in your proposal, and the overall rationale for the best-value determination. From this data, you can reconstruct: what exactly did you score as a weakness that you thought was a strength? Where did the awardee outperform you? Was it price, technical, or past performance? Build a debrief data log — track every weakness across all debriefs. If you see the same weakness cited on three consecutive proposals, you have a systemic capability gap, not a proposal writing problem.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'GAO Protest Strategy: When to Protest and When Not To',
+          body: 'Senior BD executives make protest decisions based on a structured analysis, not emotional reaction to a loss. Protest when: (1) the government made a clear evaluation error that is documented in the debrief (wrong ratings, failure to apply stated criteria, unequal treatment); (2) the protest has a reasonable probability of sustaining (GAO sustains ~15-20%); (3) the contract value justifies the cost and disruption of a protest (typically $20M+); (4) a corrective action by the government (re-evaluation or re-solicitation) would change the outcome. Don\'t protest when: the government made the right decision and your proposal genuinely lost on the merits; the protest is designed to delay performance rather than win the contract. GAO protests are public record — a pattern of losing protests without sustaining damages your reputation with government customers.',
+        },
       ],
       quiz: [
             {
@@ -5006,9 +5294,21 @@ export const modules: Module[] = [
               ['Issue', 'A risk that has materialized', 'Resolve: develop corrective action plan immediately'],
               ['Opportunity', 'A potential future positive event', 'Exploit, enhance, share, or accept the benefit'],
             ]
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Running an Effective Risk Review Board',
+          body: 'Mid-career PMs who run Risk Review Boards (RRBs) must transform the risk register from a compliance document into a decision-making tool. Common failure modes: risks rated identically month after month with no change in status; risk owners who attend RRBs without new data; mitigation plans with due dates perpetually pushed out. Fix this with three disciplines: (1) require each risk owner to bring updated probability and impact ratings with data justification — "I still rate this 3×3 because nothing has changed" is not acceptable; (2) close risks that have been mitigated with documented evidence; (3) escalate risks that haven\'t moved in 90 days — either they\'re not real risks, or they\'re not being worked. A 15-risk register where all 15 are "being monitored" is a risk register that has failed.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Opportunity Management and Risk Retirement: The Senior PM\'s Discipline',
+          body: 'Senior PMs manage both risk AND opportunity — the asymmetric upside that is often neglected in risk-focused cultures. An opportunity is an event that, if it occurs, would reduce cost, accelerate schedule, or improve performance. Examples: a technology maturation faster than planned that allows an earlier CDR; a competitor\'s contract performance failure that opens a sole-source opportunity; a congressional add that funds an accelerated production ramp. Opportunities require the same rigor as risks: owner, probability, value, exploitation plan, and trigger event. Senior PMs also understand risk retirement — when a risk\'s trigger date has passed without occurrence, formally close it and release the associated Management Reserve. Programs that never retire risks over-hold Management Reserve and underreport program health.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "Management Reserve (MR) in a defense program is intended to:",
@@ -5175,9 +5475,21 @@ export const modules: Module[] = [
             type: 'tip',
             heading: "Building Your Network Early",
             body: "The acquisition community is small. The Captain or Major you work with today is the Colonel or General you\'ll brief in 10 years. The GS-11 analyst across the table becomes the SES you\'ll be pitching your company to. Invest in every professional relationship — return calls, deliver on commitments, and be the person who solves problems rather than creates them."
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Managing Up: Briefing Flag Officers and SES Officials',
+          body: 'Mid-career PMs who brief flag officers and SES officials must master a different communication register than the one they use with their team. Three rules for flag-level briefings: (1) State the problem in the first 30 seconds — senior leaders do not have patience for context-building before the issue; (2) Present no more than three options with a clear recommendation — decision makers who are given seven options with no recommendation will make no decision; (3) Know the difference between informing and deciding — some briefings are status updates, some require a decision. Be explicit about which one you\'re presenting. The most common mid-career failure: walking into a flag-level review to "provide an update" and leaving with no decision when a decision was urgently needed. Prepare your ask in advance.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Congressional Liaison: Protecting Your Program Through the Hill',
+          body: 'Senior PMs on major programs interact with congressional staff, whether they realize it or not. The rules: (1) all congressional communications go through your legislative liaison office — never independently contact a congressional office; (2) Congressional Budget Justification Books (CBJB) are your primary public narrative — invest in them as carefully as you invest in milestone briefings, because Hill staffers read them; (3) Classified program briefs to HASC/SASC staff are opportunities to build program support — use them; (4) if your program receives a congressional mark (reduction, add, or fence), understand what drove it — usually either a performance concern that surfaced publicly or a constituent interest. Fix the performance concern; support the constituent interest where it aligns with program needs. Programs with strong Hill relationships consistently outperform programs that ignore Congress.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "A Critical Design Review (CDR) is typically conducted to:",
@@ -5361,9 +5673,21 @@ export const modules: Module[] = [
             type: 'callout',
             heading: "Salary Expectations (2025 Market)",
             body: "Government Track: GS-11 ($58-76K), GS-12 ($70-91K), GS-13 ($83-108K), GS-14 ($98-127K), GS-15 ($115-150K) — plus excellent benefits, pension, and work-life balance. Contractor Track: Program Analyst ($65-85K), Senior Analyst ($85-120K), Program Manager ($110-160K), Capture Manager ($130-200K), VP BD ($180-300K+). The government-to-contractor transition typically brings a 20-40% salary increase."
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Mid-Career Positioning: Building Your Acquisition Credentials',
+          body: 'Mid-career acquisition professionals need a deliberate portfolio strategy. The most valued combination for a GS-14/15 PM position: Defense Acquisition Workforce Improvement Act (DAWIA) Level III certification in Program Management, 4+ years of major program experience (ACAT I or II preferred), and a rotation through a contracting or finance function. Certifications alone are table stakes. Differentiators: (1) an assignment at a COCOM or joint organization that demonstrates cross-service experience; (2) a successful Milestone review as the PM — even as a deputy, being part of a Milestone B team is significant experience; (3) DAU resident course completion (PMT-401 or equivalent) — program managers who attended resident PMT are a separate tier from those who completed DAU online-only. Build the portfolio intentionally — random assignments lead to random careers.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'The Senior Executive Path in Defense Acquisition: SES and PEO Roles',
+          body: 'The path to Senior Executive Service (SES) or Program Executive Officer (PEO) in defense acquisition requires a deliberate strategy that most mid-career PMs don\'t start building early enough. The prerequisites: (1) at least one ACAT I program as PM or Deputy PM; (2) Joint Duty Assignment completion (required for senior civilian positions); (3) Senior Service College (SSC) attendance — Army War College, Naval War College, or equivalent. The SSC is not a checkbox; it is a community of future flag officers and senior executives who will be your peers for the next 20 years — build relationships deliberately; (4) SES candidate development programs (CDPs) — most services have CDPs that provide structured development, senior mentoring, and visibility to SES selection panels. Apply for CDPs 3-5 years before you want the SES position.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "For a recent college graduate interested in the government contracting track, what is the most direct pathway into DoD acquisitions?",
@@ -5530,9 +5854,21 @@ export const modules: Module[] = [
               'Step 5: If the prime fails to correct: formal cure notice or show cause letter issued by the Contracting Officer',
               'Step 6: Consult with legal and CO on contract remedies if pattern of non-performance continues',
             ]
-          }
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Managing Subcontractor Risk on Complex Defense Programs',
+          body: 'Mid-career PMs on programs with significant subcontractor content must build government visibility into the subcontract tier — not just rely on the prime\'s reporting. Best practices: (1) require the prime\'s EVM system to include subcontractor EVM data for subcontracts over $20M (this is contractually required on programs with EVMS requirements); (2) attend quarterly subcontractor program reviews with the prime — as an observer, not a participant, to avoid a privity-of-contract issue; (3) include a subcontractor management section in the prime\'s Format 2 IPMR submissions so you can identify which organizational elements are driving variance. When a prime says "we have a subcontractor problem but we\'re managing it," your question should be: "show me the corrective action plan and the sub\'s EVM data."',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Privity of Contract, Novation, and Corporate Transactions: When Your Contractor Changes',
+          body: 'Senior PMs must understand what happens when their contractor is acquired, merges, or undergoes a corporate restructuring. The government has no contractual relationship with subcontractors (privity of contract); all rights run through the prime. When a prime is acquired: FAR 42.1200 requires a novation agreement — the government must consent to transfer of the contract to the successor entity. Without government consent, contract performance by the new entity is a contract violation. The novation process takes 60-180 days; during that window, the contractor is technically in breach. Manage this proactively: when you learn of a pending M&A transaction affecting your contractor, initiate the novation process immediately and get legal counsel involved. Corporate transactions also frequently trigger key personnel departures — require the prime to brief you on retention plans for key personnel before the acquisition closes.',
+        },
         ],
-        quiz: [
+      quiz: [
           {
             id: 'q1',
             question: "A government PM discovers that a critical subcontractor is 3 months behind schedule. What is the correct first action?",
