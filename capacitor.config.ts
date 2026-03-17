@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.acqpro.app',
-  appName: 'AcqPro',
+  appId: 'com.acqlerate.app',
+  appName: 'Acqlerate',
   webDir: 'dist/public',
   server: {
     // Point to Railway backend for API calls in the native app

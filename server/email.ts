@@ -6,7 +6,7 @@ const resend = process.env.RESEND_API_KEY
 
 // Sender address — update to your verified domain once you set one up in Resend
 // For now uses Resend's shared domain for testing
-const FROM = process.env.EMAIL_FROM || "AcqPro <onboarding@resend.dev>";
+const FROM = process.env.EMAIL_FROM || "Acqlerate <onboarding@resend.dev>";
 
 export async function sendWelcomeEmail(
   to: string,
@@ -23,7 +23,7 @@ export async function sendWelcomeEmail(
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to AcqPro</title>
+  <title>Welcome to Acqlerate</title>
   <style>
     body { margin: 0; padding: 0; background: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
     .wrapper { max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
@@ -58,16 +58,16 @@ export async function sendWelcomeEmail(
     <div class="header">
       <div class="header-logo">
         <span class="logo-icon">🛡️</span>
-        <span class="logo-text">AcqPro</span>
+        <span class="logo-text">Acqlerate</span>
       </div>
-      <h1>Welcome to AcqPro</h1>
+      <h1>Welcome to Acqlerate</h1>
       <p>Defense Acquisitions Academy</p>
     </div>
 
     <div class="body">
       <div class="greeting">Hi ${username},</div>
       <p class="intro">
-        You've just taken a meaningful step toward mastering one of the most complex — and rewarding — career fields in the federal government and defense industry. Whether you're transitioning from the military, pivoting from the private sector, or deepening your existing acquisition expertise, AcqPro was built specifically for you.
+        You've just taken a meaningful step toward mastering one of the most complex — and rewarding — career fields in the federal government and defense industry. Whether you're transitioning from the military, pivoting from the private sector, or deepening your existing acquisition expertise, Acqlerate was built specifically for you.
       </p>
 
       <div class="section-title">What's waiting for you</div>
@@ -117,25 +117,25 @@ export async function sendWelcomeEmail(
       </div>
 
       <div class="cta-box">
-        <p>Module 1 is completely free. Dive in now and see why acquisition professionals are calling AcqPro the resource they wish they had when starting out.</p>
+        <p>Module 1 is completely free. Dive in now and see why acquisition professionals are calling Acqlerate the resource they wish they had when starting out.</p>
         <a href="https://acq-pro-production.up.railway.app" class="cta-btn">Start Learning →</a>
       </div>
 
       <div class="tip-box">
         <strong>💡 Career Tip</strong>
-        <p>The DoD acquisition community is smaller than you think. The GS-12 you collaborate with today could be the SES you brief in 10 years. Use AcqPro to build the vocabulary, frameworks, and confidence that get you in the room — and keep you there.</p>
+        <p>The DoD acquisition community is smaller than you think. The GS-12 you collaborate with today could be the SES you brief in 10 years. Use Acqlerate to build the vocabulary, frameworks, and confidence that get you in the room — and keep you there.</p>
       </div>
 
       <p style="font-size:14px; color:#4a5568; line-height:1.7;">
         Questions about your account or the content? Reply to this email — we read every message. We're excited to be part of your acquisition journey.
       </p>
-      <p style="font-size:14px; color:#1e3a5f; font-weight:600; margin-top:4px;">— The AcqPro Team</p>
+      <p style="font-size:14px; color:#1e3a5f; font-weight:600; margin-top:4px;">— The Acqlerate Team</p>
     </div>
 
     <div class="footer">
       <p>
-        You received this because you created an account at AcqPro.<br/>
-        <a href="https://acq-pro-production.up.railway.app">acqpro.app</a> &nbsp;·&nbsp; Defense Acquisitions Academy
+        You received this because you created an account at Acqlerate.<br/>
+        <a href="https://acq-pro-production.up.railway.app">acqlerate.app</a> &nbsp;·&nbsp; Defense Acquisitions Academy
       </p>
     </div>
   </div>
@@ -147,7 +147,7 @@ export async function sendWelcomeEmail(
     await resend.emails.send({
       from: FROM,
       to,
-      subject: "Welcome to AcqPro — Your Defense Acquisitions Journey Starts Now",
+      subject: "Welcome to Acqlerate — Your Defense Acquisitions Journey Starts Now",
       html,
     });
     console.log(`[email] Welcome email sent to ${to}`);

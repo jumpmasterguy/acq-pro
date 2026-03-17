@@ -22,7 +22,7 @@ export default function Landing({ onGetStarted }: LandingProps) {
     {
       name: "Marcus T.",
       role: "Former Army Captain → GS-13 PM",
-      text: "AcqPro gave me the exact knowledge I needed to transition. The EVM module alone was worth it — I walked into my first program review already knowing what to ask.",
+      text: "Acqlerate gave me the exact knowledge I needed to transition. The EVM module alone was worth it — I walked into my first program review already knowing what to ask.",
       stars: 5,
     },
     {
@@ -149,7 +149,7 @@ export default function Landing({ onGetStarted }: LandingProps) {
             <div>
               <h2 className="text-3xl font-bold mb-5">Built for Career Changers</h2>
               <p className="text-muted-foreground mb-8 leading-relaxed">
-                Unlike generic project management courses, AcqPro is built specifically 
+                Unlike generic project management courses, Acqlerate is built specifically 
                 for the DoD acquisition environment — the FAR/DFARS, PPBE, EVM, source 
                 selection, and capture management. Real knowledge that translates directly 
                 to your first day on the job.
@@ -284,7 +284,7 @@ export default function Landing({ onGetStarted }: LandingProps) {
       <section className="max-w-3xl mx-auto px-6 py-20 text-center">
         <h2 className="text-3xl font-bold mb-4">Your Next Chapter Starts Here</h2>
         <p className="text-muted-foreground mb-8">
-          Join thousands of professionals who used AcqPro to break into DoD acquisitions. 
+          Join thousands of professionals who used Acqlerate to break into DoD acquisitions. 
           The first module is completely free — no credit card required.
         </p>
         <Button size="lg" onClick={onGetStarted} className="text-base px-10" data-testid="footer-cta">

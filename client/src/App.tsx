@@ -289,7 +289,7 @@ function AppContent() {
               <Shield className="w-4 h-4 text-sidebar-primary" />
             </div>
             <div>
-              <div className="font-bold text-sm text-sidebar-foreground">AcqPro</div>
+              <div className="font-bold text-sm text-sidebar-foreground">Acqlerate</div>
               <div className="text-[10px] text-sidebar-foreground/50 leading-tight">Defense Academy</div>
             </div>
           </div>

@@ -1,6 +1,6 @@
 {
-  "name": "AcqPro — Defense Acquisitions Academy",
-  "short_name": "AcqPro",
+  "name": "Acqlerate — Defense Acquisitions Academy",
+  "short_name": "Acqlerate",
   "description": "Master DoD acquisitions: finance, contracts, capture management, and program operations.",
   "start_url": "/",
   "display": "standalone",
@@ -19,7 +19,7 @@
       "sizes": "512x512",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "AcqPro Dashboard"
+      "label": "Acqlerate Dashboard"
     }
   ]
 }

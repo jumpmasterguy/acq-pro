@@ -105,7 +105,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack }: AuthPage
       const res = await apiRequest("POST", "/api/auth/register", payload);
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Registration failed");
-      toast({ title: "Welcome to AcqPro!", description: "Your account has been created." });
+      toast({ title: "Welcome to Acqlerate!", description: "Your account has been created." });
       onAuthenticated(data);
     } catch (err: any) {
       toast({ title: "Registration failed", description: getErrorMessage(err), variant: "destructive" });
@@ -124,7 +124,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack }: AuthPage
             <Shield className="w-5 h-5 text-sidebar-primary" />
           </div>
           <div>
-            <div className="font-bold text-base text-sidebar-foreground">AcqPro</div>
+            <div className="font-bold text-base text-sidebar-foreground">Acqlerate</div>
             <div className="text-[11px] text-sidebar-foreground/50">Defense Acquisitions Academy</div>
           </div>
         </div>
@@ -157,7 +157,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack }: AuthPage
         {/* Testimonial */}
         <div className="bg-sidebar-accent rounded-xl p-5">
           <p className="text-sm text-sidebar-foreground/80 italic mb-3">
-            "AcqPro gave me exactly what I needed to understand the FAR, DFARS, and how 
+            "Acqlerate gave me exactly what I needed to understand the FAR, DFARS, and how 
             defense budgets actually work — all in one place."
           </p>
           <div className="text-xs text-sidebar-foreground/50">— Defense PM Candidate</div>
@@ -185,7 +185,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack }: AuthPage
             <Shield className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <div className="font-bold text-sm">AcqPro</div>
+            <div className="font-bold text-sm">Acqlerate</div>
             <div className="text-[10px] text-muted-foreground">Defense Academy</div>
           </div>
         </div>

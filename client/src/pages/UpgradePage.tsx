@@ -239,7 +239,7 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
         <Award className="w-6 h-6 text-primary mx-auto mb-2" />
         <p className="text-sm font-medium mb-1">30-Day Money-Back Guarantee</p>
         <p className="text-xs text-muted-foreground">
-          If AcqPro doesn't help you feel more confident about DoD acquisitions in 30 days, 
+          If Acqlerate doesn't help you feel more confident about DoD acquisitions in 30 days, 
           we'll refund your purchase — no questions asked.
         </p>
       </div>
