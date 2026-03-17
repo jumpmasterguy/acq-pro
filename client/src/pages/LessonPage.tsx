@@ -7,7 +7,7 @@ import {
   GripVertical, ArrowRight, Lock, ChevronUp as LevelUp,
   Sparkles, BrainCircuit, HelpCircle, Briefcase, Loader2, X
 } from "lucide-react";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest, API_BASE } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -517,7 +517,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 20000);
     try {
-      const res = await fetch(`/api/explain`, {
+      const res = await fetch(`${API_BASE}/api/explain`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ lessonTitle: lesson.title, lessonContext, mode }),
