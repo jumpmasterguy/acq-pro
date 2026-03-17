@@ -495,25 +495,37 @@ Context: ${lessonContext}`,
   // GET /api/ai-health — check Gemini key is working (no auth required, for debugging)
   app.get("/api/ai-health", async (_req: Request, res: Response) => {
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) return res.json({ ok: false, reason: 'GEMINI_API_KEY not set' });
-    // Try available models in order of preference
-    const candidates = ['gemini-2.0-flash-lite', 'gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-latest', 'gemini-pro'];
+    if (!apiKey) return res.json({ ok: false, reason: 'GEMINI_API_KEY not set', keyPrefix: 'MISSING' });
+    const keyPrefix = apiKey.substring(0, 8);
+    // Try both v1 and v1beta with multiple model names via raw REST (bypasses SDK version lock)
+    const attempts = [
+      { url: `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${apiKey}` },
+      { url: `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}` },
+      { url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}` },
+      { url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}` },
+    ];
     const results: Record<string, string> = {};
-    const { GoogleGenerativeAI } = await import("@google/generative-ai");
-    const genAI = new GoogleGenerativeAI(apiKey);
-    for (const modelName of candidates) {
+    for (const { url } of attempts) {
+      const label = url.replace(`?key=${apiKey}`, '').replace('https://generativelanguage.googleapis.com/', '');
       try {
-        const model = genAI.getGenerativeModel({ model: modelName });
-        const result = await model.generateContent('Say OK in one word.');
-        const text = result.response.text();
-        results[modelName] = `OK: ${text.trim()}`;
-        // Found a working model — return immediately
-        return res.json({ ok: true, workingModel: modelName, response: text.trim(), allResults: results });
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: 'Say OK' }] }] }),
+        });
+        const data: any = await resp.json();
+        if (resp.ok) {
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? 'no text';
+          results[label] = `OK: ${text.trim()}`;
+          return res.json({ ok: true, workingEndpoint: label, keyPrefix, allResults: results });
+        } else {
+          results[label] = `${resp.status}: ${data?.error?.message?.substring(0, 100) ?? 'unknown'}`;
+        }
       } catch (err: any) {
-        results[modelName] = `FAIL: ${err?.message?.substring(0, 120)}`;
+        results[label] = `FETCH_ERR: ${err?.message?.substring(0, 80)}`;
       }
     }
-    return res.json({ ok: false, reason: 'No models worked', allResults: results });
+    return res.json({ ok: false, reason: 'No endpoints worked', keyPrefix, allResults: results });
   });
 
   return httpServer;
