@@ -3355,387 +3355,276 @@ export const modules: Module[] = [
         ]
       },
       {
-      id: 'data-3',
-      title: 'EVM Acronym Deep Dive — Every Term Defined and Explained',
-      duration: '30 min',
-      type: 'lesson' as const,
-      content: {
-        sections: [
+        id: 'data-3',
+        title: 'EVM Acronym Deep Dive — Every Term Defined and Explained',
+        duration: '30 min',
+        description: 'Master every EVM acronym — BCWS, BCWP, ACWP, CPI, SPI, EAC, ETC, VAC, TCPI — with clear definitions, formulas, and PM-level context.',
+        keyTerms: [
+          { term: 'BAC', definition: 'Budget at Completion — the total authorized budget for all work on the contract.' },
+          { term: 'BCWS / PV', definition: 'Budgeted Cost of Work Scheduled (Planned Value) — what you planned to spend by today.' },
+          { term: 'BCWP / EV', definition: 'Budgeted Cost of Work Performed (Earned Value) — the budget value of work actually completed.' },
+          { term: 'ACWP / AC', definition: 'Actual Cost of Work Performed — real dollars spent on completed work, from the accounting system.' },
+          { term: 'CPI', definition: 'Cost Performance Index = BCWP / ACWP. Below 1.0 means over budget.' },
+          { term: 'SPI', definition: 'Schedule Performance Index = BCWP / BCWS. Below 1.0 means behind schedule.' },
+          { term: 'EAC', definition: 'Estimate at Completion — projected total cost to finish all authorized work.' },
+          { term: 'ETC', definition: 'Estimate to Complete — projected cost to finish remaining work only.' },
+          { term: 'VAC', definition: 'Variance at Completion = BAC − EAC. Negative means projected overrun.' },
+          { term: 'TCPI', definition: 'To-Complete Performance Index — efficiency needed on remaining work to hit BAC or EAC.' },
+        ],
+        content: [
           {
-            type: 'header' as const,
-            title: 'Why EVM Has So Many Acronyms — and Why You Must Know Them Cold',
-            body: 'Earned Value Management (EVM) has a dense acronym vocabulary because it integrates three independent measurement systems — cost accounting, schedule management, and performance measurement — into a single framework. Every acronym represents a specific data point that, when combined with others, tells a precise story about program health. In a program review, confusing EAC with ETC or VAC with VAR is not just embarrassing — it leads to incorrect decisions. This lesson defines and contextualizes every core EVM term.',
+            type: 'text',
+            heading: 'Why EVM Has So Many Acronyms',
+            body: "EVM integrates three independent measurement systems — cost accounting, schedule management, and performance measurement — into one framework. Every acronym is a specific data point. Confusing EAC with ETC or VAC with SV is not just embarrassing in a program review — it leads to wrong decisions. All calculations flow from three source numbers: BCWS (planned), BCWP (accomplished), ACWP (spent)."
           },
           {
-            type: 'expandable_list' as const,
-            title: 'The Baseline Metrics — What Was Planned',
-            items: [
-              {
-                label: 'BAC — Budget at Completion',
-                sublabel: 'The total authorized budget for the entire contract',
-                badge: 'Baseline',
-                badgeColor: 'blue',
-                summary: 'BAC is the total planned budget from day 1 to contract completion — the sum of all Performance Measurement Baselines plus management reserve.',
-                content: [
-                  {
-                    type: 'grid' as const,
-                    title: 'BAC Details',
-                    items: [
-                      { label: 'Full Name', value: 'Budget at Completion' },
-                      { label: 'What It Measures', value: 'Total authorized contract budget for all work scope' },
-                      { label: 'How Used', value: 'Denominator for CPI-based EAC calculations. Compared against EAC to determine cost overrun magnitude.' },
-                      { label: 'PM Insight', value: 'BAC is fixed unless there is a formal contract modification. Informal scope changes do not change BAC — they create undocumented overruns.' },
-                    ],
-                  },
-                ],
-              },
-              {
-                label: 'PMB — Performance Measurement Baseline',
-                sublabel: 'The time-phased budget against which performance is measured',
-                badge: 'Baseline',
-                badgeColor: 'blue',
-                summary: 'The PMB is BAC minus Management Reserve — the cost/schedule baseline used for EVM measurement.',
-                content: [
-                  {
-                    type: 'grid' as const,
-                    title: 'PMB Details',
-                    items: [
-                      { label: 'Full Name', value: 'Performance Measurement Baseline' },
-                      { label: 'Relationship to BAC', value: 'PMB = BAC minus Management Reserve (MR). MR is held outside the PMB for unknown-unknown risks.' },
-                      { label: 'Time-Phased', value: 'The PMB is the month-by-month plan. At any data date, the cumulative PMB = BCWS for work planned through that date.' },
-                      { label: 'IBR', value: 'The Integrated Baseline Review (IBR) verifies the PMB is realistic and traceable to contract requirements. Required for contracts over $20M.' },
-                    ],
-                  },
-                ],
-              },
+            type: 'expandable_list',
+            heading: 'The Three Source Numbers — Everything Starts Here',
+            body: 'Every EVM metric is calculated from these three values. Know them cold.',
+            expandableItems: [
               {
                 label: 'BCWS / PV — Budgeted Cost of Work Scheduled (Planned Value)',
-                sublabel: 'What you planned to spend by now',
-                badge: 'Planned Value',
+                badge: 'Baseline',
                 badgeColor: 'blue',
-                summary: 'BCWS is the cumulative budget for all work that was PLANNED to be completed as of the data date. It comes from the time-phased PMB.',
+                sublabel: 'What you planned to spend by today',
+                summary: 'The cumulative budget for all work planned to be completed as of the data date. Comes directly from the time-phased PMB.',
                 content: [
-                  {
-                    type: 'grid' as const,
-                    title: 'BCWS / PV Details',
-                    items: [
-                      { label: 'Full Name', value: 'Budgeted Cost of Work Scheduled' },
-                      { label: 'Modern Equivalent', value: 'PV (Planned Value) — used interchangeably in modern EVM and ANSI 748 literature' },
-                      { label: 'Formula', value: 'Sum of all work packages budgeted to start/complete through the data date per the approved schedule' },
-                      { label: 'What It Tells You', value: 'Where you should be on the S-curve. The denominator for SPI = EV/PV.' },
-                    ],
-                  },
-                  { type: 'text' as const, body: 'BCWS/PV does NOT tell you what you actually spent or what work was done — only what was supposed to be done. The power of EVM comes from comparing BCWS to BCWP (actual work done) and ACWP (actual dollars spent).' },
-                ],
+                  { type: 'grid', grid: [
+                    { label: 'Full Name', value: 'Budgeted Cost of Work Scheduled' },
+                    { label: 'Modern Equivalent', value: 'PV (Planned Value)' },
+                    { label: 'Source', value: 'Sum of work packages planned to start/complete through the data date per the approved schedule' },
+                    { label: 'What It Tells You', value: 'Where you should be on the S-curve. Denominator for SPI = EV/PV.' },
+                  ]},
+                  { type: 'text', body: 'BCWS/PV does NOT tell you what was spent or what was done — only what was supposed to be done. The power of EVM comes from comparing BCWS to BCWP (actual work done) and ACWP (actual dollars spent).' }
+                ]
               },
-            ],
-          },
-          {
-            type: 'expandable_list' as const,
-            title: 'The Performance Metrics — What Actually Happened',
-            items: [
               {
                 label: 'BCWP / EV — Budgeted Cost of Work Performed (Earned Value)',
-                sublabel: 'The heart of EVM — the budget value of completed work',
                 badge: 'Earned Value',
                 badgeColor: 'green',
-                summary: 'BCWP is the budget VALUE of work actually completed as of the data date. It is the only metric that directly measures accomplishment — not spending.',
+                sublabel: 'The heart of EVM — value of work actually completed',
+                summary: 'The budget VALUE of work actually completed as of the data date. The only metric that directly measures accomplishment — not spending.',
                 content: [
-                  {
-                    type: 'grid' as const,
-                    title: 'BCWP / EV Details',
-                    items: [
-                      { label: 'Full Name', value: 'Budgeted Cost of Work Performed' },
-                      { label: 'Modern Equivalent', value: 'EV (Earned Value)' },
-                      { label: 'Formula', value: '% Complete (per approved earning method) × Budget for that work package' },
-                      { label: 'Critical Distinction', value: 'BCWP is based on BUDGET, not actual cost. If a $100K task is 50% complete, BCWP = $50K regardless of whether you spent $30K or $90K.' },
-                    ],
-                  },
-                  { type: 'text' as const, body: 'Earning Methods: How you calculate % complete matters. Common methods: Discrete (milestone-based: 0/50/100, 25/75, etc.), Apportioned (tied to related work), Level of Effort (LOE — time-phased only, used for management overhead). Milestone-weighted methods are more objective. LOE work packages always show SV=0 and never show behind-schedule.' },
-                ],
+                  { type: 'grid', grid: [
+                    { label: 'Full Name', value: 'Budgeted Cost of Work Performed' },
+                    { label: 'Modern Equivalent', value: 'EV (Earned Value)' },
+                    { label: 'Formula', value: '% Complete × Budget for that work package' },
+                    { label: 'Critical Distinction', value: 'BCWP is based on BUDGET, not actual cost. If a $100K task is 50% complete, BCWP = $50K regardless of whether you spent $30K or $90K.' },
+                  ]},
+                  { type: 'text', body: "Earning Methods matter: Discrete (milestone-based: 0/50/100, 25/75), Apportioned (tied to related work), Level of Effort (LOE — time-phased only, used for management overhead). LOE work packages always show SV=0 and never show behind-schedule." }
+                ]
               },
               {
                 label: 'ACWP / AC — Actual Cost of Work Performed (Actual Cost)',
-                sublabel: 'What you actually spent on work completed',
                 badge: 'Actual Cost',
                 badgeColor: 'red',
-                summary: 'ACWP is the actual dollars incurred to accomplish the work measured by BCWP. It comes from the accounting system.',
+                sublabel: 'Real dollars spent on completed work',
+                summary: 'Actual dollars incurred to accomplish the work measured by BCWP. Comes from the accounting system.',
                 content: [
-                  {
-                    type: 'grid' as const,
-                    title: 'ACWP / AC Details',
-                    items: [
-                      { label: 'Full Name', value: 'Actual Cost of Work Performed' },
-                      { label: 'Modern Equivalent', value: 'AC (Actual Cost)' },
-                      { label: 'Source', value: 'Accounting system actuals — payroll, accounts payable, subcontractor invoices, material receipts' },
-                      { label: 'Relationship to BCWP', value: 'If ACWP > BCWP, you are spending more than the work is worth (cost overrun). If ACWP < BCWP, you are under-running the budget for completed work.' },
-                    ],
-                  },
-                ],
+                  { type: 'grid', grid: [
+                    { label: 'Full Name', value: 'Actual Cost of Work Performed' },
+                    { label: 'Modern Equivalent', value: 'AC (Actual Cost)' },
+                    { label: 'Source', value: 'Accounting system actuals — payroll, accounts payable, subcontractor invoices, material receipts' },
+                    { label: 'Key Insight', value: 'If ACWP > BCWP you are spending more than the work is worth (overrun). If ACWP < BCWP you are under-running.' },
+                  ]}
+                ]
               },
-            ],
+            ]
           },
           {
-            type: 'expandable_list' as const,
-            title: 'Variances — How Far Off Are You?',
-            items: [
+            type: 'expandable_list',
+            heading: 'Variances — How Far Off Are You?',
+            body: 'Variances tell you the dollar magnitude of cost and schedule problems.',
+            expandableItems: [
               {
                 label: 'CV — Cost Variance',
-                sublabel: 'BCWP minus ACWP',
-                badge: 'Cost',
+                badge: 'CV = BCWP − ACWP',
                 badgeColor: 'red',
-                summary: 'CV tells you whether you are spending more or less than budgeted for the work you have actually completed.',
+                sublabel: 'Over or under budget for completed work?',
+                summary: 'Negative CV = spending more than the work is worth. Positive CV = under budget.',
                 content: [
-                  {
-                    type: 'grid' as const,
-                    title: 'CV Details',
-                    items: [
-                      { label: 'Formula', value: 'CV = BCWP − ACWP (or EV − AC)' },
-                      { label: 'Positive CV', value: 'Under budget for completed work. Green.' },
-                      { label: 'Negative CV', value: 'Over budget for completed work. Red. Requires Variance Analysis Report (VAR).' },
-                      { label: 'CPI Relationship', value: 'CPI = BCWP / ACWP. CPI > 1.0 = efficient. CPI < 1.0 = over budget.' },
-                    ],
-                  },
-                ],
+                  { type: 'grid', grid: [
+                    { label: 'Formula', value: 'CV = BCWP − ACWP (EV − AC)' },
+                    { label: 'Positive CV', value: 'Under budget. Green.' },
+                    { label: 'Negative CV', value: 'Over budget. Red. Requires Variance Analysis Report (VAR).' },
+                    { label: 'Related Index', value: 'CPI = BCWP / ACWP. CPI > 1.0 = efficient. CPI < 1.0 = over budget.' },
+                  ]}
+                ]
               },
               {
                 label: 'SV — Schedule Variance',
-                sublabel: 'BCWP minus BCWS',
-                badge: 'Schedule',
-                badgeColor: 'yellow',
-                summary: 'SV measures schedule performance in cost terms — how much budget worth of work you completed compared to what was planned.',
+                badge: 'SV = BCWP − BCWS',
+                badgeColor: 'amber',
+                sublabel: 'Ahead or behind schedule in dollar terms?',
+                summary: 'Negative SV = less work completed than planned. Measured in dollars, not days.',
                 content: [
-                  {
-                    type: 'grid' as const,
-                    title: 'SV Details',
-                    items: [
-                      { label: 'Formula', value: 'SV = BCWP − BCWS (or EV − PV)' },
-                      { label: 'Positive SV', value: 'Ahead of schedule — more work completed than planned. Green.' },
-                      { label: 'Negative SV', value: 'Behind schedule — less work completed than planned. Red. Note: SV is measured in dollars, not days.' },
-                      { label: 'Limitation', value: 'SV converges to zero at contract completion regardless of how late you finish. Use SPI(t) or critical path schedule for late-phase schedule analysis.' },
-                    ],
-                  },
-                ],
+                  { type: 'grid', grid: [
+                    { label: 'Formula', value: 'SV = BCWP − BCWS (EV − PV)' },
+                    { label: 'Positive SV', value: 'Ahead of schedule. Green.' },
+                    { label: 'Negative SV', value: 'Behind schedule. Red.' },
+                    { label: 'Limitation', value: 'SV converges to zero at contract completion regardless of how late you finish. Use Earned Schedule (ES) for late-phase schedule analysis.' },
+                  ]}
+                ]
               },
               {
                 label: 'VAC — Variance at Completion',
-                sublabel: 'BAC minus EAC — projected total overrun or underrun',
-                badge: 'At Completion',
+                badge: 'VAC = BAC − EAC',
                 badgeColor: 'red',
-                summary: 'VAC is the projected cost overrun (or underrun) at contract completion.',
+                sublabel: 'Projected total overrun or underrun',
+                summary: 'VAC tells you whether the program will finish within budget. This is the number executives focus on.',
                 content: [
-                  {
-                    type: 'grid' as const,
-                    title: 'VAC Details',
-                    items: [
-                      { label: 'Formula', value: 'VAC = BAC − EAC' },
-                      { label: 'Positive VAC', value: 'Projected under-run — expected to complete below budget. Green.' },
-                      { label: 'Negative VAC', value: 'Projected over-run — expected to exceed budget. Red. This is the number executives focus on.' },
-                      { label: 'Threshold Reporting', value: 'DoD contracts typically require formal notification when VAC exceeds 10-15% of BAC.' },
-                    ],
-                  },
-                ],
+                  { type: 'grid', grid: [
+                    { label: 'Formula', value: 'VAC = BAC − EAC' },
+                    { label: 'Positive VAC', value: 'Projected under-run. Green.' },
+                    { label: 'Negative VAC', value: 'Projected overrun. Red. Threshold typically ±10-15% of BAC triggers formal notification.' },
+                    { label: 'PM Action', value: 'Negative VAC requires a credible recovery plan or formal EAC rebaseline.' },
+                  ]}
+                ]
               },
-            ],
+            ]
           },
           {
-            type: 'expandable_list' as const,
-            title: 'Indices and Completion Forecasts',
-            items: [
+            type: 'expandable_list',
+            heading: 'Indices and Completion Forecasts',
+            body: 'Indices normalize performance to ratios. Forecasts project where you will end up.',
+            expandableItems: [
               {
                 label: 'CPI — Cost Performance Index',
-                sublabel: 'BCWP ÷ ACWP — your cost efficiency ratio',
-                badge: 'Efficiency',
+                badge: 'CPI = BCWP ÷ ACWP',
                 badgeColor: 'green',
-                summary: 'CPI tells you how many cents of value you are producing for every dollar spent. The most important predictive metric in EVM.',
+                sublabel: 'Cost efficiency — cents of value per dollar spent',
+                summary: 'CPI is the most important predictive metric in EVM. Once it drops below 1.0 after 20% completion, it almost never recovers.',
                 content: [
-                  {
-                    type: 'grid' as const,
-                    title: 'CPI Details',
-                    items: [
-                      { label: 'Formula', value: 'CPI = BCWP / ACWP (or EV / AC)' },
-                      { label: 'CPI = 1.0', value: 'On budget — earning exactly what you are spending' },
-                      { label: 'CPI = 0.85', value: 'For every $1 spent, only $0.85 of value earned. 15% cost overrun rate.' },
-                      { label: 'CPI = 1.15', value: 'For every $1 spent, $1.15 of value earned. 15% under-run rate.' },
-                    ],
-                  },
-                  { type: 'text' as const, body: 'Humphreys Rule: Research shows that once a program\'s cumulative CPI drops below 1.0 by month 20% into the contract, it virtually never recovers. This makes early CPI trends critically important.' },
-                ],
+                  { type: 'grid', grid: [
+                    { label: 'CPI = 1.0', value: 'On budget — earning exactly what you are spending' },
+                    { label: 'CPI = 0.85', value: 'For every $1 spent, only $0.85 of value earned. 15% overrun rate.' },
+                    { label: 'CPI = 1.15', value: 'For every $1 spent, $1.15 of value earned. 15% under-run.' },
+                    { label: 'Humphreys Rule', value: 'Research shows cumulative CPI below 1.0 after 20% completion virtually never recovers. Early CPI trends are critical.' },
+                  ]}
+                ]
               },
               {
                 label: 'SPI — Schedule Performance Index',
-                sublabel: 'BCWP ÷ BCWS — your schedule efficiency ratio',
-                badge: 'Efficiency',
-                badgeColor: 'yellow',
-                summary: 'SPI tells you how much work you are completing relative to what was planned.',
+                badge: 'SPI = BCWP ÷ BCWS',
+                badgeColor: 'amber',
+                sublabel: 'Schedule efficiency — how much work completed vs planned',
+                summary: 'SPI below 1.0 means falling behind plan. Loses meaning after 60% contract completion.',
                 content: [
-                  {
-                    type: 'grid' as const,
-                    title: 'SPI Details',
-                    items: [
-                      { label: 'Formula', value: 'SPI = BCWP / BCWS (or EV / PV)' },
-                      { label: 'SPI = 1.0', value: 'On schedule — completing work at the planned rate' },
-                      { label: 'SPI = 0.80', value: 'Only completing 80% of planned work. Behind schedule.' },
-                      { label: 'Limitation', value: 'SPI approaches 1.0 at completion regardless of lateness. Use Earned Schedule (ES) method for programs past 60% complete.' },
-                    ],
-                  },
-                ],
+                  { type: 'grid', grid: [
+                    { label: 'SPI = 1.0', value: 'On schedule.' },
+                    { label: 'SPI = 0.80', value: 'Only completing 80% of planned work.' },
+                    { label: 'Limitation', value: 'SPI approaches 1.0 at completion regardless of lateness. Use Earned Schedule (ES) for programs past 60% complete.' },
+                    { label: 'Use With', value: 'Cross-reference SPI with the network schedule critical path for a complete picture.' },
+                  ]}
+                ]
               },
               {
                 label: 'EAC — Estimate at Completion',
-                sublabel: 'What the total program will actually cost',
-                badge: 'Forecast',
+                badge: 'Most Scrutinized Number',
                 badgeColor: 'red',
-                summary: 'EAC is the contractor\'s best estimate of total cost to complete all authorized work. The most scrutinized number in government contract oversight.',
+                sublabel: 'What the total program will actually cost',
+                summary: 'EAC is the contractor best estimate of total cost to complete all authorized work. Compare contractor EAC to statistical EAC (BAC/CPI) — large gaps are red flags.',
                 content: [
-                  {
-                    type: 'grid' as const,
-                    title: 'EAC Calculation Methods',
-                    items: [
-                      { label: 'EAC = BAC / CPI', value: 'Statistical EAC. Most accurate predictor after 20% contract completion. Assumes future efficiency = cumulative CPI.' },
-                      { label: 'EAC = ACWP + ETC', value: 'Bottom-up EAC. Most accurate when fundamental change has occurred. Most labor-intensive.' },
-                      { label: 'EAC = ACWP + (BAC − BCWP)', value: 'Assumes all cost overruns to date are non-recurring. Only valid when a specific one-time event caused the variance.' },
-                      { label: 'EAC Gap', value: 'Government PMs track BOTH contractor EAC and statistical EAC (BAC/CPI). A large gap — especially if contractor EAC is more optimistic — is a yellow flag.' },
-                    ],
-                  },
-                ],
+                  { type: 'grid', grid: [
+                    { label: 'EAC = BAC / CPI', value: 'Statistical formula. Most accurate after 20% completion. Assumes future efficiency equals cumulative CPI.' },
+                    { label: 'EAC = ACWP + ETC', value: 'Bottom-up. Most accurate when fundamental change occurred. Most labor-intensive.' },
+                    { label: 'EAC = ACWP + (BAC − BCWP)', value: 'Assumes all overruns to date are non-recurring. Only valid for confirmed one-time events.' },
+                    { label: 'Government PM Rule', value: 'Always track BOTH contractor EAC AND BAC/CPI statistical EAC. Require explanation when they diverge more than 5%.' },
+                  ]}
+                ]
               },
               {
                 label: 'ETC — Estimate to Complete',
-                sublabel: 'How much MORE it will cost to finish',
-                badge: 'Forecast',
-                badgeColor: 'yellow',
-                summary: 'ETC is the estimated cost for all work remaining. EAC = ACWP + ETC.',
+                badge: 'ETC = EAC − ACWP',
+                badgeColor: 'amber',
+                sublabel: 'How much MORE to finish remaining work',
+                summary: 'ETC is the projected cost for all work remaining. EAC = ACWP + ETC.',
                 content: [
-                  {
-                    type: 'grid' as const,
-                    title: 'ETC Details',
-                    items: [
-                      { label: 'Full Name', value: 'Estimate to Complete' },
-                      { label: 'Formula', value: 'ETC = EAC − ACWP' },
-                      { label: 'Bottom-Up ETC', value: 'Control Account Managers (CAMs) estimate remaining work in each work package. Most accurate. Required after significant re-planning.' },
-                      { label: 'Sanity Check', value: 'Compare ETC to remaining authorized budget (BAC − BCWP). If ETC >> remaining budget, a formal EAC overrun is likely.' },
-                    ],
-                  },
-                ],
+                  { type: 'grid', grid: [
+                    { label: 'Formula', value: 'ETC = EAC − ACWP' },
+                    { label: 'Bottom-Up ETC', value: 'Control Account Managers (CAMs) estimate remaining work packages. Required after significant re-planning.' },
+                    { label: 'Sanity Check', value: 'Compare ETC to remaining authorized budget (BAC − BCWP). If ETC >> remaining budget, a formal overrun notification is likely required.' },
+                    { label: 'Watch For', value: 'ETC identical to remaining budget often means the estimate has not been updated — not that the program is healthy.' },
+                  ]}
+                ]
               },
               {
                 label: 'TCPI — To-Complete Performance Index',
-                sublabel: 'The efficiency needed to hit your target',
-                badge: 'Forecast',
+                badge: 'TCPI = (BAC−EV)÷(BAC−AC)',
                 badgeColor: 'purple',
-                summary: 'TCPI tells you how efficiently you must perform on all remaining work to meet either BAC or EAC.',
+                sublabel: 'Efficiency needed on all remaining work',
+                summary: 'TCPI > 1.10 means remaining work must be performed 10%+ more efficiently than historical average — usually unrealistic.',
                 content: [
-                  {
-                    type: 'grid' as const,
-                    title: 'TCPI Details',
-                    items: [
-                      { label: 'Formula vs BAC', value: 'TCPI(BAC) = (BAC − BCWP) / (BAC − ACWP)' },
-                      { label: 'Formula vs EAC', value: 'TCPI(EAC) = (BAC − BCWP) / (EAC − ACWP)' },
-                      { label: 'TCPI > 1.10', value: 'Requires performing 10%+ more efficiently than you have been. Likely unrealistic — the EAC may be understated.' },
-                      { label: 'TCPI <= CPI', value: 'Recovery is mathematically feasible. Still requires a credible corrective action plan.' },
-                    ],
-                  },
-                ],
+                  { type: 'grid', grid: [
+                    { label: 'Formula vs BAC', value: 'TCPI(BAC) = (BAC − BCWP) / (BAC − ACWP)' },
+                    { label: 'Formula vs EAC', value: 'TCPI(EAC) = (BAC − BCWP) / (EAC − ACWP)' },
+                    { label: 'TCPI > 1.10', value: 'Requires performing 10%+ more efficiently than history. Likely unrealistic — EAC may be understated.' },
+                    { label: 'TCPI ≤ CPI', value: 'Recovery is mathematically feasible. Still needs a credible corrective action plan.' },
+                  ]}
+                ]
               },
-            ],
+            ]
           },
           {
-            type: 'text' as const,
-            title: 'The EVM Equation to Remember',
-            body: 'Every EVM calculation flows from three numbers: BCWS (what was planned), BCWP (what was accomplished), ACWP (what was spent). Cost Variance = BCWP minus ACWP. Schedule Variance = BCWP minus BCWS. CPI = BCWP/ACWP. SPI = BCWP/BCWS. EAC = BAC/CPI (statistical) or ACWP + ETC (bottom-up). VAC = BAC minus EAC. Know these six formulas and you can answer any EVM question.',
+            type: 'tip',
+            heading: 'The Six Formulas You Must Know Cold',
+            body: 'CV = BCWP − ACWP. SV = BCWP − BCWS. CPI = BCWP/ACWP. SPI = BCWP/BCWS. EAC = BAC/CPI (statistical). VAC = BAC − EAC. Everything else in EVM derives from these six.'
           },
         ],
-        noviceContent: {
-          summary: 'EVM uses three numbers to measure program health: what you planned to do (BCWS/PV), what you actually did (BCWP/EV), and what you actually spent (ACWP/AC). All ratios and variances come from comparing these three. Negative variances = problems. CPI < 1.0 = over budget. SPI < 1.0 = behind schedule.',
-          keyPoints: [
-            'BCWS (PV) = planned budget for work scheduled by today',
-            'BCWP (EV) = budget value of work you actually finished',
-            'ACWP (AC) = actual dollars spent on work you finished',
-            'CV = BCWP minus ACWP — negative means over budget',
-            'SV = BCWP minus BCWS — negative means behind schedule',
-            'CPI = BCWP / ACWP — below 1.0 means spending more than earning',
-            'EAC = what the whole contract will actually cost when finished',
-            'VAC = BAC minus EAC — negative means projected overrun',
-          ],
-        },
-        intermediateContent: {
-          summary: 'Mastering EVM means understanding what each metric reveals and what it hides. The CPI is the most predictive metric after 20% completion. SV and SPI become less meaningful in the final third of a contract. EAC = BAC/CPI is statistically the most accurate completion forecast in most cases.',
-          keyPoints: [
-            'Humphreys Rule: once cumulative CPI drops below 1.0 after 20% completion, it almost never recovers',
-            'Require contractors to provide both bottom-up EAC and statistical EAC — large gaps are red flags',
-            'TCPI vs BAC greater than 1.10 suggests an unrealistic completion estimate',
-            'SV converges to zero at contract end regardless of actual lateness — use Earned Schedule (ES) for late-program schedule assessment',
-            'VAC thresholds (typically plus or minus 10-15%) trigger Contractor Corrective Action Requirements',
-          ],
-        },
-        advancedContent: {
-          summary: 'At the advanced level, you evaluate EVMS compliance (ANSI/EIA 748), identify gaming behaviors (artificial earning, management reserve abuse, rubber baselines), and use EVM data to drive contract modifications and source selection past performance evaluations.',
-          keyPoints: [
-            'EVMS compliance required for contracts over $20M cost-type and over $50M fixed-price per DoDI 5000.02',
-            'IBR (Integrated Baseline Review) within 180 days of award validates that the PMB is realistic before problems emerge',
-            'Common EVM gaming: over-earning on easy tasks early, under-reporting ACWP, using LOE work packages to mask schedule slips',
-            'EVM data feeds Format 1, Format 3, and Format 5 in the IPMR — ensure consistency across all reporting',
-            'Use independent EAC (IEAC = BAC/CPI) alongside contractor EAC in PMRs — document the gap and require explanation when they diverge more than 5%',
-          ],
-        },
-        assessment: {
-          questions: [
-            {
-              id: 'q1',
-              question: 'A program has BCWP = $800K, ACWP = $1,000K, BCWS = $900K. What is the Cost Performance Index (CPI)?',
-              options: ['0.89', '0.80', '1.25', '1.13'],
-              correct: 1,
-              explanation: 'CPI = BCWP / ACWP = $800K / $1,000K = 0.80. The program is spending $1.25 for every $1.00 of value earned — a 20% cost overrun rate.',
-            },
-            {
-              id: 'q2',
-              question: 'Using the same data (BCWP = $800K, ACWP = $1,000K, BCWS = $900K), what is the Schedule Variance (SV)?',
-              options: ['+$100K (ahead of schedule)', '-$100K (behind schedule)', '-$200K (behind schedule)', '+$200K (ahead of schedule)'],
-              correct: 1,
-              explanation: 'SV = BCWP − BCWS = $800K − $900K = −$100K. Negative means the program is behind schedule — $100K worth of planned work has not been completed.',
-            },
-            {
-              id: 'q3',
-              question: 'What does a TCPI (vs BAC) of 1.25 indicate?',
-              options: ['The program is performing 25% ahead of budget', 'Remaining work must be performed 25% more efficiently than the plan to stay within BAC — likely unrealistic', 'The program has a 25% cost overrun', 'The program needs only 75% of its remaining budget'],
-              correct: 1,
-              explanation: 'TCPI of 1.25 means to complete remaining work within BAC, you must perform at 125% efficiency — 25% better than the baseline plan. When TCPI significantly exceeds current CPI, the completion budget is unrealistic and EAC should be revised upward.',
-            },
-            {
-              id: 'q4',
-              question: 'The statistical EAC formula (BAC / CPI) is most reliable when:',
-              options: ['The contract is in its first month', 'After approximately 20% contract completion', 'Only when the contractor provides a bottom-up estimate', 'During the final 10% of the contract'],
-              correct: 1,
-              explanation: 'Research (including RAND and GAO studies) consistently shows EAC = BAC/CPI is among the most accurate predictors of final cost after approximately 20% contract completion — often more accurate than contractor bottom-up estimates subject to optimism bias.',
-            },
-            {
-              id: 'q5',
-              question: 'Why does Schedule Variance (SV) converge to zero at contract completion?',
-              options: ['Because all cost overruns are corrected at completion', 'Because BCWP and BCWS both equal BAC at contract completion, making SV = 0 regardless of actual lateness', 'Because the contractor reconciles schedule variances before final payment', 'Because the government accepts any completion date within 10% of plan'],
-              correct: 1,
-              explanation: 'At contract completion, all work is earned (BCWP = BAC) and all work was planned (BCWS = BAC), so SV = BCWP − BCWS = 0 regardless of how late the program finished. This is a fundamental limitation of SV for late-program schedule analysis.',
-            },
-          ],
-        },
+        quiz: [
+          {
+            id: 'q1',
+            question: 'A program has BCWP = $800K, ACWP = $1,000K, BCWS = $900K. What is the CPI?',
+            options: ['0.89', '0.80', '1.25', '1.13'],
+            correct: 1,
+            explanation: 'CPI = BCWP / ACWP = $800K / $1,000K = 0.80. For every dollar spent, only $0.80 of value is earned — a 20% cost overrun rate.'
+          },
+          {
+            id: 'q2',
+            question: 'Using the same data (BCWP=$800K, ACWP=$1,000K, BCWS=$900K), what is the Schedule Variance?',
+            options: ['+$100K (ahead)', '-$100K (behind)', '-$200K (behind)', '+$200K (ahead)'],
+            correct: 1,
+            explanation: 'SV = BCWP − BCWS = $800K − $900K = −$100K. Negative SV means behind schedule — $100K worth of planned work has not been completed.'
+          },
+          {
+            id: 'q3',
+            question: 'What does TCPI > 1.10 indicate?',
+            options: ['Program is 10% ahead of budget', 'Remaining work must be performed 10%+ more efficiently than history — likely unrealistic', 'Program has a 10% cost overrun', 'Program needs only 90% of remaining budget'],
+            correct: 1,
+            explanation: 'TCPI of 1.10 means to stay within BAC, future work must be performed 10% more efficiently than the cumulative CPI. When TCPI significantly exceeds current CPI, the EAC should be revised upward.'
+          },
+          {
+            id: 'q4',
+            question: 'The statistical EAC formula (BAC/CPI) is most reliable when:',
+            options: ['Contract is in its first month', 'After approximately 20% contract completion', 'Only when contractor provides bottom-up estimate', 'During final 10% of contract'],
+            correct: 1,
+            explanation: 'Research (RAND, GAO) consistently shows EAC = BAC/CPI is among the most accurate predictors after approximately 20% completion — often more accurate than optimistic bottom-up estimates.'
+          },
+          {
+            id: 'q5',
+            question: 'Why does Schedule Variance (SV) converge to zero at contract completion?',
+            options: ['All overruns are corrected at completion', 'BCWP and BCWS both equal BAC at completion, making SV = 0 regardless of lateness', 'Contractor reconciles variances before final payment', 'Government accepts any date within 10% of plan'],
+            correct: 1,
+            explanation: 'At contract completion all work is earned (BCWP = BAC) and all was planned (BCWS = BAC), so SV = 0 regardless of how late the program finished. Use Earned Schedule (ES) for late-program schedule analysis.'
+          },
+        ],
       },
-    },
     {
       id: 'data-4',
       title: 'Reading IPMR Reports — What Every PM Looks for in Each Format',
       duration: '22 min',
       type: 'lesson' as const,
-      content: {
-        sections: [
-          {
-            type: 'header' as const,
-            title: 'What Is the IPMR and Why Does It Matter?',
-            body: 'The Integrated Program Management Report (IPMR) is the primary contractually required data deliverable for EVM reporting on DoD contracts. It replaced the older Contract Performance Report (CPR) and Contract Funds Status Report (CFSR) through DI-MGMT-81861 (2012). If your contract exceeds $20M cost-type or $50M fixed-price, you will receive IPMR data from your contractor every month. This lesson teaches what each IPMR format contains and what government PMs look for.',
-          },
-          {
-            type: 'expandable_list' as const,
-            title: 'The Six IPMR Formats',
-            items: [
+      description: 'Learn to read and analyze the six IPMR formats that contractors submit monthly on DoD programs, and understand what every government PM should look for in each one.',
+      content: [
+        {
+          type: 'text' as const,
+          heading: 'What Is the IPMR and Why Does It Matter?',
+          body: 'The Integrated Program Management Report (IPMR) is the primary contractually required data deliverable for EVM reporting on DoD contracts. It replaced the older Contract Performance Report (CPR) and Contract Funds Status Report (CFSR) through DI-MGMT-81861 (2012). If your contract exceeds $20M cost-type or $50M fixed-price, you will receive IPMR data from your contractor every month. This lesson teaches what each IPMR format contains and what government PMs look for.',
+        },
+        {
+          type: 'expandable_list' as const,
+          heading: 'The Six IPMR Formats',
+          expandableItems: [
               {
                 label: 'Format 1 — WBS Performance Summary',
                 sublabel: 'Cost and schedule performance rolled up by Work Breakdown Structure',
@@ -3868,42 +3757,11 @@ export const modules: Module[] = [
           },
           {
             type: 'text' as const,
-            title: 'IPMR Monthly Review Workflow',
+            heading: 'IPMR Monthly Review Workflow',
             body: 'Step 1 — Check Format 1 total contract CPI and VAC trend (5 min). Step 2 — Identify top 3 WBS elements by worst CV and SV (10 min). Step 3 — Read Format 5 narratives for all threshold variances (15 min). Step 4 — Check Format 3 for any baseline changes (5 min). Step 5 — Cross-reference Format 4 staffing to confirm headcount supports recovery plans (5 min). Step 6 — Compare Format 6 critical path to milestone plan (10 min). Total: approximately 50 minutes for a thorough review.',
           },
-        ],
-        noviceContent: {
-          summary: 'The IPMR is the monthly report card from your contractor. Format 1 shows where costs and schedule are off. Format 5 explains WHY and what they are doing about it. Format 6 is the schedule showing when things will be done. Negative numbers mean problems.',
-          keyPoints: [
-            'Format 1 = WBS performance table — where are the cost and schedule problems?',
-            'Format 3 = baseline history — has the plan been changed to hide problems?',
-            'Format 4 = staffing — are enough people working on the program?',
-            'Format 5 = narratives — the story behind the numbers. Most important for understanding.',
-            'Format 6 = schedule — what is on the critical path and what is at risk?',
-          ],
-        },
-        intermediateContent: {
-          summary: 'IPMR review is a monthly program health diagnostic. The power is in cross-referencing formats: Format 1 cost problems explained by Format 5 narratives, confirmed by Format 4 staffing shortfalls, visible on Format 6 critical path. A Format 5 that does not align with Format 1 data is either incomplete or misleading.',
-          keyPoints: [
-            'Cross-reference F1 problem WBS elements with F5 narratives — every threshold variance needs a credible root cause and dated corrective action',
-            'Format 3 baseline changes require government approval — retroactive replanning is a red flag',
-            'When Format 5 EAC basis differs significantly from BAC/CPI statistical EAC, require a written reconciliation',
-            'Format 4 staffing is a leading indicator — understaffing today predicts schedule slippage 1-3 months from now',
-            'Format 6 negative total float means tasks are already past their planned completion date',
-          ],
-        },
-        advancedContent: {
-          summary: 'Senior PMs use IPMR data to drive contractor corrective actions, support EAC reviews, and document program status for oversight bodies (DAES, SAR, DAB). The IPMR is also legal documentation — in disputes and claims, contractor IPMR data is frequently used as evidence of performance.',
-          keyPoints: [
-            'Over Target Baseline (OTB) reprogramming requires formal government authorization and a new IBR — it resets measurement zero but does not change BAC or EAC',
-            'IPMR data feeds the Defense Acquisition Executive Summary (DAES) and Selected Acquisition Reports (SARs) — ensure alignment across all program reporting',
-            'Contractual IPMR data items specify submission timelines (typically 25 working days after month end) — failures to submit compliant data are contract violations',
-            'EVMS compliance surveillance (DoDI 5000.02) requires annual surveillance of the contractor\'s EVMS system',
-            'In claim situations, IPMR data creates a contemporaneous record of performance — Format 5 narratives are discoverable in litigation',
-          ],
-        },
-        assessment: {
-          questions: [
+      ],
+      quiz: [
             {
               id: 'q1',
               question: 'Which IPMR format contains written narratives explaining root causes and corrective actions for significant variances?',
@@ -3939,9 +3797,16 @@ export const modules: Module[] = [
               correct: 1,
               explanation: 'An OTB is a formal, government-approved action that resets the Performance Measurement Baseline when the current baseline is so unrealistic that EVM measurements have lost informational value. It requires SSA/PEO approval, a revised EAC, and a new Integrated Baseline Review (IBR). OTB does not change the contract price.',
             },
-          ],
-        },
-      },
+      ],
+      keyTerms: [
+        { term: 'IPMR', definition: 'Integrated Program Management Report — the primary monthly EVM data deliverable from contractors on DoD programs, replacing the older CPR and CFSR.' },
+        { term: 'Format 1', definition: 'WBS Performance Summary — the most used IPMR format showing cost and schedule performance by WBS element.' },
+        { term: 'Format 5', definition: 'Explanations and Problem Analysis — written narratives from the contractor explaining root causes of variances and corrective actions.' },
+        { term: 'Format 6', definition: 'Integrated Master Schedule (IMS) in electronic format — shows network logic, critical path, and near-term milestones.' },
+        { term: 'OTB', definition: 'Over Target Baseline — a formal government-approved action that resets the Performance Measurement Baseline when the current baseline is no longer achievable.' },
+        { term: 'Total Float', definition: 'The amount of time a task can slip before it delays a downstream milestone or the contract completion. Negative total float means the task is already late.' },
+        { term: 'VAC', definition: 'Variance at Completion — the difference between BAC and EAC. Negative VAC means the program is projected to overrun budget.' },
+      ],
     },
     ]
   },
@@ -4674,242 +4539,190 @@ export const modules: Module[] = [
         ]
       },
       {
-      id: 'capture-3',
-      title: 'Section L vs Section M — The RFP Anatomy Every Competitor Must Master',
-      duration: '28 min',
-      type: 'lesson' as const,
-      content: {
-        sections: [
+        id: 'capture-3',
+        title: 'Section L vs Section M — The RFP Anatomy Every Competitor Must Master',
+        duration: '28 min',
+        description: 'Understand the difference between Section L (instructions) and Section M (evaluation criteria), how to structure a winning proposal around Section M, and the difference between LPTA and best-value acquisitions.',
+        keyTerms: [
+          { term: 'Section L', definition: 'Instructions, Conditions, and Notices to Offerors — the format and packaging rules for your proposal.' },
+          { term: 'Section M', definition: 'Evaluation Factors for Award — the scoring rubric the government uses to evaluate proposals.' },
+          { term: 'SSEB', definition: 'Source Selection Evaluation Board — the government evaluators who score proposals against Section M criteria.' },
+          { term: 'Strength', definition: 'An aspect of a proposal that exceeds requirements and provides a documented benefit to the government.' },
+          { term: 'LPTA', definition: 'Lowest Price Technically Acceptable — award goes to lowest price that meets minimum technical standards.' },
+          { term: 'Best Value', definition: 'An acquisition approach where technical superiority can justify a higher price.' },
+          { term: 'Outstanding', definition: 'Highest adjectival rating — exceptional strengths, very low risk of unsuccessful performance.' },
+          { term: 'Acceptable', definition: 'Meets requirements but has no strengths. Often a losing rating in competitive fields.' },
+        ],
+        content: [
           {
-            type: 'header' as const,
-            title: 'Why Section L and Section M Are the Two Most Important Pages in Any RFP',
-            body: 'Every federal solicitation is organized by the Uniform Contract Format (UCF) defined in FAR Part 15. Most sections describe requirements — Sections L and M are different. They describe HOW the government will evaluate and select the winner. Winning proposals are built from M backward through L. Losing proposals are built from the SOW forward and hope M matches.',
+            type: 'text',
+            heading: 'Why L and M Are the Two Most Important Pages in Any RFP',
+            body: "Every federal solicitation is organized by the Uniform Contract Format (UCF) from FAR Part 15. Most sections describe requirements — Sections L and M are different. They describe HOW the government will evaluate and select the winner. Winning proposals are built from M backward through L. Losing proposals are built from the SOW forward and hope M matches."
           },
           {
-            type: 'expandable_list' as const,
-            title: 'Section L — Instructions, Conditions, and Notices to Offerors',
-            items: [
+            type: 'expandable_list',
+            heading: 'Section L — Instructions, Conditions, and Notices to Offerors',
+            body: 'Section L is the "how to turn in your homework" document. It governs format, not content.',
+            expandableItems: [
               {
                 label: 'What Section L IS',
-                sublabel: 'The proposal architecture document',
                 badge: 'Procedural',
                 badgeColor: 'blue',
-                summary: 'Section L tells offerors exactly what to submit, how to format it, where to put it, and how long it can be.',
+                sublabel: 'The proposal packaging and format instructions',
+                summary: 'Section L tells offerors exactly what to submit, how to format it, and how long it can be. Violating it can get your proposal rejected without evaluation.',
                 content: [
-                  { type: 'text' as const, body: 'Section L is the instruction manual for building your proposal. It specifies: volume structure (Technical, Management, Past Performance, Price), page limits per volume, font size and margin requirements, file format and submission method, copies required, the proposal due date and time, and other administrative requirements.' },
-                  {
-                    type: 'bullets' as const,
-                    title: 'Common Section L Requirements',
-                    items: [
-                      '"Volume I — Technical Approach, not to exceed 50 pages, 12pt Times New Roman, 1-inch margins"',
-                      '"Volume II — Management Approach, not to exceed 25 pages"',
-                      '"Volume III — Past Performance, provide up to 3 references using the government-provided form"',
-                      '"Volume IV — Price/Cost, no page limit, must include completed DD Form 1423 (CDRLs)"',
-                      '"All volumes must be submitted via SAM.gov by 4:00 PM EST on [date]"',
-                    ],
-                  },
-                  { type: 'text' as const, body: 'CRITICAL: Section L compliance is binary. A proposal that violates Section L instructions (wrong format, exceeds page limits, missing required forms) can be rejected as non-responsive WITHOUT evaluation. The contracting officer generally does not have discretion to overlook administrative non-compliance.' },
-                  {
-                    type: 'grid' as const,
-                    title: 'Common Section L Traps',
-                    items: [
-                      { label: 'Page Count Trap', value: 'Government counts pages differently — a page with a 6pt footnote still counts. Know what "page" means in this L.' },
-                      { label: 'Exhibit Counting', value: 'Some Section Ls say figures and tables DO count toward the page limit. Others say they do not. Read carefully.' },
-                      { label: 'Font Rules', value: 'Many Ls now say "12pt minimum in all body text." Headers, figure captions, and table cells may or may not be exempt.' },
-                      { label: 'Responsive vs Compliant', value: '"Responsive" = meets threshold submission requirements. "Compliant" = meets all technical requirements. You must be both.' },
-                    ],
-                  },
-                ],
+                  { type: 'bullets', items: [
+                    '"Volume I — Technical Approach, not to exceed 50 pages, 12pt Times New Roman, 1-inch margins"',
+                    '"Volume II — Management Approach, not to exceed 25 pages"',
+                    '"Volume III — Past Performance, provide up to 3 references using the government-provided form"',
+                    '"Volume IV — Price/Cost, no page limit, must include completed DD Form 1423 (CDRLs)"',
+                    '"All volumes must be submitted via SAM.gov by 4:00 PM EST on [date]"',
+                  ]},
+                  { type: 'warning', body: 'Section L compliance is binary. A proposal violating page limits, font requirements, or missing required forms can be rejected as non-responsive WITHOUT evaluation. The CO generally has no discretion to waive administrative non-compliance.' },
+                  { type: 'grid', grid: [
+                    { label: 'Page Count Trap', value: 'Government counts pages differently. Know what "page" means in this specific L.' },
+                    { label: 'Exhibit Counting', value: 'Some Ls say figures and tables count toward page limits. Others exclude them. Read carefully.' },
+                    { label: 'Font Rules', value: 'Many Ls say "12pt minimum in all body text." Know whether headers and captions are exempt.' },
+                    { label: 'Responsive vs Compliant', value: '"Responsive" = meets submission requirements. "Compliant" = meets technical requirements. You must be both.' },
+                  ]}
+                ]
               },
               {
-                label: 'What Section L IS NOT',
-                sublabel: 'The most common proposal mistake',
+                label: 'The Most Common Proposal Mistake: Confusing L with M',
                 badge: 'Warning',
                 badgeColor: 'red',
-                summary: 'Section L is NOT where the government tells you what they want technically. It only controls proposal format.',
+                sublabel: 'Section L does not tell you what the government wants to evaluate',
+                summary: 'Section L only controls proposal format. Section M controls what is scored. If you write to L without reading M, you are guessing.',
                 content: [
-                  { type: 'text' as const, body: 'The most common proposal mistake: confusing Section L with Section M. Section L tells you HOW to structure your proposal. Section M tells you WHAT MATTERS to the government. If Section L says "describe your technical approach" but Section M says technical approach is worth 40% of evaluation, your narrative must be built to address the M criteria — not just fill the L template.' },
-                  {
-                    type: 'bullets' as const,
-                    title: 'The L vs M Confusion Mistake',
-                    items: [
-                      'Section L says: "Describe your staffing plan." Section M says staffing is NOT an evaluation factor. Your staffing section will be read for compliance only, not scored. Keep it short.',
-                      'Section L says: "Describe your technical approach." Section M has three sub-factors: Innovation (15%), Risk Mitigation (25%), Schedule Realism (20%). Your technical approach must address each sub-factor explicitly — preferably with sub-headers that mirror M language.',
-                      'Winning proposals use M as the writing guide and L as the compliance checklist.',
-                    ],
-                  },
-                ],
+                  { type: 'bullets', items: [
+                    'Section L says: "Describe your staffing plan." Section M says staffing is NOT an evaluation factor. Your staffing section will be read for compliance only, not scored. Keep it short.',
+                    'Section L says: "Describe your technical approach." Section M has three sub-factors: Innovation (15%), Risk Mitigation (25%), Schedule Realism (20%). Your technical approach must address each sub-factor with sub-headers that mirror M language.',
+                    'Winning proposals use M as the writing guide and L as the compliance checklist.',
+                  ]}
+                ]
               },
-            ],
+            ]
           },
           {
-            type: 'expandable_list' as const,
-            title: 'Section M — Evaluation Factors for Award',
-            items: [
+            type: 'expandable_list',
+            heading: 'Section M — Evaluation Factors for Award',
+            body: 'Section M is the scoring rubric. Build your entire proposal architecture from M backward.',
+            expandableItems: [
               {
                 label: 'What Section M IS',
-                sublabel: 'The scoring rubric — the most important section in the RFP',
-                badge: 'Critical',
+                badge: 'Most Important',
                 badgeColor: 'red',
-                summary: 'Section M defines the factors and sub-factors the SSEB will use to evaluate proposals and assign ratings. This is what your proposal must address to win.',
+                sublabel: 'The scoring rubric — what the SSEB grades you on',
+                summary: 'Section M defines the factors, sub-factors, and relative order of importance the SSEB uses to evaluate proposals. FAR 15.304 requires this transparency.',
                 content: [
-                  { type: 'text' as const, body: 'Section M must state: (1) all evaluation factors and significant sub-factors, (2) their relative order of importance, and (3) whether award will be made on a best-value tradeoff or LPTA basis. FAR 15.304 requires this transparency so offerors can intelligently invest their proposal resources.' },
-                  {
-                    type: 'grid' as const,
-                    title: 'M Structure Example',
-                    items: [
-                      { label: 'Factor 1 — Technical Approach (Most Important)', value: '1.1: Understanding of Requirements; 1.2: Technical Solution; 1.3: Risk Mitigation' },
-                      { label: 'Factor 2 — Management Approach (Equal to Past Perf)', value: '2.1: Program Management Plan; 2.2: Key Personnel; 2.3: Transition Plan' },
-                      { label: 'Factor 3 — Past Performance (Equal to Mgmt)', value: 'Relevance and quality of recent similar contracts.' },
-                      { label: 'Factor 4 — Price/Cost (Not Scored)', value: 'Price is NOT typically rated — it is evaluated for reasonableness and realism (cost-type contracts).' },
-                    ],
-                  },
-                ],
+                  { type: 'grid', grid: [
+                    { label: 'Factor 1 — Technical (Most Important)', value: '1.1: Understanding of Requirements; 1.2: Technical Solution; 1.3: Risk Mitigation' },
+                    { label: 'Factor 2 — Management (Equal to Past Perf)', value: '2.1: Program Management Plan; 2.2: Key Personnel; 2.3: Transition Plan' },
+                    { label: 'Factor 3 — Past Performance (Equal to Mgmt)', value: 'Relevance and quality of recent similar contracts.' },
+                    { label: 'Factor 4 — Price (Not Scored)', value: 'Evaluated for reasonableness and realism. Not rated on a scale.' },
+                  ]},
+                  { type: 'tip', body: 'Mirror Section M factor structure as your proposal section headers. Evaluators use M as a checklist — matching your headers to their factors makes it easy to credit your strengths.' }
+                ]
               },
               {
                 label: 'Adjectival Ratings: Outstanding to Unacceptable',
-                sublabel: 'How the SSEB scores your proposal',
-                badge: 'Ratings',
+                badge: 'Know These Cold',
                 badgeColor: 'green',
-                summary: 'The government typically uses adjectival ratings (not numeric scores). Understanding these ratings drives how you write.',
+                sublabel: 'How the SSEB scores your proposal',
+                summary: 'The government uses adjectival ratings, not numeric scores. Understanding these drives how you write.',
                 content: [
-                  {
-                    type: 'grid' as const,
-                    title: 'SSAC/SSEB Adjectival Rating Scale',
-                    items: [
-                      { label: 'Outstanding', value: 'Exceptional approach with strengths significantly benefiting the government. Very low risk of unsuccessful performance. Requires multiple Strengths and zero Weaknesses.' },
-                      { label: 'Good', value: 'Thorough and well-defined approach. At least one strength. Low risk.' },
-                      { label: 'Acceptable', value: 'Meets requirements. No strengths and no significant weaknesses. Moderate risk.' },
-                      { label: 'Marginal', value: 'Fails to meet requirements in some areas. Has significant weaknesses. Can be corrected if discussions are opened.' },
-                    ],
-                  },
-                  { type: 'text' as const, body: 'CRITICAL INSIGHT: An "Acceptable" rating is a losing rating in a competitive field. If all offerors are "Acceptable," price wins. You must write to earn Strengths — specific, documented benefits to the government that exceed requirements.' },
-                  {
-                    type: 'bullets' as const,
-                    title: 'How to Write to Earn a Strength',
-                    items: [
-                      'A Strength must EXCEED the requirement — not just meet it. "We will provide monthly status reports" meets a requirement. "We will provide a real-time dashboard with threshold alerts 48 hours before a schedule variance becomes actionable" earns a Strength.',
-                      'Strengths must be documented in your proposal. Evaluators can only credit what they can see and quote.',
-                      'Use the Government\'s exact M language as section headers — this signals compliance and makes the evaluator\'s job easy.',
-                      'Each sub-factor should have at least one discriminating element your competitors are unlikely to offer.',
-                    ],
-                  },
-                ],
+                  { type: 'grid', grid: [
+                    { label: 'Outstanding', value: 'Exceptional strengths significantly benefiting the government. Very low risk. Requires multiple Strengths, zero Weaknesses.' },
+                    { label: 'Good', value: 'Thorough approach. At least one Strength. Low risk.' },
+                    { label: 'Acceptable', value: 'Meets requirements. No strengths, no significant weaknesses. Moderate risk.' },
+                    { label: 'Marginal / Unacceptable', value: 'Fails to meet requirements. Has Significant Weaknesses or Deficiencies.' },
+                  ]},
+                  { type: 'warning', body: '"Acceptable" is a losing rating in a competitive field. When all offerors are Acceptable, price wins. You must write to earn Strengths — aspects that EXCEED requirements with documented, quantifiable benefit to the government.' },
+                  { type: 'bullets', items: [
+                    'A Strength must EXCEED the requirement. "We will provide monthly status reports" meets a requirement. "We will provide a real-time dashboard with threshold alerts 48 hours before a schedule variance becomes actionable" earns a Strength.',
+                    'Strengths must be documented — evaluators can only credit what they can see and quote.',
+                    'Use the Government exact M language as section headers.',
+                    'Each sub-factor needs at least one discriminating element your competitors cannot match.',
+                  ]}
+                ]
               },
               {
-                label: 'Best Value vs. LPTA — The Evaluation Method',
-                sublabel: 'Two completely different competitive strategies',
+                label: 'Best Value vs. LPTA — Two Completely Different Strategies',
                 badge: 'Strategy',
                 badgeColor: 'purple',
-                summary: 'How the government trades off technical quality against price is stated in Section M and drives your entire bid/no-bid and pricing strategy.',
+                sublabel: 'The evaluation method determines your entire bid strategy',
+                summary: 'Whether the government uses best-value tradeoff or LPTA is stated in Section M and drives your pricing strategy as much as cost estimating.',
                 content: [
-                  {
-                    type: 'grid' as const,
-                    title: 'Best Value vs. LPTA',
-                    items: [
-                      { label: 'Best Value Tradeoff', value: 'Technical quality CAN justify a higher price. SSA decides if the premium is "worth it." Strategy: be technically superior and price competitively.' },
-                      { label: 'LPTA (Lowest Price Technically Acceptable)', value: 'Once minimum technical standards are met, the lowest price wins. Strategy: price wins everything — do not over-invest in technical differentiation.' },
-                      { label: 'LPTA Warning', value: 'LPTA rewards lowest cost over best capability. DoD has been moving away from overuse of LPTA since 2017 NDAA guidance.' },
-                      { label: 'Best Value Warning', value: 'In best value, more is not always better. A $10M technical premium is only worth it if the SSA believes your solution provides more than $10M in benefit. Know your Price to Win.' },
-                    ],
-                  },
-                ],
+                  { type: 'grid', grid: [
+                    { label: 'Best Value Tradeoff', value: 'Technical superiority CAN justify a higher price. SSA decides if the premium is worth it. Strategy: be technically outstanding and price competitively.' },
+                    { label: 'LPTA', value: 'Once minimum technical standards are met, lowest price wins. Strategy: price wins everything — do not over-invest in technical differentiation.' },
+                    { label: 'LPTA Warning', value: 'DoD has reduced LPTA usage since 2017 NDAA because it rewards lowest cost over best capability. Know when to challenge an inappropriate LPTA determination.' },
+                    { label: 'Best Value Warning', value: 'A $10M technical premium is only worth it if the SSA believes it provides more than $10M in benefit. Know your Price to Win.' },
+                  ]}
+                ]
               },
-            ],
+            ]
           },
           {
-            type: 'text' as const,
-            title: 'How to Use L and M Together: The Winning Process',
-            body: 'Step 1: Read Section M first — identify every factor, sub-factor, and order of importance. Step 2: Build your proposal outline from M factors as the section structure. Step 3: For each M sub-factor, draft 1-3 discriminating points and proof points. Step 4: Use Section L page limits to size your investment — more pages to higher-weighted factors. Step 5: Compliance-check against L before submission. Your proposal is now structured to make the evaluator\'s job easy, with every page earning toward a rating.',
+            type: 'tip',
+            heading: 'The Winning Proposal Process',
+            body: 'Step 1: Read M first — identify every factor, sub-factor, and order of importance. Step 2: Build outline from M factors as section structure. Step 3: For each M sub-factor, draft 1-3 discriminating points. Step 4: Use L page limits to size investment — more pages to higher-weighted factors. Step 5: Compliance-check against L before submission.'
           },
         ],
-        noviceContent: {
-          summary: 'Think of Section L as the "how to turn in your homework" instructions and Section M as the "grading rubric." Read M before you write anything. If you do not know what is on the rubric, you are guessing.',
-          keyPoints: [
-            'Section L = format instructions (how to package your proposal)',
-            'Section M = scoring rubric (what factors the government grades you on)',
-            'Build your proposal from M backward — make every section address a scored factor',
-            'LPTA: lowest compliant price wins. Best Value: better quality can justify higher price.',
-            '"Acceptable" ratings usually lose in competitive procurements — write to earn Strengths',
-          ],
-        },
-        intermediateContent: {
-          summary: 'Your proposal outline MUST mirror Section M factor structure. Evaluators use Section M as a checklist. Every discriminator should be traceable back to a specific M sub-factor. Color reviews should evaluate proposals against Section M scoring criteria, not just editorial quality.',
-          keyPoints: [
-            'Map every Section M sub-factor to a proposal section — then write to exceed the requirement, not just meet it',
-            'Strengths are earned by exceeding requirements with documented, quantifiable benefits to the government',
-            'Pink, Red, and Gold team reviews should evaluate proposals against Section M scoring criteria',
-            'Past Performance relevancy is typically defined in M — know the recency/size/scope criteria to select the right references',
-            'Price evaluation method (best value vs LPTA) drives pricing strategy as much as cost estimating does',
-          ],
-        },
-        advancedContent: {
-          summary: 'At the expert level, you are shaping Section M before the RFP drops. Through pre-solicitation engagement and industry day comments, you influence what factors the government includes and how they weight them. Post-award, your proposal commitments become performance standards.',
-          keyPoints: [
-            'Pre-solicitation RFI responses and industry day participation let you suggest sub-factors that favor your solution',
-            'After award, proposal commitments (especially Strengths) become contractually binding performance standards',
-            'Section 808 of the FY2017 NDAA required DoD to reduce LPTA usage — know when to challenge an inappropriate LPTA determination',
-            'Source Selection Information (SSI) is protected under FAR 3.104 procurement integrity rules',
-            'Debriefs (FAR 15.506) are mandatory and must reveal your final ratings and the rationale for award',
-          ],
-        },
-        assessment: {
-          questions: [
-            {
-              id: 'q1',
-              question: 'Which section of the RFP contains the evaluation factors and their relative order of importance?',
-              options: ['Section C (Description/Specification)', 'Section L (Instructions to Offerors)', 'Section M (Evaluation Factors for Award)', 'Section H (Special Contract Requirements)'],
-              correct: 2,
-              explanation: 'Section M — Evaluation Factors for Award — is required by FAR 15.304 to disclose all evaluation factors, significant sub-factors, and their relative order of importance. This is the scoring rubric.',
-            },
-            {
-              id: 'q2',
-              question: 'A proposal that violates Section L page limits can be:',
-              options: ['Penalized with a lower technical rating', 'Rejected as non-responsive without evaluation', 'Accepted with a waiver from the Contracting Officer', 'Evaluated only for the compliant portions'],
-              correct: 1,
-              explanation: 'Administrative non-compliance with Section L (page limits, format, required forms) typically results in rejection as non-responsive. The CO generally does not have discretion to waive these requirements in a competitive source selection.',
-            },
-            {
-              id: 'q3',
-              question: 'What is an "Outstanding" adjectival rating?',
-              options: ['A proposal that meets all requirements with no weaknesses', 'A proposal with exceptional strengths significantly benefiting the government and very low risk', 'A proposal with one strength and no weaknesses', 'The highest price-to-performance ratio proposal'],
-              correct: 1,
-              explanation: 'Outstanding means the proposal has exceptional strengths that will significantly benefit the government, and the risk of unsuccessful performance is very low. It requires demonstrating benefits well above threshold requirements.',
-            },
-            {
-              id: 'q4',
-              question: 'Under LPTA (Lowest Price Technically Acceptable), which proposal wins?',
-              options: ['The technically superior proposal regardless of price', 'The proposal with the best value tradeoff', 'The lowest-priced proposal that meets minimum technical requirements', 'The proposal with the highest past performance rating'],
-              correct: 2,
-              explanation: 'LPTA awards to the lowest-priced proposal that meets minimum technical acceptability. Once technical acceptability is established, only price matters — fundamentally different from best-value tradeoff.',
-            },
-            {
-              id: 'q5',
-              question: 'The best practice for structuring a proposal under best-value source selection is to:',
-              options: ['Follow the SOW/PWS section by section', 'Mirror Section L volume structure only', 'Mirror Section M factor/sub-factor structure as the proposal outline', 'Use the offeror\'s standard proposal template'],
-              correct: 2,
-              explanation: 'Winning proposals mirror Section M factor and sub-factor structure in their section headers. This makes it easy for evaluators to find and credit strengths. Section L defines the format container; Section M defines the content architecture.',
-            },
-          ],
-        },
+        quiz: [
+          {
+            id: 'q1',
+            question: 'Which section of the RFP contains the evaluation factors and their relative order of importance?',
+            options: ['Section C (Description/Specification)', 'Section L (Instructions to Offerors)', 'Section M (Evaluation Factors for Award)', 'Section H (Special Contract Requirements)'],
+            correct: 2,
+            explanation: 'Section M — Evaluation Factors for Award — is required by FAR 15.304 to disclose all evaluation factors, significant sub-factors, and their relative order of importance. This is the scoring rubric.'
+          },
+          {
+            id: 'q2',
+            question: 'A proposal that violates Section L page limits can be:',
+            options: ['Penalized with a lower technical rating', 'Rejected as non-responsive without evaluation', 'Accepted with a CO waiver', 'Evaluated only for the compliant portions'],
+            correct: 1,
+            explanation: 'Administrative non-compliance with Section L typically results in rejection as non-responsive. The CO generally has no discretion to waive these requirements in a competitive source selection.'
+          },
+          {
+            id: 'q3',
+            question: 'What is an "Outstanding" adjectival rating?',
+            options: ['A proposal meeting all requirements with no weaknesses', 'A proposal with exceptional strengths significantly benefiting the government and very low risk', 'A proposal with one strength and no weaknesses', 'The highest price-to-performance proposal'],
+            correct: 1,
+            explanation: 'Outstanding requires exceptional strengths (plural) that significantly benefit the government, very low risk of unsuccessful performance. It requires benefits well above threshold requirements.'
+          },
+          {
+            id: 'q4',
+            question: 'Under LPTA, which proposal wins?',
+            options: ['The technically superior proposal', 'The best value tradeoff between technical and price', 'The lowest-priced proposal that meets minimum technical requirements', 'The proposal with the highest past performance rating'],
+            correct: 2,
+            explanation: 'LPTA awards to the lowest-priced technically acceptable proposal. Once technical acceptability is established, only price matters — fundamentally different from best-value tradeoff.'
+          },
+          {
+            id: 'q5',
+            question: 'The best practice for structuring a proposal in best-value source selection is to:',
+            options: ['Follow the SOW section by section', 'Mirror Section L volume structure only', 'Mirror Section M factor/sub-factor structure as the proposal outline', 'Use the company standard proposal template'],
+            correct: 2,
+            explanation: 'Winning proposals mirror Section M factor and sub-factor structure in section headers. This makes it easy for evaluators to find and credit strengths. Section L defines the container; Section M defines the content architecture.'
+          },
+        ],
       },
-    },
     {
       id: 'capture-4',
       title: 'Source Selection — From Solicitation to Award Decision',
       duration: '25 min',
       type: 'lesson' as const,
-      content: {
-        sections: [
-          {
-            type: 'header' as const,
-            title: 'How the Government Picks a Winner: The Source Selection Process',
-            body: 'Source selection is the formal government process for evaluating competitive proposals and making a contract award decision. It is governed by FAR Part 15 and, for DoD, supplemented by the DoD Source Selection Procedures (2016). Understanding this process from the GOVERNMENT side is essential for both government PMs (who participate in it) and industry professionals (who must build proposals that work within it).',
-          },
-          {
-            type: 'expandable_list' as const,
-            title: 'Key Roles in Source Selection',
-            items: [
+      description: 'Understand the government source selection process from the inside — roles, evaluation phases, discussions, and the award decision — essential knowledge for both government PMs and industry capture teams.',
+      content: [
+        {
+          type: 'text' as const,
+          heading: 'How the Government Picks a Winner: The Source Selection Process',
+          body: 'Source selection is the formal government process for evaluating competitive proposals and making a contract award decision. It is governed by FAR Part 15 and, for DoD, supplemented by the DoD Source Selection Procedures (2016). Understanding this process from the GOVERNMENT side is essential for both government PMs (who participate in it) and industry professionals (who must build proposals that work within it).',
+        },
+        {
+          type: 'expandable_list' as const,
+          heading: 'Key Roles in Source Selection',
+          expandableItems: [
               {
                 label: 'Source Selection Authority (SSA)',
                 sublabel: 'The decision maker',
@@ -4975,8 +4788,8 @@ export const modules: Module[] = [
           },
           {
             type: 'expandable_list' as const,
-            title: 'The Source Selection Timeline',
-            items: [
+            heading: 'The Source Selection Timeline',
+            expandableItems: [
               {
                 label: 'Phase 1: Pre-Solicitation',
                 sublabel: 'Market research, requirements definition, Source Selection Plan',
@@ -5079,39 +4892,8 @@ export const modules: Module[] = [
               },
             ],
           },
-        ],
-        noviceContent: {
-          summary: 'Source selection is the government\'s structured process for picking who gets the contract. Three key roles: SSEB (scores proposals), SSAC (recommends best value), SSA (makes the final decision). After award, you can request a debrief to understand why you won or lost.',
-          keyPoints: [
-            'SSEB = evaluators who score your proposal against Section M',
-            'SSAC = senior advisors who do the best-value tradeoff',
-            'SSA = the decision maker who signs the award document',
-            'CO = the only person who can legally bind the government to a contract',
-            'After award, always request a debrief — it is free intelligence for the next proposal',
-          ],
-        },
-        intermediateContent: {
-          summary: 'Understanding government source selection mechanics gives you a strategic edge. The SSEB evaluation notices during discussions tell you exactly what weaknesses to fix. The SSDD is the document you will challenge if you protest. The competitive range determination is the first cut — if excluded, request a pre-award debrief immediately.',
-          keyPoints: [
-            'Request pre-award debriefs immediately when excluded from competitive range — you have limited time',
-            'Discussions are two-way: you can improve ALL volumes, not just fix the specific ENs raised',
-            'The SSDD must document why a higher-priced offer is worth the premium — this is the SSA\'s legal exposure',
-            'If discussions are opened, every offeror in the competitive range must receive ENs',
-            'GAO protests must be filed within 10 calendar days of a debrief — missed deadlines are fatal',
-          ],
-        },
-        advancedContent: {
-          summary: 'Senior PMs use source selection knowledge to shape the acquisition before it starts, manage protest risk after award, and build a continuous improvement cycle from debriefs. As a government PM, you participate in SSEB training, manage procurement integrity protocols, and ensure the SSDD is protest-proof.',
-          keyPoints: [
-            'Source Selection Plans must be approved by the SSA before solicitation release — any mid-evaluation changes require SSA approval',
-            'Competitive range determinations are frequently protested — document exclusion rationale thoroughly in writing',
-            'The standard of review in GAO protests is "arbitrary, capricious, or contrary to law" — a well-documented SSDD is your primary defense',
-            'Enhanced Debriefs (NDAA FY2018 Sec 818): For contracts over $100M, offerors get 2 business days to submit follow-up debrief questions',
-            'Government PMs must complete procurement integrity training and sign an NDA before accessing source selection materials',
-          ],
-        },
-        assessment: {
-          questions: [
+      ],
+      quiz: [
             {
               id: 'q1',
               question: 'Who makes the final award decision in a source selection?',
@@ -5147,9 +4929,17 @@ export const modules: Module[] = [
               correct: 1,
               explanation: 'A competitive range determination (FAR 15.306(c)) allows the CO to exclude proposals with no reasonable chance of selection, streamlining the evaluation process. Excluded offerors receive notification and the right to request a pre-award debrief.',
             },
-          ],
-        },
-      },
+      ],
+      keyTerms: [
+        { term: 'SSA', definition: 'Source Selection Authority — the official who makes the final award decision and signs the Source Selection Decision Document.' },
+        { term: 'SSEB', definition: 'Source Selection Evaluation Board — the team of technical and management SMEs who evaluate proposals and assign adjectival ratings.' },
+        { term: 'SSAC', definition: 'Source Selection Advisory Council — the senior body that reviews SSEB findings, conducts tradeoff analysis, and recommends an award to the SSA.' },
+        { term: 'SSDD', definition: 'Source Selection Decision Document — the signed document where the SSA documents the best-value rationale for the award decision.' },
+        { term: 'EN', definition: 'Evaluation Notice — a written question from the SSEB to an offeror during discussions, required to address all Deficiencies and Significant Weaknesses.' },
+        { term: 'FPR', definition: 'Final Proposal Revision — the revised proposal submitted by offerors after discussions are closed, which is the basis for final evaluation.' },
+        { term: 'Competitive Range', definition: 'The set of proposals with a realistic chance of award. The CO may exclude proposals outside the competitive range before discussions.' },
+        { term: 'SSP', definition: 'Source Selection Plan — the document approved by the SSA before solicitation release that defines evaluation factors, weights, rating scales, and the evaluation process.' },
+      ],
     },
     ]
   },
