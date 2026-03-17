@@ -1,13 +1,14 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import session from "express-session";
-import MemoryStore from "memorystore";
+import ConnectPgSimple from "connect-pg-simple";
 import bcrypt from "bcryptjs";
+import { Pool } from "pg";
 import { type Express } from "express";
 import { storage } from "./storage";
 import { type User } from "@shared/schema";
 
-const MemoryStoreSession = MemoryStore(session);
+const PgSession = ConnectPgSimple(session);
 
 // Type augmentation for req.user
 declare global {
@@ -26,31 +27,51 @@ declare global {
 }
 
 export function setupAuth(app: Express) {
-  // Trust Railway's reverse proxy so secure cookies work over HTTPS
+  // Trust Railway's reverse proxy so cookies work over HTTPS
   app.set("trust proxy", 1);
 
-  // Always use MemoryStore for sessions — reliable, no external dependency
-  // Sessions are 30 days, so users stay logged in across normal usage
-  // Only lost on a server restart (which is rare with Railway)
-  const sessionStore = new MemoryStoreSession({
-    checkPeriod: 86400000, // prune expired entries every 24h
-  });
+  // ── Session store ──────────────────────────────────────────────────────────
+  // Use PostgreSQL when DATABASE_URL is set (production) — sessions survive
+  // restarts and deploys. Fall back to in-memory for local dev without a DB.
+  let store: session.Store;
 
-  console.log("[session] Using MemoryStore for sessions");
+  if (process.env.DATABASE_URL) {
+    const pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: process.env.DATABASE_URL.includes("railway") || process.env.DATABASE_URL.includes("postgres")
+        ? { rejectUnauthorized: false }
+        : false,
+    });
 
-  // Session configuration
+    store = new PgSession({
+      pool,
+      tableName: "session",          // auto-created by connect-pg-simple
+      createTableIfMissing: true,    // creates the table on first boot
+      ttl: 30 * 24 * 60 * 60,       // 30 days in seconds
+      pruneSessionInterval: 60 * 60, // prune expired rows every hour
+    });
+
+    console.log("[session] Using PostgreSQL session store");
+  } else {
+    // Local dev fallback — memorystore
+    const MemoryStore = require("memorystore")(session);
+    store = new MemoryStore({ checkPeriod: 86400000 });
+    console.log("[session] No DATABASE_URL — using MemoryStore");
+  }
+
+  // ── Session middleware ─────────────────────────────────────────────────────
   app.use(
     session({
       secret: process.env.SESSION_SECRET || "acqpro-secret-key-change-in-prod-2024",
-      resave: true,
+      resave: false,
       saveUninitialized: false,
-      rolling: true, // reset cookie expiry on every request
-      store: sessionStore,
+      rolling: true,            // reset cookie expiry on every request
+      store,
       cookie: {
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-        secure: false, // let Railway handle HTTPS termination — don't enforce secure flag
+        secure: process.env.NODE_ENV === "production", // HTTPS-only in prod
         httpOnly: true,
-        sameSite: "lax", // lax works reliably across all browsers on same-origin requests
+        sameSite: "lax",
       },
     })
   );
@@ -58,7 +79,7 @@ export function setupAuth(app: Express) {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  // Passport local strategy — authenticate by email
+  // ── Passport local strategy — authenticate by email ───────────────────────
   passport.use(
     new LocalStrategy(
       { usernameField: "email", passwordField: "password" },
