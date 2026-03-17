@@ -13,8 +13,8 @@ export default function Landing({ onGetStarted }: LandingProps) {
   
   const stats = [
     { value: `${modules.length}`, label: 'Core Modules' },
-    { value: `${totalLessons}+`, label: 'In-Depth Lessons' },
-    { value: '100%', label: 'DoD-Relevant Content' },
+    { value: `${totalLessons}`, label: 'In-Depth Lessons' },
+    { value: '3 Levels', label: 'Novice → Advanced' },
     { value: '$400B+', label: 'Market You\'ll Serve' },
   ];
 
@@ -49,7 +49,7 @@ export default function Landing({ onGetStarted }: LandingProps) {
               <Shield className="w-5 h-5 text-primary-foreground" />
             </div>
             <div>
-              <span className="font-bold text-lg tracking-tight">AcqPro</span>
+              <span className="font-bold text-lg tracking-tight">Acqlerate</span>
               <span className="text-xs text-muted-foreground ml-1 hidden sm:inline">Defense Acquisitions Academy</span>
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function Landing({ onGetStarted }: LandingProps) {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-3">Everything You Need to Succeed</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Six comprehensive modules covering every domain of DoD acquisitions — 
+            {modules.length} comprehensive modules, {totalLessons} lessons covering every domain of DoD acquisitions — 
             from your first day to your first program review.
           </p>
         </div>
@@ -226,7 +226,7 @@ export default function Landing({ onGetStarted }: LandingProps) {
               <ul className="space-y-2.5 mb-7">
                 {[
                   'Module 1: Foundations (full access)',
-                  '3 core lessons',
+                  '4 in-depth lessons',
                   'Progress tracking',
                   'Key terms & glossary',
                 ].map((item, i) => (
@@ -259,7 +259,7 @@ export default function Landing({ onGetStarted }: LandingProps) {
               <ul className="space-y-2.5 mb-7">
                 {[
                   'All 6 modules — complete access',
-                  `${totalLessons}+ in-depth lessons`,
+                  `${totalLessons} in-depth lessons`,
                   'All quizzes + detailed explanations',
                   'Key terms, formulas & reference tables',
                   'Career roadmap resources',
@@ -298,13 +298,11 @@ export default function Landing({ onGetStarted }: LandingProps) {
         <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Shield className="w-5 h-5 text-primary" />
-            <span className="font-semibold text-sm">AcqPro</span>
+            <span className="font-semibold text-sm">Acqlerate</span>
             <span className="text-xs text-muted-foreground">Defense Acquisitions Academy</span>
           </div>
           <div className="text-xs text-muted-foreground text-center">
-            <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
-              Created with Perplexity Computer
-            </a>
+            © 2026 Acqlerate. All rights reserved.
           </div>
         </div>
       </footer>
