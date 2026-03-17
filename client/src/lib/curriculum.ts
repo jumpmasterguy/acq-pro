@@ -5524,6 +5524,35 @@ export const modules: Module[] = [
             explanation: "Use a 5×5 risk matrix (Probability: 1-5, Impact: 1-5) to plot and prioritize risks. Focus mitigation resources on high-probability, high-impact risks first. Track risk burn-down over time as a program health indicator."
           },
           {
+            type: 'table',
+            heading: '5×5 Risk Matrix — DoD Standard (Score = Probability × Impact)',
+            headers: ['Probability ↓  /  Impact →', 'Impact 1 (Minimal)', 'Impact 2 (Minor)', 'Impact 3 (Moderate)', 'Impact 4 (Significant)', 'Impact 5 (Critical)'],
+            rows: [
+              ['P=5  Near Certain (>80%)',  '🟡 5 — MED',  '🟠 10 — HIGH', '🔴 15 — HIGH', '🔴 20 — HIGH', '🔴 25 — HIGH'],
+              ['P=4  Likely (61–80%)',       '🟡 4 — MED',  '🟡 8 — MED',   '🟠 12 — HIGH', '🔴 16 — HIGH', '🔴 20 — HIGH'],
+              ['P=3  Possible (41–60%)',     '🟢 3 — LOW',  '🟡 6 — MED',   '🟡 9 — MED',   '🟠 12 — HIGH', '🔴 15 — HIGH'],
+              ['P=2  Unlikely (21–40%)',     '🟢 2 — LOW',  '🟢 4 — LOW',   '🟡 6 — MED',   '🟡 8 — MED',   '🟠 10 — HIGH'],
+              ['P=1  Remote (≤20%)',         '🟢 1 — LOW',  '🟢 2 — LOW',   '🟢 3 — LOW',   '🟡 4 — MED',   '🟡 5 — MED'],
+            ]
+          },
+          {
+            type: 'tip',
+            heading: 'Reading the Matrix — Real Program Examples',
+            body: 'GREEN (Low, 1–4): Monitor only — log in risk register, review quarterly. Example: mild weather delay on a outdoor test range. YELLOW (Medium, 5–9): Develop mitigation plan with assigned owner and due date. Example: single-source supplier for a critical subcomponent. RED (High, 10–25): Immediate PM attention — active mitigation, management reserve may be needed, brief MDA at next program review. Example: key technology not yet at TRL 6 entering EMD, or contractor staffing 20% below plan on critical path tasks.'
+          },
+          {
+            type: 'table',
+            heading: 'Sample Risk Register — Active Program Risks',
+            headers: ['Risk ID', 'Description', 'P', 'I', 'Score', 'Level', 'Mitigation', 'Owner'],
+            rows: [
+              ['R-001', 'Key subcontractor (radar ASIC) sole-source; no second source qualified', '4', '5', '20', '🔴 HIGH', 'Qualify alternate supplier by CDR; hold 3% MR', 'CO / COR'],
+              ['R-002', 'Software TRL 5 at MS B; target TRL 7 by PDR not achieved', '3', '4', '12', '🟠 HIGH', 'Add 6-week software sprint; daily stand-up with SE', 'PM / SE'],
+              ['R-003', 'O&M funds may be swept in CR; test range unavailable', '3', '3', '9', '🟡 MED',  'Identify alternate test window; brief FM on funding risk', 'FM / PM'],
+              ['R-004', 'Key engineer departure risk (2 staff eligible for retirement)', '2', '4', '8', '🟡 MED',  'Knowledge transfer plan; retention bonus request to HR', 'Deputy PM'],
+              ['R-005', 'Minor supplier late delivery on non-critical hardware', '2', '2', '4', '🟢 LOW',  'Monitor via DCMA weekly report; no action required', 'COR'],
+            ]
+          },
+          {
             type: 'list',
             heading: "The RIO Management Process (DoD Standard)",
             items: [
