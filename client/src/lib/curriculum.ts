@@ -336,6 +336,87 @@ export const modules: Module[] = [
             ]
           },
           {
+            type: 'callout',
+            heading: 'The Contracting Officer (CO/1102) Role',
+            body: 'The Contracting Officer is the only person legally authorized to obligate the U.S. government to spend money on a contract. They hold a \"warrant\" — a written delegation of authority specifying dollar thresholds they can sign up to. COs manage the full contract lifecycle: developing solicitations, evaluating proposals, negotiating terms, awarding contracts, issuing contract modifications, and closing out contracts. They are the legal guardians of the procurement process and must ensure every action complies with the FAR, DFARS, and applicable agency supplements. Without a CO\'s signature, nothing is official — not a delivery order, not a modification, not even a letter acknowledging a contractor claim.',
+          },
+          {
+            type: 'list',
+            heading: 'What Makes a Successful Contracting Officer?',
+            items: [
+              'FAR/DFARS mastery — understands what the regulations require and where flexibility exists',
+              'Negotiation skills — ability to drive fair and reasonable pricing without litigation risk',
+              'Business acumen — understands contractor cost structures, profit motives, and market dynamics',
+              'Legal judgment — recognizes unauthorized commitments, organizational conflicts of interest, and protest risks',
+              'Writing precision — contract language must be unambiguous and legally defensible',
+              'Series 1102 federal position + DAWIA Contracting certification (Foundational, Practitioner, Advanced)',
+              'FAC-C certification (for civilian agencies); warrant issued by the Head of Contracting Activity (HCA)',
+            ]
+          },
+          {
+            type: 'callout',
+            heading: 'The Contracting Officer\'s Representative (COR) Role',
+            body: 'The COR is the government\'s eyes and ears on an active contract. Nominated by the PM and formally appointed by the CO in writing, the COR monitors contractor performance on the ground — accepting or rejecting deliverables, documenting performance issues, and providing technical guidance within the contract\'s scope. Critically, the COR has NO contract authority: they cannot direct changes, approve additional work, or modify contract terms. Any direction that changes cost, schedule, or scope must go through the CO via a formal contract modification. A COR who oversteps — even with good intentions — can create an \"unauthorized commitment\" that exposes the government to liability.',
+          },
+          {
+            type: 'list',
+            heading: 'What Makes a Successful COR?',
+            items: [
+              'Deep technical knowledge of the contracted work — the COR must understand what \"good\" looks like',
+              'Documentation discipline — maintains a contract file with dated records of every interaction with the contractor',
+              'Scope awareness — instantly recognizes when a contractor request or government action would change contract scope',
+              'Mandatory COR training (CLC 106 via DAU) and formal written appointment letter from the CO',
+              'Independence — comfortable escalating contractor performance problems even when there is political pressure not to',
+              'CORs must be a government employee (military or civilian) — contractors cannot serve as CORs',
+            ]
+          },
+          {
+            type: 'callout',
+            heading: 'The Financial Manager (FM) Role',
+            body: 'The Financial Manager is the PM\'s budget expert — the person who ensures the program has the right type of money, at the right time, in the right amount. DoD uses multiple appropriation types (RDT&E, Procurement, O&M, MILCON) and each has strict rules about what it can fund and when it expires. The FM formulates the program\'s budget exhibits (POM submissions), tracks obligations and expenditures against plan, manages the program\'s Spend Plan, and serves as the early warning system for funding shortfalls. When the PM says \"we\'re running out of money,\" the FM already knew two months ago.',
+          },
+          {
+            type: 'list',
+            heading: 'What Makes a Successful Financial Manager?',
+            items: [
+              'Appropriations law fluency — understands the \"color of money\" rules and what each fund type can legally purchase',
+              'PPBE cycle expertise — knows how to build a winning POM submission and defend it through the budget cycle',
+              'EVM literacy — can read a CPR/IPMR and identify early indicators of cost growth',
+              'Anti-Deficiency Act (ADA) awareness — recognizes obligations that exceed available funding before they become violations',
+              'CDFM (Certified Defense Financial Manager) or DAWIA FM certification strongly preferred',
+              'Works closely with the PM and CO — no contract mod should be signed without FM confirming funds are available',
+            ]
+          },
+          {
+            type: 'callout',
+            heading: 'The Systems Engineer (SE) Role',
+            body: 'The Systems Engineer translates warfighter requirements into a technically feasible, integrated system design. SEs own the technical baseline — the specifications, interface control documents, and system architecture that define what the contractor must build. On major programs, the SE leads Technical Reviews (SRR, PDR, CDR) and tracks technical performance measures (TPMs) to ensure the system will meet Key Performance Parameters (KPPs). The PM relies on the SE to catch technical risk early, before it becomes a cost and schedule problem. SEs bridge the gap between operational needs and engineering reality.',
+          },
+          {
+            type: 'callout',
+            heading: 'The Cost Estimator Role',
+            body: 'The Cost Estimator builds the government\'s independent assessment of what a program should cost — the Independent Cost Estimate (ICE). This estimate is produced independently of the contractor and is used to validate contractor proposals during source selection and at milestone reviews. On ACAT I programs, CAPE (Cost Assessment and Program Evaluation) produces a separate independent cost estimate called a CAPE ICE. Cost estimators use parametric models (SEER, PRICE H, ACEIT), analogous estimates from historical programs, and engineering build-ups. Their work directly influences whether a program is funded, restructured, or cancelled.',
+          },
+          {
+            type: 'callout',
+            heading: 'The Logistics / Life Cycle Sustainment Planner Role',
+            body: 'Logistics professionals plan how a system will be supported throughout its operational life — maintenance, spare parts, technical manuals, training, and depot support. The Life Cycle Sustainment Plan (LCSP) is their primary product and is reviewed at every milestone. Sustainment costs often exceed development and procurement costs over a system\'s lifetime: for many defense systems, 70% of total ownership cost is sustainment. A Logistics professional who engages late — after the design is locked — has almost no ability to reduce those costs. Early involvement in design trade-offs (reliability, maintainability, testability) is where sustainment value is created.',
+          },
+          {
+            type: 'table',
+            heading: 'How the Roles Work Together on a Program',
+            headers: ['Role', 'Primary Authority', 'What They Own', 'Key Limitation'],
+            rows: [
+              ['Program Manager (PM)', 'Cost, Schedule & Performance accountability', 'Overall program success — the integrator', 'No contracting authority; cannot sign contracts'],
+              ['Contracting Officer (CO)', 'Warrant authority to bind the government', 'Contract award, mods, and closeout', 'Cannot direct technical work beyond contract terms'],
+              ['COR', 'Delegated by CO (in writing)', 'Day-to-day technical oversight of contractor', 'ZERO contract authority — advisory role only'],
+              ['Financial Manager (FM)', 'Funds certification authority', 'Budget formulation, execution, and spend plan', 'Cannot obligate funds without CO involvement'],
+              ['Systems Engineer (SE)', 'Technical baseline authority', 'Requirements, specs, and technical reviews', 'Cannot approve contract changes unilaterally'],
+              ['Cost Estimator', 'Independent estimate authority', 'ICE and cost realism analysis', 'Advisory — does not set program budgets alone'],
+              ['Logistics/Sustainment', 'LCSP ownership', 'Sustainment planning across system lifecycle', 'Often engaged too late; must be involved at design'],
+            ]
+          },
+          {
             type: 'tip',
             heading: "Breaking In",
             body: "Many successful acquisition professionals transition from the military (especially as O-3/O-4 officers), from technical engineering fields, or from federal service in adjacent roles. DoD's Pathways program and Defense Acquisition University offer entry-level pathways. Target GS-9 or GS-11 program analyst roles to build your foundation."
