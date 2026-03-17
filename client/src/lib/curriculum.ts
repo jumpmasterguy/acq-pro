@@ -3353,10 +3353,8 @@ export const modules: Module[] = [
             explanation: "Radar/spider charts plot multiple dimensions (e.g., cost, schedule, technical, risk, quality) for multiple entities on the same chart, making them ideal for portfolio-level comparisons. A PEO reviewing 10 programs can quickly identify which programs are strong across all dimensions and which have specific weaknesses. They're not appropriate for single-program trend analysis over time."
           }
         ]
-      }
-    ]
-  },
-    {
+      },
+      {
       id: 'data-3',
       title: 'EVM Acronym Deep Dive — Every Term Defined and Explained',
       duration: '30 min',
@@ -3945,6 +3943,8 @@ export const modules: Module[] = [
         },
       },
     },
+    ]
+  },
 
   // ─────────────────────────────────────────────────────────────
   // MODULE 5 — CAPTURE
@@ -4672,10 +4672,8 @@ export const modules: Module[] = [
             explanation: "Effective proposal scheduling works backward from the submission due date. Gold Team needs to complete 5-7 days before due date to allow final revisions and production. Red Team needs to complete with enough time to incorporate feedback. Pink Team needs to review an outline that allows substantive volume development afterward. Compressing the review cycle is the most common proposal management failure."
           }
         ]
-      }
-    ]
-  },
-    {
+      },
+      {
       id: 'capture-3',
       title: 'Section L vs Section M — The RFP Anatomy Every Competitor Must Master',
       duration: '28 min',
@@ -5153,6 +5151,8 @@ export const modules: Module[] = [
         },
       },
     },
+    ]
+  },
 
   // ─────────────────────────────────────────────────────────────
   // MODULE 6 — OPERATIONS
