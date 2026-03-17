@@ -447,7 +447,7 @@ export const modules: Module[] = [
             question: "A Contracting Officer's Representative (COR) primarily serves which function?",
             options: ['Award and sign contracts on behalf of the government', 'Serve as the technical monitor ensuring contractor performance meets contract requirements', 'Develop the acquisition strategy', 'Approve program funding at milestone reviews'],
             correct: 1,
-            explanation: "The COR is the government's technical representative on a contract, responsible for monitoring contractor performance, documenting issues, and providing technical direction within the scope of the contract. They cannot modify contract terms — that authority belongs to the Contracting Officer (CO)."
+            explanation: "The COR is the government\'s technical representative on a contract, responsible for monitoring contractor performance, documenting issues, and providing technical direction within the scope of the contract. They cannot modify contract terms — that authority belongs to the Contracting Officer (CO)."
           },
           {
             id: 'q3',
@@ -2285,7 +2285,65 @@ export const modules: Module[] = [
           },
         ],
       }
-    ]
+    ],
+    assessment: [
+      {
+        id: 'fa1',
+        question: 'Which appropriation type funds the development and testing of a new weapons system before production begins?',
+        options: ['Operations & Maintenance (O&M)', 'Procurement', 'Research, Development, Test & Evaluation (RDT&E)', 'Military Construction (MILCON)'],
+        correct: 2,
+        explanation: 'RDT&E funds the research, development, test, and evaluation activities before a system enters production. It is a two-year appropriation and cannot be used for procurement of production-representative articles beyond a limited number of test articles.'
+      },
+      {
+        id: 'fa2',
+        question: 'Earned Value Management (EVM): if your program has a CPI of 0.85, what does this mean?',
+        options: ['You are spending $0.85 for every $1.00 of planned work — ahead of budget', 'You are getting $0.85 of work for every $1.00 spent — over budget', 'Your schedule is 15% behind plan', 'The contract has a 15% profit fee'],
+        correct: 1,
+        explanation: 'CPI (Cost Performance Index) = EV / AC. A CPI of 0.85 means you are only getting 85 cents of earned value for every dollar spent — you are over budget. A CPI below 1.0 is a cost overrun indicator.'
+      },
+      {
+        id: 'fa3',
+        question: 'The PPBE cycle\'s "Programming" phase produces which key document?',
+        options: ['Program Objective Memorandum (POM)', 'President\'s Budget (PB)', 'Future Years Defense Program (FYDP)', 'Both A and C — the POM feeds into the FYDP'],
+        correct: 3,
+        explanation: 'During Programming, each Military Department submits a POM to OSD. The approved programs are then reflected in the FYDP — the official 5-year financial plan. The POM IS the programming document; the FYDP is the output.'
+      },
+      {
+        id: 'fa4',
+        question: 'An Estimate at Completion (EAC) calculated as BAC / CPI represents which assumption?',
+        options: ['All remaining work will be completed at the budgeted rate', 'Future work will continue at the same cost efficiency as work completed to date', 'A specific re-estimate of remaining work was performed', 'The contract will be terminated for convenience'],
+        correct: 1,
+        explanation: 'EAC = BAC / CPI assumes future cost performance will mirror past cost performance. It is the most common EAC method used by DoD and tends to be the most accurate on programs with stable performance trends.'
+      },
+      {
+        id: 'fa5',
+        question: 'O&M (Operations & Maintenance) funding expires after how long?',
+        options: ['1 year', '2 years', '3 years', '5 years'],
+        correct: 0,
+        explanation: 'O&M is a one-year appropriation — it must be obligated within the fiscal year it is appropriated. Using it after expiration (expired funds) or for the wrong purpose violates appropriations law and can trigger an Anti-Deficiency Act (ADA) violation.'
+      },
+      {
+        id: 'fa6',
+        question: 'Which EVM metric directly measures schedule efficiency?',
+        options: ['CPI (Cost Performance Index)', 'SPI (Schedule Performance Index)', 'TCPI (To-Complete Performance Index)', 'VAC (Variance at Completion)'],
+        correct: 1,
+        explanation: 'SPI = EV / PV. An SPI below 1.0 means you have accomplished less work than planned — you are behind schedule. Note: EVM-based SPI is a dollar-weighted measure, not a time-based one. SPI converges to 1.0 at program completion regardless of lateness.'
+      },
+      {
+        id: 'fa7',
+        question: 'A program manager discovers that O&M funds were used to buy a capital asset worth $500K. This is most likely a violation of:',
+        options: ['The Competition in Contracting Act', 'The Bona Fide Needs Rule', 'The Purpose Statute (31 U.S.C. § 1301)', 'The Antideficiency Act'],
+        correct: 2,
+        explanation: 'The Purpose Statute requires that appropriations be used only for the purposes for which they were appropriated. Buying capital assets with O&M funds violates this statute — capital equipment should be funded with Procurement or RDT&E depending on the item.'
+      },
+      {
+        id: 'fa8',
+        question: 'TCPI (To-Complete Performance Index) is used to determine:',
+        options: ['How efficiently the program has spent money to date', 'The cost efficiency required on remaining work to meet a target (BAC or EAC)', 'Whether the current contract type is appropriate', 'The final profit margin the contractor will earn'],
+        correct: 1,
+        explanation: 'TCPI = (BAC - EV) / (BAC - AC) when calculated against BAC. A TCPI above 1.0 means remaining work must be performed more efficiently than past work — this is a warning sign. A TCPI above 1.1 is considered essentially unachievable without a re-baseline.'
+      },
+    ],
   },
 
   // ─────────────────────────────────────────────────────────────
@@ -3358,7 +3416,65 @@ export const modules: Module[] = [
           },
         ],
       }
-    ]
+    ],
+    assessment: [
+      {
+        id: 'ca1',
+        question: 'Under a Firm-Fixed-Price (FFP) contract, who bears 100% of the cost risk?',
+        options: ['The Government', 'The Contractor', 'Cost risk is split 50/50', 'A third-party surety'],
+        correct: 1,
+        explanation: 'Under FFP, the contractor\'s price is fixed at award and does not change regardless of actual costs incurred. The contractor bears all cost risk — if costs exceed the price, the contractor absorbs the loss. If costs are lower, the contractor keeps the savings. This is why FFP is preferred for well-defined, stable requirements.'
+      },
+      {
+        id: 'ca2',
+        question: 'Which FAR part governs the general principles of contract types?',
+        options: ['FAR Part 12', 'FAR Part 13', 'FAR Part 15', 'FAR Part 16'],
+        correct: 3,
+        explanation: 'FAR Part 16 covers contract types — from Fixed-Price (16.2) through Cost-Reimbursement (16.3) to Indefinite Delivery (16.5) and Time-and-Materials (16.6). FAR Part 15 covers negotiated acquisitions; Part 12 covers commercial items; Part 13 covers simplified acquisition.'
+      },
+      {
+        id: 'ca3',
+        question: 'In source selection, Section L and Section M of a solicitation serve which purposes respectively?',
+        options: ['Section L = Contract terms; Section M = Statement of Work', 'Section L = Instructions to offerors; Section M = Evaluation criteria and factors', 'Section L = Pricing instructions; Section M = Technical requirements', 'Section L = Past performance forms; Section M = Price/cost instructions'],
+        correct: 1,
+        explanation: 'Section L (Instructions, Conditions, and Notices to Offerors) tells contractors HOW to prepare and submit their proposal. Section M (Evaluation Factors) tells them HOW the government will evaluate and award. Section M must be aligned with Section L — you cannot evaluate something you didn\'t ask for.'
+      },
+      {
+        id: 'ca4',
+        question: 'A "constructive change" to a contract occurs when:',
+        options: ['The contractor proactively improves the system beyond what was required', 'A government action effectively changes contract scope without a formal modification', 'The CO issues a bilateral modification agreed to by both parties', 'The contractor submits a value engineering change proposal'],
+        correct: 1,
+        explanation: 'A constructive change arises when a government action — such as a COR directing extra work, an overly strict inspection standard, or government-caused delays — effectively changes what the contract requires, even without a formal modification. These can result in large, retroactive contractor claims.'
+      },
+      {
+        id: 'ca5',
+        question: 'Under the FAR, "best value" source selection most accurately means:',
+        options: ['Always selecting the lowest price technically acceptable offer', 'The government can only consider technical factors, not price', 'A tradeoff process where technical merit and price are both considered to select the offer providing the greatest overall benefit to the government', 'Selecting the offeror with the highest past performance rating regardless of price'],
+        correct: 2,
+        explanation: 'Best value allows the government to pay a price premium for superior technical capability when the additional benefit justifies the higher cost. The tradeoff rationale must be documented. The alternative is Lowest Price Technically Acceptable (LPTA), where only technical acceptability is evaluated and price wins.'
+      },
+      {
+        id: 'ca6',
+        question: 'Which contract type is generally PROHIBITED for use when acquiring services that are closely related to inherently governmental functions?',
+        options: ['Firm-Fixed-Price (FFP)', 'Time-and-Materials (T&M)', 'Cost-Plus-Incentive-Fee (CPIF)', 'Indefinite Delivery / Indefinite Quantity (IDIQ)'],
+        correct: 1,
+        explanation: 'Time-and-Materials contracts provide no incentive for the contractor to control costs — the government pays for labor hours regardless of efficiency. FAR 16.601 requires a determination that no other contract type is suitable before using T&M, and requires government surveillance of labor hours. T&M is particularly problematic for services near inherently governmental functions.'
+      },
+      {
+        id: 'ca7',
+        question: 'The "Point of Total Assumption" (PTA) in an FPIF contract is the cost point at which:',
+        options: ['The government assumes 100% of cost risk above that amount', 'The contractor assumes 100% of cost risk above that amount (equivalent to FFP above PTA)', 'Both parties renegotiate the contract target cost', 'The ceiling price is triggered and the contract converts to FFP'],
+        correct: 1,
+        explanation: 'Above the PTA, the contractor\'s share ratio effectively becomes 100/0 — the contractor absorbs every dollar of cost overrun because the ceiling price caps government payments. The PTA is calculated as: PTA = (Ceiling Price - Target Price) / Government Share Ratio + Target Cost.'
+      },
+      {
+        id: 'ca8',
+        question: 'DCMA\'s primary mission in contract administration is to:',
+        options: ['Audit contractor accounting systems and cost claims', 'Administer contracts on behalf of the PCO — monitoring performance, accepting deliverables, and managing GFP', 'Evaluate contractor proposals during source selection', 'Provide legal representation to the government in contract disputes'],
+        correct: 1,
+        explanation: 'DCMA is the operational contract administration arm of DoD. DCMA\'s Administrative Contracting Officers (ACOs) are assigned to contractor facilities to monitor schedule, quality, property, and compliance daily. DCAA handles accounting audits; DCMA handles performance administration.'
+      },
+    ],
   },
 
   // ─────────────────────────────────────────────────────────────
@@ -4129,7 +4245,65 @@ export const modules: Module[] = [
         { term: 'VAC', definition: 'Variance at Completion — the difference between BAC and EAC. Negative VAC means the program is projected to overrun budget.' },
       ],
     },
-    ]
+    ],
+    assessment: [
+      {
+        id: 'da1',
+        question: 'In DoD program reporting, what does the acronym "EVM" stand for and what does it measure?',
+        options: ['Extended Value Metrics — contractor profitability', 'Earned Value Management — integrates cost, schedule, and technical performance into a single management framework', 'Estimated Variance from Milestone — deviation from program schedule', 'Enterprise Visibility Mechanism — contractor data reporting system'],
+        correct: 1,
+        explanation: 'Earned Value Management (EVM) is a project management technique that integrates scope, schedule, and cost. It compares planned work (PV), work accomplished (EV), and actual cost (AC) to provide objective performance indicators like CPI and SPI. Required on contracts over $20M (RDT&E) or $50M (all other) per DoDI 5000.02.'
+      },
+      {
+        id: 'da2',
+        question: 'A Selected Acquisition Report (SAR) is submitted to Congress when a program exceeds cost growth thresholds. What is this threshold called?',
+        options: ['Nunn-McCurdy Breach', 'Anti-Deficiency Violation', 'Should-Cost Exceedance', 'Independent Cost Estimate Variance'],
+        correct: 0,
+        explanation: 'The Nunn-McCurdy Act requires DoD to notify Congress when a program\'s unit cost growth exceeds 15% (significant) or 25% (critical) above the current baseline, or 30%/50% above the original baseline. A critical breach requires the SecDef to certify the program is essential to national security or terminate it.'
+      },
+      {
+        id: 'da3',
+        question: 'In data analytics for DoD programs, what does "CDRL" stand for and why does it matter?',
+        options: ['Contract Data Requirements List — defines the data deliverables the contractor must provide the government under the contract', 'Contractor Deficiency Resolution Log — tracks contractor performance issues', 'Cost Data Reporting Level — defines EVM reporting thresholds', 'Consolidated Defense Reporting List — OSD-level program status reports'],
+        correct: 0,
+        explanation: 'A CDRL (Contract Data Requirements List, DD Form 1423) specifies every data item the government requires the contractor to deliver — technical reports, schedules, cost reports, test results. CDRLs are legally binding contract deliverables. Missing or late CDRLs are a contract performance issue the COR must document.'
+      },
+      {
+        id: 'da4',
+        question: 'What is the primary purpose of a Defense Acquisition Executive Summary (DAES)?',
+        options: ['To certify program funding at milestone reviews', 'To provide OSD leadership with a monthly assessment of program health — cost, schedule, and performance — using color-coded ratings', 'To document contractor past performance for future source selections', 'To report financial audit results to the Inspector General'],
+        correct: 1,
+        explanation: 'The DAES is a monthly program health report reviewed at the OSD level. It uses a color-coded assessment (Green/Yellow/Red) across cost, schedule, and performance dimensions. Programs in amber or red status receive additional OSD scrutiny and may be required to present recovery plans.'
+      },
+      {
+        id: 'da5',
+        question: 'Which metric measures the cost efficiency of work completed to date in EVM?',
+        options: ['SPI (Schedule Performance Index)', 'TCPI (To-Complete Performance Index)', 'CPI (Cost Performance Index)', 'VAC (Variance at Completion)'],
+        correct: 2,
+        explanation: 'CPI = EV / AC. It measures how much earned value you are getting per dollar spent. A CPI of 1.0 means on budget; below 1.0 means cost overrun; above 1.0 means under budget. CPI tends to stabilize early in a program and is a reliable predictor of final cost performance.'
+      },
+      {
+        id: 'da6',
+        question: 'A program\'s Integrated Master Schedule (IMS) shows the critical path. What does "critical path" mean?',
+        options: ['The tasks with the highest dollar value in the contract', 'The longest sequence of dependent tasks that determines the minimum program completion date — any slip on the critical path slips the whole program', 'The tasks most likely to experience technical failure', 'The top 10 highest-risk tasks identified in the program risk register'],
+        correct: 1,
+        explanation: 'The critical path is the longest chain of logically dependent activities in the schedule. Tasks on the critical path have zero float — any delay directly extends the program end date. PMs must track critical path tasks with the most scrutiny. A schedule with no margin on the critical path is a high-risk program.'
+      },
+      {
+        id: 'da7',
+        question: 'What does "FPRR" stand for and who conducts it?',
+        options: ['Fixed Price Rate Review — conducted by DCMA to review labor rates at contract award', 'Forward Pricing Rate Recommendation — issued by DCAA based on audit of contractor indirect cost rates used in pricing future proposals', 'Final Program Risk Review — conducted by the PM at Milestone C', 'Federal Procurement Reporting Requirement — annual OSD data call'],
+        correct: 1,
+        explanation: 'DCAA issues Forward Pricing Rate Recommendations (FPRRs) — audit-based assessments of a contractor\'s proposed indirect cost rates (overhead, G&A, fringe). These rates are used in pricing cost-type contracts and T&M proposals. A CO may use the FPRR or negotiate Forward Pricing Rate Agreements (FPRAs) directly with the contractor.'
+      },
+      {
+        id: 'da8',
+        question: 'In the context of DoD data analytics, "VACP" most closely refers to:',
+        options: ['Variance at Completion Percent — a measure of projected cost overrun relative to BAC', 'Value Added Cost Performance — a profit metric', 'Vendor Acquisition Compliance Protocol — a contractor reporting standard', 'Validated Acquisition Cost Projection — used in CAPE independent estimates'],
+        correct: 0,
+        explanation: 'VAC (Variance at Completion) = BAC - EAC. It represents the projected cost overrun or underrun at program completion. Expressed as a percentage (VAC%), it gives leadership a quick view of how far off budget the program is projected to finish. A negative VAC% means projected overrun.'
+      },
+    ],
   },
 
   // ─────────────────────────────────────────────────────────────
@@ -6067,7 +6241,65 @@ export const modules: Module[] = [
           }
         ]
       }
-    ]
+    ],
+    assessment: [
+      {
+        id: 'oa1',
+        question: 'A Program Manager receives a contractor Requests for Equitable Adjustment (REA). What is the most accurate description of an REA?',
+        options: ['A unilateral government order to change contract scope', 'A contractor\'s request for a contract price or schedule adjustment based on a government-caused change or differing site condition', 'An audit finding from DCAA requiring the contractor to refund overpayments', 'A subcontractor claim against the prime contractor'],
+        correct: 1,
+        explanation: 'An REA (Request for Equitable Adjustment) is a contractor\'s formal request to adjust the contract price, schedule, or other terms due to a government action — such as a change order, differing site condition, or government-caused delay. REAs must be addressed promptly; unresolved REAs often escalate into formal claims under the Contract Disputes Act.'
+      },
+      {
+        id: 'oa2',
+        question: 'Under DoD operations, "LRIP" refers to which phase of a program\'s lifecycle?',
+        options: ['Low Rate Initial Production — the initial production phase before Full Rate Production is approved at Milestone C', 'Long Range Investment Planning — the POM submission process', 'Logistics Readiness Integration Plan — the sustainment planning document', 'Limited Risk Incentive Pricing — a contract pricing method'],
+        correct: 0,
+        explanation: 'LRIP (Low Rate Initial Production) is the production phase between Milestone B and the Full Rate Production (FRP) Decision Review (Milestone C). LRIP produces a limited number of units for operational testing and initial fielding. IOT&E (Initial Operational Test & Evaluation) is conducted during LRIP. LRIP quantities are capped by statute.'
+      },
+      {
+        id: 'oa3',
+        question: 'A Cure Notice is issued by the Contracting Officer when:',
+        options: ['The contractor submits a late invoice', 'The contractor\'s performance is endangering completion of the contract and the government is considering termination for default', 'DCAA identifies unallowable costs in the contractor\'s accounting system', 'The contractor requests a stop-work order'],
+        correct: 1,
+        explanation: 'A Cure Notice (FAR 49.607) is issued when the contractor\'s performance is so deficient that it is in danger of default termination. The notice gives the contractor a specified time (usually 10 days) to cure the deficiency. If the contractor does not cure, the CO may issue a Show Cause Notice and ultimately terminate for default.'
+      },
+      {
+        id: 'oa4',
+        question: 'The Acquisition Program Baseline (APB) is best described as:',
+        options: ['A contractor\'s internal project schedule', 'The formal agreement between the PM and MDA establishing approved thresholds for cost, schedule, and performance — deviations trigger a breach', 'The government\'s independent cost estimate used at milestone reviews', 'A monthly status report submitted to OSD'],
+        correct: 1,
+        explanation: 'The APB is a binding agreement establishing the program\'s cost (PAUC and APUC), schedule (IOC and FOC), and performance (KPPs) parameters with objective thresholds and goals. Breaching an APB threshold requires notifying the MDA and may trigger a program review, restructure, or termination.'
+      },
+      {
+        id: 'oa5',
+        question: 'In a Termination for Convenience (T4C), the contractor is entitled to recover:',
+        options: ['Only profit on work already completed', 'Costs incurred, profit on work completed, and reasonable settlement costs — but NOT lost profits on unperformed work', 'Nothing — the government has absolute discretion to terminate without compensation', 'The full contract value as if the contract had been completed'],
+        correct: 1,
+        explanation: 'A T4C settlement compensates the contractor for: (1) costs incurred performing work, (2) profit on work performed, and (3) costs of settling the termination (e.g., subcontract termination costs). The contractor is NOT entitled to lost profits on unperformed work — this distinguishes T4C from termination for default (where the contractor may owe the government reprocurement costs).'
+      },
+      {
+        id: 'oa6',
+        question: 'What is the primary function of the Integrated Product Team (IPT) structure in DoD program management?',
+        options: ['To replace the Program Manager\'s authority on technical decisions', 'To bring together representatives from all functional areas (engineering, contracting, finance, logistics, test) to make integrated program decisions rather than sequential, stove-piped ones', 'To provide external oversight of the PM similar to an Inspector General', 'To manage contractor performance reviews and past performance ratings'],
+        correct: 1,
+        explanation: 'IPTs are cross-functional teams that integrate the technical, contractual, financial, and operational perspectives needed to solve complex acquisition problems. The Working IPT (WIPT) handles day-to-day issues; the Overarching IPT (OIPT) provides senior leadership oversight. IPTs replaced sequential (waterfall) review processes with concurrent, collaborative decision-making.'
+      },
+      {
+        id: 'oa7',
+        question: 'Should-Cost analysis differs from Will-Cost analysis in that Should-Cost:',
+        options: ['Is performed by CAPE rather than the program office', 'Identifies what a program SHOULD cost after eliminating inefficiencies, rather than projecting what it WILL cost based on current trends', 'Is only required for ACAT I programs', 'Focuses only on contractor labor rates, not overhead'],
+        correct: 1,
+        explanation: 'Will-Cost estimates project program cost based on current performance trends (essentially EAC). Should-Cost analysis — required by statute for major defense programs — challenges the program to identify and eliminate inefficiencies. The difference between Should-Cost and Will-Cost is the PM\'s cost reduction target. Should-Cost is a management tool to drive better value from the industrial base.'
+      },
+      {
+        id: 'oa8',
+        question: 'A program\'s Key Performance Parameters (KPPs) are established in which acquisition document?',
+        options: ['Acquisition Program Baseline (APB)', 'Capability Development Document (CDD)', 'Test & Evaluation Master Plan (TEMP)', 'Life Cycle Sustainment Plan (LCSP)'],
+        correct: 1,
+        explanation: 'KPPs are established in the Capability Development Document (CDD), validated through the JCIDS process. KPPs represent the minimum acceptable performance thresholds — failing to meet a KPP at IOT&E can result in a program not achieving Initial Operational Capability (IOC). The APB captures KPPs as thresholds/objectives, but the CDD is the source document.'
+      },
+    ],
   }
 ];
 
