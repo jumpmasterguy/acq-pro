@@ -493,16 +493,12 @@ export async function registerRoutes(
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) return res.json({ ok: false, reason: 'GEMINI_API_KEY not set', keyPrefix: 'MISSING' });
     const keyPrefix = apiKey.substring(0, 8);
-    // Try current Google AI Studio model names via raw REST (v1beta is canonical for AI Studio)
-    const modelCandidates = [
-      'gemini-2.0-flash-lite', 'gemini-2.0-flash-001', 'gemini-2.0-flash-lite-001',
-      'gemini-2.5-pro-exp-03-25', 'gemini-2.5-pro-preview-03-25',
-      'gemini-1.5-flash-002', 'gemini-1.5-flash-8b', 'gemini-1.5-pro-002',
-    ];
-    const attempts = modelCandidates.flatMap(m => [
-      { url: `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`, label: `v1beta/${m}` },
-      { url: `https://generativelanguage.googleapis.com/v1/models/${m}:generateContent?key=${apiKey}`, label: `v1/${m}` },
-    ]);
+    // Confirmed working models as of March 2026 via ListModels
+    const modelCandidates = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-flash-latest'];
+    const attempts = modelCandidates.map(m => ({
+      url: `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`,
+      label: `v1beta/${m}`
+    }));
     const results: Record<string, string> = {};
     for (const { url } of attempts) {
       const label = url.replace(`?key=${apiKey}`, '').replace('https://generativelanguage.googleapis.com/', '');
