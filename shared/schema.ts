@@ -15,6 +15,10 @@ export const users = pgTable("users", {
   // Progress
   completedLessons: text("completed_lessons").array().notNull().default(sql`ARRAY[]::text[]`),
   quizScores: jsonb("quiz_scores").notNull().default(sql`'{}'::jsonb`),
+  // Skill levels per module: { moduleId: 'novice' | 'intermediate' | 'advanced' }
+  moduleSkillLevels: jsonb("module_skill_levels").notNull().default(sql`'{}'::jsonb`),
+  // Module gate assessment scores: { moduleId: number (0-100) }
+  moduleAssessmentScores: jsonb("module_assessment_scores").notNull().default(sql`'{}'::jsonb`),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({

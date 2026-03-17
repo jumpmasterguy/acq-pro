@@ -28,6 +28,8 @@ const registerSchema = z.object({
 type LoginValues = z.infer<typeof loginSchema>;
 type RegisterValues = z.infer<typeof registerSchema>;
 
+export type SkillLevel = 'novice' | 'intermediate' | 'advanced';
+
 export interface AuthUser {
   id: string;
   username: string;
@@ -36,6 +38,8 @@ export interface AuthUser {
   completedLessons: string[];
   quizScores: Record<string, number>;
   isAdmin?: boolean;
+  moduleSkillLevels?: Record<string, SkillLevel>;
+  moduleAssessmentScores?: Record<string, number>;
 }
 
 interface AuthPageProps {

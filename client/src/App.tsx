@@ -17,8 +17,9 @@ import Dashboard from "@/pages/Dashboard";
 import ModulePage from "@/pages/ModulePage";
 import LessonPage from "@/pages/LessonPage";
 import UpgradePage from "@/pages/UpgradePage";
-import AuthPage, { type AuthUser } from "@/pages/AuthPage";
+import AuthPage, { type AuthUser, type SkillLevel } from "@/pages/AuthPage";
 import AdminPage from "@/pages/AdminPage";
+import { ModuleAssessment } from "@/components/ModuleAssessment";
 import { apiRequest } from "@/lib/queryClient";
 
 // View types
@@ -81,6 +82,8 @@ function AppContent() {
   );
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [authState, setAuthState] = useState<AuthState>({ status: 'loading' });
+  // Module assessment modal state
+  const [assessmentModuleId, setAssessmentModuleId] = useState<string | null>(null);
 
   // Derived progress from server auth
   const isPremium =
@@ -264,6 +267,7 @@ function AppContent() {
   const completedCount = completedLessons.size;
 
   return (
+    <>
     <div className="min-h-screen bg-background flex">
       {/* Mobile overlay */}
       {sidebarOpen && (
@@ -452,24 +456,42 @@ function AppContent() {
               onUpgrade={handleUpgrade}
             />
           )}
-          {view.type === 'module' && (
-            <ModulePage
-              moduleId={(view as { type: 'module'; moduleId: string }).moduleId}
-              progress={progress}
-              onBack={() => setView({ type: 'dashboard' })}
-              onSelectLesson={handleSelectLesson}
-              onUpgrade={handleUpgrade}
-            />
-          )}
-          {view.type === 'lesson' && (
-            <LessonPage
-              lessonId={(view as { type: 'lesson'; lessonId: string }).lessonId}
-              progress={progress}
-              onBack={handleBackFromLesson}
-              onComplete={handleCompleteLesson}
-              onNextLesson={handleNextLesson}
-            />
-          )}
+          {view.type === 'module' && (() => {
+            const modId = (view as { type: 'module'; moduleId: string }).moduleId;
+            const skillLevels = authState.status === 'authenticated'
+              ? (authState.user.moduleSkillLevels ?? {}) : {};
+            return (
+              <ModulePage
+                moduleId={modId}
+                progress={progress}
+                onBack={() => setView({ type: 'dashboard' })}
+                onSelectLesson={handleSelectLesson}
+                onUpgrade={handleUpgrade}
+                unlockedLevel={(skillLevels[modId] as SkillLevel) ?? 'novice'}
+                onOpenAssessment={() => setAssessmentModuleId(modId)}
+              />
+            );
+          })()}
+          {view.type === 'lesson' && (() => {
+            const lessonId = (view as { type: 'lesson'; lessonId: string }).lessonId;
+            const parentMod = modules.find(m => m.lessons.some(l => l.id === lessonId));
+            const skillLevels = authState.status === 'authenticated'
+              ? (authState.user.moduleSkillLevels ?? {}) : {};
+            const unlockedLevel = parentMod
+              ? ((skillLevels[parentMod.id] as SkillLevel) ?? 'novice')
+              : 'novice';
+            return (
+              <LessonPage
+                lessonId={lessonId}
+                progress={progress}
+                onBack={handleBackFromLesson}
+                onComplete={handleCompleteLesson}
+                onNextLesson={handleNextLesson}
+                unlockedLevel={unlockedLevel}
+                onOpenAssessment={parentMod ? () => setAssessmentModuleId(parentMod.id) : undefined}
+              />
+            );
+          })()}
           {view.type === 'upgrade' && (
             <UpgradePage
               onBack={() => setView({ type: 'dashboard' })}
@@ -480,10 +502,39 @@ function AppContent() {
             <AdminPage />
           )}
         </main>
-
-
       </div>
     </div>
+
+    {/* Module Assessment Modal */}
+    {assessmentModuleId && authState.status === 'authenticated' && (() => {
+      const assessMod = modules.find(m => m.id === assessmentModuleId);
+      if (!assessMod || !assessMod.assessment?.length) return null;
+      const skillLevels = authState.user.moduleSkillLevels ?? {};
+      const currentLevel = (skillLevels[assessmentModuleId] as SkillLevel) ?? 'novice';
+      return (
+        <ModuleAssessment
+          module={assessMod}
+          currentLevel={currentLevel}
+          onClose={() => setAssessmentModuleId(null)}
+          onLevelUnlocked={(moduleId, newLevel) => {
+            setAuthState(prev => {
+              if (prev.status !== 'authenticated') return prev;
+              return {
+                ...prev,
+                user: {
+                  ...prev.user,
+                  moduleSkillLevels: {
+                    ...(prev.user.moduleSkillLevels ?? {}),
+                    [moduleId]: newLevel,
+                  },
+                },
+              };
+            });
+          }}
+        />
+      );
+    })()}
+  </>
   );
 }
 

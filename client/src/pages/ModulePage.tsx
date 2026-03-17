@@ -1,10 +1,22 @@
-import { modules } from "@/lib/curriculum";
+import { modules, type SkillLevel } from "@/lib/curriculum";
 import { getModuleProgress, FREE_MODULES } from "@/lib/progress";
 import type { UserProgress } from "@/lib/progress";
-import { ArrowLeft, Clock, CheckCircle, Lock, ChevronRight, BookOpen } from "lucide-react";
+import { ArrowLeft, Clock, CheckCircle, Lock, ChevronRight, BookOpen, Trophy, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
+
+const LEVEL_LABELS: Record<SkillLevel, string> = {
+  novice: 'Novice',
+  intermediate: 'Intermediate',
+  advanced: 'Advanced',
+};
+const LEVEL_COLORS: Record<SkillLevel, string> = {
+  novice: 'text-blue-400 bg-blue-400/10 border-blue-400/30',
+  intermediate: 'text-amber-400 bg-amber-400/10 border-amber-400/30',
+  advanced: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/30',
+};
 
 interface ModulePageProps {
   moduleId: string;
@@ -12,9 +24,11 @@ interface ModulePageProps {
   onBack: () => void;
   onSelectLesson: (lessonId: string) => void;
   onUpgrade: () => void;
+  unlockedLevel?: SkillLevel;
+  onOpenAssessment?: () => void;
 }
 
-export default function ModulePage({ moduleId, progress, onBack, onSelectLesson, onUpgrade }: ModulePageProps) {
+export default function ModulePage({ moduleId, progress, onBack, onSelectLesson, onUpgrade, unlockedLevel = 'novice', onOpenAssessment }: ModulePageProps) {
   const mod = modules.find(m => m.id === moduleId);
   if (!mod) return null;
 
@@ -51,12 +65,40 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
             </div>
             <p className="text-muted-foreground text-sm mb-4">{mod.description}</p>
             {isAccessible && (
-              <div className="space-y-1.5 max-w-xs">
-                <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">Module progress</span>
-                  <span className="font-medium text-primary">{progressPct}% complete</span>
+              <div className="space-y-3">
+                <div className="space-y-1.5 max-w-xs">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-muted-foreground">Module progress</span>
+                    <span className="font-medium text-primary">{progressPct}% complete</span>
+                  </div>
+                  <Progress value={progressPct} className="h-2" />
                 </div>
-                <Progress value={progressPct} className="h-2" />
+                {/* Skill level badge + assessment button */}
+                {mod.assessment?.length ? (
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <Badge className={cn("text-xs border px-2.5 py-1 gap-1.5", LEVEL_COLORS[unlockedLevel])}>
+                      {unlockedLevel === 'advanced' ? <Trophy className="w-3 h-3" /> : <Target className="w-3 h-3" />}
+                      {LEVEL_LABELS[unlockedLevel]} Level
+                    </Badge>
+                    {unlockedLevel !== 'advanced' && (
+                      <button
+                        onClick={onOpenAssessment}
+                        className="text-xs text-primary border border-primary/30 rounded-lg px-3 py-1.5 hover:bg-primary/10 transition-colors flex items-center gap-1.5"
+                      >
+                        <Lock className="w-3 h-3" />
+                        Test Your Knowledge → Unlock {unlockedLevel === 'novice' ? 'Intermediate' : 'Advanced'}
+                      </button>
+                    )}
+                    {unlockedLevel === 'advanced' && (
+                      <button
+                        onClick={onOpenAssessment}
+                        className="text-xs text-muted-foreground border border-border rounded-lg px-3 py-1.5 hover:bg-muted/50 transition-colors"
+                      >
+                        Retake Assessment
+                      </button>
+                    )}
+                  </div>
+                ) : null}
               </div>
             )}
           </div>

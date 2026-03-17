@@ -1,15 +1,27 @@
 import { useState, useRef } from "react";
-import { modules, type Lesson, type Module, type QuizQuestion } from "@/lib/curriculum";
+import { modules, type Lesson, type Module, type QuizQuestion, type SkillLevel } from "@/lib/curriculum";
 import type { UserProgress } from "@/lib/progress";
 import {
   ArrowLeft, ChevronRight, CheckCircle, BookOpen, AlertTriangle,
   Lightbulb, Table, Clock, Award, RotateCcw, ChevronDown, ChevronUp,
-  GripVertical, ArrowRight
+  GripVertical, ArrowRight, Lock, ChevronUp as LevelUp
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+
+const SKILL_LEVELS: SkillLevel[] = ['novice', 'intermediate', 'advanced'];
+const LEVEL_LABELS: Record<SkillLevel, string> = {
+  novice: 'Novice',
+  intermediate: 'Intermediate',
+  advanced: 'Advanced',
+};
+const LEVEL_COLORS: Record<SkillLevel, string> = {
+  novice: 'bg-blue-500/10 text-blue-400 border-blue-400/30',
+  intermediate: 'bg-amber-500/10 text-amber-400 border-amber-400/30',
+  advanced: 'bg-emerald-500/10 text-emerald-400 border-emerald-400/30',
+};
 
 interface LessonPageProps {
   lessonId: string;
@@ -17,6 +29,10 @@ interface LessonPageProps {
   onBack: () => void;
   onComplete: (lessonId: string, quizScore: number) => void;
   onNextLesson: (lessonId: string) => void;
+  // Highest unlocked skill level for this lesson's module
+  unlockedLevel?: SkillLevel;
+  // Callback to open the module assessment from within a lesson
+  onOpenAssessment?: () => void;
 }
 
 type Tab = 'lesson' | 'quiz' | 'terms';
@@ -249,7 +265,7 @@ function DragMatchQuestion({ question, submitted, onMatchChange, currentMatches 
 
 // ─── Main LessonPage ───────────────────────────────────────────────────────
 
-export default function LessonPage({ lessonId, progress, onBack, onComplete, onNextLesson }: LessonPageProps) {
+export default function LessonPage({ lessonId, progress, onBack, onComplete, onNextLesson, unlockedLevel = 'novice', onOpenAssessment }: LessonPageProps) {
   const [activeTab, setActiveTab] = useState<Tab>('lesson');
   // MC answers: questionId → optionIndex
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({});
@@ -259,6 +275,8 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
   const [dragMatches, setDragMatches] = useState<Record<string, Record<string, string>>>({});
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [expandedTerm, setExpandedTerm] = useState<string | null>(null);
+  // Active viewing level — defaults to the unlocked level, can be toggled down
+  const [viewLevel, setViewLevel] = useState<SkillLevel>(unlockedLevel);
 
   // Find lesson and module
   let lesson: Lesson | null = null;
@@ -278,6 +296,15 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
   if (!lesson || !mod) return null;
 
   const isCompleted = progress.completedLessons.has(lessonId);
+
+  // Content filtering: show blocks with no level (universal) + blocks at/below viewLevel
+  const levelOrder: Record<SkillLevel, number> = { novice: 0, intermediate: 1, advanced: 2 };
+  const unlockedOrder = levelOrder[unlockedLevel];
+  const viewOrder = levelOrder[viewLevel];
+
+  // A block is visible if: no level tag (universal), OR level <= viewLevel
+  // A block is "locked preview" if: level exists AND level > unlockedLevel (user hasn't unlocked it yet)
+  const hasLeveledContent = lesson.content.some(b => b.level !== undefined);
 
   // ── Answer handlers ──
   const handleAnswerSelect = (questionId: string, optionIndex: number) => {
@@ -406,6 +433,54 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
         </div>
       </div>
 
+      {/* Skill Level Selector — only shown if this lesson has leveled content */}
+      {hasLeveledContent && (
+        <div className="bg-card border border-border rounded-xl p-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="text-xs font-semibold text-foreground">Skill Level</div>
+            {unlockedLevel !== 'advanced' && (
+              <button
+                onClick={onOpenAssessment}
+                className="text-xs text-primary hover:underline flex items-center gap-1"
+              >
+                <Lock className="w-3 h-3" />
+                Take module assessment to unlock more
+              </button>
+            )}
+          </div>
+          <div className="flex gap-2">
+            {SKILL_LEVELS.map((lvl) => {
+              const lvlOrder = levelOrder[lvl];
+              const isUnlocked = lvlOrder <= unlockedOrder;
+              const isActive = viewLevel === lvl;
+              return (
+                <button
+                  key={lvl}
+                  onClick={() => isUnlocked && setViewLevel(lvl)}
+                  disabled={!isUnlocked}
+                  className={cn(
+                    "flex-1 py-1.5 px-2 rounded-lg border text-xs font-medium transition-all",
+                    isActive && isUnlocked
+                      ? cn("border", LEVEL_COLORS[lvl])
+                      : isUnlocked
+                        ? "border-border text-muted-foreground hover:border-primary/50"
+                        : "border-border/50 text-muted-foreground/40 cursor-not-allowed"
+                  )}
+                >
+                  {!isUnlocked && <Lock className="w-3 h-3 inline mr-1 mb-0.5 opacity-60" />}
+                  {LEVEL_LABELS[lvl]}
+                </button>
+              );
+            })}
+          </div>
+          {viewLevel !== 'novice' && (
+            <p className="text-[11px] text-muted-foreground mt-2">
+              Showing <strong className="text-foreground">{LEVEL_LABELS[viewLevel]}</strong>-level content. Includes all Novice content plus deeper analysis.
+            </p>
+          )}
+        </div>
+      )}
+
       {/* Tab Navigation */}
       <div className="flex border-b border-border">
         {(['lesson', 'terms', 'quiz'] as Tab[]).map((tab) => {
@@ -432,6 +507,43 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
       {activeTab === 'lesson' && (
         <div className="space-y-5">
           {lesson.content.map((block, i) => {
+            // Skill level filtering
+            if (block.level) {
+              const blockOrder = levelOrder[block.level];
+              // Block is above the user's unlocked level — show locked teaser
+              if (blockOrder > unlockedOrder) {
+                return (
+                  <div key={i} className="bg-card border border-dashed border-border rounded-xl p-5 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-background/60 backdrop-blur-[2px] flex flex-col items-center justify-center gap-2 z-10">
+                      <Lock className="w-5 h-5 text-muted-foreground" />
+                      <div className="text-sm font-semibold text-foreground">{LEVEL_LABELS[block.level]} Content Locked</div>
+                      <p className="text-xs text-muted-foreground text-center max-w-xs">
+                        Pass the module assessment to unlock {LEVEL_LABELS[block.level]}-level content across all lessons.
+                      </p>
+                      {onOpenAssessment && (
+                        <button
+                          onClick={onOpenAssessment}
+                          className="mt-1 text-xs text-primary border border-primary/30 rounded-lg px-3 py-1.5 hover:bg-primary/10 transition-colors"
+                        >
+                          Take Module Assessment
+                        </button>
+                      )}
+                    </div>
+                    {/* Blurred preview of block heading */}
+                    <div className="opacity-20 select-none">
+                      {block.heading && <h2 className="font-semibold text-base mb-2">{block.heading}</h2>}
+                      <p className="text-sm text-muted-foreground">{'█'.repeat(60)}</p>
+                      <p className="text-sm text-muted-foreground mt-1">{'█'.repeat(40)}</p>
+                    </div>
+                  </div>
+                );
+              }
+              // Block is at a level above what user is currently viewing — hide it
+              if (blockOrder > viewOrder) {
+                return null;
+              }
+            }
+            // Render normally
             if (block.type === 'text') {
               return (
                 <div key={i} className="bg-card border border-border rounded-xl p-5">

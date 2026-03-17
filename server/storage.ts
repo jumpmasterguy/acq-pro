@@ -4,6 +4,8 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { eq } from "drizzle-orm";
 import { Pool } from "pg";
 
+export type SkillLevel = 'novice' | 'intermediate' | 'advanced';
+
 // ─── Interface ─────────────────────────────────────────────────────────────
 
 export interface IStorage {
@@ -27,6 +29,12 @@ export interface IStorage {
     quizScores: Record<string, number>
   ): Promise<User | undefined>;
   updateUserPassword(userId: string, passwordHash: string): Promise<User | undefined>;
+  updateModuleSkillLevel(
+    userId: string,
+    moduleId: string,
+    level: SkillLevel,
+    assessmentScore: number
+  ): Promise<User | undefined>;
 }
 
 // ─── Postgres Storage (production) ─────────────────────────────────────────
@@ -80,6 +88,8 @@ export class DrizzleStorage implements IStorage {
         subscriptionId: null,
         completedLessons: [],
         quizScores: {},
+        moduleSkillLevels: {},
+        moduleAssessmentScores: {},
       })
       .returning();
     return result[0];
@@ -122,6 +132,27 @@ export class DrizzleStorage implements IStorage {
       .returning();
     return result[0];
   }
+
+  async updateModuleSkillLevel(
+    userId: string,
+    moduleId: string,
+    level: SkillLevel,
+    assessmentScore: number
+  ): Promise<User | undefined> {
+    const current = await this.getUser(userId);
+    if (!current) return undefined;
+    const currentLevels = (current.moduleSkillLevels as Record<string, SkillLevel>) ?? {};
+    const currentScores = (current.moduleAssessmentScores as Record<string, number>) ?? {};
+    const updated = await this.db
+      .update(users)
+      .set({
+        moduleSkillLevels: { ...currentLevels, [moduleId]: level },
+        moduleAssessmentScores: { ...currentScores, [moduleId]: assessmentScore },
+      })
+      .where(eq(users.id, userId))
+      .returning();
+    return updated[0];
+  }
 }
 
 // ─── In-Memory Storage (fallback when no DATABASE_URL) ─────────────────────
@@ -163,6 +194,8 @@ export class MemStorage implements IStorage {
       subscriptionId: null,
       completedLessons: [],
       quizScores: {},
+      moduleSkillLevels: {},
+      moduleAssessmentScores: {},
     };
     this.users.set(id, user);
     return user;
@@ -195,6 +228,25 @@ export class MemStorage implements IStorage {
     const user = this.users.get(userId);
     if (!user) return undefined;
     const updated = { ...user, passwordHash };
+    this.users.set(userId, updated);
+    return updated;
+  }
+
+  async updateModuleSkillLevel(
+    userId: string,
+    moduleId: string,
+    level: SkillLevel,
+    assessmentScore: number
+  ): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const currentLevels = (user.moduleSkillLevels as Record<string, SkillLevel>) ?? {};
+    const currentScores = (user.moduleAssessmentScores as Record<string, number>) ?? {};
+    const updated = {
+      ...user,
+      moduleSkillLevels: { ...currentLevels, [moduleId]: level },
+      moduleAssessmentScores: { ...currentScores, [moduleId]: assessmentScore },
+    };
     this.users.set(userId, updated);
     return updated;
   }

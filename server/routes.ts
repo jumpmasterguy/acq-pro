@@ -94,6 +94,8 @@ export async function registerRoutes(
             completedLessons: user.completedLessons ?? [],
             quizScores: user.quizScores ?? {},
             isAdmin: isAdmin(req),
+            moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
+            moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
           });
         });
       }
@@ -125,6 +127,8 @@ export async function registerRoutes(
       completedLessons: user.completedLessons ?? [],
       quizScores: user.quizScores ?? {},
       isAdmin: isAdmin(req),
+      moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
+      moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
     });
   });
 
@@ -164,6 +168,58 @@ export async function registerRoutes(
     req.user!.quizScores = (updated.quizScores as Record<string, number>) ?? {};
 
     return res.json({ completedLessons: updated.completedLessons, quizScores: updated.quizScores });
+  });
+
+  // ─── Skill Level Routes ────────────────────────────────────────────
+
+  // POST /api/skill-level — submit module assessment, unlock skill level
+  app.post("/api/skill-level", requireAuth as any, async (req: Request, res: Response) => {
+    const { moduleId, score } = req.body as { moduleId: string; score: number };
+    if (!moduleId || score === undefined || score === null) {
+      return res.status(400).json({ message: "moduleId and score required" });
+    }
+
+    const userId = req.user!.id;
+    const currentUser = await storage.getUser(userId);
+    if (!currentUser) return res.status(404).json({ message: "User not found" });
+
+    // Determine current and new level
+    const currentLevels = (currentUser.moduleSkillLevels as Record<string, string>) ?? {};
+    const currentLevel = (currentLevels[moduleId] ?? 'novice') as 'novice' | 'intermediate' | 'advanced';
+
+    // Unlock logic: pass ≥75% to advance one tier
+    const PASS_THRESHOLD = 75;
+    let newLevel: 'novice' | 'intermediate' | 'advanced' = currentLevel;
+    let unlocked = false;
+
+    if (score >= PASS_THRESHOLD) {
+      if (currentLevel === 'novice') {
+        newLevel = 'intermediate';
+        unlocked = true;
+      } else if (currentLevel === 'intermediate') {
+        newLevel = 'advanced';
+        unlocked = true;
+      } else {
+        // Already advanced — record score but no new unlock
+        newLevel = 'advanced';
+      }
+    }
+
+    const updated = await storage.updateModuleSkillLevel(userId, moduleId, newLevel, score);
+    if (!updated) return res.status(500).json({ message: "Failed to update skill level" });
+
+    // Refresh session user
+    (req.user as any).moduleSkillLevels = updated.moduleSkillLevels;
+    (req.user as any).moduleAssessmentScores = updated.moduleAssessmentScores;
+
+    return res.json({
+      moduleId,
+      newLevel,
+      score,
+      unlocked,
+      moduleSkillLevels: updated.moduleSkillLevels,
+      moduleAssessmentScores: updated.moduleAssessmentScores,
+    });
   });
 
   // ─── Stripe Routes ─────────────────────────────────────────────────
