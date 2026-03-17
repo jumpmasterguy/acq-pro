@@ -496,16 +496,24 @@ Context: ${lessonContext}`,
   app.get("/api/ai-health", async (_req: Request, res: Response) => {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) return res.json({ ok: false, reason: 'GEMINI_API_KEY not set' });
-    try {
-      const { GoogleGenerativeAI } = await import("@google/generative-ai");
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      const result = await model.generateContent('Say OK in one word.');
-      const text = result.response.text();
-      return res.json({ ok: true, response: text.trim() });
-    } catch (err: any) {
-      return res.json({ ok: false, reason: err?.message, status: err?.status });
+    // Try available models in order of preference
+    const candidates = ['gemini-2.0-flash-lite', 'gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-latest', 'gemini-pro'];
+    const results: Record<string, string> = {};
+    const { GoogleGenerativeAI } = await import("@google/generative-ai");
+    const genAI = new GoogleGenerativeAI(apiKey);
+    for (const modelName of candidates) {
+      try {
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const result = await model.generateContent('Say OK in one word.');
+        const text = result.response.text();
+        results[modelName] = `OK: ${text.trim()}`;
+        // Found a working model — return immediately
+        return res.json({ ok: true, workingModel: modelName, response: text.trim(), allResults: results });
+      } catch (err: any) {
+        results[modelName] = `FAIL: ${err?.message?.substring(0, 120)}`;
+      }
     }
+    return res.json({ ok: false, reason: 'No models worked', allResults: results });
   });
 
   return httpServer;
