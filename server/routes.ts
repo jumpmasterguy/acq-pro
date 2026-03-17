@@ -463,7 +463,7 @@ export async function registerRoutes(
       lost: `You are a patient acquisition mentor. A student is confused about the following topic. First, identify what is typically confusing about it. Then re-explain it from scratch using a different approach — try a step-by-step breakdown, a comparison, or a concrete example. Keep it clear and under 200 words.\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
     };
     // Use raw REST to avoid SDK model-name lock; try models in order of preference
-    const modelNames = ['gemini-2.0-flash-lite', 'gemini-2.0-flash-001', 'gemini-1.5-flash-002', 'gemini-1.5-flash-8b', 'gemini-2.5-pro-exp-03-25'];
+    const modelNames = ['gemini-2.0-flash-lite', 'gemini-2.0-flash', 'gemini-2.0-flash-001', 'gemini-2.5-flash'];
     let lastErr = '';
     for (const modelName of modelNames) {
       try {
