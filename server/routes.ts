@@ -457,39 +457,35 @@ export async function registerRoutes(
     if (!apiKey) {
       return res.status(503).json({ message: "AI explanations are not configured yet. Add GEMINI_API_KEY in Railway." });
     }
-    try {
-      const { GoogleGenerativeAI } = await import("@google/generative-ai");
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-      const prompts: Record<string, string> = {
-        eli5: `You are a friendly teacher explaining DoD acquisitions to someone who just started learning. 
-Explain the following lesson topic in simple, plain English as if the student is completely new to this — use a real-world analogy they can relate to, keep it under 150 words, and avoid jargon.
-
-Lesson: ${lessonTitle}
-Context: ${lessonContext}`,
-
-        apply: `You are a seasoned DoD acquisition professional coaching a new Program Manager.
-For the following lesson topic, give 3-4 concrete, practical examples of how a real PM would apply this knowledge on an active defense program. Be specific — mention contract types, dollar thresholds, regulatory references, or realistic scenarios. Keep it under 200 words.
-
-Lesson: ${lessonTitle}
-Context: ${lessonContext}`,
-
-        lost: `You are a patient acquisition mentor. A student is confused about the following topic. 
-First, identify what is typically confusing about it. Then re-explain it from scratch using a different approach — try a step-by-step breakdown, a comparison, or a concrete example. Keep it clear and under 200 words.
-
-Lesson: ${lessonTitle}
-Context: ${lessonContext}`,
-      };
-
-      const result = await model.generateContent(prompts[mode]);
-      const text = result.response.text();
-      return res.json({ explanation: text });
-    } catch (err: any) {
-      console.error("Gemini error:", err?.message, err?.status, err?.errorDetails);
-      const detail = err?.message ?? 'Unknown error';
-      return res.status(500).json({ message: `AI explanation failed: ${detail}` });
+    const prompts: Record<string, string> = {
+      eli5: `You are a friendly teacher explaining DoD acquisitions to someone who just started learning. Explain the following lesson topic in simple, plain English as if the student is completely new to this — use a real-world analogy they can relate to, keep it under 150 words, and avoid jargon.\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
+      apply: `You are a seasoned DoD acquisition professional coaching a new Program Manager. For the following lesson topic, give 3-4 concrete, practical examples of how a real PM would apply this knowledge on an active defense program. Be specific — mention contract types, dollar thresholds, regulatory references, or realistic scenarios. Keep it under 200 words.\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
+      lost: `You are a patient acquisition mentor. A student is confused about the following topic. First, identify what is typically confusing about it. Then re-explain it from scratch using a different approach — try a step-by-step breakdown, a comparison, or a concrete example. Keep it clear and under 200 words.\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
+    };
+    // Use raw REST to avoid SDK model-name lock; try models in order of preference
+    const modelNames = ['gemini-2.0-flash-lite', 'gemini-2.0-flash-001', 'gemini-1.5-flash-002', 'gemini-1.5-flash-8b', 'gemini-2.5-pro-exp-03-25'];
+    let lastErr = '';
+    for (const modelName of modelNames) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompts[mode] }] }] }),
+        });
+        const data: any = await resp.json();
+        if (resp.ok) {
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+          if (text) return res.json({ explanation: text });
+        }
+        lastErr = data?.error?.message ?? `HTTP ${resp.status}`;
+        if (resp.status === 429) break; // rate limit — don't try more models
+      } catch (err: any) {
+        lastErr = err?.message ?? 'fetch error';
+      }
     }
+    console.error('Gemini explain failed — last error:', lastErr);
+    return res.status(500).json({ message: `AI explanation failed: ${lastErr}` });
   });
 
   // GET /api/ai-health — check Gemini key is working (no auth required, for debugging)
@@ -497,13 +493,16 @@ Context: ${lessonContext}`,
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) return res.json({ ok: false, reason: 'GEMINI_API_KEY not set', keyPrefix: 'MISSING' });
     const keyPrefix = apiKey.substring(0, 8);
-    // Try both v1 and v1beta with multiple model names via raw REST (bypasses SDK version lock)
-    const attempts = [
-      { url: `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${apiKey}` },
-      { url: `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}` },
-      { url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}` },
-      { url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}` },
+    // Try current Google AI Studio model names via raw REST (v1beta is canonical for AI Studio)
+    const modelCandidates = [
+      'gemini-2.0-flash-lite', 'gemini-2.0-flash-001', 'gemini-2.0-flash-lite-001',
+      'gemini-2.5-pro-exp-03-25', 'gemini-2.5-pro-preview-03-25',
+      'gemini-1.5-flash-002', 'gemini-1.5-flash-8b', 'gemini-1.5-pro-002',
     ];
+    const attempts = modelCandidates.flatMap(m => [
+      { url: `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`, label: `v1beta/${m}` },
+      { url: `https://generativelanguage.googleapis.com/v1/models/${m}:generateContent?key=${apiKey}`, label: `v1/${m}` },
+    ]);
     const results: Record<string, string> = {};
     for (const { url } of attempts) {
       const label = url.replace(`?key=${apiKey}`, '').replace('https://generativelanguage.googleapis.com/', '');
