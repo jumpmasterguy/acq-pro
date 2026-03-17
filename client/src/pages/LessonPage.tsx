@@ -4,8 +4,10 @@ import type { UserProgress } from "@/lib/progress";
 import {
   ArrowLeft, ChevronRight, CheckCircle, BookOpen, AlertTriangle,
   Lightbulb, Table, Clock, Award, RotateCcw, ChevronDown, ChevronUp,
-  GripVertical, ArrowRight, Lock, ChevronUp as LevelUp
+  GripVertical, ArrowRight, Lock, ChevronUp as LevelUp,
+  Sparkles, BrainCircuit, HelpCircle, Briefcase, Loader2, X
 } from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -377,6 +379,11 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
   const [expandedTerm, setExpandedTerm] = useState<string | null>(null);
   // Active viewing level — defaults to the unlocked level, can be toggled down
   const [viewLevel, setViewLevel] = useState<SkillLevel>(unlockedLevel);
+  // AI Explain panel
+  const [aiMode, setAiMode] = useState<'eli5' | 'apply' | 'lost' | null>(null);
+  const [aiResult, setAiResult] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
 
   // Find lesson and module
   let lesson: Lesson | null = null;
@@ -493,6 +500,34 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
     }
     return count;
   })();
+
+  // AI Explain handler
+  const handleAiExplain = async (mode: 'eli5' | 'apply' | 'lost') => {
+    if (!lesson) return;
+    // If same mode clicked again, toggle off
+    if (aiMode === mode && aiResult) { setAiMode(null); setAiResult(null); return; }
+    setAiMode(mode);
+    setAiResult(null);
+    setAiError(null);
+    setAiLoading(true);
+    // Build a brief context from the first text/callout block
+    const contextBlock = lesson.content.find(b => b.type === 'text' || b.type === 'callout');
+    const lessonContext = contextBlock?.body ?? lesson.description;
+    try {
+      const res = await apiRequest('POST', '/api/explain', {
+        lessonTitle: lesson.title,
+        lessonContext,
+        mode,
+      });
+      const data = await res.json();
+      if (data.explanation) setAiResult(data.explanation);
+      else setAiError(data.message ?? 'Something went wrong.');
+    } catch (e: any) {
+      setAiError('Could not reach the AI. Try again in a moment.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -844,6 +879,100 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
             return null;
           })}
+
+          {/* AI Explain Panel */}
+          <div className="rounded-xl border border-primary/20 bg-primary/5 overflow-hidden">
+            {/* Header row with 3 buttons */}
+            <div className="px-5 py-3.5 border-b border-primary/10">
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles className="w-4 h-4 text-primary" />
+                <span className="text-sm font-semibold text-foreground">AI Study Assistant</span>
+                <span className="text-xs text-muted-foreground ml-1">Powered by Gemini</span>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <button
+                  onClick={() => handleAiExplain('eli5')}
+                  data-testid="ai-eli5"
+                  className={cn(
+                    "flex-1 flex items-center gap-2 px-3 py-2.5 rounded-lg border text-sm font-medium transition-all text-left",
+                    aiMode === 'eli5'
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-background border-border hover:border-primary/50 hover:bg-primary/5"
+                  )}
+                >
+                  <BrainCircuit className="w-4 h-4 flex-shrink-0" />
+                  <div>
+                    <div className="font-semibold text-xs">Explain Like I'm 5</div>
+                    <div className={cn("text-[11px]", aiMode === 'eli5' ? "text-primary-foreground/70" : "text-muted-foreground")}>Simple analogy, plain English</div>
+                  </div>
+                </button>
+                <button
+                  onClick={() => handleAiExplain('apply')}
+                  data-testid="ai-apply"
+                  className={cn(
+                    "flex-1 flex items-center gap-2 px-3 py-2.5 rounded-lg border text-sm font-medium transition-all text-left",
+                    aiMode === 'apply'
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-background border-border hover:border-primary/50 hover:bg-primary/5"
+                  )}
+                >
+                  <Briefcase className="w-4 h-4 flex-shrink-0" />
+                  <div>
+                    <div className="font-semibold text-xs">How Do I Apply This?</div>
+                    <div className={cn("text-[11px]", aiMode === 'apply' ? "text-primary-foreground/70" : "text-muted-foreground")}>Real PM scenarios & examples</div>
+                  </div>
+                </button>
+                <button
+                  onClick={() => handleAiExplain('lost')}
+                  data-testid="ai-lost"
+                  className={cn(
+                    "flex-1 flex items-center gap-2 px-3 py-2.5 rounded-lg border text-sm font-medium transition-all text-left",
+                    aiMode === 'lost'
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-background border-border hover:border-primary/50 hover:bg-primary/5"
+                  )}
+                >
+                  <HelpCircle className="w-4 h-4 flex-shrink-0" />
+                  <div>
+                    <div className="font-semibold text-xs">I'm Still Lost</div>
+                    <div className={cn("text-[11px]", aiMode === 'lost' ? "text-primary-foreground/70" : "text-muted-foreground")}>Different approach, re-explained</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+            {/* Result area */}
+            {(aiLoading || aiResult || aiError) && (
+              <div className="px-5 py-4 relative">
+                {!aiLoading && (
+                  <button
+                    onClick={() => { setAiMode(null); setAiResult(null); setAiError(null); }}
+                    className="absolute top-3 right-3 text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+                {aiLoading && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                    Thinking...
+                  </div>
+                )}
+                {aiError && (
+                  <p className="text-sm text-red-500">{aiError}</p>
+                )}
+                {aiResult && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-xs font-semibold text-primary uppercase tracking-wide">
+                        {aiMode === 'eli5' ? 'Simple Explanation' : aiMode === 'apply' ? 'How to Apply as a PM' : 'Re-Explained'}
+                      </span>
+                    </div>
+                    <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{aiResult}</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* Next Actions */}
           <div className="flex flex-col sm:flex-row gap-3 pt-2">

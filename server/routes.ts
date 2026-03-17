@@ -441,6 +441,53 @@ export async function registerRoutes(
     return res.json({ message: `${user.email} is now ${status}`, userId: user.id });
   });
 
+  // ─── AI Explain Endpoint ────────────────────────────────────────────────
+  // POST /api/explain
+  // Body: { lessonTitle: string, lessonContext: string, mode: 'eli5' | 'apply' | 'lost' }
+  // Returns: { explanation: string }
+  app.post("/api/explain", requireAuth as any, async (req: Request, res: Response) => {
+    const { lessonTitle, lessonContext, mode } = req.body;
+    if (!lessonTitle || !lessonContext || !mode) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return res.status(503).json({ message: "AI explanations are not configured yet. Add GEMINI_API_KEY in Railway." });
+    }
+    try {
+      const { GoogleGenerativeAI } = await import("@google/generative-ai");
+      const genAI = new GoogleGenerativeAI(apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+      const prompts: Record<string, string> = {
+        eli5: `You are a friendly teacher explaining DoD acquisitions to someone who just started learning. 
+Explain the following lesson topic in simple, plain English as if the student is completely new to this — use a real-world analogy they can relate to, keep it under 150 words, and avoid jargon.
+
+Lesson: ${lessonTitle}
+Context: ${lessonContext}`,
+
+        apply: `You are a seasoned DoD acquisition professional coaching a new Program Manager.
+For the following lesson topic, give 3-4 concrete, practical examples of how a real PM would apply this knowledge on an active defense program. Be specific — mention contract types, dollar thresholds, regulatory references, or realistic scenarios. Keep it under 200 words.
+
+Lesson: ${lessonTitle}
+Context: ${lessonContext}`,
+
+        lost: `You are a patient acquisition mentor. A student is confused about the following topic. 
+First, identify what is typically confusing about it. Then re-explain it from scratch using a different approach — try a step-by-step breakdown, a comparison, or a concrete example. Keep it clear and under 200 words.
+
+Lesson: ${lessonTitle}
+Context: ${lessonContext}`,
+      };
+
+      const result = await model.generateContent(prompts[mode]);
+      const text = result.response.text();
+      return res.json({ explanation: text });
+    } catch (err: any) {
+      console.error("Gemini error:", err.message);
+      return res.status(500).json({ message: "AI explanation failed. Try again in a moment." });
+    }
+  });
+
   return httpServer;
 }
 

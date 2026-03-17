@@ -3356,6 +3356,595 @@ export const modules: Module[] = [
       }
     ]
   },
+    {
+      id: 'data-3',
+      title: 'EVM Acronym Deep Dive — Every Term Defined and Explained',
+      duration: '30 min',
+      type: 'lesson' as const,
+      content: {
+        sections: [
+          {
+            type: 'header' as const,
+            title: 'Why EVM Has So Many Acronyms — and Why You Must Know Them Cold',
+            body: 'Earned Value Management (EVM) has a dense acronym vocabulary because it integrates three independent measurement systems — cost accounting, schedule management, and performance measurement — into a single framework. Every acronym represents a specific data point that, when combined with others, tells a precise story about program health. In a program review, confusing EAC with ETC or VAC with VAR is not just embarrassing — it leads to incorrect decisions. This lesson defines and contextualizes every core EVM term.',
+          },
+          {
+            type: 'expandable_list' as const,
+            title: 'The Baseline Metrics — What Was Planned',
+            items: [
+              {
+                label: 'BAC — Budget at Completion',
+                sublabel: 'The total authorized budget for the entire contract',
+                badge: 'Baseline',
+                badgeColor: 'blue',
+                summary: 'BAC is the total planned budget from day 1 to contract completion — the sum of all Performance Measurement Baselines plus management reserve.',
+                content: [
+                  {
+                    type: 'grid' as const,
+                    title: 'BAC Details',
+                    items: [
+                      { label: 'Full Name', value: 'Budget at Completion' },
+                      { label: 'What It Measures', value: 'Total authorized contract budget for all work scope' },
+                      { label: 'How Used', value: 'Denominator for CPI-based EAC calculations. Compared against EAC to determine cost overrun magnitude.' },
+                      { label: 'PM Insight', value: 'BAC is fixed unless there is a formal contract modification. Informal scope changes do not change BAC — they create undocumented overruns.' },
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'PMB — Performance Measurement Baseline',
+                sublabel: 'The time-phased budget against which performance is measured',
+                badge: 'Baseline',
+                badgeColor: 'blue',
+                summary: 'The PMB is BAC minus Management Reserve — the cost/schedule baseline used for EVM measurement.',
+                content: [
+                  {
+                    type: 'grid' as const,
+                    title: 'PMB Details',
+                    items: [
+                      { label: 'Full Name', value: 'Performance Measurement Baseline' },
+                      { label: 'Relationship to BAC', value: 'PMB = BAC minus Management Reserve (MR). MR is held outside the PMB for unknown-unknown risks.' },
+                      { label: 'Time-Phased', value: 'The PMB is the month-by-month plan. At any data date, the cumulative PMB = BCWS for work planned through that date.' },
+                      { label: 'IBR', value: 'The Integrated Baseline Review (IBR) verifies the PMB is realistic and traceable to contract requirements. Required for contracts over $20M.' },
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'BCWS / PV — Budgeted Cost of Work Scheduled (Planned Value)',
+                sublabel: 'What you planned to spend by now',
+                badge: 'Planned Value',
+                badgeColor: 'blue',
+                summary: 'BCWS is the cumulative budget for all work that was PLANNED to be completed as of the data date. It comes from the time-phased PMB.',
+                content: [
+                  {
+                    type: 'grid' as const,
+                    title: 'BCWS / PV Details',
+                    items: [
+                      { label: 'Full Name', value: 'Budgeted Cost of Work Scheduled' },
+                      { label: 'Modern Equivalent', value: 'PV (Planned Value) — used interchangeably in modern EVM and ANSI 748 literature' },
+                      { label: 'Formula', value: 'Sum of all work packages budgeted to start/complete through the data date per the approved schedule' },
+                      { label: 'What It Tells You', value: 'Where you should be on the S-curve. The denominator for SPI = EV/PV.' },
+                    ],
+                  },
+                  { type: 'text' as const, body: 'BCWS/PV does NOT tell you what you actually spent or what work was done — only what was supposed to be done. The power of EVM comes from comparing BCWS to BCWP (actual work done) and ACWP (actual dollars spent).' },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'expandable_list' as const,
+            title: 'The Performance Metrics — What Actually Happened',
+            items: [
+              {
+                label: 'BCWP / EV — Budgeted Cost of Work Performed (Earned Value)',
+                sublabel: 'The heart of EVM — the budget value of completed work',
+                badge: 'Earned Value',
+                badgeColor: 'green',
+                summary: 'BCWP is the budget VALUE of work actually completed as of the data date. It is the only metric that directly measures accomplishment — not spending.',
+                content: [
+                  {
+                    type: 'grid' as const,
+                    title: 'BCWP / EV Details',
+                    items: [
+                      { label: 'Full Name', value: 'Budgeted Cost of Work Performed' },
+                      { label: 'Modern Equivalent', value: 'EV (Earned Value)' },
+                      { label: 'Formula', value: '% Complete (per approved earning method) × Budget for that work package' },
+                      { label: 'Critical Distinction', value: 'BCWP is based on BUDGET, not actual cost. If a $100K task is 50% complete, BCWP = $50K regardless of whether you spent $30K or $90K.' },
+                    ],
+                  },
+                  { type: 'text' as const, body: 'Earning Methods: How you calculate % complete matters. Common methods: Discrete (milestone-based: 0/50/100, 25/75, etc.), Apportioned (tied to related work), Level of Effort (LOE — time-phased only, used for management overhead). Milestone-weighted methods are more objective. LOE work packages always show SV=0 and never show behind-schedule.' },
+                ],
+              },
+              {
+                label: 'ACWP / AC — Actual Cost of Work Performed (Actual Cost)',
+                sublabel: 'What you actually spent on work completed',
+                badge: 'Actual Cost',
+                badgeColor: 'red',
+                summary: 'ACWP is the actual dollars incurred to accomplish the work measured by BCWP. It comes from the accounting system.',
+                content: [
+                  {
+                    type: 'grid' as const,
+                    title: 'ACWP / AC Details',
+                    items: [
+                      { label: 'Full Name', value: 'Actual Cost of Work Performed' },
+                      { label: 'Modern Equivalent', value: 'AC (Actual Cost)' },
+                      { label: 'Source', value: 'Accounting system actuals — payroll, accounts payable, subcontractor invoices, material receipts' },
+                      { label: 'Relationship to BCWP', value: 'If ACWP > BCWP, you are spending more than the work is worth (cost overrun). If ACWP < BCWP, you are under-running the budget for completed work.' },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'expandable_list' as const,
+            title: 'Variances — How Far Off Are You?',
+            items: [
+              {
+                label: 'CV — Cost Variance',
+                sublabel: 'BCWP minus ACWP',
+                badge: 'Cost',
+                badgeColor: 'red',
+                summary: 'CV tells you whether you are spending more or less than budgeted for the work you have actually completed.',
+                content: [
+                  {
+                    type: 'grid' as const,
+                    title: 'CV Details',
+                    items: [
+                      { label: 'Formula', value: 'CV = BCWP − ACWP (or EV − AC)' },
+                      { label: 'Positive CV', value: 'Under budget for completed work. Green.' },
+                      { label: 'Negative CV', value: 'Over budget for completed work. Red. Requires Variance Analysis Report (VAR).' },
+                      { label: 'CPI Relationship', value: 'CPI = BCWP / ACWP. CPI > 1.0 = efficient. CPI < 1.0 = over budget.' },
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'SV — Schedule Variance',
+                sublabel: 'BCWP minus BCWS',
+                badge: 'Schedule',
+                badgeColor: 'yellow',
+                summary: 'SV measures schedule performance in cost terms — how much budget worth of work you completed compared to what was planned.',
+                content: [
+                  {
+                    type: 'grid' as const,
+                    title: 'SV Details',
+                    items: [
+                      { label: 'Formula', value: 'SV = BCWP − BCWS (or EV − PV)' },
+                      { label: 'Positive SV', value: 'Ahead of schedule — more work completed than planned. Green.' },
+                      { label: 'Negative SV', value: 'Behind schedule — less work completed than planned. Red. Note: SV is measured in dollars, not days.' },
+                      { label: 'Limitation', value: 'SV converges to zero at contract completion regardless of how late you finish. Use SPI(t) or critical path schedule for late-phase schedule analysis.' },
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'VAC — Variance at Completion',
+                sublabel: 'BAC minus EAC — projected total overrun or underrun',
+                badge: 'At Completion',
+                badgeColor: 'red',
+                summary: 'VAC is the projected cost overrun (or underrun) at contract completion.',
+                content: [
+                  {
+                    type: 'grid' as const,
+                    title: 'VAC Details',
+                    items: [
+                      { label: 'Formula', value: 'VAC = BAC − EAC' },
+                      { label: 'Positive VAC', value: 'Projected under-run — expected to complete below budget. Green.' },
+                      { label: 'Negative VAC', value: 'Projected over-run — expected to exceed budget. Red. This is the number executives focus on.' },
+                      { label: 'Threshold Reporting', value: 'DoD contracts typically require formal notification when VAC exceeds 10-15% of BAC.' },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'expandable_list' as const,
+            title: 'Indices and Completion Forecasts',
+            items: [
+              {
+                label: 'CPI — Cost Performance Index',
+                sublabel: 'BCWP ÷ ACWP — your cost efficiency ratio',
+                badge: 'Efficiency',
+                badgeColor: 'green',
+                summary: 'CPI tells you how many cents of value you are producing for every dollar spent. The most important predictive metric in EVM.',
+                content: [
+                  {
+                    type: 'grid' as const,
+                    title: 'CPI Details',
+                    items: [
+                      { label: 'Formula', value: 'CPI = BCWP / ACWP (or EV / AC)' },
+                      { label: 'CPI = 1.0', value: 'On budget — earning exactly what you are spending' },
+                      { label: 'CPI = 0.85', value: 'For every $1 spent, only $0.85 of value earned. 15% cost overrun rate.' },
+                      { label: 'CPI = 1.15', value: 'For every $1 spent, $1.15 of value earned. 15% under-run rate.' },
+                    ],
+                  },
+                  { type: 'text' as const, body: 'Humphreys Rule: Research shows that once a program\'s cumulative CPI drops below 1.0 by month 20% into the contract, it virtually never recovers. This makes early CPI trends critically important.' },
+                ],
+              },
+              {
+                label: 'SPI — Schedule Performance Index',
+                sublabel: 'BCWP ÷ BCWS — your schedule efficiency ratio',
+                badge: 'Efficiency',
+                badgeColor: 'yellow',
+                summary: 'SPI tells you how much work you are completing relative to what was planned.',
+                content: [
+                  {
+                    type: 'grid' as const,
+                    title: 'SPI Details',
+                    items: [
+                      { label: 'Formula', value: 'SPI = BCWP / BCWS (or EV / PV)' },
+                      { label: 'SPI = 1.0', value: 'On schedule — completing work at the planned rate' },
+                      { label: 'SPI = 0.80', value: 'Only completing 80% of planned work. Behind schedule.' },
+                      { label: 'Limitation', value: 'SPI approaches 1.0 at completion regardless of lateness. Use Earned Schedule (ES) method for programs past 60% complete.' },
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'EAC — Estimate at Completion',
+                sublabel: 'What the total program will actually cost',
+                badge: 'Forecast',
+                badgeColor: 'red',
+                summary: 'EAC is the contractor\'s best estimate of total cost to complete all authorized work. The most scrutinized number in government contract oversight.',
+                content: [
+                  {
+                    type: 'grid' as const,
+                    title: 'EAC Calculation Methods',
+                    items: [
+                      { label: 'EAC = BAC / CPI', value: 'Statistical EAC. Most accurate predictor after 20% contract completion. Assumes future efficiency = cumulative CPI.' },
+                      { label: 'EAC = ACWP + ETC', value: 'Bottom-up EAC. Most accurate when fundamental change has occurred. Most labor-intensive.' },
+                      { label: 'EAC = ACWP + (BAC − BCWP)', value: 'Assumes all cost overruns to date are non-recurring. Only valid when a specific one-time event caused the variance.' },
+                      { label: 'EAC Gap', value: 'Government PMs track BOTH contractor EAC and statistical EAC (BAC/CPI). A large gap — especially if contractor EAC is more optimistic — is a yellow flag.' },
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'ETC — Estimate to Complete',
+                sublabel: 'How much MORE it will cost to finish',
+                badge: 'Forecast',
+                badgeColor: 'yellow',
+                summary: 'ETC is the estimated cost for all work remaining. EAC = ACWP + ETC.',
+                content: [
+                  {
+                    type: 'grid' as const,
+                    title: 'ETC Details',
+                    items: [
+                      { label: 'Full Name', value: 'Estimate to Complete' },
+                      { label: 'Formula', value: 'ETC = EAC − ACWP' },
+                      { label: 'Bottom-Up ETC', value: 'Control Account Managers (CAMs) estimate remaining work in each work package. Most accurate. Required after significant re-planning.' },
+                      { label: 'Sanity Check', value: 'Compare ETC to remaining authorized budget (BAC − BCWP). If ETC >> remaining budget, a formal EAC overrun is likely.' },
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'TCPI — To-Complete Performance Index',
+                sublabel: 'The efficiency needed to hit your target',
+                badge: 'Forecast',
+                badgeColor: 'purple',
+                summary: 'TCPI tells you how efficiently you must perform on all remaining work to meet either BAC or EAC.',
+                content: [
+                  {
+                    type: 'grid' as const,
+                    title: 'TCPI Details',
+                    items: [
+                      { label: 'Formula vs BAC', value: 'TCPI(BAC) = (BAC − BCWP) / (BAC − ACWP)' },
+                      { label: 'Formula vs EAC', value: 'TCPI(EAC) = (BAC − BCWP) / (EAC − ACWP)' },
+                      { label: 'TCPI > 1.10', value: 'Requires performing 10%+ more efficiently than you have been. Likely unrealistic — the EAC may be understated.' },
+                      { label: 'TCPI <= CPI', value: 'Recovery is mathematically feasible. Still requires a credible corrective action plan.' },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'text' as const,
+            title: 'The EVM Equation to Remember',
+            body: 'Every EVM calculation flows from three numbers: BCWS (what was planned), BCWP (what was accomplished), ACWP (what was spent). Cost Variance = BCWP minus ACWP. Schedule Variance = BCWP minus BCWS. CPI = BCWP/ACWP. SPI = BCWP/BCWS. EAC = BAC/CPI (statistical) or ACWP + ETC (bottom-up). VAC = BAC minus EAC. Know these six formulas and you can answer any EVM question.',
+          },
+        ],
+        noviceContent: {
+          summary: 'EVM uses three numbers to measure program health: what you planned to do (BCWS/PV), what you actually did (BCWP/EV), and what you actually spent (ACWP/AC). All ratios and variances come from comparing these three. Negative variances = problems. CPI < 1.0 = over budget. SPI < 1.0 = behind schedule.',
+          keyPoints: [
+            'BCWS (PV) = planned budget for work scheduled by today',
+            'BCWP (EV) = budget value of work you actually finished',
+            'ACWP (AC) = actual dollars spent on work you finished',
+            'CV = BCWP minus ACWP — negative means over budget',
+            'SV = BCWP minus BCWS — negative means behind schedule',
+            'CPI = BCWP / ACWP — below 1.0 means spending more than earning',
+            'EAC = what the whole contract will actually cost when finished',
+            'VAC = BAC minus EAC — negative means projected overrun',
+          ],
+        },
+        intermediateContent: {
+          summary: 'Mastering EVM means understanding what each metric reveals and what it hides. The CPI is the most predictive metric after 20% completion. SV and SPI become less meaningful in the final third of a contract. EAC = BAC/CPI is statistically the most accurate completion forecast in most cases.',
+          keyPoints: [
+            'Humphreys Rule: once cumulative CPI drops below 1.0 after 20% completion, it almost never recovers',
+            'Require contractors to provide both bottom-up EAC and statistical EAC — large gaps are red flags',
+            'TCPI vs BAC greater than 1.10 suggests an unrealistic completion estimate',
+            'SV converges to zero at contract end regardless of actual lateness — use Earned Schedule (ES) for late-program schedule assessment',
+            'VAC thresholds (typically plus or minus 10-15%) trigger Contractor Corrective Action Requirements',
+          ],
+        },
+        advancedContent: {
+          summary: 'At the advanced level, you evaluate EVMS compliance (ANSI/EIA 748), identify gaming behaviors (artificial earning, management reserve abuse, rubber baselines), and use EVM data to drive contract modifications and source selection past performance evaluations.',
+          keyPoints: [
+            'EVMS compliance required for contracts over $20M cost-type and over $50M fixed-price per DoDI 5000.02',
+            'IBR (Integrated Baseline Review) within 180 days of award validates that the PMB is realistic before problems emerge',
+            'Common EVM gaming: over-earning on easy tasks early, under-reporting ACWP, using LOE work packages to mask schedule slips',
+            'EVM data feeds Format 1, Format 3, and Format 5 in the IPMR — ensure consistency across all reporting',
+            'Use independent EAC (IEAC = BAC/CPI) alongside contractor EAC in PMRs — document the gap and require explanation when they diverge more than 5%',
+          ],
+        },
+        assessment: {
+          questions: [
+            {
+              id: 'q1',
+              question: 'A program has BCWP = $800K, ACWP = $1,000K, BCWS = $900K. What is the Cost Performance Index (CPI)?',
+              options: ['0.89', '0.80', '1.25', '1.13'],
+              correct: 1,
+              explanation: 'CPI = BCWP / ACWP = $800K / $1,000K = 0.80. The program is spending $1.25 for every $1.00 of value earned — a 20% cost overrun rate.',
+            },
+            {
+              id: 'q2',
+              question: 'Using the same data (BCWP = $800K, ACWP = $1,000K, BCWS = $900K), what is the Schedule Variance (SV)?',
+              options: ['+$100K (ahead of schedule)', '-$100K (behind schedule)', '-$200K (behind schedule)', '+$200K (ahead of schedule)'],
+              correct: 1,
+              explanation: 'SV = BCWP − BCWS = $800K − $900K = −$100K. Negative means the program is behind schedule — $100K worth of planned work has not been completed.',
+            },
+            {
+              id: 'q3',
+              question: 'What does a TCPI (vs BAC) of 1.25 indicate?',
+              options: ['The program is performing 25% ahead of budget', 'Remaining work must be performed 25% more efficiently than the plan to stay within BAC — likely unrealistic', 'The program has a 25% cost overrun', 'The program needs only 75% of its remaining budget'],
+              correct: 1,
+              explanation: 'TCPI of 1.25 means to complete remaining work within BAC, you must perform at 125% efficiency — 25% better than the baseline plan. When TCPI significantly exceeds current CPI, the completion budget is unrealistic and EAC should be revised upward.',
+            },
+            {
+              id: 'q4',
+              question: 'The statistical EAC formula (BAC / CPI) is most reliable when:',
+              options: ['The contract is in its first month', 'After approximately 20% contract completion', 'Only when the contractor provides a bottom-up estimate', 'During the final 10% of the contract'],
+              correct: 1,
+              explanation: 'Research (including RAND and GAO studies) consistently shows EAC = BAC/CPI is among the most accurate predictors of final cost after approximately 20% contract completion — often more accurate than contractor bottom-up estimates subject to optimism bias.',
+            },
+            {
+              id: 'q5',
+              question: 'Why does Schedule Variance (SV) converge to zero at contract completion?',
+              options: ['Because all cost overruns are corrected at completion', 'Because BCWP and BCWS both equal BAC at contract completion, making SV = 0 regardless of actual lateness', 'Because the contractor reconciles schedule variances before final payment', 'Because the government accepts any completion date within 10% of plan'],
+              correct: 1,
+              explanation: 'At contract completion, all work is earned (BCWP = BAC) and all work was planned (BCWS = BAC), so SV = BCWP − BCWS = 0 regardless of how late the program finished. This is a fundamental limitation of SV for late-program schedule analysis.',
+            },
+          ],
+        },
+      },
+    },
+    {
+      id: 'data-4',
+      title: 'Reading IPMR Reports — What Every PM Looks for in Each Format',
+      duration: '22 min',
+      type: 'lesson' as const,
+      content: {
+        sections: [
+          {
+            type: 'header' as const,
+            title: 'What Is the IPMR and Why Does It Matter?',
+            body: 'The Integrated Program Management Report (IPMR) is the primary contractually required data deliverable for EVM reporting on DoD contracts. It replaced the older Contract Performance Report (CPR) and Contract Funds Status Report (CFSR) through DI-MGMT-81861 (2012). If your contract exceeds $20M cost-type or $50M fixed-price, you will receive IPMR data from your contractor every month. This lesson teaches what each IPMR format contains and what government PMs look for.',
+          },
+          {
+            type: 'expandable_list' as const,
+            title: 'The Six IPMR Formats',
+            items: [
+              {
+                label: 'Format 1 — WBS Performance Summary',
+                sublabel: 'Cost and schedule performance rolled up by Work Breakdown Structure',
+                badge: 'Most Used',
+                badgeColor: 'green',
+                summary: 'Format 1 shows cumulative and at-completion cost and schedule performance organized by WBS element. This is the first format PMs open — it shows where the money and schedule problems are.',
+                content: [
+                  {
+                    type: 'bullets' as const,
+                    title: 'What to Look for in Format 1',
+                    items: [
+                      'WBS elements with negative CV (Cost Variance) — over-budget areas. Drill down to understand root cause.',
+                      'WBS elements with negative SV (Schedule Variance) — behind-schedule areas. Cross-check against the IMS.',
+                      'BAC vs. EAC at the total contract level — the delta is VAC. A growing negative VAC trend is the most critical warning sign.',
+                      'MR (Management Reserve) balance — if MR is eroding rapidly, the contractor is using contingency to mask overruns.',
+                      'Undistributed Budget (UB) — budget not yet assigned to WBS elements. Large UB balances late in the program are a concern.',
+                    ],
+                  },
+                  {
+                    type: 'grid' as const,
+                    title: 'Format 1 Red Flags',
+                    items: [
+                      { label: 'CPI < 0.90', value: 'At-completion overrun of over 10% is likely. Initiate Over Target Baseline (OTB) discussion if CPI is stable at this level.' },
+                      { label: 'EAC < Statistical EAC', value: 'Contractor may be sandbagging risk. Compare EAC vs BAC/CPI and require explanation for gaps over 5%.' },
+                      { label: 'Rapidly Decreasing MR', value: 'Management Reserve burning faster than planned indicates undocumented risk realization.' },
+                      { label: 'Large UB Late in Program', value: 'Undistributed budget that should have been assigned months ago may indicate poor planning or intentional delay.' },
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'Format 2 — OBS Performance Summary',
+                sublabel: 'Performance by organizational element and subcontractor',
+                badge: 'Organizational View',
+                badgeColor: 'blue',
+                summary: 'Format 2 shows performance by responsible organization (divisions, departments, subcontractors). Use it to identify which teams or subcontractors are driving cost and schedule problems.',
+                content: [
+                  {
+                    type: 'bullets' as const,
+                    title: 'What to Look for in Format 2',
+                    items: [
+                      'Which organizational element has the worst CPI — often points to staffing or technical problems in that org',
+                      'Subcontractor performance — if the prime\'s work is on track but subcontractors are in trouble, supply chain management needs scrutiny',
+                      'Compare Format 2 performance by org against staffing data — declining BCWP with high ACWP from a specific org often means unproductive labor',
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'Format 3 — Baseline',
+                sublabel: 'Time-phased PMB and how it has changed — baseline health',
+                badge: 'Baseline Health',
+                badgeColor: 'yellow',
+                summary: 'Format 3 shows the performance measurement baseline over time — including changes, management reserve draws, and budget reallocations. This is how you detect baseline instability.',
+                content: [
+                  {
+                    type: 'bullets' as const,
+                    title: 'What to Look for in Format 3',
+                    items: [
+                      'Baseline changes from last period — any retroactive replanning (moving budget backward to cover past variances) is a serious concern',
+                      'Management Reserve (MR) draw-downs — compare total MR used against original MR balance',
+                      'Budget shifts between near-term and far-term — "rubber baseline" behavior is a gaming indicator',
+                      'Current PMB vs. original PMB — large deviations indicate significant re-planning requiring government approval',
+                    ],
+                  },
+                  { type: 'text' as const, body: 'Retroactive changes to the PMB require Government approval. Any change reaching back more than 1-2 reporting periods is suspect. Over Target Baseline (OTB) reprogramming is the formal mechanism for resetting an unrealistic baseline — it requires government approval and resets the measurement zero.' },
+                ],
+              },
+              {
+                label: 'Format 4 — Staffing',
+                sublabel: 'Actual vs. planned headcount by labor category — a leading indicator',
+                badge: 'Workforce',
+                badgeColor: 'blue',
+                summary: 'Format 4 shows planned and actual staffing by labor category (LCATs). It is often the leading indicator of future cost and schedule problems.',
+                content: [
+                  {
+                    type: 'bullets' as const,
+                    title: 'What to Look for in Format 4',
+                    items: [
+                      'Understaffing vs. plan — if actual headcount is significantly below planned, BCWP will lag BCWS (negative SV). Schedule slippage is predictable.',
+                      'Overstaffing vs. plan — more labor than planned drives ACWP above BCWP (negative CV). May indicate rework or underestimated complexity.',
+                      'LCAT mix changes — substituting lower-grade labor for planned senior roles may affect technical quality',
+                      'Cross-reference Format 4 with Format 1: understaffed WBS elements will show negative SV in Format 1',
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'Format 5 — Explanations and Problem Analysis',
+                sublabel: 'Variance narratives — the story behind the numbers',
+                badge: 'Most Important',
+                badgeColor: 'red',
+                summary: 'Format 5 contains the contractor\'s written analysis of significant cost and schedule variances. A well-written Format 5 explains root cause, impact, and corrective action.',
+                content: [
+                  {
+                    type: 'bullets' as const,
+                    title: 'What to Look for in Format 5',
+                    items: [
+                      'Causality, not just description — "labor hours exceeded plan due to test failures" is better than "costs increased"',
+                      'Corrective action specificity — vague actions ("team is working the issue") with no timeline are not acceptable',
+                      'Recovery schedule — if behind schedule, Format 5 should show how the contractor plans to recover',
+                      'EAC rationale — the Format 5 should explain the basis for the contractor\'s EAC, especially if it differs from statistical EAC',
+                      'Variance thresholds — ensure all threshold variances (typically CV or SV over plus or minus 10% and over $100K) have narratives',
+                    ],
+                  },
+                  { type: 'text' as const, body: 'Format 5 Scrutiny Checklist: (1) Is root cause specific and credible? (2) Are corrective actions assigned, dated, and tracked? (3) Does the EAC reflect the corrective action cost? (4) Are past period corrective actions from last month\'s F5 showing results in this month\'s F1? (5) Does the narrative acknowledge schedule impact, not just cost impact?' },
+                ],
+              },
+              {
+                label: 'Format 6 — IMS / Schedule',
+                sublabel: 'The Integrated Master Schedule in electronic format',
+                badge: 'Schedule',
+                badgeColor: 'yellow',
+                summary: 'Format 6 is the contractor\'s Integrated Master Schedule (IMS) as an electronic file (Primavera P6 or MS Project). It shows network logic, critical path, and near-term milestones.',
+                content: [
+                  {
+                    type: 'bullets' as const,
+                    title: 'What to Look for in Format 6',
+                    items: [
+                      'Critical path — any slip on critical path tasks directly delays contract completion',
+                      'Total Float — tasks with zero or negative total float are on or near critical path. Negative float means the task is already late.',
+                      'Schedule density — unusually high milestone clusters ("schedule packing") are a sign of unrealistic planning',
+                      'Logic ties — all tasks should have predecessor/successor relationships. Tasks with no ties cannot drive accurate critical path analysis.',
+                      'Compare current IMS critical path to last period — an unstable critical path indicates poor schedule management',
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'text' as const,
+            title: 'IPMR Monthly Review Workflow',
+            body: 'Step 1 — Check Format 1 total contract CPI and VAC trend (5 min). Step 2 — Identify top 3 WBS elements by worst CV and SV (10 min). Step 3 — Read Format 5 narratives for all threshold variances (15 min). Step 4 — Check Format 3 for any baseline changes (5 min). Step 5 — Cross-reference Format 4 staffing to confirm headcount supports recovery plans (5 min). Step 6 — Compare Format 6 critical path to milestone plan (10 min). Total: approximately 50 minutes for a thorough review.',
+          },
+        ],
+        noviceContent: {
+          summary: 'The IPMR is the monthly report card from your contractor. Format 1 shows where costs and schedule are off. Format 5 explains WHY and what they are doing about it. Format 6 is the schedule showing when things will be done. Negative numbers mean problems.',
+          keyPoints: [
+            'Format 1 = WBS performance table — where are the cost and schedule problems?',
+            'Format 3 = baseline history — has the plan been changed to hide problems?',
+            'Format 4 = staffing — are enough people working on the program?',
+            'Format 5 = narratives — the story behind the numbers. Most important for understanding.',
+            'Format 6 = schedule — what is on the critical path and what is at risk?',
+          ],
+        },
+        intermediateContent: {
+          summary: 'IPMR review is a monthly program health diagnostic. The power is in cross-referencing formats: Format 1 cost problems explained by Format 5 narratives, confirmed by Format 4 staffing shortfalls, visible on Format 6 critical path. A Format 5 that does not align with Format 1 data is either incomplete or misleading.',
+          keyPoints: [
+            'Cross-reference F1 problem WBS elements with F5 narratives — every threshold variance needs a credible root cause and dated corrective action',
+            'Format 3 baseline changes require government approval — retroactive replanning is a red flag',
+            'When Format 5 EAC basis differs significantly from BAC/CPI statistical EAC, require a written reconciliation',
+            'Format 4 staffing is a leading indicator — understaffing today predicts schedule slippage 1-3 months from now',
+            'Format 6 negative total float means tasks are already past their planned completion date',
+          ],
+        },
+        advancedContent: {
+          summary: 'Senior PMs use IPMR data to drive contractor corrective actions, support EAC reviews, and document program status for oversight bodies (DAES, SAR, DAB). The IPMR is also legal documentation — in disputes and claims, contractor IPMR data is frequently used as evidence of performance.',
+          keyPoints: [
+            'Over Target Baseline (OTB) reprogramming requires formal government authorization and a new IBR — it resets measurement zero but does not change BAC or EAC',
+            'IPMR data feeds the Defense Acquisition Executive Summary (DAES) and Selected Acquisition Reports (SARs) — ensure alignment across all program reporting',
+            'Contractual IPMR data items specify submission timelines (typically 25 working days after month end) — failures to submit compliant data are contract violations',
+            'EVMS compliance surveillance (DoDI 5000.02) requires annual surveillance of the contractor\'s EVMS system',
+            'In claim situations, IPMR data creates a contemporaneous record of performance — Format 5 narratives are discoverable in litigation',
+          ],
+        },
+        assessment: {
+          questions: [
+            {
+              id: 'q1',
+              question: 'Which IPMR format contains written narratives explaining root causes and corrective actions for significant variances?',
+              options: ['Format 1 — WBS Performance', 'Format 3 — Baseline', 'Format 5 — Explanations and Problem Analysis', 'Format 6 — IMS/Schedule'],
+              correct: 2,
+              explanation: 'Format 5 contains the Variance Analysis Reports (VARs) — written narratives that explain the root cause of significant cost and schedule variances and describe corrective actions. It is the most important format for understanding WHY performance is off track.',
+            },
+            {
+              id: 'q2',
+              question: 'A government PM reviewing Format 3 notices the PMB was retroactively changed to reduce a prior period\'s negative SV. This most likely indicates:',
+              options: ['Normal baseline maintenance per EVMS guidelines', 'A potential EVMS compliance violation — retroactive replanning to conceal schedule variances', 'An approved change order requiring replanning', 'A subcontractor claiming additional scope'],
+              correct: 1,
+              explanation: 'Retroactive changes to the PMB to reduce prior period variances are a serious EVMS compliance concern. ANSI 748 and DoDI 5000.02 prohibit retroactive baseline revisions except in very specific circumstances. This is classic "rubber baseline" gaming behavior.',
+            },
+            {
+              id: 'q3',
+              question: 'Format 4 shows actual headcount is 30% below planned for the critical design phase. What should you expect in Format 1?',
+              options: ['Positive CPI due to lower labor costs', 'Negative SV because insufficient staff means less work is being accomplished', 'Positive SV because fewer people compresses the schedule', 'No impact — staffing and EVM performance are independent'],
+              correct: 1,
+              explanation: 'Understaffing is a direct cause of negative Schedule Variance. Fewer people completing work means BCWP accumulates slower than BCWS, creating negative SV. Cross-referencing Format 4 staffing gaps with Format 1 schedule variances is a fundamental IPMR analysis technique.',
+            },
+            {
+              id: 'q4',
+              question: 'In Format 6 (IMS), a task shows "-15 days total float." What does this mean?',
+              options: ['The task has 15 days of scheduling flexibility', 'The task is already 15 days late relative to its constraint and will delay the program end date', 'The task was completed 15 days early', 'The task needs 15 additional resources'],
+              correct: 1,
+              explanation: 'Negative total float means the task is already past its planned completion date by that amount. Without recovery actions, negative float propagates through the network and delays all successor tasks including the contract completion milestone.',
+            },
+            {
+              id: 'q5',
+              question: 'What is an Over Target Baseline (OTB) and when is it used?',
+              options: ['An informal replanning action to reset performance metrics', 'A formal government-approved reprogramming action that resets the PMB when the current baseline is no longer achievable, requiring a new IBR', 'A penalty mechanism for contractors who exceed the BAC', 'A supplemental funding authorization for overrun programs'],
+              correct: 1,
+              explanation: 'An OTB is a formal, government-approved action that resets the Performance Measurement Baseline when the current baseline is so unrealistic that EVM measurements have lost informational value. It requires SSA/PEO approval, a revised EAC, and a new Integrated Baseline Review (IBR). OTB does not change the contract price.',
+            },
+          ],
+        },
+      },
+    },
 
   // ─────────────────────────────────────────────────────────────
   // MODULE 5 — CAPTURE
@@ -3385,7 +3974,7 @@ export const modules: Module[] = [
           {
             type: 'text',
             heading: "How Defense Contractors Win Business",
-            body: "Winning government contracts is not an accident — it's a disciplined process that begins years before the RFP is released. The best capture managers are already executing their win strategy while competitors are just becoming aware of the opportunity. Understanding this lifecycle helps both government PMs (who interact with BD teams) and industry professionals who want to build winning capture programs."
+            body: "Winning government contracts is not an accident — it\'s a disciplined process that begins years before the RFP is released. The best capture managers are already executing their win strategy while competitors are just becoming aware of the opportunity. Understanding this lifecycle helps both government PMs (who interact with BD teams) and industry professionals who want to build winning capture programs."
           },
           {
             type: 'expandable_list',
@@ -3402,7 +3991,7 @@ export const modules: Module[] = [
                   {
                     heading: "What Is It?",
                     type: 'text',
-                    body: "Opportunity Identification (OI) is the systematic process of finding potential contracts before they reach the market. At this stage, nothing has been formally competed — the government is still forming requirements or hasn't yet issued a solicitation. Pwin is low because the company hasn't yet assessed strategic fit or competitive position."
+                    body: "Opportunity Identification (OI) is the systematic process of finding potential contracts before they reach the market. At this stage, nothing has been formally competed — the government is still forming requirements or hasn\'t yet issued a solicitation. Pwin is low because the company hasn\'t yet assessed strategic fit or competitive position."
                   },
                   {
                     heading: "How Is It Performed?",
@@ -3443,7 +4032,7 @@ export const modules: Module[] = [
                 badge: "20–30% Pwin",
                 badgeColor: 'blue',
                 sublabel: "Go/No-Go decision — should we invest B&P dollars in this pursuit?",
-                summary: "The gate review is the company's governance checkpoint where leadership decides whether to commit real resources. A disciplined No-Go here saves far more money than a half-hearted proposal later.",
+                summary: "The gate review is the company\'s governance checkpoint where leadership decides whether to commit real resources. A disciplined No-Go here saves far more money than a half-hearted proposal later.",
                 content: [
                   {
                     heading: "What Is It?",
@@ -3513,7 +4102,7 @@ export const modules: Module[] = [
                     heading: "Key Capture Activities",
                     type: 'bullets',
                     items: [
-                      "Customer call plan: Scheduled visits with program office, COR, end users, contracting — understanding their real priorities (not just what's in the draft PWS)",
+                      "Customer call plan: Scheduled visits with program office, COR, end users, contracting — understanding their real priorities (not just what\'s in the draft PWS)",
                       "Competitive intelligence: Who will bid? What are their past performance strengths? What price will they target?",
                       "Black Hat review: Your team role-plays as the primary competitor — developing their proposal strategy to expose your vulnerabilities",
                       "Win strategy development: Define 3-5 win themes tied to customer hot buttons and competitor weaknesses",
@@ -3557,15 +4146,15 @@ export const modules: Module[] = [
                   {
                     heading: "What Is It?",
                     type: 'text',
-                    body: "Proposal development is the structured process of producing a compliant, persuasive response to the government's RFP. It's a high-intensity, deadline-driven effort involving technical writers, subject matter experts, pricing analysts, graphics artists, and senior reviewers. The best proposals tell a clear story: \"Here is your problem. Here is our solution. Here is why we're the best team to execute it.\""
+                    body: "Proposal development is the structured process of producing a compliant, persuasive response to the government\'s RFP. It's a high-intensity, deadline-driven effort involving technical writers, subject matter experts, pricing analysts, graphics artists, and senior reviewers. The best proposals tell a clear story: \"Here is your problem. Here is our solution. Here is why we\'re the best team to execute it.\""
                   },
                   {
                     heading: "The Color Team Review Cycle",
                     type: 'bullets',
                     items: [
                       "Pink Team (30-40% draft): Reviews outline and early narrative for compliance and strategy alignment. Catches structural problems before writing is complete. Reviewers: capture lead, proposal manager, one SME per volume.",
-                      "Red Team (75-90% draft): The most rigorous review. Evaluates the near-final proposal from the government evaluator's perspective — compliance, clarity, win themes, discriminators, ghost strategies. Reviewers: Senior staff not involved in writing (fresh eyes). Output: Red Team report with actionable findings.",
-                      "Gold Team (95-100%): Final senior leadership review. Not a line-edit — focuses on executive summary, win themes, overall narrative strength, and price strategy. Decision-makers verify the proposal represents the company's best value. Reviewers: VP/Director level, BD lead, capture manager.",
+                      "Red Team (75-90% draft): The most rigorous review. Evaluates the near-final proposal from the government evaluator\'s perspective — compliance, clarity, win themes, discriminators, ghost strategies. Reviewers: Senior staff not involved in writing (fresh eyes). Output: Red Team report with actionable findings.",
+                      "Gold Team (95-100%): Final senior leadership review. Not a line-edit — focuses on executive summary, win themes, overall narrative strength, and price strategy. Decision-makers verify the proposal represents the company\'s best value. Reviewers: VP/Director level, BD lead, capture manager.",
                       "Pink-2 / White Glove (optional): Final production review for formatting, pagination, graphics quality, and printing/upload compliance."
                     ]
                   },
@@ -3602,7 +4191,7 @@ export const modules: Module[] = [
                   {
                     heading: "What Is It?",
                     type: 'text',
-                    body: "After initial evaluation, the government may determine a competitive range and open discussions. Discussions are the government's opportunity to clarify deficiencies and significant weaknesses — and your opportunity to recover from proposal errors or sharpen your price. BAFO (Best and Final Offer, also called Final Proposal Revision in FAR terminology) is your final submission."
+                    body: "After initial evaluation, the government may determine a competitive range and open discussions. Discussions are the government\'s opportunity to clarify deficiencies and significant weaknesses — and your opportunity to recover from proposal errors or sharpen your price. BAFO (Best and Final Offer, also called Final Proposal Revision in FAR terminology) is your final submission."
                   },
                   {
                     heading: "The Discussion / BAFO Process",
@@ -3613,7 +4202,7 @@ export const modules: Module[] = [
                       "Price discussions may occur — government may signal price is too high or outside competitive range",
                       "BAFO request issued: a specific due date for final revisions (technical and price)",
                       "Proposal team prepares targeted revisions — no wholesale rewrites, only EN-driven changes",
-                      "Final price submission — this is the price you'll live with for the contract period"
+                      "Final price submission — this is the price you\'ll live with for the contract period"
                     ]
                   },
                   {
@@ -3662,7 +4251,7 @@ export const modules: Module[] = [
           {
             type: 'tip',
             heading: "Black Hat Reviews",
-            body: "A \"Black Hat\" review is when your team role-plays as your competitor — developing their proposal strategy, win themes, and pricing approach as if you were them. This forces you to honestly assess your competitor's strengths and identify vulnerabilities in your own approach. The best black hats are brutal; if yours is comfortable, you're not being honest enough about the competition."
+            body: "A \"Black Hat\" review is when your team role-plays as your competitor — developing their proposal strategy, win themes, and pricing approach as if you were them. This forces you to honestly assess your competitor\'s strengths and identify vulnerabilities in your own approach. The best black hats are brutal; if yours is comfortable, you\'re not being honest enough about the competition."
           }
         ],
         quiz: [
@@ -3685,7 +4274,7 @@ export const modules: Module[] = [
             question: "B&P (Bid & Proposal) costs are:",
             options: ['Reimbursable by the government as a direct contract cost', 'Company-funded investments in pursuing specific opportunities, not chargeable to government contracts', 'Included in indirect overhead pools', 'Only applicable to cost-plus contracts'],
             correct: 1,
-            explanation: "B&P costs are the company's investment in pursuing a specific opportunity — proposal writing, customer engagement, pricing analysis. These are NOT directly chargeable to government contracts. They are typically funded from company overhead pools (G&A or B&P pools) and represent a significant strategic investment, often 1-3% of revenue for major defense firms."
+            explanation: "B&P costs are the company\'s investment in pursuing a specific opportunity — proposal writing, customer engagement, pricing analysis. These are NOT directly chargeable to government contracts. They are typically funded from company overhead pools (G&A or B&P pools) and represent a significant strategic investment, often 1-3% of revenue for major defense firms."
           },
           {
             id: 'q4',
@@ -3699,7 +4288,7 @@ export const modules: Module[] = [
             question: "In the BD-to-Capture lifecycle, what is the primary purpose of the \"gate review\" or opportunity qualification process?",
             options: ['To review the draft proposal for compliance', 'To make a disciplined go/no-go decision on whether to invest B&P resources in pursuing an opportunity', 'To evaluate subcontractor qualifications', 'To finalize the teaming arrangement'],
             correct: 1,
-            explanation: "The gate review is the company's governance process for allocating limited B&P resources. It evaluates strategic fit, competitive position, Pwin, customer relationship, and resource availability. A \"no-go\" decision is not a failure — it conserves B&P investment for higher-Pwin opportunities. Companies that pursue every opportunity without qualification waste resources on long shots."
+            explanation: "The gate review is the company\'s governance process for allocating limited B&P resources. It evaluates strategic fit, competitive position, Pwin, customer relationship, and resource availability. A \"no-go\" decision is not a failure — it conserves B&P investment for higher-Pwin opportunities. Companies that pursue every opportunity without qualification waste resources on long shots."
           },
           {
             id: 'q6',
@@ -3772,12 +4361,12 @@ export const modules: Module[] = [
           {
             type: 'callout',
             heading: "The Discriminator Rule",
-            body: "A true discriminator is something you can do (or have done) that your competitors cannot match. \"20 years of experience\" is not a discriminator — every major defense firm has 20 years of experience. A discriminator sounds like: \"We hold the only cleared facility for this specific testing in the continental U.S.\" or \"Our team developed the predecessor system and holds all historical technical data.\" If your competitor could say the same thing, it's not a discriminator."
+            body: "A true discriminator is something you can do (or have done) that your competitors cannot match. \"20 years of experience\" is not a discriminator — every major defense firm has 20 years of experience. A discriminator sounds like: \"We hold the only cleared facility for this specific testing in the continental U.S.\" or \"Our team developed the predecessor system and holds all historical technical data.\" If your competitor could say the same thing, it\'s not a discriminator."
           },
           {
             type: 'expandable_list',
             heading: "Proposal Color Team Reviews",
-            body: "Each review is a structured quality gate. Tap any review to see who runs it, what's evaluated, what inputs are required, and what the output means for your proposal.",
+            body: "Each review is a structured quality gate. Tap any review to see who runs it, what\'s evaluated, what inputs are required, and what the output means for your proposal.",
             expandableItems: [
               {
                 label: "Pink Team Review",
@@ -3789,7 +4378,7 @@ export const modules: Module[] = [
                   {
                     heading: "What Is It?",
                     type: 'text',
-                    body: "The Pink Team is the first formal review, conducted when the proposal is roughly 30-40% written. Its purpose is not to red-line grammar — it's to validate that the outline, approach, and early narrative are compliant with Section L, aligned with win themes, and responsive to the customer's evaluation criteria (Section M). Structural problems caught at Pink save days of rework at Red."
+                    body: "The Pink Team is the first formal review, conducted when the proposal is roughly 30-40% written. Its purpose is not to red-line grammar — it\'s to validate that the outline, approach, and early narrative are compliant with Section L, aligned with win themes, and responsive to the customer\'s evaluation criteria (Section M). Structural problems caught at Pink save days of rework at Red."
                   },
                   {
                     heading: "Required Inputs",
@@ -3965,7 +4554,7 @@ export const modules: Module[] = [
                   {
                     heading: "What Is It?",
                     type: 'text',
-                    body: "The Price Review is a dedicated review of the cost/price volume and pricing strategy, run by the pricing and finance team in parallel with technical volume development. It's not a single event — it's an ongoing discipline. The Price Review culminates at Gold Team with final price authorization."
+                    body: "The Price Review is a dedicated review of the cost/price volume and pricing strategy, run by the pricing and finance team in parallel with technical volume development. It's not a single event — it\'s an ongoing discipline. The Price Review culminates at Gold Team with final price authorization."
                   },
                   {
                     heading: "What Gets Reviewed?",
@@ -4008,7 +4597,7 @@ export const modules: Module[] = [
           {
             type: 'tip',
             heading: "The Ghost-Discriminate-Prove Framework",
-            body: "Structure every key proposal section using three elements: (1) Ghost — hint at why your competitor's approach is riskier (\"Unlike approaches relying on commercial hardware not designed for military environments...\"). (2) Discriminate — state your advantage clearly (\"Our MIL-SPEC hardened components provide 3× the MTBF of commercial equivalents\"). (3) Prove — evidence that backs your claim (\"demonstrated on Contract #: X, achieving 99.7% availability in deployed conditions\")."
+            body: "Structure every key proposal section using three elements: (1) Ghost — hint at why your competitor\'s approach is riskier (\"Unlike approaches relying on commercial hardware not designed for military environments...\"). (2) Discriminate — state your advantage clearly (\"Our MIL-SPEC hardened components provide 3× the MTBF of commercial equivalents\"). (3) Prove — evidence that backs your claim (\"demonstrated on Contract #: X, achieving 99.7% availability in deployed conditions\")."
           }
         ],
         quiz: [
@@ -4024,7 +4613,7 @@ export const modules: Module[] = [
             question: "\"Ghosting\" in a proposal context means:",
             options: ['Submitting the proposal without notifying the CO', 'Subtly highlighting a competitor\'s weakness without naming them, making evaluators consider the risk', 'Using a subcontractor\'s capabilities as your own without disclosure', 'Withdrawing a proposal after submission'],
             correct: 1,
-            explanation: "Ghosting is a legal and ethical proposal technique where you allude to competitor weaknesses without naming them. For example: \"Unlike approaches that rely on a single vendor for critical components, our multi-source supply chain mitigates delivery risk.\" This plants a risk concern in the evaluator's mind about competitors without direct attacks."
+            explanation: "Ghosting is a legal and ethical proposal technique where you allude to competitor weaknesses without naming them. For example: \"Unlike approaches that rely on a single vendor for critical components, our multi-source supply chain mitigates delivery risk.\" This plants a risk concern in the evaluator\'s mind about competitors without direct attacks."
           },
           {
             id: 'q3',
@@ -4038,7 +4627,7 @@ export const modules: Module[] = [
             question: "The executive summary of a proposal is the most important section because:",
             options: ['It is the only section evaluated by the SSEB for cost-plus contracts', 'It is the first and most read section, and must convey all win themes and discriminators concisely', 'It determines the final proposal score under FAR 15', 'It is submitted separately from the main proposal volumes'],
             correct: 1,
-            explanation: "The executive summary is often the only section read by senior evaluators and the SSA. If your win themes and discriminators aren't clear in the executive summary, they may never be seen. Senior leadership reads exec summaries; technical evaluators read the volumes. Write for both audiences, but get the exec summary right first."
+            explanation: "The executive summary is often the only section read by senior evaluators and the SSA. If your win themes and discriminators aren\'t clear in the executive summary, they may never be seen. Senior leadership reads exec summaries; technical evaluators read the volumes. Write for both audiences, but get the exec summary right first."
           },
           {
             id: 'q5',
@@ -4086,6 +4675,484 @@ export const modules: Module[] = [
       }
     ]
   },
+    {
+      id: 'capture-3',
+      title: 'Section L vs Section M — The RFP Anatomy Every Competitor Must Master',
+      duration: '28 min',
+      type: 'lesson' as const,
+      content: {
+        sections: [
+          {
+            type: 'header' as const,
+            title: 'Why Section L and Section M Are the Two Most Important Pages in Any RFP',
+            body: 'Every federal solicitation is organized by the Uniform Contract Format (UCF) defined in FAR Part 15. Most sections describe requirements — Sections L and M are different. They describe HOW the government will evaluate and select the winner. Winning proposals are built from M backward through L. Losing proposals are built from the SOW forward and hope M matches.',
+          },
+          {
+            type: 'expandable_list' as const,
+            title: 'Section L — Instructions, Conditions, and Notices to Offerors',
+            items: [
+              {
+                label: 'What Section L IS',
+                sublabel: 'The proposal architecture document',
+                badge: 'Procedural',
+                badgeColor: 'blue',
+                summary: 'Section L tells offerors exactly what to submit, how to format it, where to put it, and how long it can be.',
+                content: [
+                  { type: 'text' as const, body: 'Section L is the instruction manual for building your proposal. It specifies: volume structure (Technical, Management, Past Performance, Price), page limits per volume, font size and margin requirements, file format and submission method, copies required, the proposal due date and time, and other administrative requirements.' },
+                  {
+                    type: 'bullets' as const,
+                    title: 'Common Section L Requirements',
+                    items: [
+                      '"Volume I — Technical Approach, not to exceed 50 pages, 12pt Times New Roman, 1-inch margins"',
+                      '"Volume II — Management Approach, not to exceed 25 pages"',
+                      '"Volume III — Past Performance, provide up to 3 references using the government-provided form"',
+                      '"Volume IV — Price/Cost, no page limit, must include completed DD Form 1423 (CDRLs)"',
+                      '"All volumes must be submitted via SAM.gov by 4:00 PM EST on [date]"',
+                    ],
+                  },
+                  { type: 'text' as const, body: 'CRITICAL: Section L compliance is binary. A proposal that violates Section L instructions (wrong format, exceeds page limits, missing required forms) can be rejected as non-responsive WITHOUT evaluation. The contracting officer generally does not have discretion to overlook administrative non-compliance.' },
+                  {
+                    type: 'grid' as const,
+                    title: 'Common Section L Traps',
+                    items: [
+                      { label: 'Page Count Trap', value: 'Government counts pages differently — a page with a 6pt footnote still counts. Know what "page" means in this L.' },
+                      { label: 'Exhibit Counting', value: 'Some Section Ls say figures and tables DO count toward the page limit. Others say they do not. Read carefully.' },
+                      { label: 'Font Rules', value: 'Many Ls now say "12pt minimum in all body text." Headers, figure captions, and table cells may or may not be exempt.' },
+                      { label: 'Responsive vs Compliant', value: '"Responsive" = meets threshold submission requirements. "Compliant" = meets all technical requirements. You must be both.' },
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'What Section L IS NOT',
+                sublabel: 'The most common proposal mistake',
+                badge: 'Warning',
+                badgeColor: 'red',
+                summary: 'Section L is NOT where the government tells you what they want technically. It only controls proposal format.',
+                content: [
+                  { type: 'text' as const, body: 'The most common proposal mistake: confusing Section L with Section M. Section L tells you HOW to structure your proposal. Section M tells you WHAT MATTERS to the government. If Section L says "describe your technical approach" but Section M says technical approach is worth 40% of evaluation, your narrative must be built to address the M criteria — not just fill the L template.' },
+                  {
+                    type: 'bullets' as const,
+                    title: 'The L vs M Confusion Mistake',
+                    items: [
+                      'Section L says: "Describe your staffing plan." Section M says staffing is NOT an evaluation factor. Your staffing section will be read for compliance only, not scored. Keep it short.',
+                      'Section L says: "Describe your technical approach." Section M has three sub-factors: Innovation (15%), Risk Mitigation (25%), Schedule Realism (20%). Your technical approach must address each sub-factor explicitly — preferably with sub-headers that mirror M language.',
+                      'Winning proposals use M as the writing guide and L as the compliance checklist.',
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'expandable_list' as const,
+            title: 'Section M — Evaluation Factors for Award',
+            items: [
+              {
+                label: 'What Section M IS',
+                sublabel: 'The scoring rubric — the most important section in the RFP',
+                badge: 'Critical',
+                badgeColor: 'red',
+                summary: 'Section M defines the factors and sub-factors the SSEB will use to evaluate proposals and assign ratings. This is what your proposal must address to win.',
+                content: [
+                  { type: 'text' as const, body: 'Section M must state: (1) all evaluation factors and significant sub-factors, (2) their relative order of importance, and (3) whether award will be made on a best-value tradeoff or LPTA basis. FAR 15.304 requires this transparency so offerors can intelligently invest their proposal resources.' },
+                  {
+                    type: 'grid' as const,
+                    title: 'M Structure Example',
+                    items: [
+                      { label: 'Factor 1 — Technical Approach (Most Important)', value: '1.1: Understanding of Requirements; 1.2: Technical Solution; 1.3: Risk Mitigation' },
+                      { label: 'Factor 2 — Management Approach (Equal to Past Perf)', value: '2.1: Program Management Plan; 2.2: Key Personnel; 2.3: Transition Plan' },
+                      { label: 'Factor 3 — Past Performance (Equal to Mgmt)', value: 'Relevance and quality of recent similar contracts.' },
+                      { label: 'Factor 4 — Price/Cost (Not Scored)', value: 'Price is NOT typically rated — it is evaluated for reasonableness and realism (cost-type contracts).' },
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'Adjectival Ratings: Outstanding to Unacceptable',
+                sublabel: 'How the SSEB scores your proposal',
+                badge: 'Ratings',
+                badgeColor: 'green',
+                summary: 'The government typically uses adjectival ratings (not numeric scores). Understanding these ratings drives how you write.',
+                content: [
+                  {
+                    type: 'grid' as const,
+                    title: 'SSAC/SSEB Adjectival Rating Scale',
+                    items: [
+                      { label: 'Outstanding', value: 'Exceptional approach with strengths significantly benefiting the government. Very low risk of unsuccessful performance. Requires multiple Strengths and zero Weaknesses.' },
+                      { label: 'Good', value: 'Thorough and well-defined approach. At least one strength. Low risk.' },
+                      { label: 'Acceptable', value: 'Meets requirements. No strengths and no significant weaknesses. Moderate risk.' },
+                      { label: 'Marginal', value: 'Fails to meet requirements in some areas. Has significant weaknesses. Can be corrected if discussions are opened.' },
+                    ],
+                  },
+                  { type: 'text' as const, body: 'CRITICAL INSIGHT: An "Acceptable" rating is a losing rating in a competitive field. If all offerors are "Acceptable," price wins. You must write to earn Strengths — specific, documented benefits to the government that exceed requirements.' },
+                  {
+                    type: 'bullets' as const,
+                    title: 'How to Write to Earn a Strength',
+                    items: [
+                      'A Strength must EXCEED the requirement — not just meet it. "We will provide monthly status reports" meets a requirement. "We will provide a real-time dashboard with threshold alerts 48 hours before a schedule variance becomes actionable" earns a Strength.',
+                      'Strengths must be documented in your proposal. Evaluators can only credit what they can see and quote.',
+                      'Use the Government\'s exact M language as section headers — this signals compliance and makes the evaluator\'s job easy.',
+                      'Each sub-factor should have at least one discriminating element your competitors are unlikely to offer.',
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'Best Value vs. LPTA — The Evaluation Method',
+                sublabel: 'Two completely different competitive strategies',
+                badge: 'Strategy',
+                badgeColor: 'purple',
+                summary: 'How the government trades off technical quality against price is stated in Section M and drives your entire bid/no-bid and pricing strategy.',
+                content: [
+                  {
+                    type: 'grid' as const,
+                    title: 'Best Value vs. LPTA',
+                    items: [
+                      { label: 'Best Value Tradeoff', value: 'Technical quality CAN justify a higher price. SSA decides if the premium is "worth it." Strategy: be technically superior and price competitively.' },
+                      { label: 'LPTA (Lowest Price Technically Acceptable)', value: 'Once minimum technical standards are met, the lowest price wins. Strategy: price wins everything — do not over-invest in technical differentiation.' },
+                      { label: 'LPTA Warning', value: 'LPTA rewards lowest cost over best capability. DoD has been moving away from overuse of LPTA since 2017 NDAA guidance.' },
+                      { label: 'Best Value Warning', value: 'In best value, more is not always better. A $10M technical premium is only worth it if the SSA believes your solution provides more than $10M in benefit. Know your Price to Win.' },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'text' as const,
+            title: 'How to Use L and M Together: The Winning Process',
+            body: 'Step 1: Read Section M first — identify every factor, sub-factor, and order of importance. Step 2: Build your proposal outline from M factors as the section structure. Step 3: For each M sub-factor, draft 1-3 discriminating points and proof points. Step 4: Use Section L page limits to size your investment — more pages to higher-weighted factors. Step 5: Compliance-check against L before submission. Your proposal is now structured to make the evaluator\'s job easy, with every page earning toward a rating.',
+          },
+        ],
+        noviceContent: {
+          summary: 'Think of Section L as the "how to turn in your homework" instructions and Section M as the "grading rubric." Read M before you write anything. If you do not know what is on the rubric, you are guessing.',
+          keyPoints: [
+            'Section L = format instructions (how to package your proposal)',
+            'Section M = scoring rubric (what factors the government grades you on)',
+            'Build your proposal from M backward — make every section address a scored factor',
+            'LPTA: lowest compliant price wins. Best Value: better quality can justify higher price.',
+            '"Acceptable" ratings usually lose in competitive procurements — write to earn Strengths',
+          ],
+        },
+        intermediateContent: {
+          summary: 'Your proposal outline MUST mirror Section M factor structure. Evaluators use Section M as a checklist. Every discriminator should be traceable back to a specific M sub-factor. Color reviews should evaluate proposals against Section M scoring criteria, not just editorial quality.',
+          keyPoints: [
+            'Map every Section M sub-factor to a proposal section — then write to exceed the requirement, not just meet it',
+            'Strengths are earned by exceeding requirements with documented, quantifiable benefits to the government',
+            'Pink, Red, and Gold team reviews should evaluate proposals against Section M scoring criteria',
+            'Past Performance relevancy is typically defined in M — know the recency/size/scope criteria to select the right references',
+            'Price evaluation method (best value vs LPTA) drives pricing strategy as much as cost estimating does',
+          ],
+        },
+        advancedContent: {
+          summary: 'At the expert level, you are shaping Section M before the RFP drops. Through pre-solicitation engagement and industry day comments, you influence what factors the government includes and how they weight them. Post-award, your proposal commitments become performance standards.',
+          keyPoints: [
+            'Pre-solicitation RFI responses and industry day participation let you suggest sub-factors that favor your solution',
+            'After award, proposal commitments (especially Strengths) become contractually binding performance standards',
+            'Section 808 of the FY2017 NDAA required DoD to reduce LPTA usage — know when to challenge an inappropriate LPTA determination',
+            'Source Selection Information (SSI) is protected under FAR 3.104 procurement integrity rules',
+            'Debriefs (FAR 15.506) are mandatory and must reveal your final ratings and the rationale for award',
+          ],
+        },
+        assessment: {
+          questions: [
+            {
+              id: 'q1',
+              question: 'Which section of the RFP contains the evaluation factors and their relative order of importance?',
+              options: ['Section C (Description/Specification)', 'Section L (Instructions to Offerors)', 'Section M (Evaluation Factors for Award)', 'Section H (Special Contract Requirements)'],
+              correct: 2,
+              explanation: 'Section M — Evaluation Factors for Award — is required by FAR 15.304 to disclose all evaluation factors, significant sub-factors, and their relative order of importance. This is the scoring rubric.',
+            },
+            {
+              id: 'q2',
+              question: 'A proposal that violates Section L page limits can be:',
+              options: ['Penalized with a lower technical rating', 'Rejected as non-responsive without evaluation', 'Accepted with a waiver from the Contracting Officer', 'Evaluated only for the compliant portions'],
+              correct: 1,
+              explanation: 'Administrative non-compliance with Section L (page limits, format, required forms) typically results in rejection as non-responsive. The CO generally does not have discretion to waive these requirements in a competitive source selection.',
+            },
+            {
+              id: 'q3',
+              question: 'What is an "Outstanding" adjectival rating?',
+              options: ['A proposal that meets all requirements with no weaknesses', 'A proposal with exceptional strengths significantly benefiting the government and very low risk', 'A proposal with one strength and no weaknesses', 'The highest price-to-performance ratio proposal'],
+              correct: 1,
+              explanation: 'Outstanding means the proposal has exceptional strengths that will significantly benefit the government, and the risk of unsuccessful performance is very low. It requires demonstrating benefits well above threshold requirements.',
+            },
+            {
+              id: 'q4',
+              question: 'Under LPTA (Lowest Price Technically Acceptable), which proposal wins?',
+              options: ['The technically superior proposal regardless of price', 'The proposal with the best value tradeoff', 'The lowest-priced proposal that meets minimum technical requirements', 'The proposal with the highest past performance rating'],
+              correct: 2,
+              explanation: 'LPTA awards to the lowest-priced proposal that meets minimum technical acceptability. Once technical acceptability is established, only price matters — fundamentally different from best-value tradeoff.',
+            },
+            {
+              id: 'q5',
+              question: 'The best practice for structuring a proposal under best-value source selection is to:',
+              options: ['Follow the SOW/PWS section by section', 'Mirror Section L volume structure only', 'Mirror Section M factor/sub-factor structure as the proposal outline', 'Use the offeror\'s standard proposal template'],
+              correct: 2,
+              explanation: 'Winning proposals mirror Section M factor and sub-factor structure in their section headers. This makes it easy for evaluators to find and credit strengths. Section L defines the format container; Section M defines the content architecture.',
+            },
+          ],
+        },
+      },
+    },
+    {
+      id: 'capture-4',
+      title: 'Source Selection — From Solicitation to Award Decision',
+      duration: '25 min',
+      type: 'lesson' as const,
+      content: {
+        sections: [
+          {
+            type: 'header' as const,
+            title: 'How the Government Picks a Winner: The Source Selection Process',
+            body: 'Source selection is the formal government process for evaluating competitive proposals and making a contract award decision. It is governed by FAR Part 15 and, for DoD, supplemented by the DoD Source Selection Procedures (2016). Understanding this process from the GOVERNMENT side is essential for both government PMs (who participate in it) and industry professionals (who must build proposals that work within it).',
+          },
+          {
+            type: 'expandable_list' as const,
+            title: 'Key Roles in Source Selection',
+            items: [
+              {
+                label: 'Source Selection Authority (SSA)',
+                sublabel: 'The decision maker',
+                badge: 'Decision Maker',
+                badgeColor: 'red',
+                summary: 'The SSA is the official who makes the final award decision. They review the SSAC recommendation and must document their independent judgment.',
+                content: [
+                  { type: 'text' as const, body: 'The SSA is typically a senior official — for major acquisitions, a General Officer, SES, or Program Executive Officer. The SSA reviews the Source Selection Advisory Council (SSAC) recommendation, the SSEB findings, and the price evaluation, then makes an independent, documented best-value tradeoff decision documented in the Source Selection Decision Document (SSDD).' },
+                  {
+                    type: 'bullets' as const,
+                    title: 'SSA Responsibilities',
+                    items: [
+                      'Appoint the SSEB Chair and SSAC Chair',
+                      'Approve the Source Selection Plan before solicitation release',
+                      'Review the SSAC recommendation (may accept, reject, or modify)',
+                      'Sign the Source Selection Decision Document (SSDD)',
+                      'The SSDD is the legal basis for the award — it must be defensible in a protest',
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'Source Selection Evaluation Board (SSEB)',
+                sublabel: 'The technical evaluators who score proposals',
+                badge: 'Evaluators',
+                badgeColor: 'blue',
+                summary: 'The SSEB is the team of technical and management SMEs who evaluate proposal volumes against Section M criteria and assign adjectival ratings.',
+                content: [
+                  { type: 'text' as const, body: 'The SSEB is organized into evaluation teams, typically one per factor (Technical, Management, Past Performance). Each team identifies Strengths, Weaknesses, Deficiencies, and Significant Weaknesses, and assigns factor-level ratings. The SSEB Chair compiles a Proposal Evaluation Report (PER) summarizing all findings.' },
+                  {
+                    type: 'grid' as const,
+                    title: 'SSEB Finding Types',
+                    items: [
+                      { label: 'Strength', value: 'Exceeds contract requirements and benefits the government. Must be documented and quantified.' },
+                      { label: 'Weakness', value: 'A flaw increasing risk of unsuccessful performance. May be correctable in discussions.' },
+                      { label: 'Significant Weakness', value: 'Appreciably increases risk of unsuccessful performance. Can prevent Outstanding or Good rating.' },
+                      { label: 'Deficiency', value: 'A material failure to meet a requirement or combination of significant weaknesses creating unacceptable risk.' },
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'Source Selection Advisory Council (SSAC)',
+                sublabel: 'The senior review body that recommends award to the SSA',
+                badge: 'Advisory',
+                badgeColor: 'green',
+                summary: 'The SSAC reviews SSEB evaluation findings, price evaluation results, conducts the comparative tradeoff analysis, and provides a written recommendation to the SSA.',
+                content: [
+                  { type: 'text' as const, body: 'The SSAC does not re-score proposals — it uses the SSEB ratings. The SSAC\'s job is the tradeoff: given all ratings and prices, which offeror represents best value? The SSAC must document why paying more (or less) is warranted. Their recommendation goes to the SSA but is not binding.' },
+                ],
+              },
+              {
+                label: 'Contracting Officer (CO)',
+                sublabel: 'The only person with authority to bind the government',
+                badge: 'Legal Authority',
+                badgeColor: 'purple',
+                summary: 'The CO manages the solicitation process, conducts discussions, and executes the contract. Only the CO can make legally binding commitments.',
+                content: [
+                  { type: 'text' as const, body: 'The CO is responsible for the integrity and legality of the source selection. Key CO actions: release the solicitation, issue amendments, manage Q&A periods, determine competitive range, conduct discussions, request Final Proposal Revisions (FPRs), and execute the award. The CO manages procurement integrity — responsible for ensuring evaluation information is not leaked.' },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'expandable_list' as const,
+            title: 'The Source Selection Timeline',
+            items: [
+              {
+                label: 'Phase 1: Pre-Solicitation',
+                sublabel: 'Market research, requirements definition, Source Selection Plan',
+                badge: 'Planning',
+                badgeColor: 'blue',
+                summary: 'The government defines requirements, conducts market research (RFIs, industry days), develops the acquisition strategy, and drafts the Source Selection Plan before releasing the solicitation.',
+                content: [
+                  {
+                    type: 'bullets' as const,
+                    title: 'Pre-Solicitation Actions',
+                    items: [
+                      'Market Research: RFI releases, industry days, one-on-one meetings (within procurement integrity rules)',
+                      'Acquisition Strategy: Contract type, competition approach, sole source justification (if any)',
+                      'Source Selection Plan (SSP): SSA approves the SSP — defines factors, sub-factors, weights, rating scales, and the evaluation process BEFORE solicitation release',
+                      'Draft RFP (DRFP): Government may release a DRFP for industry comment before the final RFP',
+                      'Synopsis: Required FAR 5.203 notice on SAM.gov at least 15 days before solicitation release',
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'Phase 2: Solicitation and Proposal Preparation',
+                sublabel: 'RFP release through proposal due date',
+                badge: 'Solicitation',
+                badgeColor: 'green',
+                summary: 'The government releases the RFP and offerors prepare proposals. Q&As and amendments may modify requirements during this period.',
+                content: [
+                  {
+                    type: 'bullets' as const,
+                    title: 'Solicitation Phase Actions',
+                    items: [
+                      'RFP Release: Full solicitation posted to SAM.gov. Sections L, M, C, H, I, J all released simultaneously',
+                      'Pre-Proposal Conference: Government may hold a conference to answer questions (not always conducted)',
+                      'Q&A Period: Written questions answered via amendment distributed to ALL offerors — no private answers',
+                      'Amendments: Any change to the RFP requires a formal amendment. Significant amendments may extend the due date',
+                      'Industry is prohibited from contacting SSEB members during this period (procurement integrity)',
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'Phase 3: Evaluation',
+                sublabel: 'SSEB evaluates proposals and assigns ratings',
+                badge: 'Evaluation',
+                badgeColor: 'yellow',
+                summary: 'The SSEB evaluates proposals against Section M criteria. This phase is strictly government-only — all source selection information is protected.',
+                content: [
+                  {
+                    type: 'bullets' as const,
+                    title: 'Evaluation Phase Actions',
+                    items: [
+                      'Initial Proposal Evaluation: SSEB teams evaluate each volume, document Strengths/Weaknesses/Deficiencies',
+                      'Competitive Range Determination: CO may exclude proposals with no realistic chance of award (FAR 15.306)',
+                      'Notice to Excluded Offerors: Eliminated offerors notified and may request a pre-award debrief',
+                      'Price/Cost Analysis: Price reasonableness and cost realism review (for cost-type contracts)',
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'Phase 4: Discussions (If Opened)',
+                sublabel: 'ENs, clarifications, and competitive range negotiations',
+                badge: 'Discussions',
+                badgeColor: 'orange',
+                summary: 'Discussions are negotiations between the government and offerors in the competitive range. If the government holds discussions with one offeror, they must hold discussions with ALL in the competitive range.',
+                content: [
+                  { type: 'text' as const, body: 'The CO must inform each offeror of Deficiencies, Significant Weaknesses, and adverse past performance information. The government CANNOT tell one offeror what another offeror offered. Discussion techniques include Evaluation Notices (ENs). After discussions, the government issues a request for Final Proposal Revisions (FPRs).' },
+                  {
+                    type: 'grid' as const,
+                    title: 'Discussions vs. Clarifications',
+                    items: [
+                      { label: 'Clarifications', value: 'Limited exchanges to resolve ambiguities. Do NOT open the door to proposal revisions. Used when the government decides NOT to hold discussions.' },
+                      { label: 'Discussions (Negotiations)', value: 'Full exchanges — offerors can revise price, technical, management, and past performance volumes. Results in FPR request.' },
+                      { label: 'Evaluation Notice (EN)', value: 'Written question from SSEB to offeror during discussions. Must address all Deficiencies and Significant Weaknesses.' },
+                      { label: 'Final Proposal Revision (FPR)', value: 'The final document submitted after discussions. This is what gets evaluated, not the original proposal.' },
+                    ],
+                  },
+                ],
+              },
+              {
+                label: 'Phase 5: Award and Debrief',
+                sublabel: 'SSDD signature through post-award debrief',
+                badge: 'Award',
+                badgeColor: 'red',
+                summary: 'The SSA signs the SSDD, the CO executes the contract, and unsuccessful offerors are entitled to a debrief.',
+                content: [
+                  {
+                    type: 'bullets' as const,
+                    title: 'Award and Post-Award Actions',
+                    items: [
+                      'SSAC Recommendation: SSAC provides written best-value tradeoff recommendation to SSA',
+                      'Source Selection Decision Document (SSDD): SSA signs, documenting independent best-value rationale',
+                      'Contract Execution: CO executes — award notice posted to SAM.gov',
+                      'Unsuccessful Offeror Notifications: Required within 3 days of award (FAR 15.503)',
+                      'Debriefs (FAR 15.506): Mandatory if requested within 3 days of notification. Government must reveal your ratings, strengths/weaknesses, and award rationale.',
+                      'GAO Protests: Unsuccessful offerors may protest to GAO within 10 days of debrief. CO issues a stay of performance pending outcome.',
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        noviceContent: {
+          summary: 'Source selection is the government\'s structured process for picking who gets the contract. Three key roles: SSEB (scores proposals), SSAC (recommends best value), SSA (makes the final decision). After award, you can request a debrief to understand why you won or lost.',
+          keyPoints: [
+            'SSEB = evaluators who score your proposal against Section M',
+            'SSAC = senior advisors who do the best-value tradeoff',
+            'SSA = the decision maker who signs the award document',
+            'CO = the only person who can legally bind the government to a contract',
+            'After award, always request a debrief — it is free intelligence for the next proposal',
+          ],
+        },
+        intermediateContent: {
+          summary: 'Understanding government source selection mechanics gives you a strategic edge. The SSEB evaluation notices during discussions tell you exactly what weaknesses to fix. The SSDD is the document you will challenge if you protest. The competitive range determination is the first cut — if excluded, request a pre-award debrief immediately.',
+          keyPoints: [
+            'Request pre-award debriefs immediately when excluded from competitive range — you have limited time',
+            'Discussions are two-way: you can improve ALL volumes, not just fix the specific ENs raised',
+            'The SSDD must document why a higher-priced offer is worth the premium — this is the SSA\'s legal exposure',
+            'If discussions are opened, every offeror in the competitive range must receive ENs',
+            'GAO protests must be filed within 10 calendar days of a debrief — missed deadlines are fatal',
+          ],
+        },
+        advancedContent: {
+          summary: 'Senior PMs use source selection knowledge to shape the acquisition before it starts, manage protest risk after award, and build a continuous improvement cycle from debriefs. As a government PM, you participate in SSEB training, manage procurement integrity protocols, and ensure the SSDD is protest-proof.',
+          keyPoints: [
+            'Source Selection Plans must be approved by the SSA before solicitation release — any mid-evaluation changes require SSA approval',
+            'Competitive range determinations are frequently protested — document exclusion rationale thoroughly in writing',
+            'The standard of review in GAO protests is "arbitrary, capricious, or contrary to law" — a well-documented SSDD is your primary defense',
+            'Enhanced Debriefs (NDAA FY2018 Sec 818): For contracts over $100M, offerors get 2 business days to submit follow-up debrief questions',
+            'Government PMs must complete procurement integrity training and sign an NDA before accessing source selection materials',
+          ],
+        },
+        assessment: {
+          questions: [
+            {
+              id: 'q1',
+              question: 'Who makes the final award decision in a source selection?',
+              options: ['The SSEB Chair', 'The Contracting Officer (CO)', 'The Source Selection Authority (SSA)', 'The SSAC Chair'],
+              correct: 2,
+              explanation: 'The SSA makes the final award decision and signs the SSDD. The SSAC provides a recommendation, but the SSA makes an independent judgment. The CO executes the contract but does not make the selection decision.',
+            },
+            {
+              id: 'q2',
+              question: 'If the government holds discussions with one offeror in the competitive range, they must:',
+              options: ['Hold discussions with all offerors in the competitive range', 'Notify only the offeror with the lowest price', 'Issue a sole source amendment', 'Close the solicitation and restart'],
+              correct: 0,
+              explanation: 'FAR 15.306 requires that if discussions are held with any offeror in the competitive range, the government must hold discussions with ALL offerors in the competitive range. Selective discussions would provide an unfair advantage.',
+            },
+            {
+              id: 'q3',
+              question: 'An Evaluation Notice (EN) issued during discussions must address:',
+              options: ['Only price issues', 'Only strengths', 'All deficiencies and significant weaknesses identified by the SSEB', 'Administrative corrections only'],
+              correct: 2,
+              explanation: 'FAR 15.306(d) requires the CO to inform each offeror of all Deficiencies, Significant Weaknesses, and adverse past performance information. ENs are the mechanism for this.',
+            },
+            {
+              id: 'q4',
+              question: 'How many days after award notification does an offeror have to request a post-award debrief?',
+              options: ['3 calendar days', '10 calendar days', '30 calendar days', '60 calendar days'],
+              correct: 0,
+              explanation: 'Under FAR 15.506, an unsuccessful offeror must request a debrief within 3 days of receiving the award notification. Missing this deadline waives the right to a mandatory debrief.',
+            },
+            {
+              id: 'q5',
+              question: 'A "competitive range determination" is used to:',
+              options: ['Set the price range for negotiations', 'Exclude proposals with no realistic chance of award before discussions', 'Rank proposals by price', 'Determine which evaluation factors are most important'],
+              correct: 1,
+              explanation: 'A competitive range determination (FAR 15.306(c)) allows the CO to exclude proposals with no reasonable chance of selection, streamlining the evaluation process. Excluded offerors receive notification and the right to request a pre-award debrief.',
+            },
+          ],
+        },
+      },
+    },
 
   // ─────────────────────────────────────────────────────────────
   // MODULE 6 — OPERATIONS
@@ -4115,7 +5182,7 @@ export const modules: Module[] = [
           {
             type: 'text',
             heading: "Risk is Inherent in Defense Programs",
-            body: "Every defense program operates in an environment of uncertainty — technical risks, schedule risks, funding risks, and supply chain risks. The best Program Managers don't avoid risk; they manage it systematically. DoD's Risk, Issue, and Opportunity (RIO) Management Guide provides the framework. Integrating risk management into every program review — not just as a standalone briefing — is the mark of a mature program office."
+            body: "Every defense program operates in an environment of uncertainty — technical risks, schedule risks, funding risks, and supply chain risks. The best Program Managers don\'t avoid risk; they manage it systematically. DoD's Risk, Issue, and Opportunity (RIO) Management Guide provides the framework. Integrating risk management into every program review — not just as a standalone briefing — is the mark of a mature program office."
           },
           {
             type: 'formula',
@@ -4159,7 +5226,7 @@ export const modules: Module[] = [
               'Cover known, well-defined work that is already planned',
               'Fund identified risks and unforeseen events that affect the Performance Measurement Baseline',
               'Pay for program management overhead costs',
-              "Supplement the contractor's profit on cost-plus contracts"
+              "Supplement the contractor\'s profit on cost-plus contracts"
             ],
             correct: 1,
             explanation: "MR is budget above the Performance Measurement Baseline (PMB) held at the program manager level to address identified risks and unforeseen events. It is NOT planned into the PMB and NOT associated with specific work packages. MR use requires formal justification."
@@ -4201,11 +5268,11 @@ export const modules: Module[] = [
             options: [
               'Budget that has been allocated but not yet spent',
               'Budget that has not yet been assigned to specific control accounts or work packages',
-              "The contractor's fee on a cost-plus contract",
+              "The contractor\'s fee on a cost-plus contract",
               'Reserve funding held by the contracting officer'
             ],
             correct: 1,
-            explanation: "Undistributed Budget (UB) is budget within the program's Total Allocated Budget that has not yet been distributed to specific control accounts or work packages. It typically occurs when work scope is known but not yet formally assigned. UB must be distributed as planning progresses and cannot remain undistributed indefinitely."
+            explanation: "Undistributed Budget (UB) is budget within the program\'s Total Allocated Budget that has not yet been distributed to specific control accounts or work packages. It typically occurs when work scope is known but not yet formally assigned. UB must be distributed as planning progresses and cannot remain undistributed indefinitely."
           },
           {
             id: 'q6',
@@ -4245,7 +5312,7 @@ export const modules: Module[] = [
           },
           {
             id: 'q9',
-            question: "When should Management Reserve (MR) typically be included in a program's budget?",
+            question: "When should Management Reserve (MR) typically be included in a program\'s budget?",
             options: [
               'MR is never included — it violates the Anti-Deficiency Act',
               'MR is included above the Performance Measurement Baseline to cover risk events',
@@ -4284,7 +5351,7 @@ export const modules: Module[] = [
           },
           {
             type: 'list',
-            heading: "The PM's Stakeholder Map",
+            heading: "The PM\'s Stakeholder Map",
             items: [
               'Program Executive Officer (PEO): Your direct superior; manages your portfolio and fights for your resources',
               'Service Acquisition Executive (SAE): Delegated authority over all acquisition programs for the Service',
@@ -4317,7 +5384,7 @@ export const modules: Module[] = [
           {
             type: 'tip',
             heading: "Building Your Network Early",
-            body: "The acquisition community is small. The Captain or Major you work with today is the Colonel or General you'll brief in 10 years. The GS-11 analyst across the table becomes the SES you'll be pitching your company to. Invest in every professional relationship — return calls, deliver on commitments, and be the person who solves problems rather than creates them."
+            body: "The acquisition community is small. The Captain or Major you work with today is the Colonel or General you\'ll brief in 10 years. The GS-11 analyst across the table becomes the SES you\'ll be pitching your company to. Invest in every professional relationship — return calls, deliver on commitments, and be the person who solves problems rather than creates them."
           }
         ],
         quiz: [
@@ -4327,7 +5394,7 @@ export const modules: Module[] = [
             options: [
               'Validate that system requirements are complete at the beginning of Engineering & Manufacturing Development',
               'Confirm the detailed design is sufficiently mature to proceed with production',
-              "Approve the program's budget and schedule baseline at Milestone B",
+              "Approve the program\'s budget and schedule baseline at Milestone B",
               'Review contractor past performance before source selection'
             ],
             correct: 1,
@@ -4494,7 +5561,7 @@ export const modules: Module[] = [
               'Identify target companies: Booz Allen, Leidos, SAIC, Peraton, BAH, GDIT, ManTech, DXC',
               'Target roles: Program Analyst, Capture Analyst, Contract Support, Cost Analyst',
               'Build expertise in GovWin IQ, FPDS-NG, SAM.gov — essential tools for BD roles',
-              "Get PMP certified — it's the universal credential for PM roles at contractors",
+              "Get PMP certified — it\'s the universal credential for PM roles at contractors",
               'Understand EVM — most contractor PM roles require EVMS knowledge',
               'Leverage LinkedIn: connect with BD managers, capture managers, and proposal professionals',
               'Join APMP (Association of Proposal Management Professionals) — excellent community',
@@ -4593,10 +5660,10 @@ export const modules: Module[] = [
         id: 'ops-4',
         title: 'Subcontractor Management in Defense Programs',
         duration: '16 min',
-        description: "Master the government PM's role in overseeing subcontractor performance, flow-down requirements, and managing the prime-sub relationship.",
+        description: "Master the government PM\'s role in overseeing subcontractor performance, flow-down requirements, and managing the prime-sub relationship.",
         keyTerms: [
           { term: 'SMP', definition: 'Subcontract Management Plan — a document detailing how the prime contractor will manage and oversee its subcontractors.' },
-          { term: 'CPSR', definition: "Contractor Purchasing System Review — a DCMA audit of the prime contractor's purchasing/subcontracting system." },
+          { term: 'CPSR', definition: "Contractor Purchasing System Review — a DCMA audit of the prime contractor\'s purchasing/subcontracting system." },
           { term: 'Flow-Down Clauses', definition: 'FAR/DFARS contract clauses that the prime is required to include in its subcontracts.' },
           { term: 'Consent to Subcontract', definition: 'Government approval required before a prime can award certain subcontracts on cost-reimbursable contracts.' },
           { term: 'DFARS 252.244-7001', definition: 'The DFARS clause requiring contractor compliance with approved purchasing system requirements.' },
@@ -4607,7 +5674,7 @@ export const modules: Module[] = [
           {
             type: 'text',
             heading: "The Prime Owns the Entire Supply Chain",
-            body: "As a government Program Manager, you have a legal relationship only with the prime contractor — not with its subcontractors. But that does not mean you ignore what happens below the prime. Subcontractor failures are the leading cause of program schedule slips and technical shortfalls. The PM's job is to ensure the prime has robust subcontract management processes, adequate oversight, and effective escalation paths when subcontractor issues arise. When a subcontractor misses a delivery, the prime is accountable to the government — period."
+            body: "As a government Program Manager, you have a legal relationship only with the prime contractor — not with its subcontractors. But that does not mean you ignore what happens below the prime. Subcontractor failures are the leading cause of program schedule slips and technical shortfalls. The PM\'s job is to ensure the prime has robust subcontract management processes, adequate oversight, and effective escalation paths when subcontractor issues arise. When a subcontractor misses a delivery, the prime is accountable to the government — period."
           },
           {
             type: 'callout',
@@ -4643,7 +5710,7 @@ export const modules: Module[] = [
           {
             type: 'text',
             heading: "Consent to Subcontract",
-            body: "On cost-reimbursable contracts, the government's Contracting Officer must \"consent to subcontract\" before the prime can award subcontracts above certain thresholds (typically $1.5M for cost-type; higher for FFP). This consent process reviews the proposed subcontractor's cost or price reasonableness, qualifications, and competition. As PM, you should be aware of upcoming consent requests and ensure the CO has the technical information needed to make a sound decision quickly."
+            body: "On cost-reimbursable contracts, the government\'s Contracting Officer must \"consent to subcontract\" before the prime can award subcontracts above certain thresholds (typically $1.5M for cost-type; higher for FFP). This consent process reviews the proposed subcontractor\'s cost or price reasonableness, qualifications, and competition. As PM, you should be aware of upcoming consent requests and ensure the CO has the technical information needed to make a sound decision quickly."
           },
           {
             type: 'table',
@@ -4660,7 +5727,7 @@ export const modules: Module[] = [
           {
             type: 'warning',
             heading: "The Most Common PM Mistake",
-            body: "PMs who ignore the subcontractor tier until problems surface are consistently blindsided at critical program milestones. Establish a rhythm early: require the prime to brief subcontractor status at every monthly program review, demand SMP updates when critical subs change, and escalate immediately if the prime's sub oversight is inadequate. By the time a subcontractor failure becomes visible in the prime's IPMR, you're already 3-6 months behind on corrective action."
+            body: "PMs who ignore the subcontractor tier until problems surface are consistently blindsided at critical program milestones. Establish a rhythm early: require the prime to brief subcontractor status at every monthly program review, demand SMP updates when critical subs change, and escalate immediately if the prime\'s sub oversight is inadequate. By the time a subcontractor failure becomes visible in the prime\'s IPMR, you\'re already 3-6 months behind on corrective action."
           },
           {
             type: 'list',
@@ -4669,7 +5736,7 @@ export const modules: Module[] = [
               'Step 1: Identify the issue through prime reporting or DCMA surveillance — document in writing',
               'Step 2: Direct the prime PM (not the subcontractor directly) to develop a corrective action plan (CAP)',
               'Step 3: Set a hard CAP review deadline — 30 days maximum for critical issues',
-              "Step 4: Evaluate the CAP's adequacy; if insufficient, escalate to the prime's senior management via the CO",
+              "Step 4: Evaluate the CAP's adequacy; if insufficient, escalate to the prime\'s senior management via the CO",
               'Step 5: If the prime fails to correct: formal cure notice or show cause letter issued by the Contracting Officer',
               'Step 6: Consult with legal and CO on contract remedies if pattern of non-performance continues',
             ]
@@ -4686,19 +5753,19 @@ export const modules: Module[] = [
               'Notify Congress of the schedule delay'
             ],
             correct: 1,
-            explanation: "The government's contractual relationship is with the prime contractor only. The PM should direct the prime — not the subcontractor — to address the issue and develop a corrective action plan. Contacting the subcontractor directly could create unauthorized contractual commitments and undermine the prime's management authority."
+            explanation: "The government\'s contractual relationship is with the prime contractor only. The PM should direct the prime — not the subcontractor — to address the issue and develop a corrective action plan. Contacting the subcontractor directly could create unauthorized contractual commitments and undermine the prime\'s management authority."
           },
           {
             id: 'q2',
             question: "What does \"Consent to Subcontract\" refer to in defense contracting?",
             options: [
-              "The subcontractor's agreement to accept government-directed changes",
+              "The subcontractor\'s agreement to accept government-directed changes",
               "The government Contracting Officer's required approval before the prime awards certain subcontracts on cost-type contracts",
-              "The prime contractor's internal approval process for subcontract awards",
+              "The prime contractor\'s internal approval process for subcontract awards",
               "Congressional notification required for subcontracts over $50M"
             ],
             correct: 1,
-            explanation: "On cost-reimbursable contracts, FAR 44.2 requires the prime to obtain the government CO's consent before awarding subcontracts above specified thresholds. This process ensures price reasonableness and contractor qualification. The CO reviews the subcontract proposal and either consents, withholds consent pending additional information, or denies consent."
+            explanation: "On cost-reimbursable contracts, FAR 44.2 requires the prime to obtain the government CO\'s consent before awarding subcontracts above specified thresholds. This process ensures price reasonableness and contractor qualification. The CO reviews the subcontract proposal and either consents, withholds consent pending additional information, or denies consent."
           },
           {
             id: 'q3',
@@ -4722,7 +5789,7 @@ export const modules: Module[] = [
               'The program office Contracting Officer'
             ],
             correct: 2,
-            explanation: "CPSRs are conducted by the Defense Contract Management Agency (DCMA) to evaluate whether the prime contractor's purchasing system complies with FAR and DFARS requirements. An approved purchasing system is required for primes to have consent authority (the right to award subcontracts without individual government consent). DCMA conducts CPSRs periodically, typically every 3 years for active contractors."
+            explanation: "CPSRs are conducted by the Defense Contract Management Agency (DCMA) to evaluate whether the prime contractor\'s purchasing system complies with FAR and DFARS requirements. An approved purchasing system is required for primes to have consent authority (the right to award subcontracts without individual government consent). DCMA conducts CPSRs periodically, typically every 3 years for active contractors."
           },
           {
             id: 'q5',
@@ -4738,22 +5805,22 @@ export const modules: Module[] = [
           },
           {
             id: 'q6',
-            question: "The government PM's relationship with subcontractors is best characterized as:",
+            question: "The government PM\'s relationship with subcontractors is best characterized as:",
             options: [
               'Direct oversight authority — the PM can issue direction to subcontractors',
               'Insight rights through the prime — the PM can receive data but cannot direct subcontractors independently',
-              "No relationship — subcontractor performance is entirely the prime's internal matter",
-              "Equivalent authority to the prime's subcontract program manager"
+              "No relationship — subcontractor performance is entirely the prime\'s internal matter",
+              "Equivalent authority to the prime\'s subcontract program manager"
             ],
             correct: 1,
-            explanation: "The government has 'insight' into subcontractor performance — the right to receive data and participate in reviews — but not direct 'oversight' authority. The prime contractor is the government's sole point of accountability. Direct PM-to-subcontractor direction, without going through the prime, creates unauthorized contractual commitments and can expose the government to legal liability."
+            explanation: "The government has 'insight' into subcontractor performance — the right to receive data and participate in reviews — but not direct 'oversight' authority. The prime contractor is the government\'s sole point of accountability. Direct PM-to-subcontractor direction, without going through the prime, creates unauthorized contractual commitments and can expose the government to legal liability."
           },
           {
             id: 'q7',
             question: "In the IPMR reporting system, which format provides the organizational (subcontractor) breakdown of cost and schedule performance?",
             options: ['Format 1 (WBS-based)', 'Format 2 (Organizational)', 'Format 5 (Problem Analysis)', 'Format 6 (IMS/Milestone)'],
             correct: 1,
-            explanation: "IPMR Format 2 provides performance data organized by the contractor's Organizational Breakdown Structure (OBS), which maps to major subcontractors and functional organizations. This format allows PMs to identify which organizational elements (and by extension, which subcontractors) are driving cost or schedule variances — crucial for targeted corrective action."
+            explanation: "IPMR Format 2 provides performance data organized by the contractor\'s Organizational Breakdown Structure (OBS), which maps to major subcontractors and functional organizations. This format allows PMs to identify which organizational elements (and by extension, which subcontractors) are driving cost or schedule variances — crucial for targeted corrective action."
           },
           {
             id: 'q8',
@@ -4765,7 +5832,7 @@ export const modules: Module[] = [
               'The DCMA has completed a CPSR with findings requiring resolution'
             ],
             correct: 1,
-            explanation: "A Cure Notice (FAR 49.607) is issued when a contractor's performance is in danger of resulting in default. It gives the contractor a specified period (typically 10 days) to show progress toward curing the problem. If the contractor fails to cure, the CO may issue a Show Cause notice or proceed to termination for default. Cure notices are serious escalation signals that PM should avoid through proactive management."
+            explanation: "A Cure Notice (FAR 49.607) is issued when a contractor\'s performance is in danger of resulting in default. It gives the contractor a specified period (typically 10 days) to show progress toward curing the problem. If the contractor fails to cure, the CO may issue a Show Cause notice or proceed to termination for default. Cure notices are serious escalation signals that PM should avoid through proactive management."
           },
           {
             id: 'q9',
@@ -4783,13 +5850,13 @@ export const modules: Module[] = [
             id: 'q10',
             question: "Which of the following represents the most proactive approach to subcontractor risk management?",
             options: [
-              "Waiting for the prime's monthly IPMR to identify subcontractor problems",
-              "Requiring the prime to brief critical subcontractor status monthly, establishing early warning metrics, and including sub performance in the prime's performance evaluation",
+              "Waiting for the prime\'s monthly IPMR to identify subcontractor problems",
+              "Requiring the prime to brief critical subcontractor status monthly, establishing early warning metrics, and including sub performance in the prime\'s performance evaluation",
               'Bypassing the prime and conducting government-to-subcontractor reviews directly',
               'Requiring the prime to bond all subcontracts above $1M'
             ],
             correct: 1,
-            explanation: "Proactive subcontractor risk management means building visibility into the prime's oversight processes early — requiring sub performance briefings at monthly reviews, establishing leading indicators (technical progress, staffing levels, test results) before schedule slips become apparent, and including sub management quality in past performance evaluations. Waiting for IPMR data means problems are already 60-90 days old by the time you see them."
+            explanation: "Proactive subcontractor risk management means building visibility into the prime\'s oversight processes early — requiring sub performance briefings at monthly reviews, establishing leading indicators (technical progress, staffing levels, test results) before schedule slips become apparent, and including sub management quality in past performance evaluations. Waiting for IPMR data means problems are already 60-90 days old by the time you see them."
           }
         ]
       }
