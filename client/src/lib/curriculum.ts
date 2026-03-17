@@ -1011,15 +1011,21 @@ export const modules: Module[] = [
       {
         id: 'finance-3',
         title: 'Cost Estimating & Independent Cost Estimates',
-        duration: '14 min',
-        description: 'Learn the methodologies for estimating program costs and the role of the ICE in acquisition decisions.',
+        duration: '24 min',
+        description: 'Master cost estimating methodologies, the CAPE independent cost estimate process, and — critically — how contractors price labor through LCATs, pre-priced labor, job codes, and compensation ratios that directly drive your program cost.',
         keyTerms: [
-          { term: 'ICE', definition: 'Independent Cost Estimate — an estimate prepared independently of the program office, required at key milestones.' },
-          { term: 'CAPE', definition: 'Cost Assessment and Program Evaluation — OSD office responsible for independent cost analysis.' },
-          { term: 'Analogous Estimating', definition: 'Using costs from similar past programs to estimate the new program.' },
-          { term: 'Parametric Estimating', definition: 'Using statistical relationships between cost and technical parameters.' },
-          { term: 'Bottoms-Up Estimating', definition: 'Estimating each work package individually and rolling up to a total.' },
-          { term: 'Cost Risk', definition: 'The uncertainty or variability in a cost estimate; typically quantified as 80th percentile.' },
+          { term: 'ICE', definition: 'Independent Cost Estimate — an estimate prepared independently of the program office, required at key milestones for ACAT I programs.' },
+          { term: 'CAPE', definition: 'Cost Assessment and Program Evaluation — OSD office responsible for independent cost analysis of major defense acquisition programs.' },
+          { term: 'Analogous Estimating', definition: 'Using costs from similar past programs to estimate the new program. Fast but least accurate (±50%). Best for pre-Milestone A.' },
+          { term: 'Parametric Estimating', definition: 'Using statistical Cost Estimating Relationships (CERs) to relate cost to technical parameters (weight, power, throughput). Moderate accuracy (±25%).' },
+          { term: 'Bottoms-Up Estimating', definition: 'Estimating each work package or task individually and rolling up to a total. Most accurate (±10-15%) but requires mature design. Used at Milestone B+.' },
+          { term: 'Cost Risk', definition: 'The uncertainty or variability in a cost estimate; typically quantified at the 80th percentile (P80) for DoD program budgeting.' },
+          { term: 'LCAT', definition: 'Labor Category — a defined skill level and discipline (e.g., Software Engineer Level III, Program Manager Level II) that establishes what work a person performs and at what rate they are billed.' },
+          { term: 'Pre-Priced Labor', definition: 'Labor categories with negotiated, fixed billing rates established in the base contract (e.g., an IDIQ or GWAC), allowing task orders to be placed without re-pricing labor for each award.' },
+          { term: 'Compensation Ratio (Compa-Ratio)', definition: 'An employee\'s actual salary divided by the midpoint of their pay band. A ratio of 1.0 means the employee is paid exactly at midpoint. Used to assess whether a contractor\'s labor pricing is fair and competitive.' },
+          { term: 'Job Code', definition: 'A contractor-internal identifier linking an employee to a specific LCAT and pay band within their compensation structure. Audited by DCAA to verify labor charging accuracy.' },
+          { term: 'Direct Labor Rate', definition: 'The base hourly wage paid to an employee before fringe benefits or overhead are applied. The foundation of any labor cost estimate: Direct Labor Rate × Hours = Direct Labor Cost.' },
+          { term: 'Fully Burdened Rate', definition: 'The total cost per labor hour including all fringe benefits, overhead, G&A, and fee. What the government actually pays per hour of contractor labor.' },
         ],
         content: [
           {
@@ -1052,6 +1058,53 @@ export const modules: Module[] = [
             type: 'tip',
             heading: "Nunn-McCurdy",
             body: "The Nunn-McCurdy Act requires DoD to notify Congress when program unit costs breach specific thresholds (15% = \"significant breach\"; 25% = \"critical breach\"). A critical breach requires the program to be certified by USD(A&S) or face cancellation. As a PM, preventing a Nunn-McCurdy breach is a top priority."
+          },
+          {
+            type: 'text',
+            heading: "Labor Categories (LCATs): The Hidden Engine of Cost Proposals",
+            body: "When a contractor submits a cost proposal, the single largest line item — typically 50-70% of total contract cost — is direct labor. That labor is not proposed as a lump sum. It is built from Labor Categories (LCATs): defined, titled skill levels that specify the education, years of experience, and functional role a person must have to work in that slot. Examples: \"Systems Engineer Level II (SE-II)\" requires a BS in engineering + 5-8 years experience. \"Program Manager Level III (PM-III)\" requires 10+ years managing programs > $50M. Each LCAT has a specific direct labor rate — the hourly base wage — that is burdened with fringe, overhead, and G&A before you see the final billing rate. As a PM, your ability to evaluate whether a contractor's proposed labor mix is realistic directly determines whether your cost estimate is credible."
+          },
+          {
+            type: 'table',
+            heading: "LCAT Structure: How a Contractor Builds a Labor Proposal",
+            headers: ['LCAT Title', 'Skill Level Indicators', 'Typical Direct Labor Rate ($/hr)', 'Fully Burdened Rate Example'],
+            rows: [
+              ['Program Manager I', 'BS + 5 yrs; manages subteams; no independent authority', '$65-85/hr', '$165-215/hr (1.5-2.5x wrap)'],
+              ['Program Manager II', 'BS + 10 yrs or MS + 8 yrs; manages programs <$50M', '$90-120/hr', '$225-300/hr'],
+              ['Program Manager III', 'BS + 15 yrs or MS + 12 yrs; manages programs >$50M; strategic decisions', '$130-175/hr', '$325-440/hr'],
+              ['Systems Engineer II', 'BS + 4-7 yrs; requirements analysis, design trade studies', '$70-90/hr', '$175-225/hr'],
+              ['Systems Engineer III', 'BS + 8-12 yrs or MS + 5 yrs; system architecture, integration lead', '$95-130/hr', '$240-325/hr'],
+              ['Software Engineer II', 'BS CS/CE + 3-6 yrs; coding, testing, integration', '$75-100/hr', '$190-250/hr'],
+              ['Financial Analyst I', 'BS Finance/Accounting + 2-4 yrs; budget tracking, reporting', '$55-70/hr', '$138-175/hr'],
+              ['Contracts Specialist II', 'BS + 5 yrs contracting; proposal prep, mods, compliance', '$65-85/hr', '$163-213/hr'],
+            ]
+          },
+          {
+            type: 'callout',
+            heading: "Pre-Priced LCATs: How IDIQs Lock In Labor Rates",
+            body: "On IDIQ contracts and GWACs (like SEAPORT-NXG, OASIS, GSAM), labor rates are negotiated and fixed in the base contract — these are called pre-priced labor categories. When a task order is competed under that vehicle, the contractor cannot re-price their LCATs above the contract ceiling rates. This is powerful for the government: you are comparing proposals on the same rate structure, so competition becomes about hours and approach rather than rate games. As a PM, when you use a pre-priced IDIQ, verify the ceiling rates were set competitively and recently — rates negotiated 5 years ago may no longer reflect the labor market, and contractors may propose fewer hours at higher mix levels to compensate."
+          },
+          {
+            type: 'formula',
+            heading: "Job Codes, Pay Bands, and the Compensation Ratio",
+            formula: 'Compa-Ratio = Employee Annual Salary ÷ Pay Band Midpoint\n\nExample:\n  Employee salary: $95,000\n  LCAT \"Systems Engineer II\" pay band: $75,000 – $105,000 (midpoint: $90,000)\n  Compa-Ratio = $95,000 ÷ $90,000 = 1.056 (slightly above midpoint = fair)\n\nCompa-Ratio Interpretation:\n  < 0.80 = Underpaid relative to market (retention risk; DCAA flag)\n  0.80–1.00 = Below midpoint (new hire, lower experience)\n  1.00 = Exactly at midpoint (market rate)\n  1.00–1.20 = Above midpoint (senior, high performer)\n  > 1.20 = Significantly above midpoint (may require justification)',
+            explanation: "Every contractor employee has a job code — an internal HR identifier that maps them to a specific LCAT and pay band. When DCAA audits a contractor's labor charging, they pull the job code and verify: (1) Is this employee actually qualified for the LCAT they're charging? (2) Is their salary consistent with the pay band? (3) Are they charging the correct contract? A compa-ratio above 1.20 is not illegal, but it prompts DCAA to verify the employee's qualifications match the LCAT. If a contractor is billing a junior employee at a senior LCAT rate, that is a False Claims Act violation. As a PM, understanding this structure lets you challenge a cost proposal that looks too heavy at senior levels."
+          },
+          {
+            type: 'text',
+            heading: "How LCATs Connect to Your Cost Estimate as a PM",
+            body: "When you review a contractor's cost proposal at Milestone B or for a new task order, don't just look at total price. Drill into the labor mix. Ask: What percentage of hours are at senior LCAT levels vs. junior? Is the proposed mix realistic for the work? A software sustainment task that is 80% \"Software Engineer III\" when \"Software Engineer I and II\" could do 60% of the work is a red flag — it inflates cost without improving quality. Also watch for \"labor substitution\" clauses in contracts: if the contract requires senior engineers but the contractor is actually staffing junior personnel (billing at junior rates but billing more hours), your actual cost stays the same but quality drops. The LCAT structure, job codes, and compensation ratios are DCAA's primary audit tools to catch exactly this kind of misbilling — and they should be YOUR primary evaluation tools when reviewing proposals."
+          },
+          {
+            type: 'list',
+            heading: "Five Questions Every PM Should Ask When Reviewing a Labor Proposal",
+            items: [
+              '1. Does the LCAT mix make sense for the statement of work? Senior engineers should not dominate routine maintenance tasks.',
+              '2. Are the proposed direct labor rates consistent with the contractor\'s disclosed forward pricing rates (FPRAs)? If not, why not?',
+              '3. For IDIQ/pre-priced vehicles: are the proposed rates at or below the contract ceiling rates? Any ceiling rate exception requires CO approval.',
+              '4. Is the contractor proposing the same LCATs they actually staff? Request key personnel resumes and verify job codes match proposed LCATs.',
+              '5. What is the annual escalation rate applied to labor in out-years? Defense labor typically escalates 3-4% annually — proposals using 0% escalation are understating future costs.',
+            ]
           }
         ],
         quiz: [
@@ -1124,6 +1177,44 @@ export const modules: Module[] = [
             options: ['A 1-year program freeze', 'Mandatory program restructuring with a new baseline', 'Program termination', 'Transfer to a different ACAT category'],
             correct: 2,
             explanation: "A Nunn-McCurdy critical breach requires certification by the USD(A&S) — the program must be re-validated as essential to national security, with reasonable cost and schedule. If USD(A&S) cannot certify the program, it must be terminated. This statutory requirement gives Congress significant leverage over poorly performing programs."
+          },
+          {
+            id: 'q11',
+            question: "On a pre-priced IDIQ contract, a contractor submits a task order proposal with labor rates 15% above the IDIQ contract ceiling rates. What is the correct course of action?",
+            options: [
+              'Accept the proposal since ceiling rates are guidelines, not hard limits',
+              'The proposal is non-compliant — ceiling rates are contractually binding and the contractor cannot exceed them without a contract modification',
+              'Request a waiver from DCAA before accepting',
+              'The contracting officer may accept if the work is highly specialized',
+            ],
+            correct: 1,
+            explanation: "Pre-priced ceiling rates on IDIQ contracts and GWACs are contractually binding. A contractor cannot propose labor rates above the ceiling without a modification to the base contract. A task order proposal that exceeds ceiling rates is non-compliant and must be returned for correction. This is one of the primary government protections in IDIQ vehicles — it prevents rate inflation on individual task orders."
+          },
+          {
+            id: 'q12',
+            type: 'drag_match',
+            question: "Match each LCAT/labor concept to its correct definition.",
+            options: [],
+            correct: 0,
+            pairs: [
+              { left: 'Compa-Ratio', right: 'Employee salary ÷ pay band midpoint; measures pay fairness vs. market' },
+              { left: 'Job Code', right: 'Internal HR identifier linking an employee to a specific LCAT and pay band; DCAA audit target' },
+              { left: 'Pre-Priced Labor', right: 'Labor categories with rates fixed in the base contract; task orders cannot exceed these rates' },
+              { left: 'Direct Labor Rate', right: 'Base hourly wage before fringe, overhead, or G&A are applied' },
+            ],
+            explanation: "These four concepts form the backbone of defense contractor labor pricing. DCAA uses job codes and compa-ratios to audit labor charging accuracy. Government PMs use pre-priced rates and direct labor rates to evaluate proposal realism and prevent cost growth."
+          },
+          {
+            id: 'q13',
+            question: "A contractor's cost proposal for a software sustainment task shows 80% of hours at 'Software Engineer Level III' rates ($105/hr direct). You know similar tasks at other contractors typically run 60% at Level I/II ($65-75/hr). What is the most likely issue?",
+            options: [
+              'The contractor is using an incorrect estimating methodology',
+              'The contractor is proposing an inflated labor mix — over-leveling LCATs to drive up cost without improving performance',
+              'The direct labor rates are too low for Level III engineers',
+              'The proposal violates TINA because it uses parametric estimating',
+            ],
+            correct: 1,
+            explanation: "'Over-leveling' — proposing too many senior LCAT hours on work that could be done by more junior (and less expensive) personnel — is one of the most common ways cost proposals are inflated in defense contracting. As a PM, comparing the proposed labor mix against similar tasks or industry benchmarks is a critical cost realism check. You can challenge this during negotiations by requesting a staffing rationale or comparison to the contractor's actual workforce supporting similar work."
           }
         ]
       },
