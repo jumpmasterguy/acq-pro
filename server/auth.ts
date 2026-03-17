@@ -26,37 +26,55 @@ declare global {
   }
 }
 
-export function setupAuth(app: Express) {
-  // Trust Railway's reverse proxy so cookies work over HTTPS
+// Create the session table if it doesn't exist — runs once at startup
+async function ensureSessionTable(pool: Pool): Promise<void> {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS "session" (
+        "sid" varchar NOT NULL COLLATE "default",
+        "sess" json NOT NULL,
+        "expire" timestamp(6) NOT NULL,
+        CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE
+      ) WITH (OIDS=FALSE);
+    `);
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire");
+    `);
+    console.log("[session] Session table ready");
+  } catch (err: any) {
+    console.error("[session] Failed to create session table:", err.message);
+  }
+}
+
+export async function setupAuth(app: Express): Promise<void> {
+  // Trust Railway's reverse proxy — required for secure cookies over HTTPS
   app.set("trust proxy", 1);
 
   // ── Session store ──────────────────────────────────────────────────────────
-  // Use PostgreSQL when DATABASE_URL is set (production) — sessions survive
-  // restarts and deploys. Fall back to in-memory for local dev without a DB.
   let store: session.Store;
 
   if (process.env.DATABASE_URL) {
     const pool = new Pool({
       connectionString: process.env.DATABASE_URL,
-      ssl: process.env.DATABASE_URL.includes("railway") || process.env.DATABASE_URL.includes("postgres")
-        ? { rejectUnauthorized: false }
-        : false,
+      ssl: { rejectUnauthorized: false },
     });
+
+    // Ensure table exists BEFORE the store is used
+    await ensureSessionTable(pool);
 
     store = new PgSession({
       pool,
-      tableName: "session",          // auto-created by connect-pg-simple
-      createTableIfMissing: true,    // creates the table on first boot
+      tableName: "session",
+      createTableIfMissing: false, // we already created it above
       ttl: 30 * 24 * 60 * 60,       // 30 days in seconds
       pruneSessionInterval: 60 * 60, // prune expired rows every hour
     });
 
     console.log("[session] Using PostgreSQL session store");
   } else {
-    // Local dev fallback — memorystore
     const MemoryStore = require("memorystore")(session);
     store = new MemoryStore({ checkPeriod: 86400000 });
-    console.log("[session] No DATABASE_URL — using MemoryStore");
+    console.log("[session] No DATABASE_URL — using MemoryStore (local dev)");
   }
 
   // ── Session middleware ─────────────────────────────────────────────────────
@@ -65,11 +83,11 @@ export function setupAuth(app: Express) {
       secret: process.env.SESSION_SECRET || "acqpro-secret-key-change-in-prod-2024",
       resave: false,
       saveUninitialized: false,
-      rolling: true,            // reset cookie expiry on every request
+      rolling: true,
       store,
       cookie: {
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-        secure: process.env.NODE_ENV === "production", // HTTPS-only in prod
+        secure: "auto",    // true on HTTPS (via trust proxy), false on HTTP
         httpOnly: true,
         sameSite: "lax",
       },

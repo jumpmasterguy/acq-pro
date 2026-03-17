@@ -21,8 +21,8 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
-  // Setup passport + sessions
-  setupAuth(app);
+  // Setup passport + sessions (async — creates session table in PostgreSQL)
+  await setupAuth(app);
 
   // Health check — Railway uses this to confirm the app is alive
   app.get("/api/health", (_req, res) => {
@@ -85,7 +85,10 @@ export async function registerRoutes(
           return res.status(401).json({ message: info?.message || "Invalid credentials" });
         }
         req.login(user, (loginErr) => {
-          if (loginErr) return res.status(500).json({ message: "Session error" });
+          if (loginErr) {
+            console.error("[login] req.login error:", loginErr);
+            return res.status(500).json({ message: "Session error" });
+          }
           return res.json({
             id: user.id,
             username: user.username,
