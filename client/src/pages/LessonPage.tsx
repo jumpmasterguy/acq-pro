@@ -513,17 +513,28 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
     // Build a brief context from the first text/callout block
     const contextBlock = lesson.content.find(b => b.type === 'text' || b.type === 'callout');
     const lessonContext = contextBlock?.body ?? lesson.description;
+    // 20-second timeout — Gemini can be slow on first call
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 20000);
     try {
-      const res = await apiRequest('POST', '/api/explain', {
-        lessonTitle: lesson.title,
-        lessonContext,
-        mode,
+      const res = await fetch(`/api/explain`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lessonTitle: lesson.title, lessonContext, mode }),
+        credentials: 'include',
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
       const data = await res.json();
       if (data.explanation) setAiResult(data.explanation);
       else setAiError(data.message ?? 'Something went wrong.');
     } catch (e: any) {
-      setAiError('Could not reach the AI. Try again in a moment.');
+      clearTimeout(timeoutId);
+      if (e?.name === 'AbortError') {
+        setAiError('The AI is taking too long. Please try again.');
+      } else {
+        setAiError('Could not reach the AI. Try again in a moment.');
+      }
     } finally {
       setAiLoading(false);
     }
