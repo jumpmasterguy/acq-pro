@@ -460,7 +460,7 @@ export async function registerRoutes(
     try {
       const { GoogleGenerativeAI } = await import("@google/generative-ai");
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
       const prompts: Record<string, string> = {
         eli5: `You are a friendly teacher explaining DoD acquisitions to someone who just started learning. 
@@ -486,8 +486,25 @@ Context: ${lessonContext}`,
       const text = result.response.text();
       return res.json({ explanation: text });
     } catch (err: any) {
-      console.error("Gemini error:", err.message);
-      return res.status(500).json({ message: "AI explanation failed. Try again in a moment." });
+      console.error("Gemini error:", err?.message, err?.status, err?.errorDetails);
+      const detail = err?.message ?? 'Unknown error';
+      return res.status(500).json({ message: `AI explanation failed: ${detail}` });
+    }
+  });
+
+  // GET /api/ai-health — check Gemini key is working (no auth required, for debugging)
+  app.get("/api/ai-health", async (_req: Request, res: Response) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) return res.json({ ok: false, reason: 'GEMINI_API_KEY not set' });
+    try {
+      const { GoogleGenerativeAI } = await import("@google/generative-ai");
+      const genAI = new GoogleGenerativeAI(apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const result = await model.generateContent('Say OK in one word.');
+      const text = result.response.text();
+      return res.json({ ok: true, response: text.trim() });
+    } catch (err: any) {
+      return res.json({ ok: false, reason: err?.message, status: err?.status });
     }
   });
 
