@@ -4238,7 +4238,7 @@ export const modules: Module[] = [
                       'Is there a specific, measurable corrective action with a named owner and due date?',
                       'Does the corrective action realistically address the root cause?',
                       'Mismatch check: does the narrative address the same WBS elements with the biggest variances in Format 1? Inconsistency = narratives written independently of the data.',
-                      'Track last month's corrective actions: did they produce improvement? If CPI did not move, the action was ineffective.',
+                      'Track last month\'s corrective actions: did they produce improvement? If CPI did not move, the action was ineffective.',
                     ]
                   }
                 ]
@@ -4257,7 +4257,7 @@ export const modules: Module[] = [
                       'Any new entries since last month? All changes require CO approval via formal contract modification.',
                       'Budget transfers between WBS elements: legitimate re-planning or hiding overruns in other accounts?',
                       'Management Reserve (MR) draws: how much MR remains? MR burn rate is a key program health indicator.',
-                      'Undistributed Budget (UB): large UB that's been sitting means work is not yet planned in detail — schedule risk.',
+                      'Undistributed Budget (UB): large UB that\'s been sitting means work is not yet planned in detail — schedule risk.',
                     ]
                   }
                 ]
