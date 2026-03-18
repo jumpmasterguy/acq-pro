@@ -84,10 +84,23 @@ export async function registerRoutes(
         if (!user) {
           return res.status(401).json({ message: info?.message || "Invalid credentials" });
         }
-        req.login(user, (loginErr) => {
+        req.login(user, async (loginErr) => {
           if (loginErr) {
             console.error("[login] req.login error:", loginErr);
             return res.status(500).json({ message: "Session error" });
+          }
+          // Track login analytics (non-blocking)
+          try {
+            const currentUser = await storage.getUser(user.id);
+            if (currentUser) {
+              await storage.updateUserAnalytics(user.id, {
+                lastLoginAt: new Date().toISOString(),
+                lastActiveAt: new Date().toISOString(),
+                loginCount: (currentUser.loginCount ?? 0) + 1,
+              });
+            }
+          } catch (e) {
+            console.error('[analytics] login tracking error:', e);
           }
           return res.json({
             id: user.id,
@@ -442,6 +455,115 @@ export async function registerRoutes(
     const status = plan === "free" ? "free" : plan === "lifetime" ? "lifetime" : "active";
     await storage.updateUserSubscription(user.id, { subscriptionStatus: status });
     return res.json({ message: `${user.email} is now ${status}`, userId: user.id });
+  });
+
+  // ─── Activity Tracking ────────────────────────────────────────────────────
+
+  // POST /api/track-activity
+  // Body: { minutesActive: number } — sent periodically by the client (heartbeat)
+  // Also recalculates XP from progress data
+  app.post("/api/track-activity", requireAuth as any, async (req: Request, res: Response) => {
+    const userId = req.user!.id;
+    const { minutesActive = 0 } = req.body as { minutesActive?: number };
+
+    try {
+      const currentUser = await storage.getUser(userId);
+      if (!currentUser) return res.status(404).json({ message: "User not found" });
+
+      // Recalculate XP from progress data
+      const completedCount = (currentUser.completedLessons ?? []).length;
+      const quizScores = (currentUser.quizScores as Record<string, number>) ?? {};
+      const quizValues = Object.values(quizScores);
+      const avgQuiz = quizValues.length > 0
+        ? quizValues.reduce((a, b) => a + b, 0) / quizValues.length
+        : 0;
+      const skillLevels = (currentUser.moduleSkillLevels as Record<string, string>) ?? {};
+      const skillUnlocks = Object.values(skillLevels).filter(l => l === 'intermediate' || l === 'advanced').length
+        + Object.values(skillLevels).filter(l => l === 'advanced').length; // advanced counts double
+      const newXp = Math.round(
+        completedCount * 10
+        + avgQuiz * 5
+        + skillUnlocks * 50
+      );
+
+      const newMinutes = (currentUser.totalMinutesActive ?? 0) + Math.max(0, Math.round(minutesActive));
+
+      await storage.updateUserAnalytics(userId, {
+        lastActiveAt: new Date().toISOString(),
+        totalMinutesActive: newMinutes,
+        xp: newXp,
+      });
+
+      return res.json({ ok: true, xp: newXp, totalMinutesActive: newMinutes });
+    } catch (err: any) {
+      console.error('[track-activity] error:', err);
+      return res.status(500).json({ message: 'Failed to track activity' });
+    }
+  });
+
+  // ─── Admin Analytics ─────────────────────────────────────────────────────
+
+  // GET /api/admin/analytics — aggregate + per-user engagement stats
+  app.get("/api/admin/analytics", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
+
+    try {
+      const allUsers = await storage.getAllUsers();
+      const now = Date.now();
+      const oneDayMs = 24 * 60 * 60 * 1000;
+
+      // Per-user stats
+      const userStats = allUsers.map(u => {
+        const completedLessons = (u.completedLessons ?? []).length;
+        const quizScores = (u.quizScores as Record<string, number>) ?? {};
+        const quizValues = Object.values(quizScores);
+        const avgQuiz = quizValues.length > 0
+          ? Math.round(quizValues.reduce((a, b) => a + b, 0) / quizValues.length)
+          : 0;
+        const skillLevels = (u.moduleSkillLevels as Record<string, string>) ?? {};
+        const highestSkill = Object.values(skillLevels).includes('advanced') ? 'advanced'
+          : Object.values(skillLevels).includes('intermediate') ? 'intermediate'
+          : 'novice';
+        return {
+          id: u.id,
+          username: u.username,
+          email: u.email,
+          subscriptionStatus: u.subscriptionStatus,
+          lastLoginAt: u.lastLoginAt ?? null,
+          lastActiveAt: u.lastActiveAt ?? null,
+          loginCount: u.loginCount ?? 0,
+          totalMinutesActive: u.totalMinutesActive ?? 0,
+          xp: u.xp ?? 0,
+          completedLessons,
+          avgQuizScore: avgQuiz,
+          highestSkillLevel: highestSkill,
+        };
+      });
+
+      // Platform aggregate
+      const totalUsers = allUsers.length;
+      const proUsers = allUsers.filter(u => u.subscriptionStatus !== 'free').length;
+      const dau = allUsers.filter(u => {
+        if (!u.lastActiveAt) return false;
+        return now - new Date(u.lastActiveAt).getTime() < oneDayMs;
+      }).length;
+      const totalXp = userStats.reduce((sum, u) => sum + u.xp, 0);
+      const avgXp = totalUsers > 0 ? Math.round(totalXp / totalUsers) : 0;
+      const avgLessons = totalUsers > 0
+        ? Math.round(userStats.reduce((sum, u) => sum + u.completedLessons, 0) / totalUsers)
+        : 0;
+      const avgMinutes = totalUsers > 0
+        ? Math.round(userStats.reduce((sum, u) => sum + u.totalMinutesActive, 0) / totalUsers)
+        : 0;
+
+      return res.json({
+        aggregate: { totalUsers, proUsers, dau, avgXp, avgLessons, avgMinutes },
+        users: userStats,
+      });
+    } catch (err: any) {
+      console.error('[admin/analytics] error:', err);
+      return res.status(500).json({ message: 'Failed to load analytics' });
+    }
   });
 
   // ─── AI Explain Endpoint ────────────────────────────────────────────────

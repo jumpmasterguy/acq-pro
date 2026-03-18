@@ -35,6 +35,16 @@ export interface IStorage {
     level: SkillLevel,
     assessmentScore: number
   ): Promise<User | undefined>;
+  updateUserAnalytics(
+    userId: string,
+    data: {
+      lastLoginAt?: string;
+      lastActiveAt?: string;
+      loginCount?: number;
+      totalMinutesActive?: number;
+      xp?: number;
+    }
+  ): Promise<User | undefined>;
 }
 
 // ─── Postgres Storage (production) ─────────────────────────────────────────
@@ -153,6 +163,24 @@ export class DrizzleStorage implements IStorage {
       .returning();
     return updated[0];
   }
+
+  async updateUserAnalytics(
+    userId: string,
+    data: {
+      lastLoginAt?: string;
+      lastActiveAt?: string;
+      loginCount?: number;
+      totalMinutesActive?: number;
+      xp?: number;
+    }
+  ): Promise<User | undefined> {
+    const result = await this.db
+      .update(users)
+      .set(data)
+      .where(eq(users.id, userId))
+      .returning();
+    return result[0];
+  }
 }
 
 // ─── In-Memory Storage (fallback when no DATABASE_URL) ─────────────────────
@@ -247,6 +275,23 @@ export class MemStorage implements IStorage {
       moduleSkillLevels: { ...currentLevels, [moduleId]: level },
       moduleAssessmentScores: { ...currentScores, [moduleId]: assessmentScore },
     };
+    this.users.set(userId, updated);
+    return updated;
+  }
+
+  async updateUserAnalytics(
+    userId: string,
+    data: {
+      lastLoginAt?: string;
+      lastActiveAt?: string;
+      loginCount?: number;
+      totalMinutesActive?: number;
+      xp?: number;
+    }
+  ): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const updated = { ...user, ...data };
     this.users.set(userId, updated);
     return updated;
   }

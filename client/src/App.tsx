@@ -113,6 +113,29 @@ function AppContent() {
   }, [darkMode]);
   const toggleDark = () => setDarkMode(d => !d);
 
+  // Activity heartbeat — sends accumulated active-minutes to server every 2 mins
+  useEffect(() => {
+    if (authState.status !== 'authenticated') return;
+    // Track how many minutes we've accumulated since last ping
+    let accumulatedMins = 0;
+    let lastTick = Date.now();
+    const TICK_MS = 30_000;   // check every 30s
+    const PING_MINS = 2;      // ping every 2 accumulated minutes
+    const ticker = setInterval(() => {
+      if (document.hidden) return; // don't count when tab is hidden
+      const now = Date.now();
+      const elapsed = (now - lastTick) / 60000; // minutes
+      lastTick = now;
+      accumulatedMins += elapsed;
+      if (accumulatedMins >= PING_MINS) {
+        const minsToSend = Math.floor(accumulatedMins);
+        accumulatedMins -= minsToSend;
+        apiRequest('POST', '/api/track-activity', { minutesActive: minsToSend }).catch(() => {});
+      }
+    }, TICK_MS);
+    return () => clearInterval(ticker);
+  }, [authState.status]);
+
   // Persist view changes to sessionStorage
   useEffect(() => {
     if (authState.status === 'authenticated') {

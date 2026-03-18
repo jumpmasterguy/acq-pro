@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, boolean, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, boolean, jsonb, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -19,6 +19,12 @@ export const users = pgTable("users", {
   moduleSkillLevels: jsonb("module_skill_levels").notNull().default(sql`'{}'::jsonb`),
   // Module gate assessment scores: { moduleId: number (0-100) }
   moduleAssessmentScores: jsonb("module_assessment_scores").notNull().default(sql`'{}'::jsonb`),
+  // Analytics / engagement tracking
+  lastLoginAt: text("last_login_at"),         // ISO timestamp string
+  lastActiveAt: text("last_active_at"),        // ISO timestamp string (last heartbeat)
+  loginCount: integer("login_count").notNull().default(0),
+  totalMinutesActive: integer("total_minutes_active").notNull().default(0),
+  xp: integer("xp").notNull().default(0),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({

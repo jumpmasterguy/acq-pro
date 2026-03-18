@@ -77,6 +77,31 @@ app.use((req, res, next) => {
 (async () => {
   // Run database migrations if DATABASE_URL is set
   if (process.env.DATABASE_URL) {
+    // Always run ADD COLUMN IF NOT EXISTS to keep schema current
+    try {
+      const { Pool: PgPool } = await import("pg");
+      const schemaPool = new PgPool({
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false },
+      });
+      const schemaCols = [
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS module_skill_levels JSONB NOT NULL DEFAULT '{}'::JSONB`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS module_assessment_scores JSONB NOT NULL DEFAULT '{}'::JSONB`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_login_at TEXT`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_active_at TEXT`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS login_count INTEGER NOT NULL DEFAULT 0`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS total_minutes_active INTEGER NOT NULL DEFAULT 0`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS xp INTEGER NOT NULL DEFAULT 0`,
+      ];
+      for (const stmt of schemaCols) {
+        try { await schemaPool.query(stmt); } catch (e: any) { /* column already exists */ }
+      }
+      await schemaPool.end();
+      log("Analytics schema columns ensured", "db");
+    } catch (schemaErr: any) {
+      log(`Schema column check failed: ${schemaErr.message}`, "db");
+    }
+
     try {
       log("Running database migrations...", "db");
       const { migrate } = await import("drizzle-orm/node-postgres/migrator");
@@ -112,6 +137,20 @@ app.use((req, res, next) => {
           );
         `);
         log("Users table ensured via direct SQL", "db");
+        // Add any missing columns (safe to run on every startup)
+        const alterCols = [
+          `ALTER TABLE users ADD COLUMN IF NOT EXISTS module_skill_levels JSONB NOT NULL DEFAULT '{}'::JSONB`,
+          `ALTER TABLE users ADD COLUMN IF NOT EXISTS module_assessment_scores JSONB NOT NULL DEFAULT '{}'::JSONB`,
+          `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_login_at TEXT`,
+          `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_active_at TEXT`,
+          `ALTER TABLE users ADD COLUMN IF NOT EXISTS login_count INTEGER NOT NULL DEFAULT 0`,
+          `ALTER TABLE users ADD COLUMN IF NOT EXISTS total_minutes_active INTEGER NOT NULL DEFAULT 0`,
+          `ALTER TABLE users ADD COLUMN IF NOT EXISTS xp INTEGER NOT NULL DEFAULT 0`,
+        ];
+        for (const sql of alterCols) {
+          try { await pool.query(sql); } catch (e: any) { log(`alter col skipped: ${e.message}`, 'db'); }
+        }
+        log("Schema columns ensured", "db");
         await pool.end();
       } catch (sqlErr: any) {
         log(`DB setup error: ${sqlErr.message}`, "db");
