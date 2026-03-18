@@ -151,6 +151,42 @@ export async function registerRoutes(
     });
   });
 
+  // ─── Google OAuth Routes ──────────────────────────────────────────
+
+  // Initiate Google OAuth flow
+  app.get("/api/auth/google", (req: Request, res: Response, next) => {
+    // Check if Google OAuth is configured
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+      return res.status(503).json({ message: "Google OAuth is not configured" });
+    }
+    passport.authenticate("google", { scope: ["profile", "email"] })(req, res, next);
+  });
+
+  // Google OAuth callback — redirect to app after login
+  app.get("/api/auth/google/callback",
+    (req: Request, res: Response, next) => {
+      passport.authenticate("google", { failureRedirect: "/auth?error=google_failed" })(req, res, next);
+    },
+    async (req: Request, res: Response) => {
+      // Track login analytics (non-blocking)
+      if (req.user) {
+        try {
+          const currentUser = await storage.getUser(req.user.id);
+          if (currentUser) {
+            await storage.updateUserAnalytics(req.user.id, {
+              lastLoginAt: new Date().toISOString(),
+              loginCount: (currentUser.loginCount ?? 0) + 1,
+            });
+          }
+        } catch (e) {
+          console.error('[analytics] google login tracking error:', e);
+        }
+      }
+      // Redirect to the app's dashboard (hash routing)
+      res.redirect(`${process.env.APP_URL || ""}/#/dashboard`);
+    }
+  );
+
   // ─── Progress Routes ───────────────────────────────────────────────
 
   // Save lesson progress

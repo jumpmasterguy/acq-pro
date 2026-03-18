@@ -1,4 +1,4 @@
-import { type User, type InsertUser, users } from "@shared/schema";
+import { type User, type InsertUser, type InsertGoogleUser, users } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { eq } from "drizzle-orm";
@@ -12,9 +12,11 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
+  getUserByGoogleId(googleId: string): Promise<User | undefined>;
   getUserByStripeCustomerId(customerId: string): Promise<User | undefined>;
   getAllUsers(): Promise<User[]>;
   createUser(user: InsertUser): Promise<User>;
+  upsertGoogleUser(data: InsertGoogleUser & { avatarUrl?: string }): Promise<User>;
   updateUserSubscription(
     userId: string,
     data: {
@@ -77,6 +79,11 @@ export class DrizzleStorage implements IStorage {
     return result[0];
   }
 
+  async getUserByGoogleId(googleId: string): Promise<User | undefined> {
+    const result = await this.db.select().from(users).where(eq(users.googleId, googleId)).limit(1);
+    return result[0];
+  }
+
   async getUserByStripeCustomerId(customerId: string): Promise<User | undefined> {
     const result = await this.db.select().from(users).where(eq(users.stripeCustomerId, customerId)).limit(1);
     return result[0];
@@ -84,6 +91,45 @@ export class DrizzleStorage implements IStorage {
 
   async getAllUsers(): Promise<User[]> {
     return this.db.select().from(users).orderBy(users.email);
+  }
+
+  // Find or create a user for Google OAuth — links by email if account already exists
+  async upsertGoogleUser(data: InsertGoogleUser & { avatarUrl?: string }): Promise<User> {
+    // First check by Google ID
+    const byGoogleId = await this.getUserByGoogleId(data.googleId!);
+    if (byGoogleId) return byGoogleId;
+
+    // Then check by email — existing local-auth account, link Google ID
+    const byEmail = await this.getUserByEmail(data.email);
+    if (byEmail) {
+      const linked = await this.db
+        .update(users)
+        .set({ googleId: data.googleId })
+        .where(eq(users.id, byEmail.id))
+        .returning();
+      return linked[0];
+    }
+
+    // New user — create account
+    const id = randomUUID();
+    const result = await this.db
+      .insert(users)
+      .values({
+        id,
+        username: data.username,
+        email: data.email,
+        googleId: data.googleId,
+        passwordHash: null,
+        stripeCustomerId: null,
+        subscriptionStatus: "free",
+        subscriptionId: null,
+        completedLessons: [],
+        quizScores: {},
+        moduleSkillLevels: {},
+        moduleAssessmentScores: {},
+      })
+      .returning();
+    return result[0];
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
@@ -204,12 +250,49 @@ export class MemStorage implements IStorage {
     return Array.from(this.users.values()).find((u) => u.email === email);
   }
 
+  async getUserByGoogleId(googleId: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find((u) => u.googleId === googleId);
+  }
+
   async getUserByStripeCustomerId(customerId: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find((u) => u.stripeCustomerId === customerId);
   }
 
   async getAllUsers(): Promise<User[]> {
     return Array.from(this.users.values()).sort((a, b) => a.email.localeCompare(b.email));
+  }
+
+  async upsertGoogleUser(data: InsertGoogleUser & { avatarUrl?: string }): Promise<User> {
+    const byGoogleId = await this.getUserByGoogleId(data.googleId!);
+    if (byGoogleId) return byGoogleId;
+    const byEmail = await this.getUserByEmail(data.email);
+    if (byEmail) {
+      const updated = { ...byEmail, googleId: data.googleId };
+      this.users.set(byEmail.id, updated);
+      return updated;
+    }
+    const id = randomUUID();
+    const user: User = {
+      id,
+      username: data.username,
+      email: data.email,
+      googleId: data.googleId ?? null,
+      passwordHash: null,
+      stripeCustomerId: null,
+      subscriptionStatus: "free",
+      subscriptionId: null,
+      completedLessons: [],
+      quizScores: {},
+      moduleSkillLevels: {},
+      moduleAssessmentScores: {},
+      lastLoginAt: null,
+      lastActiveAt: null,
+      loginCount: 0,
+      totalMinutesActive: 0,
+      xp: 0,
+    };
+    this.users.set(id, user);
+    return user;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {

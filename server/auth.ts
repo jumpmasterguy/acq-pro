@@ -1,5 +1,6 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import session from "express-session";
 import ConnectPgSimple from "connect-pg-simple";
 import bcrypt from "bcryptjs";
@@ -120,6 +121,44 @@ export async function setupAuth(app: Express): Promise<void> {
       }
     )
   );
+
+  // ── Google OAuth strategy ──────────────────────────────────────────────────
+  const googleClientId = process.env.GOOGLE_CLIENT_ID;
+  const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const appUrl = process.env.APP_URL || "http://localhost:5000";
+
+  if (googleClientId && googleClientSecret) {
+    passport.use(
+      new GoogleStrategy(
+        {
+          clientID: googleClientId,
+          clientSecret: googleClientSecret,
+          callbackURL: `${appUrl}/api/auth/google/callback`,
+          scope: ["profile", "email"],
+        },
+        async (_accessToken, _refreshToken, profile, done) => {
+          try {
+            const email = profile.emails?.[0]?.value;
+            if (!email) {
+              return done(null, false);
+            }
+            const username = profile.displayName || email.split("@")[0];
+            const user = await storage.upsertGoogleUser({
+              googleId: profile.id,
+              email,
+              username,
+            });
+            return done(null, toPassportUser(user));
+          } catch (err) {
+            return done(err as Error);
+          }
+        }
+      )
+    );
+    console.log("[auth] Google OAuth strategy registered");
+  } else {
+    console.warn("[auth] GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET not set — Google OAuth disabled");
+  }
 
   passport.serializeUser((user, done) => {
     done(null, user.id);

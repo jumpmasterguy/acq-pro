@@ -7,7 +7,8 @@ export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   username: text("username").notNull().unique(),
   email: text("email").notNull().unique(),
-  passwordHash: text("password_hash").notNull(),
+  passwordHash: text("password_hash"),  // null for Google OAuth users
+  googleId: text("google_id").unique(),  // null for local-auth users
   // Stripe
   stripeCustomerId: text("stripe_customer_id"),
   subscriptionStatus: text("subscription_status").notNull().default("free"), // 'free' | 'active' | 'lifetime'
@@ -33,7 +34,14 @@ export const insertUserSchema = createInsertSchema(users).pick({
   passwordHash: true,
 });
 
+export const insertGoogleUserSchema = createInsertSchema(users).pick({
+  username: true,
+  email: true,
+  googleId: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
+export type InsertGoogleUser = z.infer<typeof insertGoogleUserSchema>;
 export type User = typeof users.$inferSelect;
 
 // Registration schema (used in auth routes)
