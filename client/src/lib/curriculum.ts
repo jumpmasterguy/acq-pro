@@ -4181,9 +4181,127 @@ export const modules: Module[] = [
             ],
           },
           {
-            type: 'text' as const,
-            heading: 'IPMR Monthly Review Workflow',
-            body: 'Step 1 — Check Format 1 total contract CPI and VAC trend (5 min). Step 2 — Identify top 3 WBS elements by worst CV and SV (10 min). Step 3 — Read Format 5 narratives for all threshold variances (15 min). Step 4 — Check Format 3 for any baseline changes (5 min). Step 5 — Cross-reference Format 4 staffing to confirm headcount supports recovery plans (5 min). Step 6 — Compare Format 6 critical path to milestone plan (10 min). Total: approximately 50 minutes for a thorough review.',
+            type: 'expandable_list' as const,
+            heading: 'IPMR Monthly Review Workflow — 6-Step Process (~50 min)',
+            expandableItems: [
+              {
+                label: 'Step 1 — Check Overall Contract Health',
+                badge: '5 min',
+                badgeColor: 'blue' as const,
+                sublabel: 'Format 1: Total contract CPI and VAC trend',
+                summary: 'Start at the top — is the program over or under budget overall? Which direction is the trend moving?',
+                content: [
+                  {
+                    type: 'bullets' as const,
+                    heading: 'What to look for',
+                    items: [
+                      'CPI < 1.0: cost overrun — how far, how fast is it moving?',
+                      'VAC (negative): projected overrun at completion — is it growing each month?',
+                      'SPI < 1.0: behind schedule — note which months it started declining',
+                      'Red flag: CPI trending down 3+ months in a row = systemic problem, not a blip',
+                    ]
+                  }
+                ]
+              },
+              {
+                label: 'Step 2 — Identify the Worst WBS Elements',
+                badge: '10 min',
+                badgeColor: 'amber' as const,
+                sublabel: 'Format 1: Top 3 elements by worst Cost Variance (CV) and Schedule Variance (SV)',
+                summary: 'Drill past the summary — find the specific work packages bleeding cost and schedule.',
+                content: [
+                  {
+                    type: 'bullets' as const,
+                    heading: 'What to look for',
+                    items: [
+                      'Sort CV column: the largest negative CV numbers are your biggest overruns in dollars',
+                      'Sort SV column: the largest negative SV numbers are your most schedule-critical slips',
+                      'Note if the same WBS element appears in both CV and SV worst lists — that is a compounding problem',
+                      'Compare to last month: are the same elements getting worse, or are new ones appearing?',
+                      'Cross-check against Format 5: do these elements have variance narratives? If not, ask why.',
+                    ]
+                  }
+                ]
+              },
+              {
+                label: 'Step 3 — Read the Variance Narratives',
+                badge: '15 min',
+                badgeColor: 'red' as const,
+                sublabel: 'Format 5: Narratives for all threshold variances — the most important 15 minutes',
+                summary: 'Numbers tell you what happened. Narratives tell you why — and what the contractor plans to do about it.',
+                content: [
+                  {
+                    type: 'bullets' as const,
+                    heading: 'Quality checks for every narrative',
+                    items: [
+                      'Does the root cause actually explain the CV/SV? Vague causes ("resource constraints") are a red flag.',
+                      'Is there a specific, measurable corrective action with a named owner and due date?',
+                      'Does the corrective action realistically address the root cause?',
+                      'Mismatch check: does the narrative address the same WBS elements with the biggest variances in Format 1? Inconsistency = narratives written independently of the data.',
+                      'Track last month's corrective actions: did they produce improvement? If CPI did not move, the action was ineffective.',
+                    ]
+                  }
+                ]
+              },
+              {
+                label: 'Step 4 — Check for Baseline Changes',
+                badge: '5 min',
+                badgeColor: 'blue' as const,
+                sublabel: 'Format 3: Baseline Log — any unauthorized re-baselining?',
+                summary: 'Contractors sometimes hide cost overruns by re-baselining work packages. Catch it here.',
+                content: [
+                  {
+                    type: 'bullets' as const,
+                    heading: 'What to look for',
+                    items: [
+                      'Any new entries since last month? All changes require CO approval via formal contract modification.',
+                      'Budget transfers between WBS elements: legitimate re-planning or hiding overruns in other accounts?',
+                      'Management Reserve (MR) draws: how much MR remains? MR burn rate is a key program health indicator.',
+                      'Undistributed Budget (UB): large UB that's been sitting means work is not yet planned in detail — schedule risk.',
+                    ]
+                  }
+                ]
+              },
+              {
+                label: 'Step 5 — Validate Staffing vs. Recovery Plans',
+                badge: '5 min',
+                badgeColor: 'amber' as const,
+                sublabel: 'Format 4: Staffing — does headcount actually support the corrective actions in Format 5?',
+                summary: 'Contractors often commit to recovery plans that require staff they do not have. This is where you catch it.',
+                content: [
+                  {
+                    type: 'bullets' as const,
+                    heading: 'What to look for',
+                    items: [
+                      'Cross-reference: which WBS elements have negative SV in Format 1? Are those same elements fully staffed in Format 4?',
+                      'Understaffed + negative SV = schedule slip will continue regardless of recovery commitments',
+                      'Check key personnel: are the named experts from the proposal actually on the program?',
+                      'Headcount trending down while schedule is behind = problem getting worse, not better',
+                    ]
+                  }
+                ]
+              },
+              {
+                label: 'Step 6 — Check the Critical Path',
+                badge: '10 min',
+                badgeColor: 'blue' as const,
+                sublabel: 'Format 6: IMS — compare critical path to the milestone plan',
+                summary: 'If the critical path slips, the program end date slips. No exceptions.',
+                content: [
+                  {
+                    type: 'bullets' as const,
+                    heading: 'What to look for',
+                    items: [
+                      'Has the critical path changed since last month? New tasks appearing on the critical path = scope risk emerging',
+                      'Total float on near-critical tasks: anything under 10 days of float is effectively critical',
+                      'Are key milestones (CDR, PDR, IOT&E) still tracking to the APB schedule?',
+                      'Negative total float (tasks already late): how many, and are they on the path to a contract milestone?',
+                      'Compare to Format 5: are schedule slips on the critical path explained in the variance narratives?',
+                    ]
+                  }
+                ]
+              },
+            ]
           },
         {
           type: 'text' as const,
