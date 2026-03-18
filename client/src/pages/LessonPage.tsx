@@ -627,8 +627,8 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
         </div>
       )}
 
-      {/* Tab Navigation */}
-      <div className="flex border-b border-border">
+      {/* Tab Navigation — sticky so it stays visible while scrolling */}
+      <div className="sticky top-0 z-20 flex border-b border-border bg-background/95 backdrop-blur-sm -mx-4 px-4 lg:-mx-6 lg:px-6">
         {(['lesson', 'terms', 'quiz'] as Tab[]).map((tab) => {
           const labels: Record<Tab, string> = { lesson: 'Lesson', terms: `Key Terms (${lesson!.keyTerms.length})`, quiz: `Quiz (${lesson!.quiz.length}Q)` };
           return (
