@@ -891,6 +891,195 @@ export const modules: Module[] = [
             ],
           },
         ],
+      },
+
+      // ── LESSON 5: The Acquisition Lifecycle — Phases, Milestones & Key Documents ──
+      {
+        id: 'foundations-5',
+        title: 'The Acquisition Lifecycle: Phases, Milestones & Key Documents',
+        duration: '20 min',
+        description: 'Walk through every phase of the DoD Major Capability Acquisition (MCA) lifecycle — from pre-Milestone A through Operations & Support — and the key documents that gate each phase.',
+        keyTerms: [
+          { term: 'MSA', definition: 'Materiel Solution Analysis — the first formal acquisition phase, before Milestone A. The DoD explores alternative solutions to a validated capability need. Produces the AoA (Analysis of Alternatives).' },
+          { term: 'TMRR', definition: 'Technology Maturation and Risk Reduction — Phase entered after Milestone A. Goal: mature technology to TRL 6+ and reduce risk before committing to engineering development.' },
+          { term: 'EMD', definition: 'Engineering and Manufacturing Development — Phase entered after Milestone B. Full system design, build, and test to demonstrate producibility and operational effectiveness.' },
+          { term: 'ICD', definition: 'Initial Capabilities Document — the JCIDS document that identifies a capability gap and triggers the MSA phase. Must be validated by JROC for ACAT I programs before Milestone A.' },
+          { term: 'CDD', definition: 'Capability Development Document — the primary requirements document developed during TMRR. Defines Key Performance Parameters (KPPs) and drives the program through Milestone B.' },
+          { term: 'CPD', definition: 'Capability Production Document — the requirements document produced in EMD to support Milestone C. Defines production-specific requirements and acceptable performance thresholds.' },
+          { term: 'AoA', definition: 'Analysis of Alternatives — conducted during MSA to evaluate multiple materiel solutions against cost, schedule, performance, and risk criteria. Informs the Milestone A decision.' },
+          { term: 'MDD', definition: 'Materiel Development Decision — the entry decision into the acquisition process. Made before MSA begins, driven by an approved ICD. Assigns a potential MDA and begins the AoA.' },
+          { term: 'LRIP', definition: 'Low Rate Initial Production — limited production authorized at Milestone C, before Full Rate Production. Used to support IOT&E and initial fielding.' },
+          { term: 'IOT&E', definition: 'Initial Operational Test & Evaluation — operational testing conducted during LRIP to assess effectiveness and suitability before Full Rate Production is approved.' },
+        ],
+        content: [
+          {
+            type: 'text',
+            heading: 'Why the Lifecycle Matters',
+            body: 'The DoD acquisition lifecycle is the backbone of every Major Capability Acquisition (MCA) program. Each phase has a specific purpose, required activities, and exit criteria — and only when those criteria are met can a program advance to the next phase. Understanding this lifecycle tells you: what phase your program is in, what you should be doing right now, what documents are due, who approves your next step, and what the most common failure modes are at each gate. The lifecycle does not exist to create paperwork — it exists because programs that skip phases statistically cost more, take longer, and deliver less.'
+          },
+          {
+            type: 'table',
+            heading: 'The MCA Lifecycle at a Glance',
+            headers: ['Phase', 'Gate In / Gate Out', 'Primary Goal', 'Key Document'],
+            rows: [
+              ['Pre-MSA (Concept)', 'Trigger: Validated capability gap (ICD) → Materiel Development Decision (MDD)', 'Identify the need; decide if a materiel solution is warranted', 'ICD (Initial Capabilities Document)'],
+              ['MSA — Materiel Solution Analysis', 'MDD → Milestone A', 'Analyze alternative solutions; select preferred approach; assess feasibility', 'AoA (Analysis of Alternatives)'],
+              ['TMRR — Technology Maturation & Risk Reduction', 'Milestone A → Milestone B', 'Mature technology to TRL 6+; reduce technical risk; refine requirements', 'CDD (Capability Development Document)'],
+              ['EMD — Engineering & Manufacturing Development', 'Milestone B → Milestone C', 'Design, build, integrate, and test the system; demonstrate producibility', 'CPD (Capability Production Document)'],
+              ['P&D — Production & Deployment', 'Milestone C → FRP Decision', 'Begin LRIP; conduct IOT&E; build and field initial units', 'IOT&E Report'],
+              ['O&S — Operations & Support', 'FRP Decision → Disposal', 'Sustain the fielded system; manage life-cycle costs; plan eventual disposal', 'Life Cycle Sustainment Plan (LCSP)'],
+            ]
+          },
+          {
+            type: 'text',
+            heading: 'Phase 0: Before It All Starts — The ICD and MDD',
+            body: 'Before any acquisition phase formally begins, a warfighter capability gap must be identified and validated. The Joint Capabilities Integration and Development System (JCIDS) produces the Initial Capabilities Document (ICD), which describes the gap in military terms — not a solution. The ICD is staffed through the Joint Staff and validated by the JROC (or delegated FCB) for ACAT I programs. Once an ICD is validated, the MDA issues a Materiel Development Decision (MDD) — the formal decision that a materiel solution may be appropriate and that MSA should begin. The MDD assigns a potential MDA, directs initiation of the AoA, and starts the acquisition program clock.'
+          },
+          {
+            type: 'callout',
+            heading: 'MSA: What Happens Before Milestone A',
+            body: 'Materiel Solution Analysis (MSA) is the first formal acquisition phase. The goal is NOT to build anything — it is to figure out WHAT to build (or buy). The central product is the Analysis of Alternatives (AoA), which evaluates multiple candidate solutions against cost, schedule, performance, risk, and manufacturing criteria. The DoD does not want to commit to engineering development until it knows there is a viable, affordable solution space. MSA also refines the requirements from the ICD into a draft CDD (Capability Development Document). MSA culminates in Milestone A, where the MDA approves entry into TMRR — the first time real R&D money starts flowing.'
+          },
+          {
+            type: 'table',
+            heading: 'JCIDS Requirements Documents by Phase',
+            headers: ['Document', 'Full Name', 'Phase', 'Purpose'],
+            rows: [
+              ['ICD', 'Initial Capabilities Document', 'Pre-MSA', 'Identifies capability gap; validates need for a materiel solution; triggers MDD and MSA'],
+              ['CDD', 'Capability Development Document', 'TMRR (draft at Mil A; final at Mil B)', 'Defines Key Performance Parameters (KPPs), Key System Attributes (KSAs), and other performance requirements for the system to be developed'],
+              ['CPD', 'Capability Production Document', 'EMD (for Milestone C)', 'Defines production-specific requirements; operational performance thresholds for the production system; supports Milestone C decision'],
+            ]
+          },
+          {
+            type: 'text',
+            heading: 'TMRR: Milestone A Through Milestone B',
+            body: 'Technology Maturation and Risk Reduction (TMRR) begins after Milestone A is approved. The program\'s job in TMRR is to mature technology to at least Technology Readiness Level (TRL) 6 — meaning the technology has been demonstrated in a relevant environment, not just in a lab. TMRR contracts are typically Cost-Plus (CPFF or CPIF) because the technical risk is still high. The program refines and finalizes the Capability Development Document (CDD) with validated KPPs. TMRR ends at Milestone B, when the MDA is satisfied that the design is ready for full engineering development and that cost/schedule estimates are credible. Milestone B is the program\'s biggest commitment point — EMD contracts are typically large and expensive.'
+          },
+          {
+            type: 'tip',
+            heading: 'TRL 6: The Milestone A → B Bridge',
+            body: 'TRL (Technology Readiness Level) 6 means a prototype has been demonstrated in a relevant environment. Before TRL 6, you have laboratory demonstrations (TRL 4-5) but not field-relevant performance. The Milestone B gate requires TRL 6 as the minimum for most technologies in an ACAT I EMD program. Programs that enter EMD with TRL 4-5 technology consistently overrun cost and schedule as the immature technology forces expensive re-designs. USD(R&E) reviews technology maturity for all major programs at Milestone B.'
+          },
+          {
+            type: 'text',
+            heading: 'EMD: Milestone B Through Milestone C',
+            body: 'Engineering and Manufacturing Development (EMD) is where the system actually gets built and tested. After Milestone B, the PM awards the EMD contract (usually a cost-plus development contract with a target price). During EMD the contractor completes the system design (CDR — Critical Design Review), builds Engineering Development Models (EDMs), integrates hardware and software, and conducts Developmental Test & Evaluation (DT&E). The program must demonstrate that the system is producible and meets KPPs before Milestone C. The Capability Production Document (CPD) is finalized during EMD and submitted to support the Milestone C decision. EMD ends at Milestone C — the authorization to begin Low Rate Initial Production (LRIP).'
+          },
+          {
+            type: 'table',
+            heading: 'Key Technical Reviews Within EMD',
+            headers: ['Review', 'When', 'Purpose', 'Go/No-Go Criteria'],
+            rows: [
+              ['SFR — System Functional Review', 'Early EMD', 'Validate that functional requirements are complete and understood', 'Requirements baseline is complete and traceable'],
+              ['PDR — Preliminary Design Review', 'Mid-EMD', 'Baseline the preliminary design; validate it meets requirements', 'Design is stable enough to proceed to detailed design'],
+              ['CDR — Critical Design Review', 'Late EMD', 'Baseline the detailed design; validate producibility and testability', 'Design is mature enough to begin fabrication; TRL 7+'],
+              ['TRR — Test Readiness Review', 'Before DT&E', 'Confirm system and test environment are ready to test', 'Hardware/software ready; test procedures validated'],
+            ]
+          },
+          {
+            type: 'text',
+            heading: 'Production & Deployment: Milestone C Through FRP',
+            body: 'Milestone C authorizes Low Rate Initial Production (LRIP) — a limited number of units produced before full-rate is approved. The quantity is capped by statute to ensure LRIP doesn\'t become backdoor full-rate production. During LRIP, the Army/Navy/Air Force conducts Initial Operational Test & Evaluation (IOT&E) — realistic operational testing by independent testers (typically from the operational test agencies: ATEC, OPTEVFOR, ACC). IOT&E must be completed before a Full Rate Production (FRP) Decision can be made. The FRP decision is made by the MDA after reviewing the IOT&E report, and it authorizes full production ramp-up. For many programs (F-35, DDG-51, Abrams upgrades), the transition from LRIP to FRP is a multi-year, multi-billion dollar commitment.'
+          },
+          {
+            type: 'text',
+            heading: 'Operations & Support: The Longest (and Most Expensive) Phase',
+            body: 'Operations & Support (O&S) begins at Full Rate Production and continues until system disposal — which for many defense systems means 30-50+ years. Despite being the longest phase, O&S is often the most underfunded and understaffed during program planning. O&S costs typically represent 60-70% of a system\'s total life-cycle cost. The PM during O&S focuses on: reliability and maintainability (R&M) performance against the LCSP targets, diminishing manufacturing sources (DMS) for obsolete parts, software upgrades and cybersecurity patching, and planning for eventual demilitarization and disposal. A Life Cycle Sustainment Plan (LCSP) is required and must be updated throughout the program.'
+          },
+          {
+            type: 'callout',
+            heading: 'Why MSA Is the Most Important Phase You\'ve Never Heard Of',
+            body: 'Studies consistently show that the decisions made in MSA — specifically which solution is selected in the AoA — lock in 70-80% of a program\'s total life-cycle cost before a single dollar of EMD is spent. Yet MSA is typically the most poorly resourced phase, receiving a fraction of the attention given to EMD or production. If you are a PM in MSA, fight for resources: a rigorous AoA with realistic cost modeling and honest risk assessment is the single highest-value investment a program can make. Shortcuts in MSA become multi-billion-dollar cost overruns in EMD.'
+          },
+          {
+            type: 'table',
+            level: 'intermediate',
+            heading: 'Contract Strategy by Lifecycle Phase',
+            headers: ['Phase', 'Typical Contract Type', 'Rationale'],
+            rows: [
+              ['MSA', 'Cost-Plus Fixed Fee (CPFF) study contracts', 'High uncertainty; AoA studies; no defined deliverable system yet'],
+              ['TMRR', 'CPFF or Cost-Plus Incentive Fee (CPIF)', 'Technology still maturing; risk too high for firm-price; incentivize schedule/performance'],
+              ['EMD', 'CPIF or Cost-Plus Award Fee (CPAF)', 'Significant cost/schedule risk remains; award fee incentivizes performance quality'],
+              ['LRIP', 'Fixed-Price Incentive Firm (FPIF) — transitioning', 'Design is stable; shift risk to contractor; incentivize cost control as production ramps up'],
+              ['FRP', 'Firm Fixed Price (FFP) or multi-year FFP', 'Production is mature and repeatable; government should not absorb production cost risk'],
+            ]
+          },
+          {
+            type: 'text',
+            level: 'intermediate',
+            heading: 'The Milestone B Decision Package — What the MDA Reviews',
+            body: 'Milestone B is the most document-intensive milestone in the lifecycle. The program must provide: (1) the Acquisition Strategy, approved by MDA; (2) the finalized CDD, validated by JROC; (3) an Acquisition Program Baseline (APB) with cost, schedule, and performance thresholds; (4) an Independent Cost Estimate (ICE) from CAPE for ACAT I; (5) a Test & Evaluation Master Plan (TEMP) approved by DOT&E; (6) a Life Cycle Sustainment Plan (LCSP); (7) technology readiness assessment showing TRL 6+ for all critical technologies; and (8) the EMD contract strategy with risk mitigation plan. Any one of these missing or inadequate can delay or deny Milestone B. A PM should be building all eight of these 18-24 months before the scheduled Milestone B date.'
+          },
+          {
+            type: 'callout',
+            level: 'advanced',
+            heading: 'When Programs Enter the Wrong Phase at the Wrong Time',
+            body: 'The single most expensive error in DoD acquisition is entering EMD with immature technology. When a program crosses Milestone B with TRL 4-5 technology, the EMD contract becomes a de facto TMRR contract — at EMD prices. RAND studies have shown programs that enter EMD below TRL 6 overrun by an average of 40% and slip schedule by 2+ years. The institutional pressure to advance programs (service urgency, Congressional interest, contractor lobbying, career incentives) consistently pushes MDAs to approve Milestone B before programs are ready. As a senior PM or MDA advisor, your job is to provide honest TRL and design maturity assessments even when that recommendation is inconvenient. The Milestone review exists precisely for this gate.'
+          },
+        ],
+        quiz: [
+          {
+            id: 'q1',
+            question: 'The DoD acquisition lifecycle formally begins with which phase before Milestone A?',
+            options: ['Engineering & Manufacturing Development (EMD)', 'Materiel Solution Analysis (MSA)', 'Operations & Support (O&S)', 'Technology Maturation & Risk Reduction (TMRR)'],
+            correct: 1,
+            explanation: 'MSA (Materiel Solution Analysis) is the first formal acquisition phase. It begins after the Materiel Development Decision (MDD) and ends at Milestone A. Its primary product is the Analysis of Alternatives (AoA), which evaluates multiple candidate solutions before committing to a specific approach.'
+          },
+          {
+            id: 'q2',
+            question: 'What is the primary product of the Materiel Solution Analysis (MSA) phase?',
+            options: ['Capability Production Document (CPD)', 'Initial Capabilities Document (ICD)', 'Analysis of Alternatives (AoA)', 'Test & Evaluation Master Plan (TEMP)'],
+            correct: 2,
+            explanation: 'The Analysis of Alternatives (AoA) is the central product of MSA. It evaluates multiple candidate materiel solutions against cost, schedule, performance, risk, and supportability criteria to inform the Milestone A decision on which approach to pursue.'
+          },
+          {
+            id: 'q3',
+            question: 'Which JCIDS document identifies the capability gap that triggers the Materiel Development Decision and initiates MSA?',
+            options: ['Capability Development Document (CDD)', 'Initial Capabilities Document (ICD)', 'Capability Production Document (CPD)', 'Acquisition Program Baseline (APB)'],
+            correct: 1,
+            explanation: 'The ICD (Initial Capabilities Document) identifies the validated capability gap in warfighter terms — not a solution. Once validated by the JROC for ACAT I programs, it triggers the MDD and starts the MSA phase.'
+          },
+          {
+            id: 'q4',
+            question: 'Which requirements document is finalized during TMRR and is the primary basis for the Milestone B decision?',
+            options: ['Initial Capabilities Document (ICD)', 'Capability Production Document (CPD)', 'Capability Development Document (CDD)', 'Life Cycle Sustainment Plan (LCSP)'],
+            correct: 2,
+            explanation: 'The CDD (Capability Development Document) defines the Key Performance Parameters (KPPs) and system requirements for the program. It is drafted during MSA, refined during TMRR, and must be JROC-validated before Milestone B for ACAT I programs.'
+          },
+          {
+            id: 'q5',
+            question: 'Low Rate Initial Production (LRIP) is authorized at which milestone?',
+            options: ['Milestone A', 'Milestone B', 'Milestone C', 'Full Rate Production Decision'],
+            correct: 2,
+            explanation: 'Milestone C authorizes entry into Production & Deployment, including LRIP. LRIP produces a limited number of units to support IOT&E and initial fielding before Full Rate Production is approved. The FRP decision follows successful IOT&E.'
+          },
+          {
+            id: 'q6',
+            question: 'A program with technology at TRL 4 (validated in lab environment only) is approaching Milestone B. What is the risk?',
+            options: ['No risk — TRL 4 is sufficient for Milestone B', 'Moderate risk — acceptable with a waiver from Congress', 'High risk — programs entering EMD below TRL 6 statistically overrun cost and schedule significantly', 'Low risk — the contractor will mature the technology during EMD at no additional cost'],
+            correct: 2,
+            explanation: 'Milestone B requires TRL 6 (prototype demonstrated in relevant environment) as the minimum for ACAT I programs. Programs that enter EMD with TRL 4-5 technology turn EMD into a de facto TMRR contract at EMD prices, leading to average cost overruns of 40%+ and 2+ year schedule slips per RAND studies.'
+          },
+          {
+            id: 'q7',
+            question: 'Which phase of the acquisition lifecycle is responsible for the majority of a system\'s total life-cycle cost?',
+            options: ['MSA (Materiel Solution Analysis)', 'EMD (Engineering & Manufacturing Development)', 'O&S (Operations & Support)', 'TMRR (Technology Maturation & Risk Reduction)'],
+            correct: 2,
+            explanation: 'Operations & Support (O&S) typically represents 60-70% of a defense system\'s total life-cycle cost, spanning 30-50+ years for major platforms. This is why Life Cycle Sustainment Plans (LCSPs) and reliability/maintainability requirements are critical to establish early in the program.'
+          },
+          {
+            id: 'q8',
+            question: 'What is the correct sequence of lifecycle phases for a Major Capability Acquisition program?',
+            options: [
+              'MSA → EMD → TMRR → Production → O&S',
+              'TMRR → MSA → EMD → Production → O&S',
+              'MSA → TMRR → EMD → Production → O&S',
+              'EMD → MSA → TMRR → Production → O&S'
+            ],
+            correct: 2,
+            explanation: 'The correct MCA lifecycle sequence is: MSA (before Milestone A) → TMRR (Milestone A to B) → EMD (Milestone B to C) → Production & Deployment (Milestone C to FRP Decision) → Operations & Support (FRP to Disposal). Each phase is entered only after the preceding milestone is approved.'
+          },
+        ],
       }
     ],
     assessment: [
