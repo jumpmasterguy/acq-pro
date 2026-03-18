@@ -22,6 +22,8 @@ declare global {
       subscriptionId: string | null;
       completedLessons: string[];
       quizScores: Record<string, number>;
+      moduleSkillLevels: Record<string, string>;
+      moduleAssessmentScores: Record<string, number>;
     }
   }
 }
@@ -144,6 +146,8 @@ export function toPassportUser(user: User): Express.User {
     subscriptionId: user.subscriptionId,
     completedLessons: user.completedLessons ?? [],
     quizScores: (user.quizScores as Record<string, number>) ?? {},
+    moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
+    moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
   };
 }
 

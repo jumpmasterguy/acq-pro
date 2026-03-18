@@ -64,6 +64,9 @@ export async function registerRoutes(
         subscriptionStatus: user.subscriptionStatus,
         completedLessons: user.completedLessons ?? [],
         quizScores: user.quizScores ?? {},
+        isAdmin: isAdmin(req),
+        moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
+        moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
       });
     });
   });
