@@ -97,6 +97,279 @@ export const modules: Module[] = [
     free: true,
     lessons: [
       {
+        id: 'foundations-5',
+        title: 'The Acquisition Lifecycle: Phases, Milestones & Key Documents',
+        duration: '20 min',
+        description: 'Walk through every phase of the DoD Major Capability Acquisition (MCA) lifecycle — from pre-Milestone A through Operations & Support — and the key documents that gate each phase.',
+        keyTerms: [
+          { term: 'MSA', definition: 'Materiel Solution Analysis — the first formal acquisition phase, before Milestone A. The DoD explores alternative solutions to a validated capability need. Produces the AoA (Analysis of Alternatives).' },
+          { term: 'TMRR', definition: 'Technology Maturation and Risk Reduction — Phase entered after Milestone A. Goal: mature technology to TRL 6+ and reduce risk before committing to engineering development.' },
+          { term: 'EMD', definition: 'Engineering and Manufacturing Development — Phase entered after Milestone B. Full system design, build, and test to demonstrate producibility and operational effectiveness.' },
+          { term: 'ICD', definition: 'Initial Capabilities Document — the JCIDS document that identifies a capability gap and triggers the MSA phase. Must be validated by JROC for ACAT I programs before Milestone A.' },
+          { term: 'CDD', definition: 'Capability Development Document — the primary requirements document developed during TMRR. Defines Key Performance Parameters (KPPs) and drives the program through Milestone B.' },
+          { term: 'CPD', definition: 'Capability Production Document — the requirements document produced in EMD to support Milestone C. Defines production-specific requirements and acceptable performance thresholds.' },
+          { term: 'AoA', definition: 'Analysis of Alternatives — conducted during MSA to evaluate multiple materiel solutions against cost, schedule, performance, and risk criteria. Informs the Milestone A decision.' },
+          { term: 'MDD', definition: 'Materiel Development Decision — the entry decision into the acquisition process. Made before MSA begins, driven by an approved ICD. Assigns a potential MDA and begins the AoA.' },
+          { term: 'LRIP', definition: 'Low Rate Initial Production — limited production authorized at Milestone C, before Full Rate Production. Used to support IOT&E and initial fielding.' },
+          { term: 'IOT&E', definition: 'Initial Operational Test & Evaluation — operational testing conducted during LRIP to assess effectiveness and suitability before Full Rate Production is approved.' },
+        ],
+        content: [
+          {
+            type: 'text',
+            heading: 'Why the Lifecycle Matters',
+            body: 'The DoD acquisition lifecycle is the backbone of every Major Capability Acquisition (MCA) program. Each phase has a specific purpose, required activities, and exit criteria — and only when those criteria are met can a program advance to the next phase. Understanding this lifecycle tells you: what phase your program is in, what you should be doing right now, what documents are due, who approves your next step, and what the most common failure modes are at each gate. The lifecycle does not exist to create paperwork — it exists because programs that skip phases statistically cost more, take longer, and deliver less.'
+          },
+          {
+            type: 'table',
+            heading: 'The MCA Lifecycle at a Glance',
+            headers: ['Phase', 'Gate In / Gate Out', 'Primary Goal', 'Key Document'],
+            rows: [
+              ['Pre-MSA (Concept)', 'Trigger: Validated capability gap (ICD) → Materiel Development Decision (MDD)', 'Identify the need; decide if a materiel solution is warranted', 'ICD (Initial Capabilities Document)'],
+              ['MSA — Materiel Solution Analysis', 'MDD → Milestone A', 'Analyze alternative solutions; select preferred approach; assess feasibility', 'AoA (Analysis of Alternatives)'],
+              ['TMRR — Technology Maturation & Risk Reduction', 'Milestone A → Milestone B', 'Mature technology to TRL 6+; reduce technical risk; refine requirements', 'CDD (Capability Development Document)'],
+              ['EMD — Engineering & Manufacturing Development', 'Milestone B → Milestone C', 'Design, build, integrate, and test the system; demonstrate producibility', 'CPD (Capability Production Document)'],
+              ['P&D — Production & Deployment', 'Milestone C → FRP Decision', 'Begin LRIP; conduct IOT&E; build and field initial units', 'IOT&E Report'],
+              ['O&S — Operations & Support', 'FRP Decision → Disposal', 'Sustain the fielded system; manage life-cycle costs; plan eventual disposal', 'Life Cycle Sustainment Plan (LCSP)'],
+            ]
+          },
+          {
+            type: 'text',
+            heading: 'Phase 0: Before It All Starts — The ICD and MDD',
+            body: 'Before any acquisition phase formally begins, a warfighter capability gap must be identified and validated. The Joint Capabilities Integration and Development System (JCIDS) produces the Initial Capabilities Document (ICD), which describes the gap in military terms — not a solution. The ICD is staffed through the Joint Staff and validated by the JROC (or delegated FCB) for ACAT I programs. Once an ICD is validated, the MDA issues a Materiel Development Decision (MDD) — the formal decision that a materiel solution may be appropriate and that MSA should begin. The MDD assigns a potential MDA, directs initiation of the AoA, and starts the acquisition program clock.'
+          },
+          {
+            type: 'callout',
+            heading: 'MSA: What Happens Before Milestone A',
+            body: 'Materiel Solution Analysis (MSA) is the first formal acquisition phase. The goal is NOT to build anything — it is to figure out WHAT to build (or buy). The central product is the Analysis of Alternatives (AoA), which evaluates multiple candidate solutions against cost, schedule, performance, risk, and manufacturing criteria. The DoD does not want to commit to engineering development until it knows there is a viable, affordable solution space. MSA also refines the requirements from the ICD into a draft CDD (Capability Development Document). MSA culminates in Milestone A, where the MDA approves entry into TMRR — the first time real R&D money starts flowing.'
+          },
+          {
+            type: 'table',
+            heading: 'JCIDS Requirements Documents by Phase',
+            headers: ['Document', 'Full Name', 'Phase', 'Purpose'],
+            rows: [
+              ['ICD', 'Initial Capabilities Document', 'Pre-MSA', 'Identifies capability gap; validates need for a materiel solution; triggers MDD and MSA'],
+              ['CDD', 'Capability Development Document', 'TMRR (draft at Mil A; final at Mil B)', 'Defines Key Performance Parameters (KPPs), Key System Attributes (KSAs), and other performance requirements for the system to be developed'],
+              ['CPD', 'Capability Production Document', 'EMD (for Milestone C)', 'Defines production-specific requirements; operational performance thresholds for the production system; supports Milestone C decision'],
+            ]
+          },
+          {
+            type: 'text',
+            heading: 'TMRR: Milestone A Through Milestone B',
+            body: 'Technology Maturation and Risk Reduction (TMRR) begins after Milestone A is approved. The program\'s job in TMRR is to mature technology to at least Technology Readiness Level (TRL) 6 — meaning the technology has been demonstrated in a relevant environment, not just in a lab. TMRR contracts are typically Cost-Plus (CPFF or CPIF) because the technical risk is still high. The program refines and finalizes the Capability Development Document (CDD) with validated KPPs. TMRR ends at Milestone B, when the MDA is satisfied that the design is ready for full engineering development and that cost/schedule estimates are credible. Milestone B is the program\'s biggest commitment point — EMD contracts are typically large and expensive.'
+          },
+          {
+            type: 'tip',
+            heading: 'TRL 6: The Milestone A → B Bridge',
+            body: 'TRL (Technology Readiness Level) 6 means a prototype has been demonstrated in a relevant environment. Before TRL 6, you have laboratory demonstrations (TRL 4-5) but not field-relevant performance. The Milestone B gate requires TRL 6 as the minimum for most technologies in an ACAT I EMD program. Programs that enter EMD with TRL 4-5 technology consistently overrun cost and schedule as the immature technology forces expensive re-designs. USD(R&E) reviews technology maturity for all major programs at Milestone B.'
+          },
+          {
+            type: 'text',
+            heading: 'EMD: Milestone B Through Milestone C',
+            body: 'Engineering and Manufacturing Development (EMD) is where the system actually gets built and tested. After Milestone B, the PM awards the EMD contract (usually a cost-plus development contract with a target price). During EMD the contractor completes the system design (CDR — Critical Design Review), builds Engineering Development Models (EDMs), integrates hardware and software, and conducts Developmental Test & Evaluation (DT&E). The program must demonstrate that the system is producible and meets KPPs before Milestone C. The Capability Production Document (CPD) is finalized during EMD and submitted to support the Milestone C decision. EMD ends at Milestone C — the authorization to begin Low Rate Initial Production (LRIP).'
+          },
+          {
+            type: 'table',
+            heading: 'Key Technical Reviews Within EMD',
+            headers: ['Review', 'When', 'Purpose', 'Go/No-Go Criteria'],
+            rows: [
+              ['SFR — System Functional Review', 'Early EMD', 'Validate that functional requirements are complete and understood', 'Requirements baseline is complete and traceable'],
+              ['PDR — Preliminary Design Review', 'Mid-EMD', 'Baseline the preliminary design; validate it meets requirements', 'Design is stable enough to proceed to detailed design'],
+              ['CDR — Critical Design Review', 'Late EMD', 'Baseline the detailed design; validate producibility and testability', 'Design is mature enough to begin fabrication; TRL 7+'],
+              ['TRR — Test Readiness Review', 'Before DT&E', 'Confirm system and test environment are ready to test', 'Hardware/software ready; test procedures validated'],
+            ]
+          },
+          {
+            type: 'text',
+            heading: 'Production & Deployment: Milestone C Through FRP',
+            body: 'Milestone C authorizes Low Rate Initial Production (LRIP) — a limited number of units produced before full-rate is approved. The quantity is capped by statute to ensure LRIP doesn\'t become backdoor full-rate production. During LRIP, the Army/Navy/Air Force conducts Initial Operational Test & Evaluation (IOT&E) — realistic operational testing by independent testers (typically from the operational test agencies: ATEC, OPTEVFOR, ACC). IOT&E must be completed before a Full Rate Production (FRP) Decision can be made. The FRP decision is made by the MDA after reviewing the IOT&E report, and it authorizes full production ramp-up. For many programs (F-35, DDG-51, Abrams upgrades), the transition from LRIP to FRP is a multi-year, multi-billion dollar commitment.'
+          },
+          {
+            type: 'text',
+            heading: 'Operations & Support: The Longest (and Most Expensive) Phase',
+            body: 'Operations & Support (O&S) begins at Full Rate Production and continues until system disposal — which for many defense systems means 30-50+ years. Despite being the longest phase, O&S is often the most underfunded and understaffed during program planning. O&S costs typically represent 60-70% of a system\'s total life-cycle cost. The PM during O&S focuses on: reliability and maintainability (R&M) performance against the LCSP targets, diminishing manufacturing sources (DMS) for obsolete parts, software upgrades and cybersecurity patching, and planning for eventual demilitarization and disposal. A Life Cycle Sustainment Plan (LCSP) is required and must be updated throughout the program.'
+          },
+          {
+            type: 'callout',
+            heading: 'Why MSA Is the Most Important Phase You\'ve Never Heard Of',
+            body: 'Studies consistently show that the decisions made in MSA — specifically which solution is selected in the AoA — lock in 70-80% of a program\'s total life-cycle cost before a single dollar of EMD is spent. Yet MSA is typically the most poorly resourced phase, receiving a fraction of the attention given to EMD or production. If you are a PM in MSA, fight for resources: a rigorous AoA with realistic cost modeling and honest risk assessment is the single highest-value investment a program can make. Shortcuts in MSA become multi-billion-dollar cost overruns in EMD.'
+          },
+          {
+            type: 'table',
+            level: 'intermediate',
+            heading: 'Contract Strategy by Lifecycle Phase',
+            headers: ['Phase', 'Typical Contract Type', 'Rationale'],
+            rows: [
+              ['MSA', 'Cost-Plus Fixed Fee (CPFF) study contracts', 'High uncertainty; AoA studies; no defined deliverable system yet'],
+              ['TMRR', 'CPFF or Cost-Plus Incentive Fee (CPIF)', 'Technology still maturing; risk too high for firm-price; incentivize schedule/performance'],
+              ['EMD', 'CPIF or Cost-Plus Award Fee (CPAF)', 'Significant cost/schedule risk remains; award fee incentivizes performance quality'],
+              ['LRIP', 'Fixed-Price Incentive Firm (FPIF) — transitioning', 'Design is stable; shift risk to contractor; incentivize cost control as production ramps up'],
+              ['FRP', 'Firm Fixed Price (FFP) or multi-year FFP', 'Production is mature and repeatable; government should not absorb production cost risk'],
+            ]
+          },
+          {
+            type: 'text',
+            level: 'intermediate',
+            heading: 'The Milestone B Decision Package — What the MDA Reviews',
+            body: 'Milestone B is the most document-intensive milestone in the lifecycle. The program must provide: (1) the Acquisition Strategy, approved by MDA; (2) the finalized CDD, validated by JROC; (3) an Acquisition Program Baseline (APB) with cost, schedule, and performance thresholds; (4) an Independent Cost Estimate (ICE) from CAPE for ACAT I; (5) a Test & Evaluation Master Plan (TEMP) approved by DOT&E; (6) a Life Cycle Sustainment Plan (LCSP); (7) technology readiness assessment showing TRL 6+ for all critical technologies; and (8) the EMD contract strategy with risk mitigation plan. Any one of these missing or inadequate can delay or deny Milestone B. A PM should be building all eight of these 18-24 months before the scheduled Milestone B date.'
+          },
+          {
+            type: 'callout',
+            level: 'advanced',
+            heading: 'When Programs Enter the Wrong Phase at the Wrong Time',
+            body: 'The single most expensive error in DoD acquisition is entering EMD with immature technology. When a program crosses Milestone B with TRL 4-5 technology, the EMD contract becomes a de facto TMRR contract — at EMD prices. RAND studies have shown programs that enter EMD below TRL 6 overrun by an average of 40% and slip schedule by 2+ years. The institutional pressure to advance programs (service urgency, Congressional interest, contractor lobbying, career incentives) consistently pushes MDAs to approve Milestone B before programs are ready. As a senior PM or MDA advisor, your job is to provide honest TRL and design maturity assessments even when that recommendation is inconvenient. The Milestone review exists precisely for this gate.'
+          },
+        ],
+        quiz: [
+          {
+            id: 'q1',
+            question: 'The DoD acquisition lifecycle formally begins with which phase before Milestone A?',
+            options: ['Engineering & Manufacturing Development (EMD)', 'Materiel Solution Analysis (MSA)', 'Operations & Support (O&S)', 'Technology Maturation & Risk Reduction (TMRR)'],
+            correct: 1,
+            explanation: 'MSA (Materiel Solution Analysis) is the first formal acquisition phase. It begins after the Materiel Development Decision (MDD) and ends at Milestone A. Its primary product is the Analysis of Alternatives (AoA), which evaluates multiple candidate solutions before committing to a specific approach.'
+          },
+          {
+            id: 'q2',
+            question: 'What is the primary product of the Materiel Solution Analysis (MSA) phase?',
+            options: ['Capability Production Document (CPD)', 'Initial Capabilities Document (ICD)', 'Analysis of Alternatives (AoA)', 'Test & Evaluation Master Plan (TEMP)'],
+            correct: 2,
+            explanation: 'The Analysis of Alternatives (AoA) is the central product of MSA. It evaluates multiple candidate materiel solutions against cost, schedule, performance, risk, and supportability criteria to inform the Milestone A decision on which approach to pursue.'
+          },
+          {
+            id: 'q3',
+            question: 'Which JCIDS document identifies the capability gap that triggers the Materiel Development Decision and initiates MSA?',
+            options: ['Capability Development Document (CDD)', 'Initial Capabilities Document (ICD)', 'Capability Production Document (CPD)', 'Acquisition Program Baseline (APB)'],
+            correct: 1,
+            explanation: 'The ICD (Initial Capabilities Document) identifies the validated capability gap in warfighter terms — not a solution. Once validated by the JROC for ACAT I programs, it triggers the MDD and starts the MSA phase.'
+          },
+          {
+            id: 'q4',
+            question: 'Which requirements document is finalized during TMRR and is the primary basis for the Milestone B decision?',
+            options: ['Initial Capabilities Document (ICD)', 'Capability Production Document (CPD)', 'Capability Development Document (CDD)', 'Life Cycle Sustainment Plan (LCSP)'],
+            correct: 2,
+            explanation: 'The CDD (Capability Development Document) defines the Key Performance Parameters (KPPs) and system requirements for the program. It is drafted during MSA, refined during TMRR, and must be JROC-validated before Milestone B for ACAT I programs.'
+          },
+          {
+            id: 'q5',
+            question: 'Low Rate Initial Production (LRIP) is authorized at which milestone?',
+            options: ['Milestone A', 'Milestone B', 'Milestone C', 'Full Rate Production Decision'],
+            correct: 2,
+            explanation: 'Milestone C authorizes entry into Production & Deployment, including LRIP. LRIP produces a limited number of units to support IOT&E and initial fielding before Full Rate Production is approved. The FRP decision follows successful IOT&E.'
+          },
+          {
+            id: 'q6',
+            question: 'A program with technology at TRL 4 (validated in lab environment only) is approaching Milestone B. What is the risk?',
+            options: ['No risk — TRL 4 is sufficient for Milestone B', 'Moderate risk — acceptable with a waiver from Congress', 'High risk — programs entering EMD below TRL 6 statistically overrun cost and schedule significantly', 'Low risk — the contractor will mature the technology during EMD at no additional cost'],
+            correct: 2,
+            explanation: 'Milestone B requires TRL 6 (prototype demonstrated in relevant environment) as the minimum for ACAT I programs. Programs that enter EMD with TRL 4-5 technology turn EMD into a de facto TMRR contract at EMD prices, leading to average cost overruns of 40%+ and 2+ year schedule slips per RAND studies.'
+          },
+          {
+            id: 'q7',
+            question: 'Which phase of the acquisition lifecycle is responsible for the majority of a system\'s total life-cycle cost?',
+            options: ['MSA (Materiel Solution Analysis)', 'EMD (Engineering & Manufacturing Development)', 'O&S (Operations & Support)', 'TMRR (Technology Maturation & Risk Reduction)'],
+            correct: 2,
+            explanation: 'Operations & Support (O&S) typically represents 60-70% of a defense system\'s total life-cycle cost, spanning 30-50+ years for major platforms. This is why Life Cycle Sustainment Plans (LCSPs) and reliability/maintainability requirements are critical to establish early in the program.'
+          },
+          {
+            id: 'q8',
+            question: 'What is the correct sequence of lifecycle phases for a Major Capability Acquisition program?',
+            options: [
+              'MSA → EMD → TMRR → Production → O&S',
+              'TMRR → MSA → EMD → Production → O&S',
+              'MSA → TMRR → EMD → Production → O&S',
+              'EMD → MSA → TMRR → Production → O&S'
+            ],
+            correct: 2,
+            explanation: 'The correct MCA lifecycle sequence is: MSA (before Milestone A) → TMRR (Milestone A to B) → EMD (Milestone B to C) → Production & Deployment (Milestone C to FRP Decision) → Operations & Support (FRP to Disposal). Each phase is entered only after the preceding milestone is approved.'
+          },
+        ],
+      }
+    ],
+    assessment: [
+      {
+        id: 'a1',
+        question: "The DoD 5000 series acquisition lifecycle begins at which phase before Milestone A?",
+        options: ['Engineering & Manufacturing Development', 'Materiel Solution Analysis (MSA)', 'Operations & Support', 'Production & Deployment'],
+        correct: 1,
+        explanation: "The MSA phase precedes Milestone A and is where the DoD explores alternative materiel solutions to meet a validated need. It culminates in a Milestone A decision to begin Technology Maturation & Risk Reduction (TMRR)."
+      },
+      {
+        id: 'a2',
+        question: "Which document formally captures validated operational requirements and drives the acquisition program?",
+        options: ['Acquisition Program Baseline (APB)', 'Initial Capabilities Document (ICD)', 'Capability Development Document (CDD)', 'Test & Evaluation Master Plan (TEMP)'],
+        correct: 2,
+        explanation: "The CDD (Capability Development Document) is the primary requirements document that drives the acquisition program through Milestone B. It defines Key Performance Parameters (KPPs), Key System Attributes (KSAs), and other system-level requirements validated through the JCIDS process."
+      },
+      {
+        id: 'a3',
+        question: "ACAT I programs are characterized by which threshold (as of current DoD policy)?",
+        options: ['RDT&E > $100M or Procurement > $500M', 'RDT&E > $480M or Procurement > $2.79B', 'RDT&E > $185M or Procurement > $835M', 'Any program designated by the Secretary of Defense only'],
+        correct: 1,
+        explanation: "ACAT I (MDAPs) meet the threshold of RDT&E costs exceeding $480M or procurement costs exceeding $2.79B (FY2020 constant dollars), OR are designated by the USD(A&S) due to special interest. ACAT II uses the $185M/$835M thresholds."
+      },
+      {
+        id: 'a4',
+        question: "The Milestone Decision Authority (MDA) for ACAT IC programs is:",
+        options: ['USD(A&S)', 'Component Acquisition Executive (CAE)', 'Program Executive Officer (PEO)', 'Deputy Secretary of Defense'],
+        correct: 1,
+        explanation: "For ACAT IC programs, the MDA is the Component Acquisition Executive (CAE) — e.g., ASA(ALT) for Army, ASN(RDA) for Navy, SAF/AQ for Air Force. The USD(A&S) serves as MDA for ACAT ID programs (the highest tier)."
+      },
+      {
+        id: 'a5',
+        question: "The Pathways Recent Graduates Program entry-level positions are typically at what GS grade range?",
+        options: ['GS-5 to GS-7', 'GS-7 to GS-9', 'GS-9 to GS-12', 'GS-12 to GS-13'],
+        correct: 1,
+        explanation: "Pathways Recent Graduates positions typically start at GS-7 to GS-9 for candidates within two years of earning a degree. The program provides structured training, mentorship, and a clear pathway to full career positions."
+      },
+      {
+        id: 'a6',
+        question: "Which acquisition strategy element is tailored by the MDA to adjust DoDI 5000 policy requirements for a specific program?",
+        options: ['Nunn-McCurdy certification', 'Acquisition Program Baseline', 'Tailoring plan documented in the Acquisition Strategy', 'Selected Acquisition Report (SAR)'],
+        correct: 2,
+        explanation: "Tailoring is documented in the Acquisition Strategy and requires MDA approval. It allows the program to adjust (but not eliminate) DoDI 5000 policy requirements to match program complexity and risk. Statutory requirements (e.g., SAR, Nunn-McCurdy, ICE for ACAT I) cannot be tailored away."
+      },
+      {
+        id: 'a7',
+        question: "An Other Transaction Authority (OTA) agreement differs from a FAR-based contract primarily because:",
+        options: ['It is only available to ACAT III programs', 'It is exempt from FAR, DFARS, and CAS — terms are fully negotiated', 'It requires certified cost or pricing data from all parties', 'It limits competition to small businesses only'],
+        correct: 1,
+        explanation: "OTAs are explicitly excluded from the FAR and DFARS. They are authorized under 10 U.S.C. §§ 4021-4022 for prototype and follow-on production projects. This makes them powerful for engaging non-traditional defense contractors and companies that will not accept standard FAR clauses."
+      },
+      {
+        id: 'a8',
+        question: "A FAR Part 12 commercial item contract does NOT require:",
+        options: ['A written contract', 'Competition where practicable', 'Certified cost or pricing data under TINA', 'A period of performance'],
+        correct: 2,
+        explanation: "FAR Part 12 commercial item contracts are explicitly exempt from the Truth in Negotiations Act (TINA) — no certified cost or pricing data is required. The rationale is that commercial market pricing is self-regulating and government-unique cost analysis requirements would deter commercial vendors."
+      },
+      {
+        id: 'a9',
+        question: "What is the maximum dollar threshold for Simplified Acquisition Procedures (SAP) under the FAR?",
+        options: ['$10,000', '$100,000', '$250,000', '$500,000'],
+        correct: 2,
+        explanation: "FAR Subpart 13 Simplified Acquisition Procedures apply to acquisitions at or below the Simplified Acquisition Threshold (SAT) of $250,000. Below SAT, the contracting officer can use streamlined procedures (request for quotes, three quotes minimum, simplified documentation) instead of full and open competition requirements."
+      },
+      {
+        id: 'a10',
+        question: "The JCIDS process validates requirements at what authority level before an ACAT I program can proceed to Milestone A?",
+        options: ['Program Manager', 'Program Executive Officer (PEO)', 'Joint Requirements Oversight Council (JROC) or delegated FCB', 'Component Acquisition Executive'],
+        correct: 2,
+        explanation: "For ACAT I programs, the Joint Requirements Oversight Council (JROC) — or a delegated Functional Capabilities Board (FCB) — must validate the Initial Capabilities Document (ICD) before Milestone A. The JROC is chaired by the Vice Chairman of the Joint Chiefs of Staff and ensures requirements are joint and prioritized across all services."
+      },
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // MODULE 2 — FINANCE
+  // ─────────────────────────────────────────────────────────────
+  {
+    id: 'finance',
+    title: 'Defense Finance & Budgeting',
+    subtitle: 'Module 2',
+    icon: '💰',
+    color: 'gold',
+    description: 'Master the PPBE cycle, appropriations law, EVM, and financial management fundamentals that every PM must know.',
+    lessons: [
+      {
         id: 'foundations-1',
         title: 'The DoD Acquisition System Overview',
         duration: '12 min',
@@ -895,279 +1168,6 @@ export const modules: Module[] = [
 
       // ── LESSON 5: The Acquisition Lifecycle — Phases, Milestones & Key Documents ──
       {
-        id: 'foundations-5',
-        title: 'The Acquisition Lifecycle: Phases, Milestones & Key Documents',
-        duration: '20 min',
-        description: 'Walk through every phase of the DoD Major Capability Acquisition (MCA) lifecycle — from pre-Milestone A through Operations & Support — and the key documents that gate each phase.',
-        keyTerms: [
-          { term: 'MSA', definition: 'Materiel Solution Analysis — the first formal acquisition phase, before Milestone A. The DoD explores alternative solutions to a validated capability need. Produces the AoA (Analysis of Alternatives).' },
-          { term: 'TMRR', definition: 'Technology Maturation and Risk Reduction — Phase entered after Milestone A. Goal: mature technology to TRL 6+ and reduce risk before committing to engineering development.' },
-          { term: 'EMD', definition: 'Engineering and Manufacturing Development — Phase entered after Milestone B. Full system design, build, and test to demonstrate producibility and operational effectiveness.' },
-          { term: 'ICD', definition: 'Initial Capabilities Document — the JCIDS document that identifies a capability gap and triggers the MSA phase. Must be validated by JROC for ACAT I programs before Milestone A.' },
-          { term: 'CDD', definition: 'Capability Development Document — the primary requirements document developed during TMRR. Defines Key Performance Parameters (KPPs) and drives the program through Milestone B.' },
-          { term: 'CPD', definition: 'Capability Production Document — the requirements document produced in EMD to support Milestone C. Defines production-specific requirements and acceptable performance thresholds.' },
-          { term: 'AoA', definition: 'Analysis of Alternatives — conducted during MSA to evaluate multiple materiel solutions against cost, schedule, performance, and risk criteria. Informs the Milestone A decision.' },
-          { term: 'MDD', definition: 'Materiel Development Decision — the entry decision into the acquisition process. Made before MSA begins, driven by an approved ICD. Assigns a potential MDA and begins the AoA.' },
-          { term: 'LRIP', definition: 'Low Rate Initial Production — limited production authorized at Milestone C, before Full Rate Production. Used to support IOT&E and initial fielding.' },
-          { term: 'IOT&E', definition: 'Initial Operational Test & Evaluation — operational testing conducted during LRIP to assess effectiveness and suitability before Full Rate Production is approved.' },
-        ],
-        content: [
-          {
-            type: 'text',
-            heading: 'Why the Lifecycle Matters',
-            body: 'The DoD acquisition lifecycle is the backbone of every Major Capability Acquisition (MCA) program. Each phase has a specific purpose, required activities, and exit criteria — and only when those criteria are met can a program advance to the next phase. Understanding this lifecycle tells you: what phase your program is in, what you should be doing right now, what documents are due, who approves your next step, and what the most common failure modes are at each gate. The lifecycle does not exist to create paperwork — it exists because programs that skip phases statistically cost more, take longer, and deliver less.'
-          },
-          {
-            type: 'table',
-            heading: 'The MCA Lifecycle at a Glance',
-            headers: ['Phase', 'Gate In / Gate Out', 'Primary Goal', 'Key Document'],
-            rows: [
-              ['Pre-MSA (Concept)', 'Trigger: Validated capability gap (ICD) → Materiel Development Decision (MDD)', 'Identify the need; decide if a materiel solution is warranted', 'ICD (Initial Capabilities Document)'],
-              ['MSA — Materiel Solution Analysis', 'MDD → Milestone A', 'Analyze alternative solutions; select preferred approach; assess feasibility', 'AoA (Analysis of Alternatives)'],
-              ['TMRR — Technology Maturation & Risk Reduction', 'Milestone A → Milestone B', 'Mature technology to TRL 6+; reduce technical risk; refine requirements', 'CDD (Capability Development Document)'],
-              ['EMD — Engineering & Manufacturing Development', 'Milestone B → Milestone C', 'Design, build, integrate, and test the system; demonstrate producibility', 'CPD (Capability Production Document)'],
-              ['P&D — Production & Deployment', 'Milestone C → FRP Decision', 'Begin LRIP; conduct IOT&E; build and field initial units', 'IOT&E Report'],
-              ['O&S — Operations & Support', 'FRP Decision → Disposal', 'Sustain the fielded system; manage life-cycle costs; plan eventual disposal', 'Life Cycle Sustainment Plan (LCSP)'],
-            ]
-          },
-          {
-            type: 'text',
-            heading: 'Phase 0: Before It All Starts — The ICD and MDD',
-            body: 'Before any acquisition phase formally begins, a warfighter capability gap must be identified and validated. The Joint Capabilities Integration and Development System (JCIDS) produces the Initial Capabilities Document (ICD), which describes the gap in military terms — not a solution. The ICD is staffed through the Joint Staff and validated by the JROC (or delegated FCB) for ACAT I programs. Once an ICD is validated, the MDA issues a Materiel Development Decision (MDD) — the formal decision that a materiel solution may be appropriate and that MSA should begin. The MDD assigns a potential MDA, directs initiation of the AoA, and starts the acquisition program clock.'
-          },
-          {
-            type: 'callout',
-            heading: 'MSA: What Happens Before Milestone A',
-            body: 'Materiel Solution Analysis (MSA) is the first formal acquisition phase. The goal is NOT to build anything — it is to figure out WHAT to build (or buy). The central product is the Analysis of Alternatives (AoA), which evaluates multiple candidate solutions against cost, schedule, performance, risk, and manufacturing criteria. The DoD does not want to commit to engineering development until it knows there is a viable, affordable solution space. MSA also refines the requirements from the ICD into a draft CDD (Capability Development Document). MSA culminates in Milestone A, where the MDA approves entry into TMRR — the first time real R&D money starts flowing.'
-          },
-          {
-            type: 'table',
-            heading: 'JCIDS Requirements Documents by Phase',
-            headers: ['Document', 'Full Name', 'Phase', 'Purpose'],
-            rows: [
-              ['ICD', 'Initial Capabilities Document', 'Pre-MSA', 'Identifies capability gap; validates need for a materiel solution; triggers MDD and MSA'],
-              ['CDD', 'Capability Development Document', 'TMRR (draft at Mil A; final at Mil B)', 'Defines Key Performance Parameters (KPPs), Key System Attributes (KSAs), and other performance requirements for the system to be developed'],
-              ['CPD', 'Capability Production Document', 'EMD (for Milestone C)', 'Defines production-specific requirements; operational performance thresholds for the production system; supports Milestone C decision'],
-            ]
-          },
-          {
-            type: 'text',
-            heading: 'TMRR: Milestone A Through Milestone B',
-            body: 'Technology Maturation and Risk Reduction (TMRR) begins after Milestone A is approved. The program\'s job in TMRR is to mature technology to at least Technology Readiness Level (TRL) 6 — meaning the technology has been demonstrated in a relevant environment, not just in a lab. TMRR contracts are typically Cost-Plus (CPFF or CPIF) because the technical risk is still high. The program refines and finalizes the Capability Development Document (CDD) with validated KPPs. TMRR ends at Milestone B, when the MDA is satisfied that the design is ready for full engineering development and that cost/schedule estimates are credible. Milestone B is the program\'s biggest commitment point — EMD contracts are typically large and expensive.'
-          },
-          {
-            type: 'tip',
-            heading: 'TRL 6: The Milestone A → B Bridge',
-            body: 'TRL (Technology Readiness Level) 6 means a prototype has been demonstrated in a relevant environment. Before TRL 6, you have laboratory demonstrations (TRL 4-5) but not field-relevant performance. The Milestone B gate requires TRL 6 as the minimum for most technologies in an ACAT I EMD program. Programs that enter EMD with TRL 4-5 technology consistently overrun cost and schedule as the immature technology forces expensive re-designs. USD(R&E) reviews technology maturity for all major programs at Milestone B.'
-          },
-          {
-            type: 'text',
-            heading: 'EMD: Milestone B Through Milestone C',
-            body: 'Engineering and Manufacturing Development (EMD) is where the system actually gets built and tested. After Milestone B, the PM awards the EMD contract (usually a cost-plus development contract with a target price). During EMD the contractor completes the system design (CDR — Critical Design Review), builds Engineering Development Models (EDMs), integrates hardware and software, and conducts Developmental Test & Evaluation (DT&E). The program must demonstrate that the system is producible and meets KPPs before Milestone C. The Capability Production Document (CPD) is finalized during EMD and submitted to support the Milestone C decision. EMD ends at Milestone C — the authorization to begin Low Rate Initial Production (LRIP).'
-          },
-          {
-            type: 'table',
-            heading: 'Key Technical Reviews Within EMD',
-            headers: ['Review', 'When', 'Purpose', 'Go/No-Go Criteria'],
-            rows: [
-              ['SFR — System Functional Review', 'Early EMD', 'Validate that functional requirements are complete and understood', 'Requirements baseline is complete and traceable'],
-              ['PDR — Preliminary Design Review', 'Mid-EMD', 'Baseline the preliminary design; validate it meets requirements', 'Design is stable enough to proceed to detailed design'],
-              ['CDR — Critical Design Review', 'Late EMD', 'Baseline the detailed design; validate producibility and testability', 'Design is mature enough to begin fabrication; TRL 7+'],
-              ['TRR — Test Readiness Review', 'Before DT&E', 'Confirm system and test environment are ready to test', 'Hardware/software ready; test procedures validated'],
-            ]
-          },
-          {
-            type: 'text',
-            heading: 'Production & Deployment: Milestone C Through FRP',
-            body: 'Milestone C authorizes Low Rate Initial Production (LRIP) — a limited number of units produced before full-rate is approved. The quantity is capped by statute to ensure LRIP doesn\'t become backdoor full-rate production. During LRIP, the Army/Navy/Air Force conducts Initial Operational Test & Evaluation (IOT&E) — realistic operational testing by independent testers (typically from the operational test agencies: ATEC, OPTEVFOR, ACC). IOT&E must be completed before a Full Rate Production (FRP) Decision can be made. The FRP decision is made by the MDA after reviewing the IOT&E report, and it authorizes full production ramp-up. For many programs (F-35, DDG-51, Abrams upgrades), the transition from LRIP to FRP is a multi-year, multi-billion dollar commitment.'
-          },
-          {
-            type: 'text',
-            heading: 'Operations & Support: The Longest (and Most Expensive) Phase',
-            body: 'Operations & Support (O&S) begins at Full Rate Production and continues until system disposal — which for many defense systems means 30-50+ years. Despite being the longest phase, O&S is often the most underfunded and understaffed during program planning. O&S costs typically represent 60-70% of a system\'s total life-cycle cost. The PM during O&S focuses on: reliability and maintainability (R&M) performance against the LCSP targets, diminishing manufacturing sources (DMS) for obsolete parts, software upgrades and cybersecurity patching, and planning for eventual demilitarization and disposal. A Life Cycle Sustainment Plan (LCSP) is required and must be updated throughout the program.'
-          },
-          {
-            type: 'callout',
-            heading: 'Why MSA Is the Most Important Phase You\'ve Never Heard Of',
-            body: 'Studies consistently show that the decisions made in MSA — specifically which solution is selected in the AoA — lock in 70-80% of a program\'s total life-cycle cost before a single dollar of EMD is spent. Yet MSA is typically the most poorly resourced phase, receiving a fraction of the attention given to EMD or production. If you are a PM in MSA, fight for resources: a rigorous AoA with realistic cost modeling and honest risk assessment is the single highest-value investment a program can make. Shortcuts in MSA become multi-billion-dollar cost overruns in EMD.'
-          },
-          {
-            type: 'table',
-            level: 'intermediate',
-            heading: 'Contract Strategy by Lifecycle Phase',
-            headers: ['Phase', 'Typical Contract Type', 'Rationale'],
-            rows: [
-              ['MSA', 'Cost-Plus Fixed Fee (CPFF) study contracts', 'High uncertainty; AoA studies; no defined deliverable system yet'],
-              ['TMRR', 'CPFF or Cost-Plus Incentive Fee (CPIF)', 'Technology still maturing; risk too high for firm-price; incentivize schedule/performance'],
-              ['EMD', 'CPIF or Cost-Plus Award Fee (CPAF)', 'Significant cost/schedule risk remains; award fee incentivizes performance quality'],
-              ['LRIP', 'Fixed-Price Incentive Firm (FPIF) — transitioning', 'Design is stable; shift risk to contractor; incentivize cost control as production ramps up'],
-              ['FRP', 'Firm Fixed Price (FFP) or multi-year FFP', 'Production is mature and repeatable; government should not absorb production cost risk'],
-            ]
-          },
-          {
-            type: 'text',
-            level: 'intermediate',
-            heading: 'The Milestone B Decision Package — What the MDA Reviews',
-            body: 'Milestone B is the most document-intensive milestone in the lifecycle. The program must provide: (1) the Acquisition Strategy, approved by MDA; (2) the finalized CDD, validated by JROC; (3) an Acquisition Program Baseline (APB) with cost, schedule, and performance thresholds; (4) an Independent Cost Estimate (ICE) from CAPE for ACAT I; (5) a Test & Evaluation Master Plan (TEMP) approved by DOT&E; (6) a Life Cycle Sustainment Plan (LCSP); (7) technology readiness assessment showing TRL 6+ for all critical technologies; and (8) the EMD contract strategy with risk mitigation plan. Any one of these missing or inadequate can delay or deny Milestone B. A PM should be building all eight of these 18-24 months before the scheduled Milestone B date.'
-          },
-          {
-            type: 'callout',
-            level: 'advanced',
-            heading: 'When Programs Enter the Wrong Phase at the Wrong Time',
-            body: 'The single most expensive error in DoD acquisition is entering EMD with immature technology. When a program crosses Milestone B with TRL 4-5 technology, the EMD contract becomes a de facto TMRR contract — at EMD prices. RAND studies have shown programs that enter EMD below TRL 6 overrun by an average of 40% and slip schedule by 2+ years. The institutional pressure to advance programs (service urgency, Congressional interest, contractor lobbying, career incentives) consistently pushes MDAs to approve Milestone B before programs are ready. As a senior PM or MDA advisor, your job is to provide honest TRL and design maturity assessments even when that recommendation is inconvenient. The Milestone review exists precisely for this gate.'
-          },
-        ],
-        quiz: [
-          {
-            id: 'q1',
-            question: 'The DoD acquisition lifecycle formally begins with which phase before Milestone A?',
-            options: ['Engineering & Manufacturing Development (EMD)', 'Materiel Solution Analysis (MSA)', 'Operations & Support (O&S)', 'Technology Maturation & Risk Reduction (TMRR)'],
-            correct: 1,
-            explanation: 'MSA (Materiel Solution Analysis) is the first formal acquisition phase. It begins after the Materiel Development Decision (MDD) and ends at Milestone A. Its primary product is the Analysis of Alternatives (AoA), which evaluates multiple candidate solutions before committing to a specific approach.'
-          },
-          {
-            id: 'q2',
-            question: 'What is the primary product of the Materiel Solution Analysis (MSA) phase?',
-            options: ['Capability Production Document (CPD)', 'Initial Capabilities Document (ICD)', 'Analysis of Alternatives (AoA)', 'Test & Evaluation Master Plan (TEMP)'],
-            correct: 2,
-            explanation: 'The Analysis of Alternatives (AoA) is the central product of MSA. It evaluates multiple candidate materiel solutions against cost, schedule, performance, risk, and supportability criteria to inform the Milestone A decision on which approach to pursue.'
-          },
-          {
-            id: 'q3',
-            question: 'Which JCIDS document identifies the capability gap that triggers the Materiel Development Decision and initiates MSA?',
-            options: ['Capability Development Document (CDD)', 'Initial Capabilities Document (ICD)', 'Capability Production Document (CPD)', 'Acquisition Program Baseline (APB)'],
-            correct: 1,
-            explanation: 'The ICD (Initial Capabilities Document) identifies the validated capability gap in warfighter terms — not a solution. Once validated by the JROC for ACAT I programs, it triggers the MDD and starts the MSA phase.'
-          },
-          {
-            id: 'q4',
-            question: 'Which requirements document is finalized during TMRR and is the primary basis for the Milestone B decision?',
-            options: ['Initial Capabilities Document (ICD)', 'Capability Production Document (CPD)', 'Capability Development Document (CDD)', 'Life Cycle Sustainment Plan (LCSP)'],
-            correct: 2,
-            explanation: 'The CDD (Capability Development Document) defines the Key Performance Parameters (KPPs) and system requirements for the program. It is drafted during MSA, refined during TMRR, and must be JROC-validated before Milestone B for ACAT I programs.'
-          },
-          {
-            id: 'q5',
-            question: 'Low Rate Initial Production (LRIP) is authorized at which milestone?',
-            options: ['Milestone A', 'Milestone B', 'Milestone C', 'Full Rate Production Decision'],
-            correct: 2,
-            explanation: 'Milestone C authorizes entry into Production & Deployment, including LRIP. LRIP produces a limited number of units to support IOT&E and initial fielding before Full Rate Production is approved. The FRP decision follows successful IOT&E.'
-          },
-          {
-            id: 'q6',
-            question: 'A program with technology at TRL 4 (validated in lab environment only) is approaching Milestone B. What is the risk?',
-            options: ['No risk — TRL 4 is sufficient for Milestone B', 'Moderate risk — acceptable with a waiver from Congress', 'High risk — programs entering EMD below TRL 6 statistically overrun cost and schedule significantly', 'Low risk — the contractor will mature the technology during EMD at no additional cost'],
-            correct: 2,
-            explanation: 'Milestone B requires TRL 6 (prototype demonstrated in relevant environment) as the minimum for ACAT I programs. Programs that enter EMD with TRL 4-5 technology turn EMD into a de facto TMRR contract at EMD prices, leading to average cost overruns of 40%+ and 2+ year schedule slips per RAND studies.'
-          },
-          {
-            id: 'q7',
-            question: 'Which phase of the acquisition lifecycle is responsible for the majority of a system\'s total life-cycle cost?',
-            options: ['MSA (Materiel Solution Analysis)', 'EMD (Engineering & Manufacturing Development)', 'O&S (Operations & Support)', 'TMRR (Technology Maturation & Risk Reduction)'],
-            correct: 2,
-            explanation: 'Operations & Support (O&S) typically represents 60-70% of a defense system\'s total life-cycle cost, spanning 30-50+ years for major platforms. This is why Life Cycle Sustainment Plans (LCSPs) and reliability/maintainability requirements are critical to establish early in the program.'
-          },
-          {
-            id: 'q8',
-            question: 'What is the correct sequence of lifecycle phases for a Major Capability Acquisition program?',
-            options: [
-              'MSA → EMD → TMRR → Production → O&S',
-              'TMRR → MSA → EMD → Production → O&S',
-              'MSA → TMRR → EMD → Production → O&S',
-              'EMD → MSA → TMRR → Production → O&S'
-            ],
-            correct: 2,
-            explanation: 'The correct MCA lifecycle sequence is: MSA (before Milestone A) → TMRR (Milestone A to B) → EMD (Milestone B to C) → Production & Deployment (Milestone C to FRP Decision) → Operations & Support (FRP to Disposal). Each phase is entered only after the preceding milestone is approved.'
-          },
-        ],
-      }
-    ],
-    assessment: [
-      {
-        id: 'a1',
-        question: "The DoD 5000 series acquisition lifecycle begins at which phase before Milestone A?",
-        options: ['Engineering & Manufacturing Development', 'Materiel Solution Analysis (MSA)', 'Operations & Support', 'Production & Deployment'],
-        correct: 1,
-        explanation: "The MSA phase precedes Milestone A and is where the DoD explores alternative materiel solutions to meet a validated need. It culminates in a Milestone A decision to begin Technology Maturation & Risk Reduction (TMRR)."
-      },
-      {
-        id: 'a2',
-        question: "Which document formally captures validated operational requirements and drives the acquisition program?",
-        options: ['Acquisition Program Baseline (APB)', 'Initial Capabilities Document (ICD)', 'Capability Development Document (CDD)', 'Test & Evaluation Master Plan (TEMP)'],
-        correct: 2,
-        explanation: "The CDD (Capability Development Document) is the primary requirements document that drives the acquisition program through Milestone B. It defines Key Performance Parameters (KPPs), Key System Attributes (KSAs), and other system-level requirements validated through the JCIDS process."
-      },
-      {
-        id: 'a3',
-        question: "ACAT I programs are characterized by which threshold (as of current DoD policy)?",
-        options: ['RDT&E > $100M or Procurement > $500M', 'RDT&E > $480M or Procurement > $2.79B', 'RDT&E > $185M or Procurement > $835M', 'Any program designated by the Secretary of Defense only'],
-        correct: 1,
-        explanation: "ACAT I (MDAPs) meet the threshold of RDT&E costs exceeding $480M or procurement costs exceeding $2.79B (FY2020 constant dollars), OR are designated by the USD(A&S) due to special interest. ACAT II uses the $185M/$835M thresholds."
-      },
-      {
-        id: 'a4',
-        question: "The Milestone Decision Authority (MDA) for ACAT IC programs is:",
-        options: ['USD(A&S)', 'Component Acquisition Executive (CAE)', 'Program Executive Officer (PEO)', 'Deputy Secretary of Defense'],
-        correct: 1,
-        explanation: "For ACAT IC programs, the MDA is the Component Acquisition Executive (CAE) — e.g., ASA(ALT) for Army, ASN(RDA) for Navy, SAF/AQ for Air Force. The USD(A&S) serves as MDA for ACAT ID programs (the highest tier)."
-      },
-      {
-        id: 'a5',
-        question: "The Pathways Recent Graduates Program entry-level positions are typically at what GS grade range?",
-        options: ['GS-5 to GS-7', 'GS-7 to GS-9', 'GS-9 to GS-12', 'GS-12 to GS-13'],
-        correct: 1,
-        explanation: "Pathways Recent Graduates positions typically start at GS-7 to GS-9 for candidates within two years of earning a degree. The program provides structured training, mentorship, and a clear pathway to full career positions."
-      },
-      {
-        id: 'a6',
-        question: "Which acquisition strategy element is tailored by the MDA to adjust DoDI 5000 policy requirements for a specific program?",
-        options: ['Nunn-McCurdy certification', 'Acquisition Program Baseline', 'Tailoring plan documented in the Acquisition Strategy', 'Selected Acquisition Report (SAR)'],
-        correct: 2,
-        explanation: "Tailoring is documented in the Acquisition Strategy and requires MDA approval. It allows the program to adjust (but not eliminate) DoDI 5000 policy requirements to match program complexity and risk. Statutory requirements (e.g., SAR, Nunn-McCurdy, ICE for ACAT I) cannot be tailored away."
-      },
-      {
-        id: 'a7',
-        question: "An Other Transaction Authority (OTA) agreement differs from a FAR-based contract primarily because:",
-        options: ['It is only available to ACAT III programs', 'It is exempt from FAR, DFARS, and CAS — terms are fully negotiated', 'It requires certified cost or pricing data from all parties', 'It limits competition to small businesses only'],
-        correct: 1,
-        explanation: "OTAs are explicitly excluded from the FAR and DFARS. They are authorized under 10 U.S.C. §§ 4021-4022 for prototype and follow-on production projects. This makes them powerful for engaging non-traditional defense contractors and companies that will not accept standard FAR clauses."
-      },
-      {
-        id: 'a8',
-        question: "A FAR Part 12 commercial item contract does NOT require:",
-        options: ['A written contract', 'Competition where practicable', 'Certified cost or pricing data under TINA', 'A period of performance'],
-        correct: 2,
-        explanation: "FAR Part 12 commercial item contracts are explicitly exempt from the Truth in Negotiations Act (TINA) — no certified cost or pricing data is required. The rationale is that commercial market pricing is self-regulating and government-unique cost analysis requirements would deter commercial vendors."
-      },
-      {
-        id: 'a9',
-        question: "What is the maximum dollar threshold for Simplified Acquisition Procedures (SAP) under the FAR?",
-        options: ['$10,000', '$100,000', '$250,000', '$500,000'],
-        correct: 2,
-        explanation: "FAR Subpart 13 Simplified Acquisition Procedures apply to acquisitions at or below the Simplified Acquisition Threshold (SAT) of $250,000. Below SAT, the contracting officer can use streamlined procedures (request for quotes, three quotes minimum, simplified documentation) instead of full and open competition requirements."
-      },
-      {
-        id: 'a10',
-        question: "The JCIDS process validates requirements at what authority level before an ACAT I program can proceed to Milestone A?",
-        options: ['Program Manager', 'Program Executive Officer (PEO)', 'Joint Requirements Oversight Council (JROC) or delegated FCB', 'Component Acquisition Executive'],
-        correct: 2,
-        explanation: "For ACAT I programs, the Joint Requirements Oversight Council (JROC) — or a delegated Functional Capabilities Board (FCB) — must validate the Initial Capabilities Document (ICD) before Milestone A. The JROC is chaired by the Vice Chairman of the Joint Chiefs of Staff and ensures requirements are joint and prioritized across all services."
-      },
-    ]
-  },
-
-  // ─────────────────────────────────────────────────────────────
-  // MODULE 2 — FINANCE
-  // ─────────────────────────────────────────────────────────────
-  {
-    id: 'finance',
-    title: 'Defense Finance & Budgeting',
-    subtitle: 'Module 2',
-    icon: '💰',
-    color: 'gold',
-    description: 'Master the PPBE cycle, appropriations law, EVM, and financial management fundamentals that every PM must know.',
-    lessons: [
-      {
         id: 'finance-1',
         title: 'The PPBE Cycle: Planning Your Program\'s Money',
         duration: '15 min',
@@ -1338,145 +1338,181 @@ export const modules: Module[] = [
         ]
       },
       {
-        id: 'finance-2',
-        title: 'Earned Value Management (EVM)',
-        duration: '18 min',
-        description: 'Learn how to use EVM to measure cost and schedule performance on DoD contracts.',
+        id: 'finance-4',
+        title: 'DoD Appropriations by Service: Color of Money',
+        duration: '20 min',
+        description: 'Master the specific appropriation accounts used across the Army, Navy, Air Force, and Marine Corps — and why using the wrong "color of money" is a federal violation.',
         keyTerms: [
-          { term: 'EVM', definition: 'Earned Value Management — an integrated cost/schedule/technical performance measurement methodology.' },
-          { term: 'BCWS (PV)', definition: 'Budgeted Cost of Work Scheduled (Planned Value) — what you planned to spend by now.' },
-          { term: 'BCWP (EV)', definition: 'Budgeted Cost of Work Performed (Earned Value) — the budget value of work actually accomplished.' },
-          { term: 'ACWP (AC)', definition: 'Actual Cost of Work Performed (Actual Cost) — what you actually spent.' },
-          { term: 'CPI', definition: 'Cost Performance Index — efficiency of cost performance (EV/AC).' },
-          { term: 'SPI', definition: 'Schedule Performance Index — efficiency of schedule performance (EV/PV).' },
-          { term: 'EAC', definition: 'Estimate at Completion — the projected total cost to complete the program.' },
+          { term: 'TAS', definition: 'Treasury Account Symbol — the unique identifier for each appropriation account (e.g., AF 3400 for Air Force O&M).' },
+          { term: 'O&M', definition: 'Operations & Maintenance — 1-year appropriation funding day-to-day operations, maintenance, and most services contracts.' },
+          { term: 'RDT&E', definition: 'Research, Development, Test & Evaluation — 2-year appropriation funding research and development activities.' },
+          { term: 'Procurement', definition: '3-year appropriation funding production and purchase of end-items (aircraft, ships, missiles, vehicles).' },
+          { term: 'MILCON', definition: 'Military Construction — 5-year appropriation funding construction of military facilities.' },
+          { term: 'Bona Fide Need Rule', definition: 'Funds may only be used to satisfy a legitimate, genuine need that arose during the period of availability.' },
+          { term: 'Purpose Statute', definition: '31 U.S.C. § 1301 — appropriations may only be applied to the objects for which they were made.' },
+          { term: 'Color of Money', definition: 'The appropriation type funding a particular contract line — mixing appropriation types on one CLIN is illegal.' },
+          { term: 'Expired Funds', definition: 'Funds past their period of availability but still available for 5 years to adjust or pay existing obligations.' },
+          { term: 'Canceled Funds', definition: 'Funds that have completed the 5-year expired period; permanently returned to the Treasury.' },
         ],
         content: [
           {
             type: 'text',
-            heading: "Why EVM is Critical for Program Managers",
-            body: "EVM is required on most DoD contracts with a value over $20M. It provides an objective, quantitative measure of program performance. Without EVM, PMs rely on subjective \"percent complete\" estimates that are almost always wrong. With EVM, you can detect cost and schedule problems early — often 15-20% into a program — when correction is still possible and affordable."
-          },
-          {
-            type: 'formula',
-            heading: "Core EVM Formulas",
-            formula: 'CV = EV - AC (Cost Variance: positive = under budget)\nSV = EV - PV (Schedule Variance: positive = ahead of schedule)\nCPI = EV / AC (>1.0 = under budget; <1.0 = over budget)\nSPI = EV / PV (>1.0 = ahead of schedule; <1.0 = behind)',
-            explanation: "Memorize these. At any program review, you should be able to calculate CPI and SPI instantly and explain what they mean for the program's trajectory."
-          },
-          {
-            type: 'formula',
-            heading: "Estimate at Completion (EAC)",
-            formula: 'EAC = BAC / CPI (most common — assumes future work at current efficiency)\nEAC = AC + (BAC - EV) (assumes remaining work on original budget)\nEAC = AC + [(BAC - EV) / (CPI × SPI)] (combined factor)',
-            explanation: "BAC = Budget at Completion (the total approved budget). Choose your EAC method based on the nature of variances. The CPI method (BAC/CPI) is statistically the most accurate predictor for programs that are 20%+ complete."
-          },
-          {
-            type: 'callout',
-            heading: "The 20% Threshold Rule",
-            body: "Research by David Christensen (1993) showed that the CPI at 20% program completion is highly predictive of final CPI. Programs rarely recover a CPI worse than 0.8. If your program shows a CPI of 0.75 at 20% completion, plan for overruns — the data is telling you something systemic is wrong."
+            heading: "Why \"Color of Money\" Can End Your Career",
+            body: "Every appropriation type has strict statutory limits on what it can buy. Using RDT&E money to fund a production contract, or O&M money to fund a capital acquisition, is a federal violation of the Purpose Statute (31 U.S.C. § 1301). Program Managers who ignore these rules face potential Antideficiency Act violations, personal liability, and career termination. Understanding each appropriation's \"color\" — and matching the right color to the right expenditure — is non-negotiable."
           },
           {
             type: 'table',
-            heading: "EVM Performance Indicator Benchmarks",
-            headers: ['Indicator', 'Green', 'Yellow', 'Red'],
+            heading: "Major Appropriation Types: Rules & Period of Availability",
+            headers: ['Appropriation', 'What It Funds', 'Period of Availability', 'Key Rule'],
             rows: [
-              ['CPI', '>= 0.95', '0.90 - 0.94', '< 0.90'],
-              ['SPI', '>= 0.95', '0.90 - 0.94', '< 0.90'],
-              ['CV%', '<= 5% over', '5-10% over', '> 10% over'],
-              ['TCPI', '<= 1.05', '1.05 - 1.10', '> 1.10'],
+              ['O&M', 'Operations, training, maintenance, most services contracts under $250K threshold', '1 Year', 'Cannot fund capital equipment > $250K or construction > $750K'],
+              ['RDT&E', 'Research, development, prototypes, testing — from basic research through system development', '2 Years', 'Cannot fund production quantities; use ends at Milestone C'],
+              ['Procurement', 'Production units, end-items: aircraft, ships, missiles, vehicles, major components', '3 Years', 'System must be past Milestone C / production-ready'],
+              ['MILCON', 'Permanent construction of buildings, infrastructure, and facilities', '5 Years', 'Threshold $1.5M+; below threshold uses O&M (minor construction)'],
+              ['MILPERS', 'Military pay, allowances, bonuses, PCS moves', '1 Year', 'Cannot fund civilian personnel or contractor costs'],
             ]
           },
           {
+            type: 'text',
+            heading: "The Three Laws Governing Appropriations Use",
+            body: "Three statutory principles govern every spending decision in DoD: (1) The Purpose Statute (31 U.S.C. § 1301) — funds may only be used for what Congress intended. (2) The Time Statute (31 U.S.C. § 1502) — funds may only obligate for needs arising within their period of availability. (3) The Amount Statute / Antideficiency Act (31 U.S.C. §§ 1341, 1342) — cannot obligate more than was appropriated. Violating any of these three is a federal offense."
+          },
+          {
+            type: 'table',
+            heading: "Per-Service Treasury Account Symbols (TAS) — Key Accounts",
+            headers: ['Service', 'Appropriation', 'TAS', 'What It Funds'],
+            rows: [
+              ['Air Force', 'O&M', '57-3400', 'AF operations, training, depot maintenance, most AF services'],
+              ['Air Force', 'RDT&E', '57-3600', 'AF research, development, testing — from basic research to EMD'],
+              ['Air Force', 'Aircraft Procurement', '57-3010', 'Procurement of AF aircraft (F-35A, C-130, KC-46, etc.)'],
+              ['Air Force', 'Missile Procurement', '57-3020', 'Procurement of AF missiles (JASSM, AMRAAM, ICBM sustainment production)'],
+              ['Air Force', 'Other Procurement AF', '57-3080', 'AF vehicles, C2 systems, comm equipment, training equipment'],
+              ['Army', 'O&M', '21-2010 (2400)', 'Army operations, training, depot maintenance, most Army services'],
+              ['Army', 'RDT&E', '21-0400 (2040)', 'Army research and development'],
+              ['Army', 'Aircraft Procurement', '21-2010', 'Army rotary-wing aircraft (AH-64, UH-60, CH-47)'],
+              ['Army', 'Missile Procurement', '21-2020', 'Army missiles (Patriot, Stinger, Javelin production)'],
+              ['Army', 'Procurement of W&TCV', '21-2035', 'Wheeled & tracked combat vehicles (M1 Abrams, Bradley, Stryker)'],
+              ['Army', 'Other Procurement Army', '21-2060', 'Army C4I, aircraft modifications, soldier systems'],
+              ['Navy', 'O&M (Navy)', '17-1453', 'Navy operations, training, base support'],
+              ['Navy', 'O&M (Marine Corps)', '17-1105', 'USMC operations and training'],
+              ['Navy', 'Aircraft Procurement Navy', '17-1506', 'Navy/USMC aircraft (F/A-18, F-35B/C, E-2D, P-8)'],
+              ['Navy', 'Weapons Procurement Navy', '17-1507', 'Navy weapons (Tomahawk, Standard Missile, torpedoes)'],
+              ['Navy', 'Shipbuilding & Conversion', '17-1611', 'Construction and conversion of Navy vessels (CVN, DDG, SSN)'],
+              ['Navy', 'Other Procurement Navy', '17-1804', 'Navy C4ISR, shore activities, training equipment'],
+              ['Navy', 'Procurement Marine Corps', '17-1109', 'USMC procurement (AAV, LAV, ground equipment)'],
+              ['Defense-Wide', 'O&M Defense-Wide', '97-0400 (0100)', 'DISA, DLA, SOCOM, and other defense agencies operations'],
+              ['Defense-Wide', 'RDT&E Defense-Wide', '97-0400 (0603)', 'DARPA, MDA, and other defense agency R&D'],
+            ]
+          },
+          {
+            type: 'callout',
+            heading: "The AF 3400 Account — A PM's Daily Reality",
+            body: "Air Force 3400 (O&M) is the most frequently used appropriation in day-to-day AF program management. It funds training, logistics, maintenance, most advisory & assistance services, and sustainment contracts. When PMs confuse 3400 (O&M) with 3600 (RDT&E) — for example, using 3400 to pay for developmental testing — they violate the Purpose Statute. Always ask: \"Is this work developing/testing a new capability (RDT&E), buying a production item (Procurement), or sustaining/operating an existing capability (O&M)?\""
+          },
+          {
+            type: 'formula',
+            heading: "The Appropriation Decision Framework",
+            formula: 'Is it research/development/testing? → RDT&E\nIs it buying production units/end items? → Procurement (aircraft, ships, missiles, vehicles)\nIs it day-to-day operations/maintenance/services? → O&M\nIs it permanent construction ($1.5M+)? → MILCON\nIs it military pay/allowances? → MILPERS',
+            explanation: "Apply this framework before every obligation decision. When in doubt, consult your budget officer. The consequences of misusing appropriations are serious — every obligation must be traceable to the correct appropriation type."
+          },
+          {
+            type: 'text',
+            heading: "What Happens When Funds Expire and Cancel",
+            body: "After a fund's period of availability ends, unobligated balances enter \"expired\" status for 5 years. During this period, the funds can still be used to adjust existing obligations (e.g., pay a contract invoice that was obligated on time). After the 5-year expired window, funds are permanently \"cancelled\" and returned to the Treasury — they cannot be used for any purpose. A FY2024 O&M obligation that generates an invoice in FY2028 is still payable; a FY2024 O&M invoice arriving in FY2031 cannot be paid from those funds."
+          },
+          {
             type: 'tip',
-            heading: "IPMR Reporting",
-            body: "The Integrated Program Management Report (IPMR) replaced the CPR and CFSR. The IPMR has seven formats: Format 1 (WBS-based cost/schedule), Format 2 (Organizational), Format 3 (Baseline), Format 4 (Staffing), Format 5 (Problem Analysis), Format 6 (Milestone/IMS), and Format 7 (Explanations). Learn all seven — you'll review these monthly on every major program."
+            heading: "Real Example: Buying a Radar System",
+            body: "A new radar program follows this funding progression: Basic research uses RDT&E (3600 for AF). Engineering development and testing uses RDT&E. First production units use Procurement (3080 for AF). Fielded radar maintenance and upgrades use O&M (3400 for AF). Training operators uses O&M. Building a radar maintenance facility uses MILCON. The same physical system touches four different appropriation accounts over its life."
           },
           {
           type: 'text' as const,
           level: 'intermediate' as const,
-          heading: 'Using EVM Data to Drive Contractor Behavior',
-          body: 'EVM data is only valuable if the government PM uses it to hold contractors accountable. Mid-career PMs should establish a monthly rhythm: review IPMR data within 5 days of receipt, convene a PMR within 10 days, and issue formal corrective action requests for threshold breaches within 15 days. The most powerful question you can ask a contractor at a PMR: "Your Format 5 says you\'ll recover 15 schedule days by end of quarter — what specific tasks will be completed early and by whom?" Vague recovery plans are not plans. Require specificity: named individuals, milestone dates, budget planned for the recovery effort. Document these commitments in meeting minutes so the contractor can\'t walk them back.',
+          heading: 'Managing Color of Money Across a Complex Program',
+          body: 'Real programs use multiple appropriation types simultaneously. A typical ACAT II program in EMD might have RDT&E funding the development contract, O&M funding government lab support, and MILCON funding a test facility. Each appropriation has different obligation and expenditure rules. The most common mid-career mistake: using RDT&E to fund activities that have crossed into production (violates the appropriation\'s purpose), or letting O&M funds expire while trying to transfer them to RDT&E (not permitted). Your comptroller is your best friend — but you need to give them enough lead time to structure funding actions properly. Last-minute funding transfers almost always fail or create audit exposure.',
         },
         {
           type: 'callout' as const,
           level: 'advanced' as const,
-          heading: 'EVM Compliance Surveillance and EVMS Acceptance — What Senior PMs Must Know',
-          body: 'DoDI 5000.02 requires EVMS on cost-type contracts over $20M and fixed-price over $50M. But having EVMS is not enough — the system must be compliant with ANSI/EIA-748. DCMA conducts EVMS surveillance and can issue non-compliance findings. A Level III finding (systemic noncompliance) can result in a compliance improvement plan, increased surveillance, and in extreme cases, withholding of fee. Senior PMs must understand their contractor\'s EVMS compliance status before accepting performance data. An EVMS system that rubber-baselines (retroactively adjusts PMB to reduce variances) produces data that is technically compliant but strategically meaningless. When CPI is suspiciously stable at 1.00 month after month on a complex development contract, question the system — not just the data.',
+          heading: 'Anti-Deficiency Act Violations and How They Happen to Good PMs',
+          body: 'The Anti-Deficiency Act (31 U.S.C. § 1341) prohibits obligating funds in excess of or in advance of appropriations. Violations are career-ending. They happen most often through: (1) continuing contract performance after a CR expires and before new appropriations are enacted without a proper Continuing Resolution Authority authorization; (2) using one appropriation to fund activities that belong to another ("purpose" violations); (3) obligating contracts before funds are available in USASpending. Senior PMs must build a personal funding calendar: when does each appropriation expire? When does the CR end? What is the period of availability for each line item? These are not comptroller problems — they are PM problems. The PM signs the obligation documents.',
         },
         ],
       quiz: [
           {
             id: 'q1',
-            question: "A program has: PV = $10M, EV = $8M, AC = $9M. What is the Cost Performance Index (CPI)?",
-            options: ['1.125', '0.89', '0.80', '1.25'],
-            correct: 1,
-            explanation: "CPI = EV / AC = $8M / $9M = 0.89. This means for every dollar spent, the program is only earning $0.89 of planned value — the program is over budget. The SPI would be 0.80 (EV/PV = $8M/$10M), meaning it's also behind schedule."
+            question: "What is the Air Force Treasury Account Symbol (TAS) for Operations & Maintenance funds?",
+            options: ['57-3600', '57-3010', '57-3400', '57-3080'],
+            correct: 2,
+            explanation: "The Air Force O&M appropriation is identified by TAS 57-3400 (commonly called \"3400 money\"). It has a 1-year period of availability and funds day-to-day AF operations, training, maintenance, and most services contracts. 3600 is RDT&E, 3010 is Aircraft Procurement, and 3080 is Other Procurement."
           },
           {
             id: 'q2',
-            question: "Using the most statistically accurate EAC formula for a program that is 30% complete, BAC = $100M and CPI = 0.85:",
-            options: ['$100M', '$115M', '$117.6M', '$85M'],
+            question: "Which statutory principle states that appropriations may only be used for the purposes Congress intended?",
+            options: ['Anti-Deficiency Act', 'Bona Fide Need Rule', 'Purpose Statute (31 U.S.C. § 1301)', 'Time Statute (31 U.S.C. § 1502)'],
             correct: 2,
-            explanation: "EAC = BAC / CPI = $100M / 0.85 = $117.6M. This formula is the most accurate predictor once a program is more than 20% complete. The projected overrun of $17.6M signals a systemic cost efficiency problem."
+            explanation: "The Purpose Statute (31 U.S.C. § 1301) is the core rule that each appropriation may only be applied to its intended purpose. Using O&M funds for procurement, or RDT&E for O&M activities, violates this statute — regardless of whether sufficient funds exist."
           },
           {
             id: 'q3',
-            question: "What does a Schedule Performance Index (SPI) of 0.80 indicate?",
-            options: ['The program is 20% over budget', 'For every $1.00 of work planned, only $0.80 of work has been accomplished — behind schedule', 'The program has completed 80% of its total work', 'The schedule has slipped by 20 days'],
+            question: "RDT&E appropriations have what period of availability?",
+            options: ['1 year', '2 years', '3 years', '5 years'],
             correct: 1,
-            explanation: "SPI = EV / PV = 0.80 means only 80 cents of planned work has been accomplished for every dollar of work scheduled. The program is behind schedule. SPI < 1.0 always means behind schedule; SPI > 1.0 means ahead of schedule."
+            explanation: "RDT&E appropriations have a 2-year period of availability, reflecting the multi-year nature of development activities. O&M has 1 year, Procurement has 3 years, and MILCON has 5 years."
           },
           {
             id: 'q4',
-            question: "The To-Complete Performance Index (TCPI) represents:",
-            options: ['The CPI achieved so far on the program', 'The cost efficiency required on remaining work to achieve the EAC', 'The ratio of planned work to actual work', 'The schedule efficiency required to meet the deadline'],
-            correct: 1,
-            explanation: "TCPI = (BAC - EV) / (EAC - AC). It tells you the cost efficiency you must achieve on all remaining work to hit your EAC. A TCPI > 1.10 is generally considered unrealistic — it means you need to be significantly more efficient than you've been, which rarely happens."
+            question: "The Navy's Shipbuilding & Conversion (SCN) appropriation uses which Treasury Account Symbol?",
+            options: ['17-1506', '17-1507', '17-1611', '17-1804'],
+            correct: 2,
+            explanation: "Navy Shipbuilding & Conversion (SCN) uses TAS 17-1611. This is the appropriation that funds construction of Navy vessels — carriers (CVN), destroyers (DDG), submarines (SSN/SSBN), and amphibious ships. 17-1506 is Aircraft Procurement Navy, 17-1507 is Weapons Procurement Navy, and 17-1804 is Other Procurement Navy."
           },
           {
             id: 'q5',
-            question: "EVM is contractually required on DoD contracts above what minimum threshold?",
-            options: ['$5M', '$20M', '$50M', '$100M'],
-            correct: 1,
-            explanation: "DFARS 252.234-7002 requires Earned Value Management System (EVMS) compliance on DoD contracts above $20M. Programs above $100M require a formal EVMS that meets ANSI/EIA-748 criteria and is subject to government review and acceptance."
+            question: "An Army program wants to buy 500 Javelin anti-tank missile systems in production. Which appropriation should be used?",
+            options: ['Army O&M (2400)', 'Army RDT&E', 'Army Missile Procurement (21-2020)', 'Army Other Procurement (21-2060)'],
+            correct: 2,
+            explanation: "Production quantities of guided missiles are funded with Procurement appropriations. For the Army, Missile Procurement (TAS 21-2020) specifically funds production of missiles including Javelin, Patriot, and Stinger. Using O&M or RDT&E for production purchases would violate the Purpose Statute."
           },
           {
             id: 'q6',
-            question: "In EVM, the Performance Measurement Baseline (PMB) is:",
-            options: ['The original program budget as approved at Milestone B', 'The time-phased budget plan against which actual performance is measured (BAC minus MR)', 'The contractor\'s cost estimate for the remaining work', 'The government\'s independent cost estimate'],
+            question: "The Bona Fide Need Rule requires that appropriated funds be used for:",
+            options: ['The most cost-effective solution available', 'Needs that legitimately arose during the appropriation\'s period of availability', 'Purchases over $250K only', 'Programs listed in the FYDP'],
             correct: 1,
-            explanation: "The PMB is the time-phased budget baseline for all authorized work, equal to BAC minus Management Reserve (MR). MR is held above the PMB by the PM and not included in the performance measurement baseline. Variances are measured against the PMB, not the total program budget."
+            explanation: "The Bona Fide Need Rule (31 U.S.C. § 1502(a)) requires that funds obligated must meet a legitimate need that arose during the fund's period of availability. For example, you cannot use FY2025 O&M funds in FY2025 to pre-pay for services entirely to be delivered in FY2027 — the need hasn't arisen yet."
           },
           {
             id: 'q7',
-            question: "A Cost Variance (CV) of -$2M means:",
-            options: ['The program is $2M ahead of schedule', 'The program has spent $2M less than planned', 'The program has spent $2M more than the earned value of work accomplished', 'The program will overrun by $2M at completion'],
+            question: "After a fund's period of availability expires, the unobligated balance enters \"expired\" status. For how many additional years can these expired funds still be used to pay existing obligations?",
+            options: ['1 year', '2 years', '5 years', 'They cannot be used at all'],
             correct: 2,
-            explanation: "CV = EV - AC. A negative CV (-$2M) means the program has spent $2M more (AC) than the budget value of work accomplished (EV). This is a cost overrun on the work performed to date. It does NOT directly state the final overrun — that requires an EAC calculation."
+            explanation: "After the period of availability ends, funds enter a 5-year expired period during which they can still adjust or liquidate existing obligations (pay invoices on contracts that were properly obligated during the availability period). After 5 years, the funds are permanently cancelled and returned to the Treasury."
           },
           {
             id: 'q8',
-            question: "Which IPMR format specifically covers problem analysis — explaining the root cause of significant variances?",
-            options: ['Format 1', 'Format 3', 'Format 5', 'Format 7'],
+            question: "Which Air Force appropriation specifically funds the procurement of aircraft such as the F-35A and KC-46?",
+            options: ['57-3400 (O&M)', '57-3600 (RDT&E)', '57-3010 (Aircraft Procurement)', '57-3080 (Other Procurement AF)'],
             correct: 2,
-            explanation: "IPMR Format 5 is the \"Problem Analysis Report\" — it requires the contractor to explain significant variances (typically CV% or SV% above threshold), identify root causes, and describe corrective action plans. This format is often the most closely scrutinized by program managers."
+            explanation: "TAS 57-3010 — Aircraft Procurement, Air Force — funds the production purchase of Air Force aircraft including the F-35A, KC-46 tanker, C-130J, and B-21. RDT&E (3600) funds their development and testing, while O&M (3400) funds sustainment after fielding."
           },
           {
             id: 'q9',
-            question: "According to Christensen's research, when a program's CPI is established at what completion percentage, it rarely improves significantly?",
-            options: ['10%', '15%', '20%', '50%'],
+            question: "A program manager uses O&M funds to construct a new $2 million maintenance facility. This likely violates:",
+            options: ['The Bona Fide Need Rule only', 'The Time Statute only', 'The Purpose Statute — construction over $750K threshold requires MILCON appropriations', 'No rule, since O&M can fund any maintenance-related activity'],
             correct: 2,
-            explanation: "Christensen's landmark 1993 study found that the CPI at 20% program completion is a highly reliable predictor of final CPI, and that the final CPI is almost always worse than the CPI at 20% completion. This is why early EVM analysis is critical — problems caught at 15% are far cheaper to fix than at 50%."
+            explanation: "Permanent construction above $1.5M ($750K in some contexts) generally requires MILCON appropriations — not O&M. Using O&M for construction that should be MILCON violates the Purpose Statute. \"Minor construction\" below threshold may use O&M, but a $2M facility exceeds that threshold."
           },
           {
             id: 'q10',
-            question: "Management Reserve (MR) in an EVMS context is:",
-            options: ['Budget included in the PMB for identified risks', 'Budget held outside the PMB by the PM to handle unplanned work or risks', 'The contractor\'s profit margin on a cost-plus contract', 'Undistributed budget awaiting work package assignment'],
+            question: "DARPA's research and development funding falls under which Defense-Wide appropriation?",
+            options: ['97-0400 (O&M Defense-Wide)', '97-0400 (RDT&E Defense-Wide)', '17-1506 (Aircraft Procurement Navy)', '57-3600 (RDT&E Air Force)'],
             correct: 1,
-            explanation: "Management Reserve is budget held by the PM above (outside) the Performance Measurement Baseline. It is not in the PMB, not distributed to work packages, and requires formal authorization to use. MR covers unforeseen in-scope work. Undistributed Budget (UB) is different — it's budget not yet assigned to specific work packages but IS within the PMB."
+            explanation: "DARPA, the Missile Defense Agency (MDA), and other defense-wide R&D activities are funded through RDT&E Defense-Wide appropriations (TAS 97-0603/0400 series). Each Service has its own RDT&E account (Air Force 3600, Army 2040, Navy 1319), but DARPA and other OSD-level agencies use the Defense-Wide account."
           }
         ]
-      },
-      {
+      }
+,
+{
         id: 'finance-3',
         title: 'Cost Estimating & Independent Cost Estimates',
         duration: '24 min',
@@ -1700,181 +1736,145 @@ export const modules: Module[] = [
       },
       // ── NEW LESSON: Finance-4 (Appropriations by Service / Color of Money) ──
       {
-        id: 'finance-4',
-        title: 'DoD Appropriations by Service: Color of Money',
-        duration: '20 min',
-        description: 'Master the specific appropriation accounts used across the Army, Navy, Air Force, and Marine Corps — and why using the wrong "color of money" is a federal violation.',
+        id: 'finance-2',
+        title: 'Earned Value Management (EVM)',
+        duration: '18 min',
+        description: 'Learn how to use EVM to measure cost and schedule performance on DoD contracts.',
         keyTerms: [
-          { term: 'TAS', definition: 'Treasury Account Symbol — the unique identifier for each appropriation account (e.g., AF 3400 for Air Force O&M).' },
-          { term: 'O&M', definition: 'Operations & Maintenance — 1-year appropriation funding day-to-day operations, maintenance, and most services contracts.' },
-          { term: 'RDT&E', definition: 'Research, Development, Test & Evaluation — 2-year appropriation funding research and development activities.' },
-          { term: 'Procurement', definition: '3-year appropriation funding production and purchase of end-items (aircraft, ships, missiles, vehicles).' },
-          { term: 'MILCON', definition: 'Military Construction — 5-year appropriation funding construction of military facilities.' },
-          { term: 'Bona Fide Need Rule', definition: 'Funds may only be used to satisfy a legitimate, genuine need that arose during the period of availability.' },
-          { term: 'Purpose Statute', definition: '31 U.S.C. § 1301 — appropriations may only be applied to the objects for which they were made.' },
-          { term: 'Color of Money', definition: 'The appropriation type funding a particular contract line — mixing appropriation types on one CLIN is illegal.' },
-          { term: 'Expired Funds', definition: 'Funds past their period of availability but still available for 5 years to adjust or pay existing obligations.' },
-          { term: 'Canceled Funds', definition: 'Funds that have completed the 5-year expired period; permanently returned to the Treasury.' },
+          { term: 'EVM', definition: 'Earned Value Management — an integrated cost/schedule/technical performance measurement methodology.' },
+          { term: 'BCWS (PV)', definition: 'Budgeted Cost of Work Scheduled (Planned Value) — what you planned to spend by now.' },
+          { term: 'BCWP (EV)', definition: 'Budgeted Cost of Work Performed (Earned Value) — the budget value of work actually accomplished.' },
+          { term: 'ACWP (AC)', definition: 'Actual Cost of Work Performed (Actual Cost) — what you actually spent.' },
+          { term: 'CPI', definition: 'Cost Performance Index — efficiency of cost performance (EV/AC).' },
+          { term: 'SPI', definition: 'Schedule Performance Index — efficiency of schedule performance (EV/PV).' },
+          { term: 'EAC', definition: 'Estimate at Completion — the projected total cost to complete the program.' },
         ],
         content: [
           {
             type: 'text',
-            heading: "Why \"Color of Money\" Can End Your Career",
-            body: "Every appropriation type has strict statutory limits on what it can buy. Using RDT&E money to fund a production contract, or O&M money to fund a capital acquisition, is a federal violation of the Purpose Statute (31 U.S.C. § 1301). Program Managers who ignore these rules face potential Antideficiency Act violations, personal liability, and career termination. Understanding each appropriation's \"color\" — and matching the right color to the right expenditure — is non-negotiable."
-          },
-          {
-            type: 'table',
-            heading: "Major Appropriation Types: Rules & Period of Availability",
-            headers: ['Appropriation', 'What It Funds', 'Period of Availability', 'Key Rule'],
-            rows: [
-              ['O&M', 'Operations, training, maintenance, most services contracts under $250K threshold', '1 Year', 'Cannot fund capital equipment > $250K or construction > $750K'],
-              ['RDT&E', 'Research, development, prototypes, testing — from basic research through system development', '2 Years', 'Cannot fund production quantities; use ends at Milestone C'],
-              ['Procurement', 'Production units, end-items: aircraft, ships, missiles, vehicles, major components', '3 Years', 'System must be past Milestone C / production-ready'],
-              ['MILCON', 'Permanent construction of buildings, infrastructure, and facilities', '5 Years', 'Threshold $1.5M+; below threshold uses O&M (minor construction)'],
-              ['MILPERS', 'Military pay, allowances, bonuses, PCS moves', '1 Year', 'Cannot fund civilian personnel or contractor costs'],
-            ]
-          },
-          {
-            type: 'text',
-            heading: "The Three Laws Governing Appropriations Use",
-            body: "Three statutory principles govern every spending decision in DoD: (1) The Purpose Statute (31 U.S.C. § 1301) — funds may only be used for what Congress intended. (2) The Time Statute (31 U.S.C. § 1502) — funds may only obligate for needs arising within their period of availability. (3) The Amount Statute / Antideficiency Act (31 U.S.C. §§ 1341, 1342) — cannot obligate more than was appropriated. Violating any of these three is a federal offense."
-          },
-          {
-            type: 'table',
-            heading: "Per-Service Treasury Account Symbols (TAS) — Key Accounts",
-            headers: ['Service', 'Appropriation', 'TAS', 'What It Funds'],
-            rows: [
-              ['Air Force', 'O&M', '57-3400', 'AF operations, training, depot maintenance, most AF services'],
-              ['Air Force', 'RDT&E', '57-3600', 'AF research, development, testing — from basic research to EMD'],
-              ['Air Force', 'Aircraft Procurement', '57-3010', 'Procurement of AF aircraft (F-35A, C-130, KC-46, etc.)'],
-              ['Air Force', 'Missile Procurement', '57-3020', 'Procurement of AF missiles (JASSM, AMRAAM, ICBM sustainment production)'],
-              ['Air Force', 'Other Procurement AF', '57-3080', 'AF vehicles, C2 systems, comm equipment, training equipment'],
-              ['Army', 'O&M', '21-2010 (2400)', 'Army operations, training, depot maintenance, most Army services'],
-              ['Army', 'RDT&E', '21-0400 (2040)', 'Army research and development'],
-              ['Army', 'Aircraft Procurement', '21-2010', 'Army rotary-wing aircraft (AH-64, UH-60, CH-47)'],
-              ['Army', 'Missile Procurement', '21-2020', 'Army missiles (Patriot, Stinger, Javelin production)'],
-              ['Army', 'Procurement of W&TCV', '21-2035', 'Wheeled & tracked combat vehicles (M1 Abrams, Bradley, Stryker)'],
-              ['Army', 'Other Procurement Army', '21-2060', 'Army C4I, aircraft modifications, soldier systems'],
-              ['Navy', 'O&M (Navy)', '17-1453', 'Navy operations, training, base support'],
-              ['Navy', 'O&M (Marine Corps)', '17-1105', 'USMC operations and training'],
-              ['Navy', 'Aircraft Procurement Navy', '17-1506', 'Navy/USMC aircraft (F/A-18, F-35B/C, E-2D, P-8)'],
-              ['Navy', 'Weapons Procurement Navy', '17-1507', 'Navy weapons (Tomahawk, Standard Missile, torpedoes)'],
-              ['Navy', 'Shipbuilding & Conversion', '17-1611', 'Construction and conversion of Navy vessels (CVN, DDG, SSN)'],
-              ['Navy', 'Other Procurement Navy', '17-1804', 'Navy C4ISR, shore activities, training equipment'],
-              ['Navy', 'Procurement Marine Corps', '17-1109', 'USMC procurement (AAV, LAV, ground equipment)'],
-              ['Defense-Wide', 'O&M Defense-Wide', '97-0400 (0100)', 'DISA, DLA, SOCOM, and other defense agencies operations'],
-              ['Defense-Wide', 'RDT&E Defense-Wide', '97-0400 (0603)', 'DARPA, MDA, and other defense agency R&D'],
-            ]
-          },
-          {
-            type: 'callout',
-            heading: "The AF 3400 Account — A PM's Daily Reality",
-            body: "Air Force 3400 (O&M) is the most frequently used appropriation in day-to-day AF program management. It funds training, logistics, maintenance, most advisory & assistance services, and sustainment contracts. When PMs confuse 3400 (O&M) with 3600 (RDT&E) — for example, using 3400 to pay for developmental testing — they violate the Purpose Statute. Always ask: \"Is this work developing/testing a new capability (RDT&E), buying a production item (Procurement), or sustaining/operating an existing capability (O&M)?\""
+            heading: "Why EVM is Critical for Program Managers",
+            body: "EVM is required on most DoD contracts with a value over $20M. It provides an objective, quantitative measure of program performance. Without EVM, PMs rely on subjective \"percent complete\" estimates that are almost always wrong. With EVM, you can detect cost and schedule problems early — often 15-20% into a program — when correction is still possible and affordable."
           },
           {
             type: 'formula',
-            heading: "The Appropriation Decision Framework",
-            formula: 'Is it research/development/testing? → RDT&E\nIs it buying production units/end items? → Procurement (aircraft, ships, missiles, vehicles)\nIs it day-to-day operations/maintenance/services? → O&M\nIs it permanent construction ($1.5M+)? → MILCON\nIs it military pay/allowances? → MILPERS',
-            explanation: "Apply this framework before every obligation decision. When in doubt, consult your budget officer. The consequences of misusing appropriations are serious — every obligation must be traceable to the correct appropriation type."
+            heading: "Core EVM Formulas",
+            formula: 'CV = EV - AC (Cost Variance: positive = under budget)\nSV = EV - PV (Schedule Variance: positive = ahead of schedule)\nCPI = EV / AC (>1.0 = under budget; <1.0 = over budget)\nSPI = EV / PV (>1.0 = ahead of schedule; <1.0 = behind)',
+            explanation: "Memorize these. At any program review, you should be able to calculate CPI and SPI instantly and explain what they mean for the program's trajectory."
           },
           {
-            type: 'text',
-            heading: "What Happens When Funds Expire and Cancel",
-            body: "After a fund's period of availability ends, unobligated balances enter \"expired\" status for 5 years. During this period, the funds can still be used to adjust existing obligations (e.g., pay a contract invoice that was obligated on time). After the 5-year expired window, funds are permanently \"cancelled\" and returned to the Treasury — they cannot be used for any purpose. A FY2024 O&M obligation that generates an invoice in FY2028 is still payable; a FY2024 O&M invoice arriving in FY2031 cannot be paid from those funds."
+            type: 'formula',
+            heading: "Estimate at Completion (EAC)",
+            formula: 'EAC = BAC / CPI (most common — assumes future work at current efficiency)\nEAC = AC + (BAC - EV) (assumes remaining work on original budget)\nEAC = AC + [(BAC - EV) / (CPI × SPI)] (combined factor)',
+            explanation: "BAC = Budget at Completion (the total approved budget). Choose your EAC method based on the nature of variances. The CPI method (BAC/CPI) is statistically the most accurate predictor for programs that are 20%+ complete."
+          },
+          {
+            type: 'callout',
+            heading: "The 20% Threshold Rule",
+            body: "Research by David Christensen (1993) showed that the CPI at 20% program completion is highly predictive of final CPI. Programs rarely recover a CPI worse than 0.8. If your program shows a CPI of 0.75 at 20% completion, plan for overruns — the data is telling you something systemic is wrong."
+          },
+          {
+            type: 'table',
+            heading: "EVM Performance Indicator Benchmarks",
+            headers: ['Indicator', 'Green', 'Yellow', 'Red'],
+            rows: [
+              ['CPI', '>= 0.95', '0.90 - 0.94', '< 0.90'],
+              ['SPI', '>= 0.95', '0.90 - 0.94', '< 0.90'],
+              ['CV%', '<= 5% over', '5-10% over', '> 10% over'],
+              ['TCPI', '<= 1.05', '1.05 - 1.10', '> 1.10'],
+            ]
           },
           {
             type: 'tip',
-            heading: "Real Example: Buying a Radar System",
-            body: "A new radar program follows this funding progression: Basic research uses RDT&E (3600 for AF). Engineering development and testing uses RDT&E. First production units use Procurement (3080 for AF). Fielded radar maintenance and upgrades use O&M (3400 for AF). Training operators uses O&M. Building a radar maintenance facility uses MILCON. The same physical system touches four different appropriation accounts over its life."
+            heading: "IPMR Reporting",
+            body: "The Integrated Program Management Report (IPMR) replaced the CPR and CFSR. The IPMR has seven formats: Format 1 (WBS-based cost/schedule), Format 2 (Organizational), Format 3 (Baseline), Format 4 (Staffing), Format 5 (Problem Analysis), Format 6 (Milestone/IMS), and Format 7 (Explanations). Learn all seven — you'll review these monthly on every major program."
           },
           {
           type: 'text' as const,
           level: 'intermediate' as const,
-          heading: 'Managing Color of Money Across a Complex Program',
-          body: 'Real programs use multiple appropriation types simultaneously. A typical ACAT II program in EMD might have RDT&E funding the development contract, O&M funding government lab support, and MILCON funding a test facility. Each appropriation has different obligation and expenditure rules. The most common mid-career mistake: using RDT&E to fund activities that have crossed into production (violates the appropriation\'s purpose), or letting O&M funds expire while trying to transfer them to RDT&E (not permitted). Your comptroller is your best friend — but you need to give them enough lead time to structure funding actions properly. Last-minute funding transfers almost always fail or create audit exposure.',
+          heading: 'Using EVM Data to Drive Contractor Behavior',
+          body: 'EVM data is only valuable if the government PM uses it to hold contractors accountable. Mid-career PMs should establish a monthly rhythm: review IPMR data within 5 days of receipt, convene a PMR within 10 days, and issue formal corrective action requests for threshold breaches within 15 days. The most powerful question you can ask a contractor at a PMR: "Your Format 5 says you\'ll recover 15 schedule days by end of quarter — what specific tasks will be completed early and by whom?" Vague recovery plans are not plans. Require specificity: named individuals, milestone dates, budget planned for the recovery effort. Document these commitments in meeting minutes so the contractor can\'t walk them back.',
         },
         {
           type: 'callout' as const,
           level: 'advanced' as const,
-          heading: 'Anti-Deficiency Act Violations and How They Happen to Good PMs',
-          body: 'The Anti-Deficiency Act (31 U.S.C. § 1341) prohibits obligating funds in excess of or in advance of appropriations. Violations are career-ending. They happen most often through: (1) continuing contract performance after a CR expires and before new appropriations are enacted without a proper Continuing Resolution Authority authorization; (2) using one appropriation to fund activities that belong to another ("purpose" violations); (3) obligating contracts before funds are available in USASpending. Senior PMs must build a personal funding calendar: when does each appropriation expire? When does the CR end? What is the period of availability for each line item? These are not comptroller problems — they are PM problems. The PM signs the obligation documents.',
+          heading: 'EVM Compliance Surveillance and EVMS Acceptance — What Senior PMs Must Know',
+          body: 'DoDI 5000.02 requires EVMS on cost-type contracts over $20M and fixed-price over $50M. But having EVMS is not enough — the system must be compliant with ANSI/EIA-748. DCMA conducts EVMS surveillance and can issue non-compliance findings. A Level III finding (systemic noncompliance) can result in a compliance improvement plan, increased surveillance, and in extreme cases, withholding of fee. Senior PMs must understand their contractor\'s EVMS compliance status before accepting performance data. An EVMS system that rubber-baselines (retroactively adjusts PMB to reduce variances) produces data that is technically compliant but strategically meaningless. When CPI is suspiciously stable at 1.00 month after month on a complex development contract, question the system — not just the data.',
         },
         ],
       quiz: [
           {
             id: 'q1',
-            question: "What is the Air Force Treasury Account Symbol (TAS) for Operations & Maintenance funds?",
-            options: ['57-3600', '57-3010', '57-3400', '57-3080'],
-            correct: 2,
-            explanation: "The Air Force O&M appropriation is identified by TAS 57-3400 (commonly called \"3400 money\"). It has a 1-year period of availability and funds day-to-day AF operations, training, maintenance, and most services contracts. 3600 is RDT&E, 3010 is Aircraft Procurement, and 3080 is Other Procurement."
+            question: "A program has: PV = $10M, EV = $8M, AC = $9M. What is the Cost Performance Index (CPI)?",
+            options: ['1.125', '0.89', '0.80', '1.25'],
+            correct: 1,
+            explanation: "CPI = EV / AC = $8M / $9M = 0.89. This means for every dollar spent, the program is only earning $0.89 of planned value — the program is over budget. The SPI would be 0.80 (EV/PV = $8M/$10M), meaning it's also behind schedule."
           },
           {
             id: 'q2',
-            question: "Which statutory principle states that appropriations may only be used for the purposes Congress intended?",
-            options: ['Anti-Deficiency Act', 'Bona Fide Need Rule', 'Purpose Statute (31 U.S.C. § 1301)', 'Time Statute (31 U.S.C. § 1502)'],
+            question: "Using the most statistically accurate EAC formula for a program that is 30% complete, BAC = $100M and CPI = 0.85:",
+            options: ['$100M', '$115M', '$117.6M', '$85M'],
             correct: 2,
-            explanation: "The Purpose Statute (31 U.S.C. § 1301) is the core rule that each appropriation may only be applied to its intended purpose. Using O&M funds for procurement, or RDT&E for O&M activities, violates this statute — regardless of whether sufficient funds exist."
+            explanation: "EAC = BAC / CPI = $100M / 0.85 = $117.6M. This formula is the most accurate predictor once a program is more than 20% complete. The projected overrun of $17.6M signals a systemic cost efficiency problem."
           },
           {
             id: 'q3',
-            question: "RDT&E appropriations have what period of availability?",
-            options: ['1 year', '2 years', '3 years', '5 years'],
+            question: "What does a Schedule Performance Index (SPI) of 0.80 indicate?",
+            options: ['The program is 20% over budget', 'For every $1.00 of work planned, only $0.80 of work has been accomplished — behind schedule', 'The program has completed 80% of its total work', 'The schedule has slipped by 20 days'],
             correct: 1,
-            explanation: "RDT&E appropriations have a 2-year period of availability, reflecting the multi-year nature of development activities. O&M has 1 year, Procurement has 3 years, and MILCON has 5 years."
+            explanation: "SPI = EV / PV = 0.80 means only 80 cents of planned work has been accomplished for every dollar of work scheduled. The program is behind schedule. SPI < 1.0 always means behind schedule; SPI > 1.0 means ahead of schedule."
           },
           {
             id: 'q4',
-            question: "The Navy's Shipbuilding & Conversion (SCN) appropriation uses which Treasury Account Symbol?",
-            options: ['17-1506', '17-1507', '17-1611', '17-1804'],
-            correct: 2,
-            explanation: "Navy Shipbuilding & Conversion (SCN) uses TAS 17-1611. This is the appropriation that funds construction of Navy vessels — carriers (CVN), destroyers (DDG), submarines (SSN/SSBN), and amphibious ships. 17-1506 is Aircraft Procurement Navy, 17-1507 is Weapons Procurement Navy, and 17-1804 is Other Procurement Navy."
+            question: "The To-Complete Performance Index (TCPI) represents:",
+            options: ['The CPI achieved so far on the program', 'The cost efficiency required on remaining work to achieve the EAC', 'The ratio of planned work to actual work', 'The schedule efficiency required to meet the deadline'],
+            correct: 1,
+            explanation: "TCPI = (BAC - EV) / (EAC - AC). It tells you the cost efficiency you must achieve on all remaining work to hit your EAC. A TCPI > 1.10 is generally considered unrealistic — it means you need to be significantly more efficient than you've been, which rarely happens."
           },
           {
             id: 'q5',
-            question: "An Army program wants to buy 500 Javelin anti-tank missile systems in production. Which appropriation should be used?",
-            options: ['Army O&M (2400)', 'Army RDT&E', 'Army Missile Procurement (21-2020)', 'Army Other Procurement (21-2060)'],
-            correct: 2,
-            explanation: "Production quantities of guided missiles are funded with Procurement appropriations. For the Army, Missile Procurement (TAS 21-2020) specifically funds production of missiles including Javelin, Patriot, and Stinger. Using O&M or RDT&E for production purchases would violate the Purpose Statute."
+            question: "EVM is contractually required on DoD contracts above what minimum threshold?",
+            options: ['$5M', '$20M', '$50M', '$100M'],
+            correct: 1,
+            explanation: "DFARS 252.234-7002 requires Earned Value Management System (EVMS) compliance on DoD contracts above $20M. Programs above $100M require a formal EVMS that meets ANSI/EIA-748 criteria and is subject to government review and acceptance."
           },
           {
             id: 'q6',
-            question: "The Bona Fide Need Rule requires that appropriated funds be used for:",
-            options: ['The most cost-effective solution available', 'Needs that legitimately arose during the appropriation\'s period of availability', 'Purchases over $250K only', 'Programs listed in the FYDP'],
+            question: "In EVM, the Performance Measurement Baseline (PMB) is:",
+            options: ['The original program budget as approved at Milestone B', 'The time-phased budget plan against which actual performance is measured (BAC minus MR)', 'The contractor\'s cost estimate for the remaining work', 'The government\'s independent cost estimate'],
             correct: 1,
-            explanation: "The Bona Fide Need Rule (31 U.S.C. § 1502(a)) requires that funds obligated must meet a legitimate need that arose during the fund's period of availability. For example, you cannot use FY2025 O&M funds in FY2025 to pre-pay for services entirely to be delivered in FY2027 — the need hasn't arisen yet."
+            explanation: "The PMB is the time-phased budget baseline for all authorized work, equal to BAC minus Management Reserve (MR). MR is held above the PMB by the PM and not included in the performance measurement baseline. Variances are measured against the PMB, not the total program budget."
           },
           {
             id: 'q7',
-            question: "After a fund's period of availability expires, the unobligated balance enters \"expired\" status. For how many additional years can these expired funds still be used to pay existing obligations?",
-            options: ['1 year', '2 years', '5 years', 'They cannot be used at all'],
+            question: "A Cost Variance (CV) of -$2M means:",
+            options: ['The program is $2M ahead of schedule', 'The program has spent $2M less than planned', 'The program has spent $2M more than the earned value of work accomplished', 'The program will overrun by $2M at completion'],
             correct: 2,
-            explanation: "After the period of availability ends, funds enter a 5-year expired period during which they can still adjust or liquidate existing obligations (pay invoices on contracts that were properly obligated during the availability period). After 5 years, the funds are permanently cancelled and returned to the Treasury."
+            explanation: "CV = EV - AC. A negative CV (-$2M) means the program has spent $2M more (AC) than the budget value of work accomplished (EV). This is a cost overrun on the work performed to date. It does NOT directly state the final overrun — that requires an EAC calculation."
           },
           {
             id: 'q8',
-            question: "Which Air Force appropriation specifically funds the procurement of aircraft such as the F-35A and KC-46?",
-            options: ['57-3400 (O&M)', '57-3600 (RDT&E)', '57-3010 (Aircraft Procurement)', '57-3080 (Other Procurement AF)'],
+            question: "Which IPMR format specifically covers problem analysis — explaining the root cause of significant variances?",
+            options: ['Format 1', 'Format 3', 'Format 5', 'Format 7'],
             correct: 2,
-            explanation: "TAS 57-3010 — Aircraft Procurement, Air Force — funds the production purchase of Air Force aircraft including the F-35A, KC-46 tanker, C-130J, and B-21. RDT&E (3600) funds their development and testing, while O&M (3400) funds sustainment after fielding."
+            explanation: "IPMR Format 5 is the \"Problem Analysis Report\" — it requires the contractor to explain significant variances (typically CV% or SV% above threshold), identify root causes, and describe corrective action plans. This format is often the most closely scrutinized by program managers."
           },
           {
             id: 'q9',
-            question: "A program manager uses O&M funds to construct a new $2 million maintenance facility. This likely violates:",
-            options: ['The Bona Fide Need Rule only', 'The Time Statute only', 'The Purpose Statute — construction over $750K threshold requires MILCON appropriations', 'No rule, since O&M can fund any maintenance-related activity'],
+            question: "According to Christensen's research, when a program's CPI is established at what completion percentage, it rarely improves significantly?",
+            options: ['10%', '15%', '20%', '50%'],
             correct: 2,
-            explanation: "Permanent construction above $1.5M ($750K in some contexts) generally requires MILCON appropriations — not O&M. Using O&M for construction that should be MILCON violates the Purpose Statute. \"Minor construction\" below threshold may use O&M, but a $2M facility exceeds that threshold."
+            explanation: "Christensen's landmark 1993 study found that the CPI at 20% program completion is a highly reliable predictor of final CPI, and that the final CPI is almost always worse than the CPI at 20% completion. This is why early EVM analysis is critical — problems caught at 15% are far cheaper to fix than at 50%."
           },
           {
             id: 'q10',
-            question: "DARPA's research and development funding falls under which Defense-Wide appropriation?",
-            options: ['97-0400 (O&M Defense-Wide)', '97-0400 (RDT&E Defense-Wide)', '17-1506 (Aircraft Procurement Navy)', '57-3600 (RDT&E Air Force)'],
+            question: "Management Reserve (MR) in an EVMS context is:",
+            options: ['Budget included in the PMB for identified risks', 'Budget held outside the PMB by the PM to handle unplanned work or risks', 'The contractor\'s profit margin on a cost-plus contract', 'Undistributed budget awaiting work package assignment'],
             correct: 1,
-            explanation: "DARPA, the Missile Defense Agency (MDA), and other defense-wide R&D activities are funded through RDT&E Defense-Wide appropriations (TAS 97-0603/0400 series). Each Service has its own RDT&E account (Air Force 3600, Army 2040, Navy 1319), but DARPA and other OSD-level agencies use the Defense-Wide account."
+            explanation: "Management Reserve is budget held by the PM above (outside) the Performance Measurement Baseline. It is not in the PMB, not distributed to work packages, and requires formal authorization to use. MR covers unforeseen in-scope work. Undistributed Budget (UB) is different — it's budget not yet assigned to specific work packages but IS within the PMB."
           }
         ]
-      }
-,
-{
+      },
+      {
         id: 'finance-5',
         title: 'EAC Deep Dive: Forecasting Final Program Cost',
         duration: '22 min',
@@ -2547,6 +2547,177 @@ export const modules: Module[] = [
     description: 'Master contract types, the source selection process, contract administration, and how to protect the government\'s interests.',
     lessons: [
       {
+        id: 'contracts-4',
+        title: 'Contracts vs. Task Orders: Know the Difference',
+        duration: '14 min',
+        description: 'Understand the fundamental distinction between base contracts and task orders — and why it matters for how work gets authorized, modified, and paid.',
+        keyTerms: [
+          { term: 'IDIQ', definition: 'Indefinite Delivery / Indefinite Quantity — a contract type that establishes terms and conditions for ordering supplies or services over time.' },
+          { term: 'Task Order (TO)', definition: 'An order for services placed under an IDIQ contract — the mechanism that authorizes and funds specific work.' },
+          { term: 'Delivery Order (DO)', definition: 'An order for supplies placed under an IDIQ contract (parallel to task order, but for products).' },
+          { term: 'MAC-IDIQ', definition: 'Multiple Award Contract IDIQ — competition is split among multiple awardees who then compete for individual task orders.' },
+          { term: 'GWAC', definition: 'Government-Wide Acquisition Contract — an IDIQ available for use by multiple federal agencies, awarded by a lead agency.' },
+          { term: 'Ordering Period', definition: 'The time window during which task orders may be placed under an IDIQ contract (distinct from the period of performance on individual TOs).' },
+          { term: 'Ceiling', definition: 'The maximum dollar value of all orders that may be placed under an IDIQ contract.' },
+          { term: 'Minimum Guarantee', definition: 'The minimum value the government is obligated to order under an IDIQ — typically a nominal amount ($1,000–$25,000).' },
+          { term: 'Fair Opportunity', definition: 'The requirement under FAR 16.505 to provide each MAC-IDIQ awardee a fair opportunity to compete for each task order over $3,500.' },
+          { term: 'BPA', definition: 'Blanket Purchase Agreement — a simplified ordering agreement under GSA Schedule or open market, similar in concept to an IDIQ but without minimum/maximum guarantees.' },
+        ],
+        content: [
+          {
+            type: 'text',
+            heading: "Two Levels of Agreement",
+            body: "In federal contracting, there are two distinct levels of agreement you must understand: the base contract and the order. The base contract (the IDIQ) establishes all the legal terms and conditions — pricing, labor categories, clauses, applicable regulations, and the overall ordering ceiling. The task order (TO) is where actual work gets authorized and funded. No work begins until a task order is issued. This two-level structure gives agencies flexibility to order services on demand without re-competing every single requirement."
+          },
+          {
+            type: 'table',
+            heading: "Contract vs. Task Order vs. BPA: Key Differences",
+            headers: ['Element', 'IDIQ Base Contract', 'Task Order', 'BPA'],
+            rows: [
+              ['What it does', 'Establishes legal framework, terms, clauses, labor rates', 'Authorizes & funds specific work', 'Sets up ordering arrangement (no guaranteed min/max)'],
+              ['When competed', 'Once, at contract award', 'Each order (fair opportunity)', 'Once, at BPA establishment'],
+              ['Funds obligated', 'Only minimum guarantee at award', 'Full amount of each order', 'At time of call (order) placement'],
+              ['Period', 'Ordering period (e.g., 5+5 years)', 'Task order PoP (can extend past IDIQ ordering period)', 'Typically 1 year, renewable'],
+              ['Modifications', 'Change terms, rates, ceiling, ordering period', 'Change scope/funding on that specific task', 'Modify terms of BPA arrangement'],
+              ['Competition', 'Full & open or small biz set-aside', 'Fair opportunity among awardees', 'Schedule price competition'],
+            ]
+          },
+          {
+            type: 'text',
+            heading: "How IDIQs Work: Single Award vs. Multiple Award",
+            body: "A Single Award IDIQ gives one contractor exclusive rights to receive all task orders — appropriate when a single firm has unique capabilities. A Multiple Award Contract IDIQ (MAC-IDIQ) awards the base contract to multiple vendors who then compete for individual task orders. FAR 16.504 establishes a preference for multiple awards because they maintain price competition at the task order level and give the government access to a pool of qualified vendors."
+          },
+          {
+            type: 'list',
+            heading: "The IDIQ Ordering Process (Step by Step)",
+            items: [
+              'Step 1: Requirement identified — program office describes work needed',
+              'Step 2: Determine if an existing IDIQ can satisfy the requirement (scope check)',
+              'Step 3: Issue a task order Request for Proposal (TORFP) to awardees in the pool',
+              'Step 4: Provide fair opportunity — all pool members get a reasonable chance to compete',
+              'Step 5: Evaluate task order proposals (simplified process vs. full source selection)',
+              'Step 6: Award task order to the best value offeror',
+              'Step 7: Execute work; administer the task order like a standalone contract',
+              'Step 8: Modify the task order (not the base contract) for scope/funding changes',
+            ]
+          },
+          {
+            type: 'callout',
+            heading: "The Fair Opportunity Requirement",
+            body: "FAR 16.505 requires that for MAC-IDIQ task orders over $3,500, all awardees must receive a fair opportunity to compete — meaning each must receive notice of the opportunity and a reasonable time to respond. Six narrow exceptions allow sole-source task orders: urgency, only one awardee is capable, follow-on to a prototype, logical follow-on, minimum guarantee, and national security. Bypassing fair opportunity without a valid exception is illegal and a common IG finding."
+          },
+          {
+            type: 'formula',
+            heading: "IDIQ Contract Structure",
+            formula: 'IDIQ Contract = Base Contract (terms, rates, ceiling) + n Task Orders\nTotal ordered value ≤ Maximum Ceiling\nTotal ordered value ≥ Minimum Guarantee\nEach Task Order = Independent Scope + Independent Funding + Independent PoP',
+            explanation: "The base contract ceiling sets the absolute limit on cumulative task order value. The minimum guarantee is the only amount the government is legally obligated to order — it protects the contractor's investment in the contract. Each task order is funded independently with its own period of performance."
+          },
+          {
+            type: 'table',
+            heading: "Common DoD IDIQ Vehicles by Type",
+            headers: ['Contract Vehicle', 'Type', 'Administered By', 'Best For'],
+            rows: [
+              ['OASIS+', 'MAC-IDIQ GWAC', 'GSA', 'Professional services across all disciplines'],
+              ['Alliant 2', 'MAC-IDIQ GWAC', 'GSA', 'Large-scale IT services and solutions'],
+              ['STARS III', 'MAC-IDIQ GWAC (SDVOSB/SB)', 'GSA', 'IT services — small business set-aside'],
+              ['SeaPort-NxG', 'MAC-IDIQ', 'NAVSEA', 'Navy engineering and program support'],
+              ['AFCAP IV', 'MAC-IDIQ', 'AFCEC', 'Air Force contingency base support'],
+              ['EAGLE II', 'MAC-IDIQ', 'DHS', 'IT solutions for DHS components'],
+            ]
+          },
+          {
+            type: 'tip',
+            heading: "Task Order vs. Contract Modification — Don't Confuse Them",
+            body: "A modification to a task order changes the scope, funding, or schedule of that specific task. A modification to the base IDIQ changes the contract-wide terms — labor rates, clauses, ceiling value, ordering period, or adding/removing CLINs. Most day-to-day changes (adding work, extending a PoP, adding funding) are task order mods. Changes to underlying pricing or terms require base contract modifications."
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'IDIQ Management: Ceiling vs. Scope vs. Competition',
+          body: 'Mid-career PMs using IDIQs and GWACs must navigate three overlapping constraints: (1) the IDIQ ceiling — you cannot exceed the maximum order value without a modification, but you can order below the minimum; (2) scope limitations — task orders must be within the IDIQ\'s scope (ordering outside scope violates CICA and creates protest risk); (3) competition requirements — most IDIQs require fair opportunity among all awardees for task orders above $3,500 (DARS 16.505). The most common mid-career mistake: treating an IDIQ as a preferred vehicle even when better-suited vehicles exist, or placing task orders that are technically "within scope" but stretch the scope definition to the breaking point. Contractors monitor IDIQ usage patterns and will protest if they believe scope is being stretched to steer work.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Bridge Contracts and Option Exercise Discipline',
+          body: 'Two of the most common contracting failures senior PMs face: bridge contracts and missed option windows. Bridge contracts (short-term extensions to maintain continuity between contracts) are legal but signal poor acquisition planning, attract GAO scrutiny, and often pay above-market rates because competition is waived. The bridge becomes a habit — some programs have been on "bridge" for 5+ years, paying a sole-source premium indefinitely. Option exercise discipline: options must be exercised before expiration — missed windows forfeit the option and require a new competition. With 12-24 month options, build a calendar trigger 90 days before each option expiration. The J&A required for a bridge after a missed option is a career embarrassment that documents your planning failure for the record.',
+        },
+        ],
+      quiz: [
+          {
+            id: 'q1',
+            question: "Under a Multiple Award IDIQ contract, what is the primary mechanism that actually authorizes a contractor to begin work and obligates government funding?",
+            options: ['The base IDIQ contract award', 'A task order (or delivery order) issued under the IDIQ', 'A Blanket Purchase Agreement call', 'A contract modification to the base IDIQ'],
+            correct: 1,
+            explanation: "The IDIQ base contract establishes the legal framework and terms but does NOT authorize specific work or obligate funds. A task order (or delivery order for supplies) is the mechanism that authorizes a specific scope of work and obligates the corresponding funding. No work should begin without an issued task order."
+          },
+          {
+            id: 'q2',
+            question: "What is the minimum guarantee on an IDIQ contract, and why does it exist?",
+            options: ['50% of the contract ceiling, to ensure the contractor recovers setup costs', 'A nominal amount (typically $1K–$25K) obligated at award, protecting the contractor from a zero-value contract', 'The amount needed to fund the first task order', 'The government\'s estimated annual spend, used for market research'],
+            correct: 1,
+            explanation: "The minimum guarantee is a nominal amount (typically $1,000–$25,000) obligated at contract award that represents the government's only guaranteed obligation under the IDIQ. It protects the contractor from the scenario where no task orders are ever placed. Above the minimum, the government has no obligation to order any specific amount up to the ceiling."
+          },
+          {
+            id: 'q3',
+            question: "FAR 16.505 requires \"fair opportunity\" for MAC-IDIQ task orders above what threshold?",
+            options: ['$100,000', '$250,000', '$3,500', '$1,000,000'],
+            correct: 2,
+            explanation: "FAR 16.505 requires that all MAC-IDIQ awardees receive fair opportunity to compete for task orders exceeding $3,500. Below this threshold, the contracting officer may place orders without following the fair opportunity procedures. This relatively low threshold means nearly all meaningful task orders require fair opportunity competition."
+          },
+          {
+            id: 'q4',
+            question: "What distinguishes an IDIQ contract from a Blanket Purchase Agreement (BPA)?",
+            options: ['BPAs have a maximum ceiling; IDIQs do not', 'IDIQs have enforceable minimum/maximum quantities; BPAs have no such guarantees', 'BPAs require full and open competition; IDIQs do not', 'IDIQs are only for services; BPAs are only for supplies'],
+            correct: 1,
+            explanation: "IDIQs have both a minimum guarantee (legally obligated at award) and a maximum ceiling (cannot exceed). BPAs are simplified ordering arrangements — typically against GSA Schedule contracts — with no minimum guarantee and no maximum ceiling (though agencies usually set an estimated value). BPAs are simpler to establish but provide less legal certainty."
+          },
+          {
+            id: 'q5',
+            question: "The \"ordering period\" on an IDIQ contract refers to:",
+            options: ['The period of performance for individual task orders', 'The time window during which new task orders may be placed against the IDIQ', 'The fiscal year in which funds were appropriated', 'The time from award to the first task order competition'],
+            correct: 1,
+            explanation: "The ordering period defines when task orders may be placed. A common structure is 5 years base plus one 5-year option. Task order periods of performance CAN extend beyond the IDIQ ordering period (a common misconception) — what matters is that the task order itself was awarded before the ordering period closed."
+          },
+          {
+            id: 'q6',
+            question: "Which of the following is NOT a recognized exception to the fair opportunity requirement under FAR 16.505?",
+            options: ['Urgency — need so urgent that fair opportunity would cause harm', 'Only one IDIQ awardee is technically capable of performing the work', 'The contracting officer prefers working with a particular contractor', 'Minimum guarantee — task order to fulfill the contract\'s minimum'],
+            correct: 2,
+            explanation: "Personal preference is never a valid exception to fair opportunity. The six valid exceptions are: urgency, only one awardee is capable, logical follow-on to a prototype, follow-on for consistency, minimum guarantee order, and national security. Violating fair opportunity without a documented exception is a serious contracting violation."
+          },
+          {
+            id: 'q7',
+            question: "The IDIQ contract vehicle OASIS+ (administered by GSA) is best described as:",
+            options: ['A single-award IDIQ for IT services only', 'A Government-Wide Acquisition Contract (GWAC) MAC-IDIQ for professional services available to all federal agencies', 'A Navy-specific contract vehicle for shipbuilding support', 'A simplified acquisition tool for purchases under $250K'],
+            correct: 1,
+            explanation: "OASIS+ (One Acquisition Solution for Integrated Services Plus) is a GSA-administered GWAC MAC-IDIQ that provides professional services across multiple functional areas (management consulting, engineering, R&D, financial management, logistics, IT) to all federal agencies. It replaced the original OASIS contract and is structured with unrestricted and small business pools."
+          },
+          {
+            id: 'q8',
+            question: "A program manager wants to add new work to an existing task order that was not in the original task order statement of work. The correct action is to:",
+            options: ['Issue a new task order for the additional work', 'Verbally direct the contractor to start the new work immediately', 'Execute a task order modification adding the new scope and corresponding funding', 'Award a new sole-source contract for the additional work'],
+            correct: 2,
+            explanation: "New in-scope work under an existing task order should be incorporated through a task order modification (bilateral mod signed by both parties, or a unilateral mod if using Changes clause). The modification adds the scope and obligates additional funding. Simply directing the contractor to start work without a mod is an unauthorized commitment and a constructive change."
+          },
+          {
+            id: 'q9',
+            question: "Under a MAC-IDIQ, when a task order competition results in an award, which document governs the evaluation of task order proposals?",
+            options: ['The evaluation criteria in the original base IDIQ solicitation', 'The task order Request for Proposal (TORFP) issued to the pool', 'The Federal Acquisition Regulation Part 15 formal source selection process', 'The GSA Price List for schedule contracts'],
+            correct: 1,
+            explanation: "Task order competitions use a Task Order Request for Proposal (TORFP) that specifies the requirements, evaluation factors, and instructions for that specific task. This is typically a simplified process compared to full FAR Part 15 source selection — but the same principles of consistency and documentation apply, and task order awards can be protested to GAO or the CO."
+          },
+          {
+            id: 'q10',
+            question: "A government program has multiple contractors all holding IDIQ contracts under the same MAC vehicle. To place a task order, the ordering officer must:",
+            options: ['Select whichever contractor most recently won an order to balance workload', 'Issue a TORFP providing all eligible pool members a fair opportunity to compete', 'Always select the lowest-priced contractor from the original competition', 'Get CO approval only if the order exceeds the simplified acquisition threshold'],
+            correct: 1,
+            explanation: "Under a MAC-IDIQ, the ordering officer must provide all pool members a fair opportunity to compete by issuing a TORFP. This maintains competition at the task order level and is the core benefit of the MAC-IDIQ structure. Bypassing fair opportunity without a valid FAR 16.505 exception is illegal."
+          }
+        ]
+      },
+      // ── NEW LESSON: Contracts-5 (GSA Vehicles: OASIS+, FEDSIM, AAS-D — Advanced) ──
+      {
         id: 'contracts-1',
         title: 'Contract Types: Choosing the Right Vehicle',
         duration: '16 min',
@@ -2733,6 +2904,230 @@ export const modules: Module[] = [
         ]
       },
       {
+        id: 'contracts-5',
+        title: 'GSA Vehicles: OASIS+, FEDSIM, and AAS-D',
+        duration: '18 min',
+        description: 'Master the most important government-wide acquisition contracts for professional services — how they work, when to use them, and what the differences are.',
+        keyTerms: [
+          { term: 'GWAC', definition: 'Government-Wide Acquisition Contract — a task order contract established by one agency for use by any federal agency.' },
+          { term: 'OASIS+', definition: 'One Acquisition Solution for Integrated Services Plus — GSA\'s flagship GWAC for professional and technical services across all disciplines.' },
+          { term: 'FEDSIM', definition: 'Federal Systems Integration and Management Center — GSA\'s assisted acquisition service that manages the contracting process on behalf of customer agencies.' },
+          { term: 'AAS-D', definition: 'Assisted Acquisition Services — Defense — GSA\'s defense-focused assisted acquisition service supporting DoD agencies.' },
+          { term: 'Assisted Acquisition', definition: 'When one agency (the servicing agency) conducts an acquisition on behalf of another agency (the requesting agency) using an Economy Act or similar authority.' },
+          { term: 'Ordering Agency', definition: 'The agency that places task orders against a GWAC for its own requirements (distinct from the agency that holds the contract).' },
+          { term: 'Interagency Agreement (IAA)', definition: 'The agreement between the requesting agency and servicing agency (e.g., GSA/FEDSIM) that authorizes the assisted acquisition.' },
+          { term: 'Alliant 2', definition: 'GSA\'s large-scale IT GWAC for complex IT solutions, available to all federal agencies.' },
+          { term: 'STARS III', definition: '8(a) STARS III — GSA\'s GWAC for small business IT services, including 8(a) and HUBZone set-asides.' },
+          { term: 'Economy Act', definition: '31 U.S.C. § 1535 — the statutory authority allowing federal agencies to request services or supplies from other federal agencies.' },
+        ],
+        content: [
+          {
+            type: 'text',
+            heading: "Why GWACs Matter to DoD Program Managers",
+            body: "Government-Wide Acquisition Contracts (GWACs) allow agencies to place task orders without conducting a full standalone acquisition. For DoD program managers, understanding GSA GWACs — especially OASIS+ — is increasingly essential. These vehicles save acquisition lead time, maintain competition, and provide access to pre-vetted contractor pools. Knowing when to use a GWAC vs. competing a standalone contract is a key PM and contracting competency."
+          },
+          {
+            type: 'table',
+            heading: "Major GSA GWACs: At a Glance",
+            headers: ['Vehicle', 'Type', 'Focus', 'Ceiling', 'Pools'],
+            rows: [
+              ['OASIS+', 'MAC-IDIQ GWAC', 'Professional & technical services (all disciplines)', '$60B+', 'Unrestricted + SB pools by functional area'],
+              ['Alliant 2', 'MAC-IDIQ GWAC', 'Large-scale, complex IT services & solutions', '$50B', 'Unrestricted only (Large Business)'],
+              ['STARS III', 'MAC-IDIQ GWAC', 'IT services — small business', '$50B', '8(a), WOSB, SDVOSB, HUBZone pools'],
+              ['8(a) STARS III', 'MAC-IDIQ GWAC', 'IT services — 8(a) SDB only', '(part of STARS III)', '8(a) small disadvantaged business'],
+              ['MAS (Schedules)', 'IDIQ Schedule', 'Commercial products and services (broad)', 'No ceiling', 'Multiple SINs (Special Item Numbers)'],
+            ]
+          },
+          {
+            type: 'text',
+            heading: "OASIS+ In Depth",
+            body: "OASIS+ (One Acquisition Solution for Integrated Services Plus) is GSA's marquee professional services GWAC, replacing the original OASIS contract. It covers essentially all professional and technical service categories: management consulting, engineering, research & development, program management support, IT services, logistics, financial management, and more. OASIS+ is structured in two primary tracks — Unrestricted (large businesses and small businesses competing full-and-open) and Small Business — each with multiple functional area pools. A DoD agency can access OASIS+ by establishing an Interagency Agreement with GSA, then placing task orders directly against the appropriate pool using fair opportunity competition."
+          },
+          {
+            type: 'list',
+            heading: "How to Use OASIS+ as an Ordering Agency",
+            items: [
+              'Step 1: Determine the requirement fits OASIS+ scope (professional/technical services)',
+              'Step 2: Identify the correct OASIS+ pool (unrestricted vs. small business, functional area)',
+              'Step 3: Establish an Interagency Acquisition Agreement (IAA) with GSA (if not already in place)',
+              'Step 4: Issue a Task Order Request for Proposal (TORFP) to the applicable pool',
+              'Step 5: Provide fair opportunity to all eligible pool holders per FAR 16.505',
+              'Step 6: Evaluate proposals and make best-value task order award',
+              'Step 7: Administer the task order — the ordering agency\'s CO retains oversight',
+              'Note: GSA charges an Industrial Funding Fee (IFF) or similar fee on OASIS+ orders',
+            ]
+          },
+          {
+            type: 'text',
+            heading: "FEDSIM: Assisted Acquisition Services",
+            body: "FEDSIM (Federal Systems Integration and Management Center) is GSA's assisted acquisition service. Rather than just providing a contract vehicle for agencies to use, FEDSIM acts as the contracting office on behalf of the customer agency. The customer agency defines its requirements and provides funding, and FEDSIM manages the entire acquisition process — drafting the solicitation, conducting source selection, awarding the contract, and administering it. FEDSIM commonly uses vehicles like Alliant 2, STARS III, and OASIS+ for IT and professional services acquisitions."
+          },
+          {
+            type: 'table',
+            heading: "OASIS+ Self-Service vs. FEDSIM Assisted Acquisition",
+            headers: ['Aspect', 'OASIS+ (Self-Service)', 'FEDSIM (Assisted)'],
+            rows: [
+              ['Who runs the acquisition?', 'Ordering agency\'s own CO', 'GSA/FEDSIM CO on behalf of customer'],
+              ['CO authority', 'Ordering agency retains CO authority', 'FEDSIM CO holds contracting authority'],
+              ['Best for', 'Agencies with strong in-house contracting capacity', 'Agencies without sufficient CO capacity or expertise'],
+              ['Timeline', 'Faster if agency has resources', 'May be slower due to coordination; adds FEDSIM process'],
+              ['Cost', 'IFF/fee to GSA for vehicle use', 'Acquisition management fee to FEDSIM (varies by contract value)'],
+              ['Vehicles used', 'OASIS+ pool directly', 'FEDSIM may use Alliant 2, STARS III, OASIS+, or others'],
+            ]
+          },
+          {
+            type: 'text',
+            heading: "AAS-D: GSA Defense Assisted Acquisition",
+            body: "AAS-D (Assisted Acquisition Services — Defense) is GSA's defense-specific assisted acquisition capability, designed for DoD agencies. Like FEDSIM, AAS-D can manage the entire acquisition process on behalf of a DoD program office. AAS-D has strong experience with DoD-specific requirements — DFARS compliance, classified acquisitions, and defense-unique contract clauses. DoD program offices use AAS-D when they need acquisition support but lack sufficient contracting office capacity, particularly for complex IT and professional services requirements that can be served by existing GWACs."
+          },
+          {
+            type: 'callout',
+            heading: "The Buy Decision: GWAC vs. Standalone Contract",
+            body: "A GWAC is not always the right answer. Use a GWAC when: (1) the requirement fits squarely within the vehicle's scope; (2) speed matters — GWACs eliminate re-competition of the base contract; (3) competition is maintained at the task order level. Consider a standalone contract when: (1) requirements are unique and don't fit any GWAC scope; (2) you need non-standard terms or special contract structure; (3) a single strategic partner relationship is more valuable than rotating competition. Misusing a GWAC by placing out-of-scope orders is a serious contracting violation and a recurring IG audit finding."
+          },
+          {
+            type: 'warning',
+            heading: "Scope Discipline: The IG's Favorite Finding",
+            body: "The most common GWAC compliance failure is awarding task orders that exceed the scope of the base contract. OASIS+ covers professional and technical services — it does NOT cover construction (use a construction IDIQ), supplies (use MAS schedules or standalone contracts), or highly classified programs requiring specialized contract structures. Every task order must be scope-checked against the GWAC's Statement of Objectives. Inspectors General regularly find out-of-scope orders on GWACs, resulting in contract actions being voided and requiring re-procurement."
+          },
+          {
+            type: 'tip',
+            heading: "FEDSIM vs. In-House — The Practical Decision",
+            body: "Many DoD program offices consider FEDSIM when their own contracting office is understaffed or lacks experience with a particular acquisition type. FEDSIM brings deep expertise and established processes, but adds coordination overhead and fees. The practical question is: does your contracting office have the bandwidth and skills to run a full competitive acquisition on this vehicle? If not, FEDSIM or AAS-D is a legitimate and efficient alternative — used by major DoD agencies including Army, Air Force, and numerous defense agencies."
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'GSA OASIS+ and FEDSIM: Navigating the Competitive Order Process',
+          body: 'Mid-career PMs using OASIS+ must understand that the task order competition is where outcomes are determined — not at the MAC vehicle level. For orders above $10M, FEDSIM (the GSA competition office) conducts the competition on your behalf. The government PM\'s role: write a well-scoped PWS, establish meaningful evaluation criteria, and review the price analysis. Common pitfalls: (1) PWS written so broadly that every OASIS+ contractor can qualify, leading to a lowest-price competition; (2) past performance evaluation relying on contractor-provided references that are selectively positive; (3) underestimating transition risk when switching from an incumbent. Build transition requirements directly into the PWS — require a 60-day joint transition with the incumbent, with knowledge transfer milestones and penalties for transition failures.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'MAC Vehicle Strategy: When to Use Which and Protest Risk Management',
+          body: 'Senior acquisition professionals understand that MAC vehicle selection is itself a strategic decision. OASIS+ for complex professional services; ALLIANT 3 for IT services; SeaPort NxG for Navy; CIO-SP4 for HHS/civilian. The wrong vehicle creates protest risk: using a vehicle whose scope doesn\'t cover your requirement, or using a sole-source exception under a MAC vehicle when fair opportunity competition was required. The most legally dangerous pattern: steering task orders to preferred contractors by writing evaluation criteria tailored to a specific firm\'s past performance or unique capabilities. Experienced protesters know how to document this, and GAO has sustained numerous protests on exactly these grounds. Run your task order strategy through your legal team before release.',
+        },
+        ],
+      quiz: [
+          {
+            id: 'q1',
+            question: "What does OASIS+ stand for, and what type of services does it primarily cover?",
+            options: [
+              'Optimized Acquisition Services — IT systems only',
+              'One Acquisition Solution for Integrated Services Plus — professional and technical services across all disciplines',
+              'Operations and Sustainment Integrated Services — logistics and supply chain only',
+              'Ordered Acquisition System for IT Services — information technology only'
+            ],
+            correct: 1,
+            explanation: "OASIS+ (One Acquisition Solution for Integrated Services Plus) is GSA's flagship GWAC for professional and technical services, covering management consulting, engineering, R&D, program management, IT, logistics, financial management, and more. It is not limited to IT — that distinguishes it from vehicles like Alliant 2 and STARS III."
+          },
+          {
+            id: 'q2',
+            question: "FEDSIM (Federal Systems Integration and Management Center) differs from a self-service GWAC in that FEDSIM:",
+            options: [
+              'Provides a contract vehicle that agencies use independently',
+              'Manages the entire acquisition process on behalf of the customer agency, serving as the contracting office',
+              'Only supports civilian agencies, not DoD',
+              'Is restricted to purchases under the simplified acquisition threshold'
+            ],
+            correct: 1,
+            explanation: "FEDSIM is an assisted acquisition service — it acts as the contracting office for customer agencies, managing solicitation, source selection, award, and administration on the customer's behalf. A self-service GWAC (like using OASIS+ directly) puts the ordering agency's own CO in charge of the process."
+          },
+          {
+            id: 'q3',
+            question: "A Government-Wide Acquisition Contract (GWAC) is distinct from an agency-specific IDIQ in that a GWAC:",
+            options: [
+              'Can only be used by the agency that established it',
+              'Is available for use by any federal agency as an ordering agency',
+              'Does not require competition at the task order level',
+              'Has no ceiling on total contract value'
+            ],
+            correct: 1,
+            explanation: "A GWAC is established by a lead agency (like GSA) for use by all federal agencies. Any agency can place task orders against the GWAC as an \"ordering agency.\" An agency-specific IDIQ is established by and for use by the establishing agency only — other agencies cannot place orders against it without a formal arrangement."
+          },
+          {
+            id: 'q4',
+            question: "Which GSA vehicle is specifically designed for large-scale, complex IT services and solutions, primarily for large businesses?",
+            options: ['OASIS+', 'STARS III', 'Alliant 2', 'MAS IT Schedule'],
+            correct: 2,
+            explanation: "Alliant 2 is GSA's GWAC specifically for large-scale IT services and solutions, targeting complex enterprise IT requirements. It is an unrestricted (large business) contract with a $50B ceiling. STARS III is the small business IT equivalent. OASIS+ covers professional services more broadly including IT but also non-IT disciplines."
+          },
+          {
+            id: 'q5',
+            question: "The Economy Act (31 U.S.C. § 1535) is relevant to assisted acquisitions because it:",
+            options: [
+              'Limits the total value of task orders under any GWAC',
+              'Provides statutory authority for one agency to procure services or supplies from another federal agency',
+              'Requires competition for all orders over $250K',
+              'Prohibits the use of GWACs for classified requirements'
+            ],
+            correct: 1,
+            explanation: "The Economy Act authorizes federal agencies to request goods or services from other federal agencies (the \"servicing agency\"). This is the legal foundation for arrangements like using FEDSIM or AAS-D — the customer agency uses Economy Act authority to have GSA conduct the acquisition on its behalf, reimbursing GSA for costs and fees."
+          },
+          {
+            id: 'q6',
+            question: "AAS-D (Assisted Acquisition Services — Defense) is specifically designed to serve:",
+            options: [
+              'Civilian agencies only',
+              'DoD agencies requiring assisted acquisition support, particularly for IT and professional services',
+              'Small businesses seeking to enter the defense market',
+              'Foreign military sales programs only'
+            ],
+            correct: 1,
+            explanation: "AAS-D is GSA's defense-focused assisted acquisition service that works specifically with DoD components. It has deep expertise in DFARS requirements, security requirements, and defense-specific contract structures. DoD program offices use AAS-D when they need acquisition support for requirements suited to existing GWACs."
+          },
+          {
+            id: 'q7',
+            question: "What is the primary compliance risk when using a GWAC like OASIS+?",
+            options: [
+              'Paying too high a price due to lack of competition',
+              'Placing task orders for work outside the scope of the GWAC base contract',
+              'Failing to meet small business goals',
+              'Exceeding the ordering period without an extension'
+            ],
+            correct: 1,
+            explanation: "The primary GWAC compliance risk is out-of-scope task orders — placing work that doesn't fit within the GWAC's established scope. This is the most common IG audit finding on GWACs and can result in orders being voided and requiring re-procurement. Every task order must be scope-checked against the GWAC's Statement of Objectives before placement."
+          },
+          {
+            id: 'q8',
+            question: "STARS III is best characterized as:",
+            options: [
+              'A large-business IT GWAC for complex solutions',
+              'A small business IT GWAC with 8(a), WOSB, SDVOSB, and HUBZone pools',
+              'A professional services GWAC for all service disciplines',
+              'A GSA Schedule for commercial IT products'
+            ],
+            correct: 1,
+            explanation: "STARS III (Streamlined Technology Acquisition Resources for Services) is GSA's small business IT GWAC. It includes pools for different small business categories: 8(a) Small Disadvantaged Business, Woman-Owned Small Business (WOSB), Service-Disabled Veteran-Owned Small Business (SDVOSB), and HUBZone. It's a key vehicle for meeting small business goals on IT programs."
+          },
+          {
+            id: 'q9',
+            question: "When should a DoD PM recommend using FEDSIM rather than using a GWAC directly?",
+            options: [
+              'When the acquisition is under $250K and competition is not required',
+              'When the program office\'s contracting office lacks capacity, expertise, or bandwidth to run the full acquisition',
+              'When competition is not desired to protect the incumbent contractor',
+              'When the requirement exceeds the GWAC ceiling'
+            ],
+            correct: 1,
+            explanation: "FEDSIM is the right choice when the program office contracting office doesn't have the resources or specialized expertise to run the acquisition effectively. FEDSIM brings experienced contracting professionals who manage the process end-to-end. The tradeoff is coordination overhead and fees — for programs with strong in-house contracting capacity, self-service GWAC use is typically faster and cheaper."
+          },
+          {
+            id: 'q10',
+            question: "An Interagency Acquisition Agreement (IAA) between a DoD program office and GSA for OASIS+ use primarily documents:",
+            options: [
+              'The technical requirements for the specific task order',
+              'The mutual terms under which the ordering agency will use the GWAC, including funding transfer and responsibilities',
+              'The competition strategy for individual task orders',
+              'The contractor team members who will perform the work'
+            ],
+            correct: 1,
+            explanation: "An IAA (often in the form of a Reimbursable Work Order or Economy Act agreement) between the ordering agency and GSA establishes the terms for the assisted acquisition or GWAC use — including funding transfer, fee arrangements, roles and responsibilities, and performance expectations. It must be in place before task orders are placed under the assisted acquisition arrangement."
+          }
+        ]
+      }
+,
+{
         id: 'contracts-2',
         title: 'Source Selection: How the Government Chooses',
         duration: '15 min',
@@ -3020,401 +3415,6 @@ export const modules: Module[] = [
       },
       // ── NEW LESSON: Contracts-4 (Contracts vs. Task Orders — Fundamental) ──
       {
-        id: 'contracts-4',
-        title: 'Contracts vs. Task Orders: Know the Difference',
-        duration: '14 min',
-        description: 'Understand the fundamental distinction between base contracts and task orders — and why it matters for how work gets authorized, modified, and paid.',
-        keyTerms: [
-          { term: 'IDIQ', definition: 'Indefinite Delivery / Indefinite Quantity — a contract type that establishes terms and conditions for ordering supplies or services over time.' },
-          { term: 'Task Order (TO)', definition: 'An order for services placed under an IDIQ contract — the mechanism that authorizes and funds specific work.' },
-          { term: 'Delivery Order (DO)', definition: 'An order for supplies placed under an IDIQ contract (parallel to task order, but for products).' },
-          { term: 'MAC-IDIQ', definition: 'Multiple Award Contract IDIQ — competition is split among multiple awardees who then compete for individual task orders.' },
-          { term: 'GWAC', definition: 'Government-Wide Acquisition Contract — an IDIQ available for use by multiple federal agencies, awarded by a lead agency.' },
-          { term: 'Ordering Period', definition: 'The time window during which task orders may be placed under an IDIQ contract (distinct from the period of performance on individual TOs).' },
-          { term: 'Ceiling', definition: 'The maximum dollar value of all orders that may be placed under an IDIQ contract.' },
-          { term: 'Minimum Guarantee', definition: 'The minimum value the government is obligated to order under an IDIQ — typically a nominal amount ($1,000–$25,000).' },
-          { term: 'Fair Opportunity', definition: 'The requirement under FAR 16.505 to provide each MAC-IDIQ awardee a fair opportunity to compete for each task order over $3,500.' },
-          { term: 'BPA', definition: 'Blanket Purchase Agreement — a simplified ordering agreement under GSA Schedule or open market, similar in concept to an IDIQ but without minimum/maximum guarantees.' },
-        ],
-        content: [
-          {
-            type: 'text',
-            heading: "Two Levels of Agreement",
-            body: "In federal contracting, there are two distinct levels of agreement you must understand: the base contract and the order. The base contract (the IDIQ) establishes all the legal terms and conditions — pricing, labor categories, clauses, applicable regulations, and the overall ordering ceiling. The task order (TO) is where actual work gets authorized and funded. No work begins until a task order is issued. This two-level structure gives agencies flexibility to order services on demand without re-competing every single requirement."
-          },
-          {
-            type: 'table',
-            heading: "Contract vs. Task Order vs. BPA: Key Differences",
-            headers: ['Element', 'IDIQ Base Contract', 'Task Order', 'BPA'],
-            rows: [
-              ['What it does', 'Establishes legal framework, terms, clauses, labor rates', 'Authorizes & funds specific work', 'Sets up ordering arrangement (no guaranteed min/max)'],
-              ['When competed', 'Once, at contract award', 'Each order (fair opportunity)', 'Once, at BPA establishment'],
-              ['Funds obligated', 'Only minimum guarantee at award', 'Full amount of each order', 'At time of call (order) placement'],
-              ['Period', 'Ordering period (e.g., 5+5 years)', 'Task order PoP (can extend past IDIQ ordering period)', 'Typically 1 year, renewable'],
-              ['Modifications', 'Change terms, rates, ceiling, ordering period', 'Change scope/funding on that specific task', 'Modify terms of BPA arrangement'],
-              ['Competition', 'Full & open or small biz set-aside', 'Fair opportunity among awardees', 'Schedule price competition'],
-            ]
-          },
-          {
-            type: 'text',
-            heading: "How IDIQs Work: Single Award vs. Multiple Award",
-            body: "A Single Award IDIQ gives one contractor exclusive rights to receive all task orders — appropriate when a single firm has unique capabilities. A Multiple Award Contract IDIQ (MAC-IDIQ) awards the base contract to multiple vendors who then compete for individual task orders. FAR 16.504 establishes a preference for multiple awards because they maintain price competition at the task order level and give the government access to a pool of qualified vendors."
-          },
-          {
-            type: 'list',
-            heading: "The IDIQ Ordering Process (Step by Step)",
-            items: [
-              'Step 1: Requirement identified — program office describes work needed',
-              'Step 2: Determine if an existing IDIQ can satisfy the requirement (scope check)',
-              'Step 3: Issue a task order Request for Proposal (TORFP) to awardees in the pool',
-              'Step 4: Provide fair opportunity — all pool members get a reasonable chance to compete',
-              'Step 5: Evaluate task order proposals (simplified process vs. full source selection)',
-              'Step 6: Award task order to the best value offeror',
-              'Step 7: Execute work; administer the task order like a standalone contract',
-              'Step 8: Modify the task order (not the base contract) for scope/funding changes',
-            ]
-          },
-          {
-            type: 'callout',
-            heading: "The Fair Opportunity Requirement",
-            body: "FAR 16.505 requires that for MAC-IDIQ task orders over $3,500, all awardees must receive a fair opportunity to compete — meaning each must receive notice of the opportunity and a reasonable time to respond. Six narrow exceptions allow sole-source task orders: urgency, only one awardee is capable, follow-on to a prototype, logical follow-on, minimum guarantee, and national security. Bypassing fair opportunity without a valid exception is illegal and a common IG finding."
-          },
-          {
-            type: 'formula',
-            heading: "IDIQ Contract Structure",
-            formula: 'IDIQ Contract = Base Contract (terms, rates, ceiling) + n Task Orders\nTotal ordered value ≤ Maximum Ceiling\nTotal ordered value ≥ Minimum Guarantee\nEach Task Order = Independent Scope + Independent Funding + Independent PoP',
-            explanation: "The base contract ceiling sets the absolute limit on cumulative task order value. The minimum guarantee is the only amount the government is legally obligated to order — it protects the contractor's investment in the contract. Each task order is funded independently with its own period of performance."
-          },
-          {
-            type: 'table',
-            heading: "Common DoD IDIQ Vehicles by Type",
-            headers: ['Contract Vehicle', 'Type', 'Administered By', 'Best For'],
-            rows: [
-              ['OASIS+', 'MAC-IDIQ GWAC', 'GSA', 'Professional services across all disciplines'],
-              ['Alliant 2', 'MAC-IDIQ GWAC', 'GSA', 'Large-scale IT services and solutions'],
-              ['STARS III', 'MAC-IDIQ GWAC (SDVOSB/SB)', 'GSA', 'IT services — small business set-aside'],
-              ['SeaPort-NxG', 'MAC-IDIQ', 'NAVSEA', 'Navy engineering and program support'],
-              ['AFCAP IV', 'MAC-IDIQ', 'AFCEC', 'Air Force contingency base support'],
-              ['EAGLE II', 'MAC-IDIQ', 'DHS', 'IT solutions for DHS components'],
-            ]
-          },
-          {
-            type: 'tip',
-            heading: "Task Order vs. Contract Modification — Don't Confuse Them",
-            body: "A modification to a task order changes the scope, funding, or schedule of that specific task. A modification to the base IDIQ changes the contract-wide terms — labor rates, clauses, ceiling value, ordering period, or adding/removing CLINs. Most day-to-day changes (adding work, extending a PoP, adding funding) are task order mods. Changes to underlying pricing or terms require base contract modifications."
-          },
-          {
-          type: 'text' as const,
-          level: 'intermediate' as const,
-          heading: 'IDIQ Management: Ceiling vs. Scope vs. Competition',
-          body: 'Mid-career PMs using IDIQs and GWACs must navigate three overlapping constraints: (1) the IDIQ ceiling — you cannot exceed the maximum order value without a modification, but you can order below the minimum; (2) scope limitations — task orders must be within the IDIQ\'s scope (ordering outside scope violates CICA and creates protest risk); (3) competition requirements — most IDIQs require fair opportunity among all awardees for task orders above $3,500 (DARS 16.505). The most common mid-career mistake: treating an IDIQ as a preferred vehicle even when better-suited vehicles exist, or placing task orders that are technically "within scope" but stretch the scope definition to the breaking point. Contractors monitor IDIQ usage patterns and will protest if they believe scope is being stretched to steer work.',
-        },
-        {
-          type: 'callout' as const,
-          level: 'advanced' as const,
-          heading: 'Bridge Contracts and Option Exercise Discipline',
-          body: 'Two of the most common contracting failures senior PMs face: bridge contracts and missed option windows. Bridge contracts (short-term extensions to maintain continuity between contracts) are legal but signal poor acquisition planning, attract GAO scrutiny, and often pay above-market rates because competition is waived. The bridge becomes a habit — some programs have been on "bridge" for 5+ years, paying a sole-source premium indefinitely. Option exercise discipline: options must be exercised before expiration — missed windows forfeit the option and require a new competition. With 12-24 month options, build a calendar trigger 90 days before each option expiration. The J&A required for a bridge after a missed option is a career embarrassment that documents your planning failure for the record.',
-        },
-        ],
-      quiz: [
-          {
-            id: 'q1',
-            question: "Under a Multiple Award IDIQ contract, what is the primary mechanism that actually authorizes a contractor to begin work and obligates government funding?",
-            options: ['The base IDIQ contract award', 'A task order (or delivery order) issued under the IDIQ', 'A Blanket Purchase Agreement call', 'A contract modification to the base IDIQ'],
-            correct: 1,
-            explanation: "The IDIQ base contract establishes the legal framework and terms but does NOT authorize specific work or obligate funds. A task order (or delivery order for supplies) is the mechanism that authorizes a specific scope of work and obligates the corresponding funding. No work should begin without an issued task order."
-          },
-          {
-            id: 'q2',
-            question: "What is the minimum guarantee on an IDIQ contract, and why does it exist?",
-            options: ['50% of the contract ceiling, to ensure the contractor recovers setup costs', 'A nominal amount (typically $1K–$25K) obligated at award, protecting the contractor from a zero-value contract', 'The amount needed to fund the first task order', 'The government\'s estimated annual spend, used for market research'],
-            correct: 1,
-            explanation: "The minimum guarantee is a nominal amount (typically $1,000–$25,000) obligated at contract award that represents the government's only guaranteed obligation under the IDIQ. It protects the contractor from the scenario where no task orders are ever placed. Above the minimum, the government has no obligation to order any specific amount up to the ceiling."
-          },
-          {
-            id: 'q3',
-            question: "FAR 16.505 requires \"fair opportunity\" for MAC-IDIQ task orders above what threshold?",
-            options: ['$100,000', '$250,000', '$3,500', '$1,000,000'],
-            correct: 2,
-            explanation: "FAR 16.505 requires that all MAC-IDIQ awardees receive fair opportunity to compete for task orders exceeding $3,500. Below this threshold, the contracting officer may place orders without following the fair opportunity procedures. This relatively low threshold means nearly all meaningful task orders require fair opportunity competition."
-          },
-          {
-            id: 'q4',
-            question: "What distinguishes an IDIQ contract from a Blanket Purchase Agreement (BPA)?",
-            options: ['BPAs have a maximum ceiling; IDIQs do not', 'IDIQs have enforceable minimum/maximum quantities; BPAs have no such guarantees', 'BPAs require full and open competition; IDIQs do not', 'IDIQs are only for services; BPAs are only for supplies'],
-            correct: 1,
-            explanation: "IDIQs have both a minimum guarantee (legally obligated at award) and a maximum ceiling (cannot exceed). BPAs are simplified ordering arrangements — typically against GSA Schedule contracts — with no minimum guarantee and no maximum ceiling (though agencies usually set an estimated value). BPAs are simpler to establish but provide less legal certainty."
-          },
-          {
-            id: 'q5',
-            question: "The \"ordering period\" on an IDIQ contract refers to:",
-            options: ['The period of performance for individual task orders', 'The time window during which new task orders may be placed against the IDIQ', 'The fiscal year in which funds were appropriated', 'The time from award to the first task order competition'],
-            correct: 1,
-            explanation: "The ordering period defines when task orders may be placed. A common structure is 5 years base plus one 5-year option. Task order periods of performance CAN extend beyond the IDIQ ordering period (a common misconception) — what matters is that the task order itself was awarded before the ordering period closed."
-          },
-          {
-            id: 'q6',
-            question: "Which of the following is NOT a recognized exception to the fair opportunity requirement under FAR 16.505?",
-            options: ['Urgency — need so urgent that fair opportunity would cause harm', 'Only one IDIQ awardee is technically capable of performing the work', 'The contracting officer prefers working with a particular contractor', 'Minimum guarantee — task order to fulfill the contract\'s minimum'],
-            correct: 2,
-            explanation: "Personal preference is never a valid exception to fair opportunity. The six valid exceptions are: urgency, only one awardee is capable, logical follow-on to a prototype, follow-on for consistency, minimum guarantee order, and national security. Violating fair opportunity without a documented exception is a serious contracting violation."
-          },
-          {
-            id: 'q7',
-            question: "The IDIQ contract vehicle OASIS+ (administered by GSA) is best described as:",
-            options: ['A single-award IDIQ for IT services only', 'A Government-Wide Acquisition Contract (GWAC) MAC-IDIQ for professional services available to all federal agencies', 'A Navy-specific contract vehicle for shipbuilding support', 'A simplified acquisition tool for purchases under $250K'],
-            correct: 1,
-            explanation: "OASIS+ (One Acquisition Solution for Integrated Services Plus) is a GSA-administered GWAC MAC-IDIQ that provides professional services across multiple functional areas (management consulting, engineering, R&D, financial management, logistics, IT) to all federal agencies. It replaced the original OASIS contract and is structured with unrestricted and small business pools."
-          },
-          {
-            id: 'q8',
-            question: "A program manager wants to add new work to an existing task order that was not in the original task order statement of work. The correct action is to:",
-            options: ['Issue a new task order for the additional work', 'Verbally direct the contractor to start the new work immediately', 'Execute a task order modification adding the new scope and corresponding funding', 'Award a new sole-source contract for the additional work'],
-            correct: 2,
-            explanation: "New in-scope work under an existing task order should be incorporated through a task order modification (bilateral mod signed by both parties, or a unilateral mod if using Changes clause). The modification adds the scope and obligates additional funding. Simply directing the contractor to start work without a mod is an unauthorized commitment and a constructive change."
-          },
-          {
-            id: 'q9',
-            question: "Under a MAC-IDIQ, when a task order competition results in an award, which document governs the evaluation of task order proposals?",
-            options: ['The evaluation criteria in the original base IDIQ solicitation', 'The task order Request for Proposal (TORFP) issued to the pool', 'The Federal Acquisition Regulation Part 15 formal source selection process', 'The GSA Price List for schedule contracts'],
-            correct: 1,
-            explanation: "Task order competitions use a Task Order Request for Proposal (TORFP) that specifies the requirements, evaluation factors, and instructions for that specific task. This is typically a simplified process compared to full FAR Part 15 source selection — but the same principles of consistency and documentation apply, and task order awards can be protested to GAO or the CO."
-          },
-          {
-            id: 'q10',
-            question: "A government program has multiple contractors all holding IDIQ contracts under the same MAC vehicle. To place a task order, the ordering officer must:",
-            options: ['Select whichever contractor most recently won an order to balance workload', 'Issue a TORFP providing all eligible pool members a fair opportunity to compete', 'Always select the lowest-priced contractor from the original competition', 'Get CO approval only if the order exceeds the simplified acquisition threshold'],
-            correct: 1,
-            explanation: "Under a MAC-IDIQ, the ordering officer must provide all pool members a fair opportunity to compete by issuing a TORFP. This maintains competition at the task order level and is the core benefit of the MAC-IDIQ structure. Bypassing fair opportunity without a valid FAR 16.505 exception is illegal."
-          }
-        ]
-      },
-      // ── NEW LESSON: Contracts-5 (GSA Vehicles: OASIS+, FEDSIM, AAS-D — Advanced) ──
-      {
-        id: 'contracts-5',
-        title: 'GSA Vehicles: OASIS+, FEDSIM, and AAS-D',
-        duration: '18 min',
-        description: 'Master the most important government-wide acquisition contracts for professional services — how they work, when to use them, and what the differences are.',
-        keyTerms: [
-          { term: 'GWAC', definition: 'Government-Wide Acquisition Contract — a task order contract established by one agency for use by any federal agency.' },
-          { term: 'OASIS+', definition: 'One Acquisition Solution for Integrated Services Plus — GSA\'s flagship GWAC for professional and technical services across all disciplines.' },
-          { term: 'FEDSIM', definition: 'Federal Systems Integration and Management Center — GSA\'s assisted acquisition service that manages the contracting process on behalf of customer agencies.' },
-          { term: 'AAS-D', definition: 'Assisted Acquisition Services — Defense — GSA\'s defense-focused assisted acquisition service supporting DoD agencies.' },
-          { term: 'Assisted Acquisition', definition: 'When one agency (the servicing agency) conducts an acquisition on behalf of another agency (the requesting agency) using an Economy Act or similar authority.' },
-          { term: 'Ordering Agency', definition: 'The agency that places task orders against a GWAC for its own requirements (distinct from the agency that holds the contract).' },
-          { term: 'Interagency Agreement (IAA)', definition: 'The agreement between the requesting agency and servicing agency (e.g., GSA/FEDSIM) that authorizes the assisted acquisition.' },
-          { term: 'Alliant 2', definition: 'GSA\'s large-scale IT GWAC for complex IT solutions, available to all federal agencies.' },
-          { term: 'STARS III', definition: '8(a) STARS III — GSA\'s GWAC for small business IT services, including 8(a) and HUBZone set-asides.' },
-          { term: 'Economy Act', definition: '31 U.S.C. § 1535 — the statutory authority allowing federal agencies to request services or supplies from other federal agencies.' },
-        ],
-        content: [
-          {
-            type: 'text',
-            heading: "Why GWACs Matter to DoD Program Managers",
-            body: "Government-Wide Acquisition Contracts (GWACs) allow agencies to place task orders without conducting a full standalone acquisition. For DoD program managers, understanding GSA GWACs — especially OASIS+ — is increasingly essential. These vehicles save acquisition lead time, maintain competition, and provide access to pre-vetted contractor pools. Knowing when to use a GWAC vs. competing a standalone contract is a key PM and contracting competency."
-          },
-          {
-            type: 'table',
-            heading: "Major GSA GWACs: At a Glance",
-            headers: ['Vehicle', 'Type', 'Focus', 'Ceiling', 'Pools'],
-            rows: [
-              ['OASIS+', 'MAC-IDIQ GWAC', 'Professional & technical services (all disciplines)', '$60B+', 'Unrestricted + SB pools by functional area'],
-              ['Alliant 2', 'MAC-IDIQ GWAC', 'Large-scale, complex IT services & solutions', '$50B', 'Unrestricted only (Large Business)'],
-              ['STARS III', 'MAC-IDIQ GWAC', 'IT services — small business', '$50B', '8(a), WOSB, SDVOSB, HUBZone pools'],
-              ['8(a) STARS III', 'MAC-IDIQ GWAC', 'IT services — 8(a) SDB only', '(part of STARS III)', '8(a) small disadvantaged business'],
-              ['MAS (Schedules)', 'IDIQ Schedule', 'Commercial products and services (broad)', 'No ceiling', 'Multiple SINs (Special Item Numbers)'],
-            ]
-          },
-          {
-            type: 'text',
-            heading: "OASIS+ In Depth",
-            body: "OASIS+ (One Acquisition Solution for Integrated Services Plus) is GSA's marquee professional services GWAC, replacing the original OASIS contract. It covers essentially all professional and technical service categories: management consulting, engineering, research & development, program management support, IT services, logistics, financial management, and more. OASIS+ is structured in two primary tracks — Unrestricted (large businesses and small businesses competing full-and-open) and Small Business — each with multiple functional area pools. A DoD agency can access OASIS+ by establishing an Interagency Agreement with GSA, then placing task orders directly against the appropriate pool using fair opportunity competition."
-          },
-          {
-            type: 'list',
-            heading: "How to Use OASIS+ as an Ordering Agency",
-            items: [
-              'Step 1: Determine the requirement fits OASIS+ scope (professional/technical services)',
-              'Step 2: Identify the correct OASIS+ pool (unrestricted vs. small business, functional area)',
-              'Step 3: Establish an Interagency Acquisition Agreement (IAA) with GSA (if not already in place)',
-              'Step 4: Issue a Task Order Request for Proposal (TORFP) to the applicable pool',
-              'Step 5: Provide fair opportunity to all eligible pool holders per FAR 16.505',
-              'Step 6: Evaluate proposals and make best-value task order award',
-              'Step 7: Administer the task order — the ordering agency\'s CO retains oversight',
-              'Note: GSA charges an Industrial Funding Fee (IFF) or similar fee on OASIS+ orders',
-            ]
-          },
-          {
-            type: 'text',
-            heading: "FEDSIM: Assisted Acquisition Services",
-            body: "FEDSIM (Federal Systems Integration and Management Center) is GSA's assisted acquisition service. Rather than just providing a contract vehicle for agencies to use, FEDSIM acts as the contracting office on behalf of the customer agency. The customer agency defines its requirements and provides funding, and FEDSIM manages the entire acquisition process — drafting the solicitation, conducting source selection, awarding the contract, and administering it. FEDSIM commonly uses vehicles like Alliant 2, STARS III, and OASIS+ for IT and professional services acquisitions."
-          },
-          {
-            type: 'table',
-            heading: "OASIS+ Self-Service vs. FEDSIM Assisted Acquisition",
-            headers: ['Aspect', 'OASIS+ (Self-Service)', 'FEDSIM (Assisted)'],
-            rows: [
-              ['Who runs the acquisition?', 'Ordering agency\'s own CO', 'GSA/FEDSIM CO on behalf of customer'],
-              ['CO authority', 'Ordering agency retains CO authority', 'FEDSIM CO holds contracting authority'],
-              ['Best for', 'Agencies with strong in-house contracting capacity', 'Agencies without sufficient CO capacity or expertise'],
-              ['Timeline', 'Faster if agency has resources', 'May be slower due to coordination; adds FEDSIM process'],
-              ['Cost', 'IFF/fee to GSA for vehicle use', 'Acquisition management fee to FEDSIM (varies by contract value)'],
-              ['Vehicles used', 'OASIS+ pool directly', 'FEDSIM may use Alliant 2, STARS III, OASIS+, or others'],
-            ]
-          },
-          {
-            type: 'text',
-            heading: "AAS-D: GSA Defense Assisted Acquisition",
-            body: "AAS-D (Assisted Acquisition Services — Defense) is GSA's defense-specific assisted acquisition capability, designed for DoD agencies. Like FEDSIM, AAS-D can manage the entire acquisition process on behalf of a DoD program office. AAS-D has strong experience with DoD-specific requirements — DFARS compliance, classified acquisitions, and defense-unique contract clauses. DoD program offices use AAS-D when they need acquisition support but lack sufficient contracting office capacity, particularly for complex IT and professional services requirements that can be served by existing GWACs."
-          },
-          {
-            type: 'callout',
-            heading: "The Buy Decision: GWAC vs. Standalone Contract",
-            body: "A GWAC is not always the right answer. Use a GWAC when: (1) the requirement fits squarely within the vehicle's scope; (2) speed matters — GWACs eliminate re-competition of the base contract; (3) competition is maintained at the task order level. Consider a standalone contract when: (1) requirements are unique and don't fit any GWAC scope; (2) you need non-standard terms or special contract structure; (3) a single strategic partner relationship is more valuable than rotating competition. Misusing a GWAC by placing out-of-scope orders is a serious contracting violation and a recurring IG audit finding."
-          },
-          {
-            type: 'warning',
-            heading: "Scope Discipline: The IG's Favorite Finding",
-            body: "The most common GWAC compliance failure is awarding task orders that exceed the scope of the base contract. OASIS+ covers professional and technical services — it does NOT cover construction (use a construction IDIQ), supplies (use MAS schedules or standalone contracts), or highly classified programs requiring specialized contract structures. Every task order must be scope-checked against the GWAC's Statement of Objectives. Inspectors General regularly find out-of-scope orders on GWACs, resulting in contract actions being voided and requiring re-procurement."
-          },
-          {
-            type: 'tip',
-            heading: "FEDSIM vs. In-House — The Practical Decision",
-            body: "Many DoD program offices consider FEDSIM when their own contracting office is understaffed or lacks experience with a particular acquisition type. FEDSIM brings deep expertise and established processes, but adds coordination overhead and fees. The practical question is: does your contracting office have the bandwidth and skills to run a full competitive acquisition on this vehicle? If not, FEDSIM or AAS-D is a legitimate and efficient alternative — used by major DoD agencies including Army, Air Force, and numerous defense agencies."
-          },
-          {
-          type: 'text' as const,
-          level: 'intermediate' as const,
-          heading: 'GSA OASIS+ and FEDSIM: Navigating the Competitive Order Process',
-          body: 'Mid-career PMs using OASIS+ must understand that the task order competition is where outcomes are determined — not at the MAC vehicle level. For orders above $10M, FEDSIM (the GSA competition office) conducts the competition on your behalf. The government PM\'s role: write a well-scoped PWS, establish meaningful evaluation criteria, and review the price analysis. Common pitfalls: (1) PWS written so broadly that every OASIS+ contractor can qualify, leading to a lowest-price competition; (2) past performance evaluation relying on contractor-provided references that are selectively positive; (3) underestimating transition risk when switching from an incumbent. Build transition requirements directly into the PWS — require a 60-day joint transition with the incumbent, with knowledge transfer milestones and penalties for transition failures.',
-        },
-        {
-          type: 'callout' as const,
-          level: 'advanced' as const,
-          heading: 'MAC Vehicle Strategy: When to Use Which and Protest Risk Management',
-          body: 'Senior acquisition professionals understand that MAC vehicle selection is itself a strategic decision. OASIS+ for complex professional services; ALLIANT 3 for IT services; SeaPort NxG for Navy; CIO-SP4 for HHS/civilian. The wrong vehicle creates protest risk: using a vehicle whose scope doesn\'t cover your requirement, or using a sole-source exception under a MAC vehicle when fair opportunity competition was required. The most legally dangerous pattern: steering task orders to preferred contractors by writing evaluation criteria tailored to a specific firm\'s past performance or unique capabilities. Experienced protesters know how to document this, and GAO has sustained numerous protests on exactly these grounds. Run your task order strategy through your legal team before release.',
-        },
-        ],
-      quiz: [
-          {
-            id: 'q1',
-            question: "What does OASIS+ stand for, and what type of services does it primarily cover?",
-            options: [
-              'Optimized Acquisition Services — IT systems only',
-              'One Acquisition Solution for Integrated Services Plus — professional and technical services across all disciplines',
-              'Operations and Sustainment Integrated Services — logistics and supply chain only',
-              'Ordered Acquisition System for IT Services — information technology only'
-            ],
-            correct: 1,
-            explanation: "OASIS+ (One Acquisition Solution for Integrated Services Plus) is GSA's flagship GWAC for professional and technical services, covering management consulting, engineering, R&D, program management, IT, logistics, financial management, and more. It is not limited to IT — that distinguishes it from vehicles like Alliant 2 and STARS III."
-          },
-          {
-            id: 'q2',
-            question: "FEDSIM (Federal Systems Integration and Management Center) differs from a self-service GWAC in that FEDSIM:",
-            options: [
-              'Provides a contract vehicle that agencies use independently',
-              'Manages the entire acquisition process on behalf of the customer agency, serving as the contracting office',
-              'Only supports civilian agencies, not DoD',
-              'Is restricted to purchases under the simplified acquisition threshold'
-            ],
-            correct: 1,
-            explanation: "FEDSIM is an assisted acquisition service — it acts as the contracting office for customer agencies, managing solicitation, source selection, award, and administration on the customer's behalf. A self-service GWAC (like using OASIS+ directly) puts the ordering agency's own CO in charge of the process."
-          },
-          {
-            id: 'q3',
-            question: "A Government-Wide Acquisition Contract (GWAC) is distinct from an agency-specific IDIQ in that a GWAC:",
-            options: [
-              'Can only be used by the agency that established it',
-              'Is available for use by any federal agency as an ordering agency',
-              'Does not require competition at the task order level',
-              'Has no ceiling on total contract value'
-            ],
-            correct: 1,
-            explanation: "A GWAC is established by a lead agency (like GSA) for use by all federal agencies. Any agency can place task orders against the GWAC as an \"ordering agency.\" An agency-specific IDIQ is established by and for use by the establishing agency only — other agencies cannot place orders against it without a formal arrangement."
-          },
-          {
-            id: 'q4',
-            question: "Which GSA vehicle is specifically designed for large-scale, complex IT services and solutions, primarily for large businesses?",
-            options: ['OASIS+', 'STARS III', 'Alliant 2', 'MAS IT Schedule'],
-            correct: 2,
-            explanation: "Alliant 2 is GSA's GWAC specifically for large-scale IT services and solutions, targeting complex enterprise IT requirements. It is an unrestricted (large business) contract with a $50B ceiling. STARS III is the small business IT equivalent. OASIS+ covers professional services more broadly including IT but also non-IT disciplines."
-          },
-          {
-            id: 'q5',
-            question: "The Economy Act (31 U.S.C. § 1535) is relevant to assisted acquisitions because it:",
-            options: [
-              'Limits the total value of task orders under any GWAC',
-              'Provides statutory authority for one agency to procure services or supplies from another federal agency',
-              'Requires competition for all orders over $250K',
-              'Prohibits the use of GWACs for classified requirements'
-            ],
-            correct: 1,
-            explanation: "The Economy Act authorizes federal agencies to request goods or services from other federal agencies (the \"servicing agency\"). This is the legal foundation for arrangements like using FEDSIM or AAS-D — the customer agency uses Economy Act authority to have GSA conduct the acquisition on its behalf, reimbursing GSA for costs and fees."
-          },
-          {
-            id: 'q6',
-            question: "AAS-D (Assisted Acquisition Services — Defense) is specifically designed to serve:",
-            options: [
-              'Civilian agencies only',
-              'DoD agencies requiring assisted acquisition support, particularly for IT and professional services',
-              'Small businesses seeking to enter the defense market',
-              'Foreign military sales programs only'
-            ],
-            correct: 1,
-            explanation: "AAS-D is GSA's defense-focused assisted acquisition service that works specifically with DoD components. It has deep expertise in DFARS requirements, security requirements, and defense-specific contract structures. DoD program offices use AAS-D when they need acquisition support for requirements suited to existing GWACs."
-          },
-          {
-            id: 'q7',
-            question: "What is the primary compliance risk when using a GWAC like OASIS+?",
-            options: [
-              'Paying too high a price due to lack of competition',
-              'Placing task orders for work outside the scope of the GWAC base contract',
-              'Failing to meet small business goals',
-              'Exceeding the ordering period without an extension'
-            ],
-            correct: 1,
-            explanation: "The primary GWAC compliance risk is out-of-scope task orders — placing work that doesn't fit within the GWAC's established scope. This is the most common IG audit finding on GWACs and can result in orders being voided and requiring re-procurement. Every task order must be scope-checked against the GWAC's Statement of Objectives before placement."
-          },
-          {
-            id: 'q8',
-            question: "STARS III is best characterized as:",
-            options: [
-              'A large-business IT GWAC for complex solutions',
-              'A small business IT GWAC with 8(a), WOSB, SDVOSB, and HUBZone pools',
-              'A professional services GWAC for all service disciplines',
-              'A GSA Schedule for commercial IT products'
-            ],
-            correct: 1,
-            explanation: "STARS III (Streamlined Technology Acquisition Resources for Services) is GSA's small business IT GWAC. It includes pools for different small business categories: 8(a) Small Disadvantaged Business, Woman-Owned Small Business (WOSB), Service-Disabled Veteran-Owned Small Business (SDVOSB), and HUBZone. It's a key vehicle for meeting small business goals on IT programs."
-          },
-          {
-            id: 'q9',
-            question: "When should a DoD PM recommend using FEDSIM rather than using a GWAC directly?",
-            options: [
-              'When the acquisition is under $250K and competition is not required',
-              'When the program office\'s contracting office lacks capacity, expertise, or bandwidth to run the full acquisition',
-              'When competition is not desired to protect the incumbent contractor',
-              'When the requirement exceeds the GWAC ceiling'
-            ],
-            correct: 1,
-            explanation: "FEDSIM is the right choice when the program office contracting office doesn't have the resources or specialized expertise to run the acquisition effectively. FEDSIM brings experienced contracting professionals who manage the process end-to-end. The tradeoff is coordination overhead and fees — for programs with strong in-house contracting capacity, self-service GWAC use is typically faster and cheaper."
-          },
-          {
-            id: 'q10',
-            question: "An Interagency Acquisition Agreement (IAA) between a DoD program office and GSA for OASIS+ use primarily documents:",
-            options: [
-              'The technical requirements for the specific task order',
-              'The mutual terms under which the ordering agency will use the GWAC, including funding transfer and responsibilities',
-              'The competition strategy for individual task orders',
-              'The contractor team members who will perform the work'
-            ],
-            correct: 1,
-            explanation: "An IAA (often in the form of a Reimbursable Work Order or Economy Act agreement) between the ordering agency and GSA establishes the terms for the assisted acquisition or GWAC use — including funding transfer, fee arrangements, roles and responsibilities, and performance expectations. It must be in place before task orders are placed under the assisted acquisition arrangement."
-          }
-        ]
-      }
-,
-{
         id: 'contracts-6',
         title: 'Modifications, REAs & Claims: When Contracts Change',
         duration: '22 min',
@@ -5007,6 +5007,187 @@ export const modules: Module[] = [
         ]
       },
       {
+        id: 'capture-3',
+        title: 'Section L vs Section M — The RFP Anatomy Every Competitor Must Master',
+        duration: '28 min',
+        description: 'Understand the difference between Section L (instructions) and Section M (evaluation criteria), how to structure a winning proposal around Section M, and the difference between LPTA and best-value acquisitions.',
+        keyTerms: [
+          { term: 'Section L', definition: 'Instructions, Conditions, and Notices to Offerors — the format and packaging rules for your proposal.' },
+          { term: 'Section M', definition: 'Evaluation Factors for Award — the scoring rubric the government uses to evaluate proposals.' },
+          { term: 'SSEB', definition: 'Source Selection Evaluation Board — the government evaluators who score proposals against Section M criteria.' },
+          { term: 'Strength', definition: 'An aspect of a proposal that exceeds requirements and provides a documented benefit to the government.' },
+          { term: 'LPTA', definition: 'Lowest Price Technically Acceptable — award goes to lowest price that meets minimum technical standards.' },
+          { term: 'Best Value', definition: 'An acquisition approach where technical superiority can justify a higher price.' },
+          { term: 'Outstanding', definition: 'Highest adjectival rating — exceptional strengths, very low risk of unsuccessful performance.' },
+          { term: 'Acceptable', definition: 'Meets requirements but has no strengths. Often a losing rating in competitive fields.' },
+        ],
+        content: [
+          {
+            type: 'text',
+            heading: 'Why L and M Are the Two Most Important Pages in Any RFP',
+            body: "Every federal solicitation is organized by the Uniform Contract Format (UCF) from FAR Part 15. Most sections describe requirements — Sections L and M are different. They describe HOW the government will evaluate and select the winner. Winning proposals are built from M backward through L. Losing proposals are built from the SOW forward and hope M matches."
+          },
+          {
+            type: 'expandable_list',
+            heading: 'Section L — Instructions, Conditions, and Notices to Offerors',
+            body: 'Section L is the "how to turn in your homework" document. It governs format, not content.',
+            expandableItems: [
+              {
+                label: 'What Section L IS',
+                badge: 'Procedural',
+                badgeColor: 'blue',
+                sublabel: 'The proposal packaging and format instructions',
+                summary: 'Section L tells offerors exactly what to submit, how to format it, and how long it can be. Violating it can get your proposal rejected without evaluation.',
+                content: [
+                  { type: 'bullets', items: [
+                    '"Volume I — Technical Approach, not to exceed 50 pages, 12pt Times New Roman, 1-inch margins"',
+                    '"Volume II — Management Approach, not to exceed 25 pages"',
+                    '"Volume III — Past Performance, provide up to 3 references using the government-provided form"',
+                    '"Volume IV — Price/Cost, no page limit, must include completed DD Form 1423 (CDRLs)"',
+                    '"All volumes must be submitted via SAM.gov by 4:00 PM EST on [date]"',
+                  ]},
+                  { type: 'warning', body: 'Section L compliance is binary. A proposal violating page limits, font requirements, or missing required forms can be rejected as non-responsive WITHOUT evaluation. The CO generally has no discretion to waive administrative non-compliance.' },
+                  { type: 'grid', grid: [
+                    { label: 'Page Count Trap', value: 'Government counts pages differently. Know what "page" means in this specific L.' },
+                    { label: 'Exhibit Counting', value: 'Some Ls say figures and tables count toward page limits. Others exclude them. Read carefully.' },
+                    { label: 'Font Rules', value: 'Many Ls say "12pt minimum in all body text." Know whether headers and captions are exempt.' },
+                    { label: 'Responsive vs Compliant', value: '"Responsive" = meets submission requirements. "Compliant" = meets technical requirements. You must be both.' },
+                  ]}
+                ]
+              },
+              {
+                label: 'The Most Common Proposal Mistake: Confusing L with M',
+                badge: 'Warning',
+                badgeColor: 'red',
+                sublabel: 'Section L does not tell you what the government wants to evaluate',
+                summary: 'Section L only controls proposal format. Section M controls what is scored. If you write to L without reading M, you are guessing.',
+                content: [
+                  { type: 'bullets', items: [
+                    'Section L says: "Describe your staffing plan." Section M says staffing is NOT an evaluation factor. Your staffing section will be read for compliance only, not scored. Keep it short.',
+                    'Section L says: "Describe your technical approach." Section M has three sub-factors: Innovation (15%), Risk Mitigation (25%), Schedule Realism (20%). Your technical approach must address each sub-factor with sub-headers that mirror M language.',
+                    'Winning proposals use M as the writing guide and L as the compliance checklist.',
+                  ]}
+                ]
+              },
+            ]
+          },
+          {
+            type: 'expandable_list',
+            heading: 'Section M — Evaluation Factors for Award',
+            body: 'Section M is the scoring rubric. Build your entire proposal architecture from M backward.',
+            expandableItems: [
+              {
+                label: 'What Section M IS',
+                badge: 'Most Important',
+                badgeColor: 'red',
+                sublabel: 'The scoring rubric — what the SSEB grades you on',
+                summary: 'Section M defines the factors, sub-factors, and relative order of importance the SSEB uses to evaluate proposals. FAR 15.304 requires this transparency.',
+                content: [
+                  { type: 'grid', grid: [
+                    { label: 'Factor 1 — Technical (Most Important)', value: '1.1: Understanding of Requirements; 1.2: Technical Solution; 1.3: Risk Mitigation' },
+                    { label: 'Factor 2 — Management (Equal to Past Perf)', value: '2.1: Program Management Plan; 2.2: Key Personnel; 2.3: Transition Plan' },
+                    { label: 'Factor 3 — Past Performance (Equal to Mgmt)', value: 'Relevance and quality of recent similar contracts.' },
+                    { label: 'Factor 4 — Price (Not Scored)', value: 'Evaluated for reasonableness and realism. Not rated on a scale.' },
+                  ]},
+                  { type: 'tip', body: 'Mirror Section M factor structure as your proposal section headers. Evaluators use M as a checklist — matching your headers to their factors makes it easy to credit your strengths.' }
+                ]
+              },
+              {
+                label: 'Adjectival Ratings: Outstanding to Unacceptable',
+                badge: 'Know These Cold',
+                badgeColor: 'green',
+                sublabel: 'How the SSEB scores your proposal',
+                summary: 'The government uses adjectival ratings, not numeric scores. Understanding these drives how you write.',
+                content: [
+                  { type: 'grid', grid: [
+                    { label: 'Outstanding', value: 'Exceptional strengths significantly benefiting the government. Very low risk. Requires multiple Strengths, zero Weaknesses.' },
+                    { label: 'Good', value: 'Thorough approach. At least one Strength. Low risk.' },
+                    { label: 'Acceptable', value: 'Meets requirements. No strengths, no significant weaknesses. Moderate risk.' },
+                    { label: 'Marginal / Unacceptable', value: 'Fails to meet requirements. Has Significant Weaknesses or Deficiencies.' },
+                  ]},
+                  { type: 'warning', body: '"Acceptable" is a losing rating in a competitive field. When all offerors are Acceptable, price wins. You must write to earn Strengths — aspects that EXCEED requirements with documented, quantifiable benefit to the government.' },
+                  { type: 'bullets', items: [
+                    'A Strength must EXCEED the requirement. "We will provide monthly status reports" meets a requirement. "We will provide a real-time dashboard with threshold alerts 48 hours before a schedule variance becomes actionable" earns a Strength.',
+                    'Strengths must be documented — evaluators can only credit what they can see and quote.',
+                    'Use the Government exact M language as section headers.',
+                    'Each sub-factor needs at least one discriminating element your competitors cannot match.',
+                  ]}
+                ]
+              },
+              {
+                label: 'Best Value vs. LPTA — Two Completely Different Strategies',
+                badge: 'Strategy',
+                badgeColor: 'purple',
+                sublabel: 'The evaluation method determines your entire bid strategy',
+                summary: 'Whether the government uses best-value tradeoff or LPTA is stated in Section M and drives your pricing strategy as much as cost estimating.',
+                content: [
+                  { type: 'grid', grid: [
+                    { label: 'Best Value Tradeoff', value: 'Technical superiority CAN justify a higher price. SSA decides if the premium is worth it. Strategy: be technically outstanding and price competitively.' },
+                    { label: 'LPTA', value: 'Once minimum technical standards are met, lowest price wins. Strategy: price wins everything — do not over-invest in technical differentiation.' },
+                    { label: 'LPTA Warning', value: 'DoD has reduced LPTA usage since 2017 NDAA because it rewards lowest cost over best capability. Know when to challenge an inappropriate LPTA determination.' },
+                    { label: 'Best Value Warning', value: 'A $10M technical premium is only worth it if the SSA believes it provides more than $10M in benefit. Know your Price to Win.' },
+                  ]}
+                ]
+              },
+            ]
+          },
+          {
+            type: 'tip',
+            heading: 'The Winning Proposal Process',
+            body: 'Step 1: Read M first — identify every factor, sub-factor, and order of importance. Step 2: Build outline from M factors as section structure. Step 3: For each M sub-factor, draft 1-3 discriminating points. Step 4: Use L page limits to size investment — more pages to higher-weighted factors. Step 5: Compliance-check against L before submission.'
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Using Section L as a Compliance Matrix, Not Just Instructions',
+          body: 'Mid-career proposal managers build their proposal outline directly from Section L — every instruction becomes a heading, every deliverable requirement becomes a checklist item. But the compliance matrix is the floor, not the ceiling. The government wrote Section L to describe the minimum information needed; it didn\'t write it to describe a winning proposal. After ensuring 100% Section L compliance, ask: what information would a SSEB evaluator want that Section L didn\'t require? Discriminating proposals add value beyond compliance. The most common mid-career error: a proposal that is perfectly compliant but says nothing that an Outstanding evaluator would score above Acceptable. Compliance is table stakes; evaluation excellence is the goal.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Section M as a Negotiating Document — Shaping Evaluation Criteria Pre-RFP',
+          body: 'Senior BD professionals know that the best time to influence Section M is before the RFP is released. Industry Days, RFIs, and pre-solicitation meetings are opportunities to educate the government program office on what evaluation criteria will produce the best outcome. If you have a capability that competitors lack — a proven management approach, unique past performance, specific technical solution — you want the evaluation criteria to reward it. This is legal and expected; government contracting officers solicit industry input on acquisition strategy specifically because they lack full market knowledge. The line: you can advocate for evaluation criteria that discriminate on merit. You cannot suggest criteria designed to exclude a specific competitor by name or criteria that only your company could meet.',
+        },
+        ],
+      quiz: [
+          {
+            id: 'q1',
+            question: 'Which section of the RFP contains the evaluation factors and their relative order of importance?',
+            options: ['Section C (Description/Specification)', 'Section L (Instructions to Offerors)', 'Section M (Evaluation Factors for Award)', 'Section H (Special Contract Requirements)'],
+            correct: 2,
+            explanation: 'Section M — Evaluation Factors for Award — is required by FAR 15.304 to disclose all evaluation factors, significant sub-factors, and their relative order of importance. This is the scoring rubric.'
+          },
+          {
+            id: 'q2',
+            question: 'A proposal that violates Section L page limits can be:',
+            options: ['Penalized with a lower technical rating', 'Rejected as non-responsive without evaluation', 'Accepted with a CO waiver', 'Evaluated only for the compliant portions'],
+            correct: 1,
+            explanation: 'Administrative non-compliance with Section L typically results in rejection as non-responsive. The CO generally has no discretion to waive these requirements in a competitive source selection.'
+          },
+          {
+            id: 'q3',
+            question: 'What is an "Outstanding" adjectival rating?',
+            options: ['A proposal meeting all requirements with no weaknesses', 'A proposal with exceptional strengths significantly benefiting the government and very low risk', 'A proposal with one strength and no weaknesses', 'The highest price-to-performance proposal'],
+            correct: 1,
+            explanation: 'Outstanding requires exceptional strengths (plural) that significantly benefit the government, very low risk of unsuccessful performance. It requires benefits well above threshold requirements.'
+          },
+          {
+            id: 'q4',
+            question: 'Under LPTA, which proposal wins?',
+            options: ['The technically superior proposal', 'The best value tradeoff between technical and price', 'The lowest-priced proposal that meets minimum technical requirements', 'The proposal with the highest past performance rating'],
+            correct: 2,
+            explanation: 'LPTA awards to the lowest-priced technically acceptable proposal. Once technical acceptability is established, only price matters — fundamentally different from best-value tradeoff.'
+          },
+          {
+            id: 'q5',
+            question: 'The best practice for structuring a proposal in best-value source selection is to:',
+            options: ['Follow the SOW section by section', 'Mirror Section L volume structure only', 'Mirror Section M factor/sub-factor structure as the proposal outline', 'Use the company standard proposal template'],
+            correct: 2,
+            explanation: 'Winning proposals mirror Section M factor and sub-factor structure in section headers. This makes it easy for evaluators to find and credit strengths. Section L defines the container; Section M defines the content architecture.'
+          },
+        ],
+      },
+    {
         id: 'capture-2',
         title: 'Proposal Development & Win Strategy',
         duration: '14 min',
@@ -5365,187 +5546,6 @@ export const modules: Module[] = [
         ]
       },
       {
-        id: 'capture-3',
-        title: 'Section L vs Section M — The RFP Anatomy Every Competitor Must Master',
-        duration: '28 min',
-        description: 'Understand the difference between Section L (instructions) and Section M (evaluation criteria), how to structure a winning proposal around Section M, and the difference between LPTA and best-value acquisitions.',
-        keyTerms: [
-          { term: 'Section L', definition: 'Instructions, Conditions, and Notices to Offerors — the format and packaging rules for your proposal.' },
-          { term: 'Section M', definition: 'Evaluation Factors for Award — the scoring rubric the government uses to evaluate proposals.' },
-          { term: 'SSEB', definition: 'Source Selection Evaluation Board — the government evaluators who score proposals against Section M criteria.' },
-          { term: 'Strength', definition: 'An aspect of a proposal that exceeds requirements and provides a documented benefit to the government.' },
-          { term: 'LPTA', definition: 'Lowest Price Technically Acceptable — award goes to lowest price that meets minimum technical standards.' },
-          { term: 'Best Value', definition: 'An acquisition approach where technical superiority can justify a higher price.' },
-          { term: 'Outstanding', definition: 'Highest adjectival rating — exceptional strengths, very low risk of unsuccessful performance.' },
-          { term: 'Acceptable', definition: 'Meets requirements but has no strengths. Often a losing rating in competitive fields.' },
-        ],
-        content: [
-          {
-            type: 'text',
-            heading: 'Why L and M Are the Two Most Important Pages in Any RFP',
-            body: "Every federal solicitation is organized by the Uniform Contract Format (UCF) from FAR Part 15. Most sections describe requirements — Sections L and M are different. They describe HOW the government will evaluate and select the winner. Winning proposals are built from M backward through L. Losing proposals are built from the SOW forward and hope M matches."
-          },
-          {
-            type: 'expandable_list',
-            heading: 'Section L — Instructions, Conditions, and Notices to Offerors',
-            body: 'Section L is the "how to turn in your homework" document. It governs format, not content.',
-            expandableItems: [
-              {
-                label: 'What Section L IS',
-                badge: 'Procedural',
-                badgeColor: 'blue',
-                sublabel: 'The proposal packaging and format instructions',
-                summary: 'Section L tells offerors exactly what to submit, how to format it, and how long it can be. Violating it can get your proposal rejected without evaluation.',
-                content: [
-                  { type: 'bullets', items: [
-                    '"Volume I — Technical Approach, not to exceed 50 pages, 12pt Times New Roman, 1-inch margins"',
-                    '"Volume II — Management Approach, not to exceed 25 pages"',
-                    '"Volume III — Past Performance, provide up to 3 references using the government-provided form"',
-                    '"Volume IV — Price/Cost, no page limit, must include completed DD Form 1423 (CDRLs)"',
-                    '"All volumes must be submitted via SAM.gov by 4:00 PM EST on [date]"',
-                  ]},
-                  { type: 'warning', body: 'Section L compliance is binary. A proposal violating page limits, font requirements, or missing required forms can be rejected as non-responsive WITHOUT evaluation. The CO generally has no discretion to waive administrative non-compliance.' },
-                  { type: 'grid', grid: [
-                    { label: 'Page Count Trap', value: 'Government counts pages differently. Know what "page" means in this specific L.' },
-                    { label: 'Exhibit Counting', value: 'Some Ls say figures and tables count toward page limits. Others exclude them. Read carefully.' },
-                    { label: 'Font Rules', value: 'Many Ls say "12pt minimum in all body text." Know whether headers and captions are exempt.' },
-                    { label: 'Responsive vs Compliant', value: '"Responsive" = meets submission requirements. "Compliant" = meets technical requirements. You must be both.' },
-                  ]}
-                ]
-              },
-              {
-                label: 'The Most Common Proposal Mistake: Confusing L with M',
-                badge: 'Warning',
-                badgeColor: 'red',
-                sublabel: 'Section L does not tell you what the government wants to evaluate',
-                summary: 'Section L only controls proposal format. Section M controls what is scored. If you write to L without reading M, you are guessing.',
-                content: [
-                  { type: 'bullets', items: [
-                    'Section L says: "Describe your staffing plan." Section M says staffing is NOT an evaluation factor. Your staffing section will be read for compliance only, not scored. Keep it short.',
-                    'Section L says: "Describe your technical approach." Section M has three sub-factors: Innovation (15%), Risk Mitigation (25%), Schedule Realism (20%). Your technical approach must address each sub-factor with sub-headers that mirror M language.',
-                    'Winning proposals use M as the writing guide and L as the compliance checklist.',
-                  ]}
-                ]
-              },
-            ]
-          },
-          {
-            type: 'expandable_list',
-            heading: 'Section M — Evaluation Factors for Award',
-            body: 'Section M is the scoring rubric. Build your entire proposal architecture from M backward.',
-            expandableItems: [
-              {
-                label: 'What Section M IS',
-                badge: 'Most Important',
-                badgeColor: 'red',
-                sublabel: 'The scoring rubric — what the SSEB grades you on',
-                summary: 'Section M defines the factors, sub-factors, and relative order of importance the SSEB uses to evaluate proposals. FAR 15.304 requires this transparency.',
-                content: [
-                  { type: 'grid', grid: [
-                    { label: 'Factor 1 — Technical (Most Important)', value: '1.1: Understanding of Requirements; 1.2: Technical Solution; 1.3: Risk Mitigation' },
-                    { label: 'Factor 2 — Management (Equal to Past Perf)', value: '2.1: Program Management Plan; 2.2: Key Personnel; 2.3: Transition Plan' },
-                    { label: 'Factor 3 — Past Performance (Equal to Mgmt)', value: 'Relevance and quality of recent similar contracts.' },
-                    { label: 'Factor 4 — Price (Not Scored)', value: 'Evaluated for reasonableness and realism. Not rated on a scale.' },
-                  ]},
-                  { type: 'tip', body: 'Mirror Section M factor structure as your proposal section headers. Evaluators use M as a checklist — matching your headers to their factors makes it easy to credit your strengths.' }
-                ]
-              },
-              {
-                label: 'Adjectival Ratings: Outstanding to Unacceptable',
-                badge: 'Know These Cold',
-                badgeColor: 'green',
-                sublabel: 'How the SSEB scores your proposal',
-                summary: 'The government uses adjectival ratings, not numeric scores. Understanding these drives how you write.',
-                content: [
-                  { type: 'grid', grid: [
-                    { label: 'Outstanding', value: 'Exceptional strengths significantly benefiting the government. Very low risk. Requires multiple Strengths, zero Weaknesses.' },
-                    { label: 'Good', value: 'Thorough approach. At least one Strength. Low risk.' },
-                    { label: 'Acceptable', value: 'Meets requirements. No strengths, no significant weaknesses. Moderate risk.' },
-                    { label: 'Marginal / Unacceptable', value: 'Fails to meet requirements. Has Significant Weaknesses or Deficiencies.' },
-                  ]},
-                  { type: 'warning', body: '"Acceptable" is a losing rating in a competitive field. When all offerors are Acceptable, price wins. You must write to earn Strengths — aspects that EXCEED requirements with documented, quantifiable benefit to the government.' },
-                  { type: 'bullets', items: [
-                    'A Strength must EXCEED the requirement. "We will provide monthly status reports" meets a requirement. "We will provide a real-time dashboard with threshold alerts 48 hours before a schedule variance becomes actionable" earns a Strength.',
-                    'Strengths must be documented — evaluators can only credit what they can see and quote.',
-                    'Use the Government exact M language as section headers.',
-                    'Each sub-factor needs at least one discriminating element your competitors cannot match.',
-                  ]}
-                ]
-              },
-              {
-                label: 'Best Value vs. LPTA — Two Completely Different Strategies',
-                badge: 'Strategy',
-                badgeColor: 'purple',
-                sublabel: 'The evaluation method determines your entire bid strategy',
-                summary: 'Whether the government uses best-value tradeoff or LPTA is stated in Section M and drives your pricing strategy as much as cost estimating.',
-                content: [
-                  { type: 'grid', grid: [
-                    { label: 'Best Value Tradeoff', value: 'Technical superiority CAN justify a higher price. SSA decides if the premium is worth it. Strategy: be technically outstanding and price competitively.' },
-                    { label: 'LPTA', value: 'Once minimum technical standards are met, lowest price wins. Strategy: price wins everything — do not over-invest in technical differentiation.' },
-                    { label: 'LPTA Warning', value: 'DoD has reduced LPTA usage since 2017 NDAA because it rewards lowest cost over best capability. Know when to challenge an inappropriate LPTA determination.' },
-                    { label: 'Best Value Warning', value: 'A $10M technical premium is only worth it if the SSA believes it provides more than $10M in benefit. Know your Price to Win.' },
-                  ]}
-                ]
-              },
-            ]
-          },
-          {
-            type: 'tip',
-            heading: 'The Winning Proposal Process',
-            body: 'Step 1: Read M first — identify every factor, sub-factor, and order of importance. Step 2: Build outline from M factors as section structure. Step 3: For each M sub-factor, draft 1-3 discriminating points. Step 4: Use L page limits to size investment — more pages to higher-weighted factors. Step 5: Compliance-check against L before submission.'
-          },
-          {
-          type: 'text' as const,
-          level: 'intermediate' as const,
-          heading: 'Using Section L as a Compliance Matrix, Not Just Instructions',
-          body: 'Mid-career proposal managers build their proposal outline directly from Section L — every instruction becomes a heading, every deliverable requirement becomes a checklist item. But the compliance matrix is the floor, not the ceiling. The government wrote Section L to describe the minimum information needed; it didn\'t write it to describe a winning proposal. After ensuring 100% Section L compliance, ask: what information would a SSEB evaluator want that Section L didn\'t require? Discriminating proposals add value beyond compliance. The most common mid-career error: a proposal that is perfectly compliant but says nothing that an Outstanding evaluator would score above Acceptable. Compliance is table stakes; evaluation excellence is the goal.',
-        },
-        {
-          type: 'callout' as const,
-          level: 'advanced' as const,
-          heading: 'Section M as a Negotiating Document — Shaping Evaluation Criteria Pre-RFP',
-          body: 'Senior BD professionals know that the best time to influence Section M is before the RFP is released. Industry Days, RFIs, and pre-solicitation meetings are opportunities to educate the government program office on what evaluation criteria will produce the best outcome. If you have a capability that competitors lack — a proven management approach, unique past performance, specific technical solution — you want the evaluation criteria to reward it. This is legal and expected; government contracting officers solicit industry input on acquisition strategy specifically because they lack full market knowledge. The line: you can advocate for evaluation criteria that discriminate on merit. You cannot suggest criteria designed to exclude a specific competitor by name or criteria that only your company could meet.',
-        },
-        ],
-      quiz: [
-          {
-            id: 'q1',
-            question: 'Which section of the RFP contains the evaluation factors and their relative order of importance?',
-            options: ['Section C (Description/Specification)', 'Section L (Instructions to Offerors)', 'Section M (Evaluation Factors for Award)', 'Section H (Special Contract Requirements)'],
-            correct: 2,
-            explanation: 'Section M — Evaluation Factors for Award — is required by FAR 15.304 to disclose all evaluation factors, significant sub-factors, and their relative order of importance. This is the scoring rubric.'
-          },
-          {
-            id: 'q2',
-            question: 'A proposal that violates Section L page limits can be:',
-            options: ['Penalized with a lower technical rating', 'Rejected as non-responsive without evaluation', 'Accepted with a CO waiver', 'Evaluated only for the compliant portions'],
-            correct: 1,
-            explanation: 'Administrative non-compliance with Section L typically results in rejection as non-responsive. The CO generally has no discretion to waive these requirements in a competitive source selection.'
-          },
-          {
-            id: 'q3',
-            question: 'What is an "Outstanding" adjectival rating?',
-            options: ['A proposal meeting all requirements with no weaknesses', 'A proposal with exceptional strengths significantly benefiting the government and very low risk', 'A proposal with one strength and no weaknesses', 'The highest price-to-performance proposal'],
-            correct: 1,
-            explanation: 'Outstanding requires exceptional strengths (plural) that significantly benefit the government, very low risk of unsuccessful performance. It requires benefits well above threshold requirements.'
-          },
-          {
-            id: 'q4',
-            question: 'Under LPTA, which proposal wins?',
-            options: ['The technically superior proposal', 'The best value tradeoff between technical and price', 'The lowest-priced proposal that meets minimum technical requirements', 'The proposal with the highest past performance rating'],
-            correct: 2,
-            explanation: 'LPTA awards to the lowest-priced technically acceptable proposal. Once technical acceptability is established, only price matters — fundamentally different from best-value tradeoff.'
-          },
-          {
-            id: 'q5',
-            question: 'The best practice for structuring a proposal in best-value source selection is to:',
-            options: ['Follow the SOW section by section', 'Mirror Section L volume structure only', 'Mirror Section M factor/sub-factor structure as the proposal outline', 'Use the company standard proposal template'],
-            correct: 2,
-            explanation: 'Winning proposals mirror Section M factor and sub-factor structure in section headers. This makes it easy for evaluators to find and credit strengths. Section L defines the container; Section M defines the content architecture.'
-          },
-        ],
-      },
-    {
       id: 'capture-4',
       title: 'Source Selection — From Solicitation to Award Decision',
       duration: '25 min',
@@ -5805,6 +5805,164 @@ export const modules: Module[] = [
     color: 'slate',
     description: 'Lead programs effectively: risk management, stakeholder communications, EVMS implementation, and career advancement.',
     lessons: [
+      {
+        id: 'ops-3',
+        title: 'Career Roadmap: Breaking Into DoD Acquisitions',
+        duration: '10 min',
+        description: 'A practical guide to landing your first acquisition role and building a long-term career.',
+        keyTerms: [
+          { term: 'GS Scale', definition: 'General Schedule — the federal pay scale for white-collar civilian federal employees (GS-1 through GS-15).' },
+          { term: 'SES', definition: 'Senior Executive Service — the executive leadership corps of the federal government.' },
+          { term: 'Pathways Program', definition: "DoD's competitive hiring program for recent graduates and current students." },
+          { term: 'DAU', definition: 'Defense Acquisition University — the premier education institution for acquisition professionals.' },
+          { term: 'DAPA', definition: 'Defense Acquisition Professional Development (formerly DAWIA certifications, now DAPA).' },
+        ],
+        content: [
+          {
+            type: 'text',
+            heading: "The Career Landscape",
+            body: "DoD acquisition offers two distinct career tracks: the government side (civilian or military) and the contractor/industry side. Both paths offer excellent opportunities, and many professionals move between them throughout their careers. The government side provides the acquisitions professional credentials through DAU training and DAPA requirements. The contractor side offers higher compensation but requires understanding government processes to be effective."
+          },
+          {
+            type: 'table',
+            heading: "Career Entry Points",
+            headers: ['Background', 'Recommended Entry Role', 'Grade Level', 'First Steps'],
+            rows: [
+              ['Military (O-3 to O-5)', 'Program Manager / Deputy PM', 'GS-12/13 or equivalent', 'DAU courses, apply to PEO offices'],
+              ['Enlisted Military', 'Program Analyst / Contracting Support', 'GS-9/11', 'DAU CLM 003, 049; USAJOBS'],
+              ['Engineering degree', 'Systems Engineer / Technical Advisor', 'GS-11/12', 'Get security clearance first'],
+              ['Finance / Accounting', 'Financial Manager / Cost Analyst', 'GS-9/11', 'CDFM certification, DAU FMF courses'],
+              ['Business / Management', 'Contracts Specialist (1102)', 'GS-9/11', 'FAC-C training, use Pathways program'],
+              ['No direct background', 'Program Analyst / Admin Support', 'GS-7/9', 'Pathways program, networking'],
+            ]
+          },
+          {
+            type: 'list',
+            heading: "Essential First Steps (Government Track)",
+            items: [
+              'Get your security clearance — many roles require Secret or TS/SCI; apply early',
+              'Enroll at Defense Acquisition University (DAU) — free courses, essential credentials',
+              'Target USAJOBS.gov listings under series 1102 (Contracting), 0340 (PM), or 0501 (Financial)',
+              'Network at AFCEA, NDIA, and SAME events — the defense community is relationship-driven',
+              'Obtain a relevant certification: PMP, CDFM, CPCM, DAWIA equivalents',
+              'Build your resume around the FAR/DFARS, EVM, and program management language',
+              'Consider the Pathways Recent Graduates program if you recently completed a degree',
+            ]
+          },
+          {
+            type: 'list',
+            heading: "Essential First Steps (Contractor Track)",
+            items: [
+              'Identify target companies: Booz Allen, Leidos, SAIC, Peraton, BAH, GDIT, ManTech, DXC',
+              'Target roles: Program Analyst, Capture Analyst, Contract Support, Cost Analyst',
+              'Build expertise in GovWin IQ, FPDS-NG, SAM.gov — essential tools for BD roles',
+              "Get PMP certified — it\'s the universal credential for PM roles at contractors",
+              'Understand EVM — most contractor PM roles require EVMS knowledge',
+              'Leverage LinkedIn: connect with BD managers, capture managers, and proposal professionals',
+              'Join APMP (Association of Proposal Management Professionals) — excellent community',
+            ]
+          },
+          {
+            type: 'callout',
+            heading: "Salary Expectations (2025 Market)",
+            body: "Government Track: GS-11 ($58-76K), GS-12 ($70-91K), GS-13 ($83-108K), GS-14 ($98-127K), GS-15 ($115-150K) — plus excellent benefits, pension, and work-life balance. Contractor Track: Program Analyst ($65-85K), Senior Analyst ($85-120K), Program Manager ($110-160K), Capture Manager ($130-200K), VP BD ($180-300K+). The government-to-contractor transition typically brings a 20-40% salary increase."
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Mid-Career Positioning: Building Your Acquisition Credentials',
+          body: 'Mid-career acquisition professionals need a deliberate portfolio strategy. The most valued combination for a GS-14/15 PM position: Defense Acquisition Workforce Improvement Act (DAWIA) Level III certification in Program Management, 4+ years of major program experience (ACAT I or II preferred), and a rotation through a contracting or finance function. Certifications alone are table stakes. Differentiators: (1) an assignment at a COCOM or joint organization that demonstrates cross-service experience; (2) a successful Milestone review as the PM — even as a deputy, being part of a Milestone B team is significant experience; (3) DAU resident course completion (PMT-401 or equivalent) — program managers who attended resident PMT are a separate tier from those who completed DAU online-only. Build the portfolio intentionally — random assignments lead to random careers.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'The Senior Executive Path in Defense Acquisition: SES and PEO Roles',
+          body: 'The path to Senior Executive Service (SES) or Program Executive Officer (PEO) in defense acquisition requires a deliberate strategy that most mid-career PMs don\'t start building early enough. The prerequisites: (1) at least one ACAT I program as PM or Deputy PM; (2) Joint Duty Assignment completion (required for senior civilian positions); (3) Senior Service College (SSC) attendance — Army War College, Naval War College, or equivalent. The SSC is not a checkbox; it is a community of future flag officers and senior executives who will be your peers for the next 20 years — build relationships deliberately; (4) SES candidate development programs (CDPs) — most services have CDPs that provide structured development, senior mentoring, and visibility to SES selection panels. Apply for CDPs 3-5 years before you want the SES position.',
+        },
+        ],
+      quiz: [
+          {
+            id: 'q1',
+            question: "For a recent college graduate interested in the government contracting track, what is the most direct pathway into DoD acquisitions?",
+            options: [
+              'Apply directly for GS-14 Program Manager positions',
+              "Use DoD's Pathways Recent Graduates program targeting GS-7/9 entry-level positions",
+              'Get 10 years of private sector experience first',
+              'Only military experience leads to acquisition careers'
+            ],
+            correct: 1,
+            explanation: "The Pathways Recent Graduates program is specifically designed for recent college graduates (within 2 years of degree) and provides a structured entry point into federal service at GS-7 to GS-9 levels. Combined with DAU training, it provides a clear pathway to a full-career acquisition professional role."
+          },
+          {
+            id: 'q2',
+            question: "Defense Acquisition University (DAU) courses are:",
+            options: [
+              'Paid courses costing $2,000-5,000 per course',
+              'Free to DoD acquisition workforce members and mandatory for certification',
+              'Only available to military officers',
+              "Equivalent to a master's degree from an accredited university"
+            ],
+            correct: 1,
+            explanation: "DAU courses are provided free of charge to DoD acquisition workforce members and are mandatory for DAPA certification at each level. They cover all acquisition career fields including program management, contracting, finance, systems engineering, and logistics. Many courses are now available online through the DAU learning management system."
+          },
+          {
+            id: 'q3',
+            question: "A former Army O-4 (Major) transitioning to a civilian acquisition career is most likely to enter at what GS grade level?",
+            options: ['GS-7/9', 'GS-12/13', 'GS-15', 'SES'],
+            correct: 1,
+            explanation: "O-4 officers (Majors/Lieutenant Commanders) with acquisition experience typically qualify for GS-12 to GS-13 positions, reflecting their supervisory experience, program management background, and leadership responsibilities. Military pay tables translate roughly to GS grade equivalents, and hiring authorities can credit military experience for non-competitive appointments."
+          },
+          {
+            id: 'q4',
+            question: "Which professional certification is considered the most universally valuable for contractor-side program management roles?",
+            options: ['CDFM (Certified Defense Financial Manager)', 'CPCM (Certified Professional Contracts Manager)', 'PMP (Project Management Professional)', 'CCEA (Certified Cost Estimating & Analysis)'],
+            correct: 2,
+            explanation: "The PMP (Project Management Professional), issued by PMI, is the most widely recognized PM certification across both government and contractor organizations. While defense-specific certifications are valuable, the PMP is typically required or preferred for PM roles at defense contractors and is the baseline credential for leadership positions."
+          },
+          {
+            id: 'q5',
+            question: "The GS-13 grade in the federal pay scale represents approximately what compensation range (2025)?",
+            options: ['$45,000 - $60,000', '$83,000 - $108,000', '$130,000 - $165,000', '$175,000 - $210,000'],
+            correct: 1,
+            explanation: "GS-13 positions in 2025 pay approximately $83,000 to $108,000 base salary (varying by locality pay adjustment). GS-13 is typically the entry point for senior program analyst and experienced program manager roles. With full federal benefits (health, pension, TSP), total compensation is considerably higher than base salary suggests."
+          },
+          {
+            id: 'q6',
+            question: "USAJOBS occupational series 1102 corresponds to which acquisition career field?",
+            options: ['Program Management', 'Contracting', 'Financial Management', 'Systems Engineering'],
+            correct: 1,
+            explanation: "OPM occupational series 1102 is the Contracting series — covering contract specialists, contracting officers, and related positions throughout the federal government. Program management roles typically fall under 0340 (Program Management) or 0343 (Management and Program Analysis). Financial management roles use 0501 (Financial Administration)."
+          },
+          {
+            id: 'q7',
+            question: "Which professional association is most focused on proposal management and business development in the defense industry?",
+            options: ['AFCEA (Armed Forces Communications and Electronics Association)', 'NDIA (National Defense Industrial Association)', 'APMP (Association of Proposal Management Professionals)', 'SAME (Society of American Military Engineers)'],
+            correct: 2,
+            explanation: "APMP is specifically focused on proposal development, business development, and capture management in the government contracting sector. It offers the Certified Professional Proposal Manager (APMP Foundation/Practitioner/Professional) certifications. For PM and engineering roles, AFCEA and NDIA are more relevant networking communities."
+          },
+          {
+            id: 'q8',
+            question: "The transition from a GS government position to a contractor role typically results in what salary change?",
+            options: ['10-15% decrease due to loss of federal benefits', '5-10% increase', '20-40% increase', 'No significant change — pay scales are equivalent'],
+            correct: 2,
+            explanation: "Government-to-contractor transitions typically yield a 20-40% salary increase, though this comes with the loss of federal benefits (pension, subsidized healthcare, and job security). Many experienced acquisition professionals make this transition at the GS-13 to GS-15 level, leveraging their clearances, program knowledge, and government relationships."
+          },
+          {
+            id: 'q9',
+            question: "Which of the following tools is most essential for defense contractor business development (BD) roles?",
+            options: ['USAJOBS.gov', 'GovWin IQ', 'DAU Learning Management System', 'Defense Contract Audit Agency (DCAA) portal'],
+            correct: 1,
+            explanation: "GovWin IQ (Deltek) is the premier market intelligence platform for defense contractors, providing early visibility into government opportunities, incumbent data, procurement forecasts, and competitive intelligence. BD professionals and capture managers rely on GovWin IQ daily to identify, qualify, and track opportunities. It's considered an essential tool for anyone in defense BD."
+          },
+          {
+            id: 'q10',
+            question: "The Senior Executive Service (SES) in the federal government is equivalent to what military grade?",
+            options: ['O-5 (Lieutenant Colonel/Commander)', 'O-6 (Colonel/Captain)', 'General/Flag Officers (O-7 through O-10)', 'Warrant Officers (W-1 through W-5)'],
+            correct: 2,
+            explanation: "The SES is the executive corps of the federal civilian workforce, serving in the most senior leadership roles below political appointees. SES positions are equivalent in seniority and influence to General and Flag Officer positions (O-7 through O-10). There are approximately 7,000 SES members across the federal government, with significant concentrations in DoD."
+          }
+        ]
+      },
       {
         id: 'ops-1',
         title: 'Risk Management in Defense Programs',
@@ -6200,164 +6358,6 @@ export const modules: Module[] = [
             ],
             correct: 1,
             explanation: "CAPE produces independent cost assessments that are almost always higher than program office estimates — and historical data shows CAPE is typically more accurate. This creates tension, but experienced PMs understand that engaging CAPE early and addressing their methodological concerns proactively is far better than being surprised at a milestone review."
-          }
-        ]
-      },
-      {
-        id: 'ops-3',
-        title: 'Career Roadmap: Breaking Into DoD Acquisitions',
-        duration: '10 min',
-        description: 'A practical guide to landing your first acquisition role and building a long-term career.',
-        keyTerms: [
-          { term: 'GS Scale', definition: 'General Schedule — the federal pay scale for white-collar civilian federal employees (GS-1 through GS-15).' },
-          { term: 'SES', definition: 'Senior Executive Service — the executive leadership corps of the federal government.' },
-          { term: 'Pathways Program', definition: "DoD's competitive hiring program for recent graduates and current students." },
-          { term: 'DAU', definition: 'Defense Acquisition University — the premier education institution for acquisition professionals.' },
-          { term: 'DAPA', definition: 'Defense Acquisition Professional Development (formerly DAWIA certifications, now DAPA).' },
-        ],
-        content: [
-          {
-            type: 'text',
-            heading: "The Career Landscape",
-            body: "DoD acquisition offers two distinct career tracks: the government side (civilian or military) and the contractor/industry side. Both paths offer excellent opportunities, and many professionals move between them throughout their careers. The government side provides the acquisitions professional credentials through DAU training and DAPA requirements. The contractor side offers higher compensation but requires understanding government processes to be effective."
-          },
-          {
-            type: 'table',
-            heading: "Career Entry Points",
-            headers: ['Background', 'Recommended Entry Role', 'Grade Level', 'First Steps'],
-            rows: [
-              ['Military (O-3 to O-5)', 'Program Manager / Deputy PM', 'GS-12/13 or equivalent', 'DAU courses, apply to PEO offices'],
-              ['Enlisted Military', 'Program Analyst / Contracting Support', 'GS-9/11', 'DAU CLM 003, 049; USAJOBS'],
-              ['Engineering degree', 'Systems Engineer / Technical Advisor', 'GS-11/12', 'Get security clearance first'],
-              ['Finance / Accounting', 'Financial Manager / Cost Analyst', 'GS-9/11', 'CDFM certification, DAU FMF courses'],
-              ['Business / Management', 'Contracts Specialist (1102)', 'GS-9/11', 'FAC-C training, use Pathways program'],
-              ['No direct background', 'Program Analyst / Admin Support', 'GS-7/9', 'Pathways program, networking'],
-            ]
-          },
-          {
-            type: 'list',
-            heading: "Essential First Steps (Government Track)",
-            items: [
-              'Get your security clearance — many roles require Secret or TS/SCI; apply early',
-              'Enroll at Defense Acquisition University (DAU) — free courses, essential credentials',
-              'Target USAJOBS.gov listings under series 1102 (Contracting), 0340 (PM), or 0501 (Financial)',
-              'Network at AFCEA, NDIA, and SAME events — the defense community is relationship-driven',
-              'Obtain a relevant certification: PMP, CDFM, CPCM, DAWIA equivalents',
-              'Build your resume around the FAR/DFARS, EVM, and program management language',
-              'Consider the Pathways Recent Graduates program if you recently completed a degree',
-            ]
-          },
-          {
-            type: 'list',
-            heading: "Essential First Steps (Contractor Track)",
-            items: [
-              'Identify target companies: Booz Allen, Leidos, SAIC, Peraton, BAH, GDIT, ManTech, DXC',
-              'Target roles: Program Analyst, Capture Analyst, Contract Support, Cost Analyst',
-              'Build expertise in GovWin IQ, FPDS-NG, SAM.gov — essential tools for BD roles',
-              "Get PMP certified — it\'s the universal credential for PM roles at contractors",
-              'Understand EVM — most contractor PM roles require EVMS knowledge',
-              'Leverage LinkedIn: connect with BD managers, capture managers, and proposal professionals',
-              'Join APMP (Association of Proposal Management Professionals) — excellent community',
-            ]
-          },
-          {
-            type: 'callout',
-            heading: "Salary Expectations (2025 Market)",
-            body: "Government Track: GS-11 ($58-76K), GS-12 ($70-91K), GS-13 ($83-108K), GS-14 ($98-127K), GS-15 ($115-150K) — plus excellent benefits, pension, and work-life balance. Contractor Track: Program Analyst ($65-85K), Senior Analyst ($85-120K), Program Manager ($110-160K), Capture Manager ($130-200K), VP BD ($180-300K+). The government-to-contractor transition typically brings a 20-40% salary increase."
-          },
-          {
-          type: 'text' as const,
-          level: 'intermediate' as const,
-          heading: 'Mid-Career Positioning: Building Your Acquisition Credentials',
-          body: 'Mid-career acquisition professionals need a deliberate portfolio strategy. The most valued combination for a GS-14/15 PM position: Defense Acquisition Workforce Improvement Act (DAWIA) Level III certification in Program Management, 4+ years of major program experience (ACAT I or II preferred), and a rotation through a contracting or finance function. Certifications alone are table stakes. Differentiators: (1) an assignment at a COCOM or joint organization that demonstrates cross-service experience; (2) a successful Milestone review as the PM — even as a deputy, being part of a Milestone B team is significant experience; (3) DAU resident course completion (PMT-401 or equivalent) — program managers who attended resident PMT are a separate tier from those who completed DAU online-only. Build the portfolio intentionally — random assignments lead to random careers.',
-        },
-        {
-          type: 'callout' as const,
-          level: 'advanced' as const,
-          heading: 'The Senior Executive Path in Defense Acquisition: SES and PEO Roles',
-          body: 'The path to Senior Executive Service (SES) or Program Executive Officer (PEO) in defense acquisition requires a deliberate strategy that most mid-career PMs don\'t start building early enough. The prerequisites: (1) at least one ACAT I program as PM or Deputy PM; (2) Joint Duty Assignment completion (required for senior civilian positions); (3) Senior Service College (SSC) attendance — Army War College, Naval War College, or equivalent. The SSC is not a checkbox; it is a community of future flag officers and senior executives who will be your peers for the next 20 years — build relationships deliberately; (4) SES candidate development programs (CDPs) — most services have CDPs that provide structured development, senior mentoring, and visibility to SES selection panels. Apply for CDPs 3-5 years before you want the SES position.',
-        },
-        ],
-      quiz: [
-          {
-            id: 'q1',
-            question: "For a recent college graduate interested in the government contracting track, what is the most direct pathway into DoD acquisitions?",
-            options: [
-              'Apply directly for GS-14 Program Manager positions',
-              "Use DoD's Pathways Recent Graduates program targeting GS-7/9 entry-level positions",
-              'Get 10 years of private sector experience first',
-              'Only military experience leads to acquisition careers'
-            ],
-            correct: 1,
-            explanation: "The Pathways Recent Graduates program is specifically designed for recent college graduates (within 2 years of degree) and provides a structured entry point into federal service at GS-7 to GS-9 levels. Combined with DAU training, it provides a clear pathway to a full-career acquisition professional role."
-          },
-          {
-            id: 'q2',
-            question: "Defense Acquisition University (DAU) courses are:",
-            options: [
-              'Paid courses costing $2,000-5,000 per course',
-              'Free to DoD acquisition workforce members and mandatory for certification',
-              'Only available to military officers',
-              "Equivalent to a master's degree from an accredited university"
-            ],
-            correct: 1,
-            explanation: "DAU courses are provided free of charge to DoD acquisition workforce members and are mandatory for DAPA certification at each level. They cover all acquisition career fields including program management, contracting, finance, systems engineering, and logistics. Many courses are now available online through the DAU learning management system."
-          },
-          {
-            id: 'q3',
-            question: "A former Army O-4 (Major) transitioning to a civilian acquisition career is most likely to enter at what GS grade level?",
-            options: ['GS-7/9', 'GS-12/13', 'GS-15', 'SES'],
-            correct: 1,
-            explanation: "O-4 officers (Majors/Lieutenant Commanders) with acquisition experience typically qualify for GS-12 to GS-13 positions, reflecting their supervisory experience, program management background, and leadership responsibilities. Military pay tables translate roughly to GS grade equivalents, and hiring authorities can credit military experience for non-competitive appointments."
-          },
-          {
-            id: 'q4',
-            question: "Which professional certification is considered the most universally valuable for contractor-side program management roles?",
-            options: ['CDFM (Certified Defense Financial Manager)', 'CPCM (Certified Professional Contracts Manager)', 'PMP (Project Management Professional)', 'CCEA (Certified Cost Estimating & Analysis)'],
-            correct: 2,
-            explanation: "The PMP (Project Management Professional), issued by PMI, is the most widely recognized PM certification across both government and contractor organizations. While defense-specific certifications are valuable, the PMP is typically required or preferred for PM roles at defense contractors and is the baseline credential for leadership positions."
-          },
-          {
-            id: 'q5',
-            question: "The GS-13 grade in the federal pay scale represents approximately what compensation range (2025)?",
-            options: ['$45,000 - $60,000', '$83,000 - $108,000', '$130,000 - $165,000', '$175,000 - $210,000'],
-            correct: 1,
-            explanation: "GS-13 positions in 2025 pay approximately $83,000 to $108,000 base salary (varying by locality pay adjustment). GS-13 is typically the entry point for senior program analyst and experienced program manager roles. With full federal benefits (health, pension, TSP), total compensation is considerably higher than base salary suggests."
-          },
-          {
-            id: 'q6',
-            question: "USAJOBS occupational series 1102 corresponds to which acquisition career field?",
-            options: ['Program Management', 'Contracting', 'Financial Management', 'Systems Engineering'],
-            correct: 1,
-            explanation: "OPM occupational series 1102 is the Contracting series — covering contract specialists, contracting officers, and related positions throughout the federal government. Program management roles typically fall under 0340 (Program Management) or 0343 (Management and Program Analysis). Financial management roles use 0501 (Financial Administration)."
-          },
-          {
-            id: 'q7',
-            question: "Which professional association is most focused on proposal management and business development in the defense industry?",
-            options: ['AFCEA (Armed Forces Communications and Electronics Association)', 'NDIA (National Defense Industrial Association)', 'APMP (Association of Proposal Management Professionals)', 'SAME (Society of American Military Engineers)'],
-            correct: 2,
-            explanation: "APMP is specifically focused on proposal development, business development, and capture management in the government contracting sector. It offers the Certified Professional Proposal Manager (APMP Foundation/Practitioner/Professional) certifications. For PM and engineering roles, AFCEA and NDIA are more relevant networking communities."
-          },
-          {
-            id: 'q8',
-            question: "The transition from a GS government position to a contractor role typically results in what salary change?",
-            options: ['10-15% decrease due to loss of federal benefits', '5-10% increase', '20-40% increase', 'No significant change — pay scales are equivalent'],
-            correct: 2,
-            explanation: "Government-to-contractor transitions typically yield a 20-40% salary increase, though this comes with the loss of federal benefits (pension, subsidized healthcare, and job security). Many experienced acquisition professionals make this transition at the GS-13 to GS-15 level, leveraging their clearances, program knowledge, and government relationships."
-          },
-          {
-            id: 'q9',
-            question: "Which of the following tools is most essential for defense contractor business development (BD) roles?",
-            options: ['USAJOBS.gov', 'GovWin IQ', 'DAU Learning Management System', 'Defense Contract Audit Agency (DCAA) portal'],
-            correct: 1,
-            explanation: "GovWin IQ (Deltek) is the premier market intelligence platform for defense contractors, providing early visibility into government opportunities, incumbent data, procurement forecasts, and competitive intelligence. BD professionals and capture managers rely on GovWin IQ daily to identify, qualify, and track opportunities. It's considered an essential tool for anyone in defense BD."
-          },
-          {
-            id: 'q10',
-            question: "The Senior Executive Service (SES) in the federal government is equivalent to what military grade?",
-            options: ['O-5 (Lieutenant Colonel/Commander)', 'O-6 (Colonel/Captain)', 'General/Flag Officers (O-7 through O-10)', 'Warrant Officers (W-1 through W-5)'],
-            correct: 2,
-            explanation: "The SES is the executive corps of the federal civilian workforce, serving in the most senior leadership roles below political appointees. SES positions are equivalent in seniority and influence to General and Flag Officer positions (O-7 through O-10). There are approximately 7,000 SES members across the federal government, with significant concentrations in DoD."
           }
         ]
       },
