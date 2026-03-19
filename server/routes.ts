@@ -55,8 +55,18 @@ export async function registerRoutes(
     sendWelcomeEmail(user.email, user.username).catch(() => {});
 
     // Auto-login after registration
-    req.login(toPassportUser(user), (err) => {
+    req.login(toPassportUser(user), async (err) => {
       if (err) return res.status(500).json({ message: "Login failed after registration" });
+      // Track first login analytics (non-blocking)
+      try {
+        await storage.updateUserAnalytics(user.id, {
+          lastLoginAt: new Date().toISOString(),
+          lastActiveAt: new Date().toISOString(),
+          loginCount: 1,
+        });
+      } catch (e) {
+        console.error('[analytics] registration login tracking error:', e);
+      }
       return res.status(201).json({
         id: user.id,
         username: user.username,
@@ -602,6 +612,26 @@ export async function registerRoutes(
     } catch (err: any) {
       console.error('[admin/analytics] error:', err);
       return res.status(500).json({ message: 'Failed to load analytics' });
+    }
+  });
+
+  // POST /api/admin/backfill-logins — fix users who registered before login tracking was added
+  app.post("/api/admin/backfill-logins", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
+    try {
+      const allUsers = await storage.getAllUsers();
+      const toFix = allUsers.filter((u) => !u.lastLoginAt);
+      let fixed = 0;
+      for (const u of toFix) {
+        await storage.updateUserAnalytics(u.id, {
+          lastLoginAt: u.lastActiveAt || new Date().toISOString(),
+          loginCount: Math.max(u.loginCount ?? 0, 1),
+        });
+        fixed++;
+      }
+      return res.json({ fixed, total: allUsers.length });
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message });
     }
   });
 

@@ -153,6 +153,21 @@ export default function AdminPage() {
     },
   });
 
+  const backfillLogins = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest("POST", "/api/admin/backfill-logins");
+      if (!res.ok) throw new Error("Backfill failed");
+      return res.json();
+    },
+    onSuccess: (data) => {
+      toast({ title: "Login records fixed", description: `Updated ${data.fixed} of ${data.total} users.` });
+      qc.invalidateQueries({ queryKey: ["/api/admin/analytics"] });
+    },
+    onError: (err: Error) => {
+      toast({ title: "Backfill failed", description: err.message, variant: "destructive" });
+    },
+  });
+
   // ── Computed ─────────────────────────────────────────────────────────────
 
   const userStats = {
@@ -454,7 +469,20 @@ export default function AdminPage() {
               <div className="bg-card border border-border rounded-xl overflow-hidden">
                 <div className="px-5 py-3.5 border-b border-border flex items-center justify-between">
                   <h2 className="text-sm font-semibold text-foreground">User Engagement</h2>
-                  <span className="text-xs text-muted-foreground">{analytics.users.length} users · click column headers to sort</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-muted-foreground">{analytics.users.length} users · click column headers to sort</span>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-7 text-xs gap-1.5"
+                      onClick={() => backfillLogins.mutate()}
+                      disabled={backfillLogins.isPending}
+                      title="Fix login records for users who registered before login tracking was added"
+                    >
+                      <RefreshCw className={`w-3 h-3 ${backfillLogins.isPending ? 'animate-spin' : ''}`} />
+                      Fix Login Records
+                    </Button>
+                  </div>
                 </div>
 
                 {analytics.users.length === 0 ? (
@@ -531,9 +559,18 @@ export default function AdminPage() {
 
                             {/* Last Login */}
                             <td className="px-4 py-3.5 text-right">
-                              <div className="text-foreground text-xs font-medium">{formatRelativeTime(user.lastLoginAt)}</div>
+                              <div className="text-foreground text-xs font-medium">
+                                {user.lastLoginAt
+                                  ? formatRelativeTime(user.lastLoginAt)
+                                  : user.totalMinutesActive > 0
+                                  ? <span className="text-amber-600 dark:text-amber-400">Active*</span>
+                                  : "Never"}
+                              </div>
                               {user.lastLoginAt && (
                                 <div className="text-xs text-muted-foreground">{new Date(user.lastLoginAt).toLocaleDateString()}</div>
+                              )}
+                              {!user.lastLoginAt && user.totalMinutesActive > 0 && (
+                                <div className="text-xs text-muted-foreground">login untracked</div>
                               )}
                             </td>
 
