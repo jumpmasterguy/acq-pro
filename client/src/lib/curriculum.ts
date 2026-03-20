@@ -5853,13 +5853,31 @@ export const modules: Module[] = [
             type: 'list',
             heading: "Essential First Steps (Contractor Track)",
             items: [
-              'Identify target companies: Booz Allen, Leidos, SAIC, Peraton, BAH, GDIT, ManTech, DXC',
+              'Identify target companies: Booz Allen, Leidos, SAIC, Peraton, BAH, GDIT, ManTech, DXC, HII (Huntington Ingalls Industries)',
               'Target roles: Program Analyst, Capture Analyst, Contract Support, Cost Analyst',
               'Build expertise in GovWin IQ, FPDS-NG, SAM.gov — essential tools for BD roles',
               "Get PMP certified — it\'s the universal credential for PM roles at contractors",
               'Understand EVM — most contractor PM roles require EVMS knowledge',
               'Leverage LinkedIn: connect with BD managers, capture managers, and proposal professionals',
               'Join APMP (Association of Proposal Management Professionals) — excellent community',
+            ]
+          },
+          {
+            type: 'callout',
+            heading: "What Companies and Agencies Really Want: Problem Solvers",
+            body: "Here is the truth no job posting will tell you directly: every hiring manager — government or contractor — is looking for one thing above all else. Someone who solves problems. Not someone who describes problems. Not someone who escalates problems. Someone who owns them, works the issue, and comes back with a path forward. That is the essence of being a Program Manager. Programs are messy. Budgets get cut, contractors miss milestones, requirements change, and stakeholders disagree. The PM is the person in the room who does not panic. They ask: what do we know, what do we not know, who owns it, and what are our options? Whether you are on the government side managing a billion-dollar ACAT I program or on the contractor side supporting a CPFF task order, the value you bring is your ability to take ambiguity and turn it into action. When you build your resume, your interview stories, and your professional brand — lead with problems you solved, not tasks you performed. \"Managed the schedule\" is forgettable. \"Identified a six-month schedule risk eighteen months out, built a recovery plan, and briefed the MDA with three options — we made Milestone B on time\" is the kind of answer that gets you hired. Certifications get you in the door. Problem-solving keeps you in the room."
+          },
+          {
+            type: 'list',
+            heading: "The Problem-Solver Mindset in Practice",
+            items: [
+              'When you see a risk, bring a mitigation — never just the problem',
+              'Own your lane completely: know your numbers, your schedule, your risks cold',
+              'Communicate up early — a PM who surfaces problems late destroys trust fast',
+              'Build bridges across silos: the contracting officer, the finance lead, and the engineer all need to trust you',
+              'Document decisions — when things go sideways, the paper trail protects you and the program',
+              'Ask \"so what?\" relentlessly — data without a so-what is noise, not insight',
+              'Treat every program review as a chance to demonstrate command of your program, not just read slides',
             ]
           },
           {
