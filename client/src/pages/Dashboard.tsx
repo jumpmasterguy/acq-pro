@@ -1,23 +1,33 @@
+import { useState } from "react";
 import { modules, getTotalLessons } from "@/lib/curriculum";
 import { getModuleProgress, getLevel, calculateXP, FREE_MODULES } from "@/lib/progress";
 import type { UserProgress } from "@/lib/progress";
-import { Shield, TrendingUp, BookOpen, Award, Lock, ChevronRight, Star, Zap } from "lucide-react";
+import { getLearningPath, getModuleRelevance, ROLE_LABELS, GOAL_LABELS } from "@/lib/learningPaths";
+import type { UserProfile } from "@/pages/AuthPage";
+import { Shield, TrendingUp, BookOpen, Award, Lock, ChevronRight, Star, Zap, ChevronDown, ChevronUp, Beaker, Settings } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Link } from "wouter";
+import { cn } from "@/lib/utils";
 
 interface DashboardProps {
   progress: UserProgress;
   onSelectModule: (moduleId: string) => void;
   onUpgrade: () => void;
+  userProfile?: UserProfile | null;
+  username?: string;
+  onEditProfile?: () => void;
 }
 
-export default function Dashboard({ progress, onSelectModule, onUpgrade }: DashboardProps) {
+export default function Dashboard({ progress, onSelectModule, onUpgrade, userProfile, username, onEditProfile }: DashboardProps) {
   const totalLessons = getTotalLessons();
   const completedCount = progress.completedLessons.size;
   const xp = calculateXP(progress.completedLessons, progress.quizScores);
   const levelInfo = getLevel(xp);
+  const [bonusExpanded, setBonusExpanded] = useState(false);
+
+  const learningPath = getLearningPath(userProfile);
+  const hasBonusModules = learningPath.bonusModules.length > 0;
 
   const colorMap: Record<string, string> = {
     navy: 'bg-blue-900/20 border-blue-800/30 text-blue-600 dark:text-blue-400',
@@ -37,9 +47,22 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade }: Dashb
     slate: 'bg-slate-100 dark:bg-slate-800',
   };
 
-  // Find next incomplete lesson across all accessible modules
+  // Sort modules: primary first (in path order), then bonus
+  const primaryMods = learningPath.primaryModules
+    .map(id => modules.find(m => m.id === id))
+    .filter(Boolean) as typeof modules;
+  const bonusMods = learningPath.bonusModules
+    .map(id => modules.find(m => m.id === id))
+    .filter(Boolean) as typeof modules;
+  // Any modules not in either list (shouldn't happen, but safety net)
+  const otherMods = modules.filter(
+    m => !learningPath.primaryModules.includes(m.id) && !learningPath.bonusModules.includes(m.id)
+  );
+  const allPrimary = [...primaryMods, ...otherMods];
+
+  // Find next incomplete lesson in primary modules first
   const nextLesson = (() => {
-    for (const mod of modules) {
+    for (const mod of [...allPrimary, ...bonusMods]) {
       const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
       if (!isAccessible) continue;
       for (const lesson of mod.lessons) {
@@ -51,12 +74,64 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade }: Dashb
     return null;
   })();
 
+  function ModuleCard({ mod }: { mod: typeof modules[0] }) {
+    const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
+    const lessonIds = mod.lessons.map(l => l.id);
+    const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
+    const iconBgCls = iconBgMap[mod.color] || iconBgMap.slate;
+
+    return (
+      <div
+        className={cn(
+          "relative rounded-xl border bg-card p-5 transition-all duration-200 lesson-card",
+          isAccessible
+            ? 'hover:border-primary/40 cursor-pointer hover:shadow-md'
+            : 'opacity-75'
+        )}
+        onClick={() => isAccessible ? onSelectModule(mod.id) : onUpgrade()}
+        data-testid={`module-${mod.id}`}
+      >
+        {!isAccessible && (
+          <div className="absolute top-4 right-4">
+            <Lock className="w-4 h-4 text-muted-foreground" />
+          </div>
+        )}
+        <div className="flex items-start gap-3 mb-3">
+          <div className={`w-10 h-10 rounded-lg ${iconBgCls} flex items-center justify-center text-xl flex-shrink-0`}>
+            {mod.icon}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-semibold text-sm">{mod.title}</span>
+              {mod.free && (
+                <Badge variant="outline" className="text-xs text-green-600 border-green-200 dark:border-green-800">Free</Badge>
+              )}
+            </div>
+            <div className="text-xs text-muted-foreground mt-0.5">{mod.lessons.length} lessons</div>
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground mb-4 leading-relaxed">{mod.description}</p>
+        <div className="space-y-1.5">
+          <div className="flex justify-between text-xs">
+            <span className="text-muted-foreground">Progress</span>
+            <span className={`font-medium ${isAccessible && progressPct > 0 ? 'text-primary' : 'text-muted-foreground'}`}>
+              {isAccessible ? `${progressPct}%` : 'Locked'}
+            </span>
+          </div>
+          <Progress value={isAccessible ? progressPct : 0} className="h-1.5" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       {/* Welcome Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
+          <h1 className="text-2xl font-bold tracking-tight">
+            {username ? `Welcome back, ${username.split(' ')[0]}` : 'Welcome back'}
+          </h1>
           <p className="text-muted-foreground text-sm mt-0.5">
             {completedCount === 0
               ? "Start your DoD acquisitions journey today."
@@ -77,6 +152,54 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade }: Dashb
           </div>
         </div>
       </div>
+
+      {/* Learning Path Banner */}
+      {userProfile?.completedOnboarding && (
+        <div className="bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-xl p-4 flex items-center gap-4">
+          <div className="w-9 h-9 rounded-lg bg-primary/15 flex items-center justify-center flex-shrink-0">
+            <Shield className="w-5 h-5 text-primary" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="font-semibold text-sm text-foreground">{learningPath.label}</div>
+            <div className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{learningPath.description}</div>
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
+                {ROLE_LABELS[userProfile.role]}
+              </span>
+              <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+                {GOAL_LABELS[userProfile.goal]}
+              </span>
+            </div>
+          </div>
+          {onEditProfile && (
+            <button
+              onClick={onEditProfile}
+              className="flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors"
+              title="Update your learning path"
+            >
+              <Settings className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* No profile yet — prompt */}
+      {!userProfile?.completedOnboarding && (
+        <div className="bg-muted/50 border border-border rounded-xl p-4 flex items-center gap-4">
+          <div className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+            <Star className="w-5 h-5 text-muted-foreground" />
+          </div>
+          <div className="flex-1">
+            <div className="font-semibold text-sm">Personalize your learning path</div>
+            <div className="text-xs text-muted-foreground mt-0.5">Answer 3 quick questions to get a custom module order tailored to your role and goals.</div>
+          </div>
+          {onEditProfile && (
+            <Button size="sm" variant="outline" onClick={onEditProfile} className="flex-shrink-0 gap-1.5">
+              <ChevronRight className="w-3.5 h-3.5" /> Personalize
+            </Button>
+          )}
+        </div>
+      )}
 
       {/* Overall Progress */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -126,62 +249,54 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade }: Dashb
         </div>
       )}
 
-      {/* Modules Grid */}
+      {/* Primary Modules */}
       <div>
-        <h2 className="text-base font-semibold mb-4">All Modules</h2>
+        <h2 className="text-base font-semibold mb-4">
+          {userProfile?.completedOnboarding ? 'Your Learning Path' : 'All Modules'}
+        </h2>
         <div className="grid md:grid-cols-2 gap-4">
-          {modules.map((mod) => {
-            const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
-            const lessonIds = mod.lessons.map(l => l.id);
-            const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
-            const colorCls = colorMap[mod.color] || colorMap.slate;
-            const iconBgCls = iconBgMap[mod.color] || iconBgMap.slate;
-
-            return (
-              <div
-                key={mod.id}
-                className={`relative rounded-xl border bg-card p-5 transition-all duration-200 lesson-card ${
-                  isAccessible
-                    ? 'hover:border-primary/40 cursor-pointer hover:shadow-md'
-                    : 'opacity-75'
-                }`}
-                onClick={() => isAccessible ? onSelectModule(mod.id) : onUpgrade()}
-                data-testid={`module-${mod.id}`}
-              >
-                {!isAccessible && (
-                  <div className="absolute top-4 right-4">
-                    <Lock className="w-4 h-4 text-muted-foreground" />
-                  </div>
-                )}
-                <div className="flex items-start gap-3 mb-3">
-                  <div className={`w-10 h-10 rounded-lg ${iconBgCls} flex items-center justify-center text-xl flex-shrink-0`}>
-                    {mod.icon}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-sm">{mod.title}</span>
-                      {mod.free && (
-                        <Badge variant="outline" className="text-xs text-green-600 border-green-200 dark:border-green-800">Free</Badge>
-                      )}
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{mod.lessons.length} lessons</div>
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground mb-4 leading-relaxed">{mod.description}</p>
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-muted-foreground">Progress</span>
-                    <span className={`font-medium ${isAccessible && progressPct > 0 ? 'text-primary' : 'text-muted-foreground'}`}>
-                      {isAccessible ? `${progressPct}%` : 'Locked'}
-                    </span>
-                  </div>
-                  <Progress value={isAccessible ? progressPct : 0} className="h-1.5" />
-                </div>
-              </div>
-            );
-          })}
+          {allPrimary.map(mod => <ModuleCard key={mod.id} mod={mod} />)}
         </div>
       </div>
+
+      {/* Bonus "How the Sauce is Made" modules */}
+      {hasBonusModules && (
+        <div>
+          <button
+            onClick={() => setBonusExpanded(e => !e)}
+            className="w-full flex items-center gap-3 group"
+          >
+            <div className="flex items-center gap-2 flex-1">
+              <div className="w-7 h-7 rounded-lg bg-amber-100 dark:bg-amber-950 flex items-center justify-center flex-shrink-0">
+                <Beaker className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+              </div>
+              <div className="text-left">
+                <div className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                  See How the Sauce is Made
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {bonusMods.length} bonus module{bonusMods.length > 1 ? 's' : ''} — beyond your primary track
+                </div>
+              </div>
+            </div>
+            <div className="text-muted-foreground group-hover:text-foreground transition-colors">
+              {bonusExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </div>
+          </button>
+
+          {bonusExpanded && (
+            <div className="mt-4 grid md:grid-cols-2 gap-4">
+              <div className="md:col-span-2">
+                <p className="text-xs text-muted-foreground mb-4 leading-relaxed bg-muted/40 rounded-lg p-3 border border-border">
+                  These modules are outside your primary track but give you insight into how the full acquisition ecosystem works — 
+                  from Congressional appropriations to how contractors build their BD pipeline.
+                </p>
+              </div>
+              {bonusMods.map(mod => <ModuleCard key={mod.id} mod={mod} />)}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Upgrade CTA if not premium */}
       {!progress.isPremium && (
@@ -189,7 +304,7 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade }: Dashb
           <Award className="w-8 h-8 text-primary mx-auto mb-3" />
           <h3 className="font-semibold mb-2">Unlock the Full Academy</h3>
           <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
-            Get access to all {modules.length} modules, {getTotalLessons()}+ lessons, 
+            Get access to all {modules.length} modules, {getTotalLessons()}+ lessons,
             quizzes, and career resources for a one-time investment in your career.
           </p>
           <Button onClick={onUpgrade} data-testid="upgrade-cta">

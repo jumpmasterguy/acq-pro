@@ -17,6 +17,7 @@ export interface IStorage {
   getAllUsers(): Promise<User[]>;
   createUser(user: InsertUser): Promise<User>;
   upsertGoogleUser(data: InsertGoogleUser & { avatarUrl?: string }): Promise<User>;
+  saveUserProfile(userId: string, profile: Record<string, any>): Promise<User | undefined>;
   updateUserSubscription(
     userId: string,
     data: {
@@ -227,6 +228,15 @@ export class DrizzleStorage implements IStorage {
       .returning();
     return result[0];
   }
+
+  async saveUserProfile(userId: string, profile: Record<string, any>): Promise<User | undefined> {
+    const result = await this.db
+      .update(users)
+      .set({ userProfile: profile })
+      .where(eq(users.id, userId))
+      .returning();
+    return result[0];
+  }
 }
 
 // ─── In-Memory Storage (fallback when no DATABASE_URL) ─────────────────────
@@ -375,6 +385,14 @@ export class MemStorage implements IStorage {
     const user = this.users.get(userId);
     if (!user) return undefined;
     const updated = { ...user, ...data };
+    this.users.set(userId, updated);
+    return updated;
+  }
+
+  async saveUserProfile(userId: string, profile: Record<string, any>): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const updated = { ...user, userProfile: profile };
     this.users.set(userId, updated);
     return updated;
   }

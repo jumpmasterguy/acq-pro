@@ -96,6 +96,8 @@ app.use((req, res, next) => {
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id TEXT`,
         // Make password_hash nullable for Google OAuth users
         `ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL`,
+        // Onboarding / learning path profile
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS user_profile JSONB DEFAULT '{}'::JSONB`,
       ];
       for (const stmt of schemaCols) {
         try { await schemaPool.query(stmt); } catch (e: any) { /* column already exists or already nullable */ }
@@ -156,6 +158,7 @@ app.use((req, res, next) => {
           `ALTER TABLE users ADD COLUMN IF NOT EXISTS xp INTEGER NOT NULL DEFAULT 0`,
           `ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id TEXT`,
           `ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL`,
+          `ALTER TABLE users ADD COLUMN IF NOT EXISTS user_profile JSONB DEFAULT '{}'::JSONB`,
         ];
         for (const sql of alterCols) {
           try { await pool.query(sql); } catch (e: any) { log(`alter col skipped: ${e.message}`, 'db'); }

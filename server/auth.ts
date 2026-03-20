@@ -25,6 +25,7 @@ declare global {
       quizScores: Record<string, number>;
       moduleSkillLevels: Record<string, string>;
       moduleAssessmentScores: Record<string, number>;
+      userProfile: Record<string, any> | null;
     }
   }
 }
@@ -187,6 +188,7 @@ export function toPassportUser(user: User): Express.User {
     quizScores: (user.quizScores as Record<string, number>) ?? {},
     moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
     moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
+    userProfile: (user.userProfile as Record<string, any>) ?? null,
   };
 }
 

@@ -4,7 +4,7 @@ import Stripe from "stripe";
 import passport from "passport";
 import { storage } from "./storage";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
-import { registerSchema, loginSchema } from "@shared/schema";
+import { registerSchema, loginSchema, userProfileSchema } from "@shared/schema";
 import { sendWelcomeEmail } from "./email";
 
 // Initialize Stripe — will be undefined if key not set
@@ -77,6 +77,7 @@ export async function registerRoutes(
         isAdmin: isAdmin(req),
         moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
         moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
+        userProfile: (user as any).userProfile ?? null,
       });
     });
   });
@@ -125,6 +126,7 @@ export async function registerRoutes(
             isAdmin: isAdmin(req),
             moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
             moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
+            userProfile: (user as any).userProfile ?? null,
           });
         });
       }
@@ -158,7 +160,25 @@ export async function registerRoutes(
       isAdmin: isAdmin(req),
       moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
       moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
+      userProfile: user.userProfile ?? null,
     });
+  });
+
+  // POST /api/profile — save onboarding answers
+  app.post("/api/profile", requireAuth as any, async (req: Request, res: Response) => {
+    const parsed = userProfileSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ message: parsed.error.errors[0]?.message || "Invalid profile data" });
+    }
+    try {
+      const updated = await storage.saveUserProfile(req.user!.id, parsed.data);
+      if (!updated) return res.status(404).json({ message: "User not found" });
+      // Update session
+      (req.user as any).userProfile = parsed.data;
+      return res.json({ userProfile: parsed.data });
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message });
+    }
   });
 
   // ─── Google OAuth Routes ──────────────────────────────────────────

@@ -20,6 +20,9 @@ export const users = pgTable("users", {
   moduleSkillLevels: jsonb("module_skill_levels").notNull().default(sql`'{}'::jsonb`),
   // Module gate assessment scores: { moduleId: number (0-100) }
   moduleAssessmentScores: jsonb("module_assessment_scores").notNull().default(sql`'{}'::jsonb`),
+  // Onboarding / learning path profile
+  // { role, experience, goal, completedOnboarding }
+  userProfile: jsonb("user_profile").default(sql`'{}'::jsonb`),
   // Analytics / engagement tracking
   lastLoginAt: text("last_login_at"),         // ISO timestamp string
   lastActiveAt: text("last_active_at"),        // ISO timestamp string (last heartbeat)
@@ -58,3 +61,12 @@ export const loginSchema = z.object({
 
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
+
+// Onboarding profile
+export const userProfileSchema = z.object({
+  role: z.enum(['dod_employee', 'dod_contractor', 'career_changer', 'student']),
+  experience: z.enum(['new', 'some', 'experienced']),
+  goal: z.enum(['contracts_finance', 'bd_capture', 'program_management', 'full_picture']),
+  completedOnboarding: z.boolean().default(true),
+});
+export type UserProfile = z.infer<typeof userProfileSchema>;

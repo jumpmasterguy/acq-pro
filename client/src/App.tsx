@@ -17,15 +17,17 @@ import Dashboard from "@/pages/Dashboard";
 import ModulePage from "@/pages/ModulePage";
 import LessonPage from "@/pages/LessonPage";
 import UpgradePage from "@/pages/UpgradePage";
-import AuthPage, { type AuthUser, type SkillLevel } from "@/pages/AuthPage";
+import AuthPage, { type AuthUser, type SkillLevel, type UserProfile } from "@/pages/AuthPage";
 import AdminPage from "@/pages/AdminPage";
 import { ModuleAssessment } from "@/components/ModuleAssessment";
+import OnboardingFlow from "@/components/OnboardingFlow";
 import { apiRequest } from "@/lib/queryClient";
 
 // View types
 type View =
   | { type: 'landing' }
   | { type: 'auth' }
+  | { type: 'onboarding' }
   | { type: 'dashboard' }
   | { type: 'module'; moduleId: string }
   | { type: 'lesson'; lessonId: string }
@@ -192,7 +194,25 @@ function AppContent() {
 
   const handleAuthenticated = (user: AuthUser) => {
     setAuthState({ status: 'authenticated', user });
+    // Show onboarding if they haven't completed it yet
+    const profile = user.userProfile as UserProfile | null | undefined;
+    if (!profile?.completedOnboarding) {
+      setView({ type: 'onboarding' });
+    } else {
+      setView({ type: 'dashboard' });
+    }
+  };
+
+  const handleOnboardingComplete = (profile: UserProfile) => {
+    setAuthState(prev => {
+      if (prev.status !== 'authenticated') return prev;
+      return { ...prev, user: { ...prev.user, userProfile: profile } };
+    });
     setView({ type: 'dashboard' });
+  };
+
+  const handleEditProfile = () => {
+    setView({ type: 'onboarding' });
   };
 
   const handleGetStarted = () => {
@@ -280,6 +300,21 @@ function AppContent() {
         darkMode={darkMode}
         onBack={view.type === 'auth' ? () => setView({ type: 'landing' }) : undefined}
       />
+    );
+  }
+
+  // Onboarding flow (no sidebar, full screen)
+  if (view.type === 'onboarding' && authState.status === 'authenticated') {
+    return (
+      <div className={darkMode ? 'dark' : ''}>
+        <div className="bg-background min-h-screen">
+          <OnboardingFlow
+            username={authState.user.username}
+            onComplete={handleOnboardingComplete}
+          />
+        </div>
+        <Toaster />
+      </div>
     );
   }
 
@@ -477,6 +512,9 @@ function AppContent() {
               progress={progress}
               onSelectModule={handleSelectModule}
               onUpgrade={handleUpgrade}
+              userProfile={authState.status === 'authenticated' ? (authState.user.userProfile as UserProfile | null) : null}
+              username={authState.status === 'authenticated' ? authState.user.username : undefined}
+              onEditProfile={handleEditProfile}
             />
           )}
           {view.type === 'module' && (() => {

@@ -42,6 +42,13 @@ type RegisterValues = z.infer<typeof registerSchema>;
 
 export type SkillLevel = 'novice' | 'intermediate' | 'advanced';
 
+export interface UserProfile {
+  role: 'dod_employee' | 'dod_contractor' | 'career_changer' | 'student';
+  experience: 'new' | 'some' | 'experienced';
+  goal: 'contracts_finance' | 'bd_capture' | 'program_management' | 'full_picture';
+  completedOnboarding: boolean;
+}
+
 export interface AuthUser {
   id: string;
   username: string;
@@ -52,6 +59,7 @@ export interface AuthUser {
   isAdmin?: boolean;
   moduleSkillLevels?: Record<string, SkillLevel>;
   moduleAssessmentScores?: Record<string, number>;
+  userProfile?: UserProfile | null;
 }
 
 interface AuthPageProps {
