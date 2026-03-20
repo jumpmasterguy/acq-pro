@@ -90,7 +90,7 @@ export const modules: Module[] = [
   {
     id: 'foundations',
     title: 'DoD Acquisitions Foundations',
-    subtitle: 'Start Here',
+    subtitle: '01 · Start Here',
     icon: '🏛️',
     color: 'navy',
     description: 'Learn the framework, key players, and lifecycle of DoD acquisitions. Essential for anyone entering the field.',
@@ -364,7 +364,7 @@ export const modules: Module[] = [
   {
     id: 'finance',
     title: 'Defense Finance & Budgeting',
-    subtitle: 'Module 2',
+    subtitle: '02 · Defense Finance',
     icon: '💰',
     color: 'gold',
     description: 'Master the PPBE cycle, appropriations law, EVM, and financial management fundamentals that every PM must know.',
@@ -2541,7 +2541,7 @@ export const modules: Module[] = [
   {
     id: 'contracts',
     title: 'Defense Contracting Fundamentals',
-    subtitle: 'Module 3',
+    subtitle: '03 · Defense Contracting',
     icon: '📋',
     color: 'blue',
     description: 'Master contract types, the source selection process, contract administration, and how to protect the government\'s interests.',
@@ -3672,7 +3672,7 @@ export const modules: Module[] = [
   {
     id: 'data',
     title: 'Data Analytics for Program Managers',
-    subtitle: 'Module 4',
+    subtitle: '04 · Data & Analytics',
     icon: '📊',
     color: 'teal',
     description: 'Use data to drive decisions, measure performance, and communicate program health with confidence.',
@@ -4619,7 +4619,7 @@ export const modules: Module[] = [
   {
     id: 'capture',
     title: 'Capture Management & Business Development',
-    subtitle: 'Module 5',
+    subtitle: '05 · Capture & BD',
     icon: '🎯',
     color: 'amber',
     description: 'Master the art and science of winning government contracts — from opportunity identification through proposal submission.',
@@ -5800,7 +5800,7 @@ export const modules: Module[] = [
   {
     id: 'operations',
     title: 'Program Operations & Leadership',
-    subtitle: 'Module 6',
+    subtitle: '06 · PM Operations',
     icon: '⚙️',
     color: 'slate',
     description: 'Lead programs effectively: risk management, stakeholder communications, EVMS implementation, and career advancement.',

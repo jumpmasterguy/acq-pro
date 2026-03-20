@@ -51,6 +51,11 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
         <div className="flex items-start gap-4">
           <div className="text-4xl">{mod.icon}</div>
           <div className="flex-1">
+            {mod.subtitle && (
+              <div className="text-xs font-semibold text-primary/70 uppercase tracking-widest mb-1">
+                {mod.subtitle}
+              </div>
+            )}
             <div className="flex items-center gap-2 flex-wrap mb-1">
               <h1 className="text-xl font-bold">{mod.title}</h1>
               {mod.free && (

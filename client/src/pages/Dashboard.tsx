@@ -60,6 +60,10 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, userPro
   );
   const allPrimary = [...primaryMods, ...otherMods];
 
+  // Build a sequential number map: primary modules get 1..N in display order
+  const moduleSeqNum: Record<string, number> = {};
+  allPrimary.forEach((m, i) => { moduleSeqNum[m.id] = i + 1; });
+
   // Find next incomplete lesson in primary modules first
   const nextLesson = (() => {
     for (const mod of [...allPrimary, ...bonusMods]) {
@@ -74,7 +78,7 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, userPro
     return null;
   })();
 
-  function ModuleCard({ mod }: { mod: typeof modules[0] }) {
+  function ModuleCard({ mod, seqNum, isFirst }: { mod: typeof modules[0]; seqNum?: number; isFirst?: boolean }) {
     const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
     const lessonIds = mod.lessons.map(l => l.id);
     const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
@@ -84,6 +88,7 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, userPro
       <div
         className={cn(
           "relative rounded-xl border bg-card p-5 transition-all duration-200 lesson-card",
+          isFirst ? 'border-primary/40 ring-1 ring-primary/20' : '',
           isAccessible
             ? 'hover:border-primary/40 cursor-pointer hover:shadow-md'
             : 'opacity-75'
@@ -91,11 +96,32 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, userPro
         onClick={() => isAccessible ? onSelectModule(mod.id) : onUpgrade()}
         data-testid={`module-${mod.id}`}
       >
-        {!isAccessible && (
-          <div className="absolute top-4 right-4">
-            <Lock className="w-4 h-4 text-muted-foreground" />
+        {/* Top row: sequence number + lock icon */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            {seqNum !== undefined ? (
+              <span className={cn(
+                "inline-flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-bold tabular-nums",
+                isFirst
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground'
+              )}>
+                {String(seqNum).padStart(2, '0')}
+              </span>
+            ) : (
+              <span className="inline-flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-medium bg-muted/50 text-muted-foreground">
+                ★
+              </span>
+            )}
+            {isFirst && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary border border-primary/20">
+                Start Here
+              </span>
+            )}
           </div>
-        )}
+          {!isAccessible && <Lock className="w-4 h-4 text-muted-foreground" />}
+        </div>
+
         <div className="flex items-start gap-3 mb-3">
           <div className={`w-10 h-10 rounded-lg ${iconBgCls} flex items-center justify-center text-xl flex-shrink-0`}>
             {mod.icon}
@@ -255,7 +281,14 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, userPro
           {userProfile?.completedOnboarding ? 'Your Learning Path' : 'All Modules'}
         </h2>
         <div className="grid md:grid-cols-2 gap-4">
-          {allPrimary.map(mod => <ModuleCard key={mod.id} mod={mod} />)}
+          {allPrimary.map((mod, i) => (
+            <ModuleCard
+              key={mod.id}
+              mod={mod}
+              seqNum={moduleSeqNum[mod.id]}
+              isFirst={i === 0}
+            />
+          ))}
         </div>
       </div>
 
@@ -292,7 +325,7 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, userPro
                   from Congressional appropriations to how contractors build their BD pipeline.
                 </p>
               </div>
-              {bonusMods.map(mod => <ModuleCard key={mod.id} mod={mod} />)}
+              {bonusMods.map(mod => <ModuleCard key={mod.id} mod={mod} seqNum={undefined} isFirst={false} />)}
             </div>
           )}
         </div>
