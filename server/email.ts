@@ -54,10 +54,14 @@ function emailShell(preheader: string, body: string): string {
 <body>
   <span style="display:none;max-height:0;overflow:hidden">${preheader}&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;</span>
   <div class="wrapper">
-    <div class="header">
-      <div class="logo-row">
-        <span class="logo-icon">🛡️</span>
-        <span class="logo-text">Acqlerate</span>
+    <div class="header" style="background:#0d2137 !important;padding:36px 48px 28px;text-align:center">
+      <div style="display:inline-flex;align-items:center;gap:12px">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+          <rect width="36" height="36" rx="8" fill="#01696f"/>
+          <path d="M18 6L28 10V18C28 23.5 23.5 28.2 18 30C12.5 28.2 8 23.5 8 18V10L18 6Z" fill="white" fill-opacity="0.15" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M14 18L17 21L22 15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span style="color:#ffffff;font-size:22px;font-weight:800;letter-spacing:-0.5px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">Acqlerate</span>
       </div>
     </div>
     <div class="body">
