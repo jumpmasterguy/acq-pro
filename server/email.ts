@@ -11,72 +11,22 @@ const FROM = process.env.EMAIL_FROM || "Lucas at Acqlerate <lucas@acqlerate.com>
 
 function emailShell(preheader: string, body: string): string {
   return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Acqlerate</title>
-  <!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]-->
-  <style>
-    body,html{margin:0;padding:0;background:#f0f2f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif}
-    .wrapper{max-width:600px;margin:32px auto;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07)}
-    .header{background:#0d2137;padding:36px 48px 28px;text-align:center}
-    .logo-row{display:inline-flex;align-items:center;gap:10px;margin-bottom:0}
-    .logo-icon{width:40px;height:40px;background:rgba(255,255,255,0.12);border-radius:9px;display:inline-flex;align-items:center;justify-content:center;font-size:20px;vertical-align:middle}
-    .logo-text{color:#ffffff;font-size:20px;font-weight:800;letter-spacing:-0.3px;vertical-align:middle}
-    .body{padding:36px 48px}
-    .greeting{font-size:17px;font-weight:700;color:#0d2137;margin-bottom:10px}
-    p{font-size:15px;color:#374151;line-height:1.75;margin:0 0 18px}
-    .section-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#01696f;margin-bottom:14px}
-    .highlight-box{background:#f0f9fa;border-left:4px solid #01696f;border-radius:0 10px 10px 0;padding:18px 22px;margin-bottom:24px}
-    .highlight-box p{margin:0;font-size:14px;color:#0d2137;line-height:1.65}
-    .tip-box{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:18px 20px;margin-bottom:24px}
-    .tip-box .tip-label{font-size:12px;font-weight:800;color:#92400e;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
-    .tip-box p{font-size:13px;color:#78350f;line-height:1.65;margin:0}
-    .cta-box{background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #1a3d5c}
-    .cta-box p{color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65}
-    .btn{display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none;letter-spacing:0.1px}
-    .btn-outline{display:inline-block;background:transparent;color:#01696f;font-weight:700;font-size:14px;padding:11px 26px;border-radius:8px;text-decoration:none;border:2px solid #01696f}
-    ul.checklist{list-style:none;padding:0;margin:0 0 22px}
-    ul.checklist li{font-size:14px;color:#374151;padding:5px 0 5px 26px;position:relative;line-height:1.6}
-    ul.checklist li::before{content:"✓";position:absolute;left:0;color:#01696f;font-weight:800}
-    .module-row{display:flex;align-items:flex-start;gap:14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px 18px;margin-bottom:10px}
-    .mod-icon{font-size:22px;flex-shrink:0;margin-top:1px}
-    .mod-name{font-size:14px;font-weight:700;color:#0d2137;margin-bottom:3px}
-    .mod-desc{font-size:13px;color:#64748b;line-height:1.5}
-    .divider{border:none;border-top:1px solid #f1f5f9;margin:28px 0}
-    .footer{background:#f8fafc;border-top:1px solid #e2e8f0;padding:22px 48px;text-align:center}
-    .footer p{font-size:12px;color:#94a3b8;margin:0;line-height:1.7}
-    .footer a{color:#01696f;text-decoration:none}
-    @media(max-width:600px){.body,.header,.footer{padding-left:24px;padding-right:24px}}
-  </style>
-</head>
-<body>
-  <span style="display:none;max-height:0;overflow:hidden">${preheader}&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;</span>
-  <div class="wrapper">
-    <div class="header" style="background:#0d2137 !important;padding:36px 48px 28px;text-align:center">
-      <div style="display:inline-flex;align-items:center;gap:12px">
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
-          <rect width="36" height="36" rx="8" fill="#01696f"/>
-          <path d="M18 6L28 10V18C28 23.5 23.5 28.2 18 30C12.5 28.2 8 23.5 8 18V10L18 6Z" fill="white" fill-opacity="0.15" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
-          <path d="M14 18L17 21L22 15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span style="color:#ffffff;font-size:22px;font-weight:800;letter-spacing:-0.5px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">Acqlerate</span>
-      </div>
-    </div>
-    <div class="body">
-      ${body}
-    </div>
-    <div class="footer">
-      <p>
-        You're receiving this because you created an account at Acqlerate.<br/>
-        <a href="${APP_URL}">acqlerate.com</a> &nbsp;·&nbsp; Defense Acquisitions Academy<br/>
-        <a href="${APP_URL}/#/settings">Manage email preferences</a>
-      </p>
-    </div>
-  </div>
-</body>
-</html>`;
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>Acqlerate</title></head>
+<body style="margin:0;padding:0;background:#f0f2f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
+<span style="display:none;max-height:0;overflow:hidden">${preheader}</span>
+<div style="max-width:600px;margin:32px auto;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07)">
+<div style="background:#0d2137;padding:32px 48px;text-align:center">
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto"><tr>
+<td style="padding-right:12px;vertical-align:middle"><img src="https://acqlerate.com/icon-192x192.png" width="40" height="40" alt="" style="display:block;border-radius:9px"/></td>
+<td style="vertical-align:middle"><span style="color:#ffffff;font-size:22px;font-weight:800;letter-spacing:-0.5px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">Acqlerate</span></td>
+</tr></table>
+</div>
+<div style="padding:36px 48px">${body}</div>
+<div style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:22px 48px;text-align:center">
+<p style="font-size:12px;color:#94a3b8;margin:0;line-height:1.7">You're receiving this because you created an account at Acqlerate.<br/><a href="${APP_URL}" style="color:#01696f;text-decoration:none">acqlerate.com</a> &nbsp;·&nbsp; Defense Acquisitions Academy</p>
+</div>
+</div>
+</body></html>`;
 }
 
 // ─── Email 1: Welcome (immediate) ──────────────────────────────────────────
