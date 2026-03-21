@@ -33,8 +33,8 @@ function emailShell(preheader: string, body: string): string {
     .tip-box{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:18px 20px;margin-bottom:24px}
     .tip-box .tip-label{font-size:12px;font-weight:800;color:#92400e;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
     .tip-box p{font-size:13px;color:#78350f;line-height:1.65;margin:0}
-    .cta-box{background:linear-gradient(135deg,#0d2137,#1a3d5c);border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px}
-    .cta-box p{color:rgba(255,255,255,0.85);font-size:14px;margin:0 0 20px;line-height:1.65}
+    .cta-box{background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #1a3d5c}
+    .cta-box p{color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65}
     .btn{display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none;letter-spacing:0.1px}
     .btn-outline{display:inline-block;background:transparent;color:#01696f;font-weight:700;font-size:14px;padding:11px 26px;border-radius:8px;text-decoration:none;border:2px solid #01696f}
     ul.checklist{list-style:none;padding:0;margin:0 0 22px}
@@ -91,9 +91,9 @@ export async function sendWelcomeEmail(to: string, username: string): Promise<vo
       <p style="margin-top:10px">It covers the Adaptive Acquisition Framework, ACAT categories, the FAR/DFARS structure, how programs get funded, and who the key players are across the government and industry side. Five lessons, full quizzes, and an AI study assistant ready to answer your questions in plain language.</p>
     </div>
 
-    <div class="cta-box">
-      <p>Start with Lesson 1 — it takes about 20 minutes and gives you a framework that makes everything else click.</p>
-      <a href="${APP_URL}/#/module/dod-foundations" class="btn">Start Module 01 →</a>
+    <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
+      <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Start with Lesson 1 — it takes about 20 minutes and gives you a framework that makes everything else click.</p>
+      <a href="${APP_URL}/#/module/dod-foundations" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Start Module 01 →</a>
     </div>
 
     <div class="section-label">What's ahead</div>
@@ -142,9 +142,9 @@ export async function sendEmail2(to: string, username: string): Promise<void> {
       <p style="margin-top:10px">Why does this matter? Because the pathway a program selects determines its oversight requirements, its documentation burden, its milestone review cadence, and how quickly it can field capability. If you don't know which pathway a program is on, you don't really know how the program works.</p>
     </div>
 
-    <div class="cta-box">
-      <p>Haven't started yet? Module 01 is waiting — five focused lessons, real DoD content, no filler.</p>
-      <a href="${APP_URL}/#/module/dod-foundations" class="btn">Pick Up Where You Left Off →</a>
+    <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
+      <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Haven't started yet? Module 01 is waiting — five focused lessons, real DoD content, no filler.</p>
+      <a href="${APP_URL}/#/module/dod-foundations" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Pick Up Where You Left Off →</a>
     </div>
 
     <div class="tip-box">
@@ -189,9 +189,9 @@ export async function sendEmail3(to: string, username: string): Promise<void> {
 
     <p>The assistant explains things at whatever level you need — plain-language basics or nuanced technical depth. If a lesson introduces a concept that isn't clicking, just ask.</p>
 
-    <div class="cta-box">
-      <p>Open any lesson, scroll to the bottom, and start a conversation. You'll be surprised how much faster the material sticks when you can ask follow-up questions in real time.</p>
-      <a href="${APP_URL}/#/module/dod-foundations" class="btn">Try It in Module 01 →</a>
+    <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
+      <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Open any lesson, scroll to the bottom, and start a conversation. You'll be surprised how much faster the material sticks when you can ask follow-up questions in real time.</p>
+      <a href="${APP_URL}/#/module/dod-foundations" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Try It in Module 01 →</a>
     </div>
 
     <div class="tip-box">
@@ -247,9 +247,9 @@ export async function sendEmail4(to: string, username: string): Promise<void> {
       <li>Content updates as regulations change (FAR/DFARS updates, new AAF guidance)</li>
     </ul>
 
-    <div class="cta-box">
-      <p>Start at $5.99/month — or get lifetime access for a one-time payment of $149. Either way, you're covered by a 30-day money-back guarantee.</p>
-      <a href="${APP_URL}/#/upgrade" class="btn">Unlock All 6 Modules →</a>
+    <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
+      <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Start at $5.99/month — or get lifetime access for a one-time payment of $149. Either way, you're covered by a 30-day money-back guarantee.</p>
+      <a href="${APP_URL}/#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Unlock All 6 Modules →</a>
     </div>
 
     <p>Still working through Module 01? No rush. It'll be there when you're ready.</p>
@@ -295,9 +295,9 @@ export async function sendEmail5(to: string, username: string): Promise<void> {
       <p><strong>The real difference between FFP and Cost-Plus</strong> isn't just "who bears the risk." It's about what kind of work is being done. FFP is appropriate when the government can write a detailed, stable Statement of Work and the contractor can price it with confidence. Cost-Plus is appropriate for high-uncertainty development work where locking in a price would force the contractor to pad the proposal with massive contingency — or lose money trying to deliver.</p>
     </div>
 
-    <div class="cta-box">
-      <p>This is what Modules 02 and 03 actually look like. Fifteen more lessons, full quizzes, key terms, and an AI assistant to fill in the gaps — starting at $5.99/month.</p>
-      <a href="${APP_URL}/#/upgrade" class="btn">Unlock Defense Finance & Contracting →</a>
+    <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
+      <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">This is what Modules 02 and 03 actually look like. Fifteen more lessons, full quizzes, key terms, and an AI assistant to fill in the gaps — starting at $5.99/month.</p>
+      <a href="${APP_URL}/#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Unlock Defense Finance &amp; Contracting →</a>
     </div>
 
     <p style="font-size:14px;color:#0d2137;font-weight:700;margin-top:4px">— Lucas, Acqlerate</p>
@@ -350,9 +350,9 @@ export async function sendEmail6(to: string, username: string): Promise<void> {
       <li><strong>Program Manager:</strong> Finance + Data Analytics. EVM and program dashboards are where careers get made or broken.</li>
     </ul>
 
-    <div class="cta-box">
-      <p>Your path is waiting. All five Pro modules + your personalized sequence — starting at $5.99/month with a 30-day guarantee.</p>
-      <a href="${APP_URL}/#/upgrade" class="btn">Start Your Learning Path →</a>
+    <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
+      <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Your path is waiting. All five Pro modules + your personalized sequence — starting at $5.99/month with a 30-day guarantee.</p>
+      <a href="${APP_URL}/#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Start Your Learning Path →</a>
     </div>
 
     <p>Reply to this email if you want a more specific recommendation based on your role. I'm happy to point you in the right direction.</p>
@@ -395,13 +395,11 @@ export async function sendEmail7(to: string, username: string): Promise<void> {
       <li>All future content updates, included</li>
     </ul>
 
-    <div class="cta-box">
-      <p>
-        <strong style="color:white;font-size:16px">Start at $5.99/month</strong><br/>
-        <span style="font-size:13px;opacity:0.8">or $149 one-time for lifetime access — no renewals, ever</span>
-      </p>
-      <a href="${APP_URL}/#/upgrade" class="btn" style="margin-bottom:10px">Unlock Pro Access →</a>
-      <p style="font-size:12px;opacity:0.7;margin:12px 0 0">30-day money-back guarantee. No questions asked.</p>
+    <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
+      <p style="color:#ffffff !important;font-size:16px;font-weight:800;margin:0 0 6px">Start at $5.99/month</p>
+      <p style="color:#ffffff !important;font-size:13px;margin:0 0 20px;opacity:0.8">or $149 one-time for lifetime access — no renewals, ever</p>
+      <a href="${APP_URL}/#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none;margin-bottom:10px">Unlock Pro Access →</a>
+      <p style="color:#ffffff !important;font-size:12px;margin:12px 0 0;opacity:0.7">30-day money-back guarantee. No questions asked.</p>
     </div>
 
     <p>If now isn't the right time, that's genuinely fine. Module 01 stays free forever — come back when you're ready.</p>
