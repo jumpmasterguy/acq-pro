@@ -130,7 +130,7 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
             <span className="text-3xl font-bold">$149</span>
             <span className="text-muted-foreground text-sm mb-1">one-time</span>
           </div>
-          <div className="text-xs text-muted-foreground mb-4">or $4.99/month — cancel anytime</div>
+          <div className="text-xs text-muted-foreground mb-4">or $5.99/month — cancel anytime</div>
           <ul className="space-y-2 mb-5">
             {proFeatures.map((f, i) => (
               <li key={i} className="flex items-start gap-2 text-sm">
@@ -191,7 +191,7 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
                 ) : (
                   <Zap className="w-4 h-4" />
                 )}
-                Start Monthly — $4.99/mo
+                Start Monthly — $5.99/mo
               </Button>
 
               <p className="text-xs text-muted-foreground text-center mt-2">
