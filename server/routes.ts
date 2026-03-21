@@ -333,7 +333,17 @@ export async function registerRoutes(
 
       try {
         // Create or retrieve Stripe customer
+        // Always verify the stored ID is valid in the current Stripe mode (test vs live)
         let customerId = req.user!.stripeCustomerId;
+        if (customerId) {
+          try {
+            await stripe.customers.retrieve(customerId);
+          } catch (retrieveErr: any) {
+            // Customer doesn't exist in this Stripe mode (e.g. test ID used in live mode)
+            console.warn(`[stripe] Stored customer ${customerId} not found — creating new one`);
+            customerId = null;
+          }
+        }
         if (!customerId) {
           const customer = await stripe.customers.create({
             email: userEmail,
@@ -443,17 +453,21 @@ export async function registerRoutes(
         return res.status(503).json({ message: "Payment processing not configured" });
       }
 
-      const customerId = req.user!.stripeCustomerId;
-      if (!customerId) {
+      let portalCustomerId = req.user!.stripeCustomerId;
+      if (!portalCustomerId) {
         return res.status(400).json({ message: "No billing account found" });
       }
 
       try {
+        // Verify customer exists in current Stripe mode
+        try { await stripe.customers.retrieve(portalCustomerId); }
+        catch { return res.status(400).json({ message: "Billing account not found in current payment mode" }); }
+
         const origin =
           process.env.APP_URL ||
           `${req.protocol}://${req.get("host")}`;
         const session = await stripe.billingPortal.sessions.create({
-          customer: customerId,
+          customer: portalCustomerId,
           return_url: `${origin}/#/dashboard`,
         });
         return res.json({ url: session.url });
