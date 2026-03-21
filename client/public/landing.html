@@ -253,7 +253,7 @@
     .pricing-bg .section-title { color: white; }
     .pricing-bg .section-sub { color: rgba(255,255,255,0.55); }
     .pricing-bg .section-eyebrow { color: var(--teal-mid); }
-    .pricing-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; max-width: 760px; margin: 0 auto; }
+    .pricing-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1040px; margin: 0 auto; }
     .price-card {
       background: var(--navy-mid); border: 1.5px solid rgba(255,255,255,0.1);
       border-radius: 20px; padding: 32px 28px;
@@ -355,7 +355,7 @@
       .email-form { width: 100%; }
       .email-input { width: 100%; }
       .btn-capture { width: 100%; }
-      .pricing-cards { grid-template-columns: 1fr; }
+      .pricing-cards { grid-template-columns: 1fr; max-width: 480px; }
     }
   </style>
 </head>
@@ -591,6 +591,7 @@
     <h2 class="section-title">Start free. Go pro when you're ready.</h2>
     <p class="section-sub">Module 01 — DoD Acquisitions Foundations — is completely free. No credit card. No time limit.</p>
     <div class="pricing-cards">
+      <!-- Free -->
       <div class="price-card">
         <div class="plan-name">Free</div>
         <div class="plan-price">$0 <span>/ forever</span></div>
@@ -603,8 +604,23 @@
         </ul>
         <a href="/#/auth" class="btn-plan btn-plan-outline">Start Free →</a>
       </div>
+      <!-- Monthly (featured / center) -->
       <div class="price-card featured">
-        <div class="featured-badge">BEST VALUE</div>
+        <div class="featured-badge">MOST POPULAR</div>
+        <div class="plan-name">Monthly Pro</div>
+        <div class="plan-price">$5.99 <span>/ month</span></div>
+        <div class="plan-desc">Full access while subscribed. Cancel anytime.</div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span> All 6 modules — 30 lessons</li>
+          <li><span class="check">✓</span> All skill levels unlocked</li>
+          <li><span class="check">✓</span> AI Study Assistant — unlimited</li>
+          <li><span class="check">✓</span> Module gate assessments</li>
+          <li><span class="check">✓</span> Personalized learning path</li>
+        </ul>
+        <a href="/#/auth?plan=monthly" class="btn-plan btn-plan-teal" id="monthlyBtn">Get Monthly Access →</a>
+      </div>
+      <!-- Lifetime -->
+      <div class="price-card">
         <div class="plan-name">Lifetime Pro</div>
         <div class="plan-price">$149 <span>one-time</span></div>
         <div class="plan-desc">Full access forever. No subscription. No renewals.</div>
@@ -616,19 +632,7 @@
           <li><span class="check">✓</span> Module gate assessments</li>
           <li><span class="check">✓</span> Personalized learning path</li>
         </ul>
-        <a href="/#/auth?plan=lifetime" class="btn-plan btn-plan-teal" id="lifetimeBtn">Get Lifetime Access →</a>
-      </div>
-      <div class="price-card">
-        <div class="plan-name">Monthly Pro</div>
-        <div class="plan-price">$5.99 <span>/ month</span></div>
-        <div class="plan-desc">Full access while subscribed. Cancel anytime.</div>
-        <ul class="plan-features">
-          <li><span class="check">✓</span> All 6 modules — 30 lessons</li>
-          <li><span class="check">✓</span> All skill levels unlocked</li>
-          <li><span class="check">✓</span> AI Study Assistant — unlimited</li>
-          <li><span class="check">✓</span> Module gate assessments</li>
-        </ul>
-        <a href="/#/auth?plan=monthly" class="btn-plan btn-plan-outline" id="monthlyBtn">Get Monthly Access →</a>
+        <a href="/#/auth?plan=lifetime" class="btn-plan btn-plan-outline" id="lifetimeBtn">Get Lifetime Access →</a>
       </div>
     </div>
   </div>
