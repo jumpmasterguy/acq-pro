@@ -10,11 +10,9 @@ export function serveStatic(app: Express) {
     );
   }
 
-  app.use(express.static(distPath));
-
   // Serve landing page at root for unauthenticated visitors
+  // MUST be before express.static so it intercepts / before index.html is served
   app.get("/", (req: Request, res: Response) => {
-    // If the user has an active session, send them to the app
     if ((req as any).isAuthenticated && (req as any).isAuthenticated()) {
       return res.sendFile(path.resolve(distPath, "index.html"));
     }
@@ -25,7 +23,10 @@ export function serveStatic(app: Express) {
     return res.sendFile(path.resolve(distPath, "index.html"));
   });
 
-  // fall through to index.html if the file doesn't exist
+  // Serve all other static assets (JS, CSS, images, etc.)
+  app.use(express.static(distPath));
+
+  // Fall through to index.html for all React routes (hash routing)
   app.use("/{*path}", (_req, res) => {
     res.sendFile(path.resolve(distPath, "index.html"));
   });
