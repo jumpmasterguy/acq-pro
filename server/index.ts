@@ -98,6 +98,9 @@ app.use((req, res, next) => {
         `ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL`,
         // Onboarding / learning path profile
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS user_profile JSONB DEFAULT '{}'::JSONB`,
+        // Email drip tracking
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS registered_at TEXT NOT NULL DEFAULT now()::text`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS sent_email_days JSONB NOT NULL DEFAULT '[]'::JSONB`,
       ];
       // email_leads table for landing page opt-ins
       try {

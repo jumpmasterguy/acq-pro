@@ -5,7 +5,7 @@ import passport from "passport";
 import { storage } from "./storage";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema, userProfileSchema } from "@shared/schema";
-import { sendWelcomeEmail } from "./email";
+import { sendWelcomeEmail, processDripEmails } from "./email";
 
 // Initialize Stripe — will be undefined if key not set
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
@@ -767,6 +767,40 @@ export async function registerRoutes(
     if (!isAdmin(req)) return res.status(403).json({ message: 'Forbidden' });
     const leads = await storage.getAllLeads();
     return res.json(leads);
+  });
+
+  // ── Drip email cron endpoint ──────────────────────────────────────────────
+  // Called by Railway cron (or any scheduler) every hour via:
+  //   GET /api/cron/drip?secret=<CRON_SECRET>
+  // Set CRON_SECRET in Railway env vars to protect this endpoint.
+  app.get("/api/cron/drip", async (req: Request, res: Response) => {
+    const secret = process.env.CRON_SECRET;
+    if (secret && req.query.secret !== secret) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+    try {
+      const users = await storage.getUsersForDrip();
+      let processed = 0;
+      let sent = 0;
+      for (const user of users) {
+        const updated = await processDripEmails(
+          user.email,
+          user.username,
+          user.registeredAt,
+          user.sentEmailDays
+        );
+        if (updated.length !== user.sentEmailDays.length) {
+          await storage.updateSentEmailDays(user.id, updated);
+          sent += updated.length - user.sentEmailDays.length;
+        }
+        processed++;
+      }
+      console.log(`[drip] Processed ${processed} users, sent ${sent} emails`);
+      return res.json({ processed, sent });
+    } catch (err: any) {
+      console.error('[drip] Error running drip cron:', err);
+      return res.status(500).json({ message: err.message });
+    }
   });
 
   return httpServer;

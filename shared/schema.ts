@@ -29,6 +29,9 @@ export const users = pgTable("users", {
   loginCount: integer("login_count").notNull().default(0),
   totalMinutesActive: integer("total_minutes_active").notNull().default(0),
   xp: integer("xp").notNull().default(0),
+  // Email drip tracking
+  registeredAt: text("registered_at").notNull().default(sql`now()::text`),
+  sentEmailDays: jsonb("sent_email_days").notNull().default(sql`'[]'::jsonb`), // number[]
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({

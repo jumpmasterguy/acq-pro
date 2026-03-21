@@ -50,6 +50,8 @@ export interface IStorage {
   ): Promise<User | undefined>;
   saveLead(email: string, source?: string): Promise<Lead>;
   getAllLeads(): Promise<Lead[]>;
+  getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[] }>>;
+  updateSentEmailDays(userId: string, days: number[]): Promise<void>;
 }
 
 // ─── Postgres Storage (production) ─────────────────────────────────────────
@@ -251,6 +253,24 @@ export class DrizzleStorage implements IStorage {
   async getAllLeads(): Promise<Lead[]> {
     return this.db.select().from(emailLeads).orderBy(emailLeads.createdAt);
   }
+
+  async getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[] }>> {
+    const rows = await this.db.select({
+      id: users.id,
+      email: users.email,
+      username: users.username,
+      registeredAt: users.registeredAt,
+      sentEmailDays: users.sentEmailDays,
+    }).from(users);
+    return rows.map(r => ({
+      ...r,
+      sentEmailDays: Array.isArray(r.sentEmailDays) ? (r.sentEmailDays as number[]) : [],
+    }));
+  }
+
+  async updateSentEmailDays(userId: string, days: number[]): Promise<void> {
+    await this.db.update(users).set({ sentEmailDays: days }).where(eq(users.id, userId));
+  }
 }
 
 // ─── In-Memory Storage (fallback when no DATABASE_URL) ─────────────────────
@@ -417,6 +437,21 @@ export class MemStorage implements IStorage {
   }
 
   async getAllLeads(): Promise<Lead[]> { return []; }
+
+  async getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[] }>> {
+    return Array.from(this.users.values()).map(u => ({
+      id: u.id,
+      email: u.email,
+      username: u.username,
+      registeredAt: u.registeredAt ?? new Date().toISOString(),
+      sentEmailDays: Array.isArray(u.sentEmailDays) ? (u.sentEmailDays as number[]) : [],
+    }));
+  }
+
+  async updateSentEmailDays(userId: string, days: number[]): Promise<void> {
+    const user = this.users.get(userId);
+    if (user) this.users.set(userId, { ...user, sentEmailDays: days });
+  }
 }
 
 // ─── Export — auto-select based on DATABASE_URL ─────────────────────────────
