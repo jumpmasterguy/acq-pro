@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type InsertGoogleUser, users } from "@shared/schema";
+import { type User, type InsertUser, type InsertGoogleUser, users, emailLeads, type Lead } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { eq } from "drizzle-orm";
@@ -48,6 +48,8 @@ export interface IStorage {
       xp?: number;
     }
   ): Promise<User | undefined>;
+  saveLead(email: string, source?: string): Promise<Lead>;
+  getAllLeads(): Promise<Lead[]>;
 }
 
 // ─── Postgres Storage (production) ─────────────────────────────────────────
@@ -237,6 +239,18 @@ export class DrizzleStorage implements IStorage {
       .returning();
     return result[0];
   }
+
+  async saveLead(email: string, source = 'landing_page'): Promise<Lead> {
+    // Upsert — ignore duplicate emails
+    const existing = await this.db.select().from(emailLeads).where(eq(emailLeads.email, email)).limit(1);
+    if (existing[0]) return existing[0];
+    const result = await this.db.insert(emailLeads).values({ email, source }).returning();
+    return result[0];
+  }
+
+  async getAllLeads(): Promise<Lead[]> {
+    return this.db.select().from(emailLeads).orderBy(emailLeads.createdAt);
+  }
 }
 
 // ─── In-Memory Storage (fallback when no DATABASE_URL) ─────────────────────
@@ -396,6 +410,13 @@ export class MemStorage implements IStorage {
     this.users.set(userId, updated);
     return updated;
   }
+
+  async saveLead(email: string, source = 'landing_page'): Promise<Lead> {
+    const lead: Lead = { id: randomUUID(), email, source, createdAt: new Date().toISOString() };
+    return lead;
+  }
+
+  async getAllLeads(): Promise<Lead[]> { return []; }
 }
 
 // ─── Export — auto-select based on DATABASE_URL ─────────────────────────────

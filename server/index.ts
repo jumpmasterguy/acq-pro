@@ -99,6 +99,17 @@ app.use((req, res, next) => {
         // Onboarding / learning path profile
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS user_profile JSONB DEFAULT '{}'::JSONB`,
       ];
+      // email_leads table for landing page opt-ins
+      try {
+        await schemaPool.query(`
+          CREATE TABLE IF NOT EXISTS email_leads (
+            id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid()::varchar,
+            email TEXT NOT NULL UNIQUE,
+            source TEXT DEFAULT 'landing_page',
+            created_at TEXT NOT NULL DEFAULT now()::text
+          )
+        `);
+      } catch (e: any) { /* table already exists */ }
       for (const stmt of schemaCols) {
         try { await schemaPool.query(stmt); } catch (e: any) { /* column already exists or already nullable */ }
       }

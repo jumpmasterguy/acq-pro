@@ -734,6 +734,27 @@ export async function registerRoutes(
     return res.json({ ok: false, reason: 'No endpoints worked', keyPrefix, allResults: results });
   });
 
+  // ── Email lead capture (landing page opt-in) ──────────────────────────────
+  app.post("/api/leads", async (req: Request, res: Response) => {
+    const { email, source } = req.body;
+    if (!email || typeof email !== 'string' || !email.includes('@')) {
+      return res.status(400).json({ message: 'Valid email required' });
+    }
+    try {
+      const lead = await storage.saveLead(email.toLowerCase().trim(), source || 'landing_page');
+      return res.json({ ok: true, id: lead.id });
+    } catch (err: any) {
+      return res.status(500).json({ message: 'Failed to save email' });
+    }
+  });
+
+  // Admin: view all leads
+  app.get("/api/admin/leads", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isAdmin(req)) return res.status(403).json({ message: 'Forbidden' });
+    const leads = await storage.getAllLeads();
+    return res.json(leads);
+  });
+
   return httpServer;
 }
 

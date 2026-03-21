@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, boolean, jsonb, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, boolean, jsonb, integer, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -70,3 +70,15 @@ export const userProfileSchema = z.object({
   completedOnboarding: z.boolean().default(true),
 });
 export type UserProfile = z.infer<typeof userProfileSchema>;
+
+// ── Email leads (landing page opt-in) ─────────────────────────────────────
+export const emailLeads = pgTable("email_leads", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: text("email").notNull().unique(),
+  source: text("source").default("landing_page"),   // landing_page | exit_intent
+  createdAt: text("created_at").notNull().default(sql`now()::text`),
+});
+
+export const insertLeadSchema = createInsertSchema(emailLeads).pick({ email: true, source: true });
+export type Lead = typeof emailLeads.$inferSelect;
+export type InsertLead = z.infer<typeof insertLeadSchema>;
