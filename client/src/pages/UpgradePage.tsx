@@ -30,6 +30,7 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
     "All quiz questions with detailed explanations",
     "Key terms glossary for every lesson",
     "Career roadmap for gov & contractor tracks",
+    "AI Study Assistant: Explain Like I\u2019m 5 + I\u2019m Still Lost",
     "Cancel anytime",
   ];
 
@@ -43,6 +44,7 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
     "Salary benchmarks & certification guidance",
     "Lifetime content updates as regulations change",
     "Priority email support",
+    "\u2605 \"How Do I Apply This?\" AI — exclusive to Lifetime",
   ];
 
   const premiumModules = modules.filter(m => !m.free);
@@ -212,12 +214,21 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
           </div>
           <div className="text-xs text-muted-foreground mb-4">Pay once, own it forever</div>
           <ul className="space-y-2 mb-5 flex-1">
-            {lifetimeFeatures.map((f, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm">
-                <CheckCircle className="w-3.5 h-3.5 text-green-500 flex-shrink-0 mt-0.5" />
-                {f}
-              </li>
-            ))}
+            {lifetimeFeatures.map((f, i) => {
+              const isExclusive = f.startsWith('\u2605');
+              return (
+                <li key={i} className={cn(
+                  "flex items-start gap-2 text-sm",
+                  isExclusive && "mt-1 pt-2 border-t border-primary/20"
+                )}>
+                  <CheckCircle className={cn(
+                    "w-3.5 h-3.5 flex-shrink-0 mt-0.5",
+                    isExclusive ? "text-primary" : "text-green-500"
+                  )} />
+                  <span className={isExclusive ? "text-primary font-semibold" : ""}>{f}</span>
+                </li>
+              );
+            })}
           </ul>
 
           {nativeApp ? (
