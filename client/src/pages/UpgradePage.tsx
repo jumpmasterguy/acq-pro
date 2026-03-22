@@ -30,7 +30,7 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
     "All quiz questions with detailed explanations",
     "Key terms glossary for every lesson",
     "Career roadmap for gov & contractor tracks",
-    "AI Study Assistant: Explain Like I\u2019m 5 + I\u2019m Still Lost",
+    "AI Study Assistant — limited",
     "Cancel anytime",
   ];
 
@@ -42,6 +42,7 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
     "Formulas, tables & quick-reference content",
     "Career roadmap for gov & contractor tracks",
     "Salary benchmarks & certification guidance",
+    "AI Study Assistant — unlimited",
     "Lifetime content updates as regulations change",
     "Priority email support",
     "\u2605 \"How Do I Apply This?\" AI — exclusive to Lifetime",
