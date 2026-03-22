@@ -135,6 +135,8 @@ interface LessonPageProps {
   unlockedLevel?: SkillLevel;
   // Callback to open the module assessment from within a lesson
   onOpenAssessment?: () => void;
+  // True only for lifetime subscribers — unlocks "How Do I Apply This?" AI button
+  isLifetime?: boolean;
 }
 
 type Tab = 'lesson' | 'quiz' | 'terms';
@@ -455,7 +457,7 @@ function DragMatchQuestion({ question, submitted, onMatchChange, currentMatches 
 
 // ─── Main LessonPage ───────────────────────────────────────────────────────
 
-export default function LessonPage({ lessonId, progress, onBack, onComplete, onNextLesson, unlockedLevel = 'novice', onOpenAssessment }: LessonPageProps) {
+export default function LessonPage({ lessonId, progress, onBack, onComplete, onNextLesson, unlockedLevel = 'novice', onOpenAssessment, isLifetime = false }: LessonPageProps) {
   const [activeTab, setActiveTab] = useState<Tab>('lesson');
   // MC answers: questionId → optionIndex
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({});
@@ -1015,22 +1017,36 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     <div className={cn("text-[11px]", aiMode === 'eli5' ? "text-primary-foreground/70" : "text-muted-foreground")}>Simple analogy, plain English</div>
                   </div>
                 </button>
-                <button
-                  onClick={() => handleAiExplain('apply')}
-                  data-testid="ai-apply"
-                  className={cn(
-                    "flex-1 flex items-center gap-2 px-3 py-2.5 rounded-lg border text-sm font-medium transition-all text-left",
-                    aiMode === 'apply'
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-background border-border hover:border-primary/50 hover:bg-primary/5"
-                  )}
-                >
-                  <Briefcase className="w-4 h-4 flex-shrink-0" />
-                  <div>
-                    <div className="font-semibold text-xs">How Do I Apply This?</div>
-                    <div className={cn("text-[11px]", aiMode === 'apply' ? "text-primary-foreground/70" : "text-muted-foreground")}>Real PM scenarios & examples</div>
+                {isLifetime ? (
+                  <button
+                    onClick={() => handleAiExplain('apply')}
+                    data-testid="ai-apply"
+                    className={cn(
+                      "flex-1 flex items-center gap-2 px-3 py-2.5 rounded-lg border text-sm font-medium transition-all text-left",
+                      aiMode === 'apply'
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-background border-border hover:border-primary/50 hover:bg-primary/5"
+                    )}
+                  >
+                    <Briefcase className="w-4 h-4 flex-shrink-0" />
+                    <div>
+                      <div className="font-semibold text-xs">How Do I Apply This?</div>
+                      <div className={cn("text-[11px]", aiMode === 'apply' ? "text-primary-foreground/70" : "text-muted-foreground")}>Real PM scenarios & examples</div>
+                    </div>
+                  </button>
+                ) : (
+                  <div
+                    data-testid="ai-apply-locked"
+                    className="flex-1 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-dashed border-border/60 text-sm text-left cursor-default opacity-60"
+                    title="Upgrade to Lifetime to unlock"
+                  >
+                    <Lock className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
+                    <div>
+                      <div className="font-semibold text-xs text-muted-foreground">How Do I Apply This?</div>
+                      <div className="text-[11px] text-muted-foreground/70">Lifetime plan — <a href="/#/upgrade" className="underline hover:text-primary">upgrade</a></div>
+                    </div>
                   </div>
-                </button>
+                )}
                 <button
                   onClick={() => handleAiExplain('lost')}
                   data-testid="ai-lost"

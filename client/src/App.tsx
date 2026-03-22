@@ -567,6 +567,7 @@ function AppContent() {
                 onNextLesson={handleNextLesson}
                 unlockedLevel={unlockedLevel}
                 onOpenAssessment={parentMod ? () => setAssessmentModuleId(parentMod.id) : undefined}
+                isLifetime={authState.status === 'authenticated' && authState.user.subscriptionStatus === 'lifetime'}
               />
             );
           })()}
