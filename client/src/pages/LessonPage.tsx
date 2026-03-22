@@ -150,6 +150,8 @@ interface DragOrderProps {
 
 // ── AI-powered expandable bullet item ─────────────────────────────────────────
 
+const DETAIL_SEP = '|||';
+
 function ExpandableBulletItem({
   item,
   lessonTitle,
@@ -159,22 +161,31 @@ function ExpandableBulletItem({
   lessonTitle: string;
   heading?: string;
 }) {
+  // Items can embed static detail: "Bullet text|||Static detail text"
+  const sepIdx = item.indexOf(DETAIL_SEP);
+  const bulletText = sepIdx >= 0 ? item.slice(0, sepIdx) : item;
+  const staticDetail = sepIdx >= 0 ? item.slice(sepIdx + DETAIL_SEP.length) : null;
+
   const [open, setOpen] = useState(false);
-  const [detail, setDetail] = useState<string | null>(null);
+  const [aiDetail, setAiDetail] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+
+  const detail = staticDetail ?? aiDetail;
 
   const handleToggle = async () => {
     if (open) { setOpen(false); return; }
     setOpen(true);
-    if (detail !== null) return; // already loaded
+    // If static detail exists, show instantly — no API call needed
+    if (staticDetail !== null || aiDetail !== null) return;
+    // Otherwise fetch from AI
     setLoading(true);
     setError(false);
     try {
-      const res = await apiRequest('POST', '/api/expand-item', { item, lessonTitle, heading });
+      const res = await apiRequest('POST', '/api/expand-item', { item: bulletText, lessonTitle, heading });
       const data = await res.json();
       if (res.ok && data.detail) {
-        setDetail(data.detail);
+        setAiDetail(data.detail);
       } else {
         setError(true);
       }
@@ -203,7 +214,7 @@ function ExpandableBulletItem({
             open ? "text-primary" : "text-primary/60 group-hover:text-primary"
           )} />
         </span>
-        <span className="flex-1">{item}</span>
+        <span className="flex-1">{bulletText}</span>
       </button>
       {open && (
         <div className="ml-6 mt-1 mb-2 px-3 py-2.5 bg-primary/5 border border-primary/15 rounded-lg">
