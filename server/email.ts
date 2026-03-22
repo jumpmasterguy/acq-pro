@@ -71,6 +71,129 @@ export async function sendWelcomeEmail(to: string, username: string): Promise<vo
   console.log(`[email] Email 1 (welcome) sent to ${to}`);
 }
 
+// ─── Starter Kit Email ────────────────────────────────────────────────────
+// Sent after onboarding is complete and role is known
+
+type UserRole = 'dod_employee' | 'dod_contractor' | 'career_changer' | 'student';
+
+export async function sendStarterKitEmail(to: string, username: string, role: UserRole): Promise<void> {
+  if (!resend) { console.log('[email] RESEND_API_KEY not set — skipping starter kit email'); return; }
+
+  const isContractor = role === 'dod_contractor';
+  const isUSG = role === 'dod_employee';
+  const isCareerChanger = role === 'career_changer';
+
+  // Career changers and students get both kits
+  const getsBoth = isCareerChanger || role === 'student';
+
+  const kitLabel = isContractor
+    ? 'The Contractor\'s Acquisition Starter Kit'
+    : isUSG
+    ? 'The Acquisition Starter Kit (USG Edition)'
+    : 'Both Starter Kits — USG & Contractor';
+
+  const kitDesc = isContractor
+    ? 'Built for defense contractors, BD professionals, and proposal teams — contracts, task orders, vehicles, IDIQ structures, common mistakes, and the acronym glossary you need from day one.'
+    : isUSG
+    ? 'Built for government acquisition professionals — DoD lifecycle, ACAT levels, key roles, acquisition pathways, the 5 most common PM mistakes, and the vocabulary you need to be effective.'
+    : 'Because understanding both sides of the table is one of the fastest ways to accelerate your career — we\'re sending you both the USG and Contractor editions.';
+
+  const downloadButtons = isContractor ? `
+    <a href="${APP_URL}/starter-kit-contractor.pdf"
+       style="display:inline-block;background:#01696f;color:#ffffff;font-weight:800;font-size:14px;padding:12px 28px;border-radius:8px;text-decoration:none">
+      Download Your Starter Kit →
+    </a>
+  ` : isUSG ? `
+    <a href="${APP_URL}/starter-kit-usg.pdf"
+       style="display:inline-block;background:#01696f;color:#ffffff;font-weight:800;font-size:14px;padding:12px 28px;border-radius:8px;text-decoration:none">
+      Download Your Starter Kit →
+    </a>
+  ` : `
+    <a href="${APP_URL}/starter-kit-usg.pdf"
+       style="display:inline-block;background:#01696f;color:#ffffff;font-weight:800;font-size:14px;padding:12px 24px;border-radius:8px;text-decoration:none;margin-right:10px">
+      USG Edition →
+    </a>
+    <a href="${APP_URL}/starter-kit-contractor.pdf"
+       style="display:inline-block;background:#0d2137;color:#ffffff;font-weight:700;font-size:14px;padding:12px 24px;border-radius:8px;text-decoration:none;border:1px solid #264d73">
+      Contractor Edition →
+    </a>
+  `;
+
+  const body = `
+    <div style="font-size:17px;font-weight:700;color:#0d2137;margin:0 0 10px">Here's your Acqlerate Starter Kit, ${username.split(' ')[0]}.</div>
+    <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 18px">You told us you're on the ${isContractor ? 'contractor' : isUSG ? 'government' : 'career transition'} side of defense acquisitions. We put together a free reference guide specifically for your situation.</p>
+
+    <div style="background:#f0f9fa;border-left:4px solid #01696f;border-radius:0 10px 10px 0;padding:20px 24px;margin-bottom:24px">
+      <p style="margin:0 0 6px;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:#01696f">Your Starter Kit</p>
+      <p style="margin:0 0 4px;font-size:15px;font-weight:700;color:#0d2137">${kitLabel}</p>
+      <p style="margin:0;font-size:13px;color:#374151;line-height:1.6">${kitDesc}</p>
+    </div>
+
+    <div style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:2px solid #264d73">
+      <p style="color:#ffffff;font-size:14px;margin:0 0 20px;line-height:1.65">Your PDF reference guide — save it, share it with your team, and use it when you need a quick reminder of the terminology or frameworks that come up every day in this field.</p>
+      ${downloadButtons}
+    </div>
+
+    <p style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#01696f;margin:0 0 14px">What's inside</p>
+    ${isContractor ? `
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:10px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
+      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">Task Orders vs. Standalone Contracts</p>
+      <p style="font-size:13px;color:#64748b;margin:0">IDIQs, fair opportunity, single vs. multiple award — how DoD actually buys services</p>
+    </td></tr></table>
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:10px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
+      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">GSA AAS-D & IDIQ Vehicle Landscape</p>
+      <p style="font-size:13px;color:#64748b;margin:0">OASIS+, FEDSIM, ASTRO, and the vehicles that matter for defense contractors</p>
+    </td></tr></table>
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:10px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
+      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">Who's Buying — AFICC, ESS & MAJCOM Contracting</p>
+      <p style="font-size:13px;color:#64748b;margin:0">The three tiers of Air Force contracting and how to engage each one</p>
+    </td></tr></table>
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
+      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">5 Most Common Contractor Mistakes + 70+ Acronym Glossary</p>
+      <p style="font-size:13px;color:#64748b;margin:0">Pipeline strategy, COR relationship, DCAA compliance, recompete planning</p>
+    </td></tr></table>
+    ` : isUSG ? `
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:10px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
+      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">DoD Acquisition Lifecycle Cheat Sheet</p>
+      <p style="font-size:13px;color:#64748b;margin:0">All 6 AAF pathways with timelines, governing DoDIs, and MDA levels</p>
+    </td></tr></table>
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:10px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
+      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">ACAT Decision Tree</p>
+      <p style="font-size:13px;color:#64748b;margin:0">ACAT I/II/III thresholds, MDA levels, Nunn-McCurdy breach triggers</p>
+    </td></tr></table>
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:10px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
+      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">5 Most Common PM Mistakes</p>
+      <p style="font-size:13px;color:#64748b;margin:0">IMS discipline, Nunn-McCurdy thresholds, EVM signals, requirements quality, stakeholder management</p>
+    </td></tr></table>
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
+      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">50+ Acronym Glossary & AAF Pathway Selector</p>
+      <p style="font-size:13px;color:#64748b;margin:0">Every acronym you'll encounter in your first year, organized by category</p>
+    </td></tr></table>
+    ` : `
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:10px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
+      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">USG Edition — Lifecycle, ACAT, PM Mistakes, Acronyms</p>
+      <p style="font-size:13px;color:#64748b;margin:0">The government side: programs, milestones, oversight, and career paths</p>
+    </td></tr></table>
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
+      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">Contractor Edition — Vehicles, Mistakes, Glossary, Who's Buying</p>
+      <p style="font-size:13px;color:#64748b;margin:0">The industry side: IDIQs, BD strategy, DCAA compliance, COR relationship</p>
+    </td></tr></table>
+    `}
+
+    <hr style="border:none;border-top:1px solid #f1f5f9;margin:4px 0 24px" />
+    <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 6px">This is just the start — Module 01 inside Acqlerate is waiting for you whenever you're ready to go deeper.</p>
+    <p style="font-size:14px;color:#0d2137;font-weight:700;margin:0">— Lucas, Acqlerate</p>
+  `;
+
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: `Your Acqlerate Starter Kit is ready to download`,
+    html: emailShell('Your free acquisition reference guide — tailored to your role.', body),
+  });
+  console.log(`[email] Starter kit email sent to ${to} (role: ${role})`);
+}
+
 // ─── Email 2: Why acquisition literacy matters (Day 2) ─────────────────────
 
 export async function sendEmail2(to: string, username: string): Promise<void> {

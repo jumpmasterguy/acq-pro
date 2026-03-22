@@ -5,7 +5,7 @@ import passport from "passport";
 import { storage } from "./storage";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema, userProfileSchema } from "@shared/schema";
-import { sendWelcomeEmail, processDripEmails } from "./email";
+import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails } from "./email";
 
 // Initialize Stripe — will be undefined if key not set
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
@@ -175,6 +175,17 @@ export async function registerRoutes(
       if (!updated) return res.status(404).json({ message: "User not found" });
       // Update session
       (req.user as any).userProfile = parsed.data;
+
+      // Send role-specific starter kit email (non-blocking)
+      const user = req.user as any;
+      if (parsed.data.completedOnboarding && parsed.data.role && user.email) {
+        sendStarterKitEmail(
+          user.email,
+          user.username || user.email,
+          parsed.data.role as any
+        ).catch((err) => console.error('[email] Starter kit send failed:', err));
+      }
+
       return res.json({ userProfile: parsed.data });
     } catch (err: any) {
       return res.status(500).json({ message: err.message });

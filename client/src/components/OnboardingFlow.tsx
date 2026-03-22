@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Shield, ChevronRight, Building2, HardHat, Compass, GraduationCap, Sprout, TrendingUp, Star, FileText, Target, LayoutGrid, CheckCircle2 } from "lucide-react";
+import { ChevronRight, Building2, HardHat, Compass, GraduationCap, Sprout, TrendingUp, Star, FileText, Target, LayoutGrid, CheckCircle2 } from "lucide-react";
+import { AcqlerateLogo } from "@/components/AcqlerateLogo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { apiRequest } from "@/lib/queryClient";
@@ -194,14 +195,8 @@ export default function OnboardingFlow({ username, onComplete }: OnboardingFlowP
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-xl">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-            <Shield className="w-5 h-5 text-primary" />
-          </div>
-          <div>
-            <div className="font-bold text-sm">Acqlerate</div>
-            <div className="text-[10px] text-muted-foreground">Defense Acquisitions Academy</div>
-          </div>
+        <div className="mb-8">
+          <AcqlerateLogo iconSize={36} />
         </div>
 
         {/* Progress dots */}
