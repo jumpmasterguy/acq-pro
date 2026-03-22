@@ -148,6 +148,83 @@ interface DragOrderProps {
   currentOrder: string[];
 }
 
+// ── AI-powered expandable bullet item ─────────────────────────────────────────
+
+function ExpandableBulletItem({
+  item,
+  lessonTitle,
+  heading,
+}: {
+  item: string;
+  lessonTitle: string;
+  heading?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [detail, setDetail] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  const handleToggle = async () => {
+    if (open) { setOpen(false); return; }
+    setOpen(true);
+    if (detail !== null) return; // already loaded
+    setLoading(true);
+    setError(false);
+    try {
+      const res = await apiRequest('POST', '/api/expand-item', { item, lessonTitle, heading });
+      const data = await res.json();
+      if (res.ok && data.detail) {
+        setDetail(data.detail);
+      } else {
+        setError(true);
+      }
+    } catch {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <li className="rounded-lg overflow-hidden border border-transparent">
+      <button
+        onClick={handleToggle}
+        className={cn(
+          "w-full flex items-start gap-2.5 text-sm text-left py-1.5 px-1 rounded-lg transition-colors group",
+          open ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+        )}
+      >
+        <span className={cn(
+          "flex-shrink-0 mt-0.5 transition-transform duration-200",
+          open ? "rotate-90" : ""
+        )}>
+          <ChevronRight className={cn(
+            "w-3.5 h-3.5 transition-colors",
+            open ? "text-primary" : "text-primary/60 group-hover:text-primary"
+          )} />
+        </span>
+        <span className="flex-1">{item}</span>
+      </button>
+      {open && (
+        <div className="ml-6 mt-1 mb-2 px-3 py-2.5 bg-primary/5 border border-primary/15 rounded-lg">
+          {loading && (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Loader2 className="w-3 h-3 animate-spin" />
+              Loading detail…
+            </div>
+          )}
+          {error && (
+            <p className="text-xs text-destructive">Couldn’t load detail — try again.</p>
+          )}
+          {detail && (
+            <p className="text-xs text-foreground/85 leading-relaxed">{detail}</p>
+          )}
+        </div>
+      )}
+    </li>
+  );
+}
+
 function DragOrderQuestion({ question, submitted, onOrderChange, currentOrder }: DragOrderProps) {
   const items = question.orderedItems ?? [];
   const order = currentOrder.length > 0 ? currentOrder : items;
@@ -745,12 +822,14 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               return (
                 <div key={i} className="bg-card border border-border rounded-xl p-5">
                   {block.heading && <h3 className="font-semibold text-sm mb-3">{block.heading}</h3>}
-                  <ul className="space-y-2">
+                  <ul className="space-y-0.5">
                     {block.items?.map((item, ii) => (
-                      <li key={ii} className="flex items-start gap-2.5 text-sm text-muted-foreground">
-                        <ChevronRight className="w-3.5 h-3.5 text-primary flex-shrink-0 mt-0.5" />
-                        {item}
-                      </li>
+                      <ExpandableBulletItem
+                        key={ii}
+                        item={item}
+                        lessonTitle={lesson!.title}
+                        heading={block.heading}
+                      />
                     ))}
                   </ul>
                 </div>

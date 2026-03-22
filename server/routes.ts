@@ -713,6 +713,45 @@ export async function registerRoutes(
     return res.status(500).json({ message: `AI explanation failed: ${lastErr}` });
   });
 
+  // ─── AI List Item Expand ─────────────────────────────────────────────────
+  // POST /api/expand-item
+  // Body: { item: string, lessonTitle: string, heading?: string }
+  // Returns: { detail: string }
+  app.post("/api/expand-item", requireAuth as any, async (req: Request, res: Response) => {
+    const { item, lessonTitle, heading } = req.body;
+    if (!item || !lessonTitle) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return res.status(503).json({ message: "GEMINI_API_KEY not configured" });
+    }
+    const context = heading ? `Section: ${heading}\nItem: ${item}` : `Item: ${item}`;
+    const prompt = `You are a concise DoD acquisitions instructor. Expand on the following bullet point from a lesson titled "${lessonTitle}". Provide 2-4 sentences of practical, specific detail that a defense professional would find genuinely useful — include regulatory citations, dollar thresholds, real examples, or common pitfalls where relevant. Do not repeat the bullet text. Be direct and professional.\n\n${context}`;
+    const modelNames = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-flash-latest'];
+    let lastErr = '';
+    for (const modelName of modelNames) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+        });
+        const data: any = await resp.json();
+        if (resp.ok) {
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+          if (text) return res.json({ detail: text.trim() });
+        }
+        lastErr = data?.error?.message ?? `HTTP ${resp.status}`;
+        if (resp.status === 429) break;
+      } catch (err: any) {
+        lastErr = err?.message ?? 'fetch error';
+      }
+    }
+    return res.status(500).json({ message: `Failed: ${lastErr}` });
+  });
+
   // GET /api/ai-health — check Gemini key is working (no auth required, for debugging)
   app.get("/api/ai-health", async (_req: Request, res: Response) => {
     const apiKey = process.env.GEMINI_API_KEY;
