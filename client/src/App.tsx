@@ -78,10 +78,12 @@ function clearSavedView() {
 }
 
 function AppContent() {
-  const [view, setView] = useState<View>({ type: 'landing' });
-  const [darkMode, setDarkMode] = useState(() =>
-    typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches
-  );
+  // Check if we arrived via a landing page CTA (/app#/auth)
+  const arrivedAtAuth = typeof window !== 'undefined' &&
+    (window.location.hash.startsWith('#/auth') || window.location.pathname === '/app');
+  const [view, setView] = useState<View>(arrivedAtAuth ? { type: 'auth' } : { type: 'landing' });
+  // Always default to dark mode to match brand
+  const [darkMode, setDarkMode] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [authState, setAuthState] = useState<AuthState>({ status: 'loading' });
   // Module assessment modal state
