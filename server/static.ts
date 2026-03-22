@@ -23,6 +23,12 @@ export function serveStatic(app: Express) {
     return res.sendFile(path.resolve(distPath, "index.html"));
   });
 
+  // /app route — always serves the React app (index.html)
+  // Used by landing page CTAs so hash routing works correctly
+  app.get("/app", (_req: Request, res: Response) => {
+    res.sendFile(path.resolve(distPath, "index.html"));
+  });
+
   // Serve all other static assets (JS, CSS, images, etc.)
   app.use(express.static(distPath));
 
