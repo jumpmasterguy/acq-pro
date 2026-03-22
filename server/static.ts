@@ -24,9 +24,22 @@ export function serveStatic(app: Express) {
   });
 
   // /app route — always serves the React app (index.html)
-  // Used by landing page CTAs so hash routing works correctly
   app.get("/app", (_req: Request, res: Response) => {
     res.sendFile(path.resolve(distPath, "index.html"));
+  });
+
+  // /blog routes — serve static blog HTML pages
+  app.get("/blog", (_req: Request, res: Response) => {
+    res.sendFile(path.resolve(distPath, "blog", "index.html"));
+  });
+  app.get("/blog/:slug", (req: Request, res: Response) => {
+    const slug = req.params.slug;
+    const filePath = path.resolve(distPath, "blog", `${slug}.html`);
+    if (fs.existsSync(filePath)) {
+      return res.sendFile(filePath);
+    }
+    // Fallback to blog index if post not found
+    return res.redirect("/blog");
   });
 
   // Serve all other static assets (JS, CSS, images, etc.)
