@@ -8,7 +8,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { FREE_MODULES, getModuleProgress } from "@/lib/progress";
 import { isNativeApp } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
-import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck } from "lucide-react";
+import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3 } from "lucide-react";
 import { AcqlerateLogo } from "@/components/AcqlerateLogo";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +20,7 @@ import LessonPage from "@/pages/LessonPage";
 import UpgradePage from "@/pages/UpgradePage";
 import AuthPage, { type AuthUser, type SkillLevel, type UserProfile } from "@/pages/AuthPage";
 import AdminPage from "@/pages/AdminPage";
+import AdminAnalytics from "@/pages/AdminAnalytics";
 import { ModuleAssessment } from "@/components/ModuleAssessment";
 import OnboardingFlow from "@/components/OnboardingFlow";
 import { apiRequest } from "@/lib/queryClient";
@@ -33,7 +34,8 @@ type View =
   | { type: 'module'; moduleId: string }
   | { type: 'lesson'; lessonId: string }
   | { type: 'upgrade' }
-  | { type: 'admin' };
+  | { type: 'admin' }
+  | { type: 'analytics' };
 
 // Auth state
 type AuthState =
@@ -68,7 +70,7 @@ function loadSavedView(): View | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw) as View;
     // Validate it's a known view type
-    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin'];
+    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin', 'analytics'];
     if (!valid.includes(parsed.type)) return null;
     return parsed;
   } catch { return null; }
@@ -195,13 +197,19 @@ function AppContent() {
     }
   }, [authState.status]);
 
+  // GA4 helper
+  const track = (event: string, params?: Record<string, any>) => {
+    try { (window as any).trackEvent?.(event, params); } catch {}
+  };
+
   const handleAuthenticated = (user: AuthUser) => {
     setAuthState({ status: 'authenticated', user });
-    // Show onboarding if they haven't completed it yet
     const profile = user.userProfile as UserProfile | null | undefined;
     if (!profile?.completedOnboarding) {
+      track('sign_up', { method: user.googleId ? 'google' : 'email' });
       setView({ type: 'onboarding' });
     } else {
+      track('login', { method: user.googleId ? 'google' : 'email' });
       setView({ type: 'dashboard' });
     }
   };
@@ -211,6 +219,7 @@ function AppContent() {
       if (prev.status !== 'authenticated') return prev;
       return { ...prev, user: { ...prev.user, userProfile: profile } };
     });
+    track('onboarding_complete', { role: profile.role, goal: profile.goal });
     setView({ type: 'dashboard' });
   };
 
@@ -406,6 +415,21 @@ function AppContent() {
               Admin Panel
             </button>
           )}
+          {isAdmin && (
+            <button
+              onClick={() => { setView({ type: 'analytics' }); setSidebarOpen(false); }}
+              className={cn(
+                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                view.type === 'analytics'
+                  ? "bg-sidebar-accent text-sidebar-foreground"
+                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+              )}
+              data-testid="nav-analytics"
+            >
+              <BarChart3 className="w-4 h-4" />
+              Analytics
+            </button>
+          )}
 
           <div className="text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/40 px-3 pt-3 pb-1.5">
             Modules
@@ -554,6 +578,9 @@ function AppContent() {
           )}
           {view.type === 'admin' && isAdmin && (
             <AdminPage />
+          )}
+          {view.type === 'analytics' && isAdmin && (
+            <AdminAnalytics onBack={() => setView({ type: 'admin' })} />
           )}
         </main>
       </div>

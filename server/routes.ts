@@ -819,6 +819,82 @@ export async function registerRoutes(
     return res.json(leads);
   });
 
+  // ── Admin: Stripe Revenue Dashboard ──────────────────────────────────────────────
+  app.get("/api/admin/revenue", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isAdmin(req)) return res.status(403).json({ message: 'Forbidden' });
+    if (!stripe) return res.status(503).json({ message: 'Stripe not configured' });
+
+    try {
+      // Fetch active subscriptions
+      const subscriptions = await stripe.subscriptions.list({ limit: 100, status: 'active' });
+      const allUsers = await storage.getAllUsers();
+
+      const monthlyCustomers = subscriptions.data.filter(s =>
+        s.items.data.some(i => i.price.recurring?.interval === 'month')
+      );
+      const mrr = monthlyCustomers.reduce((sum, s) => {
+        const monthlyAmount = s.items.data.reduce((a, i) => a + (i.price.unit_amount ?? 0), 0);
+        return sum + monthlyAmount;
+      }, 0) / 100; // cents to dollars
+
+      // Lifetime payments (one-time charges)
+      const paymentIntents = await stripe.paymentIntents.list({ limit: 100 });
+      const lifetimeSales = paymentIntents.data.filter(p => p.status === 'succeeded');
+      const lifetimeRevenue = lifetimeSales.reduce((sum, p) => sum + p.amount, 0) / 100;
+
+      // Signups by day (last 30 days from DB)
+      const now = new Date();
+      const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      const recentSignups = allUsers.filter(u => {
+        const reg = new Date(u.registeredAt ?? u.lastLoginAt ?? '');
+        return reg >= thirtyDaysAgo;
+      });
+
+      // Signups by day (group)
+      const signupsByDay: Record<string, number> = {};
+      recentSignups.forEach(u => {
+        const day = (u.registeredAt ?? u.lastLoginAt ?? '').slice(0, 10);
+        if (day) signupsByDay[day] = (signupsByDay[day] ?? 0) + 1;
+      });
+
+      // Free to paid conversion
+      const totalUsers = allUsers.length;
+      const paidUsers = allUsers.filter(u => u.subscriptionStatus !== 'free').length;
+      const conversionRate = totalUsers > 0 ? Math.round((paidUsers / totalUsers) * 100) : 0;
+
+      // Lesson completion rates
+      const lessonCompletionCounts: Record<string, number> = {};
+      allUsers.forEach(u => {
+        (u.completedLessons ?? []).forEach((lid: string) => {
+          lessonCompletionCounts[lid] = (lessonCompletionCounts[lid] ?? 0) + 1;
+        });
+      });
+      const topLessons = Object.entries(lessonCompletionCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .map(([id, count]) => ({ id, count, pct: Math.round((count / totalUsers) * 100) }));
+
+      return res.json({
+        mrr: Math.round(mrr * 100) / 100,
+        arr: Math.round(mrr * 12 * 100) / 100,
+        lifetimeRevenue: Math.round(lifetimeRevenue * 100) / 100,
+        totalRevenue: Math.round((mrr + lifetimeRevenue) * 100) / 100,
+        activeSubscriptions: monthlyCustomers.length,
+        lifetimeSalesCount: lifetimeSales.length,
+        totalUsers,
+        paidUsers,
+        freeUsers: totalUsers - paidUsers,
+        conversionRate,
+        signupsByDay,
+        topLessons,
+        recentSignups30d: recentSignups.length,
+      });
+    } catch (err: any) {
+      console.error('[admin/revenue] error:', err);
+      return res.status(500).json({ message: err.message });
+    }
+  });
+
   // ── Drip email cron endpoint ──────────────────────────────────────────────
   // Called by Railway cron (or any scheduler) every hour via:
   //   GET /api/cron/drip?secret=<CRON_SECRET>

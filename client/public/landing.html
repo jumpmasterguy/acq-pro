@@ -2,6 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <!-- Google Search Console verification (replace content with your actual verification code) -->
+  <!-- Get this from: search.google.com/search-console → Add property → acqlerate.com → HTML tag method -->
+  <!-- <meta name="google-site-verification" content="REPLACE_WITH_GSC_VERIFICATION_CODE" /> -->
+
+  <!-- Google Analytics 4 -->
+  <!-- Replace GA_MEASUREMENT_ID with your G-XXXXXXXXXX from analytics.google.com -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'GA_MEASUREMENT_ID', {
+      page_title: document.title,
+      page_location: window.location.href,
+    });
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Acqlerate — Master DoD Acquisition. Built for the Professionals Who Win.</title>
   <meta name="description" content="The only self-paced academy built for DoD acquisition professionals. Finance, contracts, data analytics, capture management — six modules, 34 lessons, AI-powered study assistant. Start free." />

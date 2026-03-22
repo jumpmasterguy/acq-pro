@@ -55,6 +55,14 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Payment setup failed");
       if (data.url) {
+        // GA4: begin_checkout
+        try {
+          (window as any).trackEvent?.('begin_checkout', {
+            currency: 'USD',
+            value: priceType === 'lifetime' ? 149 : 5.99,
+            items: [{ item_name: `Acqlerate Pro ${priceType}`, price: priceType === 'lifetime' ? 149 : 5.99 }],
+          });
+        } catch {}
         window.location.href = data.url;
       } else {
         throw new Error("No checkout URL returned");

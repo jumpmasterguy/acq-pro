@@ -545,6 +545,14 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
     setQuizSubmitted(true);
     const score = calcScore();
     onComplete(lessonId, score);
+    // GA4: lesson_complete event
+    try {
+      (window as any).trackEvent?.('lesson_complete', {
+        lesson_id: lessonId,
+        lesson_title: lesson?.title,
+        quiz_score: score,
+      });
+    } catch {}
   };
 
   const handleRetakeQuiz = () => {

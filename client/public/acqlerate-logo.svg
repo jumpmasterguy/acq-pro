@@ -1,21 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="400" height="100">
-  <!-- Icon mark -->
-  <rect x="0" y="0" width="100" height="100" rx="22" fill="#01696f"/>
-  <!-- Geometric hexagon/asterisk mark matching screenshot -->
-  <g transform="translate(50,50)">
-    <!-- Outer hexagon ring -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" width="520" height="120">
+  <!-- Icon mark: teal rounded square with geometric hexagon -->
+  <rect x="0" y="10" width="100" height="100" rx="22" fill="#01696f"/>
+  <g transform="translate(50,60)">
     <polygon points="0,-28 24.2,-14 24.2,14 0,28 -24.2,14 -24.2,-14"
-      fill="none" stroke="white" stroke-width="3.5" stroke-linejoin="round"/>
-    <!-- Inner rotated hexagon -->
+      fill="none" stroke="white" stroke-width="4" stroke-linejoin="round"/>
     <polygon points="0,-16 13.9,-8 13.9,8 0,16 -13.9,8 -13.9,-8"
-      fill="none" stroke="white" stroke-width="2.5" stroke-linejoin="round"
+      fill="none" stroke="white" stroke-width="3" stroke-linejoin="round"
       transform="rotate(30)"/>
-    <!-- Center dot -->
-    <circle cx="0" cy="0" r="3.5" fill="white"/>
+    <circle cx="0" cy="0" r="4" fill="white"/>
   </g>
-  <!-- Wordmark: "Acql" in dark, "erate" in teal -->
-  <text x="118" y="68" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-    font-weight="700" font-size="46" fill="#111827" letter-spacing="-1">Acql</text>
-  <text x="227" y="68" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-    font-weight="700" font-size="46" fill="#01696f" letter-spacing="-1">erate</text>
+  <!-- Wordmark using single text with tspan for color split -->
+  <text x="118" y="78"
+    font-family="Arial, Helvetica, sans-serif"
+    font-weight="700"
+    font-size="58"
+    letter-spacing="-1"
+  ><tspan fill="#0f172a">Acql</tspan><tspan fill="#01696f">erate</tspan></text>
 </svg>
