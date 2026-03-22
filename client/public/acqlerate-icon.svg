@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <rect x="0" y="0" width="100" height="100" rx="22" fill="#01696f"/>
+  <g transform="translate(50,50)">
+    <polygon points="0,-28 24.2,-14 24.2,14 0,28 -24.2,14 -24.2,-14"
+      fill="none" stroke="white" stroke-width="3.5" stroke-linejoin="round"/>
+    <polygon points="0,-16 13.9,-8 13.9,8 0,16 -13.9,8 -13.9,-8"
+      fill="none" stroke="white" stroke-width="2.5" stroke-linejoin="round"
+      transform="rotate(30)"/>
+    <circle cx="0" cy="0" r="3.5" fill="white"/>
+  </g>
+</svg>

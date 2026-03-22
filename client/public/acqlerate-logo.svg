@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="400" height="100">
+  <!-- Icon mark -->
+  <rect x="0" y="0" width="100" height="100" rx="22" fill="#01696f"/>
+  <!-- Geometric hexagon/asterisk mark matching screenshot -->
+  <g transform="translate(50,50)">
+    <!-- Outer hexagon ring -->
+    <polygon points="0,-28 24.2,-14 24.2,14 0,28 -24.2,14 -24.2,-14"
+      fill="none" stroke="white" stroke-width="3.5" stroke-linejoin="round"/>
+    <!-- Inner rotated hexagon -->
+    <polygon points="0,-16 13.9,-8 13.9,8 0,16 -13.9,8 -13.9,-8"
+      fill="none" stroke="white" stroke-width="2.5" stroke-linejoin="round"
+      transform="rotate(30)"/>
+    <!-- Center dot -->
+    <circle cx="0" cy="0" r="3.5" fill="white"/>
+  </g>
+  <!-- Wordmark: "Acql" in dark, "erate" in teal -->
+  <text x="118" y="68" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    font-weight="700" font-size="46" fill="#111827" letter-spacing="-1">Acql</text>
+  <text x="227" y="68" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    font-weight="700" font-size="46" fill="#01696f" letter-spacing="-1">erate</text>
+</svg>

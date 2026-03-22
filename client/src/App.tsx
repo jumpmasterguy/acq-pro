@@ -8,7 +8,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { FREE_MODULES, getModuleProgress } from "@/lib/progress";
 import { isNativeApp } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
-import { Shield, LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck } from "lucide-react";
+import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck } from "lucide-react";
+import { AcqlerateLogo } from "@/components/AcqlerateLogo";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -280,9 +281,7 @@ function AppContent() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-            <Shield className="w-5 h-5 text-primary" />
-          </div>
+          <AcqlerateLogo iconSize={40} showWordmark={false} />
           <div className="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
         </div>
       </div>
@@ -344,15 +343,7 @@ function AppContent() {
       )}>
         {/* Logo */}
         <div className="px-5 py-5 border-b border-sidebar-border flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-sidebar-primary/20 flex items-center justify-center">
-              <Shield className="w-4 h-4 text-sidebar-primary" />
-            </div>
-            <div>
-              <div className="font-bold text-sm text-sidebar-foreground">Acqlerate</div>
-              <div className="text-[10px] text-sidebar-foreground/50 leading-tight">Defense Academy</div>
-            </div>
-          </div>
+          <AcqlerateLogo iconSize={32} />
           <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-sidebar-foreground/60 hover:text-sidebar-foreground">
             <X className="w-4 h-4" />
           </button>

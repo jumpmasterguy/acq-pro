@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Shield, Eye, EyeOff, Zap, Lock, BookOpen, Award, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Zap, Lock, BookOpen, Award, ArrowLeft } from "lucide-react";
+import { AcqlerateLogo } from "@/components/AcqlerateLogo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -145,15 +146,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack }: AuthPage
       {/* Left panel — branding */}
       <div className="hidden lg:flex flex-col justify-between w-[45%] bg-sidebar text-sidebar-foreground p-10">
         {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-sidebar-primary/20 flex items-center justify-center">
-            <Shield className="w-5 h-5 text-sidebar-primary" />
-          </div>
-          <div>
-            <div className="font-bold text-base text-sidebar-foreground">Acqlerate</div>
-            <div className="text-[11px] text-sidebar-foreground/50">Defense Acquisitions Academy</div>
-          </div>
-        </div>
+        <AcqlerateLogo iconSize={40} />
 
         {/* Hero copy */}
         <div className="space-y-6">
@@ -206,14 +199,8 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack }: AuthPage
         )}
 
         {/* Mobile logo */}
-        <div className="flex items-center gap-2.5 mb-8 lg:hidden">
-          <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-            <Shield className="w-5 h-5 text-primary" />
-          </div>
-          <div>
-            <div className="font-bold text-sm">Acqlerate</div>
-            <div className="text-[10px] text-muted-foreground">Defense Academy</div>
-          </div>
+        <div className="mb-8 lg:hidden">
+          <AcqlerateLogo iconSize={36} />
         </div>
 
         <div className="w-full max-w-md">

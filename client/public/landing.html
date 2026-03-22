@@ -58,10 +58,10 @@
     }
     .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
     .nav-logo-icon {
-      width: 32px; height: 32px; background: var(--teal); border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; background: var(--teal); border-radius: 9px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .nav-logo-icon svg { width: 18px; height: 18px; }
+    .nav-logo-icon svg { width: 22px; height: 22px; }
     .nav-logo-text { font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
     .nav-logo-text span { color: var(--teal); }
     .nav-actions { display: flex; align-items: center; gap: 12px; }
@@ -366,9 +366,13 @@
   <div class="nav-inner">
     <a href="/" class="nav-logo">
       <div class="nav-logo-icon">
-        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9 2L16 6V12L9 16L2 12V6L9 2Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
-          <path d="M9 2V16M2 6L16 12M16 6L2 12" stroke="white" stroke-width="1" opacity="0.5"/>
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="50,22 71.2,36 71.2,64 50,78 28.8,64 28.8,36"
+            fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+          <polygon points="50,34 63.9,42 63.9,58 50,66 36.1,58 36.1,42"
+            fill="none" stroke="white" stroke-width="5" stroke-linejoin="round"
+            transform="rotate(30,50,50)"/>
+          <circle cx="50" cy="50" r="5" fill="white"/>
         </svg>
       </div>
       <span class="nav-logo-text">Acql<span>erate</span></span>
