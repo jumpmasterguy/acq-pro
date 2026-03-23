@@ -10,8 +10,15 @@ export function serveStatic(app: Express) {
     );
   }
 
+  // Helper: send file with no-cache headers to bust Cloudflare edge cache
+  const sendNoCache = (res: Response, filePath: string) => {
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+    return res.sendFile(filePath);
+  };
+
   // Serve landing page at root for unauthenticated visitors
-  // MUST be before express.static so it intercepts / before index.html is served
   app.get("/", (req: Request, res: Response) => {
     if ((req as any).isAuthenticated && (req as any).isAuthenticated()) {
       return res.sendFile(path.resolve(distPath, "index.html"));
@@ -28,28 +35,36 @@ export function serveStatic(app: Express) {
     res.sendFile(path.resolve(distPath, "index.html"));
   });
 
-  // Serve all static assets FIRST (JS, CSS, images, fonts, etc.)
-  // Must be before blog slug route so /blog/blog.css is served as a file,
-  // not intercepted by the :slug handler.
-  app.use(express.static(distPath));
+  // Blog static assets — explicit routes to prevent :slug handler from intercepting
+  app.get("/blog/blog.css", (_req: Request, res: Response) => {
+    sendNoCache(res, path.resolve(distPath, "blog", "blog.css"));
+  });
+  app.get("/blog/blog.js", (_req: Request, res: Response) => {
+    sendNoCache(res, path.resolve(distPath, "blog", "blog.js"));
+  });
 
-  // /blog routes — serve static blog HTML pages
-  app.get("/blog", (_req: Request, res: Response) => {
-    res.sendFile(path.resolve(distPath, "blog", "index.html"));
+  // Blog HTML routes — with and without trailing slash
+  app.get(["/blog", "/blog/"], (_req: Request, res: Response) => {
+    sendNoCache(res, path.resolve(distPath, "blog", "index.html"));
   });
   app.get("/blog/:slug", (req: Request, res: Response) => {
     const slug = req.params.slug;
-    // Skip if this looks like a static asset (has a file extension)
+    // Serve static assets directly (avoid redirect loop)
     if (slug.includes('.')) {
+      const assetPath = path.resolve(distPath, "blog", slug);
+      if (fs.existsSync(assetPath)) return res.sendFile(assetPath);
       return res.status(404).send('Not found');
     }
     const filePath = path.resolve(distPath, "blog", `${slug}.html`);
     if (fs.existsSync(filePath)) {
-      return res.sendFile(filePath);
+      return sendNoCache(res, filePath);
     }
     // Fallback to blog index if post not found
     return res.redirect("/blog");
   });
+
+  // Serve all other static assets (JS, CSS, images, etc.)
+  app.use(express.static(distPath));
 
   // Fall through to index.html for all React routes (hash routing)
   app.use("/{*path}", (_req, res) => {
