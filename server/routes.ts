@@ -223,8 +223,8 @@ export async function registerRoutes(
           console.error('[analytics] google login tracking error:', e);
         }
       }
-      // Redirect to the app's dashboard (hash routing)
-      res.redirect(`${process.env.APP_URL || ""}/#/dashboard`);
+      // Redirect to the app (use /app route which always serves index.html)
+      res.redirect(`${process.env.APP_URL || ""}/app#/dashboard`);
     }
   );
 
@@ -371,8 +371,8 @@ export async function registerRoutes(
         const origin =
           process.env.APP_URL ||
           `${req.protocol}://${req.get("host")}`;
-        const successUrl = `${origin}/#/dashboard?payment=success`;
-        const cancelUrl = `${origin}/#/upgrade?payment=cancelled`;
+        const successUrl = `${origin}/app#/dashboard?payment=success`;
+        const cancelUrl = `${origin}/app#/upgrade?payment=cancelled`;
 
         const session = await stripe.checkout.sessions.create({
           customer: customerId,

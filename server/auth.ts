@@ -91,9 +91,9 @@ export async function setupAuth(app: Express): Promise<void> {
       store,
       cookie: {
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-        secure: "auto",    // true on HTTPS (via trust proxy), false on HTTP
+        secure: true,      // always true — Railway + Cloudflare always serve HTTPS
         httpOnly: true,
-        sameSite: "lax",
+        sameSite: "none",  // required for Google OAuth cross-origin redirect to set cookie
       },
     })
   );
