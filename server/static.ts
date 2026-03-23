@@ -43,6 +43,17 @@ export function serveStatic(app: Express) {
     sendNoCache(res, path.resolve(distPath, "blog", "blog.js"));
   });
 
+
+  // /products/* — serve product landing pages
+  app.get("/products/:slug", (req: Request, res: Response) => {
+    const slug = req.params.slug;
+    const filePath = path.resolve(distPath, "products", slug, "index.html");
+    if (fs.existsSync(filePath)) {
+      return res.sendFile(filePath);
+    }
+    return res.redirect("/blog");
+  });
+
   // Blog HTML routes — with and without trailing slash
   app.get(["/blog", "/blog/"], (_req: Request, res: Response) => {
     sendNoCache(res, path.resolve(distPath, "blog", "index.html"));
