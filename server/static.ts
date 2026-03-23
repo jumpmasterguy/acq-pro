@@ -28,12 +28,21 @@ export function serveStatic(app: Express) {
     res.sendFile(path.resolve(distPath, "index.html"));
   });
 
+  // Serve all static assets FIRST (JS, CSS, images, fonts, etc.)
+  // Must be before blog slug route so /blog/blog.css is served as a file,
+  // not intercepted by the :slug handler.
+  app.use(express.static(distPath));
+
   // /blog routes — serve static blog HTML pages
   app.get("/blog", (_req: Request, res: Response) => {
     res.sendFile(path.resolve(distPath, "blog", "index.html"));
   });
   app.get("/blog/:slug", (req: Request, res: Response) => {
     const slug = req.params.slug;
+    // Skip if this looks like a static asset (has a file extension)
+    if (slug.includes('.')) {
+      return res.status(404).send('Not found');
+    }
     const filePath = path.resolve(distPath, "blog", `${slug}.html`);
     if (fs.existsSync(filePath)) {
       return res.sendFile(filePath);
@@ -41,9 +50,6 @@ export function serveStatic(app: Express) {
     // Fallback to blog index if post not found
     return res.redirect("/blog");
   });
-
-  // Serve all other static assets (JS, CSS, images, etc.)
-  app.use(express.static(distPath));
 
   // Fall through to index.html for all React routes (hash routing)
   app.use("/{*path}", (_req, res) => {
