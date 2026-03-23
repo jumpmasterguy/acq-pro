@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { isNativeApp } from "@/lib/platform";
+import { cn } from "@/lib/utils";
 
 interface UpgradePageProps {
   onBack: () => void;
@@ -20,8 +21,10 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
   const { toast } = useToast();
 
   const freeFeatures = [
-    "Module 1: Foundations (complete)",
-    "Progress tracking & XP",
+    "Module 1: Foundations (full access)",
+    "4 in-depth lessons",
+    "Progress tracking",
+    "Key terms & glossary",
   ];
 
   const monthlyFeatures = [
@@ -118,13 +121,14 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
         </p>
       </div>
 
-      {/* Pricing Cards — 3 columns */}
+      {/* Pricing Cards — 3 columns, matching landing page layout */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
 
         {/* ── Free ── */}
         <div className="bg-card border border-border rounded-xl p-5 flex flex-col">
-          <div className="text-base font-semibold mb-1">Free</div>
-          <div className="text-3xl font-bold mb-4">$0</div>
+          <div className="text-base font-semibold text-muted-foreground mb-1">Free</div>
+          <div className="text-3xl font-bold mb-0.5">$0</div>
+          <div className="text-xs text-muted-foreground mb-4">No credit card needed</div>
           <ul className="space-y-2.5 mb-6 flex-1">
             {freeFeatures.map((f, i) => (
               <li key={i} className="flex items-center gap-2 text-sm">
@@ -132,10 +136,11 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
                 {f}
               </li>
             ))}
-            {premiumModules.map(m => (
+            <li className="pt-1 border-t border-border" />
+            {premiumModules.slice(0, 4).map(m => (
               <li key={m.id} className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Lock className="w-4 h-4 flex-shrink-0" />
-                {m.title}
+                <Lock className="w-3.5 h-3.5 flex-shrink-0" />
+                <span className="truncate">{m.title.split(":")[0]}</span>
               </li>
             ))}
           </ul>
@@ -146,12 +151,14 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
 
         {/* ── Monthly (featured / center) ── */}
         <div className="bg-primary/5 dark:bg-primary/10 border-2 border-primary rounded-xl p-5 flex flex-col relative">
-          <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 whitespace-nowrap">
-            <Star className="w-3 h-3 mr-1 inline-block" />
-            Most Popular
-          </Badge>
-          <div className="text-base font-semibold mb-1">Monthly</div>
-          <div className="flex items-end gap-1 mb-1">
+          <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+            <span className="bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 whitespace-nowrap shadow-sm">
+              <Star className="w-3 h-3" />
+              Most Popular
+            </span>
+          </div>
+          <div className="text-base font-semibold mb-1">Monthly Pro</div>
+          <div className="flex items-end gap-1 mb-0.5">
             <span className="text-3xl font-bold">$5.99</span>
             <span className="text-muted-foreground text-sm mb-1">/month</span>
           </div>
@@ -170,12 +177,11 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
               <Globe className="w-8 h-8 text-primary mx-auto" />
               <p className="text-sm font-semibold">Purchase on the Web</p>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Visit{" "}
-                <span className="font-medium text-primary">acqlerate.com</span>{" "}
-                in your browser to complete your purchase. Your account unlocks instantly.
+                Visit <span className="font-medium text-primary">acqlerate.com</span> in your browser.
+                Your account unlocks instantly.
               </p>
               <Button variant="outline" className="w-full gap-1.5 text-sm" asChild>
-                <a href="https://acqlerate.com/#/upgrade" target="_blank" rel="noopener noreferrer">
+                <a href="https://acqlerate.com/app#/upgrade" target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="w-4 h-4" />
                   Go to Website
                 </a>
@@ -194,10 +200,10 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
                 ) : (
                   <Zap className="w-4 h-4" />
                 )}
-                Start Monthly — $5.99/mo
+                Get Monthly Access →
               </Button>
               <p className="text-xs text-muted-foreground text-center">
-                Secured by Stripe · 30-day guarantee
+                Secured by Stripe · Cancel anytime
               </p>
             </div>
           )}
@@ -205,11 +211,13 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
 
         {/* ── Lifetime ── */}
         <div className="bg-card border border-border rounded-xl p-5 flex flex-col relative">
-          <Badge variant="outline" className="absolute -top-3 left-1/2 -translate-x-1/2 bg-background px-4 whitespace-nowrap border-border">
-            Best Value
-          </Badge>
-          <div className="text-base font-semibold mb-1">Lifetime</div>
-          <div className="flex items-end gap-1 mb-1">
+          <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+            <span className="bg-background border border-border text-foreground text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap shadow-sm">
+              Best Value
+            </span>
+          </div>
+          <div className="text-base font-semibold mb-1">Lifetime Pro</div>
+          <div className="flex items-end gap-1 mb-0.5">
             <span className="text-3xl font-bold">$149</span>
             <span className="text-muted-foreground text-sm mb-1">one-time</span>
           </div>
@@ -226,7 +234,9 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
                     "w-3.5 h-3.5 flex-shrink-0 mt-0.5",
                     isExclusive ? "text-primary" : "text-green-500"
                   )} />
-                  <span className={isExclusive ? "text-primary font-semibold" : ""}>{f}</span>
+                  <span className={isExclusive ? "text-primary font-semibold" : ""}>
+                    {f.replace('\u2605 ', '')}
+                  </span>
                 </li>
               );
             })}
@@ -237,12 +247,11 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
               <Globe className="w-8 h-8 text-primary mx-auto" />
               <p className="text-sm font-semibold">Purchase on the Web</p>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Visit{" "}
-                <span className="font-medium text-primary">acqlerate.com</span>{" "}
-                in your browser to complete your purchase. Your account unlocks instantly.
+                Visit <span className="font-medium text-primary">acqlerate.com</span> in your browser.
+                Your account unlocks instantly.
               </p>
               <Button variant="outline" className="w-full gap-1.5 text-sm" asChild>
-                <a href="https://acqlerate.com/#/upgrade" target="_blank" rel="noopener noreferrer">
+                <a href="https://acqlerate.com/app#/upgrade" target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="w-4 h-4" />
                   Go to Website
                 </a>
@@ -262,7 +271,7 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
                 ) : (
                   <CreditCard className="w-4 h-4" />
                 )}
-                Get Lifetime Access — $149
+                Get Lifetime Access →
               </Button>
               <p className="text-xs text-muted-foreground text-center">
                 Secured by Stripe · 30-day guarantee
