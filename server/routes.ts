@@ -2,6 +2,9 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import Stripe from "stripe";
 import passport from "passport";
+import crypto from "crypto";
+import path from "path";
+import fs from "fs";
 import { storage } from "./storage";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema, userProfileSchema } from "@shared/schema";
@@ -16,6 +19,36 @@ const stripe = stripeSecretKey
 const STRIPE_PRICE_LIFETIME = process.env.STRIPE_PRICE_ID_LIFETIME;
 const STRIPE_PRICE_MONTHLY = process.env.STRIPE_PRICE_ID_MONTHLY;
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
+
+// ── Template pack price IDs (set in Railway env vars) ─────────────────────────
+const PACK_PRICES: Record<string, string | undefined> = {
+  "pm-essentials":      process.env.STRIPE_PRICE_PACK_PM_ESSENTIALS,
+  "proposal-toolkit":   process.env.STRIPE_PRICE_PACK_PROPOSAL_TOOLKIT,
+  "finance-cheat-sheets": process.env.STRIPE_PRICE_PACK_FINANCE_SHEETS,
+};
+
+const PACK_FILES: Record<string, string[]> = {
+  "pm-essentials": [
+    "rfp-compliance-matrix.xlsx",
+    "risk-register.xlsx",
+    "igce-calculator.xlsx",
+    "stakeholder-raci.xlsx",
+    "pm-briefing-deck.pptx",
+  ],
+  "proposal-toolkit": [
+    "proposal-compliance-matrix.xlsx",
+    "section-lm-decoder.xlsx",
+    "win-theme-development.xlsx",
+    "past-performance-template.xlsx",
+    "pricing-volume-checklist.xlsx",
+  ],
+  "finance-cheat-sheets": [
+    "ppbe-cycle-one-pager.xlsx",
+    "color-of-money-decision-tree.xlsx",
+    "evm-formulas-quick-reference.xlsx",
+    "wrap-rate-breakdown.xlsx",
+  ],
+};
 
 export async function registerRoutes(
   httpServer: Server,
@@ -422,15 +455,34 @@ export async function registerRoutes(
           case "checkout.session.completed": {
             const session = event.data.object as Stripe.Checkout.Session;
             const userId = session.metadata?.userId;
-            if (!userId) break;
+            const purchaseType = session.metadata?.type;
 
-            // Determine if one-time or subscription
-            const isSubscription = session.mode === "subscription";
-            await storage.updateUserSubscription(userId, {
-              subscriptionStatus: isSubscription ? "active" : "lifetime",
-              subscriptionId: isSubscription ? (session.subscription as string) : undefined,
-              stripeCustomerId: session.customer as string,
-            });
+            if (purchaseType === "pack_purchase") {
+              // Template pack purchase — save to purchases table
+              const pack = session.metadata?.pack;
+              if (pack) {
+                const downloadToken = crypto.randomBytes(32).toString("hex");
+                const email = session.customer_details?.email || session.customer_email || "";
+                await storage.savePurchase({
+                  userId: userId || undefined,
+                  email,
+                  pack,
+                  stripeSessionId: session.id,
+                  stripePaymentIntent: session.payment_intent as string || "",
+                  amountPaid: session.amount_total || 0,
+                  downloadToken,
+                });
+                console.log(`[webhook] Pack purchase saved: ${pack} for ${email}`);
+              }
+            } else if (userId) {
+              // Subscription / lifetime upgrade
+              const isSubscription = session.mode === "subscription";
+              await storage.updateUserSubscription(userId, {
+                subscriptionStatus: isSubscription ? "active" : "lifetime",
+                subscriptionId: isSubscription ? (session.subscription as string) : undefined,
+                stripeCustomerId: session.customer as string,
+              });
+            }
             break;
           }
           case "customer.subscription.deleted": {
@@ -488,6 +540,83 @@ export async function registerRoutes(
       }
     }
   );
+
+
+  // ─── Template Pack Routes ────────────────────────────────────────────────────
+
+  // POST /api/packs/checkout — create Stripe checkout for a template pack
+  app.post("/api/packs/checkout", async (req: Request, res: Response) => {
+    if (!stripe) return res.status(503).json({ message: "Payment processing not configured" });
+
+    const { pack, email } = req.body as { pack: string; email?: string };
+    if (!pack || !PACK_FILES[pack]) {
+      return res.status(400).json({ message: "Invalid pack" });
+    }
+
+    const priceId = PACK_PRICES[pack];
+    if (!priceId) {
+      return res.status(503).json({ message: `Price not configured for pack: ${pack}` });
+    }
+
+    const origin = process.env.APP_URL || `${req.protocol}://${req.get("host")}`;
+    const userId = (req as any).isAuthenticated?.() ? (req.user as any)?.id : undefined;
+    const customerEmail = email || (req.user as any)?.email;
+
+    try {
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        payment_method_types: ["card"],
+        line_items: [{ price: priceId, quantity: 1 }],
+        ...(customerEmail ? { customer_email: customerEmail } : {}),
+        success_url: `${origin}/products/${pack}/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${origin}/products/${pack}`,
+        metadata: { pack, userId: userId || "", type: "pack_purchase" },
+        allow_promotion_codes: true,
+      });
+      return res.json({ url: session.url });
+    } catch (err: any) {
+      console.error("[packs/checkout] error:", err);
+      return res.status(500).json({ message: "Payment error — please try again" });
+    }
+  });
+
+  // GET /api/packs/session/:sessionId — return download links after successful purchase
+  app.get("/api/packs/session/:sessionId", async (req: Request, res: Response) => {
+    const { sessionId } = req.params;
+    try {
+      const purchase = await storage.getPurchaseBySessionId(sessionId);
+      if (!purchase) {
+        return res.json({ status: "pending", message: "Processing your purchase..." });
+      }
+      const files = PACK_FILES[purchase.pack] || [];
+      const downloadLinks = files.map(f => ({
+        filename: f,
+        name: f.replace(/-/g, " ").replace(/\.xlsx$/, " (Excel)").replace(/\.pptx$/, " (PowerPoint)"),
+        url: `/api/packs/download/${purchase.downloadToken}/${f}`,
+      }));
+      return res.json({ status: "complete", pack: purchase.pack, email: purchase.email, downloadLinks });
+    } catch (err: any) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // GET /api/packs/download/:token/:filename — secure file download
+  app.get("/api/packs/download/:token/:filename", async (req: Request, res: Response) => {
+    const { token, filename } = req.params;
+    const purchase = await storage.getPurchaseByToken(token);
+    if (!purchase) return res.status(404).json({ message: "Download link not found" });
+
+    const packFiles = PACK_FILES[purchase.pack] || [];
+    if (!packFiles.includes(filename)) return res.status(403).json({ message: "File not in this pack" });
+
+    const packDir = `pack${purchase.pack === "pm-essentials" ? "1" : purchase.pack === "proposal-toolkit" ? "2" : "3"}-${purchase.pack}`;
+    const filePath = require("path").resolve(__dirname, "public", "products", packDir, filename);
+    if (!require("fs").existsSync(filePath)) return res.status(404).json({ message: "File temporarily unavailable" });
+
+    storage.incrementDownloadCount(purchase.id).catch(() => {});
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    return res.sendFile(filePath);
+  });
 
   // ─── Admin Routes ──────────────────────────────────────────────────
 

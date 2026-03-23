@@ -85,3 +85,19 @@ export const emailLeads = pgTable("email_leads", {
 export const insertLeadSchema = createInsertSchema(emailLeads).pick({ email: true, source: true });
 export type Lead = typeof emailLeads.$inferSelect;
 export type InsertLead = z.infer<typeof insertLeadSchema>;
+
+// ── Template pack purchases ────────────────────────────────────────────────────
+export const purchases = pgTable("purchases", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id"),            // null if bought without account (email-only)
+  email: text("email").notNull(),
+  pack: text("pack").notNull(),           // 'pm-essentials' | 'proposal-toolkit' | 'finance-cheat-sheets'
+  stripeSessionId: text("stripe_session_id").notNull().unique(),
+  stripePaymentIntent: text("stripe_payment_intent"),
+  amountPaid: integer("amount_paid").notNull(), // in cents
+  downloadToken: text("download_token").notNull(), // secure random token for download links
+  downloadCount: integer("download_count").notNull().default(0),
+  createdAt: text("created_at").notNull().default(sql`now()::text`),
+});
+
+export type Purchase = typeof purchases.$inferSelect;

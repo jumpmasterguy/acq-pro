@@ -44,7 +44,7 @@ export function serveStatic(app: Express) {
   });
 
 
-  // /products/* — serve product landing pages
+  // /products/* — serve product landing pages and success pages
   app.get("/products/:slug", (req: Request, res: Response) => {
     const slug = req.params.slug;
     const filePath = path.resolve(distPath, "products", slug, "index.html");
@@ -52,6 +52,14 @@ export function serveStatic(app: Express) {
       return res.sendFile(filePath);
     }
     return res.redirect("/blog");
+  });
+  app.get("/products/:slug/success", (req: Request, res: Response) => {
+    const slug = req.params.slug;
+    const filePath = path.resolve(distPath, "products", slug, "success.html");
+    if (fs.existsSync(filePath)) {
+      return res.sendFile(filePath);
+    }
+    return res.redirect(`/products/${slug}`);
   });
 
   // Blog HTML routes — with and without trailing slash

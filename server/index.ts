@@ -221,6 +221,23 @@ app.use((req, res, next) => {
           )
         `);
       } catch (e: any) { /* table already exists */ }
+      // Create purchases table for template pack sales
+      try {
+        await schemaPool.query(`
+          CREATE TABLE IF NOT EXISTS purchases (
+            id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid()::varchar,
+            user_id VARCHAR,
+            email TEXT NOT NULL,
+            pack TEXT NOT NULL,
+            stripe_session_id TEXT NOT NULL UNIQUE,
+            stripe_payment_intent TEXT,
+            amount_paid INTEGER NOT NULL DEFAULT 0,
+            download_token TEXT NOT NULL UNIQUE,
+            download_count INTEGER NOT NULL DEFAULT 0,
+            created_at TEXT NOT NULL DEFAULT now()::text
+          )
+        `);
+      } catch (e: any) { /* table already exists */ }
       for (const stmt of schemaCols) {
         try { await schemaPool.query(stmt); } catch (e: any) { /* column already exists or already nullable */ }
       }

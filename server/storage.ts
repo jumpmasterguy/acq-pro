@@ -50,6 +50,11 @@ export interface IStorage {
   ): Promise<User | undefined>;
   saveLead(email: string, source?: string): Promise<Lead>;
   getAllLeads(): Promise<Lead[]>;
+  // Template pack purchases
+  savePurchase(data: { userId?: string; email: string; pack: string; stripeSessionId: string; stripePaymentIntent: string; amountPaid: number; downloadToken: string; }): Promise<Purchase>;
+  getPurchaseBySessionId(sessionId: string): Promise<Purchase | undefined>;
+  getPurchaseByToken(token: string): Promise<Purchase | undefined>;
+  incrementDownloadCount(purchaseId: string): Promise<void>;
   getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[] }>>;
   updateSentEmailDays(userId: string, days: number[]): Promise<void>;
 }
@@ -254,6 +259,44 @@ export class DrizzleStorage implements IStorage {
     return this.db.select().from(emailLeads).orderBy(emailLeads.createdAt);
   }
 
+  // ── Template pack purchases ──────────────────────────────────────────────
+  async savePurchase(data: { userId?: string; email: string; pack: string; stripeSessionId: string; stripePaymentIntent: string; amountPaid: number; downloadToken: string; }): Promise<Purchase> {
+    const { Pool } = require('pg');
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
+    const res = await pool.query(
+      `INSERT INTO purchases (user_id, email, pack, stripe_session_id, stripe_payment_intent, amount_paid, download_token, download_count)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, 0)
+       ON CONFLICT (stripe_session_id) DO NOTHING
+       RETURNING *`,
+      [data.userId || null, data.email, data.pack, data.stripeSessionId, data.stripePaymentIntent, data.amountPaid, data.downloadToken]
+    );
+    await pool.end();
+    return res.rows[0] as Purchase;
+  }
+
+  async getPurchaseBySessionId(sessionId: string): Promise<Purchase | undefined> {
+    const { Pool } = require('pg');
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
+    const res = await pool.query('SELECT * FROM purchases WHERE stripe_session_id = $1 LIMIT 1', [sessionId]);
+    await pool.end();
+    return res.rows[0] as Purchase | undefined;
+  }
+
+  async getPurchaseByToken(token: string): Promise<Purchase | undefined> {
+    const { Pool } = require('pg');
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
+    const res = await pool.query('SELECT * FROM purchases WHERE download_token = $1 LIMIT 1', [token]);
+    await pool.end();
+    return res.rows[0] as Purchase | undefined;
+  }
+
+  async incrementDownloadCount(purchaseId: string): Promise<void> {
+    const { Pool } = require('pg');
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
+    await pool.query('UPDATE purchases SET download_count = download_count + 1 WHERE id = $1', [purchaseId]);
+    await pool.end();
+  }
+
   async getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[] }>> {
     const rows = await this.db.select({
       id: users.id,
@@ -437,6 +480,11 @@ export class MemStorage implements IStorage {
   }
 
   async getAllLeads(): Promise<Lead[]> { return []; }
+
+  async savePurchase(data: any): Promise<Purchase> { throw new Error("Not implemented in MemStorage"); }
+  async getPurchaseBySessionId(_: string): Promise<Purchase | undefined> { return undefined; }
+  async getPurchaseByToken(_: string): Promise<Purchase | undefined> { return undefined; }
+  async incrementDownloadCount(_: string): Promise<void> {}
 
   async getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[] }>> {
     return Array.from(this.users.values()).map(u => ({
