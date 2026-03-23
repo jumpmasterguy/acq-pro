@@ -1,255 +1,532 @@
 #!/usr/bin/env python3
 """
 Acqlerate Blog Post Generator
-Runs on Tuesdays and Saturdays via cron.
-Researches current DoD acquisition news, writes a full HTML post,
-updates the blog index, commits, and pushes to GitHub (Railway auto-deploys).
+Runs Tuesdays (news) and Saturdays (educational) via cron.
+
+Every post MUST contain:
+  1. Email capture CTA (mid-article inline block + sidebar form)
+  2. Internal link to the relevant Acqlerate module (inline text + teal CTA card)
+  3. Comparison table OR downloadable template (topic-dependent, always one or the other)
 """
 
-import os
-import re
-import sys
-import json
-import random
-import subprocess
+import os, re, sys, json, random, subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 import urllib.request
-import urllib.parse
 
-# ── Configuration ─────────────────────────────────────────────────────────────
+# ── Config ────────────────────────────────────────────────────────────────────
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyCb5cYnJh16swSRh7C1q7nEipBfgKAaW18")
-BLOG_DIR = Path(__file__).parent.parent / "client" / "public" / "blog"
-REPO_ROOT = Path(__file__).parent.parent
+BLOG_DIR       = Path(__file__).parent.parent / "client" / "public" / "blog"
+REPO_ROOT      = Path(__file__).parent.parent
 
-# ── Topic rotation — alternates Tuesday (news-driven) / Saturday (educational) ─
+# ── Module map: module ID → display title + lesson area ─────────────────────
+MODULES = {
+    "foundations": {
+        "title": "DoD Acquisitions Foundations",
+        "desc":  "Start here — the complete overview of how DoD buys things, from FAR to program office.",
+    },
+    "finance": {
+        "title": "Defense Finance & Budgeting",
+        "desc":  "PPBE, color of money, EVM, appropriations, and the fiscal mechanics behind every program.",
+    },
+    "contracts": {
+        "title": "Defense Contracting Fundamentals",
+        "desc":  "Contract types, source selection, IDIQs, GWACs, modifications, and the COR role.",
+    },
+    "data": {
+        "title": "Data Analytics for Program Managers",
+        "desc":  "EVM deep dives, IPMR formats, KPIs, and data-driven decision making.",
+    },
+    "capture": {
+        "title": "Capture Management & Business Development",
+        "desc":  "BD lifecycle, proposal writing, win strategy, and the source selection process from both sides.",
+    },
+    "operations": {
+        "title": "Program Operations & Leadership",
+        "desc":  "Risk management, stakeholder comms, CMMI, subcontractor management, and career roadmaps.",
+    },
+}
+
+# ── Topic pool ────────────────────────────────────────────────────────────────
+# Tuesday = news/policy   Saturday = educational/how-to
+# Each entry: search query, article angle, badge, audience, relevant module,
+#             table_type ("comparison"|"template"|"checklist"), table_title, template_rows
+
 TOPIC_POOL_NEWS = [
     {
-        "search": "DoD defense acquisition contract awards 2026",
-        "angle": "Recent large DoD contract awards and what they reveal about how the government buys defense capabilities",
-        "badge": "News & Analysis",
-        "audience": "USG & Contractor",
+        "search": "DoD defense acquisition major contract awards 2026",
+        "angle": "What recent large DoD contract awards reveal about how — and where — the Pentagon is spending money right now",
+        "badge": "News & Analysis", "audience": "USG & Contractor",
+        "module": "contracts",
+        "table_type": "comparison",
+        "table_title": "Contract Types in Recent Major Awards",
+        "table_headers": ["Program Area", "Typical Contract Type", "Why the Government Chose It", "What Contractors Need"],
+        "table_rows": [
+            ["Large IT Systems", "IDIQ / GWAC task order", "Speed to award; pre-competed pool", "Vehicle access + task order win strategy"],
+            ["Weapons Systems EMD", "Cost-Plus Incentive Fee (CPIF)", "High tech risk; share savings", "DCAA-accepted accounting system"],
+            ["Services & Sustainment", "Firm Fixed Price (FFP)", "Well-defined scope; low risk", "Competitive pricing + CPARS history"],
+            ["Rapid Prototyping", "Other Transaction (OT)", "Bypass FAR; attract non-traditionals", "Non-traditional partner or innovative tech"],
+        ],
     },
     {
-        "search": "NDAA 2026 defense acquisition reform provisions",
-        "angle": "What the FY2026 NDAA changes for defense acquisition professionals and contractors",
-        "badge": "Policy Update",
-        "audience": "USG & Contractor",
+        "search": "NDAA 2026 National Defense Authorization Act acquisition reform changes",
+        "angle": "NDAA 2026 acquisition provisions every defense professional needs to know — and what changes in practice",
+        "badge": "Policy Update", "audience": "USG & Contractor",
+        "module": "foundations",
+        "table_type": "comparison",
+        "table_title": "Key NDAA 2026 Acquisition Changes at a Glance",
+        "table_headers": ["Provision", "What It Changes", "Who It Affects", "Effective When"],
+        "table_rows": [
+            ["OTA threshold increase", "Raises prototype OT ceiling", "Non-traditional contractors", "FY2026"],
+            ["Small business goals", "Adjusts SB prime contract targets", "Large primes, small subs", "FY2026"],
+            ["CMMC implementation", "Accelerates CMMC Level 2 rollout", "All DIB contractors", "FY2026–2027"],
+            ["Acquisition workforce", "New DAWIA alternative certification paths", "GS-1102 / PM workforce", "FY2026"],
+        ],
     },
     {
-        "search": "Pentagon OTA Other Transaction Authority 2026",
-        "angle": "How DoD is using Other Transaction Authority in 2026 — what it means for non-traditional contractors",
-        "badge": "Contracting",
-        "audience": "Contractor",
+        "search": "Pentagon Other Transaction Authority OTA prototype agreement 2026",
+        "angle": "How DoD is using Other Transaction Authority in 2026 — and what the surge in OTAs means for defense contractors",
+        "badge": "Contracting", "audience": "Contractor",
+        "module": "contracts",
+        "table_type": "comparison",
+        "table_title": "OTA vs. Traditional FAR Contract",
+        "table_headers": ["Factor", "Other Transaction (OT)", "Traditional FAR Contract"],
+        "table_rows": [
+            ["Applicable regulations", "Not subject to FAR/DFARS", "Full FAR + DFARS"],
+            ["Cost accounting (CAS)", "Not required", "Required on cost-type above threshold"],
+            ["Competition", "Flexible — can be sole source", "Full and open required (FAR Part 6)"],
+            ["Best for", "Prototyping, non-traditional contractors, rapid delivery", "Production, recurring services, established vendors"],
+            ["Primary risk", "Limited protest rights; less standard oversight", "Administrative burden; slower award timeline"],
+        ],
     },
     {
-        "search": "defense budget continuing resolution 2026 impact acquisitions",
-        "angle": "How continuing resolutions disrupt defense acquisition programs and what PMs need to do",
-        "badge": "Finance",
-        "audience": "USG Personnel",
+        "search": "defense budget continuing resolution impact acquisition programs 2026",
+        "angle": "Continuing resolutions: why budget gridlock is one of the biggest hidden risks to your defense program",
+        "badge": "Finance", "audience": "USG Personnel",
+        "module": "finance",
+        "table_type": "comparison",
+        "table_title": "CR vs. Full Appropriation — Impact on Programs",
+        "table_headers": ["Factor", "Continuing Resolution", "Full Appropriation"],
+        "table_rows": [
+            ["Funding level", "Prior year rate (capped)", "Full authorized amount"],
+            ["New program starts", "Generally prohibited", "Permitted"],
+            ["Contract awards", "Limited to prior-year scope", "Full scope permitted"],
+            ["Planning certainty", "Low — month-to-month risk", "High — full-year visibility"],
+            ["PM Action Required", "Rate contracts, avoid new starts", "Execute to plan"],
+        ],
     },
     {
-        "search": "DoD CMMC cybersecurity maturity model certification 2026 contractors",
-        "angle": "CMMC in 2026: what defense contractors need to know right now to stay eligible for contracts",
-        "badge": "Compliance",
-        "audience": "Contractor",
+        "search": "CMMC cybersecurity maturity model certification defense contractors requirements 2026",
+        "angle": "CMMC in 2026: the compliance clock is ticking and most defense contractors are not ready",
+        "badge": "Compliance", "audience": "Contractor",
+        "module": "contracts",
+        "table_type": "comparison",
+        "table_title": "CMMC Level Requirements at a Glance",
+        "table_headers": ["Level", "Applies To", "Key Requirement", "Assessment Type"],
+        "table_rows": [
+            ["Level 1 (Foundational)", "All DoD contractors handling FCI", "17 basic safeguarding practices", "Annual self-assessment"],
+            ["Level 2 (Advanced)", "Contractors handling CUI", "110 NIST SP 800-171 practices", "Triennial C3PAO assessment"],
+            ["Level 3 (Expert)", "Contractors on highest-priority programs", "110 + NIST SP 800-172 practices", "Government-led assessment (DCSA)"],
+        ],
     },
     {
-        "search": "GAO bid protest defense contracts 2026",
-        "angle": "The most common reasons the government loses bid protests — and what acquisition professionals can do about it",
-        "badge": "Source Selection",
-        "audience": "USG & Contractor",
+        "search": "GAO bid protest sustained government defense acquisition 2026",
+        "angle": "The most common reasons the government loses bid protests — and what every acquisition professional should do about it",
+        "badge": "Source Selection", "audience": "USG & Contractor",
+        "module": "capture",
+        "table_type": "comparison",
+        "table_title": "Top Sustained Protest Grounds (GAO Annual Report)",
+        "table_headers": ["Protest Ground", "What Went Wrong", "Fix for Government", "Fix for Contractors"],
+        "table_rows": [
+            ["Flawed evaluation", "SSEB ratings inconsistent with record", "Document every strength/weakness per M", "Submit proposals SSEB can quote directly"],
+            ["Unequal treatment", "Different standards applied to offerors", "Apply identical process to all", "Request debrief; compare to Section M"],
+            ["Past performance", "Improperly discounted relevant past perf", "Use neutral relevancy determination", "Submit detailed, specific PPQs"],
+            ["Price/cost analysis", "Price reasonableness not documented", "Document methodology in selection record", "Price realistically; explain basis of estimate"],
+        ],
     },
     {
-        "search": "DoD small business defense contracts set-aside 2026",
-        "angle": "Small business set-asides in defense: the opportunities, the eligibility traps, and how to compete",
-        "badge": "Career",
-        "audience": "Contractor",
+        "search": "defense acquisition workforce shortage contracting officer GS-1102 vacancy 2026",
+        "angle": "The defense acquisition workforce is understaffed — and that's creating opportunity for smart career changers",
+        "badge": "Career", "audience": "Career Changer",
+        "module": "operations",
+        "table_type": "comparison",
+        "table_title": "DoD Acquisition Career Paths Compared",
+        "table_headers": ["Path", "Entry Point", "Certifications Needed", "Typical Starting Salary", "Growth Trajectory"],
+        "table_rows": [
+            ["Government PM (GS-1102)", "GS-9/11 contract specialist", "DAWIA Level I → III", "$65K–$85K entry", "→ GS-15 PM / SES"],
+            ["Contractor PM", "Junior PM or analyst role", "PMP, DAWIA helpful", "$75K–$95K entry", "→ Sr. PM / BD / Exec"],
+            ["Contracting Officer", "GS-1102 entry level", "DAWIA Contracting Level I-III + Warrant", "$60K–$85K entry", "→ PCO / ACO / SES"],
+            ["Capture Manager", "BD analyst or proposal writer", "Shipley, APMP", "$85K–$115K", "→ VP BD / SVP Growth"],
+        ],
     },
     {
-        "search": "defense acquisition workforce shortage GS-1102 contracting officer 2026",
-        "angle": "The defense acquisition workforce crisis: what it means for programs, contractors, and career opportunity",
-        "badge": "Career",
-        "audience": "Career Changer",
+        "search": "DoD small business set-aside defense contracts SDVOSB WOSB 8a 2026",
+        "angle": "Small business set-asides in defense: the rules, the socioeconomic programs, and how to compete effectively",
+        "badge": "Contracting", "audience": "Contractor",
+        "module": "contracts",
+        "table_type": "comparison",
+        "table_title": "DoD Small Business Set-Aside Programs",
+        "table_headers": ["Program", "Eligibility", "Annual Goal (% of prime $)", "Best Vehicles to Target"],
+        "table_rows": [
+            ["Small Business (SB)", "≤ size standard for NAICS code", "23%", "OASIS+ SB, SEWP V SB, GSA MAS"],
+            ["8(a) Business Development", "SBA-certified; economically disadvantaged", "5%", "8(a) STARS III, agency 8(a) contracts"],
+            ["Service-Disabled Veteran (SDVOSB)", "Veteran with service-connected disability, ≥51% owned", "3%", "VA VETS 2, OASIS+ SDVOSB pool"],
+            ["Women-Owned (WOSB)", "≥51% women-owned; certain NAICS codes", "5%", "OASIS+ WOSB, SEWP V WOSB"],
+            ["HUBZone", "≥35% employees in HUBZone area", "3%", "OASIS+ HUBZone, agency HUBZone vehicles"],
+        ],
     },
 ]
 
 TOPIC_POOL_EDUCATIONAL = [
     {
-        "search": "earned value management EVM basics defense programs",
-        "angle": "Earned Value Management (EVM) explained — the one number every defense PM watches obsessively and why",
-        "badge": "Program Management",
-        "audience": "USG Personnel",
+        "search": "earned value management EVM CPI SPI defense program basics",
+        "angle": "Earned Value Management explained plainly — the numbers every defense PM watches and what they actually tell you",
+        "badge": "Program Management", "audience": "USG Personnel",
+        "module": "data",
+        "table_type": "comparison",
+        "table_title": "EVM Metrics Quick Reference",
+        "table_headers": ["Metric", "Formula", "Means", "Red Flag"],
+        "table_rows": [
+            ["CPI (Cost Performance Index)", "EV ÷ AC", "Cost efficiency — how much work per dollar spent", "< 0.90 for 3+ months"],
+            ["SPI (Schedule Performance Index)", "EV ÷ PV", "Schedule efficiency — how much work vs. plan", "< 0.90 and on critical path"],
+            ["VAC (Variance at Completion)", "BAC − EAC", "Projected over/underrun at contract end", "Growing negative month-over-month"],
+            ["EAC (Estimate at Completion)", "BAC ÷ CPI", "Most reliable final cost forecast", "Diverges from contractor's own EAC"],
+        ],
     },
     {
-        "search": "PPBE defense budget process planning programming budgeting",
-        "angle": "The Pentagon's budget process in plain English — why your program needs money years before it's spent",
-        "badge": "Finance",
-        "audience": "USG & Contractor",
+        "search": "DoD PPBE planning programming budgeting execution defense budget process",
+        "angle": "The Pentagon's budget process in plain English — why your program needs money years before a dollar is spent",
+        "badge": "Finance", "audience": "USG & Contractor",
+        "module": "finance",
+        "table_type": "comparison",
+        "table_title": "PPBE Cycle at a Glance",
+        "table_headers": ["Phase", "Who Owns It", "Key Output", "Timeframe"],
+        "table_rows": [
+            ["Planning", "OSD / Joint Chiefs", "Defense Planning Guidance (DPG)", "Year N-2"],
+            ["Programming", "Services / Agencies", "Program Objective Memorandum (POM)", "Year N-2"],
+            ["Budgeting", "OSD Comptroller / OMB", "President's Budget Request", "Year N-1"],
+            ["Execution", "Program Offices / Comptrollers", "Actual obligations & expenditures", "Year N"],
+        ],
     },
     {
-        "search": "IDIQ task order competition defense contracting",
-        "angle": "IDIQs and task orders: why most of the defense market runs through these vehicles and how to win on them",
-        "badge": "Contracting",
-        "audience": "Contractor",
+        "search": "IDIQ indefinite delivery indefinite quantity task order defense contracting",
+        "angle": "IDIQs and task orders: why most of the defense market runs through these vehicles — and how to actually win on them",
+        "badge": "Contracting", "audience": "Contractor",
+        "module": "contracts",
+        "table_type": "comparison",
+        "table_title": "Single Award vs. Multiple Award IDIQ",
+        "table_headers": ["Factor", "Single Award IDIQ", "Multiple Award IDIQ (MAIDIQ)"],
+        "table_rows": [
+            ["Post-award competition", "None — one contractor gets all orders", "Fair opportunity required per task order"],
+            ["Government risk", "Higher — no competitive pressure", "Lower — ongoing competition keeps prices fair"],
+            ["Contractor upside", "Full ceiling if performing well", "Share of ceiling; must keep winning TO competitions"],
+            ["Typical use", "Highly specialized; incumbent-heavy", "Standard services; broad capability pools"],
+            ["Examples", "LOGCAP IV, some systems engineering IDIQs", "OASIS+, SEWP V, ALLIANT 3, agency IDIQs"],
+        ],
     },
     {
-        "search": "defense acquisition program manager career path DAWIA",
-        "angle": "What it actually takes to become a defense program manager — the certifications, the experience, and the path",
-        "badge": "Career",
-        "audience": "Career Changer",
+        "search": "defense acquisition program manager career path DAWIA certification",
+        "angle": "What it actually takes to become a defense program manager — the certifications, the experience path, and the realistic timeline",
+        "badge": "Career", "audience": "Career Changer",
+        "module": "operations",
+        "table_type": "comparison",
+        "table_title": "DAWIA PM Certification Requirements",
+        "table_headers": ["Level", "Experience Required", "Training Required", "What It Unlocks"],
+        "table_rows": [
+            ["Level I (Practitioner)", "1 year in acquisition", "DAU ACQ 101 + 202", "Junior PM billets"],
+            ["Level II (Advanced)", "2 years in acquisition", "Level I + ACQ 203 + electives", "Mid-level PM positions"],
+            ["Level III (Expert)", "4 years in acquisition", "Level II + ACQ 404 + continuous learning", "ACAT II/III PM billets; PEO staff"],
+        ],
     },
     {
-        "search": "ACAT acquisition category DoD program milestone review",
-        "angle": "ACAT levels: why the category your program sits in determines almost everything about how it's managed",
-        "badge": "Foundations",
-        "audience": "USG Personnel",
+        "search": "ACAT acquisition category DoD program oversight milestone decision authority",
+        "angle": "ACAT levels: why the category your program sits in determines almost everything about how it's managed and overseen",
+        "badge": "Foundations", "audience": "USG Personnel",
+        "module": "foundations",
+        "table_type": "comparison",
+        "table_title": "ACAT Level Decision Matrix",
+        "table_headers": ["Level", "Dollar Threshold (PAUC)", "Milestone Decision Authority", "Key Oversight Requirements"],
+        "table_rows": [
+            ["ACAT I (MDAP)", "> $480M R&D or > $2.79B procurement", "USD(A&S) or CAE", "DAB review, CAPE ICE, Congressional reporting, Nunn-McCurdy"],
+            ["ACAT II", "$185M–$480M R&D or $1.08B–$2.79B procurement", "CAE (Service SAE)", "Milestone reviews, APB, CAPE assistance"],
+            ["ACAT III", "Below ACAT II thresholds", "Designated MDA (PEO or lower)", "Streamlined oversight; less external review"],
+            ["ACAT IV", "Lowest dollar programs", "Program office level", "Minimal — internal reviews only"],
+        ],
     },
     {
-        "search": "defense contractor proposal writing Section L Section M RFP",
-        "angle": "Why most defense proposals lose before they're written — the Section L vs. Section M mistake everyone makes",
-        "badge": "Capture Management",
-        "audience": "Contractor",
+        "search": "defense contractor proposal writing win strategy RFP Section L Section M",
+        "angle": "Why most defense proposals lose before they're written — and the Section L vs. Section M discipline that separates winners from losers",
+        "badge": "Capture Management", "audience": "Contractor",
+        "module": "capture",
+        "table_type": "template",
+        "table_title": "Proposal Writing Discipline — L vs. M Mapping Template",
+        "table_headers": ["Section M Factor", "Section M Weight/Sub-factors", "Section L Instruction", "Your Response Strategy"],
+        "table_rows": [
+            ["Technical Approach", "List sub-factors here", "List L instruction here", "Address each sub-factor with a discriminating element"],
+            ["Management Approach", "List sub-factors here", "List L instruction here", "Show org chart, key personnel, PM methodology"],
+            ["Past Performance", "Recency + relevance + rating", "Up to 3 references via PPQ form", "Select contracts with highest CPARS ratings"],
+            ["Price/Cost", "Price reasonableness", "No page limit; completed cost model", "Price to win, document assumptions clearly"],
+        ],
     },
     {
-        "search": "cost plus fixed price contract types defense DoD",
-        "angle": "Cost-plus vs. fixed-price: which contract type is better for who, and why the government cares so much",
-        "badge": "Contracting",
-        "audience": "USG & Contractor",
+        "search": "cost plus fixed price contract types defense selection factors",
+        "angle": "Cost-plus vs. fixed-price: which contract type is right for which situation, and why the government cares so much about the choice",
+        "badge": "Contracting", "audience": "USG & Contractor",
+        "module": "contracts",
+        "table_type": "comparison",
+        "table_title": "Contract Type Selection Guide",
+        "table_headers": ["Contract Type", "Risk Allocation", "Best Used When", "Contractor Upside/Downside"],
+        "table_rows": [
+            ["Firm Fixed Price (FFP)", "All on contractor", "Well-defined scope; low technical risk", "Full profit if efficient; loss if over budget"],
+            ["Fixed Price Incentive (FPIF)", "Shared up to ceiling", "Moderate risk; want to incentivize efficiency", "Earn more if under target cost"],
+            ["Cost Plus Fixed Fee (CPFF)", "All on government", "High tech risk; R&D; requirements unclear", "Low profit; no downside; DCAA oversight"],
+            ["Cost Plus Incentive Fee (CPIF)", "Shared via share ratio", "High risk with measurable outcomes", "Earn more fee for better performance"],
+            ["Time & Materials (T&M)", "Mostly on government", "Uncertain hours; labor-intensive services", "Billed at ceiling rates; ceiling is max"],
+        ],
     },
     {
-        "search": "DoD JCIDS requirements process capability gap",
-        "angle": "JCIDS explained: how the military decides what it needs and why requirements drive everything downstream",
-        "badge": "Foundations",
-        "audience": "USG Personnel",
+        "search": "DoD JCIDS requirements process capability gap warfighter needs",
+        "angle": "JCIDS explained: how the military decides what it needs — and why understanding requirements is the foundation of everything in acquisition",
+        "badge": "Foundations", "audience": "USG Personnel",
+        "module": "foundations",
+        "table_type": "comparison",
+        "table_title": "JCIDS Requirements Documents",
+        "table_headers": ["Document", "Phase", "Purpose", "Key Content"],
+        "table_rows": [
+            ["Initial Capabilities Document (ICD)", "Pre-Milestone A (MSA)", "Documents the capability gap and potential approaches", "Mission need, gap analysis, potential solutions"],
+            ["Capability Development Document (CDD)", "Pre-Milestone B (TMRR)", "Defines KPPs, KSAs, and APAs for the solution", "Key Performance Parameters; threshold/objective values"],
+            ["Capability Production Document (CPD)", "Pre-Milestone C", "Defines production-specific performance parameters", "Production KPPs; IOT&E criteria"],
+        ],
     },
 ]
 
 
 def gemini_generate(prompt: str) -> str:
-    """Call Gemini 2.5 Flash API to generate content."""
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {
-            "temperature": 0.7,
-            "maxOutputTokens": 8192,
-        },
+        "generationConfig": {"temperature": 0.7, "maxOutputTokens": 8192},
     }
     data = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
+    req  = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
     try:
         with urllib.request.urlopen(req, timeout=120) as resp:
             result = json.loads(resp.read())
             return result["candidates"][0]["content"]["parts"][0]["text"]
     except Exception as e:
-        print(f"Gemini API error: {e}")
-        sys.exit(1)
+        print(f"Gemini error: {e}"); sys.exit(1)
 
 
-def search_news(query: str) -> str:
-    """Use Gemini to research current news on a topic."""
-    prompt = f"""You are a defense acquisition journalist and researcher. 
-Research the following topic and provide a detailed summary of current (2025-2026) developments, facts, and context:
+def build_comparison_table(title: str, headers: list, rows: list) -> str:
+    head_cells = "".join(f"<th>{h}</th>" for h in headers)
+    body_rows  = ""
+    for row in rows:
+        cells = "".join(f"<td>{c}</td>" for c in row)
+        body_rows += f"      <tr>{cells}</tr>\n"
+    return f"""
+<h3>{title}</h3>
+<table class="comparison-table">
+  <thead><tr>{head_cells}</tr></thead>
+  <tbody>
+{body_rows}  </tbody>
+</table>
+"""
 
-Topic: {query}
 
-Provide:
-1. 3-5 specific recent developments, events, or data points with approximate dates
-2. Key numbers, dollar amounts, or statistics
-3. Why this matters practically for DoD program managers and/or defense contractors
-4. Any recent policy changes or announcements
+def build_template_table(title: str, headers: list, rows: list) -> str:
+    """A fillable template table with a download note."""
+    head_cells = "".join(f"<th>{h}</th>" for h in headers)
+    body_rows  = ""
+    for row in rows:
+        cells = "".join(f"<td>{c}</td>" for c in row)
+        body_rows += f"      <tr>{cells}</tr>\n"
+    return f"""
+<h3>{title}</h3>
+<div class="callout">
+  <p><strong>Use this template:</strong> Copy these columns into a spreadsheet before your next proposal. Fill in the left two columns from the RFP, then the right two columns from your win strategy session. Every scored section must have at least one discriminating element in column four.</p>
+</div>
+<table class="comparison-table">
+  <thead><tr>{head_cells}</tr></thead>
+  <tbody>
+{body_rows}  </tbody>
+</table>
+"""
 
-Be specific and factual. If you don't have current data, use the most recent information available and note it's from your training data."""
-    return gemini_generate(prompt)
+
+def build_email_capture_block(form_id: str, success_id: str, source: str) -> str:
+    """Mid-article inline email capture block."""
+    return f"""
+<div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:14px;padding:28px 32px;margin:40px 0;color:white;">
+  <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;opacity:0.7;margin-bottom:6px">Free Starter Kit</div>
+  <h3 style="font-size:1.1rem;font-weight:800;margin:0 0 8px;color:white">Get the Acqlerate Acquisition Starter Kit — Free</h3>
+  <p style="font-size:0.9rem;opacity:0.9;margin:0 0 18px;line-height:1.5">Key terms, ACAT levels, career roadmaps, and the 5 most common acquisition mistakes. Tailored to your role — USG, contractor, or career changer.</p>
+  <form id="{form_id}" onsubmit="submitSidebarLead(event,'{form_id}','{success_id}')" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+    <input type="email" placeholder="your@email.com" required style="padding:10px 14px;border:none;border-radius:8px;font-size:0.9rem;font-family:inherit;width:240px;max-width:100%;outline:none;color:#1A1A1A" />
+    <button type="submit" style="background:white;color:#01696F;border:none;cursor:pointer;font-size:0.9rem;font-weight:800;padding:10px 20px;border-radius:8px;font-family:inherit;white-space:nowrap">Send It Free →</button>
+  </form>
+  <div id="{success_id}" style="font-size:0.875rem;font-weight:700;color:rgba(255,255,255,0.9);display:none;margin-top:10px">✓ Check your inbox — it's on its way.</div>
+</div>
+"""
 
 
-def generate_blog_post(topic: dict, research: str, pub_date: str, slug: str) -> str:
-    """Generate a complete blog post HTML using Gemini."""
+def build_module_cta(module_key: str, context_note: str) -> str:
+    """Inline module deep-link CTA block."""
+    mod = MODULES.get(module_key, MODULES["foundations"])
+    return f"""
+<div style="border:2px solid var(--teal);border-radius:14px;padding:24px 28px;margin:40px 0;background:var(--teal-light, #E6F2F3);">
+  <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal);margin-bottom:6px">Learn More on Acqlerate</div>
+  <h3 style="font-size:1.05rem;font-weight:800;color:#0D1B2A;margin:0 0 8px">Module: {mod['title']}</h3>
+  <p style="font-size:0.9rem;color:#374151;margin:0 0 16px;line-height:1.5">{context_note} {mod['desc']}</p>
+  <a href="/app#/auth" style="display:inline-block;background:var(--teal, #01696F);color:white;font-weight:800;font-size:0.875rem;padding:10px 20px;border-radius:8px;text-decoration:none">Start This Module Free →</a>
+</div>
+"""
+
+
+def generate_article_body(topic: dict, research: str, pub_date: str) -> tuple:
+    """Ask Gemini for the article body + title + deck. Returns (title, deck, body_html)."""
     
-    prompt = f"""You are a senior writer for Acqlerate, a defense acquisitions education platform (acqlerate.com).
-Your job is to write a blog post that is:
-- Down-to-earth and jargon-aware (explain terms when you use them)
-- Focused on "why this matters" for real practitioners
-- Educational but not textbook-dry — conversational, direct, like a knowledgeable colleague
-- Ends with a natural CTA pointing readers to Acqlerate's courses
+    table_instruction = (
+        "Include a comparison table where most helpful (use <table class='comparison-table'>)."
+        if topic["table_type"] == "comparison"
+        else "Include a practical template table readers can copy and use (use <table class='comparison-table'>)."
+    )
+    
+    prompt = f"""You are a senior writer for Acqlerate — a defense acquisitions education platform at acqlerate.com.
 
-TOPIC ANGLE: {topic['angle']}
+Write a blog post about: {topic['angle']}
+
 TARGET AUDIENCE: {topic['audience']}
-BADGE/CATEGORY: {topic['badge']}
 PUBLICATION DATE: {pub_date}
 
-RESEARCH MATERIAL (use this as your factual foundation):
+RESEARCH TO DRAW FROM:
 {research}
 
-Write a complete blog post with:
-- A compelling title (not clickbait, genuinely useful)
-- A 1-2 sentence deck/subtitle 
-- 4-6 substantive sections with H2 headers
-- At least one practical "what this means for you" section
-- A callout box with a key insight (use <div class="callout"><p>...</p></div>)
-- A comparison table if appropriate (use class="comparison-table")
-- A closing section that naturally transitions to: "If you want to go deeper on [topic], Acqlerate's [relevant module name] module covers this in full — at novice, intermediate, and advanced levels. Start free at acqlerate.com."
-- Relevant module names from Acqlerate: DoD Acquisitions Foundations, Defense Finance & Budgeting, Defense Contracting Fundamentals, Data Analytics for Program Managers, Capture Management & Business Development, Program Operations & Leadership
+REQUIREMENTS:
+1. Title: Compelling and specific (under 85 chars). Return it on line 1 as plain text, no formatting.
+2. Deck: 1-sentence subtitle (under 160 chars). Return it on line 2 as plain text.  
+3. Body: Start on line 3. Use <h2> section headers, <p> paragraphs, <ul>/<li> for bullets.
+4. {table_instruction}
+5. Include at least one <div class="callout"><p>...</p></div> with a key insight.
+6. 4-6 sections. Total 800-1200 words of body text.
+7. DO NOT include a "Start free at acqlerate.com" section — that will be added programmatically.
+8. DO NOT use <h1> tags — the title is added separately.
+9. Write like a knowledgeable colleague explaining something important over coffee. Direct, practical, zero fluff.
+10. Every section should have a "so what" — connect facts to what the reader should actually DO or KNOW.
 
-Estimated reading time: 8-12 minutes
-
-FORMAT RULES:
-- Use <p> tags for paragraphs
-- Use <ul><li> for bullets
-- Use <strong> for emphasis on terms/numbers
-- Use <h2> for section headers
-- DO NOT include the HTML shell (head, body tags) — just the article content starting from the first <h2> or <p>
-- DO NOT include the title as an H1 — that will be added separately
-- DO NOT include a byline — that will be added separately
-
-Write the full article body now (just the inner content, no HTML wrapper):"""
-
-    return gemini_generate(prompt)
-
-
-def extract_title_from_content(content: str, fallback: str) -> str:
-    """Try to extract a title suggestion from the AI content."""
-    # Look for a line that looks like a title at the very start
-    lines = content.strip().split('\n')
-    for line in lines[:5]:
-        line = line.strip()
-        if line and not line.startswith('<') and len(line) < 120 and len(line) > 20:
-            return line
-    return fallback
-
-
-def slugify(title: str) -> str:
-    """Convert title to URL slug."""
-    slug = title.lower()
-    slug = re.sub(r'[^\w\s-]', '', slug)
-    slug = re.sub(r'[\s_-]+', '-', slug)
-    slug = re.sub(r'^-+|-+$', '', slug)
-    return slug[:80]
+Start with the title on line 1, deck on line 2, then the body HTML."""
+    
+    raw = gemini_generate(prompt)
+    lines = raw.strip().split('\n')
+    
+    # Parse title from line 1
+    title = re.sub(r'[#*`]', '', lines[0]).strip().strip('"').strip("'")
+    
+    # Parse deck from line 2
+    deck = ""
+    if len(lines) > 1:
+        deck = re.sub(r'[#*`]', '', lines[1]).strip().strip('"').strip("'")
+    
+    # Everything else is body
+    body = '\n'.join(lines[2:]).strip()
+    
+    # Remove any stray h1 tags
+    body = re.sub(r'<h1[^>]*>.*?</h1>', '', body, flags=re.DOTALL | re.IGNORECASE)
+    
+    # If title/deck look wrong (too long or contain HTML), regenerate
+    if len(title) > 120 or '<' in title:
+        title_raw = gemini_generate(f"Write ONE blog post title under 85 characters for this content. Return ONLY the title, no quotes:\n\n{body[:400]}")
+        title = title_raw.strip().strip('"').strip("'")
+    if len(deck) > 200 or '<' in deck:
+        deck_raw = gemini_generate(f"Write ONE subtitle sentence under 160 characters for a blog post titled '{title}'. Return ONLY the sentence, no quotes.")
+        deck = deck_raw.strip().strip('"').strip("'")
+    
+    return title, deck, body
 
 
-def get_read_time(html_content: str) -> int:
-    """Estimate read time from HTML content."""
-    text = re.sub(r'<[^>]+>', ' ', html_content)
-    words = len(text.split())
-    return max(5, round(words / 200))
+def slugify(text: str) -> str:
+    s = text.lower()
+    s = re.sub(r'[^\w\s-]', '', s)
+    s = re.sub(r'[\s_-]+', '-', s)
+    return s.strip('-')[:80]
 
 
-def build_post_html(title: str, deck: str, article_body: str, topic: dict, 
-                    pub_date: str, slug: str, read_time: int) -> str:
-    """Build the complete blog post HTML file."""
+def get_read_time(html: str) -> int:
+    text = re.sub(r'<[^>]+>', ' ', html)
+    return max(6, round(len(text.split()) / 200))
+
+
+def build_sidebar_capture(form_id: str, success_id: str) -> str:
+    return f"""
+    <div class="sidebar-capture" style="margin-top:24px;background:var(--gold-bg);border:1.5px solid #F0D060;border-radius:12px;padding:20px">
+      <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold);margin-bottom:6px">Free Resource</div>
+      <p style="font-size:0.85rem;color:var(--text);margin:0 0 12px;line-height:1.5">Acquisition Starter Kit — tailored to your role. Key terms, career paths, the 5 biggest mistakes.</p>
+      <form id="{form_id}" onsubmit="submitSidebarLead(event,'{form_id}','{success_id}')" style="display:flex;flex-direction:column;gap:8px">
+        <input type="email" placeholder="your@email.com" required style="padding:9px 12px;border:1.5px solid #E0C050;border-radius:7px;font-size:0.85rem;font-family:inherit;outline:none" />
+        <button type="submit" style="background:var(--gold);color:white;border:none;cursor:pointer;font-size:0.85rem;font-weight:700;padding:9px;border-radius:7px;font-family:inherit">Get Starter Kit →</button>
+      </form>
+      <div id="{success_id}" style="font-size:0.8rem;font-weight:700;color:var(--teal);display:none;margin-top:6px">✓ Check your inbox!</div>
+    </div>
+"""
+
+
+def assemble_post(title: str, deck: str, body_html: str, topic: dict,
+                  pub_date: str, slug: str, read_time: int) -> str:
     
     formatted_date = datetime.strptime(pub_date, "%Y-%m-%d").strftime("%B %Y")
+    mod = MODULES.get(topic["module"], MODULES["foundations"])
     
-    # Build table of contents from H2 headers
-    h2s = re.findall(r'<h2>(.*?)</h2>', article_body)
-    toc_items = '\n'.join(
+    # Build the hard-required elements
+    table_html = build_comparison_table(
+        topic["table_title"], topic["table_headers"], topic["table_rows"]
+    ) if topic["table_type"] in ("comparison", "template") else build_template_table(
+        topic["table_title"], topic["table_headers"], topic["table_rows"]
+    )
+    
+    # If body already has a comparison table from AI, keep it and add ours after first h2
+    # Insert: email capture mid-way, module CTA, and our enforced table
+    # Find a good injection point — after the 2nd <h2>
+    h2_positions = [m.start() for m in re.finditer(r'<h2>', body_html)]
+    
+    if len(h2_positions) >= 2:
+        inject_at = h2_positions[1]
+        # Insert email capture before 2nd h2
+        body_html = (
+            body_html[:inject_at]
+            + build_email_capture_block("midCapture", "midSuccess", f"blog_{slug}")
+            + body_html[inject_at:]
+        )
+    else:
+        # Append to end of body if not enough h2s
+        body_html += build_email_capture_block("midCapture", "midSuccess", f"blog_{slug}")
+    
+    # Insert module CTA before last h2 (or at end)
+    h2_positions = [m.start() for m in re.finditer(r'<h2>', body_html)]
+    if h2_positions:
+        last_h2 = h2_positions[-1]
+        context_note = f"This post touches on concepts covered in depth in the {mod['title']} module."
+        body_html = (
+            body_html[:last_h2]
+            + build_module_cta(topic["module"], context_note)
+            + body_html[last_h2:]
+        )
+    
+    # Append the enforced table at the end of body (before the closing CTA)
+    # Only append if the AI didn't already include a similar one
+    if "comparison-table" not in body_html:
+        body_html += "\n" + table_html
+    else:
+        # AI included a table — append ours with a different heading
+        extra_title = topic["table_title"].replace("at a Glance", "Reference").replace("Guide", "Summary")
+        body_html += "\n" + build_comparison_table(
+            extra_title, topic["table_headers"], topic["table_rows"]
+        )
+    
+    # Build table of contents
+    h2s = re.findall(r'<h2>(.*?)</h2>', body_html)
+    toc_items = "\n".join(
         f'        <li style="font-size:0.8rem;margin-bottom:5px"><a href="#" style="color:var(--teal)">{h}</a></li>'
         for h in h2s[:6]
     )
-    
-    # Clean up any title that leaked into the body
-    article_body = re.sub(r'^<h1>.*?</h1>\s*', '', article_body, flags=re.DOTALL)
     
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -315,15 +592,16 @@ def build_post_html(title: str, deck: str, article_body: str, topic: dict,
     <div class="post-meta">By Acqlerate · {formatted_date} · {read_time} min read · For: {topic['audience']}</div>
 
     <div class="post-body">
-{article_body}
+{body_html}
     </div>
 
-    <!-- CTA block -->
+    <!-- Bottom CTA -->
     <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:16px;padding:32px;margin-top:48px;color:white;">
-      <div style="font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;opacity:0.7;margin-bottom:8px">Learn More at Acqlerate</div>
-      <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:10px;color:white">Master Defense Acquisitions — Start Free</h3>
-      <p style="font-size:0.95rem;opacity:0.9;margin-bottom:20px;line-height:1.6">Six modules. 34+ lessons. Novice through advanced. Built for DoD program managers, contracting officers, and defense contractors who need practical knowledge, not theory.</p>
-      <a href="/app#/auth" style="display:inline-block;background:white;color:#01696F;font-weight:800;font-size:0.95rem;padding:12px 24px;border-radius:10px;text-decoration:none">Start Learning Free →</a>
+      <div style="font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;opacity:0.7;margin-bottom:8px">Master Defense Acquisitions</div>
+      <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:10px;color:white">Start Free — Six Modules, 34+ Lessons</h3>
+      <p style="font-size:0.95rem;opacity:0.9;margin-bottom:20px;line-height:1.6">Built for DoD program managers, contracting officers, and defense contractors. Novice through advanced. The <strong>{mod['title']}</strong> module goes deep on everything covered in this post.</p>
+      <a href="/app#/auth" style="display:inline-block;background:white;color:#01696F;font-weight:800;font-size:0.95rem;padding:12px 24px;border-radius:10px;text-decoration:none;margin-right:12px">Start Learning Free →</a>
+      <a href="/app#/upgrade" style="display:inline-block;color:rgba(255,255,255,0.85);font-weight:600;font-size:0.9rem;padding:12px 0;text-decoration:none">See all modules →</a>
     </div>
   </article>
 
@@ -335,12 +613,16 @@ def build_post_html(title: str, deck: str, article_body: str, topic: dict,
       </ul>
     </div>
 
-    <!-- Sidebar CTA -->
-    <div style="background:var(--teal-light);border:1.5px solid var(--teal);border-radius:12px;padding:20px;margin-top:24px">
-      <div style="font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--teal);margin-bottom:8px">Free Starter Kit</div>
-      <p style="font-size:0.85rem;color:var(--text);margin-bottom:16px;line-height:1.5">Key terms, ACAT levels, career paths, and the 5 most common mistakes. Tailored to your role. Free.</p>
-      <a href="/app#/auth" style="display:block;text-align:center;background:var(--teal);color:white;font-weight:700;font-size:0.875rem;padding:10px 16px;border-radius:8px;text-decoration:none">Get the Starter Kit →</a>
+    <!-- Sidebar module link -->
+    <div style="background:var(--teal-light,#E6F2F3);border:1.5px solid var(--teal,#01696F);border-radius:12px;padding:20px;margin-top:20px">
+      <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--teal);margin-bottom:6px">Relevant Module</div>
+      <p style="font-size:0.85rem;font-weight:700;color:#0D1B2A;margin:0 0 6px">{mod['title']}</p>
+      <p style="font-size:0.8rem;color:#374151;margin:0 0 14px;line-height:1.4">{mod['desc']}</p>
+      <a href="/app#/auth" style="display:block;text-align:center;background:var(--teal,#01696F);color:white;font-weight:700;font-size:0.875rem;padding:9px 14px;border-radius:8px;text-decoration:none">Open This Module →</a>
     </div>
+
+    <!-- Sidebar email capture -->
+{build_sidebar_capture("sidebarCapture", "sidebarSuccess")}
   </aside>
 </div>
 
@@ -367,15 +649,11 @@ def build_post_html(title: str, deck: str, article_body: str, topic: dict,
     return html
 
 
-def add_post_to_index(slug: str, title: str, excerpt: str, topic: dict, 
-                       read_time: int) -> None:
-    """Insert a new post card at the top of the blog index."""
-    index_path = BLOG_DIR / "index.html"
-    with open(index_path) as f:
-        content = f.read()
-    
-    new_card = f"""
-    <!-- {title} -->
+def add_to_index(slug: str, title: str, excerpt: str, topic: dict, read_time: int) -> None:
+    index = BLOG_DIR / "index.html"
+    content = index.read_text()
+    card = f"""
+    <!-- {title[:60]} -->
     <a href="/blog/{slug}" class="post-card" style="text-decoration:none;color:inherit">
       <span class="post-card-badge">{topic['badge']}</span>
       <div class="post-card-body">
@@ -390,143 +668,88 @@ def add_post_to_index(slug: str, title: str, excerpt: str, topic: dict,
       </div>
     </a>
 """
-    
-    # Insert after the opening <!-- POSTS GRID --> comment's div
-    insert_after = '  <div class="posts-grid">\n'
-    if insert_after in content:
-        content = content.replace(insert_after, insert_after + new_card, 1)
-        with open(index_path, 'w') as f:
-            f.write(content)
-        print(f"Added '{title}' to blog index")
+    marker = '  <div class="posts-grid">\n'
+    if marker in content:
+        content = content.replace(marker, marker + card, 1)
+        index.write_text(content)
+        print(f"Added card to index: {title[:60]}")
     else:
-        print("WARNING: Could not find insertion point in blog index")
+        print("WARNING: Could not find posts-grid in index.html")
 
 
-def git_commit_and_push(slug: str, title: str) -> bool:
-    """Commit the new post and push to GitHub (Railway auto-deploys)."""
+def git_push(slug: str, title: str) -> bool:
     try:
-        subprocess.run(["git", "config", "user.email", "blog-bot@acqlerate.com"], 
-                      cwd=REPO_ROOT, check=True, capture_output=True)
-        subprocess.run(["git", "config", "user.name", "Acqlerate Blog Bot"], 
-                      cwd=REPO_ROOT, check=True, capture_output=True)
-        subprocess.run(["git", "add", 
-                        f"client/public/blog/{slug}.html",
-                        "client/public/blog/index.html"],
-                      cwd=REPO_ROOT, check=True, capture_output=True)
-        subprocess.run(["git", "commit", "-m", 
-                        f"blog: auto-publish '{title[:60]}'"],
-                      cwd=REPO_ROOT, check=True, capture_output=True)
-        subprocess.run(["git", "push", "origin", "main"],
-                      cwd=REPO_ROOT, check=True, capture_output=True)
-        print(f"Pushed post to GitHub: {slug}")
+        for cmd in [
+            ["git", "config", "user.email", "blog-bot@acqlerate.com"],
+            ["git", "config", "user.name", "Acqlerate Blog Bot"],
+            ["git", "add",
+             f"client/public/blog/{slug}.html",
+             "client/public/blog/index.html"],
+            ["git", "commit", "-m", f"blog: publish '{title[:60]}'"],
+            ["git", "push", "origin", "main"],
+        ]:
+            subprocess.run(cmd, cwd=REPO_ROOT, check=True, capture_output=True)
         return True
     except subprocess.CalledProcessError as e:
         print(f"Git error: {e.stderr.decode() if e.stderr else e}")
         return False
 
 
-def pick_topic(is_tuesday: bool) -> dict:
-    """Pick a topic based on day. Tuesday = news, Saturday = educational."""
-    pool = TOPIC_POOL_NEWS if is_tuesday else TOPIC_POOL_EDUCATIONAL
-    # Rotate through topics based on week number to avoid repeats
-    week_num = datetime.now(timezone.utc).isocalendar()[1]
-    return pool[week_num % len(pool)]
+def main() -> int:
+    now       = datetime.now(timezone.utc)
+    pub_date  = now.strftime("%Y-%m-%d")
+    is_tuesday = now.weekday() == 1
 
+    print(f"Blog post generation — {pub_date} ({'Tuesday/News' if is_tuesday else 'Saturday/Educational'})")
 
-def main():
-    now = datetime.now(timezone.utc)
-    pub_date = now.strftime("%Y-%m-%d")
-    is_tuesday = now.weekday() == 1  # 0=Mon, 1=Tue, 5=Sat
-    
-    print(f"Starting blog post generation — {pub_date} ({'Tuesday/News' if is_tuesday else 'Saturday/Education'})")
-    
-    # Pick topic
-    topic = pick_topic(is_tuesday)
-    print(f"Topic angle: {topic['angle'][:60]}...")
-    
-    # Research
+    pool  = TOPIC_POOL_NEWS if is_tuesday else TOPIC_POOL_EDUCATIONAL
+    week  = now.isocalendar()[1]
+    topic = pool[week % len(pool)]
+    print(f"Topic: {topic['angle'][:70]}...")
+
+    # 1. Research
     print("Researching...")
-    research = search_news(topic["search"])
-    
-    # Generate article body
-    print("Generating article...")
-    raw_content = generate_blog_post(topic, research, pub_date, "")
-    
-    # Extract title from first non-HTML line, or generate one
-    lines = raw_content.strip().split('\n')
-    title = ""
-    deck = ""
-    body_start = 0
-    
-    # Try to find a title line at the top (Gemini sometimes includes it)
-    for i, line in enumerate(lines[:8]):
-        clean = re.sub(r'<[^>]*>', '', line).strip()
-        if clean and len(clean) > 20 and len(clean) < 120 and not clean.startswith('By '):
-            if not title:
-                title = clean
-                body_start = i + 1
-                break
-    
-    # If no title found, ask Gemini for one
-    if not title:
-        title_prompt = f"""Based on this blog post content about "{topic['angle']}", 
-write ONE compelling, specific blog post title (under 80 characters). 
-No quotes, no punctuation at the end. Just the title.
-Post preview: {raw_content[:500]}"""
-        title = gemini_generate(title_prompt).strip().strip('"').strip("'")
-    
-    # Generate deck if not found
-    deck_prompt = f"""Write a 1-sentence compelling subtitle for this blog post titled "{title}".
-Under 160 characters. No quotes. Direct and practical for defense acquisition professionals."""
-    deck = gemini_generate(deck_prompt).strip().strip('"').strip("'")
-    
-    # Clean body — remove any title that leaked in
-    article_body = '\n'.join(lines[body_start:])
-    article_body = re.sub(r'^<h1>.*?</h1>\s*', '', article_body, flags=re.DOTALL | re.IGNORECASE)
-    # Remove any standalone title line at start
-    article_body = re.sub(r'^[A-Z][^<\n]{20,100}\n', '', article_body.strip())
-    
-    # Generate slug from title
+    research_prompt = f"""You are a defense acquisition expert and journalist.
+Research this topic and provide current (2025-2026) facts, developments, and context:
+{topic['search']}
+
+Provide: specific recent events with dates, key dollar amounts/statistics, practical implications
+for defense PMs and contractors, any recent policy changes. Be specific and factual."""
+    research = gemini_generate(research_prompt)
+
+    # 2. Generate article
+    print("Writing article...")
+    title, deck, body_html = generate_article_body(topic, research, pub_date)
+    print(f"Title: {title}")
+
+    # 3. Build slug
     slug = slugify(title)
-    if not slug:
-        slug = f"defense-acquisition-{pub_date}"
-    
-    # Check slug doesn't already exist
-    if (BLOG_DIR / f"{slug}.html").exists():
-        slug = f"{slug}-{pub_date}"
-    
-    # Get read time
-    read_time = get_read_time(article_body)
-    
-    # Generate a short excerpt for the index card
-    excerpt_prompt = f"""Write a 1-2 sentence excerpt (under 180 chars) for a blog post index card.
-Title: {title}
-Content preview: {article_body[:600]}
-Make it practical and compelling. No quotes."""
-    excerpt = gemini_generate(excerpt_prompt).strip().strip('"').strip("'")
-    
-    # Build HTML
-    print(f"Building HTML for '{title}'...")
-    post_html = build_post_html(title, deck, article_body, topic, pub_date, slug, read_time)
-    
-    # Write post file
+    if not slug: slug = f"defense-acquisition-{pub_date}"
+    if (BLOG_DIR / f"{slug}.html").exists(): slug = f"{slug}-{pub_date}"
+
+    read_time = get_read_time(body_html)
+
+    # 4. Assemble full HTML with all required elements
+    print("Assembling post...")
+    post_html = assemble_post(title, deck, body_html, topic, pub_date, slug, read_time)
+
+    # 5. Write file
     post_path = BLOG_DIR / f"{slug}.html"
-    with open(post_path, 'w') as f:
-        f.write(post_html)
-    print(f"Written: {post_path}")
-    
-    # Update index
-    add_post_to_index(slug, title, excerpt, topic, read_time)
-    
-    # Commit and push
-    success = git_commit_and_push(slug, title)
-    
-    if success:
-        print(f"\n✓ Blog post published: https://acqlerate.com/blog/{slug}")
-    else:
-        print(f"\n✗ Post written but push failed. Manual push needed.")
-    
-    return 0
+    post_path.write_text(post_html)
+    print(f"Written: {post_path.name}")
+
+    # 6. Generate excerpt for index card
+    excerpt_prompt = f"Write a 1-sentence excerpt (under 160 chars) for a blog index card. Title: {title}. No quotes."
+    excerpt = gemini_generate(excerpt_prompt).strip().strip('"').strip("'")
+
+    # 7. Update index
+    add_to_index(slug, title, excerpt, topic, read_time)
+
+    # 8. Push
+    ok = git_push(slug, title)
+    url = f"https://acqlerate.com/blog/{slug}"
+    print(f"\n{'✓ Published' if ok else '✗ Written but push failed'}: {url}")
+    return 0 if ok else 1
 
 
 if __name__ == "__main__":
