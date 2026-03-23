@@ -490,7 +490,17 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
     }
   }
 
-  if (!lesson || !mod) return null;
+  if (!lesson || !mod) {
+    // Lesson not found — show a recoverable error instead of blank screen
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[40vh] gap-4 text-center p-8">
+        <div className="text-4xl">🔍</div>
+        <h2 className="text-lg font-bold">Lesson not found</h2>
+        <p className="text-sm text-muted-foreground max-w-sm">We couldn\'t find lesson <code className="bg-muted px-1 rounded">{lessonId}</code>. It may have been moved.</p>
+        <button onClick={onBack} className="text-sm text-primary underline">← Go back</button>
+      </div>
+    );
+  }
 
   const isCompleted = progress.completedLessons.has(lessonId);
 

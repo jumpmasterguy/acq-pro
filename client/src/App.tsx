@@ -69,9 +69,14 @@ function loadSavedView(): View | null {
     const raw = sessionStorage.getItem(VIEW_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as View;
-    // Validate it's a known view type
     const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin', 'analytics'];
     if (!valid.includes(parsed.type)) return null;
+    // Validate lesson ID still exists in curriculum
+    if (parsed.type === 'lesson') {
+      const { modules: allMods } = require('@/lib/curriculum');
+      const exists = allMods.some((m: any) => m.lessons.some((l: any) => l.id === (parsed as any).lessonId));
+      if (!exists) return { type: 'dashboard' };
+    }
     return parsed;
   } catch { return null; }
 }

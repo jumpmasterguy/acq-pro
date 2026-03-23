@@ -254,7 +254,7 @@ export const modules: Module[] = [
             explanation: 'Services — contractors providing labor and expertise to support government operations, programs, and missions — represent the largest category of DoD contract spending by volume. This includes everything from IT support and base operations to program management support and professional advisory services.',
           },
         ],
-      },,
+      },
       {
         id: 'foundations-contracts',
         title: 'Contracts vs. Task Orders: How the Government Actually Buys',
@@ -411,7 +411,7 @@ export const modules: Module[] = [
             explanation: 'A Single Award IDIQ winner gets all task orders — no further competition required, but only one firm wins the vehicle. A Multiple Award IDIQ puts several firms on the contract, then each task order is competed among them under fair opportunity rules. More firms can participate in MA-IDIQs, but no firm is guaranteed any specific task order.',
           },
         ],
-      },,
+      },
       {
         id: 'foundations-players',
         title: 'Who\'s Who: The Key Players in Defense Acquisition',
@@ -574,7 +574,7 @@ export const modules: Module[] = [
             explanation: 'The PM reports to their PEO (Program Executive Officer), who reports to the SAE (Service Acquisition Executive) — e.g., SAF/AQ for Air Force programs. For ACAT I programs, the SAE may report to the USD(A&S) at OSD. Congress oversees the overall system but does not directly supervise individual PMs.',
           },
         ],
-      },,
+      },
       {
         id: 'foundations-money',
         title: 'How Money Works in DoD: Budgets, Appropriations & Color of Money',
@@ -709,7 +709,7 @@ export const modules: Module[] = [
             explanation: 'O&M funds have a 1-year obligation period. Unobligated O&M funds expire at the end of the fiscal year (September 30) and cannot be used to obligate new contracts or orders. This is why the end of the fiscal year is an intense period of activity — programs scramble to obligate funding before it expires.',
           },
         ],
-      },,
+      },
       {
         id: 'foundations-lifecycle',
         title: 'The Acquisition Lifecycle: From Need to Fielded Capability',
@@ -856,7 +856,7 @@ export const modules: Module[] = [
             explanation: 'Studies (including by RAND and CAPE) consistently show that 70–80% of a program\'s total life-cycle cost is locked in by the decisions made during MSA — what requirements are set, which alternative is chosen, and how mature the technology is. Changing requirements in EMD is 10–100x more expensive than getting them right during MSA. This is why early rigor — despite lower visibility and funding — is the highest-value investment a program can make.',
           },
         ],
-      },,
+      },
     ],
     assessment: [
       {
@@ -1132,7 +1132,7 @@ export const modules: Module[] = [
             ]
           }
         ]
-      },,
+      },
 {
         id: 'foundations-3',
         title: 'ACAT Levels: How the DoD Categorizes Your Program',
@@ -3117,7 +3117,7 @@ export const modules: Module[] = [
             ],
           },
         ],
-      },,
+      },
             {
         id: 'contracts-4',
         title: 'Contracts vs. Task Orders: Know the Difference',
@@ -4354,7 +4354,7 @@ export const modules: Module[] = [
             explanation: 'OASIS+ (One Acquisition Solution for Integrated Services Plus) is GSA\'s flagship GWAC for complex professional services — covering program management, management consulting, engineering, logistics, and scientific services. It replaced the legacy OASIS vehicle and includes both unrestricted and small business set-aside pools.',
           },
         ],
-      },,
+      },
       {
         id: 'contracts-8',
         title: 'Who\'s Buying: Navigating the DoD Contracting Enterprise',
@@ -4502,7 +4502,7 @@ export const modules: Module[] = [
             explanation: 'A strong CPARS rating from base-level performance is compelling past performance evidence that can be used in source selections across the AFICC enterprise. Past performance is a key evaluation factor in most formal source selections — quality ratings from any installation are portable competitive assets.',
           },
         ],
-      },,
+      },
     ],
     assessment: [
       {
@@ -6844,7 +6844,7 @@ export const modules: Module[] = [
             explanation: 'Recompete planning should begin at contract award — not 12 months before expiration. The entire period of performance is recompete positioning time. CPARS narratives, performance documentation, competitive intelligence, and staffing continuity plans all need to be built over the life of the contract, not assembled in a last-minute rush before the RFP.',
           },
         ],
-      },,
+      },
     ]
   },
 
@@ -7818,7 +7818,7 @@ export const modules: Module[] = [
             explanation: 'New PMs typically wait until a problem is visible before engaging upward — by which point they have no accumulated political capital from proactive communication. The right approach: consistent, honest, proactive communication during quiet periods builds the trust and credibility that makes oversight bodies supportive rather than adversarial when real problems emerge.',
           },
         ],
-      },,
+      },
     ],
     assessment: [
       {
