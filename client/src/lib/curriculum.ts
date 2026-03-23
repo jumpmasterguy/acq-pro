@@ -918,9 +918,9 @@ export const modules: Module[] = [
       {
         id: 'a9',
         question: "What is the maximum dollar threshold for Simplified Acquisition Procedures (SAP) under the FAR?",
-        options: ['$10,000', '$100,000', '$250,000', '$500,000'],
+        options: ['$10,000', '$100,000', '$350,000', '$500,000'],
         correct: 2,
-        explanation: "FAR Subpart 13 Simplified Acquisition Procedures apply to acquisitions at or below the Simplified Acquisition Threshold (SAT) of $250,000. Below SAT, the contracting officer can use streamlined procedures (request for quotes, three quotes minimum, simplified documentation) instead of full and open competition requirements."
+        explanation: "FAR Subpart 13 Simplified Acquisition Procedures apply to acquisitions at or below the Simplified Acquisition Threshold (SAT) of $350,000. Below SAT, the contracting officer can use streamlined procedures (request for quotes, three quotes minimum, simplified documentation) instead of full and open competition requirements."
       },
       {
         id: 'a10',
@@ -1633,7 +1633,7 @@ export const modules: Module[] = [
           {
             id: 'q6',
             question: "The Bona Fide Need Rule requires that appropriated funds be used for:",
-            options: ['The most cost-effective solution available', 'Needs that legitimately arose during the appropriation\'s period of availability', 'Purchases over $250K only', 'Programs listed in the FYDP'],
+            options: ['The most cost-effective solution available', 'Needs that legitimately arose during the appropriation\'s period of availability', 'Purchases over $350K only', 'Programs listed in the FYDP'],
             correct: 1,
             explanation: "The Bona Fide Need Rule (31 U.S.C. § 1502(a)) requires that funds obligated must meet a legitimate need that arose during the fund's period of availability. For example, you cannot use FY2025 O&M funds in FY2025 to pre-pay for services entirely to be delivered in FY2027 — the need hasn't arisen yet."
           },
@@ -2947,9 +2947,9 @@ export const modules: Module[] = [
           { term: 'Other Transaction Agreement', definition: 'An agreement (not a procurement contract) executed under OTA authority. Not subject to FAR, DFARS, CAS, or most standard acquisition regulations.' },
           { term: 'FAR Part 12', definition: 'Acquisition of Commercial Products and Commercial Services — streamlined procedures for buying items available in the commercial marketplace, with reduced regulatory burden.' },
           { term: 'Commercial Item', definition: 'An item sold or offered in the commercial marketplace for non-government purposes. FAR Part 12 allows acquisition with fewer regulations and no certified cost or pricing data requirement.' },
-          { term: 'SAP', definition: 'Simplified Acquisition Procedures — streamlined procurement process for purchases below the SAT ($250K). Faster, less documentation, but still requires competition where practical.' },
-          { term: 'SAT', definition: 'Simplified Acquisition Threshold — $250K (as of 2024). Acquisitions below this threshold use SAP. Between SAT and $750K there are additional micro-purchase/simplified procedures.' },
-          { term: 'Micro-Purchase', definition: 'Purchases at or below $10K. May be made by any government employee with a purchase card without competition requirement (FAR Part 13.2).' },
+          { term: 'SAP', definition: 'Simplified Acquisition Procedures — streamlined procurement process for purchases below the SAT ($350K). Faster, less documentation, but still requires competition where practical.' },
+          { term: 'SAT', definition: 'Simplified Acquisition Threshold — $350K (effective October 1, 2025). Acquisitions below this threshold use SAP. Between SAT and $750K there are additional micro-purchase/simplified procedures.' },
+          { term: 'Micro-Purchase', definition: 'Purchases at or below $15K. May be made by any government employee with a purchase card without competition requirement (FAR Part 13.2).' },
           { term: 'Sole Source', definition: 'Award without competition. Requires justification under FAR 6.302 — valid reasons include: only one responsible source, urgency, national security, follow-on R&D.' },
           { term: 'COTS', definition: 'Commercial Off-The-Shelf — products sold or used commercially without modification. COTS acquisition is the fastest, cheapest path but requires active market research.' },
           { term: '10 USC 4022', definition: 'The primary statutory authority for DoD prototype OTAs and follow-on production OTAs. Allows non-traditional defense contractors to participate without the FAR compliance burden.' },
@@ -2969,7 +2969,7 @@ export const modules: Module[] = [
               ['FAR Part 12 Commercial', 'Reduced — no CAS, no certified cost data', '6-18 months', 'Products/services available commercially without substantial modification', 'Item must be genuinely commercial'],
               ['OTA Prototype', 'No FAR/DFARS/CAS', '3-12 months', 'Innovative prototypes; non-traditional contractors; technology demonstration', 'Non-competitive follow-on must still meet criteria'],
               ['OTA Production (follow-on)', 'No FAR/DFARS', '1-6 months if directly follows prototype', 'Production of successfully demonstrated OTA prototype', 'Requires successful prototype; scale limits apply'],
-              ['Simplified Acquisition Procedures', 'Minimal', 'Days to weeks', 'Purchases < $250K; immediate needs', '$250K ceiling; cannot be used to circumvent competition for larger requirements'],
+              ['Simplified Acquisition Procedures', 'Minimal', 'Days to weeks', 'Purchases < $350K; immediate needs', '$350K ceiling; cannot be used to circumvent competition for larger requirements'],
               ['Micro-Purchase', 'None', 'Hours', 'Purchases < $10K; credit card', '$10K ceiling; no strategic use'],
             ],
           },
@@ -3005,7 +3005,7 @@ export const modules: Module[] = [
           {
             type: 'text',
             heading: 'Simplified Acquisition Procedures — Speed and Flexibility for Small Buys',
-            body: 'For purchases below $250K, FAR Part 13 allows significantly streamlined procedures. Competition is still encouraged — generally three quotes are sufficient — but the complex evaluation, documentation, and review requirements of FAR Part 15 do not apply. Below $10K (micro-purchase threshold), Government Purchase Card (GPC) holders can buy without any competition requirement. For PMs managing programs with many small supporting contracts, understanding SAP allows faster decisions without compromising legal compliance. However, SAP cannot be used to intentionally break up larger requirements to stay below the threshold (a practice called "split purchasing" — a federal violation).',
+            body: 'For purchases below $350K, FAR Part 13 allows significantly streamlined procedures. Competition is still encouraged — generally three quotes are sufficient — but the complex evaluation, documentation, and review requirements of FAR Part 15 do not apply. Below $15K (micro-purchase threshold), Government Purchase Card (GPC) holders can buy without any competition requirement. For PMs managing programs with many small supporting contracts, understanding SAP allows faster decisions without compromising legal compliance. However, SAP cannot be used to intentionally break up larger requirements to stay below the threshold (a practice called "split purchasing" — a federal violation).',
           },
           {
             type: 'warning',
@@ -3055,9 +3055,9 @@ export const modules: Module[] = [
           {
             id: 'q4',
             question: 'The simplified acquisition threshold (SAT) is currently:',
-            options: ['$10,000', '$50,000', '$150,000', '$250,000'],
+            options: ['$10,000', '$50,000', '$150,000', '$350,000'],
             correct: 3,
-            explanation: 'The SAT is $250,000 (as of 2024 per FAR 2.101 and DFARS 202.101 adjustments). Acquisitions below the SAT use simplified acquisition procedures (FAR Part 13). The micro-purchase threshold (no competition required) is $10,000. The SAT is adjusted periodically for inflation and certain exceptions apply (e.g., commercial items, construction).',
+            explanation: 'The SAT is $350,000, effective October 1, 2025 per FAR 2.101 (updated by the Federal Acquisition Circular FAC 2025-07). Acquisitions below the SAT use simplified acquisition procedures (FAR Part 13). The micro-purchase threshold (no competition required) is $15,000. The SAT is adjusted periodically for inflation and certain exceptions apply (e.g., commercial items, construction).',
           },
           {
             id: 'q5',
@@ -3092,7 +3092,7 @@ export const modules: Module[] = [
             question: 'Government Purchase Cards (GPCs) can be used without any competition requirement for purchases at or below:',
             options: ['$2,500', '$10,000', '$25,000', '$50,000'],
             correct: 1,
-            explanation: 'The micro-purchase threshold is $10,000 (FAR 13.201) — purchases at or below this amount may be made with a GPC by any authorized cardholder without a competition requirement. Above $10K, SAP competition standards apply. Above $250K (SAT), full competition and documentation requirements apply.',
+            explanation: 'The micro-purchase threshold is $15,000 (FAR 13.201) — purchases at or below this amount may be made with a GPC by any authorized cardholder without a competition requirement. Above $15K, SAP competition standards apply. Above $350K (SAT), full competition and documentation requirements apply.',
           },
           {
             id: 'q10',
@@ -3126,8 +3126,8 @@ export const modules: Module[] = [
               'Traditional FAR/DFARS Contract (full CAS, DFARS, TINA, competition)|||Correct. Traditional FAR/DFARS contracts carry the full weight of government procurement law â CAS for cost-type, DFARS clauses, TINA certified cost or pricing data requirements over $2M, and mandatory competition under FAR Part 6. These provide maximum oversight but maximum administrative burden.',
               'FAR Part 12 Commercial Item (reduced clauses; no CAS; no certified cost data)|||Correct. FAR Part 12 commercial item acquisitions use a streamlined clause set. Contractors are not required to submit certified cost or pricing data, CAS does not apply, and standard commercial terms are accepted. Preferred for COTS and commercial services but requires a determination of commerciality.',
               'Other Transaction Authority (no FAR/DFARS/CAS; negotiated terms only)|||Correct. OTAs are authorized under 10 U.S.C. 4021-4022 and allow DoD to negotiate agreements without FAR/DFARS constraints. They are designed to attract non-traditional defense contractors and accelerate prototyping and fielding. OTAs cannot be used for traditional services or routine supplies.',
-              'Simplified Acquisition Procedures (below $250K; three quotes; minimal docs)|||Correct. SAP applies to purchases below the Simplified Acquisition Threshold ($250K standard). The CO can use simplified competition â typically three competitive quotes â with minimal documentation. This allows rapid procurement for routine, lower-dollar requirements.',
-              'Micro-Purchase / Government Purchase Card (below $10K; no competition required)|||Correct. Micro-purchases (below $10K generally) can be made by government purchase card without competition under FAR 13.2. No contract is required â the purchase is made directly on a government credit card. This is the fastest acquisition method.',
+              'Simplified Acquisition Procedures (below $350K; three quotes; minimal docs)|||Correct. SAP applies to purchases below the Simplified Acquisition Threshold ($350K effective October 1, 2025). The CO can use simplified competition â typically three competitive quotes â with minimal documentation. This allows rapid procurement for routine, lower-dollar requirements.',
+              'Micro-Purchase / Government Purchase Card (below $15K; no competition required)|||Correct. Micro-purchases (below $15K generally) can be made by government purchase card without competition under FAR 13.2. No contract is required â the purchase is made directly on a government credit card. This is the fastest acquisition method.',
             ],
           },
         ],
@@ -3247,7 +3247,7 @@ export const modules: Module[] = [
           {
             id: 'q3',
             question: "FAR 16.505 requires \"fair opportunity\" for MAC-IDIQ task orders above what threshold?",
-            options: ['$100,000', '$250,000', '$3,500', '$1,000,000'],
+            options: ['$100,000', '$350,000', '$3,500', '$1,000,000'],
             correct: 2,
             explanation: "FAR 16.505 requires that all MAC-IDIQ awardees receive fair opportunity to compete for task orders exceeding $3,500. Below this threshold, the contracting officer may place orders without following the fair opportunity procedures. This relatively low threshold means nearly all meaningful task orders require fair opportunity competition."
           },
@@ -3275,7 +3275,7 @@ export const modules: Module[] = [
           {
             id: 'q7',
             question: "The IDIQ contract vehicle OASIS+ (administered by GSA) is best described as:",
-            options: ['A single-award IDIQ for IT services only', 'A Government-Wide Acquisition Contract (GWAC) MAC-IDIQ for professional services available to all federal agencies', 'A Navy-specific contract vehicle for shipbuilding support', 'A simplified acquisition tool for purchases under $250K'],
+            options: ['A single-award IDIQ for IT services only', 'A Government-Wide Acquisition Contract (GWAC) MAC-IDIQ for professional services available to all federal agencies', 'A Navy-specific contract vehicle for shipbuilding support', 'A simplified acquisition tool for purchases under $350K'],
             correct: 1,
             explanation: "OASIS+ (One Acquisition Solution for Integrated Services Plus) is a GSA-administered GWAC MAC-IDIQ that provides professional services across multiple functional areas (management consulting, engineering, R&D, financial management, logistics, IT) to all federal agencies. It replaced the original OASIS contract and is structured with unrestricted and small business pools."
           },
@@ -3644,7 +3644,7 @@ export const modules: Module[] = [
             options: [
               'Limits the total value of task orders under any GWAC|||Incorrect. There is no universal statutory cap on GWAC total value â individual GWACs have their own ceiling values set at award.',
               'Provides statutory authority for one agency to procure services or supplies from another federal agency|||Correct. The Economy Act (31 U.S.C. 1535) authorizes interagency acquisitions â one agency using another agency\'s contracting resources or purchasing on their behalf.',
-              'Requires competition for all orders over $250K|||Incorrect for the Economy Act specifically. The Economy Act governs the relationship between federal agencies in interagency acquisitions â it does not set competition thresholds. Competition requirements at the ordering level are governed by the individual GWAC\'s terms and FAR 16.505.',
+              'Requires competition for all orders over $350K|||Incorrect for the Economy Act specifically. The Economy Act governs the relationship between federal agencies in interagency acquisitions â it does not set competition thresholds. Competition requirements at the ordering level are governed by the individual GWAC\'s terms and FAR 16.505.',
               'Prohibits the use of GWACs for classified requirements'
             ],
             correct: 1,
@@ -3690,7 +3690,7 @@ export const modules: Module[] = [
             id: 'q9',
             question: "When should a DoD PM recommend using FEDSIM rather than using a GWAC directly?",
             options: [
-              'When the acquisition is under $250K and competition is not required|||Incorrect. AAS-D is used for significant acquisitions â particularly complex services benefiting from GSA\'s contracting expertise. Small purchases under the SAT would typically be handled through simplified acquisition or purchase card.',
+              'When the acquisition is under $350K and competition is not required|||Incorrect. AAS-D is used for significant acquisitions â particularly complex services benefiting from GSA\'s contracting expertise. Small purchases under the SAT would typically be handled through simplified acquisition or purchase card.',
               'When the program office\'s contracting office lacks capacity, expertise, or bandwidth to run the full acquisition|||Correct. This is the primary driver for using AAS-D. Program offices with technical expertise but limited acquisition personnel benefit from GSA\'s experienced acquisition teams managing the process.',
               'When competition is not desired to protect the incumbent contractor|||Incorrect. AAS-D does not facilitate non-competitive awards as a matter of policy. Any acquisition through AAS-D must still comply with competition requirements.',
               'When the requirement exceeds the GWAC ceiling'
@@ -3731,7 +3731,7 @@ export const modules: Module[] = [
           {
             type: 'text',
             heading: "The Source Selection Process",
-            body: "Source selection is the competitive process by which the government evaluates proposals and selects a contractor. For most DoD acquisitions above the simplified acquisition threshold ($250K), competition is required by the Competition in Contracting Act (CICA). The process must be objective, documented, and defensible — any deviation from the stated evaluation criteria is grounds for a GAO bid protest."
+            body: "Source selection is the competitive process by which the government evaluates proposals and selects a contractor. For most DoD acquisitions above the simplified acquisition threshold ($350K), competition is required by the Competition in Contracting Act (CICA). The process must be objective, documented, and defensible — any deviation from the stated evaluation criteria is grounds for a GAO bid protest."
           },
           {
             type: 'list',
@@ -3814,9 +3814,9 @@ export const modules: Module[] = [
           {
             id: 'q5',
             question: "The Competition in Contracting Act (CICA) requires competition for most DoD acquisitions above what threshold?",
-            options: ['$10,000', '$25,000', '$250,000 (Simplified Acquisition Threshold)', '$1,000,000'],
+            options: ['$10,000', '$25,000', '$350,000 (Simplified Acquisition Threshold)', '$1,000,000'],
             correct: 2,
-            explanation: "CICA requires full and open competition for acquisitions above the Simplified Acquisition Threshold (SAT), currently $250,000. Below the SAT, simplified acquisition procedures apply. Sole-source awards above the SAT require a written Justification and Approval (J&A)."
+            explanation: "CICA requires full and open competition for acquisitions above the Simplified Acquisition Threshold (SAT), currently $350,000. Below the SAT, simplified acquisition procedures apply. Sole-source awards above the SAT require a written Justification and Approval (J&A)."
           },
           {
             id: 'q6',
@@ -4354,7 +4354,7 @@ export const modules: Module[] = [
               'A guaranteed revenue source for qualified contractors|||Incorrect. Being on the Federal Supply Schedule does not guarantee revenue. Schedule contractors must still market their offerings and compete for individual orders. Many schedule holders receive little or no government business.',
               'A pre-competed vehicle available only to defense agencies|||Incorrect. The GSA Multiple Award Schedule (MAS/FSS) is available to all federal agencies â civilian and defense. It is managed by GSA and is government-wide.',
               'A marketing platform with pre-negotiated commercial terms available to all federal agencies|||Correct. The GSA Multiple Award Schedule (MAS) is a long-term contract vehicle with pre-established pricing that any federal agency can use. Contractors list their products and services at pre-negotiated prices, and agencies can order directly.',
-              'An IDIQ requiring annual task order competitions|||Incorrect. MAS orders are simplified â for orders below $10K, the ordering agency can select any MAS contractor; for orders over $10K, the agency must provide fair opportunity to three or more MAS awardees. There is no annual re-competition requirement.',
+              'An IDIQ requiring annual task order competitions|||Incorrect. MAS orders are simplified â for orders below $15K, the ordering agency can select any MAS contractor; for orders over $10K, the agency must provide fair opportunity to three or more MAS awardees. There is no annual re-competition requirement.',
             ],
             correct: 2,
             explanation: 'The GSA MAS allows contractors to sell pre-negotiated commercial products and services to federal agencies — but it is a marketing platform, not a revenue guarantee. Contractors must actively pursue orders; simply holding a schedule generates no revenue.',
@@ -4382,8 +4382,8 @@ export const modules: Module[] = [
           { term: 'AFICC', definition: 'Air Force Installation Contracting Center — manages enterprise-level contracting for installation and mission support requirements across the Air Force. Its Enterprise Sourcing Squadrons (ESS) handle large-dollar, multi-year service acquisitions.' },
           { term: 'ESS', definition: 'Enterprise Sourcing Squadron — AFICC\'s operational contracting units that manage large-dollar, enterprise-level acquisitions across installations and functional areas (sustainment, services, IT infrastructure).' },
           { term: 'MAJCOM', definition: 'Major Command — top-level Air Force organizational units (ACC, AMC, AFSOC, USAFE-AFAFRICA, etc.) with aligned contracting support for operationally-driven, often classified requirements.' },
-          { term: 'SAP', definition: 'Simplified Acquisition Procedures — streamlined procurement methods for purchases below the Simplified Acquisition Threshold ($250,000). Base-level contracting heavily uses SAP.' },
-          { term: 'SAT', definition: 'Simplified Acquisition Threshold — currently $250,000. Purchases below this threshold may use simplified procedures; above it requires more formal competition requirements.' },
+          { term: 'SAP', definition: 'Simplified Acquisition Procedures — streamlined procurement methods for purchases below the Simplified Acquisition Threshold ($350,000). Base-level contracting heavily uses SAP.' },
+          { term: 'SAT', definition: 'Simplified Acquisition Threshold — currently $350,000. Purchases below this threshold may use simplified procedures; above it requires more formal competition requirements.' },
           { term: 'BPA', definition: 'Blanket Purchase Agreement — a simplified acquisition mechanism used heavily at base level for recurring, predictable requirements. Issued against GSA Schedules or open market.' },
           { term: 'PWS', definition: 'Performance Work Statement — outcome-based description of work required; used in performance-based service acquisitions. Base-level and ESS offices increasingly require PWS-style solicitations.' },
           { term: 'SAM.gov', definition: 'System for Award Management — the official federal database for contract opportunities, awardee registration, and past performance. Primary source of visible solicitations above SAT.' },
