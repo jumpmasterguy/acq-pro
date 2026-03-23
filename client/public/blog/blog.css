@@ -307,5 +307,6 @@ footer {
   .post-sidebar { position: static; }
   .posts-grid { grid-template-columns: 1fr; padding: 32px 0; }
   .nav-actions .btn-ghost { display: none; }
+  .nav-actions .nav-blog { display: inline-flex; }
   nav { padding: 0; }
 }
