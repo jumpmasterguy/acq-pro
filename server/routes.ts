@@ -388,7 +388,7 @@ export async function registerRoutes(
         return res.json({ url: session.url });
       } catch (err: any) {
         console.error("Stripe checkout error:", err);
-        return res.status(500).json({ message: err.message || "Payment error" });
+        return res.status(500).json({ message: "Payment error — please try again" });
       }
     }
   );
@@ -484,7 +484,7 @@ export async function registerRoutes(
         return res.json({ url: session.url });
       } catch (err: any) {
         console.error("Portal error:", err);
-        return res.status(500).json({ message: err.message || "Portal error" });
+        return res.status(500).json({ message: "Failed to open billing portal" });
       }
     }
   );
@@ -529,12 +529,7 @@ export async function registerRoutes(
   // Grant/revoke Pro — admin only (by user id or email)
   app.post("/api/admin/make-pro", requireAuth as any, async (req: Request, res: Response) => {
     if (!isAdmin(req)) {
-      // Legacy: also allow ADMIN_SECRET header for curl usage
-      const adminSecret = process.env.ADMIN_SECRET;
-      const { secret } = req.body;
-      if (!adminSecret || secret !== adminSecret) {
-        return res.status(403).json({ message: "Forbidden" });
-      }
+      return res.status(403).json({ message: "Forbidden" });
     }
     const { email, userId, plan } = req.body;
     let user;
@@ -763,11 +758,11 @@ export async function registerRoutes(
     return res.status(500).json({ message: `Failed: ${lastErr}` });
   });
 
-  // GET /api/ai-health — check Gemini key is working (no auth required, for debugging)
-  app.get("/api/ai-health", async (_req: Request, res: Response) => {
+  // GET /api/ai-health — check Gemini key is working (admin only)
+  app.get("/api/ai-health", requireAuth as any, async (_req: Request, res: Response) => {
+    if (!isAdmin(_req)) return res.status(403).json({ message: "Forbidden" });
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) return res.json({ ok: false, reason: 'GEMINI_API_KEY not set', keyPrefix: 'MISSING' });
-    const keyPrefix = apiKey.substring(0, 8);
+    if (!apiKey) return res.json({ ok: false, reason: 'GEMINI_API_KEY not set' });
     // Confirmed working models as of March 2026 via ListModels
     const modelCandidates = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-flash-latest'];
     const attempts = modelCandidates.map(m => ({
@@ -776,7 +771,7 @@ export async function registerRoutes(
     }));
     const results: Record<string, string> = {};
     for (const { url } of attempts) {
-      const label = url.replace(`?key=${apiKey}`, '').replace('https://generativelanguage.googleapis.com/', '');
+      const label = url.replace(/key=[^&]+/, 'key=REDACTED').replace('https://generativelanguage.googleapis.com/', '');
       try {
         const resp = await fetch(url, {
           method: 'POST',
@@ -787,7 +782,7 @@ export async function registerRoutes(
         if (resp.ok) {
           const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? 'no text';
           results[label] = `OK: ${text.trim()}`;
-          return res.json({ ok: true, workingEndpoint: label, keyPrefix, allResults: results });
+          return res.json({ ok: true, workingEndpoint: label, allResults: results });
         } else {
           results[label] = `${resp.status}: ${data?.error?.message?.substring(0, 100) ?? 'unknown'}`;
         }
@@ -795,7 +790,7 @@ export async function registerRoutes(
         results[label] = `FETCH_ERR: ${err?.message?.substring(0, 80)}`;
       }
     }
-    return res.json({ ok: false, reason: 'No endpoints worked', keyPrefix, allResults: results });
+    return res.json({ ok: false, reason: 'No endpoints worked', allResults: results });
   });
 
   // ── Email lead capture (landing page opt-in) ──────────────────────────────

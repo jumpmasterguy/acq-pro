@@ -84,7 +84,16 @@ export async function setupAuth(app: Express): Promise<void> {
   // ── Session middleware ─────────────────────────────────────────────────────
   app.use(
     session({
-      secret: process.env.SESSION_SECRET || "acqpro-secret-key-change-in-prod-2024",
+      secret: (() => {
+        const s = process.env.SESSION_SECRET;
+        if (!s) {
+          if (process.env.NODE_ENV === 'production') {
+            console.error('[SECURITY] SESSION_SECRET env var is not set — using insecure fallback. Set this in Railway immediately.');
+          }
+          return 'acqpro-dev-secret-not-for-production';
+        }
+        return s;
+      })(),
       resave: false,
       saveUninitialized: false,
       rolling: true,

@@ -1,4 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
@@ -12,10 +14,69 @@ declare module "http" {
   }
 }
 
-// CORS — allow credentials from any origin (required for Safari/Firefox cookie handling)
+// ── Security headers via helmet ──────────────────────────────────────────────
+// Content-Security-Policy is intentionally relaxed for Stripe, Google, Gemini.
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          "'unsafe-inline'",          // React dev + inline GA4 snippet
+          "https://js.stripe.com",
+          "https://www.googletagmanager.com",
+          "https://accounts.google.com",
+        ],
+        frameSrc: [
+          "https://js.stripe.com",
+          "https://hooks.stripe.com",
+          "https://accounts.google.com",
+        ],
+        connectSrc: [
+          "'self'",
+          "https://api.stripe.com",
+          "https://generativelanguage.googleapis.com",
+          "https://www.google-analytics.com",
+          "https://accounts.google.com",
+        ],
+        imgSrc: ["'self'", "data:", "https:"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        upgradeInsecureRequests: [],
+      },
+    },
+    // HSTS — tell browsers to always use HTTPS for 1 year
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true,
+    },
+    // Prevent clickjacking
+    frameguard: { action: "sameorigin" },
+    // Prevent MIME-type sniffing
+    noSniff: true,
+    // Disable X-Powered-By: Express header
+    hidePoweredBy: true,
+    // Referrer policy — only send origin on cross-origin requests
+    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+  })
+);
+
+// ── CORS — restrict to known origins ─────────────────────────────────────────
+const ALLOWED_ORIGINS = [
+  "https://acqlerate.com",
+  "https://www.acqlerate.com",
+  "https://acqlerate.app",
+  "https://acq-pro-production.up.railway.app",
+  // Local development
+  "http://localhost:5000",
+  "http://localhost:3000",
+];
+
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  if (origin) {
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
@@ -26,6 +87,53 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+// ── Global rate limits ────────────────────────────────────────────────────────
+// Auth endpoints — stricter (brute force protection)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20,                  // 20 attempts per window per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many attempts — please try again in 15 minutes" },
+  skip: (req) => process.env.NODE_ENV === "development",
+});
+
+// AI endpoints — protect Gemini API quota
+const aiLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 30,             // 30 AI requests per minute per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many AI requests — please slow down" },
+  skip: (req) => process.env.NODE_ENV === "development",
+});
+
+// Email/lead capture — prevent flooding
+const leadsLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10,                  // 10 lead submissions per hour per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many submissions — please try again later" },
+});
+
+// General API — light baseline
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 120,            // 120 requests per minute per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many requests" },
+  skip: (req) => process.env.NODE_ENV === "development",
+});
+
+app.use("/api", apiLimiter);
+app.use("/api/register", authLimiter);
+app.use("/api/login", authLimiter);
+app.use("/api/leads", leadsLimiter);
+app.use("/api/expand-item", aiLimiter);
+app.use("/api/explain", aiLimiter);
 
 app.use(
   express.json({
