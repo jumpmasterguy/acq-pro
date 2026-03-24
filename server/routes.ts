@@ -29,6 +29,7 @@ const PACK_PRICES: Record<string, string | undefined> = {
 
 const PACK_FILES: Record<string, string[]> = {
   "pm-essentials": [
+    "pack-guide.pdf",
     "rfp-compliance-matrix.xlsx",
     "risk-register.xlsx",
     "igce-calculator.xlsx",
@@ -36,6 +37,7 @@ const PACK_FILES: Record<string, string[]> = {
     "pm-briefing-deck.pptx",
   ],
   "proposal-toolkit": [
+    "pack-guide.pdf",
     "proposal-compliance-matrix.xlsx",
     "section-lm-decoder.xlsx",
     "win-theme-development.xlsx",
@@ -43,6 +45,7 @@ const PACK_FILES: Record<string, string[]> = {
     "pricing-volume-checklist.xlsx",
   ],
   "finance-cheat-sheets": [
+    "pack-guide.pdf",
     "ppbe-cycle-one-pager.xlsx",
     "color-of-money-decision-tree.xlsx",
     "evm-formulas-quick-reference.xlsx",
