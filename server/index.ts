@@ -45,6 +45,8 @@ app.use(
         imgSrc: ["'self'", "data:", "https:"],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        // Allow onclick= and other inline event handlers on static HTML pages
+        scriptSrcAttr: ["'unsafe-inline'"],
         upgradeInsecureRequests: [],
       },
     },
