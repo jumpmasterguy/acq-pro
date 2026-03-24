@@ -539,7 +539,10 @@ def assemble_post(title: str, deck: str, body_html: str, topic: dict,
   <meta property="og:description" content="{deck}" />
   <meta property="og:url" content="https://acqlerate.com/blog/{slug}" />
   <link rel="canonical" href="https://acqlerate.com/blog/{slug}" />
-  <link rel="icon" href="/acqlerate-icon.svg" type="image/svg+xml" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
   <link rel="stylesheet" href="/blog/blog.css" />
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-SW42SFY999"></script>
   <script>
