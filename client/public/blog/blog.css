@@ -48,6 +48,19 @@ nav {
 .nav-logo-text { font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
 .nav-logo-text span { color: var(--teal); }
 .nav-actions { display: flex; align-items: center; gap: 12px; }
+.nav-blog-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(1,105,111,0.08); border: 1px solid rgba(1,105,111,0.25);
+  color: var(--teal); font-size: 0.85rem; font-weight: 600;
+  padding: 6px 14px; border-radius: 20px; text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+.nav-blog-pill:hover { background: rgba(1,105,111,0.15); border-color: rgba(1,105,111,0.45); }
+.nav-blog-badge {
+  background: var(--teal); color: white; font-size: 0.65rem;
+  font-weight: 700; padding: 1px 6px; border-radius: 10px;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
 .btn-ghost {
   background: none; border: none; cursor: pointer;
   color: var(--text-muted); font-size: 0.9rem; font-weight: 500;
