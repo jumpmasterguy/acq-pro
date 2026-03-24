@@ -8,7 +8,7 @@ import fs from "fs";
 import { storage } from "./storage";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema, userProfileSchema } from "@shared/schema";
-import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification } from "./email";
+import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail } from "./email";
 
 // Initialize Stripe — will be undefined if key not set
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
@@ -936,6 +936,10 @@ export async function registerRoutes(
     }
     try {
       const lead = await storage.saveLead(email.toLowerCase().trim(), source || 'landing_page');
+      // Send lead nurture email (non-blocking — never delay the response)
+      sendLeadNurtureEmail(email.toLowerCase().trim()).catch((err) =>
+        console.error('[email] Lead nurture send failed:', err)
+      );
       return res.json({ ok: true, id: lead.id });
     } catch (err: any) {
       return res.status(500).json({ message: 'Failed to save email' });

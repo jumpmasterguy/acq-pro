@@ -497,6 +497,74 @@ export async function sendEmail7(to: string, username: string): Promise<void> {
   console.log(`[email] Email 7 (day 21) sent to ${to}`);
 }
 
+// ─── Lead Nurture Email (landing page opt-in) ────────────────────────────────
+
+/**
+ * Sent immediately when someone submits the landing page email capture form.
+ * Tells them their kit is tailored to their role — drives them to register
+ * and complete the onboarding flow, which triggers sendStarterKitEmail().
+ */
+export async function sendLeadNurtureEmail(to: string): Promise<void> {
+  if (!resend) { console.log('[email] RESEND_API_KEY not set — skipping lead nurture email'); return; }
+
+  const body = `
+    <div style="font-size:18px;font-weight:800;color:#0d2137;margin:0 0 8px">Your Acquisition Starter Kit is ready.</div>
+    <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 20px">We just need to know which side of the table you're on — so we can send you the right version.</p>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px">
+      <tr>
+        <td style="padding-right:8px;vertical-align:top;width:50%">
+          <div style="background:#f0f9fa;border:2px solid #01696f;border-radius:12px;padding:20px 18px">
+            <div style="font-size:22px;margin-bottom:8px">🏛️</div>
+            <div style="font-size:14px;font-weight:800;color:#0d2137;margin-bottom:6px">USG Acquisition Personnel</div>
+            <div style="font-size:12px;color:#374151;line-height:1.6;margin-bottom:12px">DoD civilians, active duty, COs, PMs, budget analysts working inside a program office or contracting shop.</div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#01696f;margin-bottom:6px">Kit includes:</div>
+            <ul style="font-size:12px;color:#374151;margin:0;padding-left:16px;line-height:1.8">
+              <li>DoD Acquisition Lifecycle Cheat Sheet</li>
+              <li>ACAT Decision Tree</li>
+              <li>5 Most Common PM Mistakes</li>
+              <li>50+ Acronym Glossary</li>
+            </ul>
+          </div>
+        </td>
+        <td style="padding-left:8px;vertical-align:top;width:50%">
+          <div style="background:#fff8e6;border:2px solid #d4a017;border-radius:12px;padding:20px 18px">
+            <div style="font-size:22px;margin-bottom:8px">🏢</div>
+            <div style="font-size:14px;font-weight:800;color:#0d2137;margin-bottom:6px">Defense Industry Contractor</div>
+            <div style="font-size:12px;color:#374151;line-height:1.6;margin-bottom:12px">Prime/sub contractors, BD leads, Capture Managers, proposal teams, and program support working for industry.</div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#d4a017;margin-bottom:6px">Kit includes:</div>
+            <ul style="font-size:12px;color:#374151;margin:0;padding-left:16px;line-height:1.8">
+              <li>Task Orders vs. Contracts Guide</li>
+              <li>GSA AAS-D & IDIQ Vehicle Landscape</li>
+              <li>Who's Buying — AFICC, ESS & MAJCOM</li>
+              <li>5 Common Contractor Mistakes + 70+ Acronyms</li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <div style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:24px;border:1px solid #264d73">
+      <p style="color:#ffffff;font-size:15px;font-weight:700;margin:0 0 6px">Create your free account — takes 60 seconds.</p>
+      <p style="color:rgba(255,255,255,0.7);font-size:13px;margin:0 0 20px;line-height:1.6">You'll pick your path during setup and we'll send the right kit straight to your inbox. Module 01 is free with no credit card required.</p>
+      <a href="${APP_URL}/app#/register"
+         style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 32px;border-radius:8px;text-decoration:none">
+        Choose Your Path &amp; Get Your Kit →
+      </a>
+    </div>
+
+    <p style="font-size:13px;color:#64748b;line-height:1.7;margin:0">Already have an account? <a href="${APP_URL}/app#/dashboard" style="color:#01696f;text-decoration:none;font-weight:600">Sign in here</a> and complete the quick onboarding if you haven't yet — that's what unlocks the kit delivery.</p>
+  `;
+
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: 'Your Acquisition Starter Kit — which side of the table are you on?',
+    html: emailShell('USG or Contractor? Pick your path and get the right kit.', body),
+  });
+  console.log(`[email] Lead nurture email sent to ${to}`);
+}
+
 // ─── Admin Signup Notification ──────────────────────────────────────────────
 
 /**
