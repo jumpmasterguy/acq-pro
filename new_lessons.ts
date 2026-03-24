@@ -528,7 +528,7 @@
           {
             id: 'q8',
             question: 'The Truth in Negotiations Act (TINA) / Defective Pricing audit by DCAA is triggered when:',
-            options: ['Any contract over $250K is awarded', 'A contract over $2M required the submission of certified cost or pricing data before award', 'A contractor files an ICS late', 'A Nunn-McCurdy breach is declared'],
+            options: ['Any contract over $350K is awarded', 'A contract over $2M required the submission of certified cost or pricing data before award', 'A contractor files an ICS late', 'A Nunn-McCurdy breach is declared'],
             correct: 1,
             explanation: 'TINA (codified as 41 U.S.C. § 3502) requires contractors to submit certified cost or pricing data for contracts exceeding $2M (where competition and other exceptions do not apply). Post-award, DCAA may audit whether that data was accurate, current, and complete at the time of submission. If data was defective (incorrect or outdated), the government is entitled to a price reduction equal to the amount overpaid.',
           },

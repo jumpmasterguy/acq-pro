@@ -1521,7 +1521,7 @@ export const modules: Module[] = [
             heading: "Major Appropriation Types: Rules & Period of Availability",
             headers: ['Appropriation', 'What It Funds', 'Period of Availability', 'Key Rule'],
             rows: [
-              ['O&M', 'Operations, training, maintenance, most services contracts under $250K threshold', '1 Year', 'Cannot fund capital equipment > $250K or construction > $750K'],
+              ['O&M', 'Operations, training, maintenance, most services contracts under $350K threshold', '1 Year', 'Cannot fund capital equipment > $250K (investment threshold) or construction > $750K'],
               ['RDT&E', 'Research, development, prototypes, testing — from basic research through system development', '2 Years', 'Cannot fund production quantities; use ends at Milestone C'],
               ['Procurement', 'Production units, end-items: aircraft, ships, missiles, vehicles, major components', '3 Years', 'System must be past Milestone C / production-ready'],
               ['MILCON', 'Permanent construction of buildings, infrastructure, and facilities', '5 Years', 'Threshold $1.5M+; below threshold uses O&M (minor construction)'],
@@ -2591,7 +2591,7 @@ export const modules: Module[] = [
           {
             id: 'q8',
             question: 'The Truth in Negotiations Act (TINA) / Defective Pricing audit by DCAA is triggered when:',
-            options: ['Any contract over $250K is awarded', 'A contract over $2M required the submission of certified cost or pricing data before award', 'A contractor files an ICS late', 'A Nunn-McCurdy breach is declared'],
+            options: ['Any contract over $350K is awarded', 'A contract over $2M required the submission of certified cost or pricing data before award', 'A contractor files an ICS late', 'A Nunn-McCurdy breach is declared'],
             correct: 1,
             explanation: 'TINA (codified as 41 U.S.C. § 3502) requires contractors to submit certified cost or pricing data for contracts exceeding $2M (where competition and other exceptions do not apply). Post-award, DCAA may audit whether that data was accurate, current, and complete at the time of submission. If data was defective (incorrect or outdated), the government is entitled to a price reduction equal to the amount overpaid.',
           },
@@ -2970,7 +2970,7 @@ export const modules: Module[] = [
               ['OTA Prototype', 'No FAR/DFARS/CAS', '3-12 months', 'Innovative prototypes; non-traditional contractors; technology demonstration', 'Non-competitive follow-on must still meet criteria'],
               ['OTA Production (follow-on)', 'No FAR/DFARS', '1-6 months if directly follows prototype', 'Production of successfully demonstrated OTA prototype', 'Requires successful prototype; scale limits apply'],
               ['Simplified Acquisition Procedures', 'Minimal', 'Days to weeks', 'Purchases < $350K; immediate needs', '$350K ceiling; cannot be used to circumvent competition for larger requirements'],
-              ['Micro-Purchase', 'None', 'Hours', 'Purchases < $10K; credit card', '$10K ceiling; no strategic use'],
+              ['Micro-Purchase', 'None', 'Hours', 'Purchases < $15K; credit card (GPC)', '$15K ceiling; no competition required'],
             ],
           },
           {
@@ -3090,8 +3090,8 @@ export const modules: Module[] = [
           {
             id: 'q9',
             question: 'Government Purchase Cards (GPCs) can be used without any competition requirement for purchases at or below:',
-            options: ['$2,500', '$10,000', '$25,000', '$50,000'],
-            correct: 1,
+            options: ['$2,500', '$10,000', '$15,000', '$50,000'],
+            correct: 2,
             explanation: 'The micro-purchase threshold is $15,000 (FAR 13.201) — purchases at or below this amount may be made with a GPC by any authorized cardholder without a competition requirement. Above $15K, SAP competition standards apply. Above $350K (SAT), full competition and documentation requirements apply.',
           },
           {
@@ -4354,7 +4354,7 @@ export const modules: Module[] = [
               'A guaranteed revenue source for qualified contractors|||Incorrect. Being on the Federal Supply Schedule does not guarantee revenue. Schedule contractors must still market their offerings and compete for individual orders. Many schedule holders receive little or no government business.',
               'A pre-competed vehicle available only to defense agencies|||Incorrect. The GSA Multiple Award Schedule (MAS/FSS) is available to all federal agencies â civilian and defense. It is managed by GSA and is government-wide.',
               'A marketing platform with pre-negotiated commercial terms available to all federal agencies|||Correct. The GSA Multiple Award Schedule (MAS) is a long-term contract vehicle with pre-established pricing that any federal agency can use. Contractors list their products and services at pre-negotiated prices, and agencies can order directly.',
-              'An IDIQ requiring annual task order competitions|||Incorrect. MAS orders are simplified â for orders below $15K, the ordering agency can select any MAS contractor; for orders over $10K, the agency must provide fair opportunity to three or more MAS awardees. There is no annual re-competition requirement.',
+              'An IDIQ requiring annual task order competitions|||Incorrect. MAS orders are simplified â for orders below $15K, the ordering agency can select any MAS contractor; for orders over $15K, the agency must provide fair opportunity to three or more MAS awardees. There is no annual re-competition requirement.',
             ],
             correct: 2,
             explanation: 'The GSA MAS allows contractors to sell pre-negotiated commercial products and services to federal agencies — but it is a marketing platform, not a revenue guarantee. Contractors must actively pursue orders; simply holding a schedule generates no revenue.',

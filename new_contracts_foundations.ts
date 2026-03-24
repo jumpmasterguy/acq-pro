@@ -397,7 +397,7 @@
               ['OTA Prototype', 'No FAR/DFARS/CAS', '3-12 months', 'Innovative prototypes; non-traditional contractors; technology demonstration', 'Non-competitive follow-on must still meet criteria'],
               ['OTA Production (follow-on)', 'No FAR/DFARS', '1-6 months if directly follows prototype', 'Production of successfully demonstrated OTA prototype', 'Requires successful prototype; scale limits apply'],
               ['Simplified Acquisition Procedures', 'Minimal', 'Days to weeks', 'Purchases < $350K; immediate needs', '$350K ceiling; cannot be used to circumvent competition for larger requirements'],
-              ['Micro-Purchase', 'None', 'Hours', 'Purchases < $10K; credit card', '$10K ceiling; no strategic use'],
+              ['Micro-Purchase', 'None', 'Hours', 'Purchases < $15K; credit card (GPC)', '$15K ceiling; no competition required'],
             ],
           },
           {
@@ -505,8 +505,8 @@
           {
             id: 'q9',
             question: 'Government Purchase Cards (GPCs) can be used without any competition requirement for purchases at or below:',
-            options: ['$2,500', '$10,000', '$25,000', '$50,000'],
-            correct: 1,
+            options: ['$2,500', '$10,000', '$15,000', '$50,000'],
+            correct: 2,
             explanation: 'The micro-purchase threshold is $15,000 (FAR 13.201) — purchases at or below this amount may be made with a GPC by any authorized cardholder without a competition requirement. Above $15K, SAP competition standards apply. Above $350K (SAT), full competition and documentation requirements apply.',
           },
           {
