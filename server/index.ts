@@ -31,11 +31,13 @@ app.use(
         frameSrc: [
           "https://js.stripe.com",
           "https://hooks.stripe.com",
+          "https://checkout.stripe.com",
           "https://accounts.google.com",
         ],
         connectSrc: [
           "'self'",
           "https://api.stripe.com",
+          "https://checkout.stripe.com",
           "https://generativelanguage.googleapis.com",
           "https://www.google-analytics.com",
           "https://accounts.google.com",
