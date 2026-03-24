@@ -282,24 +282,7 @@ export default function AdminAnalytics({ onBack }: AdminAnalyticsProps) {
             </div>
           </div>
 
-          {/* ── GA4 Note ─────────────────────────────── */}
-          <div className="mt-6 bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4">
-            <p className="text-sm font-semibold text-yellow-400 mb-1">GA4 Setup Required</p>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              Replace <code className="bg-muted px-1 rounded text-xs">GA_MEASUREMENT_ID</code> with your <strong>G-XXXXXXXXXX</strong> in both{' '}
-              <code className="bg-muted px-1 rounded text-xs">landing.html</code> and{' '}
-              <code className="bg-muted px-1 rounded text-xs">index.html</code>.
-              Get your Measurement ID at{' '}
-              <a href="https://analytics.google.com" target="_blank" rel="noopener noreferrer" className="text-primary underline">
-                analytics.google.com
-              </a>
-              {' '}→ Admin → Data Streams → Web stream → Measurement ID.
-              Google Search Console: add the meta tag verification code at{' '}
-              <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" className="text-primary underline">
-                search.google.com/search-console
-              </a>.
-            </p>
-          </div>
+
         </>
       )}
     </div>
