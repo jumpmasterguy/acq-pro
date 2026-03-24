@@ -497,6 +497,68 @@ export async function sendEmail7(to: string, username: string): Promise<void> {
   console.log(`[email] Email 7 (day 21) sent to ${to}`);
 }
 
+// ─── Admin Signup Notification ──────────────────────────────────────────────
+
+/**
+ * Notify the admin (Lucas) whenever a new user signs up.
+ * Fires non-blocking — failures are logged but never surface to the user.
+ */
+export async function sendAdminNotification(
+  newUserEmail: string,
+  newUserName: string,
+  method: 'email_password' | 'google'
+): Promise<void> {
+  const adminEmail = process.env.ADMIN_EMAILS || 'lucas.l.cruz.es@gmail.com';
+  if (!resend) { console.log('[email] RESEND_API_KEY not set — skipping admin notification'); return; }
+
+  const methodLabel = method === 'google' ? 'Google OAuth' : 'Email / Password';
+  const now = new Date().toLocaleString('en-US', {
+    timeZone: 'America/New_York',
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  });
+
+  const body = `
+    <div style="font-size:17px;font-weight:700;color:#0d2137;margin:0 0 16px">🎉 New signup on Acqlerate</div>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:20px">
+      <tr><td style="background:#f0f9fa;border:1px solid #d1ede0;border-radius:10px;padding:20px 24px">
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+          <tr>
+            <td style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:#01696f;padding-bottom:14px" colspan="2">User Details</td>
+          </tr>
+          <tr>
+            <td style="font-size:13px;color:#64748b;padding:4px 0;width:120px">Name</td>
+            <td style="font-size:14px;font-weight:700;color:#0d2137;padding:4px 0">${newUserName}</td>
+          </tr>
+          <tr>
+            <td style="font-size:13px;color:#64748b;padding:4px 0">Email</td>
+            <td style="font-size:14px;font-weight:600;color:#01696f;padding:4px 0">${newUserEmail}</td>
+          </tr>
+          <tr>
+            <td style="font-size:13px;color:#64748b;padding:4px 0">Method</td>
+            <td style="font-size:14px;font-weight:600;color:#0d2137;padding:4px 0">${methodLabel}</td>
+          </tr>
+          <tr>
+            <td style="font-size:13px;color:#64748b;padding:4px 0">Time (ET)</td>
+            <td style="font-size:14px;color:#0d2137;padding:4px 0">${now}</td>
+          </tr>
+        </table>
+      </td></tr>
+    </table>
+
+    <p style="font-size:13px;color:#64748b;margin:0">This is an automated notification from Acqlerate. No action needed.</p>
+  `;
+
+  await resend.emails.send({
+    from: FROM,
+    to: adminEmail,
+    subject: `New signup: ${newUserName} (${newUserEmail}) via ${methodLabel}`,
+    html: emailShell(`${newUserName} just created an account on Acqlerate.`, body),
+  });
+  console.log(`[email] Admin notification sent — new user: ${newUserEmail} (${method})`);
+}
+
 // ─── Dispatch helper ───────────────────────────────────────────────────────
 
 const EMAIL_SEQUENCE: Array<{

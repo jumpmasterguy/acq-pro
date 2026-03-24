@@ -8,7 +8,7 @@ import fs from "fs";
 import { storage } from "./storage";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema, userProfileSchema } from "@shared/schema";
-import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails } from "./email";
+import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification } from "./email";
 
 // Initialize Stripe — will be undefined if key not set
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
@@ -84,8 +84,9 @@ export async function registerRoutes(
     const passwordHash = await hashPassword(password);
     const user = await storage.createUser({ username, email, passwordHash });
 
-    // Send welcome email (non-blocking)
+    // Send welcome email + admin notification (non-blocking)
     sendWelcomeEmail(user.email, user.username).catch(() => {});
+    sendAdminNotification(user.email, user.username, 'email_password').catch(() => {});
 
     // Auto-login after registration
     req.login(toPassportUser(user), async (err) => {
@@ -247,10 +248,15 @@ export async function registerRoutes(
         try {
           const currentUser = await storage.getUser(req.user.id);
           if (currentUser) {
+            const isNewUser = (currentUser.loginCount ?? 0) === 0;
             await storage.updateUserAnalytics(req.user.id, {
               lastLoginAt: new Date().toISOString(),
               loginCount: (currentUser.loginCount ?? 0) + 1,
             });
+            // Notify admin only on first Google login (new account)
+            if (isNewUser) {
+              sendAdminNotification(currentUser.email, currentUser.username, 'google').catch(() => {});
+            }
           }
         } catch (e) {
           console.error('[analytics] google login tracking error:', e);
