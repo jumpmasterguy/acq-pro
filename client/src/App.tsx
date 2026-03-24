@@ -21,6 +21,7 @@ import UpgradePage from "@/pages/UpgradePage";
 import AuthPage, { type AuthUser, type SkillLevel, type UserProfile } from "@/pages/AuthPage";
 import AdminPage from "@/pages/AdminPage";
 import AdminAnalytics from "@/pages/AdminAnalytics";
+import PDUTracker from "@/pages/PDUTracker";
 import { ModuleAssessment } from "@/components/ModuleAssessment";
 import OnboardingFlow from "@/components/OnboardingFlow";
 import { apiRequest } from "@/lib/queryClient";
@@ -35,7 +36,8 @@ type View =
   | { type: 'lesson'; lessonId: string }
   | { type: 'upgrade' }
   | { type: 'admin' }
-  | { type: 'analytics' };
+  | { type: 'analytics' }
+  | { type: 'pdu' };
 
 // Auth state
 type AuthState =
@@ -69,7 +71,7 @@ function loadSavedView(): View | null {
     const raw = sessionStorage.getItem(VIEW_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as View;
-    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin', 'analytics'];
+    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin', 'analytics', 'pdu'];
     if (!valid.includes(parsed.type)) return null;
     // Validate lesson ID still exists in curriculum
     if (parsed.type === 'lesson') {

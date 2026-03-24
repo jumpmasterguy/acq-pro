@@ -44,6 +44,16 @@ export function serveStatic(app: Express) {
   });
 
 
+
+  // /pdu — PMI PDU landing page
+  app.get(["/pdu", "/pdu/"], (_req: Request, res: Response) => {
+    const filePath = path.resolve(distPath, "pdu", "index.html");
+    if (fs.existsSync(filePath)) {
+      return res.sendFile(filePath);
+    }
+    return res.redirect("/");
+  });
+
   // /products/* — serve product landing pages and success pages
   app.get("/products/:slug", (req: Request, res: Response) => {
     const slug = req.params.slug;
