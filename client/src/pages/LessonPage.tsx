@@ -1241,7 +1241,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                               "w-4 h-4 rounded-full border-2 flex-shrink-0",
                               isSelected ? "border-primary bg-primary" : "border-muted-foreground/40"
                             )} />
-                            {option}
+                            {option.split('|||')[0]}
                           </div>
                         </button>
                       );
@@ -1256,7 +1256,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                         : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300"
                     )} data-testid={`explanation-${qi}`}>
                       <strong className="font-semibold">{isCorrect ? "✓ Correct!" : "✗ Incorrect."}</strong>{" "}
-                      {question.explanation}
+                      {question.explanation || question.options[question.correct]?.split('|||')[1] || ""}
                     </div>
                   )}
                 </div>
