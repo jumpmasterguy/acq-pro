@@ -2638,7 +2638,463 @@ export const modules: Module[] = [
             ],
           },
         ],
-      }
+      },
+      {
+        id: 'finance-8',
+        title: 'Contract Finance Intelligence: CPAF, Burn Rate & Award Fee',
+        duration: '55 min',
+        keyTerms: [
+          {
+            term: 'CPAF',
+            definition: 'Cost-Plus Award Fee — a contract type where the government reimburses 100% of allowable costs and pays two layers of fee: a small fixed base fee (max 3%) and a variable award fee earned through performance ratings.',
+          },
+          {
+            term: 'Award Fee',
+            definition: 'The variable, performance-linked portion of contract profit. Earned only for above-satisfactory performance across rated factors (Technical, Cost, Schedule, Management). Unsatisfactory performance earns $0 regardless of other factors.',
+          },
+          {
+            term: 'Base Fee',
+            definition: 'The fixed, guaranteed floor of profit on a CPAF contract. Capped at 3% of estimated contract cost under DFARS 216.405-2. Paid regardless of performance scores.',
+          },
+          {
+            term: 'Wrap Rate',
+            definition: 'The cost multiplier applied to every dollar of direct labor: Billed Cost = Base Salary × (1 + Fringe) × (1 + Overhead) × (1 + G&A). A single employee at $100K base salary can bill $200K+ to the government after wrap rates are applied.',
+          },
+          {
+            term: 'Burn Rate',
+            definition: 'The actual monthly cost spend rate on a contract. Finance calculates it weekly. If burn rate exceeds the remaining funded value, all work must stop — spending beyond obligated funding violates the Anti-Deficiency Act (ADA), a federal offense.',
+          },
+          {
+            term: 'Labor Utilization',
+            definition: 'Direct Hours ÷ Total Available Hours. The percentage of your team\'s time charged to direct (billable) work. Target is 75–85%. Below 70% inflates overhead rates company-wide; above 90% risks burnout and quality degradation.',
+          },
+          {
+            term: 'Anti-Deficiency Act (ADA)',
+            definition: 'Federal law prohibiting government contractors from spending beyond officially obligated funding. An ADA violation is a federal criminal offense. The funded ceiling is set by contract modification and ACRN — never exceed it.',
+          },
+          {
+            term: 'EAC (Estimate at Completion)',
+            definition: 'Finance\'s projection of total contract cost by end of performance, based on current burn rate and remaining scope. Used to detect funding gaps before they become crises. PMs should sync with Finance on EAC weekly.',
+          },
+          {
+            term: 'ODCs (Other Direct Costs)',
+            definition: 'Non-labor direct costs charged to a contract: travel, equipment, materials, training. High-risk cost area — require pre-approval and documented contract nexus. Non-mission travel and unrelated training are waste that drains award fee.',
+          },
+          {
+            term: 'DCAA',
+            definition: 'Defense Contract Audit Agency. Audits contractor indirect rates (fringe, overhead, G&A) and cost pools to ensure compliance with FAR Part 31. Unallowable costs (entertainment, alcohol, image advertising) must be excluded from all pools.',
+          },
+        ],
+        levels: {
+          novice: {
+            sections: [
+              {
+                heading: 'Why Your Technical Decisions Are Financial Decisions',
+                content:
+                  'On a CPAF contract, every staffing call you make, every deliverable you schedule, and every cost you approve shows up directly on the company\'s income statement. You\'re not just managing a project — you\'re running a business unit where your performance score is the profit lever. Defense contractors like Booz Allen Hamilton (~98% government revenue) and Lockheed Martin (~99% government revenue) depend almost entirely on contract performance for every financial metric Wall Street tracks.',
+                items: [
+                  'Mission Performance drives award fee|||The government scores your technical results at the end of each evaluation period. That score determines whether the company earns profit beyond base costs. A poor score isn\'t just a report card — it\'s a direct reduction in operating income.',
+                  'Cost overruns hurt everyone, not just your contract|||When you overspend, it reduces your award fee score (cost control is worth at least 25% of the evaluation). It also inflates overhead rates that every other contract in the company pays. Your inefficiency has ripple effects.',
+                  'Defense contracts are Wall Street events|||BAH derives ~98% of its revenue from government contracts. When your contract wins a high award fee, that flows to operating income, earnings per share, and analyst confidence. When it underperforms, the stock feels it.',
+                  'CPARS scores determine future work|||Your Contractor Performance Assessment Reporting System (CPARS) ratings are the #1 factor government agencies use when deciding who wins re-compete awards. Strong CPARS = backlog growth = company survival.',
+                ],
+              },
+              {
+                heading: 'How a CPAF Contract Actually Works',
+                content:
+                  'Think of a CPAF contract as a cost-reimbursement arrangement with a performance bonus layer on top. Unlike a fixed-price contract where saving money directly increases profit, on a CPAF contract the government pays your costs either way — your profit comes from how well you perform, not how cheaply you work.',
+                items: [
+                  'The government reimburses 100% of allowable costs|||Allowable costs include direct labor, subcontracts, Other Direct Costs (ODCs), and indirect rates applied per FAR Part 31. If it\'s allowable, allocable, and reasonable, you get paid back for it.',
+                  'Base Fee: the floor|||Fixed and guaranteed regardless of performance. Capped at 3% of estimated contract cost under DFARS 216.405-2. Think of it as the minimum acceptable profit — enough to keep the lights on, not enough to make the shareholders happy.',
+                  'Award Fee: the profit multiplier|||This is where real profit lives. The government evaluates your performance across weighted factors and pays you a percentage of the available award fee pool based on your rating. Earn "Excellent" and you collect nearly all of it. Earn "Poor" and you get nothing.',
+                  'Total Payment = Allowable Costs + Base Fee + Award Fee Earned|||This is the core formula. Costs are reimbursed regardless. Base fee is guaranteed. Award fee is earned. Maximize the third element — that\'s where PM decisions convert to profit.',
+                  'Saving costs does NOT automatically increase profit on CPAF|||This is the biggest conceptual shift from fixed-price thinking. On a fixed-price contract, every dollar you save is a dollar of profit. On CPAF, costs are reimbursed — so reducing cost only helps if it improves your cost control score and thus your award fee. Performance scores, not cost savings, drive profit.',
+                ],
+              },
+              {
+                heading: 'Award Fee: The Four Factors That Score Your Profit',
+                content:
+                  'At the end of each evaluation period (typically 6 months), a government Fee Determining Official (FDO) reviews your performance across four weighted categories and assigns a rating. That rating translates directly into a dollar amount the company receives.',
+                items: [
+                  'Technical Performance (35%)|||The largest single factor. Did your deliverables meet requirements? Were solutions innovative and high quality? Technical problems that aren\'t flagged early tend to grow into expensive fixes — and a "Fair" technical score still only earns you 25–47.5% of available fee.',
+                  'Cost Control (25% minimum)|||Federal regulations require cost control to represent at least 25% of the total evaluation weight. Are you executing at or below the spend plan? Is your burn rate tracking correctly? This is the factor you control most directly through staffing and oversight decisions.',
+                  'Schedule / Timeliness (25%)|||On-time delivery is worth a quarter of your award fee. A technically excellent deliverable that arrives late is still a financial loss. Know your next 30/60/90-day milestones and treat schedule slippage as a profit emergency.',
+                  'Management / Customer Satisfaction (15%)|||COR trust is a scored factor. Surprising the customer with bad news, failing to communicate proactively, or letting subcontractors miss milestones without escalation all erode this score.',
+                  'Rating-to-dollar translation|||Excellent (95–100 score): earn 97.5–100% of available fee. Good (76–85): earn 50–72.5%. Fair (66–75): earn 25–47.5%. Poor/Unsatisfactory (below 60): earn $0. One unsatisfactory rating wipes out the entire award fee for that period regardless of other factor scores.',
+                ],
+              },
+              {
+                heading: 'Burn Rate and Funding: The Rules You Cannot Break',
+                content:
+                  'The government doesn\'t write a blank check — it obligates specific dollar amounts via contract modifications. That obligated amount is the hard ceiling. Spending beyond it violates federal law. Understanding burn rate is how you stay safe and stay in the customer\'s good graces.',
+                items: [
+                  'Funded Value is the ceiling|||The funded value is what the government has officially obligated (set by contract modification and ACRN). You cannot spend beyond this without violating the Anti-Deficiency Act — which is a federal criminal offense, not just a contract issue.',
+                  'Burn Rate Too High = funding gap risk|||If you\'re spending faster than planned, you\'ll hit the funded ceiling before the next modification arrives. When that happens, work stops. A work stoppage damages schedule scores, triggers government scrutiny, and signals poor planning — all of which hurt award fee. Alert finance immediately if burn is running hot.',
+                  'Burn Rate Too Low = a different problem|||Under-execution signals schedule delays or staffing gaps. The government may de-obligate unused funds at fiscal year end — money that\'s gone forever. It also hurts your schedule evaluation score since it implies work isn\'t progressing.',
+                  'Track burn rate weekly, not quarterly|||By the time a funding gap is visible to leadership, it\'s already a crisis. Finance calculates burn weekly. Sync with your Finance PM every week to review burn vs. plan and the EAC (Estimate at Completion). A 5% variance from planned monthly spend is a yellow flag.',
+                ],
+              },
+              {
+                heading: 'The Six Pitfalls That Cost PMs Award Fee',
+                content:
+                  'These aren\'t hypotheticals — they\'re the most common ways PMs leave money on the table. Each one maps directly to a specific award fee factor and a specific dollar impact.',
+                items: [
+                  'Overstaffing "just in case"|||Idle labor burns funding, spikes overhead rates across all company contracts, and signals poor planning to the Contracting Officer\'s Representative (COR). Staff to the work you have, not the work you fear.',
+                  'Ignoring burn rate until it\'s urgent|||Weekly reviews catch problems when they\'re still manageable. Quarterly reviews catch them when they\'re emergencies.',
+                  'Loose subcontractor scope|||Every undocumented task you let a subcontractor perform outside their Statement of Work (SOW) is a potential unallowable cost or a billing dispute. Define scope tightly, enforce it consistently.',
+                  'Chasing perfection over schedule|||Schedule represents 25% of your award fee evaluation. A technically perfect deliverable delivered three weeks late is worth less than a very good deliverable delivered on time.',
+                  'Poor documentation|||Award fee evaluations rely on documented evidence of your team\'s achievements. If it isn\'t written down, the FDO can\'t credit it. Build your performance narrative throughout the evaluation period, not the week before it ends.',
+                  'Surprising the customer|||COR trust is a scored management factor. Communicating bad news early, with a recovery plan, preserves trust. Letting the customer discover problems themselves destroys it — and that destruction shows up in your award fee score.',
+                ],
+              },
+            ],
+            quiz: [
+              {
+                id: 'q1',
+                type: 'mc',
+                question: 'On a CPAF contract, what happens to the company\'s profit if you save costs by finishing work under budget?',
+                options: [
+                  'Profit increases dollar-for-dollar because costs saved become profit|||Incorrect. That\'s how fixed-price contracts work. On CPAF, the government reimburses your actual allowable costs — so costs saved are simply not spent, not converted to profit.',
+                  'Profit only improves if the cost savings improve your award fee score|||Correct. On CPAF, revenue is recognized as costs incur and fees are the source of profit. Spending less may improve your cost control score (25% of evaluation weight), which could earn more award fee — but the savings themselves don\'t automatically become profit.',
+                  'Profit decreases because you billed less to the government|||Incorrect. While you do bill less in allowable costs, your fee structure remains intact. The issue is that cost-saving alone doesn\'t generate profit on a CPAF contract.',
+                  'There is no impact on profit because the government pays a fixed amount|||Incorrect. CPAF is not fixed-price. The government reimburses actual allowable costs plus fees. Total payment varies based on costs incurred and award fee earned.',
+                ],
+                correct: 1,
+                explanation:
+                  'CPAF is a cost-reimbursement vehicle — the government pays your costs either way. Profit comes from base fee (fixed, small) and award fee (variable, performance-driven). Reducing costs only improves profit indirectly, by boosting your cost control evaluation score and thus your award fee earned.',
+              },
+              {
+                id: 'q2',
+                type: 'mc',
+                question: 'The government scores your award fee across four factors. Cost Control must represent at least what percentage of the total evaluation weight?',
+                options: [
+                  '10%|||Incorrect. 10% would make cost control nearly irrelevant to the evaluation. The regulation sets a higher minimum to ensure contractors are incentivized to manage costs.',
+                  '15%|||Incorrect. 15% is the weight assigned to Management/Customer Satisfaction in many standard CPAF structures, not the regulatory minimum for cost control.',
+                  '25%|||Correct. Federal acquisition regulations require cost control to represent at least 25% of the total award fee evaluation weight. This ensures every CPAF contractor is financially incentivized to control spending, not just deliver technical results.',
+                  '35%|||Incorrect. 35% is the typical weight for Technical Performance, not Cost Control. The cost control minimum is 25%.',
+                ],
+                correct: 2,
+                explanation:
+                  'Cost Control must represent at least 25% of the evaluation weight per federal acquisition regulations. In a typical CPAF structure: Technical 35%, Cost Control 25%, Schedule/Timeliness 25%, Management/Customer 15%. Every PM decision that affects cost is directly affecting at least one quarter of the total award fee.',
+              },
+              {
+                id: 'q3',
+                type: 'mc',
+                question: 'Your burn rate is running significantly below plan for the past two months. Which of the following is NOT a likely consequence?',
+                options: [
+                  'The government may de-obligate unused funds at fiscal year end|||This IS a likely consequence. Under-execution means money sits unused, and agencies often sweep unspent funds at year end.',
+                  'Your schedule evaluation score may suffer|||This IS a likely consequence. Low burn usually signals work isn\'t progressing on schedule, which damages the timeliness evaluation factor.',
+                  'Your award fee will automatically increase because you spent less|||This is NOT a likely consequence — and it\'s the correct answer. Low burn doesn\'t earn award fee. Award fee comes from performance ratings, not from underspending. Under-execution actually hurts your schedule score.',
+                  'Finance may flag staffing gaps or scope issues|||This IS a likely consequence. Finance uses EAC analysis to diagnose under-execution and will investigate whether there are staffing or scope problems driving the low burn.',
+                ],
+                correct: 2,
+                explanation:
+                  'Under-execution (burn rate too low) is a problem, not a reward. It risks fund de-obligation, damages schedule scores, and signals delivery problems to the government. Award fee isn\'t earned by spending less — it\'s earned by performing well across all four evaluation factors.',
+              },
+              {
+                id: 'q4',
+                type: 'mc',
+                question: 'What is the maximum base fee allowed on a CPAF contract?',
+                options: [
+                  '1% of estimated contract cost|||Incorrect. While base fees are often set well below the maximum, the regulatory ceiling under DFARS 216.405-2 is higher than 1%.',
+                  '3% of estimated contract cost|||Correct. DFARS 216.405-2 caps base fee at 3% of estimated contract cost. This is the guaranteed, performance-independent floor of profit — paid regardless of award fee scores.',
+                  '10% of estimated contract cost|||Incorrect. A 10% guaranteed fee would undermine the performance incentive structure of CPAF. The cap is set low specifically to ensure the award fee pool provides meaningful motivation.',
+                  'There is no cap — it is negotiated freely|||Incorrect. DFARS 216.405-2 establishes a regulatory maximum of 3% for base fee on CPAF contracts.',
+                ],
+                correct: 1,
+                explanation:
+                  'DFARS 216.405-2 limits base fee to 3% of estimated contract cost. The base fee is intentionally small — it\'s the floor, not the target. The real profit opportunity is in the award fee pool, which incentivizes above-satisfactory performance. PMs who maximize performance scores earn multiples of what the base fee alone provides.',
+              },
+              {
+                id: 'q5',
+                type: 'mc',
+                question: 'A subcontractor on your contract has been performing tasks not described in their Statement of Work (SOW) because it was convenient. What is the primary risk?',
+                options: [
+                  'The subcontractor may bill for the extra work, creating unallowable or disputed costs|||Correct. Undocumented work outside an approved SOW creates potential unallowable costs or billing disputes. If the government audits and finds costs incurred for work without proper authorization, those costs may be disallowed — meaning the company eats them with no reimbursement.',
+                  'The subcontractor will receive a lower performance rating|||Incorrect. The subcontractor\'s rating is secondary. The primary risk is financial: costs incurred outside the authorized scope may be unallowable, and the PM is responsible for managing that boundary.',
+                  'The contract will be terminated for convenience|||Incorrect. Loose SOW enforcement rarely triggers immediate termination. The more direct risk is financial — unallowable costs, audit findings, and award fee reductions.',
+                  'No risk — if the work benefited the government, it will be reimbursed|||Incorrect. FAR Part 31 governs allowability. Costs must be allowable, allocable, and reasonable AND properly authorized. Work outside an approved SOW may not meet the allocable standard, regardless of benefit delivered.',
+                ],
+                correct: 0,
+                explanation:
+                  'Subcontractor scope discipline is a financial control. Work performed outside an approved SOW lacks proper authorization under FAR Part 31 cost principles. An audit can disallow those costs, meaning the company absorbs them with no government reimbursement. Beyond the direct cost risk, loose SOW management also signals poor oversight to the government evaluator — damaging both cost control and management scores.',
+              },
+            ],
+          },
+          intermediate: {
+            sections: [
+              {
+                heading: 'Reading the Contract P&L: Your Business Unit Income Statement',
+                content:
+                  'A CPAF contract is effectively its own business unit with its own income statement. Revenue is recognized as allowable costs are incurred and fees are earned. Once you understand the P&L structure, every staffing decision, every subcontract modification, and every ODC approval translates directly into a line item impact.',
+                items: [
+                  'Revenue line = Allowable Costs Billed + Base Fee + Award Fee Earned|||Revenue is not a fixed number — it grows as you incur and bill allowable costs. A $64.2M cost contract with $2.66M in fees generates $66.86M in total revenue, but only if the award fee is fully earned.',
+                  'Direct Costs: what goes on the bill|||Direct Labor is typically 60–75% of total program costs. Add Subcontracts and ODCs (travel, equipment, materials) and you have your core direct cost base. These are directly traceable to contract deliverables.',
+                  'Indirect Costs: the wrap rate multiplier|||Fringe (25–45%) covers health insurance, 401k, PTO, and payroll taxes. Overhead (50–150%) covers facilities, indirect supervision, equipment, and training — this rate rises when utilization falls. G&A (8–25%) covers corporate overhead: executive salaries, legal, finance, HR, and business development.',
+                  'Worked example — a $64.2M contract|||Direct Labor: $24.0M. Fringe at 30%: $7.2M. Overhead at 80%: $19.2M. Subcontracts + ODCs: $8.0M. G&A at 10%: $5.84M. Total Allowable Costs: ~$64.2M. Base Fee at 1.5%: $0.96M. Award Fee at 85% earned (Good rating): $1.7M. Contract Profit = $2.66M. This is real money — and every PM decision affects whether it\'s $2.66M or $0.',
+                  'Contract Profit = Base Fee + Award Fee − Unallowable Overruns|||Unallowable costs (entertainment, alcohol, image advertising) that accidentally flow into cost pools reduce effective profit because the company bears them without reimbursement. DCAA audits these pools — unallowable contamination creates both audit liability and reputation damage.',
+                ],
+              },
+              {
+                heading: 'The Wrap Rate: Every Dollar of Labor Costs More Than You Think',
+                content:
+                  'When you add a senior engineer to your team at $90,000 annual salary, you\'re not adding $90,000 in contract cost — you\'re adding over $200,000. The difference is the wrap rate: a multiplier of indirect costs that every dollar of direct labor carries. Understanding wrap rates changes how you think about staffing decisions.',
+                items: [
+                  'Wrap Rate Formula: Billed Cost = Base Salary × (1 + Fringe) × (1 + Overhead) × (1 + G&A)|||Using representative rates: $100,000 × 1.35 (fringe) × 1.80 (overhead) × 1.08 (G&A) = ~$262,080 billed to the government for one employee\'s annual labor. That\'s 2.62× the base salary.',
+                  'Fringe Rate (25–45%): the employment cost layer|||Payroll taxes, health and dental insurance, 401k match, PTO, and disability insurance. This rate is relatively stable and tied to benefits packages. It applies to every employee regardless of what they work on.',
+                  'Overhead Rate (50–150%): the facility and management layer|||Facilities rent, indirect management salaries, IT infrastructure, equipment depreciation, and unbillable training. This rate is the most volatile — and the one PMs control most directly through utilization. When your team sits idle, overhead costs don\'t stop, but the direct hour base shrinks, driving overhead rates up for every contract.',
+                  'G&A Rate (8–25%): the corporate layer|||Executive compensation, corporate legal, corporate finance, HR, and business development costs spread across all contracts. This rate is largely outside the PM\'s control but still impacts your contract cost.',
+                  'DCAA audits these rates annually|||The Defense Contract Audit Agency (DCAA) verifies that indirect rates are calculated correctly and that unallowable costs haven\'t contaminated the pools. Audit findings can result in cost disallowances, rate adjustments, and reputational damage. PMs should never charge entertainment, alcohol, or image advertising to a government contract.',
+                ],
+              },
+              {
+                heading: 'Labor Strategy: Utilization and Mix as Financial Levers',
+                content:
+                  'Direct labor is 60–75% of total program costs on most CPAF contracts. The two variables you control most directly — team utilization rate and the mix of senior vs. mid-level staff — have more financial impact than almost any other PM decision. Getting them right optimizes cost without degrading quality.',
+                items: [
+                  'Labor Utilization Formula: Direct Hours ÷ Total Available Hours|||If your team works 160 hours per month and 128 of those are charged directly to contracts, utilization is 80% — solidly in the 75–85% target range. This is healthy: you\'re covering overhead costs efficiently without burning people out.',
+                  'Below 70% = overhead drag on every contract|||When utilization drops, overhead costs (facilities, indirect management) don\'t drop with them — they get spread over fewer direct hours, raising the overhead rate. A utilization problem on your contract inflates overhead rates for every other contract in the company. It\'s not an isolated problem.',
+                  'Above 90% = quality and burnout risk|||Sustained high utilization degrades deliverable quality, increases employee turnover, and signals to the government that your project is understaffed. Both quality scores and management scores can suffer. The sweet spot is 75–85%.',
+                  'Labor Mix Strategy: 2× mid-level often beats 1× senior|||Right-sizing skill levels to task requirements is one of the highest-leverage cost management moves available to a PM. Two mid-level engineers (combined ~$110/hr) often outperform one senior engineer ($95/hr) at lower total billed cost, especially for execution-heavy work. Reserve senior staff for tasks that genuinely require their expertise.',
+                  'Overtime is allowable but signals problems|||Overtime costs are reimbursable on CPAF contracts, but excessive overtime indicates poor planning in the government\'s eyes. It burns budget without proportional award fee improvement — overtime hours cost more (premium pay + overhead) but don\'t score higher on technical or schedule factors.',
+                ],
+              },
+              {
+                heading: 'Subcontractors and ODCs: The High-Risk Cost Areas',
+                content:
+                  'Subcontractors and Other Direct Costs represent roughly 25% of typical CPAF contract spend but generate a disproportionate share of cost overruns and award fee reductions. The government scores your subcontracting plan execution — including small business goals — as part of the award fee evaluation.',
+                items: [
+                  'Typical cost composition: understand where money flows|||Direct Labor including fringe: ~50%. Overhead Applied: ~25%. Subcontracts: ~15%. ODCs (travel, equipment, training): ~10%. The last two categories are where PMs most frequently lose cost control — not because they\'re large, but because oversight is inconsistent.',
+                  'Subcontractor scope discipline prevents financial leakage|||Define scope in the Statement of Work with precision. Changes cost money — a subcontractor performing out-of-scope work is either billing you for unauthorized cost or doing unpaid work that will eventually create disputes. Enforce deliverable timelines to prevent schedule slippage cascading into your schedule score.',
+                  'Small business subcontracting goals are worth 10% of award fee|||FAR 1816.405-274 ties subcontracting plan execution — including small business participation goals — to award fee. This is not a compliance checkbox; it\'s a profit driver worth up to 10% of available fee. Track your small business utilization monthly.',
+                  'ODC discipline: three questions before approving any expenditure|||Is it in the budget (approved in the contract or task order)? Is it truly required for contract performance? Is it contract-related and documented? Non-mission travel is waste. Equipment purchases outside the budget are overruns. Training that isn\'t contract-related is unallowable. Each unapproved ODC is a potential disallowed cost.',
+                  'Monitor subcontractor invoices against delivered value monthly|||An invoice without a corresponding deliverable is a red flag. Subcontractors who invoice on schedule but deliver late are burning your budget without advancing your award fee position. Review monthly and hold subs to their SOW milestones.',
+                ],
+              },
+              {
+                heading: 'The PM Financial Dashboard: What to Track Weekly',
+                content:
+                  'You don\'t need a finance degree to stay on top of contract financial health — you need five data points reviewed weekly. Think of it as a cockpit: these are your instruments. Ignoring any one of them long enough guarantees a crash.',
+                items: [
+                  'Burn Rate vs. Plan: ±5% is the warning threshold|||Compare actual monthly spend to the spend plan. If you\'re more than 5% over or under, flag it to finance. Over-burn risks a funding gap and ADA exposure. Under-burn signals execution problems and risks year-end de-obligation.',
+                  'Labor Utilization: weekly timesheet review|||Is your team between 75–85% charged to direct work? Spikes above 90% are a quality risk. Sustained drops below 70% inflate overhead rates. Review time sheets weekly — waiting for monthly reports means problems compound for four weeks before you see them.',
+                  'Deliverable Schedule: 30/60/90-day milestone visibility|||On-time delivery represents 25% of your award fee evaluation. Know exactly which deliverables are due in the next 30, 60, and 90 days. A deliverable at risk today is a schedule score at risk in 60 days.',
+                  'Available Funding Remaining vs. EAC|||Know your funded ceiling (obligated amount on the current modification) and what Finance projects you will spend by end of performance (EAC). If EAC > funded ceiling, you have a gap. Start the funding increase request process immediately — contract modifications take time.',
+                  'Award Fee Period Status: build the narrative now|||Know exactly when the next evaluation period ends. Evaluators rely on documented evidence. Start building your performance narrative at the beginning of the period — record achievements, cost control actions, and customer communications as they happen. Don\'t write it the week before the FDO meeting.',
+                ],
+              },
+            ],
+            quiz: [
+              {
+                id: 'q1',
+                type: 'mc',
+                question: 'Using the wrap rate formula — Billed Cost = Base Salary × (1 + Fringe) × (1 + Overhead) × (1 + G&A) — what is the approximate billed cost for an employee with an $80,000 base salary, 35% fringe, 80% overhead, and 10% G&A?',
+                options: [
+                  '$104,000|||Incorrect. This only applies fringe (80K × 1.30 ≈ $104K). The overhead and G&A multipliers are not applied, significantly understating the true billed cost.',
+                  '$171,600|||Incorrect. This is the result of applying only fringe and overhead (80K × 1.35 × 1.80 = $194,400 before G&A). Check the full formula with all three multipliers.',
+                  '$213,840|||Correct. $80,000 × 1.35 (fringe) = $108,000 × 1.80 (overhead) = $194,400 × 1.10 (G&A) = $213,840. This employee\'s annual labor bills the government at nearly 2.67× base salary.',
+                  '$288,000|||Incorrect. This overstates the result. The wrap multipliers are compounded, not additive, and the total should be roughly $213,840 with these rates.',
+                ],
+                correct: 2,
+                explanation:
+                  'The wrap rate formula compounds each indirect layer: $80,000 × 1.35 × 1.80 × 1.10 = $213,840. This is why labor mix decisions are so financially significant — adding even one senior staff member at a high wrap rate can move the needle by hundreds of thousands of dollars over a contract year. The government reimburses this full amount, but it consumes funded value rapidly.',
+              },
+              {
+                id: 'q2',
+                type: 'mc',
+                question: 'Your team\'s labor utilization drops from 82% to 63% over two months due to a delayed task order. What is the most immediate company-wide financial impact?',
+                options: [
+                  'Base fee for your contract is reduced|||Incorrect. Base fee is fixed and guaranteed regardless of performance or utilization. Utilization doesn\'t directly reduce base fee.',
+                  'Overhead rates rise for all contracts in the company|||Correct. Overhead costs (facilities, indirect management, equipment) are relatively fixed. When direct hours billed drop from 82% to 63%, those same fixed costs are spread over fewer direct hours — raising the overhead rate applied to every contract company-wide, not just yours.',
+                  'Award fee is automatically reduced by 25%|||Incorrect. Award fee reductions occur through the formal evaluation process based on rated performance. A utilization drop doesn\'t trigger an automatic award fee reduction, though it may ultimately lower cost control and schedule scores.',
+                  'The Anti-Deficiency Act is triggered|||Incorrect. The Anti-Deficiency Act involves spending beyond obligated funding. Low utilization and underspending are the opposite problem — they don\'t trigger ADA concerns.',
+                ],
+                correct: 1,
+                explanation:
+                  'This is the hidden consequence of idle labor. Overhead costs don\'t decrease when your team isn\'t billing — facilities, indirect management, and equipment costs continue. Those costs get divided by a smaller base of direct labor hours, which mathematically increases the overhead rate. Every other PM in the company now has higher billed costs for the same labor, potentially pushing their contracts over budget.',
+              },
+              {
+                id: 'q3',
+                type: 'mc',
+                question: 'Your contract has $500,000 in remaining funded value but your Finance PM\'s EAC projects you will spend $750,000 before the next modification is received. What is the correct immediate action?',
+                options: [
+                  'Continue normal operations and request a modification when funds run out|||Incorrect. By the time funds run out, you\'ve potentially committed to costs you cannot pay — creating ADA violation risk. The modification process takes time and must be initiated before the gap, not after.',
+                  'Reduce labor hours across the team to slow burn rate AND initiate the funding increase modification process with your contracting officer|||Correct. Both actions are required simultaneously. Slowing burn rate buys time. Initiating the modification request immediately is essential because contract modifications take time to process — waiting until the crisis arrives is too late.',
+                  'Charge costs to a different contract until the modification arrives|||Incorrect. Charging costs from one contract to another without proper authorization is mischarging — a serious compliance violation under FAR. This is not an acceptable workaround.',
+                  'Notify the government only after exhausting all funded value|||Incorrect. Notifying the government after funds are exhausted means work has already stopped or you\'ve incurred costs beyond funded value. Both outcomes are negative. Early notification preserves trust and award fee.',
+                ],
+                correct: 1,
+                explanation:
+                  'A projected funding gap requires a two-track response: (1) manage the burn rate to extend the funded ceiling as long as possible, and (2) initiate the modification process immediately since it takes weeks to process. The government appreciates early notification — it signals proactive management and preserves your cost control and management scores. Silent management of a funding crisis until it explodes is one of the fastest ways to destroy a COR relationship.',
+              },
+              {
+                id: 'q4',
+                type: 'mc',
+                question: 'On the worked contract P&L example ($24M direct labor, 30% fringe, 80% overhead, $8M subcontracts/ODCs, 10% G&A), what is the approximate total contract profit if 85% of the available award fee ($2M pool) is earned?',
+                options: [
+                  '$0.96M (base fee only)|||Incorrect. This represents only the base fee. The question specifies that 85% of the award fee pool is also earned, which adds to profit.',
+                  '$1.70M (award fee only)|||Incorrect. This is only the award fee earned (85% × $2M = $1.70M). Total profit is base fee plus award fee earned.',
+                  '$2.66M (base fee + award fee earned)|||Correct. Base fee at 1.5% of ~$64.2M allowable costs ≈ $0.96M. Award fee at 85% of $2M pool = $1.70M. Total contract profit = $0.96M + $1.70M = $2.66M.',
+                  '$3.62M (full fee pool + base)|||Incorrect. This would represent 100% of the award fee ($2M) plus base fee ($0.96M) = $2.96M — but even that arithmetic doesn\'t equal $3.62M. The actual answer uses 85% of the award fee pool.',
+                ],
+                correct: 2,
+                explanation:
+                  'The P&L math: Total Allowable Costs ≈ $64.2M. Base Fee at 1.5% = $0.96M. Award Fee Pool = $2M; 85% earned = $1.70M. Total Profit = $0.96M + $1.70M = $2.66M on ~$64.2M in costs — roughly a 4.1% margin. A "Poor" rating would have reduced this to just the $0.96M base fee: a 1.5% margin. Performance scores are literally the difference between a viable business and a breakeven contract.',
+              },
+              {
+                id: 'q5',
+                type: 'mc',
+                question: 'Small business subcontracting plan execution is worth approximately what percentage of available award fee under FAR 1816.405-274?',
+                options: [
+                  '2%|||Incorrect. A 2% weight would make small business compliance financially negligible. The actual weight is significantly higher and reflects the government\'s policy priority on small business utilization.',
+                  '5%|||Incorrect. While some contracts vary, the standard award fee weight for subcontracting plan execution including small business goals is higher than 5%.',
+                  '10%|||Correct. FAR 1816.405-274 ties subcontracting plan execution — including small business participation goals — to award fee, typically worth approximately 10% of available fee. On a $2M award fee pool, that\'s $200,000 directly tied to your small business subcontracting performance.',
+                  '25%|||Incorrect. 25% is the minimum weight for cost control evaluation. Small business subcontracting plan performance is a component of the broader management/customer evaluation, worth approximately 10%.',
+                ],
+                correct: 2,
+                explanation:
+                  'Small business subcontracting compliance is a profit driver, not a compliance checkbox. At approximately 10% of available award fee under FAR 1816.405-274, it represents real dollars — $200,000 on a $2M award fee pool. Track your small business utilization against goals monthly and treat shortfalls as urgently as a cost overrun.',
+              },
+            ],
+          },
+          advanced: {
+            sections: [
+              {
+                heading: 'CPAF Financial Architecture: Profit Engineering at the Contract Level',
+                content:
+                  'At the advanced level, contract finance stops being a reporting exercise and becomes a profit engineering discipline. The PM who understands how indirect rate pools interact with labor utilization, how EAC trajectories signal award fee outcomes months in advance, and how contract-level P&L connects to segment operating margin can make decisions that compound favorably across the entire evaluation period — not just react to monthly variance reports.',
+                items: [
+                  'Award fee pool sizing determines your profit ceiling|||The award fee pool is negotiated at contract formation and typically represents 5–15% of estimated contract value on CPAF contracts. Your strategic job is to earn as much of that pool as possible — which means influencing cost, schedule, technical quality, and documentation simultaneously, not optimizing one factor at the expense of others.',
+                  'Fee-weighted optimization: prioritize the 35% (Technical) but don\'t neglect the others|||Technical Performance at 35% is the largest single factor, but optimizing only for technical excellence while letting cost and schedule drift is a losing strategy. Scoring 100% on Technical but 50% on Cost and Schedule yields a blended score in the mid-70s — a "Fair" rating that earns only 25–47.5% of available fee. Maximum earnings require balanced performance across all four factors.',
+                  'Unsatisfactory in any one factor is a fee extinguisher|||Most CPAF contracts contain language (derived from FAR Part 16) specifying that an Unsatisfactory rating in any single evaluation factor results in $0 award fee for the period, regardless of other factor scores. A technically brilliant but wildly over-budget contract earns nothing. This asymmetric downside makes risk management — not just performance maximization — the core financial discipline.',
+                  'Revenue recognition mechanics on CPAF: costs drive the income statement|||Under ASC 606 (revenue recognition) as applied to cost-type contracts, revenue is recognized over time as costs are incurred (the input method). This means your burn rate is literally the revenue recognition rate. A contract running 30% under plan isn\'t just behind schedule — it\'s recognizing 30% less revenue than modeled, which flows directly to segment operating income and company guidance.',
+                  'The contract backlog connection: CPARS as a predictor of company value|||CPARS ratings are the primary filter government source selection boards apply to re-compete decisions. A single "Marginal" CPARS rating can effectively disqualify a company from winning a re-compete even with pricing advantages. Book-to-bill ratio — new contract awards vs. recognized revenue — is the metric analysts use to value defense contractors. Every contract you win (and retain) contributes to backlog, which drives valuation multiples.',
+                ],
+              },
+              {
+                heading: 'Advanced Burn Rate and EAC Management: The Funding Horizon Model',
+                content:
+                  'Sophisticated burn rate management goes beyond tracking actuals against plan. It involves maintaining a rolling funding horizon model: a forward projection that tells you not just whether you\'re on plan today, but whether you will have a funding gap, an execution gap, or an optimal burn trajectory at any point in the next 6–12 months. This is the tool that converts reactive fire-fighting into proactive contract management.',
+                items: [
+                  'Funded Value ≠ Estimated Contract Value: the obligation gap|||Contracts are often funded incrementally — the total estimated contract value may be $64M, but the government may have only obligated $20M in the current modification. The EAC must be measured against funded value, not total contract value. Operating near the funded ceiling while the next modification is in process is high-risk territory.',
+                  'EAC trajectories: three scenarios every PM should model|||Best Case EAC: current burn rate maintained, no scope changes, no staffing variances. Most Likely EAC: finance\'s projection incorporating known risks. Worst Case EAC: current burn rate plus identified risks fully materialized. Present all three to leadership and contracting officer quarterly. The gap between Most Likely and Worst Case EAC is your risk exposure.',
+                  'Fiscal year end de-obligation risk: a silent threat to cost control scores|||Government agencies are required to reconcile appropriations at fiscal year end (September 30 for many DoD contracts). Funds obligated but not spent are candidates for de-obligation. If your contract is significantly under-executing in Q3, proactively communicate your execution plan and burn acceleration strategy to the COR — failing to do so and losing funding will hurt both schedule and cost scores.',
+                  'Anti-Deficiency Act mechanics: why the ceiling is absolute|||The ADA (31 U.S.C. § 1341) prohibits any government employee or contractor from making obligations or expenditures in excess of amounts available. On a CPAF contract, the funded value set by ACRN (Accounting Classification Reference Number) in the current modification is the legal ceiling. Exceeding it — even by accident, even if a modification is en route — constitutes a federal violation. Finance must track actual obligations (committed costs, not just invoiced costs) against funded value weekly.',
+                  'Earned Value Management (EVM) as award fee predictor|||On larger CPAF contracts, EVM data (Schedule Performance Index and Cost Performance Index) provides a leading indicator of award fee outcomes 2–3 months in advance. A CPI below 0.90 signals cost overrun trajectory; an SPI below 0.90 signals schedule slippage. PMs who understand EVM can initiate corrective actions early enough to shift the award fee narrative before the evaluation period closes.',
+                ],
+              },
+              {
+                heading: 'Indirect Rate Strategy: What PMs Actually Control',
+                content:
+                  'Most PMs treat indirect rates as external inputs — numbers that come from accounting and get applied to their labor. Advanced PMs understand that indirect rates are partially influenced by PM decisions, particularly through utilization management, cost pool discipline, and strategic staffing timing. This section covers the mechanisms and levers.',
+                items: [
+                  'Provisional vs. final rates: the true-up risk|||During contract performance, the government reimburses based on provisional (estimated) indirect rates. At year end, DCAA audits actual costs and establishes final rates. If final rates are higher than provisional rates (because overhead costs increased or utilization dropped), the company owes the government money — a receivable reversal that damages the period\'s income statement. If final rates are lower, the company receives additional payment. PMs who maintain utilization and control indirect costs protect the company from adverse true-ups.',
+                  'The utilization-to-overhead rate transmission mechanism|||Overhead Rate = Total Overhead Pool Costs ÷ Total Direct Labor Base. If your contract contributes significantly to the company\'s direct labor base and your team goes idle, the denominator of that fraction shrinks — raising the rate for everyone. For a company with $500M in direct labor base, a single contract losing $10M in direct hours (dropping utilization from 82% to 72%) can raise the effective overhead rate by 2–3 percentage points company-wide.',
+                  'Unallowable cost contamination: the audit trigger|||FAR Part 31.201-6 requires contractors to exclude unallowable costs from all indirect rate pools and proposals. Unallowable items include entertainment, alcohol, image advertising, certain relocation costs, and costs related to influencing legislation. If unallowable costs contaminate a pool (even accidentally), DCAA can disallow ALL costs in that pool pending audit — not just the unallowable items. One unallowable charge can freeze reimbursements on an entire rate category.',
+                  'Forward pricing rate agreements (FPRAs): locking in financial stability|||Large contractors negotiate FPRAs with DCAA to establish agreed-upon indirect rates for future periods. FPRAs provide cost predictability for both the contractor and the government during contract negotiation. PMs whose contracts are operating at plan contribute to the data that supports favorable FPRA negotiations — another way contract-level execution connects to company-level financial strategy.',
+                  'Labor category compliance: billing rate vs. actual cost|||Each labor category in a contract has a negotiated billing rate ceiling. If you charge a contractor to a category below their actual labor cost, the company absorbs the difference. If you charge someone to a category above their qualifications, it\'s a potential mischarging violation (False Claims Act exposure). Labor category management is both a financial control and a compliance requirement.',
+                ],
+              },
+              {
+                heading: 'The Chain from PM Performance to Share Price: Quantitative Mechanics',
+                content:
+                  'The connection between daily PM decisions and publicly traded stock price is not metaphorical — it operates through a specific financial cascade that analysts, investors, and company executives track in real time. Advanced PMs who understand this chain make better risk-tradeoff decisions because they can quantify the downstream consequence of every major choice.',
+                items: [
+                  'Award fee → operating income: the direct transmission|||Award fee earned flows directly to operating income on the company\'s income statement. For a company with $10B in revenue and a 10% operating margin ($1B operating income), a single large CPAF contract with a $10M award fee pool swinging from 95% to 50% earned represents a $4.5M swing in operating income — measurable in the quarterly earnings release.',
+                  'Operating income → EPS: the per-share impact|||Earnings Per Share = Net Income ÷ Shares Outstanding. For BAH (~150M diluted shares, ~35% effective tax rate), $4.5M in operating income loss translates to ~$0.02 EPS reduction after tax. Wall Street analysts model expected EPS to two decimal places — a $0.02 miss triggers coverage revisions. Multiple contracts performing poorly simultaneously creates a material EPS miss.',
+                  'Book-to-bill ratio: the forward-looking metric|||Book-to-bill = New Contract Awards ÷ Revenue Recognized in the period. A ratio above 1.0 means the backlog is growing (positive signal). Below 1.0 means you\'re consuming backlog faster than you\'re winning new work (negative signal). CPARS-driven re-compete losses directly suppress the book-to-bill ratio, which suppresses the forward revenue multiple analysts apply to the stock.',
+                  'Backlog → valuation multiple: the terminal financial connection|||Defense analysts value companies primarily on backlog multiples — typically 1.0–1.5× funded backlog depending on contract mix quality. A $100M CPAF re-compete loss (driven by poor CPARS) removes $100–150M from the equity valuation model. Over a portfolio of 50 contracts, CPARS discipline is literally a $500M+ valuation exercise.',
+                  'The three-question daily test: operational translation of the financial cascade|||(1) Am I burning within 5% of the planned monthly spend rate? — This is your cost control score in real time. (2) Is my team 75–85% billable and productive? — This is both your overhead rate management and your schedule execution signal. (3) Will my next deliverable be on time and documented? — This is your schedule score and your award fee narrative. These three questions, answered honestly every week, connect your daily operational decisions to the chain that runs all the way to the stock price.',
+                ],
+              },
+              {
+                heading: 'Advanced Award Fee Strategy: Narrative Management and Evaluation Positioning',
+                content:
+                  'The award fee evaluation is not a purely objective measurement — it is a scored assessment based on documented evidence presented to a Fee Determining Official who may not be embedded in your day-to-day work. Advanced PMs treat award fee management as a continuous narrative discipline: building, documenting, and presenting evidence of performance excellence throughout the period, not just at the end.',
+                items: [
+                  'The FDO perspective: they evaluate documentation, not effort|||The Fee Determining Official reviews the Contracting Officer\'s Representative (COR) assessment and the Self-Assessment submitted by the contractor. Undocumented achievements do not exist in the evaluation process. An excellent quarter with no written record of accomplishments produces the same FDO input as a mediocre quarter. Documentation is not bureaucracy — it is the mechanism through which excellent work converts to dollars.',
+                  'Self-Assessment strategy: quantify everything|||The contractor Self-Assessment is your opportunity to present your performance narrative before the COR writes their assessment. Effective self-assessments quantify: cost control in dollar terms (e.g., "reduced burn rate by $240K in Q3 through labor reallocation"), schedule performance in days (e.g., "delivered 4 of 4 milestones on or ahead of schedule"), and technical quality (e.g., "zero defect rework hours logged against this deliverable"). Percentages and dollar figures are more convincing than narrative prose.',
+                  'COR relationship as a financial asset|||The COR is the government\'s primary performance observer and their assessment drives the FDO\'s rating. PMs who maintain weekly touchpoints with the COR, communicate problems early with recovery plans, and provide unsolicited positive performance updates are building a scored financial asset. COR trust is literally worth money — it shows up in the Management/Customer Satisfaction factor, which is 15% of award fee.',
+                  'Evaluation period planning: front-load the evidence|||The strongest award fee outcomes come from PMs who plan the performance narrative from day one of the evaluation period. Identify which achievements will resonate most with the specific COR (technical innovation? cost savings? ahead-of-schedule deliveries?), then ensure those achievements are both executed and documented. Don\'t wait to discover what the COR values — ask at the start of the period.',
+                  'Risk disclosure as award fee protection|||Counterintuitively, disclosing risks and problems early — with documented mitigation plans — protects award fee better than concealing them. CORs who learn about problems from the contractor (with a recovery plan) consistently rate management higher than CORs who discover problems independently. Transparency converts from a soft communication virtue into a hard financial advantage in the Management/Customer factor.',
+                ],
+              },
+            ],
+            quiz: [
+              {
+                id: 'q1',
+                type: 'mc',
+                question: 'Your CPAF contract has a $3M award fee pool. Your evaluation period scores are: Technical 90 (Excellent), Cost Control 72 (Fair), Schedule 88 (Excellent), Management 80 (Good). Assuming equal weight at 25% each, what is the approximate award fee earned?',
+                options: [
+                  '$3M (100% earned due to Excellent Technical and Schedule scores)|||Incorrect. Award fee is calculated on a weighted blended basis. "Excellent" scores on two factors do not override the lower scores on the others — all four factors contribute proportionally to the blended rating.',
+                  '$1.35M–$1.65M (approximately 45–55% earned, based on blended weighted score)|||Correct. Weighted score: Technical Excellent ~97.5% × 25% = 24.4%; Cost Fair ~36% × 25% = 9%; Schedule Excellent ~97.5% × 25% = 24.4%; Management Good ~61% × 25% = 15.25%. Blended ≈ 73% → Low Good rating → approx 45–55% of $3M = $1.35M–$1.65M earned.',
+                  '$2.4M (80% earned due to majority Excellent/Good ratings)|||Incorrect. The blended weighted score is dragged down significantly by the Fair (72) Cost Control rating. The 25% weight on a Fair score materially reduces the overall blended average.',
+                  '$0 (Unsatisfactory in Cost Control eliminates all award fee)|||Incorrect. A score of 72 in Cost Control is "Fair" (range 66–75), not "Unsatisfactory" (below 60). The $0 fee extinguisher only triggers on an Unsatisfactory rating. A Fair rating earns 25–47.5% of available fee for that factor.',
+                ],
+                correct: 1,
+                explanation:
+                  'This question illustrates the financial consequence of allowing even one factor to slip to "Fair." The Cost Control score of 72 (earning ~36% of that factor\'s fee contribution) pulls the blended score into the low-to-mid 70s — reducing total award fee earned from the ~$2.85M+ that a balanced Excellent/Good performance would generate to roughly $1.35–1.65M. The $1.2–1.5M difference is the direct financial cost of losing cost control discipline for one evaluation period.',
+              },
+              {
+                id: 'q2',
+                type: 'mc',
+                question: 'DCAA is conducting a rate audit and discovers that $45,000 in company entertainment expenses were incorrectly charged to the overhead pool. What is the most severe potential consequence beyond just disallowing the $45,000?',
+                options: [
+                  'The contract is immediately terminated for default|||Incorrect. A cost pool error, even a deliberate one, does not typically trigger immediate contract termination. The government has less drastic remedies — cost disallowance, rate adjustment, and referral to the Inspector General for intentional mischarging.',
+                  'DCAA can suspend reimbursement of ALL overhead costs pending resolution of the pool contamination|||Correct. FAR Part 31.201-6 requires unallowable costs to be excluded from all pools and proposals. When unallowable costs contaminate a pool, DCAA has authority to question the entire pool pending audit resolution — not just the specific unallowable items. This can freeze overhead reimbursements across all contracts, creating a company-wide cash flow crisis.',
+                  'Only the $45,000 is disallowed and no other action is taken|||Incorrect. While disallowing the $45,000 is the minimum outcome, FAR cost principles and DCAA audit procedures contemplate broader pool-level scrutiny when unallowable items are discovered. The contamination calls the integrity of the entire pool into question.',
+                  'The overhead rate is permanently increased to recover the lost amount|||Incorrect. The government does not increase rates to recover improperly charged costs on behalf of the contractor. Disallowed costs are the contractor\'s financial loss — they are not redistributed back into rates.',
+                ],
+                correct: 1,
+                explanation:
+                  'Cost pool contamination is a systemic risk, not an isolated line-item adjustment. When DCAA finds unallowable costs in an indirect rate pool, the entire pool\'s integrity is in question. Suspension of overhead reimbursements pending full audit resolution creates an immediate cash flow impact on every contract the company performs. This is why unallowable cost discipline is treated as a priority compliance requirement — the $45,000 error can cost millions in delayed reimbursements and audit remediation.',
+              },
+              {
+                id: 'q3',
+                type: 'mc',
+                question: 'Your company has $10B in revenue, 150M diluted shares, and a 35% effective tax rate. A major CPAF contract swings from 95% award fee earned to 45% earned on a $20M award fee pool. What is the approximate per-share EPS impact?',
+                options: [
+                  '$0.04 reduction in EPS|||Incorrect. The calculation: $20M pool × 50% swing = $10M operating income loss. After 35% tax: $10M × 0.65 = $6.5M net income loss. $6.5M ÷ 150M shares ≈ $0.043 reduction. This is closer but the answer below is more precisely derived.',
+                  '$0.043 reduction in EPS|||Correct. $20M award fee pool × (95% − 45%) = $10M operating income reduction. After 35% tax: $10M × 0.65 = $6.5M net income reduction. $6.5M ÷ 150M shares = $0.043 EPS reduction. On a stock trading at 25× earnings, this single contract swing reduces market cap by approximately $162M.',
+                  '$0.13 reduction in EPS|||Incorrect. This overstates the impact. The calculation should apply the 35% tax rate to the pre-tax operating income reduction before dividing by share count. $10M pre-tax × 0.65 after-tax ÷ 150M shares ≈ $0.043.',
+                  '$0.003 reduction in EPS|||Incorrect. This understates by an order of magnitude. A $10M operating income swing on a 150M share base with 35% tax produces approximately $0.043 EPS impact, not $0.003.',
+                ],
+                correct: 1,
+                explanation:
+                  'The mechanics: 50% swing on a $20M pool = $10M less operating income. Tax-affected: $10M × (1 − 0.35) = $6.5M less net income. EPS impact: $6.5M ÷ 150M = $0.043 per share. At a 25× P/E multiple typical for defense contractors, the market cap impact is $6.5M × 25 = $162.5M — from a single contract\'s award fee underperformance. This is why institutional investors scrutinize contract performance data and CPARS ratings during earnings calls.',
+              },
+              {
+                id: 'q4',
+                type: 'mc',
+                question: 'You are approaching fiscal year end (September 30) with 15% of the contract\'s funded value unspent due to a delayed hiring ramp. The COR has not been informed. What is the correct course of action and primary risk if you stay silent?',
+                options: [
+                  'Accelerate spending on any available ODCs to consume the remaining funds before year end|||Incorrect. Accelerating expenditures on non-mission-required ODCs would constitute wasteful spending — a violation of cost stewardship principles and potentially unallowable under FAR Part 31. Award fee evaluators who discover artificial spending acceleration rate both cost control and management lower.',
+                  'Immediately communicate the under-execution to the COR with an execution plan, and proactively request that funds be preserved via a contract modification or fund extension|||Correct. Proactive communication preserves COR trust (management score) and gives the agency time to execute a modification to extend the fund availability or reprogram. Silent under-execution that results in year-end de-obligation loses funding permanently and damages both schedule and management scores.',
+                  'Submit accelerated invoices for work planned for next quarter to consume the funding|||Incorrect. Billing for work not yet performed is fraud under the False Claims Act. This is not a financial management solution — it is a federal criminal act.',
+                  'Do nothing — under-execution is always preferred to over-execution on government contracts|||Incorrect. Under-execution has significant financial consequences: potential fund de-obligation, schedule score damage, and management score damage from non-communication. Neither over- nor under-execution is preferred — on-plan execution is the target.',
+                ],
+                correct: 1,
+                explanation:
+                  'Year-end fund management is a test of both financial acumen and COR relationship management. The COR needs time to act — modifications and fund extensions don\'t happen in days. Silent under-execution followed by de-obligation is a double loss: you lose the funding AND you damage trust by failing to communicate. Proactive disclosure with a recovery plan is the management score-protecting move. Document your communication and the proposed execution plan — that documentation becomes award fee evidence.',
+              },
+              {
+                id: 'q5',
+                type: 'mc',
+                question: 'A colleague argues that focusing on award fee documentation is a distraction from actual technical work, and that good work speaks for itself in the evaluation. What is the financially precise rebuttal?',
+                options: [
+                  'Documentation is a nice-to-have but the FDO generally knows what the contractor has done|||Incorrect. FDOs are not embedded in daily contract operations. They rely on the COR assessment and the contractor Self-Assessment. Undocumented achievements have no input into the evaluation — the FDO literally cannot credit what hasn\'t been reported to them.',
+                  'Award fee evaluations are based on documented evidence submitted to the FDO; undocumented achievements produce the same evaluated score as if they never occurred, directly reducing operating income by the undocumented fee value|||Correct. This is the precise financial statement of the documentation imperative. The FDO evaluates records, not effort. An excellent quarter without documentation scores the same as a mediocre quarter. On a $3M award fee pool, the difference between 90% and 60% earned — attributable entirely to documentation quality — is $900,000 in operating income.',
+                  'Documentation only matters for large contracts above $100M in value|||Incorrect. Award fee documentation matters proportionally to the size of the award fee pool, not the contract value. A $5M contract with a $500K award fee pool has just as much to lose proportionally from poor documentation practices.',
+                  'The government is required to give the contractor the benefit of the doubt when evidence is ambiguous|||Incorrect. FAR Part 16.405-2 and associated agency supplements place the burden of performance demonstration on the contractor. The FDO has no obligation to infer excellent performance from ambiguous or absent evidence. Absence of documentation is evaluated as absence of achievement.',
+                ],
+                correct: 1,
+                explanation:
+                  'The financial stakes of documentation are concrete and calculable. On a $3M award fee pool, the difference between Excellent (97.5% earned = $2.925M) and Good (50% earned = $1.5M) performance is $1.425M. If that gap is caused by undocumented achievements — work that was actually done but not recorded and presented — it is a permanent, unrecoverable operating income loss. Documentation is not bureaucratic overhead; it is the mechanism through which excellent work converts to earnings.',
+              },
+            ],
+          },
+        },
+      },
     ],
     assessment: [
       {
