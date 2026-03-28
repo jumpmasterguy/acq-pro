@@ -655,19 +655,21 @@ def assemble_post(title: str, deck: str, body_html: str, topic: dict,
 def add_to_index(slug: str, title: str, excerpt: str, topic: dict, read_time: int) -> None:
     index = BLOG_DIR / "index.html"
     content = index.read_text()
+    from datetime import date as _date
+    today = _date.today().strftime('%b %-d, %Y')
     card = f"""
-    <!-- {title[:60]} -->
     <a href="/blog/{slug}" class="post-card" style="text-decoration:none;color:inherit">
-      <span class="post-card-badge">{topic['badge']}</span>
-      <div class="post-card-body">
-        <h2>{title}</h2>
-        <p>{excerpt}</p>
-        <div class="post-card-meta">
-          <span>{read_time} min read</span>
-          <span>·</span>
-          <span>{topic['audience']}</span>
+      <div class="post-card-inner">
+        <div class="post-meta-top">
+          <span class="post-tag">{topic['badge']}</span>
+          <span class="post-date">{today}</span>
         </div>
-        <span class="read-more">Read article →</span>
+        <h2>{title}</h2>
+        <p>{excerpt[:160]}</p>
+        <div class="post-footer">
+          <span>{read_time} min read</span>
+          <span class="read-more">Read →</span>
+        </div>
       </div>
     </a>
 """
@@ -689,9 +691,22 @@ def git_push(slug: str, title: str) -> bool:
              f"client/public/blog/{slug}.html",
              "client/public/blog/index.html"],
             ["git", "commit", "-m", f"blog: publish '{title[:60]}'"],
-            ["git", "push", "origin", "main"],
         ]:
             subprocess.run(cmd, cwd=REPO_ROOT, check=True, capture_output=True)
+        # Push using gh auth token (avoids invalid origin credentials)
+        import shutil
+        gh = shutil.which("gh")
+        if gh:
+            token_result = subprocess.run([gh, "auth", "token"], capture_output=True, text=True)
+            token = token_result.stdout.strip()
+            if token:
+                subprocess.run(
+                    ["git", "-c", f"http.https://github.com/.extraheader=Authorization: token {token}",
+                     "push", "https://github.com/jumpmasterguy/acq-pro.git", "HEAD:main"],
+                    cwd=REPO_ROOT, check=True, capture_output=True
+                )
+            else:
+                raise subprocess.CalledProcessError(1, "gh auth token", b"", b"No token returned")
         return True
     except subprocess.CalledProcessError as e:
         print(f"Git error: {e.stderr.decode() if e.stderr else e}")
