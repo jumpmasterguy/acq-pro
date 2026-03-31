@@ -219,12 +219,17 @@ function ExpandableBulletItem({
         <span className="flex-1">
           {(() => {
             const dashIdx = bulletText.indexOf(' — ');
-            const hyphenIdx = bulletText.indexOf(': ');
-            const splitIdx = dashIdx > 0 ? dashIdx : (hyphenIdx > 0 && hyphenIdx < 60 ? hyphenIdx : -1);
+            const colonIdx = bulletText.indexOf(': ');
+            // Split on em-dash or colon if both label and rest are present
+            const splitIdx = dashIdx > 0 ? dashIdx : (colonIdx > 0 && colonIdx < 55 ? colonIdx : -1);
             if (splitIdx > 0) {
               const label = bulletText.slice(0, splitIdx);
               const rest = bulletText.slice(splitIdx);
               return <><span className="font-semibold text-foreground">{label}</span><span>{rest}</span></>;
+            }
+            // Short items with no split — bold the whole thing
+            if (bulletText.length < 55) {
+              return <span className="font-semibold text-foreground">{bulletText}</span>;
             }
             return bulletText;
           })()
@@ -1016,6 +1021,27 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                       ))}
                     </div>
                     <p className="text-[11px] text-muted-foreground italic">FAR 16.103(a): The contract type must be appropriate for the circumstances — risk must be commensurate with the government's ability to define requirements and manage performance.</p>
+                  </div>
+                </div>
+              );
+            }
+
+            // ── lucas_note: founder insight block ───────────────────────────
+            if (block.type === 'lucas_note') {
+              return (
+                <div key={i} className="relative bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/30 rounded-xl p-5">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-black">L</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs font-bold text-primary uppercase tracking-widest mb-2">Lucas’ Note</div>
+                      {block.body && block.body.split('\n\n').filter(Boolean).map((para: string, pi: number) => (
+                        <p key={pi} className={`text-sm text-foreground leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>
+                          {para.trim().split(/\*\*([^*]+)\*\*/).map((seg: string, si: number) =>
+                            si % 2 === 1 ? <strong key={si} className="font-semibold">{seg}</strong> : seg
+                          )}
+                        </p>
+                      ))}
+                    </div>
                   </div>
                 </div>
               );

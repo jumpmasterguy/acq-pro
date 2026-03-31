@@ -92,8 +92,14 @@ function AppContent() {
   const arrivedAtAuth = typeof window !== 'undefined' &&
     (window.location.hash.startsWith('#/auth') || window.location.pathname === '/app');
   const [view, setView] = useState<View>(arrivedAtAuth ? { type: 'auth' } : { type: 'landing' });
-  // Always default to dark mode to match brand
-  const [darkMode, setDarkMode] = useState(true);
+  // Dark mode — persisted in cookie (works on Railway, not a sandboxed iframe)
+  const [darkMode, setDarkMode] = useState(() => {
+    try {
+      const c = document.cookie.split('; ').find(r => r.startsWith('theme='));
+      if (c) return c.split('=')[1] !== 'light';
+    } catch {}
+    return true; // default dark
+  });
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [authState, setAuthState] = useState<AuthState>({ status: 'loading' });
   // Module assessment modal state
@@ -125,7 +131,11 @@ function AppContent() {
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
-  const toggleDark = () => setDarkMode(d => !d);
+  const toggleDark = () => setDarkMode(d => {
+    const next = !d;
+    try { document.cookie = `theme=${next ? 'dark' : 'light'};path=/;max-age=31536000`; } catch {}
+    return next;
+  });
 
   // Activity heartbeat — sends accumulated active-minutes to server every 2 mins
   useEffect(() => {

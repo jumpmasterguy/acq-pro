@@ -311,11 +311,12 @@ export const modules: Module[] = [
           },
           {
             type: 'stat_row',
-            heading: 'The PM Triangle — Push One, The Others Move',
+            heading: 'The Four Things a PM Is Always Managing',
             stats: [
-              { value: '💰', label: 'Cost', sub: 'Are we spending at the right rate to finish?' },
-              { value: '📅', label: 'Schedule', sub: 'Will we hit the next milestone — not find out after?' },
-              { value: '✅', label: 'Performance', sub: 'Are we delivering what the customer actually asked for?' },
+              { value: '💰', label: 'Cost', sub: 'Spending at the right rate to finish?' },
+              { value: '📅', label: 'Schedule', sub: 'On track for the next milestone?' },
+              { value: '✅', label: 'Performance', sub: 'Delivering what was actually asked for?' },
+              { value: '⚠️', label: 'Risk', sub: 'Seeing problems before they become crises?' },
             ],
           },
           {
@@ -337,9 +338,17 @@ export const modules: Module[] = [
                 badge: 'CPARS',
                 text: 'The simplest to describe, the hardest to stay honest about. Are you delivering what the customer asked for? This is where your technical background actually helps — not to do the work, but to know whether the work being done meets the requirement. Busy ≠ delivering.',
               },
+              {
+                label: 'Risk',
+                badge: 'Risk Register',
+                text: "What could go wrong, how likely is it, and what's the plan when it does? The PM who is surprised by problems isn't managing risk. Risk management isn't a quarterly briefing slide — it's a weekly conversation. If it's not on your risk register, it doesn't officially exist.",
+              },
             ],
           },
           {
+            type: 'lucas_note',
+            body: "Here's the simplest version of this job I can give you:\n\nA good PM always knows three things cold: **their contract** (or task order, delivery order, or TDL — whatever instrument you're working under), **their subcontracts** (who's doing what, what they've delivered, and what they owe you), and **their finances** (burn rate, EAC, and whether there's money to finish).\n\nEverything else — the stakeholder meetings, the risk register, the status reports — is in service of staying on top of those three. If you know your contract, your subs, and your money, you will almost never be surprised in a program review.",
+          },          {
             type: 'list',
             heading: 'What Your Day Actually Looks Like',
             items: [
@@ -8018,6 +8027,10 @@ export const modules: Module[] = [
               ['Contractor', 'Senior PM / Program Director', '$140,000 – $185,000', 'TS/SCI + program relationships = primary value drivers'],
               ['Contractor', 'VP, Business Development', '$180,000 – $250,000+', 'Highly variable; often includes commission/bonus structure'],
             ],
+          },
+          {
+            type: 'lucas_note',
+            body: "I'll make this concrete. When I talk about 'knowing your contract,' I don't just mean knowing the title of the vehicle you're on. I mean: What does your Statement of Work actually authorize you to do? What are your CDRLs and when are they due? What's in each CLIN and how much is funded?\n\nYour subcontracts: Who are your subs, what did you promise them, and are they delivering? Your finances: What's your burn rate this month, and does your estimate to complete match your funded value?\n\nA PM who can answer all of that without looking it up has command of their program. That's the job.",
           },
           {
             type: 'text',
