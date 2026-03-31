@@ -1029,32 +1029,23 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             // ── lucas_note: personal aside ───────────────────────────────────
             if (block.type === 'lucas_note') {
               return (
-                <div key={i} className="my-6 flex justify-end pr-1">
-                  <div
-                    className="relative bg-[#0d2137] border-2 border-primary rounded-xl shadow-2xl overflow-hidden"
-                    style={{ width: '92%', transform: 'rotate(0.6deg)' }}
-                  >
-                    {/* Gold pinstripe top */}
-                    <div className="h-[3px] w-full bg-gradient-to-r from-transparent via-[#f5c842] to-transparent" />
-                    <div className="px-5 pt-4 pb-2">
-                      {/* Header row */}
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white text-[10px] font-black flex-shrink-0">L</div>
-                        <span className="text-[9px] font-black text-[#f5c842] uppercase tracking-[0.25em]">From Lucas</span>
-                      </div>
-                      {/* Body */}
-                      {block.body && block.body.split('\n\n').filter(Boolean).map((para: string, pi: number) => (
-                        <p key={pi} className={`text-sm text-slate-200 leading-relaxed${pi > 0 ? ' mt-3' : ''}`}>
-                          {para.trim().split(/\*\*([^*]+)\*\*/).map((seg: string, si: number) =>
-                            si % 2 === 1
-                              ? <strong key={si} className="font-bold text-[#f5c842]">{seg}</strong>
-                              : seg
-                          )}
-                        </p>
-                      ))}
+                <div key={i} className="bg-[#0d2137] border-2 border-primary/60 rounded-xl overflow-hidden">
+                  <div className="h-[3px] bg-gradient-to-r from-[#f5c842] via-primary to-[#f5c842]" />
+                  <div className="p-5">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white text-[10px] font-black flex-shrink-0">L</div>
+                      <span className="text-[10px] font-black text-[#f5c842] uppercase tracking-[0.2em]">From Lucas</span>
                     </div>
-                    {/* Signature */}
-                    <div className="px-5 py-3 flex items-center gap-2">
+                    {block.body && block.body.split('\n\n').filter(Boolean).map((para: string, pi: number) => (
+                      <p key={pi} className={`text-sm text-slate-200 leading-relaxed${pi > 0 ? ' mt-3' : ''}`}>
+                        {para.trim().split(/\*\*([^*]+)\*\*/).map((seg: string, si: number) =>
+                          si % 2 === 1
+                            ? <strong key={si} className="font-bold text-[#f5c842]">{seg}</strong>
+                            : seg
+                        )}
+                      </p>
+                    ))}
+                    <div className="flex items-center gap-2 mt-4">
                       <div className="h-px flex-1 bg-primary/20" />
                       <span className="text-[10px] text-primary/50 italic">— Lucas, Acqlerate</span>
                     </div>
