@@ -1041,6 +1041,10 @@ export const modules: Module[] = [
             heading: 'For Contractors: Why You Need to Know This Too',
             body: 'Color of money directly affects you as a contractor. If the government is paying you from O&M funds, your contract must be structured and performed within that fiscal year or you risk the funding expiring. If a CO tells you "we can\'t pay for that under this contract line," color of money is often the reason. Understanding appropriations helps you structure proposals, set payment milestones, and have more productive conversations with your CO and COR about what\'s fundable.',
           },
+          {
+            type: 'lucas_note',
+            body: `September 30th is a real thing. The government fiscal year ends on September 30, and the weeks before that date are chaos. Contracting offices are flooded with last-minute requests to obligate expiring O&M funds. Requirements get rushed, scopes get vague, and sometimes work gets bought that nobody really needs.\n\nAs a contractor, this is actually **opportunity** — if you're on the right vehicles and have a good relationship with your COR, you'll get called in August with real work. But the projects that get stood up in September often have the worst-defined SOWs and the most scope creep. Get clarity on what you're actually being asked to deliver before you say yes.`,
+          },
         ],
         quiz: [
           {
@@ -2784,6 +2788,10 @@ export const modules: Module[] = [
           heading: 'Working the DCAA/DCMA Relationship to Your Advantage',
           body: 'Mid-career PMs who treat DCAA and DCMA as adversaries are leaving oversight resources on the table. Both agencies work for the government — their findings protect your program, not the contractor. Establish a quarterly touchpoint with your ACO and DCAA auditor: share your program priorities, the highest-risk WBS elements, and any contractor behaviors that concern you. DCAA can target its audit resources to your hot spots if you tell them where to look. Request a floor check audit when your contractor reports a staffing surge that isn\'t reflected in performance. Ask DCMA to review the contractor\'s subcontract management practices when you see a subcontractor performance problem the prime isn\'t addressing. These agencies have authorities you don\'t — use them.',
         },
+          {
+            type: 'lucas_note',
+            body: `Contractor PMs: DCAA showing up is not an emergency. It's normal. If you have a compliant accounting system, accurate timecards, and you're not billing unallowable costs — a DCAA audit is just a process. The PMs who panic are the ones who haven't been keeping clean books.\n\nThe one thing that actually causes problems: being slow or uncooperative with access. DCAA has the right to your records under FAR 52.215-2. If you stonewall them, it escalates fast and ends badly. Open the door, get your finance team in the room, answer the questions honestly. Clean records, transparent answers, no drama.`,
+          },
         {
           type: 'callout' as const,
           level: 'advanced' as const,
@@ -3792,28 +3800,28 @@ export const modules: Module[] = [
           {
             type: 'text',
             heading: "Two Levels of Agreement",
-            body: "In federal contracting, there are two distinct levels of agreement you must understand: the base contract and the order. The base contract (the IDIQ) establishes all the legal terms and conditions — pricing, labor categories, clauses, applicable regulations, and the overall ordering ceiling. The task order (TO) is where actual work gets authorized and funded. No work begins until a task order is issued. This two-level structure gives agencies flexibility to order services on demand without re-competing every single requirement."
+            body: `Think of it like a hotel contract and a reservation. The hotel contract sets the rules — room rates, cancellation policy, what's included. The reservation is the specific authorization: room 412, three nights, Tuesday check-in. You can't just show up because you signed the contract. You need a reservation.\n\nIn federal contracting, the **base contract** (the IDIQ) is the hotel contract. It sets labor rates, legal terms, applicable regulations, and the overall ceiling. The **task order (TO)** is the reservation — it authorizes specific work and obligates actual money. No task order, no work. Period.\n\nThis two-level structure lets agencies order services on demand without running a full competition every single time. The vehicle is competed once. Then individual requirements are competed among the pool — faster, leaner, still competitive.`
           },
           {
             type: 'instrument_compare',
           },
           {
             type: 'text',
-            heading: "How IDIQs Work: Single Award vs. Multiple Award",
-            body: "A Single Award IDIQ gives one contractor exclusive rights to receive all task orders — appropriate when a single firm has unique capabilities. A Multiple Award Contract IDIQ (MAC-IDIQ) awards the base contract to multiple vendors who then compete for individual task orders. FAR 16.504 establishes a preference for multiple awards because they maintain price competition at the task order level and give the government access to a pool of qualified vendors."
+            heading: "Single Award vs. Multiple Award",
+            body: `A **Single Award IDIQ** gives one contractor exclusive rights — no competition at the task order level. The government uses this when one firm has truly unique capabilities. It's the exception, not the rule.\n\nA **Multiple Award Contract IDIQ (MAC-IDIQ)** awards the base vehicle to several contractors. When the government has work, they run a mini-competition among those awardees. The winner gets the task order. FAR 16.504 prefers multiple awards because it keeps price competition alive after award — and gives the government a bench of qualified vendors to draw from.\n\nAs a contractor PM, most of the vehicles you'll work on are MAC-IDIQs. **Winning the vehicle** gets you in the door. **Winning task orders** is how you actually make money.`
           },
           {
             type: 'list',
             heading: "The IDIQ Ordering Process (Step by Step)",
             items: [
-              'Step 1: Requirement identified — program office describes work needed|||The quality of the SOW/PWS here determines the quality of proposals and performance. A vague SOW produces vague proposals and an ambiguous contract. A good task order SOW describes outcomes (performance-based), includes measurable acceptance criteria, and specifies deliverables with format and timing. This is the most underinvested step in task order contracting.',
-              'Step 2 — Scope check: does an existing IDIQ cover this requirement?|||The CO must conduct a scope determination to verify work falls within the original IDIQ\'s scope. Placing a task order outside the IDIQ\'s scope is an improper order — effectively a sole-source contract without a J&A. For GWACs like OASIS+, scope is broadly defined but still has limits.',
-              'Step 3 — Issue a TORFP to all pool holders|||TORFPs under MA-IDIQs must provide fair opportunity per FAR 16.505. Includes the SOW/PWS, evaluation factors, proposal instructions, and period of performance. Page limits are common (10–30 pages vs. 100+ for new vehicle bids). Response times are typically 7–30 days — much faster than full proposals.',
-              'Step 4: Provide fair opportunity — all pool members get a reasonable chance to compete|||Fair opportunity under FAR 16.505 is the default rule — it cannot be waived without documented justification. The ordering CO must ensure the task order RFP is distributed to all eligible pool holders simultaneously with equal response time. Selectively notifying preferred contractors or providing advance information to favorites is a protest-sustaining violation.',
-              'Step 5 — Evaluate proposals (lighter than a full competition)|||Task order evaluations are significantly lighter than full Part 15 source selections — no formal discussions, no SSAC, fewer documentation requirements. But the process must still be documented, consistent with the stated evaluation factors, and defensible. Task order award decisions are still protestable to the GAO.',
-              'Step 6 — Award to best value|||Best value means the proposal offering the greatest combination of technical merit, past performance, and price for the government\'s needs — not necessarily the lowest price. The ordering CO documents the tradeoff rationale. For LPTA task orders, the lowest technically acceptable price wins. Most professional services use BVTO.',
-              'Step 7 — Execute and administer the task order like its own contract|||Task orders have their own period of performance, deliverables, and COR. The COR monitors performance against the task order PWS/SOW, not just the base contract. Performance is documented in CPARS at the task order level for large orders. Option years on the task order can be exercised independently of the base contract.',
-              'Step 8 — Modify the task order (never the base IDIQ) for scope or funding changes|||Task order modifications use the SF-30 and follow the same modification authorities as standalone contracts. Critically — changes go on the task order, not the base IDIQ contract. Adding scope beyond the task order ceiling requires a new modification with additional funding. The base IDIQ contract is modified only for vehicle-level changes (period of performance extension, ceiling increase).',
+              'Step 1 — Requirement identified: program office describes the work|||This is the most underinvested step in task order contracting — and it shows. A vague SOW produces vague proposals, scope disputes, and a contract that\'s hard to manage. A good task order SOW describes outcomes (what does "done" look like?), includes measurable acceptance criteria, and lists deliverables with format and timing. As a contractor PM, if the SOW is unclear before award, it will be a headache every single month of performance.',
+              'Step 2 — Scope check: does this work fit the IDIQ?|||The Contracting Officer checks whether the requirement actually falls within the IDIQ\'s scope. This matters more than people think. If work is placed outside the vehicle\'s scope, it\'s an improper order — essentially a sole-source contract without the required justification. Competitors can protest. For broad GWACs like OASIS+, scope is wide but not unlimited.',
+              'Step 3 — Issue a TORFP to all pool members|||The government sends a Task Order Request for Proposals (TORFP) to everyone holding a seat on the vehicle. It includes the SOW, evaluation factors, proposal instructions, and period of performance. Page limits are typically 10–30 pages (vs. 100+ for full proposals). Response windows are usually 7–30 days. This is your chance — how well you respond to the TORFP is what wins or loses the work.',
+              'Step 4 — Fair opportunity: the government must notify all eligible awardees equally|||Fair opportunity is the law, not a courtesy. The ordering CO must distribute the TORFP to all eligible pool members simultaneously with equal response time. The six exceptions that allow skipping fair opportunity are narrow: urgency, only one contractor is capable, logical follow-on, minimum guarantee, and national security. Anything else is protestable — and it gets protested.',
+              'Step 5 — Evaluate proposals (lighter than a full competition, but still documented)|||Task order evaluations skip the heavy Part 15 machinery — no formal discussions, no Source Selection Advisory Council. It\'s faster. But the evaluation must still follow the stated factors consistently and be written up in a way that can survive a protest. Task order awards absolutely can be protested to GAO. Sloppy documentation gets overturned.',
+              'Step 6 — Award to best value (or LPTA, depending on the requirement)|||Best value means the proposal offering the best combination of technical merit, past performance, and price — not automatically the lowest price. The CO documents the tradeoff rationale. For straightforward work with well-defined requirements, LPTA (Lowest Price Technically Acceptable) is used — the lowest price that meets the minimum technical bar wins. Most professional services go best value.',
+              'Step 7 — Execute: the task order is its own contract in practice|||Once awarded, the task order has its own period of performance, deliverables, COR, and CPARS rating. The COR monitors against the task order SOW, not the base IDIQ. Option years on the task order can be exercised independently of the base contract. As a contractor PM, this is your world: you are managing the task order, not the IDIQ.',
+              'Step 8 — Modify the task order for changes — not the base IDIQ|||When work changes, funding is added, or the period extends, those changes go on the task order — not the base IDIQ contract. Mods use the SF-30 and follow the same rules as standalone contract modifications. The base IDIQ is only modified for vehicle-level changes: extending the ordering period, raising the ceiling, or updating base pricing. If your COR tells you to do something new — stop and make sure a task order mod is coming.',
             ]
           },
           {
@@ -3825,7 +3833,11 @@ export const modules: Module[] = [
             type: 'formula',
             heading: "IDIQ Contract Structure",
             formula: 'IDIQ Contract = Base Contract (terms, rates, ceiling) + n Task Orders\nTotal ordered value ≤ Maximum Ceiling\nTotal ordered value ≥ Minimum Guarantee\nEach Task Order = Independent Scope + Independent Funding + Independent PoP',
-            explanation: "The base contract ceiling sets the absolute limit on cumulative task order value. The minimum guarantee is the only amount the government is legally obligated to order — it protects the contractor's investment in the contract. Each task order is funded independently with its own period of performance."
+            explanation: "The base contract ceiling sets the absolute limit on cumulative task order value. The minimum guarantee is the only amount the government is legally obligated to order — it protects the contractor from winning a vehicle and getting zero work. Each task order is funded independently with its own period of performance."
+          },
+          {
+            type: 'lucas_note',
+            body: `Three things a PM on a MAC-IDIQ needs to know cold: their **task order** (what work is authorized), their **SOW/PWS** (what they're obligated to deliver), and their **funding** (how much is actually on contract).\n\nThe IDIQ base contract is the vehicle. The task order is the game. I've seen PMs confused about why their invoices aren't getting paid — and it's because they were billing against a CLIN that doesn't have money on the task order. Know your TO like you know your own name.`
           },
           {
             type: 'table',
@@ -3848,14 +3860,14 @@ export const modules: Module[] = [
           {
           type: 'text' as const,
           level: 'intermediate' as const,
-          heading: 'IDIQ Management: Ceiling vs. Scope vs. Competition',
-          body: 'Mid-career PMs using IDIQs and GWACs must navigate three overlapping constraints: (1) the IDIQ ceiling — you cannot exceed the maximum order value without a modification, but you can order below the minimum; (2) scope limitations — task orders must be within the IDIQ\'s scope (ordering outside scope violates CICA and creates protest risk); (3) competition requirements — most IDIQs require fair opportunity among all awardees for task orders above $3,500 (DARS 16.505). The most common mid-career mistake: treating an IDIQ as a preferred vehicle even when better-suited vehicles exist, or placing task orders that are technically "within scope" but stretch the scope definition to the breaking point. Contractors monitor IDIQ usage patterns and will protest if they believe scope is being stretched to steer work.',
+          heading: 'IDIQ Management: Ceiling, Scope, and Competition',
+          body: `Mid-career PMs working IDIQs and GWACs need to hold three constraints in their head simultaneously: the ceiling, the scope, and the competition rules.\n\n**The ceiling** sets the max dollar value of all orders combined. You can't exceed it without a base contract mod. The minimum guarantee is small — the government is not obligated to give you any specific amount above that.\n\n**Scope** limits what work can actually go on the vehicle. Task orders must be within the IDIQ's defined scope. Ordering outside scope is an improper action — it's a protest magnet and an IG finding. Some programs try to stretch scope to use a preferred vehicle. Competitors notice.\n\n**Competition** requirements mean most IDIQs require fair opportunity for any order above $3,500. The most common mistake at this level: picking a vehicle because it's familiar rather than because it's the right fit — then forcing the requirement to fit the scope.`,
         },
         {
           type: 'callout' as const,
           level: 'advanced' as const,
           heading: 'Bridge Contracts and Option Exercise Discipline',
-          body: 'Two of the most common contracting failures senior PMs face: bridge contracts and missed option windows. Bridge contracts (short-term extensions to maintain continuity between contracts) are legal but signal poor acquisition planning, attract GAO scrutiny, and often pay above-market rates because competition is waived. The bridge becomes a habit — some programs have been on "bridge" for 5+ years, paying a sole-source premium indefinitely. Option exercise discipline: options must be exercised before expiration — missed windows forfeit the option and require a new competition. With 12-24 month options, build a calendar trigger 90 days before each option expiration. The J&A required for a bridge after a missed option is a career embarrassment that documents your planning failure for the record.',
+          body: `Two of the most common contracting failures senior PMs face: bridge contracts and missed option windows.\n\nBridge contracts — short-term extensions to maintain continuity between vehicles — are technically legal. But they signal poor acquisition planning, attract GAO scrutiny, and typically cost more because competition is waived. The real problem: the bridge becomes a habit. Some programs have been "on bridge" for five-plus years, paying a sole-source premium indefinitely.\n\nOption exercise discipline: options must be exercised before the expiration date — missed windows forfeit the option entirely and require a new full competition. Build a 90-day calendar trigger for every option on every task order you own. The J&A you'll need to write for a bridge contract after a missed option is a career embarrassment that documents your planning failure for the record.`,
         },
         ],
       quiz: [
@@ -4714,6 +4726,10 @@ export const modules: Module[] = [
           heading: 'Protest-Proofing Your Source Selection',
           body: 'GAO sustains about 15-20% of bid protests it reviews. Most sustained protests result not from wrong decisions, but from inadequate documentation of correct decisions. Senior PMs preparing for a source selection must ensure: (1) the SSDD documents the SSA\'s independent judgment — not just a recitation of SSAC recommendations; (2) every strength and weakness is documented with specific proposal references; (3) the best-value tradeoff explicitly states why higher price is (or is not) worth better technical factors; (4) all offerors in the competitive range received equal treatment during discussions. The most protest-prone decision is the competitive range determination — excluding an offeror requires thorough documentation of why their proposal has no realistic chance of award. Assume every decision will be reviewed by a GAO attorney.',
         },
+          {
+            type: 'lucas_note',
+            body: `When I'm writing a proposal, I read Section M before I read anything else. Before the SOW, before Section C, before the instructions. Section M is the scoring rubric. It tells me exactly what the evaluator is going to grade me on.\n\nEverything else in the proposal is in service of Section M. If an evaluation factor says "management approach" is the second-highest weighted factor — my best writer goes on that section, not on the technical approach. If past performance is pass/fail, I don't spend 20 pages on it.\n\nMost proposals I've reviewed spend the most effort on what the team knows best, not on what the government is actually scoring. Read M first. Build your outline from M. Then fill it in.`,
+          },
         ],
       quiz: [
           {
@@ -4861,6 +4877,10 @@ export const modules: Module[] = [
             type: 'tip',
             heading: "QASP and Surveillance",
             body: "Every services contract should have a Quality Assurance Surveillance Plan (QASP). The QASP defines how the government will monitor performance, what metrics are tracked, and what constitutes acceptable performance. A well-executed QASP provides the documentation needed to support negative past performance ratings, withhold award fees, or terminate for cause."
+          },
+          {
+            type: 'lucas_note',
+            body: `The constructive change is the trap I see contractor PMs fall into constantly. The COR asks for something — a little extra analysis, a slightly different format, a new briefing that wasn't in the SOW — and the PM just says yes because they want to keep the relationship smooth.\n\nThat's admirable. But here's the problem: you just did work that isn't on contract. If you do it enough times, you've created scope creep, burned hours you can't bill, and potentially set a precedent for what "standard" looks like. And if you ever try to get paid for it via an REA, you now have no documentation.\n\nThe right answer isn't to say no. It's to say: "Happy to do that — let's make sure there's a mod." Three words that protect everyone.`,
           },
           {
           type: 'text' as const,
@@ -5036,6 +5056,10 @@ export const modules: Module[] = [
           heading: 'Armed Services Board of Contract Appeals: What Senior PMs Need to Know',
           body: 'When REAs become claims and claims become disputes, they go to the Armed Services Board of Contract Appeals (ASBCA) or the Court of Federal Claims. Senior PMs are rarely ASBCA participants personally, but their decisions — and their documentation — become the evidence. ASBCA cases routinely turn on: (1) whether government direction was communicated in writing or only verbally; (2) whether the contractor provided timely notice of a changed condition (failure to provide REQ notice waives the right to recover); (3) whether government delay was "excusable" (sovereign acts, weather) or "compensable" (government failure to perform its obligations). Build a file culture from day one: every significant decision in writing, every government-caused delay documented with specific dates and contract references. The ASBCA judge reading your file 5 years from now is your actual audience.',
         },
+          {
+            type: 'lucas_note',
+            body: `Simple rule I give every new contractor PM: if your COR asks you to do something that isn't in your Statement of Work, **stop**. Don't do it yet. Say: "I want to make sure we're covered — can we get a mod?"\n\nNine times out of ten, the COR didn't realize it was out of scope. They're not trying to get free work. They just didn't check the SOW. Most of the time you can get a quick mod and execute. The tenth time, the government says "we don't have funding for a mod" — which tells you everything you need to know about whether you should do it.\n\nThe contract you won is the starting line, not the finish line. Everything after that is execution — and execution without documentation is just volunteering.`,
+          },
         ],
       quiz: [
           {
@@ -8291,6 +8315,10 @@ export const modules: Module[] = [
           heading: 'Opportunity Management and Risk Retirement: The Senior PM\'s Discipline',
           body: 'Senior PMs manage both risk AND opportunity — the asymmetric upside that is often neglected in risk-focused cultures. An opportunity is an event that, if it occurs, would reduce cost, accelerate schedule, or improve performance. Examples: a technology maturation faster than planned that allows an earlier CDR; a competitor\'s contract performance failure that opens a sole-source opportunity; a congressional add that funds an accelerated production ramp. Opportunities require the same rigor as risks: owner, probability, value, exploitation plan, and trigger event. Senior PMs also understand risk retirement — when a risk\'s trigger date has passed without occurrence, formally close it and release the associated Management Reserve. Programs that never retire risks over-hold Management Reserve and underreport program health.',
         },
+          {
+            type: 'lucas_note',
+            body: `A risk register that nobody updates is just a paperwork exercise. I've been in program reviews where the risk register had the same 12 risks, same probability ratings, same mitigation notes — for four consecutive months. At that point it's a compliance artifact, not a management tool.\n\nThe real signal is this: if a risk has been "yellow — being monitored" for 90 days with no movement, one of two things is true. Either it's not actually a risk (close it), or nobody's working the mitigation (that's a problem). Push your team to update ratings with actual data — not gut feel, not comfort, data. "We did X, and it reduced the likelihood from 4 to 2 because Y." That's a risk update. Everything else is just keeping the chart warm.`,
+          },
         ],
       quiz: [
           {
