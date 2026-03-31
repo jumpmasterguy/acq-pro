@@ -305,9 +305,39 @@ export const modules: Module[] = [
             body: 'Imagine you\'re the best striker on a soccer team. Thirty goals this season. Undeniable. The coach pulls you aside: "You\'re so good at this, we\'re making you the manager."\n\nCongratulations. You just stopped being a striker.\n\nYour job now is not to score goals. Your job is to build a team that scores goals. You don\'t get on the field. You set the strategy, manage the relationships, handle the budget, make sure the training schedule doesn\'t conflict with match days, and answer to the club owners when results don\'t come. The technical skills that made you a great striker are useful background — but they will get you fired as a manager if you keep using them instead of doing the actual management job.\n\nDefense acquisition program management is identical. The best engineers, analysts, and contract specialists who become PMs and struggle usually have one thing in common: they keep doing the old job. They dive into the technical details. They solve the problems themselves. They attend meetings to demonstrate how smart they are instead of to facilitate decisions. They are, in the language of the field, "in the weeds" — and while they\'re down there, nobody is flying the plane.\n\nThis lesson is about flying the plane.',
           },
           {
-            type: 'text',
-            heading: 'The Three Things You\'re Actually Accountable For',
-            body: 'Cost. Schedule. Performance. That\'s it. Everything else exists in service of those three.\n\nThink of a triangle where cost, schedule, and performance are the three sides. They\'re connected — push on one side and the others move. Add six months to the schedule, and cost goes up because you\'re paying people longer. Cut the budget by 20%, and something has to give — either the schedule slips or you deliver less. The PM\'s job is to manage that triangle deliberately, not to let it manage you.\n\nHere\'s what each one actually means day-to-day:\n\n**Cost** doesn\'t just mean "is the contract funded?" It means: are we spending at the right rate, do we have enough money to finish, and is the government going to get sticker shock at the next review? This is where Earned Value Management (EVM) comes in — and it\'s simpler than the name sounds. EVM is just a way to compare how much work you\'ve gotten done against how much you planned to get done and how much you planned to spend, all at the same time. It\'s the difference between knowing you\'re on track and hoping you are.\n\n**Schedule** is not a Gantt chart you file away and look at once a quarter. It\'s a living document — the Integrated Master Schedule (IMS) — that should be updated weekly and should tell you whether your next milestone is at risk before it slips, not after. If your IMS is ever surprising you, it\'s not doing its job.\n\n**Performance** is the simplest to describe and the hardest to stay honest about: are you delivering what the customer asked for? This is where your technical background actually helps — not to do the work yourself, but to know whether the work being done meets the requirement. There\'s a difference between a team that\'s busy and a team that\'s delivering.',
+            type: 'highlight',
+            body: 'Everything you do as a PM serves **three things**: Cost. Schedule. Performance.',
+            subtext: 'If someone asks you to do something that doesn\'t protect one of those three, ask why.',
+          },
+          {
+            type: 'stat_row',
+            heading: 'The PM Triangle — Push One, The Others Move',
+            stats: [
+              { value: '💰', label: 'Cost', sub: 'Are we spending at the right rate to finish?' },
+              { value: '📅', label: 'Schedule', sub: 'Will we hit the next milestone — not find out after?' },
+              { value: '✅', label: 'Performance', sub: 'Are we delivering what the customer actually asked for?' },
+            ],
+          },
+          {
+            type: 'two_col',
+            heading: 'What Each One Actually Means Day-to-Day',
+            rows: [
+              {
+                label: 'Cost',
+                badge: 'EVM',
+                text: 'Not just \"is the contract funded?\" It means: are we burning at the right rate, do we have enough to finish, and will leadership be shocked at the next review? EVM (Earned Value Management) is the tool — it compares how much work you\'ve gotten done against how much you planned to spend. It\'s the difference between knowing you\'re on track and hoping you are.',
+              },
+              {
+                label: 'Schedule',
+                badge: 'IMS',
+                text: 'Not a Gantt chart you file and forget. The IMS (Integrated Master Schedule) is a living document that should tell you whether the next milestone is at risk before it slips, not after. If your IMS is ever surprising you — it\'s not doing its job.',
+              },
+              {
+                label: 'Performance',
+                badge: 'CPARS',
+                text: 'The simplest to describe, the hardest to stay honest about. Are you delivering what the customer asked for? This is where your technical background actually helps — not to do the work, but to know whether the work being done meets the requirement. Busy ≠ delivering.',
+              },
+            ],
           },
           {
             type: 'list',
@@ -7917,10 +7947,26 @@ export const modules: Module[] = [
         ],
         content: [
           {
-            type: 'text',
-            heading: 'The Two Paths: Government Side vs. Contractor Side',
-            body: 'Defense acquisitions is one field with two very different careers inside it. The government side and the contractor side work closely together — often in the same building, on the same program — but they\'re playing different games with different rules and different incentives.\n\nThink of it like this: the government side is the client. The contractor side is the vendor. The client sets the requirements, owns the budget, makes the final decisions, and is accountable to Congress and the American taxpayer. The vendor delivers the work, manages the technical execution, and lives and dies by their performance ratings and contract renewals.\n\nOn the government side, you have real authority. You can approve or withhold payments. You can direct the contractor to change course. You sign the paperwork that matters. The tradeoff is that you do a lot of oversight work — reviewing contractor deliverables, sitting in status meetings, writing reports up the chain. Your salary is capped by the GS scale, and the bureaucracy is real.\n\nOn the contractor side, you\'re in the delivery business. Your job is to execute what the contract says, manage your team\'s performance, and keep the government customer happy enough to renew. The upside is higher compensation and — in some firms — faster career advancement. The downside is that your job security is tied to contract awards. When the contract ends or gets recompeted, so might your position.\n\nMany experienced professionals move between the two sides over the course of a career. That\'s not just normal — it\'s often strategic. A former government PM who knows how the oversight process works is extremely valuable to a contractor. A former contractor PM who understands technical execution is valuable to a government program office. The skills transfer. The perspective you build on each side makes you better at the other.',
+            type: 'two_col',
+            heading: 'Defense Acquisitions: Two Very Different Games',
+            rows: [
+              {
+                label: 'Government Side',
+                badge: 'The Client',
+                text: 'You set the requirements, own the budget, and are accountable to Congress and the taxpayer. You approve payments, direct the contractor, and sign the paperwork that matters. Tradeoff: more oversight work, GS salary caps, and real bureaucracy.',
+              },
+              {
+                label: 'Contractor Side',
+                badge: 'The Vendor',
+                text: 'You deliver the work, manage the technical execution, and live by your CPARS ratings and contract renewals. Upside: higher compensation and faster advancement at some firms. Downside: when the contract ends or gets recompeted, so might your job.',
+              },
+            ],
           },
+          {
+            type: 'highlight',
+            body: 'Many experienced professionals move **between both sides** over a career. That\'s not just normal — it\'s strategic.',
+            subtext: 'A former government PM who understands oversight is worth a lot to a contractor. A former contractor PM who understands technical execution is worth a lot to a program office.',
+          },,
           {
             type: 'callout',
             heading: 'A PM Is Not a Promotion',

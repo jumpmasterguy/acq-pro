@@ -1021,6 +1021,58 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               );
             }
 
+            // ── highlight: punchy single-insight callout ───────────────────────
+            if (block.type === 'highlight') {
+              return (
+                <div key={i} className="border-l-4 border-primary pl-5 py-3">
+                  <p className="text-base font-semibold text-foreground leading-snug">
+                    {block.body?.split(/\*\*([^*]+)\*\*/).map((seg: string, si: number) =>
+                      si % 2 === 1 ? <span key={si} className="text-primary">{seg}</span> : seg
+                    )}
+                  </p>
+                  {block.subtext && <p className="text-xs text-muted-foreground mt-1.5 italic">{block.subtext}</p>}
+                </div>
+              );
+            }
+
+            // ── stat_row: 2–4 KPI cards with big number + label ───────────────
+            if (block.type === 'stat_row') {
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-semibold text-sm mb-4">{block.heading}</h3>}
+                  <div className={`grid gap-3 ${ (block.stats?.length ?? 0) <= 2 ? 'grid-cols-2' : (block.stats?.length ?? 0) === 3 ? 'grid-cols-3' : 'grid-cols-2 sm:grid-cols-4'}`}>
+                    {block.stats?.map((stat: any, si: number) => (
+                      <div key={si} className="bg-muted/30 rounded-xl p-4 text-center">
+                        <div className="text-2xl font-black text-primary leading-none mb-1">{stat.value}</div>
+                        <div className="text-xs font-semibold text-foreground mb-1">{stat.label}</div>
+                        {stat.sub && <div className="text-[11px] text-muted-foreground leading-tight">{stat.sub}</div>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // ── two_col: label | explanation rows ──────────────────────────
+            if (block.type === 'two_col') {
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-semibold text-sm mb-4">{block.heading}</h3>}
+                  <div className="space-y-0">
+                    {block.rows?.map((row: any, ri: number) => (
+                      <div key={ri} className={`flex gap-4 py-3 ${ri < (block.rows?.length ?? 0) - 1 ? 'border-b border-border/50' : ''}`}>
+                        <div className="w-28 flex-shrink-0 pt-0.5">
+                          <span className="text-xs font-bold text-primary uppercase tracking-wide leading-tight">{row.label}</span>
+                          {row.badge && <span className="block mt-0.5 text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded font-medium w-fit">{row.badge}</span>}
+                        </div>
+                        <div className="flex-1 text-sm text-muted-foreground leading-relaxed">{row.text}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
             return null;
           })}
 
