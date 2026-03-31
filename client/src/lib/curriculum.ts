@@ -9221,3 +9221,24 @@ export const getAllLessons = (): { lesson: Lesson; module: Module }[] => {
 export const getTotalLessons = () => getAllLessons().length;
 export const getTotalModules = () => modules.length;
 
+
+/** Parse "14 min" → 14. Returns 0 if format is unexpected. */
+export const parseDuration = (d: string): number => {
+  const m = d.match(/^(\d+)/);
+  return m ? parseInt(m[1], 10) : 0;
+};
+
+/** Sum all lesson durations for a module, returned in minutes. */
+export const getModuleTotalMinutes = (moduleId: string): number => {
+  const mod = modules.find(m => m.id === moduleId);
+  if (!mod) return 0;
+  return mod.lessons.reduce((acc, l) => acc + parseDuration(l.duration), 0);
+};
+
+/** Format minutes as "Xh Ym" or "Y min" */
+export const formatDuration = (mins: number): string => {
+  if (mins < 60) return `${mins} min`;
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return m > 0 ? `${h}h ${m}m` : `${h}h`;
+};
