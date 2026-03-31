@@ -7350,180 +7350,253 @@ export const modules: Module[] = [
       {
         id: 'ops-3',
         title: 'Career Roadmap: Breaking Into DoD Acquisitions',
-        duration: '10 min',
-        description: 'A practical guide to landing your first acquisition role and building a long-term career.',
+        duration: '12 min',
+        description: 'Whether you\'re coming from a technical background, a business degree, or a military transition, defense acquisitions offers two very different career paths — government and contractor — with distinct entry points, credentials, and cultures. This lesson maps both tracks honestly: what each side actually does, how to get in the door, what gets you hired, what to expect in compensation, and how the career develops from entry level to the senior executive ranks.',
         keyTerms: [
-          { term: 'GS Scale', definition: 'General Schedule — the federal pay scale for white-collar civilian federal employees (GS-1 through GS-15).' },
-          { term: 'SES', definition: 'Senior Executive Service — the executive leadership corps of the federal government.' },
-          { term: 'Pathways Program', definition: "DoD's competitive hiring program for recent graduates and current students." },
-          { term: 'DAU', definition: 'Defense Acquisition University — the premier education institution for acquisition professionals.' },
-          { term: 'DAPA', definition: 'Defense Acquisition Professional Development (formerly DAWIA certifications, now DAPA).' },
+          {
+            term: 'GS Scale (General Schedule)',
+            definition: 'The federal government\'s standard pay system, running from GS-1 (entry level) to GS-15 (senior professional). Most acquisition careers start at GS-7 or GS-9 and top out around GS-14 or GS-15 before the Senior Executive Service. The grade determines your salary band, which varies by location — working in Washington D.C. pays more than the same grade in a lower cost-of-living city.',
+          },
+          {
+            term: 'Program Manager (PM)',
+            definition: 'The person accountable for delivering a defense program — on schedule, within budget, and to the required performance. Critically: the PM is not the technical expert. The PM\'s job is coordination, decision-making, and accountability. They make sure the right people are working the right problems and that leadership always has what they need to make informed decisions.',
+          },
+          {
+            term: 'Defense Contractor',
+            definition: 'A private company that is paid by the government to deliver goods or services — weapons systems, software, logistics support, advisory services, and much more. Major players include Lockheed Martin, Raytheon, Boeing, Booz Allen Hamilton, Leidos, and SAIC. Contractors do the technical work; government employees oversee it and are ultimately accountable for outcomes.',
+          },
+          {
+            term: 'Security Clearance',
+            definition: 'Official authorization from the U.S. government to access classified information. The most common levels are Secret and Top Secret (with TS/SCI — Sensitive Compartmented Information — being the most demanding). Getting cleared takes 6 to 18 months on average and involves a detailed background investigation. In this industry, having a clearance is often worth more than an extra degree — it\'s genuinely hard to replace.',
+          },
+          {
+            term: 'DAU (Defense Acquisition University)',
+            definition: 'The federal government\'s training institution for acquisition professionals. It offers hundreds of courses — most of them free to government employees — covering contracting, program management, finance, logistics, and more. If you\'re on the government track, DAU isn\'t optional. Start with ACQ 101 (Fundamentals of Systems Acquisition Management), which is free and available online.',
+          },
+          {
+            term: 'Series 1102 / 1101',
+            definition: 'The federal job classification codes used to categorize acquisition roles. Series 1102 is the Contracting Officer track — the people who write and award contracts. Series 1101 is a broader Program Management / Acquisition Support category. When searching USAJOBS.gov, filtering by these series codes is the fastest way to find acquisition jobs and cuts through the noise.',
+          },
+          {
+            term: 'Pathways Program',
+            definition: 'The federal government\'s structured entry-level hiring program for recent college graduates (within the past two years). It\'s the most direct door into a government acquisition career without prior federal experience. Most positions are GS-7 to GS-9, include a formal development plan, and can convert to a full-time permanent position after one year. Think of it as a paid apprenticeship with a built-in career track.',
+          },
+          {
+            term: 'PMP (Project Management Professional)',
+            definition: 'The most widely recognized project management certification in the world, administered by PMI (Project Management Institute). On the contractor side, it\'s essentially a baseline credential for anyone in a PM or program analyst role. It signals that you understand the discipline of project management — scheduling, risk, stakeholder management — regardless of what industry you learned it in.',
+          },
+          {
+            term: 'GovWin IQ',
+            definition: 'A business intelligence platform used extensively by defense contractors to track government opportunities, monitor competitor activity, and plan business development strategy. If you end up in a Business Development (BD) or capture role on the contractor side, GovWin is the primary tool for finding and qualifying new contract opportunities before they\'re officially solicited.',
+          },
+          {
+            term: 'DAPA (Defense Acquisition Professional Development Program)',
+            definition: 'The current framework (formerly called DAWIA — Defense Acquisition Workforce Improvement Act) that defines certification requirements for government acquisition professionals. It establishes what training, education, and experience you need to hold certain positions. Working toward your certifications isn\'t bureaucratic box-checking — it\'s the clearest signal to hiring managers that you\'re serious about this career.',
+          },
         ],
         content: [
           {
             type: 'text',
-            heading: "The Career Landscape",
-            body: "DoD acquisition offers two distinct career tracks: the government side (civilian or military) and the contractor/industry side. Both paths offer excellent opportunities, and many professionals move between them throughout their careers. The government side provides the acquisitions professional credentials through DAU training and DAPA requirements. The contractor side offers higher compensation but requires understanding government processes to be effective."
+            heading: 'The Two Paths: Government Side vs. Contractor Side',
+            body: 'Defense acquisitions is one field with two very different careers inside it. The government side and the contractor side work closely together — often in the same building, on the same program — but they\'re playing different games with different rules and different incentives.\n\nThink of it like this: the government side is the client. The contractor side is the vendor. The client sets the requirements, owns the budget, makes the final decisions, and is accountable to Congress and the American taxpayer. The vendor delivers the work, manages the technical execution, and lives and dies by their performance ratings and contract renewals.\n\nOn the government side, you have real authority. You can approve or withhold payments. You can direct the contractor to change course. You sign the paperwork that matters. The tradeoff is that you do a lot of oversight work — reviewing contractor deliverables, sitting in status meetings, writing reports up the chain. Your salary is capped by the GS scale, and the bureaucracy is real.\n\nOn the contractor side, you\'re in the delivery business. Your job is to execute what the contract says, manage your team\'s performance, and keep the government customer happy enough to renew. The upside is higher compensation and — in some firms — faster career advancement. The downside is that your job security is tied to contract awards. When the contract ends or gets recompeted, so might your position.\n\nMany experienced professionals move between the two sides over the course of a career. That\'s not just normal — it\'s often strategic. A former government PM who knows how the oversight process works is extremely valuable to a contractor. A former contractor PM who understands technical execution is valuable to a government program office. The skills transfer. The perspective you build on each side makes you better at the other.',
+          },
+          {
+            type: 'callout',
+            heading: 'A PM Is Not a Promotion',
+            body: 'This is the most important concept in this lesson, and it\'s the one that trips people up most often.\n\nBecoming a Program Manager is not a promotion from your current job. It\'s a lateral move into a completely different discipline.\n\nBeing a great engineer doesn\'t make you a great PM any more than being a great surgeon makes you a great hospital administrator. The skills are adjacent but different. One is about doing the work. The other is about making sure the work gets done — by the right people, at the right cost, on the right schedule.\n\nThe surgeon analogy is worth sitting with. A surgeon who becomes a department head and keeps trying to do surgery all day is a bad department head. The job changed. The measure of success changed. Everything that made them excellent before is now, at best, a distraction — and at worst, a liability.\n\nDefense PM is the same. The best engineers, analysts, and contract specialists who become PMs often struggle in the transition because they keep defaulting to doing the technical work instead of managing it. It feels productive to dive into the details. It feels uncomfortable to stay at 30,000 feet while problems pile up below you. But that discomfort is exactly the job.\n\nA PM\'s core questions are: Who owns this? What are the options? What does leadership need to know, and when do they need to know it? Not: let me solve this myself.\n\nIf you\'re moving into a PM role, give yourself six months before you judge whether you\'re good at it. The rewiring takes time.',
+          },
+          {
+            type: 'list',
+            heading: 'Getting In: Government Track',
+            items: [
+              'Start your security clearance process immediately|||You cannot start the official clearance process until you have a job offer, but you can prepare. Know your full employment history, foreign contacts, and financial history. The most common delay isn\'t a disqualifying event — it\'s missing information. Clearances typically take 6 to 18 months; TS/SCI can take longer. Disclose everything honestly. Adjudicators care far more about honesty and context than about the underlying facts.',
+              'USAJOBS.gov is the only place government jobs are posted|||There is no LinkedIn Easy Apply for federal jobs. Every civilian government position must be posted on USAJOBS.gov. When you search, filter by job series — Series 1102 (Contracting) or 1101 (Program Management/Acquisition) will surface most acquisition roles. Read the job announcement carefully and mirror its exact language in your application materials. Automated screening systems look for keyword matches before a human ever sees your resume.',
+              'The Pathways Program is the best entry door for recent graduates|||If you graduated from college in the last two years, the Pathways Recent Graduates Program is designed specifically for you. It places you in a one-year developmental assignment at GS-7 or GS-9, with a structured training plan and a conversion pathway to a permanent position. This is how many acquisition professionals get their first federal job — without needing prior government experience.',
+              'DAU training is free for government employees — start now|||Defense Acquisition University (DAU) offers free online courses for all government acquisition employees. ACQ 101 (Fundamentals of Systems Acquisition Management) is the right starting point and takes roughly eight hours. You will need DAU certifications to advance — they are required, not optional, for most GS-13 and above positions. The earlier you start, the less it feels like a checkbox and the more it feels like actual knowledge.',
+              'The defense community is small — network accordingly|||AFCEA (Armed Forces Communications and Electronics Association) events, industry days, and LinkedIn are all legitimate networking channels. The DoD acquisition community is genuinely small. You will keep running into the same people throughout your career. Treat every interaction — including informational interviews with people more senior than you — as a long-term relationship investment. The person you help out at GS-9 may be a SES member when you\'re a GS-14.',
+              'Your federal resume is not your private-sector resume|||A federal resume is typically 3 to 5 pages, not one. It must document your work history in significant detail — specific duties, accomplishments, and hours per week for each position. It must match the language of the job announcement as closely as possible, because keyword matching matters. Quantify everything: not "managed a budget" but "managed a $4.2M operations budget across three funding lines." If you\'re not used to writing this way, DAU and USAJOBS both offer guidance.',
+              'Apply broadly and expect the process to take months|||Federal hiring is slow by design. From application to start date, three to six months is normal; some positions take longer. Apply to multiple positions simultaneously. Do not withdraw from a process because you haven\'t heard back — no news is genuinely no news in federal hiring.',
+            ],
+          },
+          {
+            type: 'list',
+            heading: 'Getting In: Contractor Track',
+            items: [
+              'The big firms are not the only option — and may not be the best for early careers|||Booz Allen Hamilton, Leidos, SAIC, Peraton, and GDIT are the household names. They hire at volume and have established training programs, but early-career employees can get lost in large organizations. Smaller and mid-size firms often offer faster advancement, broader exposure, and more direct mentorship. If you\'re choosing between a large firm and a smaller one, ask what your day-to-day looks like in year two — not just year one.',
+              'Program Analyst is the most common entry-level door|||If you\'re applying for contractor jobs without a clearance or significant acquisition experience, look for "Program Analyst" roles. The job typically involves supporting a government program office: tracking schedules, preparing briefings, analyzing data, writing reports. It\'s not glamorous, but it\'s where you learn how programs actually run — and it builds the experience base you\'ll need for every role after it.',
+              'Get your PMP — even if you don\'t have it yet|||The Project Management Professional (PMP) certification is the baseline credential for contractor PM roles. You need 36 months of project management experience to sit for the exam, so you may not qualify immediately. That\'s fine — but put it on your roadmap from day one. In the meantime, look at PMI\'s entry-level certifications as stepping stones. Senior contractor PM roles routinely list PMP as required, not preferred.',
+              'GovWin IQ is essential if you move into business development|||GovWin IQ is the intelligence platform that tracks government procurement activity — what\'s being bid, what competitors are winning, what\'s coming up on the horizon. If you end up in a Business Development (BD) or capture role, this is your most important daily tool. Even if you\'re not in BD yet, basic familiarity with it signals to employers that you understand how the contractor business works.',
+              'LinkedIn is how this industry actually hires|||The contractor market is heavily relationship-driven. Firms recruit from their networks first, post jobs second. A strong LinkedIn profile with specific program keywords (program names, agency names, contract vehicles) will get you inbound recruiter contacts. Connect proactively with people in the roles you want. Informational interviews are widely accepted in this community — most people will take a 30-minute call if you ask respectfully.',
+              'A security clearance is more valuable than an extra degree at senior levels|||At the entry and mid levels, education and certifications matter. At the senior level, your clearance and your program relationships are what contractors are actually paying for. This sounds blunt but it\'s true: a cleared GS-14 who knows the government PM and the customer organization is worth far more to a contractor than a credentialed professional who has to start from scratch on relationships. Protect your clearance like the asset it is.',
+            ],
+          },
+          {
+            type: 'callout',
+            heading: 'What Actually Gets You Hired',
+            body: 'Here\'s the honest version of what both sides are looking for: problem solvers, not task completers.\n\nAnyone can say they "supported a program" or "managed acquisition actions." The candidates who get hired — and get promoted — are the ones who can tell a specific story about a problem they diagnosed, a solution they built, and an outcome they drove.\n\nThis is what that sounds like in practice: "We were 18 months out from Milestone B — a major program review — and our schedule showed we were going to miss it. I identified the critical path issues early, built a recovery plan with three options, briefed leadership with a clear recommendation, and we made the milestone on time."\n\nThat answer has: a problem, an analysis, a decision, and an outcome. It shows judgment, not just activity.\n\nCertifications get you in the door. They signal baseline competence and show you took the time to invest in the field. But problem-solving keeps you in the room — and gets you the next job.\n\nWhen you\'re preparing for interviews, build a library of five to seven specific stories like this from your own experience. Use the STAR format (Situation, Task, Action, Result) if it helps structure your thinking. The specific details — the program name, the dollar amount, the schedule date — are what make the story credible. Vague stories sound like resume filler. Specific stories sound like experience.',
           },
           {
             type: 'table',
-            heading: "Career Entry Points",
-            headers: ['Background', 'Recommended Entry Role', 'Grade Level', 'First Steps'],
+            heading: 'Salary Reality Check (2025 Estimates)',
+            headers: ['Track', 'Role / Grade', 'Approximate Annual Salary', 'Notes'],
             rows: [
-              ['Military (O-3 to O-5)', 'Program Manager / Deputy PM', 'GS-12/13 or equivalent', 'DAU courses, apply to PEO offices'],
-              ['Enlisted Military', 'Program Analyst / Contracting Support', 'GS-9/11', 'DAU CLM 003, 049; USAJOBS'],
-              ['Engineering degree', 'Systems Engineer / Technical Advisor', 'GS-11/12', 'Get security clearance first'],
-              ['Finance / Accounting', 'Financial Manager / Cost Analyst', 'GS-9/11', 'CDFM certification, DAU FMF courses'],
-              ['Business / Management', 'Contracts Specialist (1102)', 'GS-9/11', 'FAC-C training, use Pathways program'],
-              ['No direct background', 'Program Analyst / Admin Support', 'GS-7/9', 'Pathways program, networking'],
-            ]
+              ['Government', 'GS-9 (Entry)', '$55,000 – $72,000', 'Varies significantly by location; D.C. metro adds ~30%'],
+              ['Government', 'GS-11 (Early Career)', '$66,000 – $87,000', 'Typical after 2–3 years; first supervisory roles possible'],
+              ['Government', 'GS-12 (Mid Career)', '$79,000 – $103,000', 'Where most people spend several years building specialization'],
+              ['Government', 'GS-13 (Senior Specialist)', '$94,000 – $122,000', 'Competitive; typically requires DAPA certification progress'],
+              ['Government', 'GS-14 (Senior PM / Lead)', '$111,000 – $144,000', 'Major program experience usually required to reach this grade'],
+              ['Government', 'GS-15 (Principal / Director)', '$130,000 – $169,000', 'Highest non-SES grade; leadership of significant programs'],
+              ['Contractor', 'Program Analyst (Entry)', '$65,000 – $85,000', 'Wide range depending on firm size, clearance level, location'],
+              ['Contractor', 'Program Manager (Mid)', '$100,000 – $135,000', 'With PMP and active clearance; direct program oversight'],
+              ['Contractor', 'Senior PM / Program Director', '$140,000 – $185,000', 'TS/SCI + program relationships = primary value drivers'],
+              ['Contractor', 'VP, Business Development', '$180,000 – $250,000+', 'Highly variable; often includes commission/bonus structure'],
+            ],
           },
           {
-            type: 'list',
-            heading: "Essential First Steps (Government Track)",
-            items: [
-              'Get your security clearance — many roles require Secret or TS/SCI; apply early|||The clearance backlog has historically run 12-24 months for Secret and longer for TS/SCI. Starting the process at your first eligible opportunity — typically when you accept a conditional job offer — is critical. Any financial irregularities, foreign contacts, or drug use history should be disclosed honestly; the adjudication process is more forgiving of disclosed issues than discovered ones.',
-              'Enroll at Defense Acquisition University (DAU) — free courses, essential credentials|||DAU (dau.edu) is free for all DoD government employees and provides the DAWIA certifications required for career progression. Start with ACQ 101 (Fundamentals of Systems Acquisition Management) regardless of your career field. The continuous learning requirement (40 CLPs/year) keeps certifications current. DAU courses are also available to industry partners at a modest cost.',
-              'Target USAJOBS.gov listings under series 1102 (Contracting), 0340/1101 (PM — 1101 is the Air Force-specific PM series), or 0501 (Financial)|||USAJOBS.gov is the mandatory posting site for all federal civilian positions. Filter by occupational series, grade (GS-7 to GS-11 for entry), and location. Set up automated job alerts for your target series and locations. Pathways Recent Graduates positions are specifically designated — search for "Pathways" combined with your target series. Veterans\' preference points provide a meaningful advantage.',
-              'Network at AFCEA, NDIA, and SAME events — the defense community is relationship-driven|||AFCEA (Armed Forces Communications and Electronics Association), NDIA (National Defense Industrial Association), and SAME (Society of American Military Engineers) host local chapter events, symposia, and luncheons where government and industry professionals mix. Showing up consistently, engaging thoughtfully, and following up after meetings compounds into a professional network that accelerates both information and opportunity.',
-              'Obtain a relevant certification: PMP, CDFM, CPCM, DAWIA equivalents|||Certifications signal commitment and baseline competence. PMP (Project Management Professional) is recognized across both government and industry. CDFM (Certified Defense Financial Manager) is specific to defense finance. CPCM (Certified Professional Contracts Manager) is the NCMA standard for contracting professionals. DAWIA certifications are DoD-specific. The right certification depends on your target career field and employer.',
-              'Build your resume around the FAR/DFARS, EVM, and program management language|||Federal resumes are longer than private sector resumes (often 3-5 pages) and must include specific language from job announcements for keyword matching. Quantify achievements: "Administered 23 task orders totaling $47M" beats "managed multiple contracts." Use the exact terminology from the job announcement — applicant tracking systems match keywords before humans read resumes.',
-              'Consider the Pathways Recent Graduates program if you recently completed a degree|||The Pathways Recent Graduates Program accepts applications within 2 years of degree completion. It provides 1 year of structured career development, a mentor, and a clear pathway to a permanent appointment. It\'s one of the few structured entry pipelines for federal service and offers GS-7 to GS-9 starting grades depending on education and experience.',
-            ]
+            type: 'text',
+            level: 'intermediate' as const,
+            heading: 'Mid-Career: Building a Portfolio, Not Just a Resume',
+            body: 'If you\'re five to ten years in and thinking about the next level, the question changes. It\'s no longer "how do I get experience?" It\'s "what kind of experience am I deliberately building?"\n\nThe most competitive GS-14 and GS-15 profiles — and the contractor equivalents — share a few characteristics. First, they\'ve worked on at least one major program. In acquisition, program size is classified using ACAT levels (Acquisition Category). ACAT I programs are the big ones — major weapons systems with price tags in the billions that Congress watches closely and the Secretary of Defense approves. ACAT II programs are still significant but operate with more delegation. Having ACAT I or ACAT II experience on your resume signals that you understand how defense acquisition works at scale, with real stakes.\n\nSecond, they\'ve done a functional rotation. The best PMs understand finance, contracting, and engineering — not at a practitioner level, but well enough to ask the right questions. A rotation through a contracting office or a program finance function makes you a materially better PM. It also demonstrates breadth of perspective, which is increasingly what senior hiring managers look for.\n\nThird, they\'re current on their DAPA certifications. The government\'s certification framework isn\'t just a credential — it reflects the training requirements tied to specific job levels. Letting your certifications lag sends a signal that you\'re coasting.\n\nFor those considering the government-to-contractor transition: this typically happens at the GS-13 to GS-15 level, and it\'s worth thinking through clearly. Contractors aren\'t just paying for your PM skills — they\'re paying for your clearance, your knowledge of a specific program or customer office, and your relationships. Those things have genuine market value. The tradeoff is that you give up federal benefits, pension accrual, and some job stability. Neither choice is obviously better — it depends on what you\'re optimizing for. Just make the choice deliberately rather than because a recruiter caught you on a good day.',
           },
           {
-            type: 'list',
-            heading: "Essential First Steps (Contractor Track)",
-            items: [
-              'Identify target companies: Booz Allen, Leidos, SAIC, Peraton, BAH, GDIT, ManTech, DXC, HII (Huntington Ingalls Industries)|||The "Big 8" defense services firms (Booz Allen, Leidos, SAIC, Peraton, GDIT, ManTech, CACI, Accenture Federal) collectively hold thousands of task orders across all DoD components. They offer structured career paths, training programs, and geographic diversity. Mid-size firms (200-2000 employees) often offer faster advancement and broader responsibility. Small businesses (<500 employees) offer equity potential and agility.',
-
-              'Target roles: Program Analyst, Capture Analyst, Contract Support, Cost Analyst|||Entry-level titles in defense contracting are deliberately general. Program Analyst is the most common entry point — supporting a PM or program office on a cost-reimbursable contract. Capture Analyst supports BD and proposal functions. Contract Support assists the Contracts department. Cost Analyst focuses on pricing and financial analysis. All four build toward PM, Capture Manager, Contracts Manager, or Finance Director tracks respectively.',
-              'Build expertise in GovWin IQ, FPDS-NG, SAM.gov — essential tools for BD roles|||GovWin IQ (Deltek) is the dominant competitive intelligence platform for defense contracting — used to track opportunities, incumbents, and award histories. FPDS-NG (Federal Procurement Data System-Next Generation) is the government\'s public procurement database — every contract award above the micro-purchase threshold is reported here. SAM.gov (System for Award Management) is where opportunities are posted and contractor registrations are maintained.',
-              "Get PMP certified — it\'s the universal credential for PM roles at contractors",
-              'Understand EVM — most contractor PM roles require EVMS knowledge|||Earned Value Management System (EVMS) knowledge is now a near-universal requirement for contractor PM roles on cost-type defense contracts. Understanding how to structure a WBS, maintain a baseline, calculate variances, forecast EAC, and prepare IPMR/CPR reports is the core of program financial management. AACE International and PMI both offer EVM-related credentials.',
-              'Leverage LinkedIn: connect with BD managers, capture managers, and proposal professionals|||LinkedIn is the primary professional networking platform for defense contractors. Following companies, engaging with their content, and connecting with people in target roles creates visibility before formal job applications. Many BD and capture roles are filled through internal referrals — being known to the hiring manager before the job opens is the most reliable way in.',
-              'Join APMP (Association of Proposal Management Professionals) — excellent community|||APMP (apmp.org) has a robust local chapter network, certification program (Foundation, Practitioner, Professional levels), and an annual conference that is genuinely valuable for anyone in proposal management, BD support, or capture roles. The APMP Body of Knowledge is also a practical reference for proposal professionals at all experience levels.',
-            ]
+            type: 'text',
+            level: 'advanced' as const,
+            heading: 'The Senior Executive Path',
+            body: 'If you\'re thinking about SES (Senior Executive Service) — the top of the civilian career ladder — you\'re playing a longer game, and the rules are different.\n\nFirst, some scale: there are roughly 7,000 SES members across the entire federal government. In defense acquisition, the most visible senior civilian positions are Program Executive Officers (PEOs) — the officials who oversee portfolios of related programs — and Deputy Assistant Secretaries of Defense. These are the civilian equivalents of general officers. Getting there requires two decades of deliberate choices, not just accumulated time.\n\nHere\'s what the path actually requires:\n\n**Major Program Experience.** You need at least one tour as a PM or Deputy PM on a significant program — ideally ACAT I or II. This is non-negotiable. You cannot credibly lead a PEO\'s office if you haven\'t personally managed a program through at least one major milestone review.\n\n**Joint Duty Assignment (JDA).** This is a cross-service or cross-agency assignment — for example, an Army acquisition officer spending a tour at a Navy command, or a civilian working at a joint combatant command. JDAs are required by law for senior civilian positions in the defense department. They\'re also genuinely valuable: working outside your home service gives you a network and a perspective that\'s rare.\n\n**Senior Service College.** Army War College, Naval War College, Air War College — the war colleges admit senior civilians alongside senior military officers. This is not optional for the SES track, and the curriculum isn\'t really the point. The relationships you build in that year — with future generals, admirals, and senior executives — matter more than the coursework. Plan for this in your mid-40s.\n\n**Candidate Development Program (CDP).** Most military departments run CDPs for civilians who want to be considered for SES. These are competitive programs — apply three to five years before you want the role. They involve developmental assignments, executive coaching, and formal assessment. If SES is your goal, identify the CDP in your organization and start positioning for it early.\n\nThe plain-English reality check: this path takes 20 or more years and requires deliberate choices starting from your first program assignment. Random assignments produce random careers. If you want to lead a major program office someday, that goal should inform which jobs you take at GS-12 and GS-13 — not just at GS-14 and GS-15. The people who make SES didn\'t stumble into it. They planned backward from where they wanted to be.',
           },
-          {
-            type: 'callout',
-            heading: "What Companies and Agencies Really Want: Problem Solvers",
-            body: "Here is the truth no job posting will tell you directly: every hiring manager — government or contractor — is looking for one thing above all else. Someone who solves problems. Not someone who describes problems. Not someone who escalates problems. Someone who owns them, works the issue, and comes back with a path forward. That is the essence of being a Program Manager. Programs are messy. Budgets get cut, contractors miss milestones, requirements change, and stakeholders disagree. The PM is the person in the room who does not panic. They ask: what do we know, what do we not know, who owns it, and what are our options? Whether you are on the government side managing a billion-dollar ACAT I program or on the contractor side supporting a CPFF task order, the value you bring is your ability to take ambiguity and turn it into action. When you build your resume, your interview stories, and your professional brand — lead with problems you solved, not tasks you performed. \"Managed the schedule\" is forgettable. \"Identified a six-month schedule risk eighteen months out, built a recovery plan, and briefed the MDA with three options — we made Milestone B on time\" is the kind of answer that gets you hired. Certifications get you in the door. Problem-solving keeps you in the room."
-          },
-          {
-            type: 'list',
-            heading: "The Problem-Solver Mindset in Practice",
-            items: [
-              'When you see a risk, bring a mitigation — never just the problem|||Presenting a problem without a recommended solution signals you don\'t understand the issue deeply enough to solve it. When you identify a risk: (1) quantify it — probability × impact; (2) propose 2–3 mitigation options with tradeoffs; (3) recommend one. Then let the leader decide. This is the single most important behavioral shift for junior acquisition professionals.',
-              'Own your lane completely: know your numbers, your schedule, your risks cold|||At any program review, you should answer questions about your area without hesitation. If you\'re the budget analyst, know the obligation rate, EAC, and Nunn-McCurdy thresholds cold. Being caught unprepared in front of your PEO once is a memorable career moment — for the wrong reasons.',
-              'Communicate up early — a PM who surfaces problems late destroys trust fast|||The cardinal rule: no surprises for leadership. A cost overrun known for months but revealed at a milestone review is a career-defining moment. The same problem surfaced 12 months early with a recovery plan is manageable. The PM who delivers honest early bad news is trusted. The PM who hides problems is not.',
-              'Build bridges across silos: the contracting officer, the finance lead, and the engineer all need to trust you|||The most effective program offices are integrated teams where each member understands adjacent functions well enough to anticipate problems across silos. A PM who can\'t explain EVM to the engineer or acquisition strategy to the finance lead is constantly translating — and losing information in translation. Cross-functional fluency is a force multiplier.',
-
-              'Document decisions — when things go sideways, the paper trail protects you and the program|||Every significant decision — to proceed despite a risk, to accept a deliverable with a known deficiency, to defer a test event — should be documented in writing with the reasoning. When OIG or GAO audits a struggling program, they look for decision documentation. Programs that made sound decisions but didn\'t document them look exactly like programs that made poor decisions.',
-              'Ask \"so what?\" relentlessly — data without a so-what is noise, not insight|||Program reviews that present data without interpretation — "our CPI is 0.91" — are missed opportunities. The PM should train the team to always provide context: "our CPI is 0.91, which represents a $3.2M cost overrun driven by three specific work packages, and we\'ve initiated recovery actions X, Y, and Z." Data that prompts a decision is useful. Data that just sits there is overhead.',
-              'Treat every program review as a chance to demonstrate command of your program, not just read slides|||Senior leaders — PEOs, SAEs, Congressional staffers — evaluate PM competence based on whether they can speak to their program without looking at the slides. PMs who know their numbers cold, who anticipate questions before they\'re asked, and who present problems with solutions already framed project a very different level of confidence than those who are reading the brief for the first time.',
-            ]
-          },
-          {
-            type: 'callout',
-            heading: "Salary Expectations (2025 Market)",
-            body: "Government Track: GS-11 ($58-76K), GS-12 ($70-91K), GS-13 ($83-108K), GS-14 ($98-127K), GS-15 ($115-150K) — plus excellent benefits, pension, and work-life balance. Contractor Track: Program Analyst ($65-85K), Senior Analyst ($85-120K), Program Manager ($110-160K), Capture Manager ($130-200K), VP BD ($180-300K+). The government-to-contractor transition typically brings a 20-40% salary increase."
-          },
-          {
-          type: 'text' as const,
-          level: 'intermediate' as const,
-          heading: 'Mid-Career Positioning: Building Your Acquisition Credentials',
-          body: 'Mid-career acquisition professionals need a deliberate portfolio strategy. The most valued combination for a GS-14/15 PM position: Defense Acquisition Workforce Improvement Act (DAWIA) Level III certification in Program Management, 4+ years of major program experience (ACAT I or II preferred), and a rotation through a contracting or finance function. Certifications alone are table stakes. Differentiators: (1) an assignment at a COCOM or joint organization that demonstrates cross-service experience; (2) a successful Milestone review as the PM — even as a deputy, being part of a Milestone B team is significant experience; (3) DAU resident course completion (PMT-401 or equivalent) — program managers who attended resident PMT are a separate tier from those who completed DAU online-only. Build the portfolio intentionally — random assignments lead to random careers.',
-        },
-        {
-          type: 'callout' as const,
-          level: 'advanced' as const,
-          heading: 'The Senior Executive Path in Defense Acquisition: SES and PEO Roles',
-          body: 'The path to Senior Executive Service (SES) or Program Executive Officer (PEO) in defense acquisition requires a deliberate strategy that most mid-career PMs don\'t start building early enough. The prerequisites: (1) at least one ACAT I program as PM or Deputy PM; (2) Joint Duty Assignment completion (required for senior civilian positions); (3) Senior Service College (SSC) attendance — Army War College, Naval War College, or equivalent. The SSC is not a checkbox; it is a community of future flag officers and senior executives who will be your peers for the next 20 years — build relationships deliberately; (4) SES candidate development programs (CDPs) — most services have CDPs that provide structured development, senior mentoring, and visibility to SES selection panels. Apply for CDPs 3-5 years before you want the SES position.',
-        },
         ],
-      quiz: [
+        quiz: [
           {
             id: 'q1',
-            question: "For a recent college graduate interested in the government contracting track, what is the most direct pathway into DoD acquisitions?",
+            type: 'mc',
+            question: 'What is the most accurate way to describe the difference between working on the government side versus the contractor side in defense acquisition?',
             options: [
-              'Apply directly for GS-14 Program Manager positions|||Incorrect. Entry into DoD acquisition careers typically starts at GS-7 through GS-12 levels. GS-14 PM positions typically require 10+ years of acquisition experience and DAWIA Level III (or APWG equivalent) certification.',
-              "Use DoD's Pathways Recent Graduates program targeting GS-7/9 entry-level positions",
-              'Get 10 years of private sector experience first|||Incorrect. Private sector experience is valuable but not a prerequisite. Many acquisition professionals begin directly from college, military service, or other government positions.',
-              'Only military experience leads to acquisition careers'
+              'Government employees do the technical work; contractors oversee it|||This is backwards. Contractors typically perform the technical execution. Government employees provide oversight and are ultimately accountable for outcomes.',
+              'Government employees are the client with oversight authority; contractors are the vendors who deliver the work|||Correct. The government sets requirements, controls the budget, and is accountable to Congress. Contractors execute the work and are evaluated on their performance.',
+              'Both sides perform the same functions but are paid differently|||The roles are structurally different — not just in compensation but in authority, accountability, and day-to-day responsibilities.',
+              'Contractors have more authority because they hold the technical expertise|||Technical expertise and authority are different things. Government Contracting Officers and PMs have legal and contractual authority regardless of technical depth.',
             ],
             correct: 1,
-            explanation: "The Pathways Recent Graduates program is specifically designed for recent college graduates (within 2 years of degree) and provides a structured entry point into federal service at GS-7 to GS-9 levels. Combined with DAU training, it provides a clear pathway to a full-career acquisition professional role."
+            explanation: 'The government side functions as the client — setting requirements, controlling funds, and maintaining oversight authority. The contractor side functions as the vendor — executing the work and being measured on schedule, cost, and performance. Many professionals move between the two sides over the course of a career because understanding both perspectives is genuinely valuable.',
           },
           {
             id: 'q2',
-            question: "Defense Acquisition University (DAU) courses are:",
+            type: 'mc',
+            question: 'A talented systems engineer with 10 years of experience is considering a move into a Program Manager role. What is the most important thing for them to understand about this transition?',
             options: [
-              'Paid courses costing $2,000-5,000 per course|||Incorrect. DAU (Defense Acquisition University) courses are provided at no cost to the DoD acquisition workforce â funded by DoD as a workforce development investment.',
-              'Free to DoD acquisition workforce members and mandatory for certification|||Correct. DAU courses are free to DoD acquisition workforce members (civilians and military) and required for DAWIA certification. DAU offers courses in-person at Fort Belvoir, VA and online. Key courses include ACQ 101, ACQ 202, CON 200, and PM certifications.',
-              'Only available to military officers|||Incorrect. DAU courses are available to all DoD acquisition workforce members â military officers, enlisted personnel, and civilian employees. Many critical acquisition positions are held by civil servants.',
-              "Equivalent to a master's degree from an accredited university"
+              'Their technical expertise will be their biggest advantage as a PM|||Technical depth is useful context but can actually become a liability if the new PM defaults to doing technical work instead of managing it.',
+              'The PM role is a natural promotion that rewards deep technical expertise|||Being a PM is a lateral move into a different discipline — not a promotion. The skills that made someone a great engineer are different from the skills that make a great PM.',
+              'PM is a different job focused on coordination and accountability, not technical execution|||Correct. The PM\'s job is making sure the right people are solving the right problems — not solving the problems themselves. This is a genuine mindset shift that takes time.',
+              'The main challenge will be learning acquisition regulations|||Regulations can be learned. The harder transition is behavioral — learning to stay at the management level rather than diving into technical details.',
             ],
-            correct: 1,
-            explanation: "DAU courses are provided free of charge to DoD acquisition workforce members and are mandatory for DAPA certification at each level. They cover all acquisition career fields including program management, contracting, finance, systems engineering, and logistics. Many courses are now available online through the DAU learning management system."
+            correct: 2,
+            explanation: 'The PM role requires a fundamentally different mindset: Who owns this? What are the options? What does leadership need to know? The best engineers who become PMs often struggle initially because they keep defaulting to doing the technical work instead of managing it. The job is coordination and accountability — not expertise.',
           },
           {
             id: 'q3',
-            question: "A former Army O-4 (Major) transitioning to a civilian acquisition career is most likely to enter at what GS grade level?",
-            options: ['GS-7/9', 'GS-12/13', 'GS-15', 'SES'],
+            type: 'mc',
+            question: 'A recent college graduate (graduated 14 months ago) wants to start a career on the government side of defense acquisition. What is the best entry path?',
+            options: [
+              'Apply directly to GS-12 positions using USAJOBS.gov|||GS-12 positions require significant prior experience. A recent graduate without federal service would not be competitive at this level.',
+              'The Pathways Recent Graduates Program, which offers GS-7 to GS-9 positions with a structured development plan|||Correct. The Pathways program is specifically designed for graduates within two years of their degree. It provides a one-year structured program and a conversion pathway to a permanent position.',
+              'Start at a defense contractor first and then transition to government after two years|||This is a valid career path but not the most direct route for someone who specifically wants to start on the government side.',
+              'Wait until you have a security clearance before applying|||You cannot obtain a clearance without a job offer — it\'s the job that initiates the clearance process. Waiting for a clearance before applying is not possible.',
+            ],
             correct: 1,
-            explanation: "O-4 officers (Majors/Lieutenant Commanders) with acquisition experience typically qualify for GS-12 to GS-13 positions, reflecting their supervisory experience, program management background, and leadership responsibilities. Military pay tables translate roughly to GS grade equivalents, and hiring authorities can credit military experience for non-competitive appointments."
+            explanation: 'The Pathways Recent Graduates Program is the primary federal government entry mechanism for recent college graduates. It offers positions typically at GS-7 to GS-9, a one-year development program, and conversion to a permanent appointment — all without requiring prior federal experience.',
           },
           {
             id: 'q4',
-            question: "Which professional certification is considered the most universally valuable for contractor-side program management roles?",
-            options: ['CDFM (Certified Defense Financial Manager)', 'CPCM (Certified Professional Contracts Manager)', 'PMP (Project Management Professional)', 'CCEA (Certified Cost Estimating & Analysis)'],
-            correct: 2,
-            explanation: "The PMP (Project Management Professional), issued by PMI, is the most widely recognized PM certification across both government and contractor organizations. While defense-specific certifications are valuable, the PMP is typically required or preferred for PM roles at defense contractors and is the baseline credential for leadership positions."
+            type: 'mc',
+            question: 'Which certification is considered a baseline credential for contractor Program Manager roles and is widely required rather than preferred?',
+            options: [
+              'DAPA Level III certification|||DAPA (Defense Acquisition Professional Development Program) is the government\'s internal certification framework. It\'s required for government employees, not typically contractors.',
+              'PMP (Project Management Professional)|||Correct. The PMP is the universal baseline credential on the contractor side. Senior PM roles routinely list it as required. It signals cross-industry project management competence regardless of background.',
+              'DAU ACQ 101 completion certificate|||ACQ 101 is a free foundational course from Defense Acquisition University. It\'s useful but not a professional certification and is not typically listed in contractor job requirements.',
+              'TS/SCI security clearance|||A clearance is critical for many contractor roles but it\'s not a certification — it\'s a credential. The question asks about professional certification.',
+            ],
+            correct: 1,
+            explanation: 'The PMP (Project Management Professional), administered by PMI, is the standard baseline certification for contractor PM roles. It\'s recognized across industries and demonstrates structured project management competence. If you don\'t have it yet, it should be on your roadmap from the start of your contractor career.',
           },
           {
             id: 'q5',
-            question: "The GS-13 grade in the federal pay scale represents approximately what compensation range (2025)?",
-            options: ['$45,000 - $60,000', '$83,000 - $108,000', '$130,000 - $165,000', '$175,000 - $210,000'],
-            correct: 1,
-            explanation: "GS-13 positions in 2025 pay approximately $83,000 to $108,000 base salary (varying by locality pay adjustment). GS-13 is typically the entry point for senior program analyst and experienced program manager roles. With full federal benefits (health, pension, TSP), total compensation is considerably higher than base salary suggests."
+            type: 'mc',
+            question: 'How does a security clearance most directly affect a defense acquisition career, especially at senior levels?',
+            options: [
+              'It primarily affects which DAU courses you can take|||DAU courses are based on your job role and certification level, not your clearance level.',
+              'It has little practical impact since most acquisition work is unclassified|||Significant portions of defense acquisition involve classified programs, and senior roles almost universally require clearances. An uncleared professional is excluded from large segments of the market.',
+              'It is a critical asset — cleared professionals have access to classified programs and are substantially more valuable, especially to contractors|||Correct. At senior levels, a clearance (particularly TS/SCI) is often more valuable than an additional degree. Contractors pay a premium for cleared professionals, and the clearance opens access to programs that represent a large share of defense spending.',
+              'It only matters for government employees, not contractors|||Contractors working on classified programs must be cleared. Many senior contractor positions explicitly require TS or TS/SCI clearances.',
+            ],
+            correct: 2,
+            explanation: 'A security clearance is a genuine career asset in defense acquisition — treat it like one. At senior levels, your clearance and your program relationships are often what contractors are actually paying for. The clearance process takes 6 to 18 months minimum, so starting it early and protecting it throughout your career is critical.',
           },
           {
             id: 'q6',
-            question: "USAJOBS occupational series 1102 corresponds to which acquisition career field?",
-            options: ['Program Management', 'Contracting', 'Financial Management', 'Systems Engineering'],
-            correct: 1,
-            explanation: "OPM occupational series 1102 is the Contracting series — covering contract specialists, contracting officers, and related positions throughout the federal government. Program management roles typically fall under 0340 (Program Management) government-wide, but the Air Force specifically uses Series 1101 for Program Managers. Financial management roles use 0501 (Financial Administration)."
+            type: 'mc',
+            question: 'What do the Series 1102 and 1101 codes mean in the context of a federal job search?',
+            options: [
+              'They are security classification levels for acquisition programs|||Classification levels are a separate system. ACAT levels classify programs by size and oversight; classification levels (Secret, Top Secret) govern information access.',
+              'They are DAU certification levels for program managers|||DAU uses its own certification structure under DAPA. Series codes are entirely separate and are part of the federal job classification system.',
+              'They are federal job classification codes — 1102 for Contracting Officers and 1101 for Program Management and Acquisition Support roles|||Correct. Filtering USAJOBS.gov by these series codes is the most effective way to find acquisition jobs, cutting through thousands of unrelated federal postings.',
+              'They identify the GS pay grade range for entry-level acquisition jobs|||GS grades and job series codes are separate systems. The series identifies the type of work; the GS grade identifies the pay level.',
+            ],
+            correct: 2,
+            explanation: 'Series codes are the federal government\'s job classification system. Series 1102 covers Contracting Officer positions; Series 1101 covers broader Program Management and Acquisition Support roles. When searching USAJOBS.gov, using these series codes as filters is the fastest way to surface acquisition-specific positions.',
           },
           {
             id: 'q7',
-            question: "Which professional association is most focused on proposal management and business development in the defense industry?",
-            options: ['AFCEA (Armed Forces Communications and Electronics Association)', 'NDIA (National Defense Industrial Association)', 'APMP (Association of Proposal Management Professionals)', 'SAME (Society of American Military Engineers)'],
-            correct: 2,
-            explanation: "APMP is specifically focused on proposal development, business development, and capture management in the government contracting sector. It offers the Certified Professional Proposal Manager (APMP Foundation/Practitioner/Professional) certifications. For PM and engineering roles, AFCEA and NDIA are more relevant networking communities."
+            type: 'mc',
+            question: 'What does DAU (Defense Acquisition University) provide, and what does it cost government employees?',
+            options: [
+              'Advanced degree programs in defense management; tuition varies by program|||DAU offers certifications and professional development courses, not accredited degree programs. The cost model is also different.',
+              'A wide range of acquisition training courses that are free for government employees|||Correct. DAU offers hundreds of courses covering program management, contracting, finance, logistics, and more — at no cost to federal government employees. It\'s the primary training institution for the acquisition workforce.',
+              'Contractor-focused PMP preparation; fees apply for all participants|||DAU is a government institution primarily serving the government acquisition workforce. The PMP is a separate PMI certification.',
+              'Security clearance processing and adjudication support|||Security clearances are processed through DCSA (Defense Counterintelligence and Security Agency), not DAU.',
+            ],
+            correct: 1,
+            explanation: 'DAU provides comprehensive acquisition training — free for government employees — covering every major acquisition discipline. ACQ 101 (Fundamentals of Systems Acquisition Management) is the recommended starting point. DAU courses are tied to DAPA certification requirements, so completing them isn\'t just professional development — it\'s career progression.',
           },
           {
             id: 'q8',
-            question: "The transition from a GS government position to a contractor role typically results in what salary change?",
-            options: ['10-15% decrease due to loss of federal benefits', '5-10% increase', '20-40% increase', 'No significant change — pay scales are equivalent'],
+            type: 'mc',
+            question: 'When a defense contractor recruits a senior government acquisition professional, what are they primarily paying for?',
+            options: [
+              'Their academic credentials and graduate degrees|||Education is a factor at the entry level, but senior contractors are primarily paying for experience, clearance, and relationships — not degrees.',
+              'Their DAU certification levels|||DAPA certifications confirm that the professional has met government training requirements. They\'re relevant but not what drives the premium salary in a government-to-contractor transition.',
+              'Their security clearance, knowledge of specific programs, and relationships with the customer organization|||Correct. A cleared professional who knows the government program office and has existing relationships with the customer is genuinely difficult to replace. That combination is what contractors pay a premium for.',
+              'Their ability to write acquisition regulations|||Regulatory expertise is useful but widely available. The scarcer and more valuable asset is program-specific knowledge and relationships.',
+            ],
             correct: 2,
-            explanation: "Government-to-contractor transitions typically yield a 20-40% salary increase, though this comes with the loss of federal benefits (pension, subsidized healthcare, and job security). Many experienced acquisition professionals make this transition at the GS-13 to GS-15 level, leveraging their clearances, program knowledge, and government relationships."
+            explanation: 'When a contractor recruits a senior government professional, they\'re primarily acquiring three things: an active security clearance (which cannot be quickly replicated), deep knowledge of a specific program or customer office, and existing relationships with the government personnel who will make or influence procurement decisions. That package is what drives the salary premium in government-to-contractor transitions.',
           },
           {
             id: 'q9',
-            question: "Which of the following tools is most essential for defense contractor business development (BD) roles?",
-            options: ['USAJOBS.gov', 'GovWin IQ', 'DAU Learning Management System', 'Defense Contract Audit Agency (DCAA) portal'],
-            correct: 1,
-            explanation: "GovWin IQ (Deltek) is the premier market intelligence platform for defense contractors, providing early visibility into government opportunities, incumbent data, procurement forecasts, and competitive intelligence. BD professionals and capture managers rely on GovWin IQ daily to identify, qualify, and track opportunities. It's considered an essential tool for anyone in defense BD."
+            type: 'mc',
+            question: 'What is GovWin IQ primarily used for in the defense contractor world?',
+            options: [
+              'Processing security clearance applications for contractor employees|||Clearances are processed through DCSA, a government agency. GovWin is a private business intelligence platform.',
+              'Submitting contract proposals through the government procurement portal|||Contract proposals go through SAM.gov and agency-specific portals. GovWin is an intelligence and market research tool, not a submission platform.',
+              'Tracking government procurement opportunities, monitoring competitor wins, and planning business development strategy|||Correct. GovWin IQ is the primary market intelligence tool for contractor business development teams — used to identify upcoming opportunities, research the competitive landscape, and prioritize which bids to pursue.',
+              'Managing program schedules and deliverables for active contracts|||Program management tools (MS Project, Jira, etc.) handle schedule and deliverable tracking. GovWin focuses on the pre-award, business development phase.',
+            ],
+            correct: 2,
+            explanation: 'GovWin IQ is a business intelligence platform that tracks the federal procurement market — upcoming solicitations, historical awards, competitor activity, and agency spending trends. It\'s the go-to tool for contractor business development and capture teams, and basic familiarity with it signals to employers that you understand how the contractor business development process works.',
           },
           {
             id: 'q10',
-            question: "The Senior Executive Service (SES) in the federal government is equivalent to what military grade?",
-            options: ['O-5 (Lieutenant Colonel/Commander)', 'O-6 (Colonel/Captain)', 'General/Flag Officers (O-7 through O-10)', 'Warrant Officers (W-1 through W-5)'],
-            correct: 2,
-            explanation: "The SES is the executive corps of the federal civilian workforce, serving in the most senior leadership roles below political appointees. SES positions are equivalent in seniority and influence to General and Flag Officer positions (O-7 through O-10). There are approximately 7,000 SES members across the federal government, with significant concentrations in DoD."
-          }
-        ]
+            type: 'mc',
+            question: 'Based on typical 2025 salary ranges, approximately how much of a salary increase might a GS-14 government acquisition professional expect when transitioning to a Senior PM or Program Director role at a defense contractor?',
+            options: [
+              'Little to no increase — government and contractor salaries are comparable at senior levels|||At the senior level, contractor salaries typically run significantly higher than equivalent government grades, particularly when clearance and program relationships are involved.',
+              'Approximately 25–50% increase, moving from roughly $111–144K to $140–185K|||Correct. A GS-14 earning in the $111,000 to $144,000 range could expect to earn $140,000 to $185,000 or more in a comparable senior contractor PM role — a meaningful increase, offset by the tradeoff in benefits and job security.',
+              'A decrease in total compensation due to the loss of federal benefits|||Federal benefits (pension, health insurance, leave) have real value and should be factored in, but the base salary difference at the senior level typically more than offsets benefit costs in most scenarios.',
+              'More than double the salary in all cases|||While some senior contractor roles (particularly VP-level BD) can reach $250K or more, a straightforward Senior PM role does not typically represent a 2x increase from GS-14.',
+            ],
+            correct: 1,
+            explanation: 'The salary premium for transitioning from a GS-14 government role to a comparable senior contractor position is typically 25 to 50 percent in base salary. The tradeoff is real though: federal benefits, pension accrual, and job stability have genuine financial value. A government-to-contractor transition at GS-13 to GS-15 level makes financial sense for many professionals, but it should be a deliberate choice, not a reactive one.',
+          },
+        ],
       },
       {
         id: 'ops-1',
