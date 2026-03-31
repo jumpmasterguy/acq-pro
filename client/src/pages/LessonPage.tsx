@@ -1026,21 +1026,37 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               );
             }
 
-            // ── lucas_note: founder insight block ───────────────────────────
+            // ── lucas_note: personal aside ───────────────────────────────────
             if (block.type === 'lucas_note') {
               return (
-                <div key={i} className="relative bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/30 rounded-xl p-5">
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-black">L</div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-xs font-bold text-primary uppercase tracking-widest mb-2">Lucas’ Note</div>
+                <div key={i} className="relative my-2 -mx-1">
+                  {/* Rotated tab label */}
+                  <div className="absolute -left-1 top-6 z-10">
+                    <div className="bg-primary text-white text-[9px] font-black uppercase tracking-[0.15em] px-2 py-1 rounded-r-md shadow-md" style={{writingMode: 'vertical-rl', textOrientation: 'mixed', transform: 'rotate(180deg)', letterSpacing: '0.15em'}}>From Lucas</div>
+                  </div>
+                  {/* Note card */}
+                  <div className="ml-5 relative bg-[#0d2137] border-2 border-primary rounded-xl shadow-lg overflow-hidden">
+                    {/* Gold accent top bar */}
+                    <div className="h-1 w-full bg-gradient-to-r from-[#f5c842] via-primary to-[#f5c842] opacity-80" />
+                    <div className="px-5 pt-4 pb-5">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-white text-[11px] font-black flex-shrink-0">L</div>
+                        <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Personal Note</span>
+                      </div>
                       {block.body && block.body.split('\n\n').filter(Boolean).map((para: string, pi: number) => (
-                        <p key={pi} className={`text-sm text-foreground leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>
+                        <p key={pi} className={`text-sm text-slate-200 leading-relaxed${pi > 0 ? ' mt-3' : ''}`} style={{fontStyle: pi === 0 ? 'normal' : 'normal'}}>
                           {para.trim().split(/\*\*([^*]+)\*\*/).map((seg: string, si: number) =>
-                            si % 2 === 1 ? <strong key={si} className="font-semibold">{seg}</strong> : seg
+                            si % 2 === 1
+                              ? <strong key={si} className="font-bold text-[#f5c842]">{seg}</strong>
+                              : seg
                           )}
                         </p>
                       ))}
+                    </div>
+                    {/* Bottom signature */}
+                    <div className="px-5 pb-4 flex items-center gap-1.5">
+                      <div className="h-px flex-1 bg-primary/30" />
+                      <span className="text-[10px] text-primary/60 italic">— Lucas, Acqlerate</span>
                     </div>
                   </div>
                 </div>
