@@ -272,20 +272,20 @@ function ModuleCard({
                 <span className="text-lg leading-none">{mod.icon}</span>
                 <span className="font-bold text-white text-sm">{mod.title}</span>
               </div>
-              <div className="flex items-center gap-2 mt-0.5">
-                <span className="text-[11px] text-white/60">{mod.subtitle}</span>
+              <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                <span className="text-[11px] text-white/60 whitespace-nowrap">{mod.subtitle}</span>
                 <span className="text-white/30 text-[10px]">·</span>
-                <span className="text-[11px] text-white/80 font-medium flex items-center gap-1">
-                  <Clock className="w-2.5 h-2.5 inline" />
+                <span className="text-[11px] text-white/80 font-medium whitespace-nowrap flex items-center gap-1">
+                  <Clock className="w-2.5 h-2.5" />
                   {isCareerMode && trackMins !== totalMins
-                    ? <>{formatDuration(trackMins)} <span className="text-white/50 font-normal">of {formatDuration(totalMins)}</span></>
-                    : formatDuration(totalMins)
+                    ? <span>{formatDuration(trackMins)}<span className="text-white/50 font-normal"> / {formatDuration(totalMins)}</span></span>
+                    : <span>{formatDuration(totalMins)}</span>
                   }
                 </span>
                 <span className="text-white/30 text-[10px]">·</span>
-                <span className="text-[11px] text-white/70">
+                <span className="text-[11px] text-white/70 whitespace-nowrap">
                   {isCareerMode && trackLessonCount !== mod.lessons.length
-                    ? <>{trackLessonCount} <span className="text-white/50">of {mod.lessons.length}</span> lessons</>
+                    ? <>{trackLessonCount}<span className="text-white/50"> / {mod.lessons.length}</span> lessons</>
                     : <>{mod.lessons.length} lessons</>
                   }
                 </span>
@@ -524,9 +524,12 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
 
       {/* ── Filter Bar ─────────────────────────────────────────────────────── */}
       <div className="space-y-3">
-        <div className="flex items-center gap-2">
-          <Filter className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
-          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mr-1">View by</span>
+        {/* Mode context + toggle on one row */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+          <div className="flex items-center gap-2">
+            <Filter className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">View by</span>
+          </div>
           <div className="flex items-center gap-1.5 bg-muted/40 rounded-xl p-1">
             <FilterTab active={filterMode === 'career'} onClick={() => setFilterMode('career')}>
               Career Path
@@ -535,6 +538,13 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
               Subject Matter
             </FilterTab>
           </div>
+          {/* Context hint */}
+          <p className="text-[11px] text-muted-foreground sm:ml-1">
+            {filterMode === 'career'
+              ? <><span className="font-semibold text-foreground/70">Career Path</span> — shows only the lessons most relevant to your role. Pick your track below to customize the order and lesson list.</>              
+              : <><span className="font-semibold text-foreground/70">Subject Matter</span> — browse all modules grouped by topic. Best if you want to study a specific area regardless of career role.</>
+            }
+          </p>
         </div>
 
         {filterMode === 'career' && (
@@ -575,7 +585,13 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
           </div>
         )}
 
-        <p className="text-xs text-muted-foreground italic">{activeFilterDesc}</p>
+        {/* Active track/group description */}
+        <p className="text-[11px] text-muted-foreground pl-0.5">
+          {filterMode === 'career'
+            ? CAREER_TRACKS.find(t => t.id === activeCareer)!.desc
+            : SUBJECT_GROUPS.find(g => g.id === activeSubject)!.desc
+          }
+        </p>
       </div>
 
       {/* ── Primary Modules ───────────────────────────────────────────────── */}
