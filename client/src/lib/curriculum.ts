@@ -5136,16 +5136,15 @@ export const modules: Module[] = [
             explanation: 'The commercial item determination is made by the contracting officer, but the PM drives the market research that supports it. Document your market research thoroughly — a challenged commercial item determination can unravel an entire acquisition strategy post-award.',
           },
           {
-            type: 'table',
-            heading: 'Sole Source Justifications Under FAR 6.302 — When Competition Is Not Required',
-            headers: ['Exception', 'FAR Cite', 'Example', 'Key Documentation Required'],
-            rows: [
-              ['Only one responsible source', 'FAR 6.302-1', 'Spare parts from OEM only; unique IP holder', 'J&A documenting why only one source can satisfy requirement'],
-              ['Unusual and compelling urgency', 'FAR 6.302-2', 'Time-critical mission need; emergency repair', 'J&A with timeline; limited period; must compete ASAP'],
-              ['Industrial mobilization; engineering development', 'FAR 6.302-3', 'Maintaining defense industrial base capability', 'D&F with SecDef or component secretary approval'],
-              ['International agreement', 'FAR 6.302-4', 'NATO standardization agreement requires specific vendor', 'Reference to international agreement'],
-              ['Authorized or required by statute', 'FAR 6.302-5', 'Small Business set-asides; 8(a) direct awards', 'Documentation of statutory authority'],
-              ['National security', 'FAR 6.302-6', 'Classified programs; ITAR restrictions', 'National security D&F'],
+            type: 'list',
+            heading: 'The 6 Reasons the Government Can Skip Competition',
+            items: [
+              'Only one company can actually do it — unique technology, patent, or proprietary data|||The classic example: spare parts that only the original manufacturer makes. If no other company can legally or practically deliver what\'s needed, competition isn\'t meaningful. Requires a written Justification & Approval (J&A) explaining why. FAR 6.302-1.',
+              'There\'s no time — a genuine emergency|||An aircraft is grounded, a system fails in the field, and waiting 6 months for a competition isn\'t an option. Urgency sole-source is allowed but must be limited to the immediate need — once the emergency is resolved, competition resumes. FAR 6.302-2.',
+              'National security or classified programs|||Some requirements can\'t be publicly competed without revealing sensitive information. Classified programs, ITAR-restricted technology, and certain intelligence-related work fall here. FAR 6.302-6.',
+              'Required by law — like small business set-asides|||Some acquisitions are legally required to go to specific categories of vendors: 8(a) small businesses, service-disabled veteran-owned firms, women-owned firms. These aren\'t really "sole source" in the traditional sense — they\'re competition within a restricted pool. FAR 6.302-5.',
+              'International agreement requires a specific vendor|||NATO standardization agreements, foreign military sales arrangements, or bilateral treaties may specify who must provide certain goods or services. FAR 6.302-4.',
+              'Maintaining a critical industrial base capability|||If letting a defense-critical supplier go out of business would harm national security, the government can sole-source to keep them viable. Rare, and requires Secretary-level approval. FAR 6.302-3.',
             ],
           },
           {
