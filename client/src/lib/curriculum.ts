@@ -3168,6 +3168,1596 @@ export const modules: Module[] = [
     description: 'Master contract types, the source selection process, contract administration, and how to protect the government\'s interests.',
     lessons: [
       {
+        id: 'contracts-8',
+        title: 'Who\'s Buying: Navigating the DoD Contracting Enterprise',
+        duration: '16 min',
+        description: 'Map the organizations that actually issue defense contracts — from AFICC/ESS and base-level contracting squadrons to MAJCOM contracting offices — and build a BD strategy aligned to the right customer.',
+        keyTerms: [
+          { term: 'AFICC', definition: 'Air Force Installation Contracting Center — manages enterprise-level contracting for installation and mission support requirements across the Air Force. Its Enterprise Sourcing Squadrons (ESS) handle large-dollar, multi-year service acquisitions.' },
+          { term: 'ESS', definition: 'Enterprise Sourcing Squadron — AFICC\'s operational contracting units that manage large-dollar, enterprise-level acquisitions across installations and functional areas (sustainment, services, IT infrastructure).' },
+          { term: 'MAJCOM', definition: 'Major Command — top-level Air Force organizational units (ACC, AMC, AFSOC, USAFE-AFAFRICA, etc.) with aligned contracting support for operationally-driven, often classified requirements.' },
+          { term: 'SAP', definition: 'Simplified Acquisition Procedures — streamlined procurement methods for purchases below the Simplified Acquisition Threshold ($350,000). Base-level contracting heavily uses SAP.' },
+          { term: 'SAT', definition: 'Simplified Acquisition Threshold — currently $350,000. Purchases below this threshold may use simplified procedures; above it requires more formal competition requirements.' },
+          { term: 'BPA', definition: 'Blanket Purchase Agreement — a simplified acquisition mechanism used heavily at base level for recurring, predictable requirements. Issued against GSA Schedules or open market.' },
+          { term: 'PWS', definition: 'Performance Work Statement — outcome-based description of work required; used in performance-based service acquisitions. Base-level and ESS offices increasingly require PWS-style solicitations.' },
+          { term: 'SAM.gov', definition: 'System for Award Management — the official federal database for contract opportunities, awardee registration, and past performance. Primary source of visible solicitations above SAT.' },
+          { term: 'CPARS', definition: 'Contractor Performance Assessment Reporting System — the government\'s official record of contractor performance on federal contracts. Past Performance in CPARS is one of the most important factors in source selection.' },
+        ],
+        content: [
+          {
+            type: 'text',
+            heading: 'The Most Underestimated Competitive Advantage in Defense BD',
+            body: 'One of the most underestimated competitive advantages a defense contractor can develop is a precise understanding of who actually issues the contract. The Air Force contracting enterprise — and the DoD contracting enterprise broadly — is not monolithic. It is divided into distinct organizational layers, each with different authorities, contract size thresholds, mission focus, and levels of accessibility to industry. Contractors who confuse these layers build misaligned BD strategies, waste proposal resources, and miss opportunities that better-informed competitors capture.',
+          },
+          {
+            type: 'table',
+            heading: 'The Three Layers of Air Force Contracting',
+            headers: ['Layer', 'Typical Contract Size', 'Competition Type', 'Entry Difficulty', 'Visibility (SAM.gov)', 'Relationship Weight'],
+            rows: [
+              ['AFICC / ESS', '$1M–$100M+', 'Formal source selection, written proposals, oral presentations', 'Moderate–High', 'High', 'Moderate'],
+              ['Base-Level Contracting Squadrons', 'Under $1M (SAP range)', 'Simplified acquisition, BPAs, sole-source justifications', 'Low–Moderate', 'Moderate', 'Very High'],
+              ['MAJCOM / Service Component', '$500K–$50M+ (varies)', 'Formal to streamlined; often classified or operationally sensitive', 'High (clearance, access required)', 'Low–Moderate', 'High'],
+            ],
+          },
+          {
+            type: 'text',
+            heading: 'AFICC / Enterprise Sourcing Squadrons — The Primary Entry Point',
+            body: 'The Air Force Installation Contracting Center and its Enterprise Sourcing Squadrons represent the most accessible entry point for mid-size to large contractors seeking multi-year service contracts. ESS offices typically manage requirements from $1M to well over $100M, running formal source selections with written proposals, oral presentations, and structured evaluation criteria. These competitions reward thorough market research, strong PWS/SOW alignment, and credible past performance. AFICC covers enterprise services across installations — sustainment, base operations, information technology infrastructure, and logistics support are common requirement types.',
+          },
+          {
+            type: 'callout',
+            heading: 'How to Engage AFICC/ESS Offices',
+            body: 'ESS offices publish pre-solicitation notices, Requests for Information, and Sources Sought notices on SAM.gov. Responding to these is not optional for serious competitors — it shapes the requirement, establishes your firm in the CO\'s market research, and gives you intelligence about the acquisition timeline and competitive landscape. Industry Days, when offered, are your best opportunity to understand evaluation criteria priorities and ask questions that competitors who don\'t attend will not know to ask.',
+          },
+          {
+            type: 'text',
+            heading: 'Base-Level Contracting Squadrons — Where Relationships Win',
+            body: 'Base-level contracting squadrons are where relationships matter most. These offices process thousands of smaller actions annually — blanket purchase agreements, simplified acquisitions, and sole-source justifications under SAP thresholds. For small businesses and new market entrants, base-level contracting provides the fastest pathway to building past performance. Contracting Officers at the base level value reliable incumbents highly, making early market entry and COR relationship-building critical investments. A $150,000 BPA awarded today can become the past performance reference that wins a $5M ESS contract in two years.',
+          },
+          {
+            type: 'list',
+            heading: 'Base-Level BD Strategy — What Actually Works',
+            items: [
+              'Identify the installation contracting squadron through the Air Force\'s Installation directory or SAM.gov agency searches. Every installation with a significant contracting footprint has a publicly accessible contracting office.|||The Air Force Installation and Mission Support Center (AFICC) website and SAM.gov both list contracting office locations and contact information. Before investing BD resources at a base, verify the contracting office has authority over the types of requirements you pursue. Base contracting handles simplified acquisitions; large enterprise requirements route through ESS offices.',
+              'Attend base-level small business events and installation open houses. Base contracting squadrons actively engage with industry — especially small businesses — in ways that larger enterprise offices cannot.|||Small Business Day events and Industry Days at bases are among the highest-ROI BD activities for small businesses. You meet the CO, the contracting officers, and often the technical requirements owners in the same room. The program manager who remembers your company from a base event is far more likely to include you in market research for the next requirement.',
+              'Build relationships with Contracting Officer Representatives (CORs), not just Contracting Officers. The COR is your day-to-day performance evaluator and one of the most influential voices in CPARS ratings and recompete positioning.|||CORs write performance observations that feed directly into CPARS. They also influence future requirements by describing what the current contractor does well or poorly. A contractor who invests in COR relationship management — proactive status reporting, documenting issue resolution, making the COR look good to leadership — consistently outperforms competitors who treat the COR as a contract monitor rather than a strategic relationship.',
+              'Focus on performance above all else. At the base level, your reputation spreads rapidly. A single strong CPARS rating from a base installation can be leveraged across the entire AFICC enterprise.|||CPARS ratings are portable competitive assets. Exceptional ratings from base-level work become past performance references in ESS and MAJCOM-level source selections. The defense contracting community at any given installation is small — reputation spreads through the contracting officer network faster than through formal channels.',
+            ],
+          },
+          {
+            type: 'text',
+            heading: 'MAJCOM Contracting — High Barrier, Lower Competition',
+            body: 'MAJCOM-aligned contracting, such as the contracting operations supporting USAFE-AFAFRICA or Air Combat Command, handles operationally-driven requirements that often carry unique classification, OCONUS, or mission-specific constraints. These opportunities are less visible on SAM.gov and often require security clearances, theater knowledge, and existing relationships with program offices. Entry is harder, but competition is typically less crowded. For cleared defense firms with specialized mission-area expertise, MAJCOM contracting represents some of the most defensible, long-term contract opportunities in the Air Force portfolio.',
+          },
+          {
+            type: 'table',
+            heading: 'Key Air Force MAJCOMs and Their Contracting Focus',
+            headers: ['MAJCOM', 'Mission Focus', 'Contracting Characteristics', 'Best For'],
+            rows: [
+              ['Air Force Materiel Command (AFMC)', 'Acquisition, sustainment, R&D across Air Force programs', 'Largest acquisition authority; manages most ACAT programs', 'Prime contractors, engineering support firms'],
+              ['Air Combat Command (ACC)', 'Combat air forces, CONUS fighter and bomber units', 'Operations support, training, base services', 'Mid-tier services firms with operational support experience'],
+              ['Air Mobility Command (AMC)', 'Airlift, air refueling, aeromedical evacuation', 'Logistics, maintenance, ground support services', 'Logistics and sustainment contractors'],
+              ['USAFE-AFAFRICA', 'European and African theater air forces', 'OCONUS work, NATO coordination, classified requirements', 'Cleared firms with international operations capability'],
+              ['Air Force Special Operations Command (AFSOC)', 'Special operations aviation', 'Small, highly specialized contracts; classified requirements', 'Niche capability firms with AFSOC relationships'],
+            ],
+          },
+          {
+            type: 'text',
+            heading: 'Applying This Framework Beyond the Air Force',
+            body: 'While this lesson uses the Air Force enterprise as the primary example, the same three-tier structure exists across all military services and many defense agencies. The Army has Installation Management Command (IMCOM) contracting, Army Contracting Command (ACC), and theater-level contracting offices. The Navy has NAVSUP Fleet Logistics Centers, SPAWAR (now NAVWAR), and fleet-level contracting. Understanding which tier of any service\'s contracting enterprise you are engaging — and aligning your BD approach accordingly — is one of the clearest markers of a mature defense contractor.',
+          },
+          {
+            type: 'tip',
+            heading: 'Build a Customer Map Before You Build a Pipeline',
+            body: 'Before you populate a BD pipeline, build a customer map. For each target installation or command, identify: the contracting squadron or office, the contracting officer(s) for your NAICS codes, the program offices or functional areas you support, and the CORs on any current or adjacent contracts. This map is the infrastructure of a disciplined BD strategy — without it, you\'re pursuing opportunities without knowing who controls the award decision.',
+          },
+        ],
+        quiz: [
+          {
+            id: 'q1',
+            question: 'AFICC Enterprise Sourcing Squadrons (ESS) are primarily responsible for:',
+            options: [
+              'Processing simplified acquisitions under the Simplified Acquisition Threshold|||Incorrect for AFICC ESS specifically. Base-level contracting squadrons handle simplified acquisitions for individual installations. AFICC Enterprise Sourcing Squadrons focus on enterprise-level, higher-value acquisitions across the Air Force.',
+              'Large-dollar, enterprise-level acquisitions across installations and functional areas|||Correct. AFICC Enterprise Sourcing Squadrons (ESS) specialize in large, complex acquisitions spanning multiple Air Force installations or functional areas â base operations support, IT services, professional services.',
+              'Classified acquisition programs for AFSOC and special operations|||Incorrect. AFICC ESS is not specifically a classified AFSOC vehicle. AFSOC has its own acquisition infrastructure for classified requirements. ESS focuses on enterprise services, not classified special operations.',
+              'Small business set-aside competitions at individual base levels|||Incorrect for AFICC ESS. Small business set-asides at individual bases are managed by base-level contracting squadrons. ESS focuses on large enterprise acquisitions.',
+            ],
+            correct: 1,
+            explanation: 'AFICC ESS offices handle large-dollar, enterprise-level acquisitions ($1M to $100M+) across Air Force installations — covering sustainment, services, and IT infrastructure. They run formal source selections with written proposals and structured evaluation criteria.',
+          },
+          {
+            id: 'q2',
+            question: 'For a small business entering the defense market, which contracting tier typically offers the fastest pathway to building past performance?',
+            options: [
+              'AFICC / Enterprise Sourcing Squadrons|||Correct. AFICC (Air Force Installation Contracting Center) ESS are the specialized acquisition organizations within AFICC that manage enterprise-wide service contracts. They are organized by functional portfolio (base operations, IT, professional services).',
+              'MAJCOM contracting offices|||Correct. Major Command (MAJCOM) contracting offices (e.g., ACC Contracting, AMC Contracting) manage acquisitions for their respective command\'s unique operational requirements. They are distinct from AFICC in organizational alignment.',
+              'Base-level contracting squadrons|||Correct. Base contracting squadrons (e.g., 88th Contracting Squadron at Wright-Patterson AFB) handle local installation day-to-day acquisition needs â base support services, facilities projects, equipment â up to their delegated contracting authority limits.',
+              'Defense Pricing and Contracting (DPC)|||Correct. DPC (formerly DPAP) is the OSD-level policy organization setting contracting policy guidance for all DoD components. DPC issues the DFARS, policy memoranda, and class deviations. It is not a contracting office but a policy authority.',
+            ],
+            correct: 2,
+            explanation: 'Base-level contracting squadrons process thousands of smaller actions annually under simplified acquisition procedures. For small businesses and new market entrants, this is the fastest pathway to building past performance through BPAs, sole-source justifications, and simplified acquisitions below the SAT.',
+          },
+          {
+            id: 'q3',
+            question: 'Why are MAJCOM contracting opportunities typically less visible on SAM.gov?',
+            options: [
+              'MAJCOM offices are exempt from public procurement posting requirements|||Incorrect. MAJCOM contracting offices must post synopsis notices on SAM.gov like all other federal contracting offices (FAR 5.203). Classified requirements have different posting rules, but the general rule requires public posting.',
+              'Requirements are often operationally sensitive, classified, or OCONUS|||Correct. Command-unique requirements often involve operational sensitivity â which may affect the solicitation process (shorter posting periods, classified appendices), security requirements in contract clauses, and teaming considerations for contractors.',
+              'MAJCOM contracts are below the SAT and don\'t require posting|||Incorrect. MAJCOMs execute multi-million and multi-billion dollar contracts â far above the Simplified Acquisition Threshold. MAJCOM contracting offices are full acquisition authorities with large portfolios.',
+              'MAJCOM contracting is conducted exclusively through GWACs|||Incorrect. MAJCOMs use a variety of contracting mechanisms â standalone competitive acquisitions, GWACs, OTAs, SAPs, and interagency agreements. MAJCOM-unique requirements often require standalone competitions.',
+            ],
+            correct: 1,
+            explanation: 'MAJCOM-aligned contracting handles operationally-driven requirements that often carry unique classification, OCONUS, or mission-specific constraints. These characteristics reduce their SAM.gov visibility, but also mean less crowded competition for firms with the right clearances and relationships.',
+          },
+          {
+            id: 'q4',
+            question: 'Which Air Force MAJCOM manages the largest acquisition authority and most ACAT programs?',
+            options: [
+              'Air Combat Command (ACC)|||Correct. ACC (Air Combat Command) is a major USAF command responsible for combat air forces. ACC contracting manages requirements for aircraft maintenance, operations support, and systems unique to ACC-assigned forces.',
+              'Air Mobility Command (AMC)|||Correct. AMC is responsible for global air mobility and strategic airlift. AMC contracting handles LOGCAP-type support, aerial port operations, tanker support, and mobility-related services across the AMC enterprise.',
+              'Air Force Materiel Command (AFMC)|||Correct. AFMC is the science and technology, acquisition, and sustainment command. AFMC includes Air Force Research Laboratory (AFRL), Program Executive Officers, and Air Force Life Cycle Management Center (AFLCMC). The largest share of Air Force acquisition spending flows through AFMC.',
+              'USAFE-AFAFRICA|||Correct. USAFE-AFAFRICA is the Air Force component of European Command and Africa Command. Its contracting offices manage OCONUS acquisitions in support of European and African theater operations, often involving host-nation agreements and Status of Forces Agreement compliance.',
+            ],
+            correct: 2,
+            explanation: 'Air Force Materiel Command (AFMC) manages acquisition, sustainment, and R&D across Air Force programs. It has the largest acquisition authority of any Air Force MAJCOM and manages most ACAT-designated programs, making it the primary target for prime contractors and engineering support firms.',
+          },
+          {
+            id: 'q5',
+            question: 'What is the strategic value of building a strong CPARS rating at the base installation level?',
+            options: [
+              'It automatically qualifies your firm for AFICC ESS competitions|||Incorrect. No single past performance award automatically qualifies a firm for future competitions. Past performance on AFICC contracts is a strong advantage in future AFICC source selections, but each competition has its own qualification criteria.',
+              'It can be leveraged as past performance across the entire AFICC enterprise in future source selections|||Correct. Past performance on one AFICC base or enterprise contract is highly relevant to future AFICC competitions. Evaluators within the AFICC enterprise share knowledge of contractor performance history, and CPARS ratings from AFICC contracts are visible across the enterprise.',
+              'It exempts your firm from oral presentation requirements|||Incorrect. There is no such exemption. Each source selection team designs its own evaluation process. Oral presentations are a common evaluation tool in AFICC competitions â particularly for complex management approach sub-factors.',
+              'It qualifies your firm for sole-source awards on all future base requirements|||Incorrect. Sole-source awards require specific statutory justification (FAR 6.302). Prior performance creates a track record but does not entitle a contractor to sole-source treatment.',
+            ],
+            correct: 1,
+            explanation: 'A strong CPARS rating from base-level performance is compelling past performance evidence that can be used in source selections across the AFICC enterprise. Past performance is a key evaluation factor in most formal source selections — quality ratings from any installation are portable competitive assets.',
+          },
+        ],
+      },
+
+      {
+        id: 'contracts-1',
+        title: 'Contract Types: Choosing the Right Vehicle',
+        duration: '16 min',
+        description: 'Understand the spectrum of contract types from FFP to Cost-Plus, and when to use each.',
+        keyTerms: [
+          { term: 'FFP', definition: 'Firm-Fixed-Price — price is set at award and does not change. Contractor bears 100% of cost risk. Most preferred by FAR. Used when requirements are well-defined and market competition exists. (FAR 16.202)' },
+          { term: 'FPIF', definition: 'Fixed-Price Incentive (Firm Target) — has a target cost, target fee, ceiling price, and share ratio. Contractor and government share cost savings/overruns up to the ceiling. Above the Point of Total Assumption (PTA), contractor absorbs 100%. (FAR 16.403-1)' },
+          { term: 'CPFF', definition: 'Cost-Plus-Fixed-Fee — government reimburses all allowable costs plus a fixed fee that does not change with cost performance. Contractor has no financial incentive to control costs. Used for R&D and early development where costs cannot be estimated. (FAR 16.306)' },
+          { term: 'CPIF', definition: 'Cost-Plus-Incentive-Fee — government reimburses all allowable costs, and the fee adjusts based on cost performance against a target. If the contractor beats the target cost, fee goes up; if they overspend, fee goes down. Still cost-reimbursable — government pays all costs regardless. (FAR 16.304)' },
+          { term: 'CPAF', definition: 'Cost-Plus-Award-Fee — government reimburses all allowable costs plus a base fee, with additional award fee determined subjectively by a Fee Determining Official (FDO) based on periodic performance evaluations. Unlike CPIF, the award fee is not tied to a formula — it is a judgment call. Used when performance quality matters more than cost control. (FAR 16.305)' },
+          { term: 'T&M', definition: 'Time & Materials — contractor is paid fixed hourly labor rates plus actual material costs. Government bears essentially all cost risk since there is no ceiling on hours. Requires CO surveillance and a not-to-exceed ceiling. D&F required to justify use. (FAR 16.601)' },
+          { term: 'Share Ratio', definition: 'In incentive contracts, the split of cost savings or overruns between government and contractor (e.g., 80/20 means government absorbs 80¢ and contractor keeps/loses 20¢ of every dollar above/below target cost).' },
+          { term: 'PTA', definition: 'Point of Total Assumption — on an FPIF contract, the cost level at which the contractor has lost all its fee and begins absorbing 100% of additional costs. Above the PTA, the contract behaves like FFP.' },
+          { term: 'D&F', definition: 'Determination and Findings — a documented government decision required to justify use of certain contract types (e.g., T&M, cost-reimbursable) or acquisition actions that deviate from standard FAR policy.' },
+        ],
+        content: [
+          {
+            type: 'text',
+            heading: "Contract Type = Risk Allocation",
+            body: "Choosing the right contract type is one of the most consequential decisions in acquisition strategy. Contract type determines who bears cost risk — the government or the contractor. The FAR's overarching principle is clear: use firm-fixed-price whenever possible. When market conditions, technology maturity, or performance uncertainty prevent FFP, you move along the spectrum toward cost-reimbursable contracts — but each step increases government risk and oversight burden."
+          },
+          {
+            type: 'table',
+            heading: "The Contract Type Spectrum",
+            headers: ['Type', 'Full Name', 'Who Bears Risk?', 'Best Used When', 'FAR Ref'],
+            rows: [
+              ['FFP',    'Firm-Fixed-Price',                  'Contractor (100%)',  'Well-defined requirements; stable design; competitive market', 'FAR 16.202'],
+              ['FPIF',   'Fixed-Price Incentive (Firm)',       'Shared via formula', 'Design fairly mature; some cost uncertainty remains', 'FAR 16.403'],
+              ['CPIF',   'Cost-Plus-Incentive-Fee',           'Shared via formula', 'Development programs where cost targets can be set', 'FAR 16.304'],
+              ['CPAF',   'Cost-Plus-Award-Fee',               'Mostly Government',  'Complex services where performance quality is hard to quantify', 'FAR 16.305'],
+              ['CPFF',   'Cost-Plus-Fixed-Fee',               'Government (100%)',  'Early R&D; high tech risk; level-of-effort work', 'FAR 16.306'],
+              ['T&M',    'Time & Materials',                  'Government (100%)',  'Cannot define hours/effort upfront; last resort; D&F required', 'FAR 16.601'],
+            ]
+          },
+          {
+            type: 'list',
+            heading: 'Contract Type Definitions — Know These Cold',
+            items: [
+              'FFP (Firm-Fixed-Price): Price locked at award. Contractor eats every dollar over budget. Government pays nothing extra. Maximum incentive for contractor efficiency.|||FAR 16.202. FFP is the government\'s preferred type — cost risk transfers to the contractor, creating strong efficiency incentives. Required for commercial items. Not appropriate for immature development: FFP on uncertain scope forces excessive contingency or creates underpriced contracts that result in default or claims.',
+              'FPIF (Fixed-Price Incentive Firm): Starts like FFP with a target cost and ceiling price. Cost savings/overruns are shared via a ratio (e.g., 80/20) until the Point of Total Assumption (PTA), where contractor absorbs 100%.|||FAR 16.403. Key numbers: Target Cost, Target Profit, Ceiling Price, and share ratio. The share ratio (e.g., 80/20) means for every dollar over target cost, contractor absorbs 80 cents; government absorbs 20. Above the Ceiling Price the contractor bears 100%. Standard for LRIP as programs transition from development to production.',
+              'CPIF (Cost-Plus-Incentive-Fee): Government pays all allowable costs. Contractor fee goes up if they beat the target cost, down if they overspend — but they always get reimbursed. Incentive is on cost performance.|||FAR 16.304. Appropriate for complex development where cost targets can be established. Fee range (min to max) must be specified — typically 4% to 12% of target cost. Gives the contractor a financial reason to control costs while protecting them from catastrophic loss on genuinely uncertain technical work.',
+              'CPAF (Cost-Plus-Award-Fee): Government pays all allowable costs plus a base fee. Additional award fee is determined subjectively by a Fee Determining Official (FDO) after each evaluation period. No formula — purely judgment-based. Incentive is on performance quality.|||FAR 16.305. The award fee is subjective — based on the government\'s evaluation of performance quality, responsiveness, and management, not formulas. An Award Fee Plan defines evaluation criteria and periods. The FDO (often the PM or PEO) evaluates performance each period. Award fees are powerful motivators but require significant government evaluation effort.',
+              'CPFF (Cost-Plus-Fixed-Fee): Government pays all allowable costs plus a fixed fee that never changes regardless of actual cost. No financial incentive for contractor to control costs. Used for early R&D where cost estimation is impossible.|||FAR 16.306. CPFF gives the least incentive to control costs — the fee doesn\'t change whether the contractor performs efficiently or not. Appropriate for exploratory R&D, studies, and work where scope is genuinely unknowable. Completion CPFF ties the fee to delivering a result; Term CPFF ties it to a level of effort with no specified end result.',
+              'T&M (Time & Materials): Government pays hourly labor rates plus materials at cost. No cap on hours unless a ceiling is set. Least preferred — requires a D&F that no other type is suitable and active CO surveillance.|||FAR 16.601. T&M is the riskiest type for the government. FAR requires documentation that no other type is suitable, a ceiling price, and enhanced COR surveillance. Most common for emergency repairs, undefinitized periods before FFP is negotiated, and situations where level of effort is genuinely unknowable.',
+            ]
+          },
+          {
+            type: 'risk_chart',
+          },
+          {
+            type: 'callout',
+            heading: "The FAR's Hierarchy of Preference",
+            body: "FAR 16.103(d) requires the contracting officer to document the contract type selection rationale in the written acquisition plan. The presumption is FFP. Every step away from FFP must be justified. An undocumented contract type decision is a significant finding in a contract audit."
+          },
+          {
+            type: 'formula',
+            heading: "Incentive Contract Math",
+            formula: 'Target Cost (TC): $10M | Target Fee (TF): $1M | Share Ratio: 80/20 (Gov/Contractor)\nIf actual cost = $9M (under target by $1M): Contractor earns TF + 20% × $1M = $1.2M fee\nIf actual cost = $11M (over target by $1M): Contractor earns TF - 20% × $1M = $0.8M fee\nPoint of Total Assumption (PTA): Where contractor absorbs 100% of overrun',
+            explanation: "In incentive contracts, sharing ratios motivate cost control. A 80/20 share ratio means for every dollar saved, the contractor keeps 20 cents. The PTA is critical — above it, all risk falls on the contractor (like FFP ceiling)."
+          },
+          {
+            type: 'warning',
+            heading: "T&M Contracts Require Special Justification",
+            body: "Time & Materials (T&M) and Labor-Hour (LH) contracts provide the least incentive for efficient performance. FAR 16.601(c) requires a D&F (Determination and Findings) that no other contract type is suitable. T&M contracts must also have a ceiling price that the contractor cannot exceed without CO approval."
+          },
+          {
+            type: 'tip',
+            heading: "Contract Type in Development Programs",
+            body: "Defense development programs often evolve through contract types: CPFF or CPIF during early development (high technical risk), transitioning to FPIF as design matures, then FFP for production. This progression mirrors the risk reduction achieved through the acquisition lifecycle."
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Contract Type Strategy for Mid-Career PMs',
+          body: 'Contract type selection is one of the most consequential decisions a PM makes, and it\'s made during acquisition planning — before the contractor is even selected. Mid-career PMs must think beyond risk allocation (cost-type = government bears risk; fixed-price = contractor bears risk) to incentive design. A CPIF with a 80/20 share ratio incentivizes cost control; a 50/50 ratio gives the contractor less motivation to reduce costs since they keep more savings. For schedule incentives: use CPIF-CPAF combos where the fixed-fee portion covers profit at plan, the incentive fee rewards cost performance, and the award fee rewards schedule and technical performance. Complex programs often have multiple CLINs with different contract types — a development CLIN at CPFF and a production option at FFP. Design the structure so each CLIN type matches the risk profile of that work.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Undefinitized Contract Actions (UCAs): The Most Dangerous Contract Tool',
+          body: 'UCAs (contracts or modifications executed before price is agreed) are authorized by FAR 16.603 and DFARS 217.74, but they are the source of some of the worst cost outcomes in DoD acquisition. DFARS requires definitization within 180 days or 40% of not-to-exceed value obligated — whichever comes first. In practice, programs routinely miss these deadlines, and definitization happens after the contractor has incurred most costs, eliminating negotiating leverage. The contractor who knows you MUST definitize has no incentive to reduce costs during definitization. Senior PMs minimize UCAs, use them only when true urgency justifies starting before price is agreed, and definitize aggressively — before the contractor has spent their way into a position of strength.',
+        },
+        ],
+      quiz: [
+          {
+            id: 'q1',
+            question: "Which contract type places 100% of cost risk on the contractor and is most preferred by the FAR?",
+            options: ['Cost-Plus-Fixed-Fee (CPFF)', 'Fixed-Price-Incentive-Firm (FPIF)', 'Firm-Fixed-Price (FFP)', 'Time & Materials (T&M)'],
+            correct: 2,
+            explanation: "Firm-Fixed-Price (FFP) is the government's most preferred contract type because it places maximum cost risk on the contractor, creating the strongest incentive for efficiency. Under FFP, if the contractor spends more than the agreed price, it absorbs the loss."
+          },
+          {
+            id: 'q2',
+            question: "On a Cost-Plus-Incentive-Fee contract with a 70/30 share ratio, if the contractor comes in $2M under the target cost, how much additional fee do they earn?",
+            options: ['$2M', '$1.4M', '$0.6M', '$0.7M'],
+            correct: 2,
+            explanation: "With a 70/30 (Government/Contractor) share ratio, the contractor earns 30% of cost savings. On a $2M underrun: contractor additional fee = 30% × $2M = $0.6M added to their target fee. The government retains 70% of the savings ($1.4M)."
+          },
+          {
+            id: 'q3',
+            question: "A Time & Materials contract requires what special documentation before award?",
+            options: ['A Nunn-McCurdy waiver', 'A Determination and Findings (D&F) that no other contract type is suitable', 'Congressional notification', 'A GAO protest review'],
+            correct: 1,
+            explanation: "Per FAR 16.601(d), T&M and Labor-Hour contracts require a written D&F (Determination and Findings) signed by the contracting officer (or higher official for contracts over $1M) justifying that no other contract type is suitable. T&M provides the least incentive for efficiency and must be used only when necessary."
+          },
+          {
+            id: 'q4',
+            question: "The Point of Total Assumption (PTA) on a Fixed-Price Incentive Firm (FPIF) contract is the point at which:",
+            options: ['The government assumes 100% of remaining cost risk', 'The contractor assumes 100% of cost overruns above the ceiling price', 'The target fee is fully earned', 'The contract converts to cost-plus'],
+            correct: 1,
+            explanation: "The PTA on an FPIF contract is the cost level at which the contractor absorbs 100% of additional costs — effectively making it FFP above that point. Beyond the PTA, the contractor's fee has been entirely eroded by the cost overrun sharing."
+          },
+          {
+            id: 'q5',
+            question: "Which contract type is most appropriate for a program in early technology development where cost and technical scope cannot be well-defined?",
+            options: ['FFP', 'FPIF', 'CPFF', 'BPA'],
+            correct: 2,
+            explanation: "CPFF (Cost-Plus-Fixed-Fee) is appropriate when technical risk is high and costs cannot be reliably estimated. The government pays all allowable costs plus a fixed fee that does not change with cost performance. It is the standard for early R&D work covered by FAR Part 35."
+          },
+          {
+            id: 'q6',
+            question: "Under FAR 16.103, what must the contracting officer document to justify the chosen contract type?",
+            options: ['A cost analysis certified by the comptroller', 'Written rationale in the acquisition plan explaining why the chosen type is appropriate', 'Congressional approval for non-FFP contracts', 'A GAO pre-award review'],
+            correct: 1,
+            explanation: "FAR 16.103(d) requires the contracting officer to document the contract type selection rationale in the written acquisition plan. This is a standard audit requirement — unsupported contract type decisions are a common finding in IG and GAO reviews."
+          },
+          {
+            id: 'q7',
+            question: "A Cost-Plus-Award-Fee (CPAF) contract is distinguished from CPIF in that the award fee is:",
+            options: ['Calculated using a fixed formula tied to cost performance', 'Subjectively determined by the government based on overall performance evaluation', 'Paid automatically at contract completion', 'The same as the base fee on a CPFF contract'],
+            correct: 1,
+            explanation: "CPAF award fees are subjectively evaluated by a government Fee Determining Official (FDO) based on qualitative performance criteria. This makes CPAF useful for service contracts where the quality of performance matters most. CPIF, by contrast, uses a formula-based fee tied to measurable cost targets."
+          },
+          {
+            id: 'q8',
+            question: "Which contract type is specifically PROHIBITED for use with commercial items under FAR Part 12?",
+            options: ['FFP', 'FPIF', 'Cost-reimbursable contracts (CPFF, CPIF, CPAF)', 'T&M'],
+            correct: 2,
+            explanation: "FAR 12.207 prohibits the use of cost-reimbursable contracts for the acquisition of commercial items. Commercial items must use FFP, FPIF, or T&M/LH contract types. This rule reflects the commercial marketplace reality that vendors sell at firm prices, not on a cost-reimbursable basis."
+          },
+          {
+            id: 'q9',
+            question: "What is the primary advantage of an FPIF contract over a pure FFP contract for a development program?",
+            options: ['FPIF requires less government oversight', 'FPIF shares cost risk while still incentivizing cost control', 'FPIF allows the contractor unlimited cost reimbursement', 'FPIF requires no competition'],
+            correct: 1,
+            explanation: "FPIF shares cost risk between government and contractor through a negotiated share ratio, while maintaining a firm ceiling price. This is appropriate when some cost uncertainty exists but a pure cost-plus arrangement is not warranted. The incentive structure motivates the contractor to control costs without fully absorbing unpredictable risk."
+          },
+          {
+            id: 'q10',
+            question: "The FAR preference for contract type selection, in order from most to least preferred, is:",
+            options: ['T&M → CPFF → FPIF → FFP', 'FFP → FPIF → CPIF → CPFF → T&M', 'CPFF → FFP → T&M', 'CPIF → FFP → CPFF → T&M'],
+            correct: 1,
+            explanation: "The FAR preference order moves from maximum contractor risk (FFP) to maximum government risk (T&M/CPFF): FFP → FPI → Cost-Reimbursable (CPIF, CPFF, CPAF) → T&M/LH. Each step requires additional justification and imposes greater government oversight obligations."
+          },
+          {
+            id: 'q11',
+            type: 'drag_order',
+            question: "Order these contract types from HIGHEST contractor risk to LOWEST contractor risk:",
+            options: [],
+            correct: 0,
+            explanation: "FFP places 100% cost risk on the contractor — they absorb every dollar over budget. FPIF shares risk via a formula up to the ceiling/PTA. CPIF reimburses all costs with incentive fee adjustments. CPAF reimburses all costs with subjective award fee. T&M reimburses hours + materials with no ceiling unless set — government bears virtually all cost risk.",
+            orderedItems: [
+              "FFP — Firm-Fixed-Price (Contractor 100%)",
+              "FPIF — Fixed-Price Incentive Firm (Shared, formula-based)",
+              "CPIF — Cost-Plus-Incentive-Fee (Mostly Government)",
+              "CPAF — Cost-Plus-Award-Fee (Mostly Government, subjective)",
+              "T&M — Time & Materials (Government ~100%)"
+            ]
+          },
+          {
+            id: 'q12',
+            type: 'drag_match',
+            question: "Match each contract type to the scenario where it is MOST appropriate:",
+            options: [],
+            correct: 0,
+            explanation: "Contract type selection must match the risk environment. FFP works when requirements are stable and competition exists. FPIF works when some cost uncertainty remains but a ceiling is feasible. CPFF works for early R&D where you truly can't estimate cost. T&M requires a D&F and is the last resort when effort is completely undefined.",
+            pairs: [
+              { left: 'FFP', right: 'Stable requirements, mature design, competitive market' },
+              { left: 'FPIF', right: 'Design mostly mature; some cost uncertainty remains' },
+              { left: 'CPFF', right: 'Early R&D; cost cannot be estimated with any confidence' },
+              { left: 'T&M', right: 'Undefined hours/effort; last resort; D&F required' }
+            ]
+          }
+        ]
+      },
+
+            {
+        id: 'contracts-4',
+        title: 'Contracts vs. Task Orders: Know the Difference',
+        duration: '14 min',
+        description: 'Understand the fundamental distinction between base contracts and task orders — and why it matters for how work gets authorized, modified, and paid.',
+        keyTerms: [
+          { term: 'IDIQ', definition: 'Indefinite Delivery / Indefinite Quantity — a contract type that establishes terms and conditions for ordering supplies or services over time.' },
+          { term: 'Task Order (TO)', definition: 'An order for services placed under an IDIQ contract — the mechanism that authorizes and funds specific work.' },
+          { term: 'Delivery Order (DO)', definition: 'An order for supplies placed under an IDIQ contract (parallel to task order, but for products).' },
+          { term: 'MAC-IDIQ', definition: 'Multiple Award Contract IDIQ — competition is split among multiple awardees who then compete for individual task orders.' },
+          { term: 'GWAC', definition: 'Government-Wide Acquisition Contract — an IDIQ available for use by multiple federal agencies, awarded by a lead agency.' },
+          { term: 'Ordering Period', definition: 'The time window during which task orders may be placed under an IDIQ contract (distinct from the period of performance on individual TOs).' },
+          { term: 'Ceiling', definition: 'The maximum dollar value of all orders that may be placed under an IDIQ contract.' },
+          { term: 'Minimum Guarantee', definition: 'The minimum value the government is obligated to order under an IDIQ — typically a nominal amount ($1,000–$25,000).' },
+          { term: 'Fair Opportunity', definition: 'The requirement under FAR 16.505 to provide each MAC-IDIQ awardee a fair opportunity to compete for each task order over $3,500.' },
+          { term: 'BPA', definition: 'Blanket Purchase Agreement — a simplified ordering agreement under GSA Schedule or open market, similar in concept to an IDIQ but without minimum/maximum guarantees.' },
+        ],
+        content: [
+          {
+            type: 'text',
+            heading: "Two Levels of Agreement",
+            body: "In federal contracting, there are two distinct levels of agreement you must understand: the base contract and the order. The base contract (the IDIQ) establishes all the legal terms and conditions — pricing, labor categories, clauses, applicable regulations, and the overall ordering ceiling. The task order (TO) is where actual work gets authorized and funded. No work begins until a task order is issued. This two-level structure gives agencies flexibility to order services on demand without re-competing every single requirement."
+          },
+          {
+            type: 'table',
+            heading: "Contract vs. Task Order vs. BPA: Key Differences",
+            headers: ['Element', 'IDIQ Base Contract', 'Task Order', 'BPA'],
+            rows: [
+              ['What it does', 'Establishes legal framework, terms, clauses, labor rates', 'Authorizes & funds specific work', 'Sets up ordering arrangement (no guaranteed min/max)'],
+              ['When competed', 'Once, at contract award', 'Each order (fair opportunity)', 'Once, at BPA establishment'],
+              ['Funds obligated', 'Only minimum guarantee at award', 'Full amount of each order', 'At time of call (order) placement'],
+              ['Period', 'Ordering period (e.g., 5+5 years)', 'Task order PoP (can extend past IDIQ ordering period)', 'Typically 1 year, renewable'],
+              ['Modifications', 'Change terms, rates, ceiling, ordering period', 'Change scope/funding on that specific task', 'Modify terms of BPA arrangement'],
+              ['Competition', 'Full & open or small biz set-aside', 'Fair opportunity among awardees', 'Schedule price competition'],
+            ]
+          },
+          {
+            type: 'text',
+            heading: "How IDIQs Work: Single Award vs. Multiple Award",
+            body: "A Single Award IDIQ gives one contractor exclusive rights to receive all task orders — appropriate when a single firm has unique capabilities. A Multiple Award Contract IDIQ (MAC-IDIQ) awards the base contract to multiple vendors who then compete for individual task orders. FAR 16.504 establishes a preference for multiple awards because they maintain price competition at the task order level and give the government access to a pool of qualified vendors."
+          },
+          {
+            type: 'list',
+            heading: "The IDIQ Ordering Process (Step by Step)",
+            items: [
+              'Step 1: Requirement identified — program office describes work needed|||The quality of the SOW/PWS here determines the quality of proposals and performance. A vague SOW produces vague proposals and an ambiguous contract. A good task order SOW describes outcomes (performance-based), includes measurable acceptance criteria, and specifies deliverables with format and timing. This is the most underinvested step in task order contracting.',
+              'Step 2: Determine if an existing IDIQ can satisfy the requirement (scope check)|||The CO must conduct a scope determination to verify work falls within the original IDIQ\'s scope. Placing a task order outside the IDIQ\'s scope is an improper order — effectively a sole-source contract without a J&A. For GWACs like OASIS+, scope is broadly defined but still has limits.',
+              'Step 3: Issue a task order Request for Proposal (TORFP) to awardees in the pool|||TORFPs under MA-IDIQs must provide fair opportunity per FAR 16.505. Includes the SOW/PWS, evaluation factors, proposal instructions, and period of performance. Page limits are common (10–30 pages vs. 100+ for new vehicle bids). Response times are typically 7–30 days — much faster than full proposals.',
+              'Step 4: Provide fair opportunity — all pool members get a reasonable chance to compete|||Fair opportunity under FAR 16.505 is the default rule — it cannot be waived without documented justification. The ordering CO must ensure the task order RFP is distributed to all eligible pool holders simultaneously with equal response time. Selectively notifying preferred contractors or providing advance information to favorites is a protest-sustaining violation.',
+              'Step 5: Evaluate task order proposals (simplified process vs. full source selection)|||Task order evaluations are significantly lighter than full Part 15 source selections — no formal discussions, no SSAC, fewer documentation requirements. But the process must still be documented, consistent with the stated evaluation factors, and defensible. Task order award decisions are still protestable to the GAO.',
+              'Step 6: Award task order to the best value offeror|||Best value means the proposal offering the greatest combination of technical merit, past performance, and price for the government\'s needs — not necessarily the lowest price. The ordering CO documents the tradeoff rationale. For LPTA task orders, the lowest technically acceptable price wins. Most professional services use BVTO.',
+              'Step 7: Execute work; administer the task order like a standalone contract|||Task orders have their own period of performance, deliverables, and COR. The COR monitors performance against the task order PWS/SOW, not just the base contract. Performance is documented in CPARS at the task order level for large orders. Option years on the task order can be exercised independently of the base contract.',
+              'Step 8: Modify the task order (not the base contract) for scope/funding changes|||Task order modifications use the SF-30 and follow the same modification authorities as standalone contracts. Critically — changes go on the task order, not the base IDIQ contract. Adding scope beyond the task order ceiling requires a new modification with additional funding. The base IDIQ contract is modified only for vehicle-level changes (period of performance extension, ceiling increase).',
+            ]
+          },
+          {
+            type: 'callout',
+            heading: "The Fair Opportunity Requirement",
+            body: "FAR 16.505 requires that for MAC-IDIQ task orders over $3,500, all awardees must receive a fair opportunity to compete — meaning each must receive notice of the opportunity and a reasonable time to respond. Six narrow exceptions allow sole-source task orders: urgency, only one awardee is capable, follow-on to a prototype, logical follow-on, minimum guarantee, and national security. Bypassing fair opportunity without a valid exception is illegal and a common IG finding."
+          },
+          {
+            type: 'formula',
+            heading: "IDIQ Contract Structure",
+            formula: 'IDIQ Contract = Base Contract (terms, rates, ceiling) + n Task Orders\nTotal ordered value ≤ Maximum Ceiling\nTotal ordered value ≥ Minimum Guarantee\nEach Task Order = Independent Scope + Independent Funding + Independent PoP',
+            explanation: "The base contract ceiling sets the absolute limit on cumulative task order value. The minimum guarantee is the only amount the government is legally obligated to order — it protects the contractor's investment in the contract. Each task order is funded independently with its own period of performance."
+          },
+          {
+            type: 'table',
+            heading: "Common DoD IDIQ Vehicles by Type",
+            headers: ['Contract Vehicle', 'Type', 'Administered By', 'Best For'],
+            rows: [
+              ['OASIS+', 'MAC-IDIQ GWAC', 'GSA', 'Professional services across all disciplines'],
+              ['Alliant 2', 'MAC-IDIQ GWAC', 'GSA', 'Large-scale IT services and solutions'],
+              ['STARS III', 'MAC-IDIQ GWAC (SDVOSB/SB)', 'GSA', 'IT services — small business set-aside'],
+              ['SeaPort-NxG', 'MAC-IDIQ', 'NAVSEA', 'Navy engineering and program support'],
+              ['AFCAP IV', 'MAC-IDIQ', 'AFCEC', 'Air Force contingency base support'],
+              ['EAGLE II', 'MAC-IDIQ', 'DHS', 'IT solutions for DHS components'],
+            ]
+          },
+          {
+            type: 'tip',
+            heading: "Task Order vs. Contract Modification — Don't Confuse Them",
+            body: "A modification to a task order changes the scope, funding, or schedule of that specific task. A modification to the base IDIQ changes the contract-wide terms — labor rates, clauses, ceiling value, ordering period, or adding/removing CLINs. Most day-to-day changes (adding work, extending a PoP, adding funding) are task order mods. Changes to underlying pricing or terms require base contract modifications."
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'IDIQ Management: Ceiling vs. Scope vs. Competition',
+          body: 'Mid-career PMs using IDIQs and GWACs must navigate three overlapping constraints: (1) the IDIQ ceiling — you cannot exceed the maximum order value without a modification, but you can order below the minimum; (2) scope limitations — task orders must be within the IDIQ\'s scope (ordering outside scope violates CICA and creates protest risk); (3) competition requirements — most IDIQs require fair opportunity among all awardees for task orders above $3,500 (DARS 16.505). The most common mid-career mistake: treating an IDIQ as a preferred vehicle even when better-suited vehicles exist, or placing task orders that are technically "within scope" but stretch the scope definition to the breaking point. Contractors monitor IDIQ usage patterns and will protest if they believe scope is being stretched to steer work.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Bridge Contracts and Option Exercise Discipline',
+          body: 'Two of the most common contracting failures senior PMs face: bridge contracts and missed option windows. Bridge contracts (short-term extensions to maintain continuity between contracts) are legal but signal poor acquisition planning, attract GAO scrutiny, and often pay above-market rates because competition is waived. The bridge becomes a habit — some programs have been on "bridge" for 5+ years, paying a sole-source premium indefinitely. Option exercise discipline: options must be exercised before expiration — missed windows forfeit the option and require a new competition. With 12-24 month options, build a calendar trigger 90 days before each option expiration. The J&A required for a bridge after a missed option is a career embarrassment that documents your planning failure for the record.',
+        },
+        ],
+      quiz: [
+          {
+            id: 'q1',
+            question: "Under a Multiple Award IDIQ contract, what is the primary mechanism that actually authorizes a contractor to begin work and obligates government funding?",
+            options: ['The base IDIQ contract award', 'A task order (or delivery order) issued under the IDIQ', 'A Blanket Purchase Agreement call', 'A contract modification to the base IDIQ'],
+            correct: 1,
+            explanation: "The IDIQ base contract establishes the legal framework and terms but does NOT authorize specific work or obligate funds. A task order (or delivery order for supplies) is the mechanism that authorizes a specific scope of work and obligates the corresponding funding. No work should begin without an issued task order."
+          },
+          {
+            id: 'q2',
+            question: "What is the minimum guarantee on an IDIQ contract, and why does it exist?",
+            options: ['50% of the contract ceiling, to ensure the contractor recovers setup costs', 'A nominal amount (typically $1K–$25K) obligated at award, protecting the contractor from a zero-value contract', 'The amount needed to fund the first task order', 'The government\'s estimated annual spend, used for market research'],
+            correct: 1,
+            explanation: "The minimum guarantee is a nominal amount (typically $1,000–$25,000) obligated at contract award that represents the government's only guaranteed obligation under the IDIQ. It protects the contractor from the scenario where no task orders are ever placed. Above the minimum, the government has no obligation to order any specific amount up to the ceiling."
+          },
+          {
+            id: 'q3',
+            question: "FAR 16.505 requires \"fair opportunity\" for MAC-IDIQ task orders above what threshold?",
+            options: ['$100,000', '$350,000', '$3,500', '$1,000,000'],
+            correct: 2,
+            explanation: "FAR 16.505 requires that all MAC-IDIQ awardees receive fair opportunity to compete for task orders exceeding $3,500. Below this threshold, the contracting officer may place orders without following the fair opportunity procedures. This relatively low threshold means nearly all meaningful task orders require fair opportunity competition."
+          },
+          {
+            id: 'q4',
+            question: "What distinguishes an IDIQ contract from a Blanket Purchase Agreement (BPA)?",
+            options: ['BPAs have a maximum ceiling; IDIQs do not', 'IDIQs have enforceable minimum/maximum quantities; BPAs have no such guarantees', 'BPAs require full and open competition; IDIQs do not', 'IDIQs are only for services; BPAs are only for supplies'],
+            correct: 1,
+            explanation: "IDIQs have both a minimum guarantee (legally obligated at award) and a maximum ceiling (cannot exceed). BPAs are simplified ordering arrangements — typically against GSA Schedule contracts — with no minimum guarantee and no maximum ceiling (though agencies usually set an estimated value). BPAs are simpler to establish but provide less legal certainty."
+          },
+          {
+            id: 'q5',
+            question: "The \"ordering period\" on an IDIQ contract refers to:",
+            options: ['The period of performance for individual task orders', 'The time window during which new task orders may be placed against the IDIQ', 'The fiscal year in which funds were appropriated', 'The time from award to the first task order competition'],
+            correct: 1,
+            explanation: "The ordering period defines when task orders may be placed. A common structure is 5 years base plus one 5-year option. Task order periods of performance CAN extend beyond the IDIQ ordering period (a common misconception) — what matters is that the task order itself was awarded before the ordering period closed."
+          },
+          {
+            id: 'q6',
+            question: "Which of the following is NOT a recognized exception to the fair opportunity requirement under FAR 16.505?",
+            options: ['Urgency — need so urgent that fair opportunity would cause harm', 'Only one IDIQ awardee is technically capable of performing the work', 'The contracting officer prefers working with a particular contractor', 'Minimum guarantee — task order to fulfill the contract\'s minimum'],
+            correct: 2,
+            explanation: "Personal preference is never a valid exception to fair opportunity. The six valid exceptions are: urgency, only one awardee is capable, logical follow-on to a prototype, follow-on for consistency, minimum guarantee order, and national security. Violating fair opportunity without a documented exception is a serious contracting violation."
+          },
+          {
+            id: 'q7',
+            question: "The IDIQ contract vehicle OASIS+ (administered by GSA) is best described as:",
+            options: ['A single-award IDIQ for IT services only', 'A Government-Wide Acquisition Contract (GWAC) MAC-IDIQ for professional services available to all federal agencies', 'A Navy-specific contract vehicle for shipbuilding support', 'A simplified acquisition tool for purchases under $350K'],
+            correct: 1,
+            explanation: "OASIS+ (One Acquisition Solution for Integrated Services Plus) is a GSA-administered GWAC MAC-IDIQ that provides professional services across multiple functional areas (management consulting, engineering, R&D, financial management, logistics, IT) to all federal agencies. It replaced the original OASIS contract and is structured with unrestricted and small business pools."
+          },
+          {
+            id: 'q8',
+            question: "A program manager wants to add new work to an existing task order that was not in the original task order statement of work. The correct action is to:",
+            options: ['Issue a new task order for the additional work', 'Verbally direct the contractor to start the new work immediately', 'Execute a task order modification adding the new scope and corresponding funding', 'Award a new sole-source contract for the additional work'],
+            correct: 2,
+            explanation: "New in-scope work under an existing task order should be incorporated through a task order modification (bilateral mod signed by both parties, or a unilateral mod if using Changes clause). The modification adds the scope and obligates additional funding. Simply directing the contractor to start work without a mod is an unauthorized commitment and a constructive change."
+          },
+          {
+            id: 'q9',
+            question: "Under a MAC-IDIQ, when a task order competition results in an award, which document governs the evaluation of task order proposals?",
+            options: ['The evaluation criteria in the original base IDIQ solicitation', 'The task order Request for Proposal (TORFP) issued to the pool', 'The Federal Acquisition Regulation Part 15 formal source selection process', 'The GSA Price List for schedule contracts'],
+            correct: 1,
+            explanation: "Task order competitions use a Task Order Request for Proposal (TORFP) that specifies the requirements, evaluation factors, and instructions for that specific task. This is typically a simplified process compared to full FAR Part 15 source selection — but the same principles of consistency and documentation apply, and task order awards can be protested to GAO or the CO."
+          },
+          {
+            id: 'q10',
+            question: "A government program has multiple contractors all holding IDIQ contracts under the same MAC vehicle. To place a task order, the ordering officer must:",
+            options: ['Select whichever contractor most recently won an order to balance workload', 'Issue a TORFP providing all eligible pool members a fair opportunity to compete', 'Always select the lowest-priced contractor from the original competition', 'Get CO approval only if the order exceeds the simplified acquisition threshold'],
+            correct: 1,
+            explanation: "Under a MAC-IDIQ, the ordering officer must provide all pool members a fair opportunity to compete by issuing a TORFP. This maintains competition at the task order level and is the core benefit of the MAC-IDIQ structure. Bypassing fair opportunity without a valid FAR 16.505 exception is illegal."
+          }
+        ]
+      },
+
+      {
+        id: 'contracts-7',
+        title: 'A&AS, IDIQs, and GWACs: The Defense Vehicle Landscape',
+        duration: '18 min',
+        description: 'Master the full spectrum of defense contract vehicles — from IDIQ structures and fair opportunity rules to A&AS categories and GWACs that define how defense contractors win recurring work.',
+        keyTerms: [
+          { term: 'IDIQ', definition: 'Indefinite Delivery, Indefinite Quantity — a contract type that establishes a ceiling value and minimum guarantee, under which the government orders services or supplies via task or delivery orders.' },
+          { term: 'Single Award IDIQ', definition: 'An IDIQ where one contractor holds the vehicle and receives all task orders without further competition. Highest revenue certainty; hardest to win.' },
+          { term: 'MA-IDIQ', definition: 'Multiple Award IDIQ — the dominant defense contracting model. Multiple contractors hold the vehicle; task orders are competed among awardees under fair opportunity provisions (FAR 16.505).' },
+          { term: 'Fair Opportunity', definition: 'FAR 16.505 requirement that all MA-IDIQ awardees receive a fair opportunity to be considered for each task order. Exceptions are narrow and scrutinized.' },
+          { term: 'A&AS', definition: 'Advisory and Assistance Services — a formal acquisition category under FAR 37.2 covering management advisory functions, studies and analyses, and engineering and technical services.' },
+          { term: 'GWAC', definition: 'Government-Wide Acquisition Contract — a pre-competed IDIQ vehicle available to all federal agencies. Examples: OASIS+, CIO-SP4, Alliant 3, STARS III.' },
+          { term: 'GSA MAS', definition: 'GSA Multiple Award Schedule — allows contractors to sell pre-negotiated commercial products and services to federal agencies. A marketing platform, not a revenue guarantee.' },
+          { term: 'BPA', definition: 'Blanket Purchase Agreement — a simplified acquisition mechanism for recurring needs, established against an existing contract or GSA Schedule.' },
+          { term: 'MAC', definition: 'Multiple Award Contract — umbrella term for any contract vehicle where multiple awardees compete for individual task orders.' },
+          { term: 'A&AS-D', definition: 'Advisory and Assistance Services — Digital. Emerging subcategory covering digital engineering, DevSecOps support, and digital transformation advisory. Growing across Air Force and Space Force.' },
+          { term: 'OASIS+', definition: 'One Acquisition Solution for Integrated Services Plus — GSA\'s flagship professional services GWAC replacing the legacy OASIS vehicle. Covers complex professional services including program management, management consulting, and engineering.' },
+          { term: 'CIO-SP4', definition: 'Chief Information Officer Solutions and Partners 4 — NIH\'s GWAC for IT services and solutions. One of the most widely used GWACs across civilian and defense agencies.' },
+        ],
+        content: [
+          {
+            type: 'text',
+            heading: 'Why Vehicle Strategy Is Your Most Important BD Decision',
+            body: 'Before a single proposal is written, before a capture plan is built, the most consequential BD decision a defense contractor makes is which contract vehicles to pursue and hold. The vehicle you\'re on determines what opportunities you can see, which agencies you can serve, and whether you\'re competing in a pool of 3 contractors or 300. Winning a place on the right IDIQ vehicles is the infrastructure of a sustainable defense business — task order wins are built on top of it.',
+          },
+          {
+            type: 'table',
+            heading: 'Contract Vehicle Types — Know the Differences',
+            headers: ['Vehicle Type', 'Scope', 'Who Can Use', 'Entry Difficulty', 'Best For'],
+            rows: [
+              ['IDIQ (Agency-Specific)', 'Agency-specific requirements', 'Named awardees only', 'Moderate–High', 'Recurring work with target agency'],
+              ['GWAC', 'Government-wide', 'All federal agencies', 'High — rigorous qualification', 'IT, professional services across agencies'],
+              ['GSA MAS', 'Commercial items/services', 'All federal agencies', 'Low–Moderate', 'Commercial-type offerings, product sales'],
+              ['BPA', 'Agency/base-level recurring needs', 'Specific CO only', 'Low', 'Recurring small purchases, simplified acquisitions'],
+              ['OTA', 'R&D / Prototype only', 'Sponsoring agency', 'Moderate (consortium model)', 'Innovation, rapid prototyping under 10 U.S.C. § 4022'],
+            ],
+          },
+          {
+            type: 'text',
+            heading: 'Single Award vs. Multiple Award IDIQ — The Revenue Tradeoff',
+            body: 'The choice between single and multiple award structures reflects a fundamental government tradeoff between competition and efficiency. Single award IDIQs deliver maximum revenue certainty for the winner — but they require the government to demonstrate that only one firm is capable, which is increasingly difficult to defend. Multiple award IDIQs dominate the defense services landscape precisely because they maintain competition at the task order level while reducing the procurement overhead of re-competing each requirement from scratch.',
+          },
+          {
+            type: 'callout',
+            heading: 'Fair Opportunity Is the Rule — Exceptions Are Narrow',
+            body: 'Under FAR 16.505, the government must give all MA-IDIQ awardees a fair opportunity to be considered for every task order. The five exceptions — unusual urgency, only one awardee capable, public interest sole source, logical follow-on, and minimum order — are each legally constrained and routinely protested. Never assume an exception applies. If a competitor receives a task order without fair opportunity competition, GAO protest is a viable and often successful remedy.',
+          },
+          {
+            type: 'table',
+            heading: 'Single vs. Multiple Award IDIQ — Side by Side',
+            headers: ['Feature', 'Standalone Contract', 'Single Award IDIQ', 'Multiple Award IDIQ'],
+            rows: [
+              ['Competition Level', 'Full & Open or Set-Aside', 'Single competition at award', 'Competition at vehicle + each task order'],
+              ['Revenue Certainty', 'High (if awarded)', 'Very High', 'Moderate — depends on win rate'],
+              ['Entry Difficulty', 'Moderate to High', 'Very High', 'Moderate'],
+              ['Typical Duration', '1–5 years', '5–10 years', '5–10 years'],
+              ['BD Effort Post-Award', 'Low', 'Low', 'High — continuous task order competition'],
+              ['Common Use Cases', 'Unique, defined scope', 'Specialized capability, single source', 'Broad services, IT, professional services'],
+            ],
+          },
+          {
+            type: 'text',
+            heading: 'Advisory and Assistance Services (A&AS) — What It Means for Contractors',
+            body: 'A&AS is not just a label — it is a formal acquisition category under FAR 37.2 with regulatory implications for how contracts are structured, what personnel qualifications may be required, and how inherently governmental function boundaries are applied. Being categorized as A&AS often means higher scrutiny, more demanding performance standards, and greater government oversight of your personnel qualifications. But it also means access to some of the most stable, high-value recurring work in the defense space.',
+          },
+          {
+            type: 'list',
+            heading: 'The Three A&AS Subcategories — Know Yours',
+            items: [
+              'Management and Professional Support Services — program management support, financial management consulting, organizational studies, strategic advisory. This is where most large defense service firms compete.|||This subcategory covers program office support contracts — the analysts, program managers, financial advisors, and organizational consultants that work alongside government personnel. These are among the most sensitive A&AS contracts because contractors are often deeply embedded in government decision-making processes, raising inherently governmental function concerns.',
+
+              'Studies, Analyses, and Evaluations — research, assessments, analytical work products, independent evaluations. Requires demonstrated analytical methodology and cleared personnel for sensitive assessments.|||This covers FFRDC-type work performed by for-profit contractors: alternatives analyses, cost-benefit studies, program assessments, policy research. Contractors in this space must be especially careful about organizational conflicts of interest — if you evaluate a program for which your parent company is also bidding, that\'s a textbook OCI.',
+
+              'Engineering and Technical Services — support to acquisition programs including systems engineering, technical advice, test support, and logistics engineering. The backbone of major program office support contracts.|||This is the largest A&AS subcategory by dollar volume. SETA (Systems Engineering and Technical Assistance) contracts provide integrated engineering support to program offices. SETA contractors often have significant influence over requirements and acquisition strategy — which makes OCI management critical and inherently governmental function boundaries essential to enforce.',
+
+              'A&AS-D (Digital) — emerging Air Force/Space Force category covering digital engineering, DevSecOps support, software factory integration, and digital transformation advisory. Contractors without demonstrated digital credentials will find these task orders increasingly difficult to compete.|||A&AS-D reflects the DAF\'s push toward digital-first acquisition. Contractors must demonstrate Platform One familiarity, IL4/IL5 cloud delivery experience, and DevSecOps credentials. This category is growing rapidly — contractors without demonstrated digital engineering credentials are increasingly finding traditional A&AS work difficult to retain on recompete.',
+
+            ],
+          },
+          {
+            type: 'text',
+            heading: 'The Major GWACs — Which Vehicles to Target',
+            body: 'GWACs represent the premium tier of the defense contracting vehicle landscape. They require the most rigorous qualification process and carry the highest competition at task order level — but they open the entire federal marketplace, not just a single agency. The strategic value of a GWAC position compounds over time as you build past performance, expand to new agencies, and develop relationships across the federal enterprise.',
+          },
+          {
+            type: 'table',
+            heading: 'Key Defense & Federal GWACs',
+            headers: ['GWAC', 'Managed By', 'Scope', 'Key For', 'Set-Aside Pools'],
+            rows: [
+              ['OASIS+', 'GSA', 'Complex professional services: PM, management consulting, engineering, logistics', 'Large businesses + SB set-aside pools', 'Yes — SB, SDB, 8(a), SDVOSB, HUBZone, WOSB'],
+              ['CIO-SP4', 'NIH', 'IT services and solutions', 'IT-focused defense contractors', 'Yes — unrestricted + small business'],
+              ['Alliant 3', 'GSA', 'Large-scale IT solutions and services', 'Large prime IT integrators', 'Unrestricted only'],
+              ['STARS III', 'GSA', 'IT services for small businesses', 'Small businesses in IT/cyber/cloud', 'Small business only'],
+              ['SEWP VI', 'NASA', 'IT products and product-related services', 'Product-heavy offerings', 'Mixed pools'],
+            ],
+          },
+          {
+            type: 'tip',
+            heading: 'OTA Warning for Contractors',
+            body: 'Other Transaction Agreements under 10 U.S.C. § 4022 are NOT contracts in the FAR sense — they bypass standard procurement regulations. This makes them attractive for speed but requires careful legal and DCAA awareness. OTAs executed through consortium managers (like NSTXL, AFWERX, or DIU) have different terms than traditional contracts. Always have acquisition counsel review OTA terms before executing — particularly around IP rights, audit access, and flow-down requirements.',
+          },
+          {
+            type: 'text',
+            heading: 'Building Your Vehicle Portfolio Strategy',
+            body: 'A mature defense contractor does not pursue every vehicle — it builds a deliberate portfolio aligned to its core capabilities, target agencies, and growth strategy. The right vehicle mix balances near-term revenue (agency-specific IDIQs where you have relationships) with long-term expansion (GWACs that open new agencies) and specialized positioning (set-aside vehicles that leverage socioeconomic certifications). Map every pursuit in your pipeline to a vehicle before you commit proposal resources.',
+          },
+        ],
+        quiz: [
+          {
+            id: 'q1',
+            question: 'Under FAR 16.505, what is the default rule for task order competition on a Multiple Award IDIQ?',
+            options: [
+              'The government may award to any awardee at its sole discretion|||Incorrect for MAIDIQ. Under FAR 16.505, Multiple Award IDIQ contracts require a \'fair opportunity\' process for task orders over the threshold. Every awardee must be given a fair opportunity to compete. Sole discretion applies only to Single Award IDIQs.',
+              'All awardees must receive a fair opportunity to be considered|||Correct. FAR 16.505(b)(1) requires fair opportunity procedures for task orders over the threshold. Each MAIDIQ awardee must be notified, given the opportunity to submit a proposal, and evaluated using the criteria established in the base IDIQ.',
+              'Task orders under $150,000 require full and open competition|||Incorrect. Task orders under $150,000 are often exempt from fair opportunity requirements â the CO may award at their discretion. It\'s orders OVER $3,500 (and especially over $150,000 for civilian agencies, $6M for DoD) that trigger increasing fair opportunity formality.',
+              'The incumbent contractor receives right of first refusal|||Incorrect. There is no statutory right of first refusal for incumbent contractors on MAIDIQ task orders. All awardees must receive fair opportunity. While past performance is a legitimate evaluation factor, it does not give the incumbent a contractual preference.',
+            ],
+            correct: 1,
+            explanation: 'FAR 16.505 requires the government to provide all MA-IDIQ awardees a fair opportunity to be considered for each task order. This is the default rule — exceptions (unusual urgency, only one awardee capable, public interest, logical follow-on, minimum order) are narrow and legally constrained.',
+          },
+          {
+            id: 'q2',
+            question: 'Which A&AS subcategory covers digital engineering support, DevSecOps, and software factory integration?',
+            options: [
+              'Management and Professional Support Services|||Correct. This is one of the four A&AS (Advisory and Assistance Services) categories defined in FAR 37.2. It covers management analysis, organizational studies, training, and professional support. Defense agencies use this category for program management support and strategic planning assistance.',
+              'Studies, Analyses, and Evaluations|||Correct. This A&AS category covers independent research, operational analysis, technical evaluations, and studies. It includes policy analysis, program assessments, and alternatives analysis â work that informs government decisions without directly executing them.',
+              'Engineering and Technical Services|||Correct. This A&AS category covers technical expertise supporting government programs â systems engineering, technical review, test support, and engineering advisory services. It is the most commonly used A&AS category in DoD acquisition programs.',
+              'A&AS-D (Digital)|||Incorrect. The correct expansion is A&AS-D = Advisory and Assistance Services â Defense (or specifically, GSA\'s AAS-D = Assisted Acquisition Services - Defense). There is no \'Digital\' designation in the standard A&AS taxonomy.',
+            ],
+            correct: 3,
+            explanation: 'A&AS-D (Digital) is the emerging subcategory gaining traction across the Air Force and Space Force that specifically covers digital engineering, DevSecOps support, software factory integration, and digital transformation advisory.',
+          },
+          {
+            id: 'q3',
+            question: 'What is the key distinction between a GWAC and an agency-specific IDIQ?',
+            options: [
+              'GWACs have higher minimum guarantees than agency IDIQs|||Incorrect. GWAC minimum guarantees are often very low â sometimes $1 per awardee â to minimize the government\'s financial commitment while maintaining a large awardee pool. The minimum guarantee comparison between GWACs and agency IDIQs varies by vehicle.',
+              'GWACs are available to all federal agencies; agency IDIQs are limited to named awardees|||Partially correct but conflated. GWACs are available to all federal agencies as ordering agencies. Agency IDIQs are typically limited to the establishing agency or named ordering activities. The key difference is who can ORDER â not who can hold the contract.',
+              'Agency IDIQs require Congressional notification; GWACs do not|||Incorrect. There is no general rule requiring Congressional notification for agency IDIQs vs. GWACs. Large contracts may trigger Congressional notification under specific statutes (e.g., Nunn-McCurdy for cost growth on MDAPs), but that is program-specific, not vehicle-type-specific.',
+              'GWACs are only for small businesses; agency IDIQs are unrestricted|||Incorrect. GWACs are available to all businesses — large and small. Some GWACs have small business pools alongside large business pools (e.g., OASIS+, ALLIANT 2). Agency IDIQs can also be set-aside for small businesses. The restriction to small businesses is a set-aside decision, not inherent to GWACs.',
+            ],
+            correct: 1,
+            explanation: 'The defining characteristic of a GWAC is that it is available government-wide — any federal agency can place orders against it. Agency-specific IDIQs are limited to the ordering agency and named awardees only.',
+          },
+          {
+            id: 'q4',
+            question: 'An OTA (Other Transaction Agreement) differs from a traditional FAR contract primarily because:',
+            options: [
+              'OTAs have lower dollar thresholds|||Incorrect. OTAs do not have lower thresholds than FAR contracts â in fact, they are often used for larger, more complex prototype and production programs. The value of OTAs is regulatory flexibility, not cost threshold reduction.',
+              'OTAs bypass standard FAR procurement regulations|||Correct. OTAs are authorized under 10 U.S.C. 4021-4022. They are explicitly not subject to the FAR, DFARS, or most standard procurement regulations. This allows DoD to negotiate customized agreements and attract non-traditional defense contractors. However, OTAs require a prototype purpose.',
+              'OTAs require Congressional approval|||Incorrect. OTA authority is already granted by Congress through statute (10 U.S.C. 4021). Individual OTA agreements do not require separate Congressional approval.',
+              'OTAs are only available to small businesses|||Incorrect. OTAs are available to any contractor. One requirement is that at least one \'non-traditional defense contractor\' participates. Large defense contractors can and do use OTAs when working with non-traditional partners.',
+            ],
+            correct: 1,
+            explanation: 'OTAs under 10 U.S.C. § 4022 are NOT contracts in the FAR sense — they bypass standard procurement regulations. This makes them attractive for speed and innovation but requires careful legal review, particularly around IP rights, DCAA access, and flow-down requirements.',
+          },
+          {
+            id: 'q5',
+            question: 'Which of the following best describes the GSA Multiple Award Schedule (MAS)?',
+            options: [
+              'A guaranteed revenue source for qualified contractors|||Incorrect. Being on the Federal Supply Schedule does not guarantee revenue. Schedule contractors must still market their offerings and compete for individual orders. Many schedule holders receive little or no government business.',
+              'A pre-competed vehicle available only to defense agencies|||Incorrect. The GSA Multiple Award Schedule (MAS/FSS) is available to all federal agencies â civilian and defense. It is managed by GSA and is government-wide.',
+              'A marketing platform with pre-negotiated commercial terms available to all federal agencies|||Correct. The GSA Multiple Award Schedule (MAS) is a long-term contract vehicle with pre-established pricing that any federal agency can use. Contractors list their products and services at pre-negotiated prices, and agencies can order directly.',
+              'An IDIQ requiring annual task order competitions|||Incorrect. MAS orders are simplified â for orders below $15K, the ordering agency can select any MAS contractor; for orders over $15K, the agency must provide fair opportunity to three or more MAS awardees. There is no annual re-competition requirement.',
+            ],
+            correct: 2,
+            explanation: 'The GSA MAS allows contractors to sell pre-negotiated commercial products and services to federal agencies — but it is a marketing platform, not a revenue guarantee. Contractors must actively pursue orders; simply holding a schedule generates no revenue.',
+          },
+          {
+            id: 'q6',
+            question: 'OASIS+ is best described as:',
+            options: [
+              'An Army-specific IDIQ for base operations services|||Incorrect. AFICC (Air Force Installation Contracting Center) is an Air Force contracting organization â not Army. AFICC manages Air Force installation contracting across all CONUS Air Force installations.',
+              'GSA\'s flagship GWAC for complex professional services including program management and engineering|||Correct for OASIS+. OASIS+ is GSA\'s largest and most comprehensive professional services GWAC. Recompeted in 2023-2024, it provides access to a large pool of qualified contractors for complex, integrated professional services across all disciplines.',
+              'A NASA GWAC for IT products and services|||Correct. SEWP (Solutions for Enterprise-Wide Procurement) is a NASA-managed GWAC for IT products and services â hardware, software, and related services. SEWP V is the current generation, with very fast ordering timelines (24-48 hours for simple orders).',
+              'A DoD-only vehicle for classified program support|||Incorrect. Major GWACs (OASIS+, SEWP, ALLIANT) are unclassified and available to all agencies. Classified program acquisitions typically use separate, program-specific vehicles.',
+            ],
+            correct: 1,
+            explanation: 'OASIS+ (One Acquisition Solution for Integrated Services Plus) is GSA\'s flagship GWAC for complex professional services — covering program management, management consulting, engineering, logistics, and scientific services. It replaced the legacy OASIS vehicle and includes both unrestricted and small business set-aside pools.',
+          },
+        ],
+      },
+
+      {
+        id: 'contracts-5',
+        title: 'GSA Vehicles: OASIS+, FEDSIM, and AAS-D',
+        duration: '18 min',
+        description: 'Master the most important government-wide acquisition contracts for professional services — how they work, when to use them, and what the differences are.',
+        keyTerms: [
+          { term: 'GWAC', definition: 'Government-Wide Acquisition Contract — a task order contract established by one agency for use by any federal agency.' },
+          { term: 'OASIS+', definition: 'One Acquisition Solution for Integrated Services Plus — GSA\'s flagship GWAC for professional and technical services across all disciplines.' },
+          { term: 'FEDSIM', definition: 'Federal Systems Integration and Management Center — GSA\'s assisted acquisition service that manages the contracting process on behalf of customer agencies.' },
+          { term: 'AAS-D', definition: 'Assisted Acquisition Services — Defense — GSA\'s defense-focused assisted acquisition service supporting DoD agencies.' },
+          { term: 'Assisted Acquisition', definition: 'When one agency (the servicing agency) conducts an acquisition on behalf of another agency (the requesting agency) using an Economy Act or similar authority.' },
+          { term: 'Ordering Agency', definition: 'The agency that places task orders against a GWAC for its own requirements (distinct from the agency that holds the contract).' },
+          { term: 'Interagency Agreement (IAA)', definition: 'The agreement between the requesting agency and servicing agency (e.g., GSA/FEDSIM) that authorizes the assisted acquisition.' },
+          { term: 'Alliant 2', definition: 'GSA\'s large-scale IT GWAC for complex IT solutions, available to all federal agencies.' },
+          { term: 'STARS III', definition: '8(a) STARS III — GSA\'s GWAC for small business IT services, including 8(a) and HUBZone set-asides.' },
+          { term: 'Economy Act', definition: '31 U.S.C. § 1535 — the statutory authority allowing federal agencies to request services or supplies from other federal agencies.' },
+        ],
+        content: [
+          {
+            type: 'text',
+            heading: "Why GWACs Matter to DoD Program Managers",
+            body: "Government-Wide Acquisition Contracts (GWACs) allow agencies to place task orders without conducting a full standalone acquisition. For DoD program managers, understanding GSA GWACs — especially OASIS+ — is increasingly essential. These vehicles save acquisition lead time, maintain competition, and provide access to pre-vetted contractor pools. Knowing when to use a GWAC vs. competing a standalone contract is a key PM and contracting competency."
+          },
+          {
+            type: 'table',
+            heading: "Major GSA GWACs: At a Glance",
+            headers: ['Vehicle', 'Type', 'Focus', 'Ceiling', 'Pools'],
+            rows: [
+              ['OASIS+', 'MAC-IDIQ GWAC', 'Professional & technical services (all disciplines)', '$60B+', 'Unrestricted + SB pools by functional area'],
+              ['Alliant 2', 'MAC-IDIQ GWAC', 'Large-scale, complex IT services & solutions', '$50B', 'Unrestricted only (Large Business)'],
+              ['STARS III', 'MAC-IDIQ GWAC', 'IT services — small business', '$50B', '8(a), WOSB, SDVOSB, HUBZone pools'],
+              ['8(a) STARS III', 'MAC-IDIQ GWAC', 'IT services — 8(a) SDB only', '(part of STARS III)', '8(a) small disadvantaged business'],
+              ['MAS (Schedules)', 'IDIQ Schedule', 'Commercial products and services (broad)', 'No ceiling', 'Multiple SINs (Special Item Numbers)'],
+            ]
+          },
+          {
+            type: 'text',
+            heading: "OASIS+ In Depth",
+            body: "OASIS+ (One Acquisition Solution for Integrated Services Plus) is GSA's marquee professional services GWAC, replacing the original OASIS contract. It covers essentially all professional and technical service categories: management consulting, engineering, research & development, program management support, IT services, logistics, financial management, and more. OASIS+ is structured in two primary tracks — Unrestricted (large businesses and small businesses competing full-and-open) and Small Business — each with multiple functional area pools. A DoD agency can access OASIS+ by establishing an Interagency Agreement with GSA, then placing task orders directly against the appropriate pool using fair opportunity competition."
+          },
+          {
+            type: 'list',
+            heading: "How to Use OASIS+ as an Ordering Agency",
+            items: [
+              'Step 1: Determine the requirement fits OASIS+ scope (professional/technical services)|||OASIS+ covers complex professional services: program management, management consulting, logistics, engineering, scientific, and financial management services. It does NOT cover IT products, construction, or commercial off-the-shelf items. Before using OASIS+, the ordering CO must verify scope fit and document it. Misaligned orders are a protest risk. GSA\'s OASIS+ Program Office can assist with scope determinations.',
+              'Step 2: Identify the correct OASIS+ pool (unrestricted vs. small business, functional area)|||OASIS+ has separate pools for unrestricted (large business), small business, 8(a), HUBZone, SDVOSB, and WOSB. Within each pool, there are functional areas (domains) — the requirement must align to a pool where the work fits. Ordering from the wrong pool is a compliance error. The government must also decide whether to use a set-aside pool (if the requirement can be satisfied by SB pool holders) before going unrestricted.',
+              'Step 3: Establish an Interagency Acquisition Agreement (IAA) with GSA (if not already in place)|||An IAA (usually an Economy Act determination or assisted acquisition agreement) authorizes the ordering agency to use GSA\'s contract vehicle. The ordering agency CO must document the authority basis, confirm it\'s cost-effective vs. running an independent procurement, and comply with their own agency\'s ordering procedures. GSA charges an Industrial Funding Fee (IFF) of 0.75% on all OASIS+ orders — this must be included in the price analysis.',
+              'Step 4: Issue a Task Order Request for Proposal (TORFP) to the applicable pool|||The TORFP must provide fair opportunity to all pool holders — typically issued through eBuy (GSA\'s e-procurement system). The TORFP defines evaluation factors, proposal instructions, submission format, and the period of performance. The ordering CO issues the TORFP under their own agency\'s procurement authority, not GSA\'s. Exception: if using GSA as the contracting agent (assisted acquisition via FEDSIM/AAS), GSA runs the source selection.',
+              'Step 5: Provide fair opportunity to all eligible pool holders per FAR 16.505|||Fair opportunity is the default rule for all MA-IDIQ task orders. The CO must document how fair opportunity was provided. Exceptions are narrow: unusual urgency (documented and time-limited), only one awardee is capable (rare and risky to claim), public interest determination, logical follow-on to an existing order, or the order is below the simplified acquisition threshold. Using an improper exception is a top protest ground.',
+              'Step 6: Evaluate proposals and make best-value task order award|||Best Value Tradeoff (BVTO) is the standard evaluation approach. The technical approach and past performance typically carry more weight than price on complex services task orders. The Source Selection Authority (SSA) documents the tradeoff decision. Unlike formal FAR Part 15 source selections, task order source selections have lighter documentation requirements — but the decision must still be defensible to a protest.',
+              'Step 7: Administer the task order — the ordering agency\'s CO retains oversight|||The ordering CO and COR manage performance after award. CPARS ratings at task order completion are some of the most valuable past performance evidence in future competitions. Good contract administration — consistent documentation, timely deliverable acceptance, proactive issue resolution — is what protects the government\'s recompete position.',
+              'Note: GSA charges an Industrial Funding Fee (IFF) or similar fee on OASIS+ orders|||The IFF is currently 0.75% of the total task order value on OASIS+. Contractors remit the IFF to GSA; in practice, most build it into their pricing. Ordering agencies should factor this into their price analysis. The IFF funds GSA\'s contracting support infrastructure. Failing to account for IFF in price reasonableness determinations is a common oversight.',
+            ]
+          },
+          {
+            type: 'text',
+            heading: "FEDSIM: Assisted Acquisition Services",
+            body: "FEDSIM (Federal Systems Integration and Management Center) is GSA's assisted acquisition service. Rather than just providing a contract vehicle for agencies to use, FEDSIM acts as the contracting office on behalf of the customer agency. The customer agency defines its requirements and provides funding, and FEDSIM manages the entire acquisition process — drafting the solicitation, conducting source selection, awarding the contract, and administering it. FEDSIM commonly uses vehicles like Alliant 2, STARS III, and OASIS+ for IT and professional services acquisitions."
+          },
+          {
+            type: 'table',
+            heading: "OASIS+ Self-Service vs. FEDSIM Assisted Acquisition",
+            headers: ['Aspect', 'OASIS+ (Self-Service)', 'FEDSIM (Assisted)'],
+            rows: [
+              ['Who runs the acquisition?', 'Ordering agency\'s own CO', 'GSA/FEDSIM CO on behalf of customer'],
+              ['CO authority', 'Ordering agency retains CO authority', 'FEDSIM CO holds contracting authority'],
+              ['Best for', 'Agencies with strong in-house contracting capacity', 'Agencies without sufficient CO capacity or expertise'],
+              ['Timeline', 'Faster if agency has resources', 'May be slower due to coordination; adds FEDSIM process'],
+              ['Cost', 'IFF/fee to GSA for vehicle use', 'Acquisition management fee to FEDSIM (varies by contract value)'],
+              ['Vehicles used', 'OASIS+ pool directly', 'FEDSIM may use Alliant 2, STARS III, OASIS+, or others'],
+            ]
+          },
+          {
+            type: 'text',
+            heading: "AAS-D: GSA Defense Assisted Acquisition",
+            body: "AAS-D (Assisted Acquisition Services — Defense) is GSA's defense-specific assisted acquisition capability, designed for DoD agencies. Like FEDSIM, AAS-D can manage the entire acquisition process on behalf of a DoD program office. AAS-D has strong experience with DoD-specific requirements — DFARS compliance, classified acquisitions, and defense-unique contract clauses. DoD program offices use AAS-D when they need acquisition support but lack sufficient contracting office capacity, particularly for complex IT and professional services requirements that can be served by existing GWACs."
+          },
+          {
+            type: 'callout',
+            heading: "The Buy Decision: GWAC vs. Standalone Contract",
+            body: "A GWAC is not always the right answer. Use a GWAC when: (1) the requirement fits squarely within the vehicle's scope; (2) speed matters — GWACs eliminate re-competition of the base contract; (3) competition is maintained at the task order level. Consider a standalone contract when: (1) requirements are unique and don't fit any GWAC scope; (2) you need non-standard terms or special contract structure; (3) a single strategic partner relationship is more valuable than rotating competition. Misusing a GWAC by placing out-of-scope orders is a serious contracting violation and a recurring IG audit finding."
+          },
+          {
+            type: 'warning',
+            heading: "Scope Discipline: The IG's Favorite Finding",
+            body: "The most common GWAC compliance failure is awarding task orders that exceed the scope of the base contract. OASIS+ covers professional and technical services — it does NOT cover construction (use a construction IDIQ), supplies (use MAS schedules or standalone contracts), or highly classified programs requiring specialized contract structures. Every task order must be scope-checked against the GWAC's Statement of Objectives. Inspectors General regularly find out-of-scope orders on GWACs, resulting in contract actions being voided and requiring re-procurement."
+          },
+          {
+            type: 'tip',
+            heading: "FEDSIM vs. In-House — The Practical Decision",
+            body: "Many DoD program offices consider FEDSIM when their own contracting office is understaffed or lacks experience with a particular acquisition type. FEDSIM brings deep expertise and established processes, but adds coordination overhead and fees. The practical question is: does your contracting office have the bandwidth and skills to run a full competitive acquisition on this vehicle? If not, FEDSIM or AAS-D is a legitimate and efficient alternative — used by major DoD agencies including Army, Air Force, and numerous defense agencies."
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'GSA OASIS+ and FEDSIM: Navigating the Competitive Order Process',
+          body: 'Mid-career PMs using OASIS+ must understand that the task order competition is where outcomes are determined — not at the MAC vehicle level. For orders above $10M, FEDSIM (the GSA competition office) conducts the competition on your behalf. The government PM\'s role: write a well-scoped PWS, establish meaningful evaluation criteria, and review the price analysis. Common pitfalls: (1) PWS written so broadly that every OASIS+ contractor can qualify, leading to a lowest-price competition; (2) past performance evaluation relying on contractor-provided references that are selectively positive; (3) underestimating transition risk when switching from an incumbent. Build transition requirements directly into the PWS — require a 60-day joint transition with the incumbent, with knowledge transfer milestones and penalties for transition failures.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'MAC Vehicle Strategy: When to Use Which and Protest Risk Management',
+          body: 'Senior acquisition professionals understand that MAC vehicle selection is itself a strategic decision. OASIS+ for complex professional services; ALLIANT 3 for IT services; SeaPort NxG for Navy; CIO-SP4 for HHS/civilian. The wrong vehicle creates protest risk: using a vehicle whose scope doesn\'t cover your requirement, or using a sole-source exception under a MAC vehicle when fair opportunity competition was required. The most legally dangerous pattern: steering task orders to preferred contractors by writing evaluation criteria tailored to a specific firm\'s past performance or unique capabilities. Experienced protesters know how to document this, and GAO has sustained numerous protests on exactly these grounds. Run your task order strategy through your legal team before release.',
+        },
+        ],
+      quiz: [
+          {
+            id: 'q1',
+            question: "What does OASIS+ stand for, and what type of services does it primarily cover?",
+            options: [
+              'Optimized Acquisition Services — IT systems only|||Incorrect. OASIS+ stands for One Acquisition Solution for Integrated Services Plus. It is NOT limited to IT — it covers professional and technical services including program management, management consulting, engineering, scientific, financial, and logistics support. SEWP V is the GSA IT-focused GWAC.',
+              'One Acquisition Solution for Integrated Services Plus — professional and technical services across all disciplines|||Correct. OASIS+ is GSA\'s flagship professional and technical services GWAC. Awarded in 2023-2024, it replaced the original OASIS contract with an expanded scope covering management consulting, program management support, engineering, R&D, data analytics, logistics, and more.',
+              'Operations and Sustainment Integrated Services — logistics and supply chain only|||Incorrect. No GWAC uses the abbreviation OASIS+ to mean \'Operations and Sustainment Integrated Services.\' OASIS+ is a GSA GWAC for professional and technical services — not a logistics-only vehicle.',
+              'Ordered Acquisition System for IT Services — information technology only'
+            ],
+            correct: 1,
+            explanation: "OASIS+ (One Acquisition Solution for Integrated Services Plus) is GSA's flagship GWAC for professional and technical services, covering management consulting, engineering, R&D, program management, IT, logistics, financial management, and more. It is not limited to IT — that distinguishes it from vehicles like Alliant 2 and STARS III."
+          },
+          {
+            id: 'q2',
+            question: "FEDSIM (Federal Systems Integration and Management Center) differs from a self-service GWAC in that FEDSIM:",
+            options: [
+              'Provides a contract vehicle that agencies use independently|||Incorrect as a description of AAS-D. AAS-D\'s defining characteristic is that GSA manages the entire acquisition on behalf of the customer â acting as the contracting office. This is \'assisted acquisition\' â fundamentally different from simply providing a vehicle.',
+              'Manages the entire acquisition process on behalf of the customer agency, serving as the contracting office|||Correct. GSA\'s Assisted Acquisition Services - Defense (AAS-D) is an assisted acquisition service where GSA acts as the buying agency â managing the full acquisition lifecycle from requirements to award to contract administration â on behalf of DoD and other federal customers.',
+              'Only supports civilian agencies, not DoD|||Incorrect. AAS-D is specifically designed for DoD customers. The \'Defense\' designation in AAS-D indicates the primary customer base.',
+              'Is restricted to purchases under the simplified acquisition threshold'
+            ],
+            correct: 1,
+            explanation: "FEDSIM is an assisted acquisition service — it acts as the contracting office for customer agencies, managing solicitation, source selection, award, and administration on the customer's behalf. A self-service GWAC (like using OASIS+ directly) puts the ordering agency's own CO in charge of the process."
+          },
+          {
+            id: 'q3',
+            question: "A Government-Wide Acquisition Contract (GWAC) is distinct from an agency-specific IDIQ in that a GWAC:",
+            options: [
+              'Can only be used by the agency that established it|||Incorrect for GWACs. Government-Wide Acquisition Contracts â by definition â are available to all federal agencies. That government-wide accessibility is their defining feature.',
+              'Is available for use by any federal agency as an ordering agency|||Correct. GWACs are authorized under 40 U.S.C. 11314 and are open to all federal agencies. This cross-agency accessibility allows smaller agencies without acquisition expertise to leverage GWACs managed by agencies like GSA or NIH.',
+              'Does not require competition at the task order level|||Incorrect. Most GWACs require fair opportunity competition at the task order level under FAR 16.505. Awardees must be given a fair opportunity to submit offers for each task order. Exceptions are narrow.',
+              'Has no ceiling on total contract value'
+            ],
+            correct: 1,
+            explanation: "A GWAC is established by a lead agency (like GSA) for use by all federal agencies. Any agency can place task orders against the GWAC as an \"ordering agency.\" An agency-specific IDIQ is established by and for use by the establishing agency only — other agencies cannot place orders against it without a formal arrangement."
+          },
+          {
+            id: 'q4',
+            question: "Which GSA vehicle is specifically designed for large-scale, complex IT services and solutions, primarily for large businesses?",
+            options: ['OASIS+', 'STARS III', 'Alliant 2', 'MAS IT Schedule'],
+            correct: 2,
+            explanation: "Alliant 2 is GSA's GWAC specifically for large-scale IT services and solutions, targeting complex enterprise IT requirements. It is an unrestricted (large business) contract with a $50B ceiling. STARS III is the small business IT equivalent. OASIS+ covers professional services more broadly including IT but also non-IT disciplines."
+          },
+          {
+            id: 'q5',
+            question: "The Economy Act (31 U.S.C. § 1535) is relevant to assisted acquisitions because it:",
+            options: [
+              'Limits the total value of task orders under any GWAC|||Incorrect. There is no universal statutory cap on GWAC total value â individual GWACs have their own ceiling values set at award.',
+              'Provides statutory authority for one agency to procure services or supplies from another federal agency|||Correct. The Economy Act (31 U.S.C. 1535) authorizes interagency acquisitions â one agency using another agency\'s contracting resources or purchasing on their behalf.',
+              'Requires competition for all orders over $350K|||Incorrect for the Economy Act specifically. The Economy Act governs the relationship between federal agencies in interagency acquisitions â it does not set competition thresholds. Competition requirements at the ordering level are governed by the individual GWAC\'s terms and FAR 16.505.',
+              'Prohibits the use of GWACs for classified requirements'
+            ],
+            correct: 1,
+            explanation: "The Economy Act authorizes federal agencies to request goods or services from other federal agencies (the \"servicing agency\"). This is the legal foundation for arrangements like using FEDSIM or AAS-D — the customer agency uses Economy Act authority to have GSA conduct the acquisition on its behalf, reimbursing GSA for costs and fees."
+          },
+          {
+            id: 'q6',
+            question: "AAS-D (Assisted Acquisition Services — Defense) is specifically designed to serve:",
+            options: [
+              'Civilian agencies only|||Incorrect for AAS-D. AAS-D is specifically a defense-focused assisted acquisition service. DoD components regularly use AAS-D to leverage GSA\'s contracting expertise.',
+              'DoD agencies requiring assisted acquisition support, particularly for IT and professional services|||Correct. AAS-D serves DoD customers who need a skilled contracting office to manage acquisitions on their behalf â particularly valuable for program offices that lack acquisition expertise or contracting capacity.',
+              'Small businesses seeking to enter the defense market|||Incorrect. AAS-D is a customer-facing service for government agencies â not a vehicle for small businesses to enter the market. Small businesses participate as contractors; AAS-D is used by government agencies as the buyer-side mechanism.',
+              'Foreign military sales programs only'
+            ],
+            correct: 1,
+            explanation: "AAS-D is GSA's defense-focused assisted acquisition service that works specifically with DoD components. It has deep expertise in DFARS requirements, security requirements, and defense-specific contract structures. DoD program offices use AAS-D when they need acquisition support for requirements suited to existing GWACs."
+          },
+          {
+            id: 'q7',
+            question: "What is the primary compliance risk when using a GWAC like OASIS+?",
+            options: [
+              'Paying too high a price due to lack of competition|||Incorrect as primary GWAC risk. GWACs are pre-competed vehicles. The primary ordering-level risks are: scope creep (ordering work outside the GWAC\'s scope), improper use of the vehicle, and bypassing fair opportunity requirements.',
+              'Placing task orders for work outside the scope of the GWAC base contract|||Correct. This is the most legally significant risk when using GWACs. A task order placed for work outside the scope of the base IDIQ constitutes an unauthorized procurement â potentially triggering a protest or legal challenge.',
+              'Failing to meet small business goals|||Correct. Many GWACs have small business set-aside pools. Ordering agencies that consistently bypass small business pools may face scrutiny from the SBA and their agency\'s Office of Small Business Programs.',
+              'Exceeding the ordering period without an extension'
+            ],
+            correct: 1,
+            explanation: "The primary GWAC compliance risk is out-of-scope task orders — placing work that doesn't fit within the GWAC's established scope. This is the most common IG audit finding on GWACs and can result in orders being voided and requiring re-procurement. Every task order must be scope-checked against the GWAC's Statement of Objectives before placement."
+          },
+          {
+            id: 'q8',
+            question: "STARS III is best characterized as:",
+            options: [
+              'A large-business IT GWAC for complex solutions|||Correct for ALLIANT 2. ALLIANT 2 is a GSA GWAC for complex IT solutions, limited to large businesses. ALLIANT 3 is in procurement as of 2024. ALLIANT 2 Small Business is the companion vehicle. These vehicles cover IT services, systems integration, cybersecurity, and cloud solutions.',
+              'A small business IT GWAC with 8(a), WOSB, SDVOSB, and HUBZone pools|||Correct for ALLIANT 2 Small Business or SEWP V small business. These GWACs organize small business participation into socioeconomic pools: 8(a) (SBA-certified disadvantaged businesses), WOSB (women-owned), SDVOSB (service-disabled veteran-owned), and HUBZone.',
+              'A professional services GWAC for all service disciplines|||Correct for OASIS+. OASIS+ is GSA\'s flagship professional services GWAC covering management consulting, program management, engineering, logistics, data analytics, and more â for both large and small businesses across multiple pools.',
+              'A GSA Schedule for commercial IT products'
+            ],
+            correct: 1,
+            explanation: "STARS III (Streamlined Technology Acquisition Resources for Services) is GSA's small business IT GWAC. It includes pools for different small business categories: 8(a) Small Disadvantaged Business, Woman-Owned Small Business (WOSB), Service-Disabled Veteran-Owned Small Business (SDVOSB), and HUBZone. It's a key vehicle for meeting small business goals on IT programs."
+          },
+          {
+            id: 'q9',
+            question: "When should a DoD PM recommend using FEDSIM rather than using a GWAC directly?",
+            options: [
+              'When the acquisition is under $350K and competition is not required|||Incorrect. AAS-D is used for significant acquisitions â particularly complex services benefiting from GSA\'s contracting expertise. Small purchases under the SAT would typically be handled through simplified acquisition or purchase card.',
+              'When the program office\'s contracting office lacks capacity, expertise, or bandwidth to run the full acquisition|||Correct. This is the primary driver for using AAS-D. Program offices with technical expertise but limited acquisition personnel benefit from GSA\'s experienced acquisition teams managing the process.',
+              'When competition is not desired to protect the incumbent contractor|||Incorrect. AAS-D does not facilitate non-competitive awards as a matter of policy. Any acquisition through AAS-D must still comply with competition requirements.',
+              'When the requirement exceeds the GWAC ceiling'
+            ],
+            correct: 1,
+            explanation: "FEDSIM is the right choice when the program office contracting office doesn't have the resources or specialized expertise to run the acquisition effectively. FEDSIM brings experienced contracting professionals who manage the process end-to-end. The tradeoff is coordination overhead and fees — for programs with strong in-house contracting capacity, self-service GWAC use is typically faster and cheaper."
+          },
+          {
+            id: 'q10',
+            question: "An Interagency Acquisition Agreement (IAA) between a DoD program office and GSA for OASIS+ use primarily documents:",
+            options: [
+              'The technical requirements for the specific task order|||Correct. The Task Order SOW/PWS/SOO describes what the contractor will actually do â the scope, deliverables, performance standards, and period of performance for that specific task order.',
+              'The mutual terms under which the ordering agency will use the GWAC, including funding transfer and responsibilities|||Correct. An Interagency Agreement (IAA) â including a MIPR or Economy Act Order â establishes the terms of the relationship between the ordering agency and the contracting agency, covering funding transfer and responsibilities.',
+              'The competition strategy for individual task orders|||Correct. The Acquisition Plan or Task Order Acquisition Strategy defines how the agency will conduct fair opportunity for a specific task order â factors, evaluation methodology, oral presentation requirements, past performance approach, and price reasonableness determination.',
+              'The contractor team members who will perform the work'
+            ],
+            correct: 1,
+            explanation: "An IAA (often in the form of a Reimbursable Work Order or Economy Act agreement) between the ordering agency and GSA establishes the terms for the assisted acquisition or GWAC use — including funding transfer, fee arrangements, roles and responsibilities, and performance expectations. It must be in place before task orders are placed under the assisted acquisition arrangement."
+          }
+        ]
+      },
+      {
+        id: 'contracts-2',
+        title: 'Source Selection: How the Government Chooses',
+        duration: '15 min',
+        description: 'Walk through the source selection process from RFP to award decision.',
+        keyTerms: [
+          { term: 'RFP', definition: 'Request for Proposal — the government\'s solicitation document inviting offerors to submit proposals.' },
+          { term: 'SSEB', definition: 'Source Selection Evaluation Board — the team that evaluates proposals against established criteria.' },
+          { term: 'SSAC', definition: 'Source Selection Advisory Council — senior advisory body that reviews SSEB results.' },
+          { term: 'SSA', definition: 'Source Selection Authority — the individual with authority to make the award decision.' },
+          { term: 'LPTA', definition: 'Lowest Price Technically Acceptable — award to the lowest priced proposal that meets minimum requirements.' },
+          { term: 'Best Value', definition: 'Award to the proposal offering the best combination of technical merit and price.' },
+          { term: 'Past Performance', definition: 'An evaluation factor assessing the offeror\'s track record on similar contracts.' },
+        ],
+        content: [
+          {
+            type: 'text',
+            heading: "The Source Selection Process",
+            body: "Source selection is the competitive process by which the government evaluates proposals and selects a contractor. For most DoD acquisitions above the simplified acquisition threshold ($350K), competition is required by the Competition in Contracting Act (CICA). The process must be objective, documented, and defensible — any deviation from the stated evaluation criteria is grounds for a GAO bid protest."
+          },
+          {
+            type: 'list',
+            heading: "Source Selection Steps",
+            items: [
+              'Step 1: Develop Acquisition Strategy — contract type, competition, evaluation approach|||The Acquisition Strategy is approved by the MDA/CO supervisor before the solicitation is drafted. It documents contract type rationale, competition approach (full and open, set-aside, or sole source), evaluation methodology (LPTA vs. BVTO), and estimated schedule. For large acquisitions, an RFI or industry day often precedes the strategy.',
+              'Step 2: Draft RFP — Sections L (instructions) and M (evaluation factors) are most critical|||Inconsistency between Section L (how to prepare proposals) and Section M (how they\'ll be evaluated) is the most common protest ground. Every evaluation factor in Section M must have corresponding instructions in Section L. The Source Selection Plan (SSP), written before RFP release, defines criteria, weights, rating scales, and procedures.',
+              'Step 3: Issue Draft RFP — industry review and comment period (30-45 days typical)|||Draft RFP releases are best practice for complex acquisitions. Industry comments improve clarity, identify unrealistic requirements, and reduce protest risk. The government reviews all comments and provides a written responses or incorporates changes. Programs that skip draft RFP release often face more protests and more scope ambiguity post-award.',
+              'Step 4: Issue Final RFP — proposals due date typically 45-60 days out|||Proposal preparation time must be adequate for the complexity of the requirement. FAR 5.203 recommends minimum 30 days for large/complex acquisitions. Tight timelines disadvantage smaller firms without large proposal teams and increase the risk of non-compliant proposals from otherwise qualified contractors.',
+              'Step 5: SSEB Evaluation — each proposal scored against stated evaluation factors|||The Source Selection Evaluation Board (SSEB) applies the stated evaluation criteria consistently across all proposals. Each evaluator documents their findings with specific references to proposal content. Undocumented findings, subjective assessments without proposal citations, and inconsistent application of criteria are the most common protest-sustaining evaluation errors.',
+              'Step 6: Competitive Range Determination — eliminate clearly unacceptable proposals|||The competitive range includes all proposals that have a reasonable chance of award. Excluding a proposal from the competitive range is a significant decision — it ends that offeror\'s participation. The CO documents the rationale. Offerors excluded from competitive range are entitled to a post-exclusion debriefing.',
+              'Step 7: Discussions (if applicable) — exchanges with offerors in competitive range|||Discussions (different from clarifications) allow the government to identify deficiencies and weaknesses and give offerors a chance to revise. If discussions are opened with any offeror, they must be opened with all offerors in the competitive range. The CO must not engage in auction-style negotiations or reveal competitor pricing.',
+              'Step 8: Final Proposal Revisions — offerors submit best and final offers (BAFOs)|||After discussions, the CO issues a Final Proposal Revision (FPR) request establishing a common deadline for all offerors to submit their best revised proposals. Offerors can only improve proposals — they cannot worsen terms or retract revisions already submitted. This is typically the highest-pressure phase of the source selection.',
+              'Step 9: SSAC Review — advisory recommendation to the SSA|||The Source Selection Advisory Council (SSAC) reviews the SSEB findings and prepares an independent comparative assessment with a recommended award decision. The SSAC is advisory only — the SSA is not bound by the recommendation. For large acquisitions, the SSAC provides a valuable independent check on evaluation consistency.',
+              'Step 10: SSA Award Decision — documented source selection decision statement|||The Source Selection Decision Document (SSDD) is the legal foundation for the award. It must document the rationale for each significant tradeoff — why the technical advantages of the selected offeror justify any price premium over a lower-priced alternative. A weak SSDD is the government\'s most common vulnerability in bid protests.',
+            ]
+          },
+          {
+            type: 'table',
+            heading: "LPTA vs. Best Value Tradeoff",
+            headers: ['Approach', 'When to Use', 'Risk', 'Example'],
+            rows: [
+              ['LPTA', 'Well-defined requirements; commoditized services; minimal performance variation', 'Risk of minimum acceptable quality', 'Janitorial services, standard IT help desk'],
+              ['Best Value Tradeoff', 'Complex programs; performance matters; clear benefit to paying more', 'More subjective; higher protest risk', 'Software development, systems integration'],
+              ['Value Adjusted Total Evaluated Price (VATEP)', 'When non-cost factors can be monetized', 'Requires thorough methodology', 'Logistics support with reliability trade-offs'],
+            ]
+          },
+          {
+            type: 'callout',
+            heading: "The \"Equal\" Evaluation Obligation",
+            body: "Every offeror must be evaluated against the same factors, using the same standards. If the SSEB gives credit to offeror A for a feature not mentioned in Section L, and the same feature is overlooked in offeror B's proposal, that is a basis for a successful bid protest. Disciplined source selection panels document every finding."
+          },
+          {
+            type: 'tip',
+            heading: "Protest Risk Management",
+            body: "GAO bid protest rates have risen steadily. Best practices to minimize protest risk: use clear, specific evaluation criteria in Section M; document all evaluation findings with specific proposal citations; ensure debriefs are conducted professionally within 5 days of request; never deviate from stated evaluation factors regardless of CO or PM preference."
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Shaping the Solicitation: What Mid-Career PMs Can Control',
+          body: 'By the time an RFP is released, the source selection outcome is largely determined by the evaluation criteria. Mid-career PMs who engage early in PWS/SOW development and Section M criteria weighting have the most influence. Push for evaluation factors that discriminate on the qualities that matter: management approach (how does the contractor plan to staff and manage the program?), cost realism (does their estimate reflect what the work actually costs?), and relevant past performance (not just any past performance). Weight price lower on high-complexity development work — the cheapest proposal is rarely the best value. The most common mistake: writing evaluation criteria so broad they discriminate on nothing, leading to a selection driven entirely by price.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Protest-Proofing Your Source Selection',
+          body: 'GAO sustains about 15-20% of bid protests it reviews. Most sustained protests result not from wrong decisions, but from inadequate documentation of correct decisions. Senior PMs preparing for a source selection must ensure: (1) the SSDD documents the SSA\'s independent judgment — not just a recitation of SSAC recommendations; (2) every strength and weakness is documented with specific proposal references; (3) the best-value tradeoff explicitly states why higher price is (or is not) worth better technical factors; (4) all offerors in the competitive range received equal treatment during discussions. The most protest-prone decision is the competitive range determination — excluding an offeror requires thorough documentation of why their proposal has no realistic chance of award. Assume every decision will be reviewed by a GAO attorney.',
+        },
+        ],
+      quiz: [
+          {
+            id: 'q1',
+            question: "Which RFP section describes the evaluation factors and their relative importance used to select the contractor?",
+            options: ['Section L', 'Section M', 'Section C', 'Section H'],
+            correct: 1,
+            explanation: "Section M of a DoD RFP contains the evaluation factors and their relative importance (e.g., Technical > Past Performance > Price, or they may be listed as equal). Section L contains the instructions for proposal preparation. Offerors must directly address Section L requirements, knowing they'll be evaluated against Section M."
+          },
+          {
+            id: 'q2',
+            question: "LPTA (Lowest Price Technically Acceptable) is most appropriate when:",
+            options: ['The acquisition is for a complex, technically challenging development program', 'Requirements are well-defined and there is minimal performance benefit to paying more', 'Past performance is the most important evaluation factor', 'International competition is expected'],
+            correct: 1,
+            explanation: "LPTA is used when requirements can be expressed precisely and performance above the minimum offers no added value. It's common for commodity services (janitorial, food service, standard IT maintenance). For complex programs where better performance justifies higher cost, Best Value Tradeoff is more appropriate."
+          },
+          {
+            id: 'q3',
+            question: "The Source Selection Authority (SSA) is the individual who:",
+            options: ['Evaluates proposals on the SSEB', 'Has final authority to make the contract award decision', 'Chairs the Source Selection Advisory Council', 'Prepares the government\'s independent cost estimate'],
+            correct: 1,
+            explanation: "The SSA is the senior official with final authority to make the source selection decision and execute the award. Depending on program value, the SSA may be the CO, PEO, or even a senior Service official. The SSA reviews the SSAC recommendation but is not bound by it — and must document the rationale for any deviation."
+          },
+          {
+            id: 'q4',
+            question: "A contractor files a GAO bid protest after losing a contract award. What is the standard GAO resolution timeframe?",
+            options: ['30 days', '60 days', '100 days', '180 days'],
+            correct: 2,
+            explanation: "GAO is required to issue a decision within 100 days of the protest filing. An express option exists for 65 days. During this time, performance on the protested contract is typically suspended unless the agency overrides the stay. This 100-day window creates significant program schedule risk."
+          },
+          {
+            id: 'q5',
+            question: "The Competition in Contracting Act (CICA) requires competition for most DoD acquisitions above what threshold?",
+            options: ['$10,000', '$25,000', '$350,000 (Simplified Acquisition Threshold)', '$1,000,000'],
+            correct: 2,
+            explanation: "CICA requires full and open competition for acquisitions above the Simplified Acquisition Threshold (SAT), currently $350,000. Below the SAT, simplified acquisition procedures apply. Sole-source awards above the SAT require a written Justification and Approval (J&A)."
+          },
+          {
+            id: 'q6',
+            question: "During source selection, the Competitive Range Determination is used to:",
+            options: ['Set the government\'s should-cost estimate range', 'Identify proposals with a reasonable chance of award to focus discussions', 'Determine whether LPTA or Best Value applies', 'Establish the price range for negotiations'],
+            correct: 1,
+            explanation: "The Competitive Range Determination (FAR 15.306) identifies which offerors have a reasonable chance of being selected for award, allowing the government to focus discussions on viable competitors. Proposals outside the competitive range are eliminated. However, COs must document this decision carefully as exclusions are a common protest basis."
+          },
+          {
+            id: 'q7',
+            question: "Discussions during source selection (FAR 15.306) must be conducted with:",
+            options: ['Only the incumbent contractor', 'All offerors, regardless of technical rating', 'All offerors within the competitive range equally', 'Only offerors whose price is within 10% of the lowest bid'],
+            correct: 2,
+            explanation: "FAR 15.306 requires that if discussions are held, they must be conducted with all offerors in the competitive range. The government must address significant weaknesses or deficiencies with each offeror. Engaging only certain offerors is a violation and a strong basis for a successful protest."
+          },
+          {
+            id: 'q8',
+            question: "What is a \"best value tradeoff\" analysis primarily used to determine?",
+            options: ['Which offeror has the lowest cost per unit', 'Whether the additional technical merit of a higher-priced proposal justifies the price premium', 'The maximum price the government is willing to pay', 'The government\'s should-cost estimate'],
+            correct: 1,
+            explanation: "Best Value Tradeoff analysis weighs technical merit, past performance, and price against each other. The SSA must document that any price premium paid over the lowest-priced technically acceptable offer is justified by demonstrably superior technical or performance features."
+          },
+          {
+            id: 'q9',
+            question: "A offeror requests a debriefing after losing a source selection. The government is required to provide the debriefing within:",
+            options: ['5 business days of the request', '10 business days of request', '30 calendar days of award', 'Only if required by statute'],
+            correct: 0,
+            explanation: "FAR 15.505-15.506 requires that post-award debriefings be provided within 5 business days of the debriefing request. Timely, professional debriefs are critical — they help contractors improve future proposals and reduce protest likelihood by explaining the award rationale."
+          },
+          {
+            id: 'q10',
+            question: "The SSEB (Source Selection Evaluation Board) evaluates proposals against which established document?",
+            options: ['The government\'s cost estimate', 'The evaluation criteria published in Section M of the RFP', 'The offeror\'s past performance database only', 'The program office\'s internal scoring matrix not shared with offerors'],
+            correct: 1,
+            explanation: "The SSEB evaluates every proposal exclusively against the criteria and standards stated in Section M of the RFP. Using unstated criteria or changing the evaluation standard mid-process is a violation of FAR Part 15 and the basis for a successful protest. Consistency and documentation are the SSEB's most important obligations."
+          }
+        ]
+      },
+
+      {
+        id: 'contracts-3',
+        title: 'Contract Administration & COR Fundamentals',
+        duration: '14 min',
+        description: 'Learn how contracts are administered after award and the critical role of the COR.',
+        keyTerms: [
+          { term: 'ACO', definition: 'Administrative Contracting Officer — responsible for contract administration after award.' },
+          { term: 'DCMA', definition: 'Defense Contract Management Agency — the primary government agency for DoD contract administration.' },
+          { term: 'CDRL', definition: 'Contract Data Requirements List — the official list of data deliverables required under the contract.' },
+          { term: 'SOW', definition: 'Statement of Work — defines the technical requirements and work the contractor must perform.' },
+          { term: 'PWS', definition: 'Performance Work Statement — outcome-based work description focused on desired results, not methods.' },
+          { term: 'Constructive Change', definition: 'An informal action by the government that changes contract scope without a formal contract modification.' },
+        ],
+        content: [
+          {
+            type: 'text',
+            heading: "The Post-Award Phase",
+            body: "Contract award is not the end — it's the beginning of the most critical phase. The vast majority of cost growth, schedule delays, and disputes occur during contract administration, not before award. A program office that does excellent source selection but weak contract administration will still fail. Understanding the roles of the CO, ACO, COR, and DCMA is essential for any PM."
+          },
+          {
+            type: 'table',
+            heading: "Key Contract Administration Roles",
+            headers: ['Role', 'Responsibility', 'Key Authority'],
+            rows: [
+              ['PCO', 'Award and modification authority; contract terms and conditions', 'Only one who can change contract scope or price'],
+              ['ACO', 'Day-to-day administration; payments; contractor compliance', 'Can approve interim payments; suspend work'],
+              ['COR', 'Technical oversight; performance monitoring; CDRL acceptance', 'NO contract authority — advisory only to CO'],
+              ['DCMA', 'On-site contractor oversight; quality, delivery, and finance surveillance', 'Can withhold payment for non-conforming items'],
+            ]
+          },
+          {
+            type: 'warning',
+            heading: "The Constructive Change Trap",
+            body: "A \"constructive change\" occurs when a government action effectively changes the contract's scope, schedule, or cost without a formal contract modification. Common examples: a COR directing \"a little extra work,\" a PM verbally approving scope expansion, or government-caused delays. These are legally binding and can result in large, retroactive contractor claims. All changes must go through the CO via a formal contract modification (mod)."
+          },
+          {
+            type: 'list',
+            heading: "Critical COR Responsibilities",
+            items: [
+              'Monitor contractor performance against the PWS/SOW and CDRLs daily/weekly|||The COR is the government\'s eyes and ears on contract performance. Monitoring includes reviewing deliverables, attending status meetings, and verifying labor categories match the contract. Documentation is critical — undocumented COR observations have no legal standing in disputes or CPARS assessments.',
+              'Document all contractor communications — emails, meeting minutes, phone notes|||The contract file is a legal document. In a dispute or claim, the government\'s case rests on contemporaneous documentation. A COR who verbally agrees to a scope change without documentation has potentially created an unauthorized commitment — a legally binding obligation without contracting authority. Rule: if it\'s not in writing and in the file, it didn\'t happen.',
+              'Review and accept/reject deliverables within the specified timeframe|||Most contracts specify an acceptance period (e.g., 30 days). If the government doesn\'t accept or reject within that period, constructive acceptance may occur — the government is deemed to have accepted even without explicit action. This waives the right to reject on quality grounds. CORs must review promptly and document acceptance or provide written rejection with specific deficiencies cited.',
+              'Notify the CO immediately of any performance deficiencies, schedule slips, or scope issues|||The COR\'s notification obligation is immediate and in writing — verbal notifications don\'t create a legal record. The CO needs the documented notification to issue cure notices, show cause letters, or contract modifications. CORs who delay notification to avoid conflict give contractors time to dig deeper into performance problems.',
+              'Maintain a surveillance plan and daily/weekly surveillance records|||The Quality Assurance Surveillance Plan (QASP) defines how the COR monitors performance — what gets inspected, how often, and what the acceptance criteria are. Surveillance records must be detailed enough to support CPARS ratings and claims resolution. Spotty or absent records consistently disadvantage the government in disputes.',
+              'Never direct the contractor to do work not in the contract scope — that creates constructive changes|||A constructive change is a government-directed change to the contract that occurs without a formal modification. If the COR tells the contractor to "just add this" without CO authorization, the contractor may have a valid claim for additional compensation. The COR has no authority to change scope — only the CO does.',
+              'Track invoices against actual work performed; do not accept invoices for work not completed|||Invoice acceptance is a COR responsibility on many contracts. Accepting an invoice for work not performed or not accepted is improper payment — potentially a False Claims Act issue. The COR must verify deliverables are accepted, work is performed as described, and hours/materials are accurate before recommending payment.',
+            ]
+          },
+          {
+            type: 'callout',
+            heading: "CDRL Management",
+            body: "CDRLs (Contract Data Requirements Lists, DD Form 1423) are the formal mechanism for requiring data deliverables from contractors. A PM who fails to review CDRLs on time and provide Government Furnished Information (GFI) on schedule may inadvertently waive the government's right to reject substandard work or trigger an excusable delay claim. Every CDRL has a review period — track them religiously."
+          },
+          {
+            type: 'tip',
+            heading: "QASP and Surveillance",
+            body: "Every services contract should have a Quality Assurance Surveillance Plan (QASP). The QASP defines how the government will monitor performance, what metrics are tracked, and what constitutes acceptable performance. A well-executed QASP provides the documentation needed to support negative past performance ratings, withhold award fees, or terminate for cause."
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'COR Oversight of High-Risk Performance Areas',
+          body: 'Mid-career PMs must direct their COR\'s oversight efforts to the highest-risk contract areas — not just routine deliverable acceptance. Risk areas that warrant enhanced COR attention: (1) subcontractor performance (prime contractors often absorb subcontractor failures rather than escalating to the government, masking systemic problems); (2) key personnel substitutions (contractors routinely propose senior experts who disappear post-award — CORs must verify key personnel presence); (3) Government-Furnished Equipment (GFE) receipt and accountability; and (4) cybersecurity compliance under DFARS 252.204-7012. A COR who only reviews deliverables is missing 80% of performance risk. Build a COR surveillance plan that maps oversight activities to contract risk, not just to deliverable schedules.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Cure Notices, Show Cause, and Termination for Default: The Escalation Ladder',
+          body: 'Senior PMs have a contract escalation ladder they must understand thoroughly. Cure Notice (FAR 49.607): when a contractor is in danger of default, the CO issues a cure notice giving typically 10 days to cure the condition. Show Cause Notice: when default appears imminent, requires contractor to explain why the contract should not be terminated. Termination for Default (T4D): the nuclear option — the government terminates, the contractor loses all rights to claim for termination costs, and the government can reprocure at the contractor\'s expense. T4D creates its own risks: contractors routinely convert T4D to Termination for Convenience through litigation by arguing the default was government-caused (weather, GFE delays, government-directed changes). Document government actions meticulously throughout performance — the paper trail determines whether T4D survives a challenge.',
+        },
+        ],
+      quiz: [
+          {
+            id: 'q1',
+            question: "Which individual is the ONLY person with authority to change a contract's scope, price, or delivery schedule?",
+            options: ['Program Manager', 'COR (Contracting Officer\'s Representative)', 'Contracting Officer (CO)', 'DCMA Quality Assurance Representative'],
+            correct: 2,
+            explanation: "Only a warranted Contracting Officer (CO) with appropriate authority has legal power to modify a contract. The PM, COR, and government technical personnel cannot direct changes to scope, price, or schedule. Doing so creates an unauthorized commitment and potential constructive change claim."
+          },
+          {
+            id: 'q2',
+            question: "DCMA (Defense Contract Management Agency) primarily provides which service to DoD?",
+            options: ['Contract award and source selection support', 'On-site contractor oversight including quality, delivery, and financial surveillance', 'Independent cost estimates for program offices', 'Legal review of contract disputes'],
+            correct: 1,
+            explanation: "DCMA provides post-award contract administration and on-site oversight at contractor facilities, including quality assurance, production surveillance, delivery monitoring, EVMS surveillance, and property management. They act as the government's eyes and ears at the contractor's facility."
+          },
+          {
+            id: 'q3',
+            question: "A constructive change claim may arise when:",
+            options: ['A CO issues a formal bilateral modification', 'A COR verbally directs the contractor to perform work beyond the contract scope', 'DCMA approves a contractor\'s quality plan', 'An offeror submits a proposal for additional work'],
+            correct: 1,
+            explanation: "A constructive change occurs when a government action — including informal direction from a COR or government technical personnel — effectively changes contract scope without a formal modification. The contractor can file a claim for the additional cost. All scope direction must go through the CO via formal contract modification."
+          },
+          {
+            id: 'q4',
+            question: "The Performance Work Statement (PWS) differs from a Statement of Work (SOW) in that a PWS:",
+            options: ['Lists every specific task the contractor must perform', 'Focuses on desired outcomes and performance standards rather than prescribing how work is done', 'Is only used for cost-plus contracts', 'Requires the contractor to use government-specified methods and procedures'],
+            correct: 1,
+            explanation: "A PWS defines the outcomes and standards the contractor must achieve, not the specific methods or procedures. This gives the contractor flexibility to innovate while holding them accountable for results. An SOW, by contrast, specifies exactly what tasks must be performed. PWS is required for performance-based services contracts."
+          },
+          {
+            id: 'q5',
+            question: "A CDRL (Contract Data Requirements List) is used to:",
+            options: ['List all government-furnished equipment provided to the contractor', 'Formally specify data deliverables the contractor must provide under the contract', 'Define the contract quality inspection criteria', 'Identify subcontractor qualifications required'],
+            correct: 1,
+            explanation: "CDRLs (DD Form 1423) are the contractually binding list of data deliverables — reports, technical documents, test plans, drawings — that the contractor must deliver. Each CDRL specifies the data item description (DID), frequency, format, and review period. Failure to track and respond to CDRLs is a common government oversight failure."
+          },
+          {
+            id: 'q6',
+            question: "What is a Quality Assurance Surveillance Plan (QASP) primarily used for?",
+            options: ['Contractor proposal evaluation during source selection', 'Defining how the government will monitor, measure, and document contractor performance', 'Approving contractor subcontracting plans', 'Setting contract award fee criteria'],
+            correct: 1,
+            explanation: "The QASP defines the government's plan for monitoring contract performance — what will be measured, how often, by whom, and what constitutes acceptable vs. unacceptable performance. A QASP is required for performance-based services contracts and provides the documentation baseline for past performance assessments and award fee decisions."
+          },
+          {
+            id: 'q7',
+            question: "A COR discovers a contractor has submitted an invoice for deliverables not yet completed. The COR should:",
+            options: ['Approve the invoice to maintain the contractor relationship', 'Reject the invoice and immediately notify the Contracting Officer with documentation', 'Ignore it and wait for the CO to review all invoices', 'Direct the contractor to complete the work and resubmit'],
+            correct: 1,
+            explanation: "CORs have a responsibility to verify work completion before approving invoices. Accepting invoices for work not performed is improper payment — potentially a fraud issue. The COR should reject the invoice, document the discrepancy, and immediately notify the CO so proper action can be taken."
+          },
+          {
+            id: 'q8',
+            question: "The Administrative Contracting Officer (ACO) differs from the Procuring Contracting Officer (PCO) in that the ACO:",
+            options: ['Has authority to award new contracts and modifications', 'Handles post-award administration including payments, contractor compliance, and closeout', 'Is responsible for source selection only', 'Reports directly to the program manager'],
+            correct: 1,
+            explanation: "The PCO focuses on pre-award activities (strategy, solicitation, negotiation, award) and significant modifications. The ACO handles ongoing contract administration after award — processing invoices, monitoring compliance, managing property, and handling routine modifications within delegated authority."
+          },
+          {
+            id: 'q9',
+            question: "A contractor misses a contractual delivery milestone due to a government delay in providing Government Furnished Equipment (GFE). This may entitle the contractor to:",
+            options: ['Termination for convenience', 'An excusable delay extension to the contract schedule', 'Increased profit on remaining work', 'Conversion to a cost-plus contract type'],
+            correct: 1,
+            explanation: "When government-caused events — like late delivery of GFE, late approval of drawings, or government-directed changes — impact the contractor's schedule, the contractor is generally entitled to an \"excusable delay\" — a schedule extension with no liability for delay damages. PMs must track GFE and GFI delivery dates carefully to avoid creating government-caused delays."
+          },
+          {
+            id: 'q10',
+            question: "Past Performance Assessments (PPAs) in the Contractor Performance Assessment Reporting System (CPARS) are important because:",
+            options: ['They determine the contractor\'s fee on the current contract', 'They become part of the contractor\'s official record and are used in future source selections', 'They trigger mandatory audits by DCAA', 'They are only used to document contractor failures'],
+            correct: 1,
+            explanation: "CPARS records are used in future source selections as the past performance evaluation factor. Both positive and negative assessments follow contractors for 3 years. CORs and PMs have a legal and ethical obligation to complete CPARS assessments accurately and on time — they are the government's institutional memory of contractor performance."
+          }
+        ]
+      },
+
+      {
+        id: 'contracts-6',
+        title: 'Modifications, REAs & Claims: When Contracts Change',
+        duration: '22 min',
+        description: 'Master contract modifications, constructive changes, Requests for Equitable Adjustment, and the claims process — the most contentious and costly aspects of contract administration.',
+        keyTerms: [
+          { term: 'Bilateral Modification', definition: 'A contract change signed by both the contractor and the contracting officer. Used for definitized changes, price adjustments, and scope changes both parties agree to.' },
+          { term: 'Unilateral Modification', definition: 'A contract change signed only by the contracting officer, using a contract authority clause (e.g., Changes clause, stop-work order, exercise of option). Contractor may disagree but must perform.' },
+          { term: 'Changes Clause', definition: 'FAR 52.243-1 through 52.243-4 — authorizes the CO to direct changes within the general scope of the contract. Contractor must perform the change; has right to an equitable adjustment.' },
+          { term: 'Constructive Change', definition: 'A change that is not formally directed but results from government action or inaction that effectively changes the contractor\'s work. Examples: defective specifications, government-caused delays, over-inspection.' },
+          { term: 'REA', definition: 'Request for Equitable Adjustment — a contractor\'s formal request for a contract price or schedule adjustment due to a government-directed or constructive change. Precursor to a claim.' },
+          { term: 'Claim', definition: 'A written demand by a contractor to the CO for payment of a specific sum, adjustment to contract terms, or other relief — subject to the Contract Disputes Act. Claims over $100K must be certified.' },
+          { term: 'Definitization', definition: 'The process of negotiating and finalizing the price and terms of an undefinitized contract action (UCA) — converting a letter contract or other interim vehicle to a fully priced contract.' },
+          { term: 'UCA', definition: 'Undefinitized Contract Action — a contract where work begins before price is agreed. Risky for government — contractor has little incentive to control costs before definitization.' },
+          { term: 'Contract Disputes Act', definition: '41 U.S.C. § 7101 et seq. — establishes the process for resolving government contract disputes, including CO Final Decisions, ASBCA appeals, and Court of Federal Claims.' },
+          { term: 'ASBCA', definition: 'Armed Services Board of Contract Appeals — administrative tribunal that hears contractor appeals of Contracting Officer Final Decisions on contract disputes.' },
+        ],
+        content: [
+          {
+            type: 'text',
+            heading: 'Why Contract Changes Are Every PM\'s Biggest Financial Risk',
+            body: 'The initial contract price is a starting point — not the final cost. On complex defense programs, contract modifications routinely add 20-50% to the original contract value. Every undefinitized UCA, every government-caused delay, every specification change, every constructive change creates entitlement for the contractor to more money. PMs who do not understand modification authority, REA management, and claims risk losing budget discipline entirely. The contractors\' contracts and claims departments are professional — PMs must be equally sophisticated.',
+          },
+          {
+            type: 'table',
+            heading: 'Types of Contract Modifications — Know the Difference',
+            headers: ['Type', 'Who Signs', 'Authority', 'Common Use', 'Key Risk'],
+            rows: [
+              ['Bilateral Mod (SF30)', 'CO + Contractor', 'Mutual agreement', 'Definitize changes; price supplements; scope adjustments', 'Scope creep if poorly scoped; waiver of claims if "accord & satisfaction" language added'],
+              ['Unilateral Mod — Change Order', 'CO only', 'Changes Clause (FAR 52.243-1)', 'Direct contractor to change work; price to be negotiated after', 'Contractor has 30 days to submit REA; undefinitized cost risk grows over time'],
+              ['Unilateral Mod — Admin', 'CO only', 'Administrative necessity', 'Correct errors, change COR, update addresses, issue/modify options', 'Low risk if truly administrative; never use to sneak in scope changes'],
+              ['Letter Contract / UCA', 'CO + Contractor', 'FAR 16.603 / DFARS 217.74', 'Begin urgent work before price is agreed; requires definitization schedule', 'Highest risk — contractor bills costs with limited incentive to control; DFARS requires definitization within 180 days'],
+            ],
+          },
+          {
+            type: 'text',
+            heading: 'The Changes Clause — Your Most Important Tool and Risk',
+            body: 'The Changes clause (FAR 52.243-1 for fixed-price supply, 52.243-2 for cost-reimbursable, etc.) is one of the most powerful tools in government contracting. It allows the CO to unilaterally direct changes to the contract\'s technical requirements, delivery schedule, place of performance, or other specified areas — without the contractor\'s consent. The contractor must perform. But the Changes clause also creates the contractor\'s entitlement to an equitable adjustment for any change that increases cost or time. The PM must ensure every directed change is formally documented — verbal direction to "just go do it" is a constructive change waiting to happen.',
+          },
+          {
+            type: 'callout',
+            heading: 'Constructive Changes — The Silent Budget Killer',
+            body: 'A constructive change is not a formal directive — it is a government action or inaction that effectively changes the contractor\'s work without formal paperwork. Common examples: Government-issued specifications that turn out to be defective (requiring rework); CO over-inspection that goes beyond contract standards; Government delay in furnishing data, GFE, or approvals; Government interference with contractor methods of performance; Informal technical direction from a COR or Government engineer that exceeds their authority. The contractor can pursue an REA or claim for a constructive change years after the work was performed. The best defense is meticulous daily documentation of all government-contractor interactions.',
+          },
+          {
+            type: 'formula',
+            heading: 'The REA Process — Timeline and Requirements',
+            formula: 'TRIGGER: Government directs change (formal or constructive)\n\nSTEP 1: Contractor submits REA\n  → Must include: Factual basis (what changed), legal entitlement (what clause), quantum (how much $)\n  → No specific time limit — but best practice is 30-60 days after the triggering event\n  → Informal REAs: "We think we\'re entitled" without full cost detail\n  → Formal REAs: Full cost proposal with certified cost/pricing data if >$2M\n\nSTEP 2: Government review\n  → ACO/CO reviews entitlement and quantum\n  → DCAA may audit the REA cost proposal if >$2M\n  → Government requests additional information as needed\n\nSTEP 3: Negotiate bilateral modification\n  → Both parties agree on price and schedule adjustment\n  → Signed bilateral mod definitizes the change\n  → IDEAL OUTCOME: Bilateral mod settles the REA; no claim necessary\n\nIF NEGOTIATIONS FAIL → REA converts to Claim:\n  → Contractor certifies the claim (if >$100K)\n  → CO issues Contracting Officer Final Decision (COFD) within 60 days\n  → Contractor may appeal: ASBCA (administrative) or Court of Federal Claims (judicial)\n  → Interest runs from date of claim submission at Renegotiation Act rate',
+            explanation: 'The earlier you can resolve an REA via bilateral modification, the better. Once an REA becomes a claim and enters dispute resolution, costs escalate for both sides and relationships deteriorate. PMs should push for rapid, fair REA resolution — a contractor that knows its REAs will be resolved promptly is less likely to inflate future REAs.',
+          },
+          {
+            type: 'text',
+            heading: 'Undefinitized Contract Actions (UCAs) — The Highest-Risk Modification',
+            body: 'A UCA (also called a letter contract or undefinitized change order) authorizes a contractor to begin work before the price is agreed. UCAs are necessary for urgent national security situations — but they create serious cost risk. A contractor performing under a UCA has no price ceiling and a weak incentive to control costs: they bill actual costs and know the government will pay them regardless of final negotiated price. DFARS 217.7404 requires definitization within 180 days of initial performance. In practice, many UCAs run for years undefinitized. For PMs, every open UCA is a financial exposure that should be tracked and closed as quickly as possible.',
+          },
+          {
+            type: 'table',
+            heading: 'Cardinal Change Doctrine — When a Change Becomes a Breach',
+            headers: ['Concept', 'Definition', 'Example', 'Consequence'],
+            rows: [
+              ['Within-Scope Change', 'Change is within the general scope of the original contract — CO can direct it unilaterally', 'Changing radar frequency range on a radar development contract', 'Contractor must perform; entitled to equitable adjustment'],
+              ['Cardinal Change', 'Change so significant it falls outside the general scope — essentially a new contract requirement', 'Changing a radar development contract to also develop a missile guidance system', 'Cannot be directed unilaterally; must be competed separately or bilateral agreement required'],
+              ['Change vs. Breach', 'An unauthorized direction that constitutes a cardinal change is a government breach — contractor can terminate for cause', 'CO directs contractor to provide services not contemplated anywhere in the original SOW', 'Contractor entitled to settlement as if for termination for convenience'],
+            ],
+          },
+          {
+            type: 'tip',
+            heading: 'The PM\'s Best Defense: An Active Change Control Board',
+            body: 'Every major program should have a formal Change Control Board (CCB) that reviews, approves, and documents every technical, schedule, or contract change before it is executed. The CCB records: what changed, why, who authorized it, and the estimated cost/schedule impact. Good CCB discipline prevents constructive changes (changes that happen informally), gives the PM visibility into cumulative scope growth, and provides documentation if a contractor\'s REA is disputed. PMs who run informal programs without CCBs routinely lose REA negotiations because they cannot reconstruct what was actually directed.',
+          },
+          {
+            type: 'warning',
+            heading: 'Accord & Satisfaction — Read Every Bilateral Mod Carefully',
+            body: 'When a contractor signs a bilateral modification that includes "accord and satisfaction" language (or "full and final settlement"), they may be waiving their right to any future claim related to that change. Contractors sometimes sign these under time pressure without fully recognizing the financial waiver. As a PM working with the CO, be aware that modification language matters legally. Conversely, if you want to definitively close out all claims associated with a change, including "full and final settlement" language is appropriate — just ensure both parties understand what they are agreeing to.',
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'Constructive Changes: The Most Expensive Undocumented Government Actions',
+          body: 'A constructive change occurs when government actions — without a formal modification — effectively change the contract\'s scope, schedule, or performance requirements. Examples: a government engineer verbally directing the contractor to add features not in the SOW; a COR demanding deliverables in a format not specified in the contract; unreasonable inspection failures that require rework not called for by contract quality standards. Contractors document every instance and compile them into REAs at contract closeout. Mid-career PMs prevent constructive changes by enforcing a single communication protocol: all direction goes through the CO, all informal guidance is labeled as "information only, not direction," and CORs are trained that they cannot direct scope changes. Track every verbal exchange with contractors at the technical level.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'Armed Services Board of Contract Appeals: What Senior PMs Need to Know',
+          body: 'When REAs become claims and claims become disputes, they go to the Armed Services Board of Contract Appeals (ASBCA) or the Court of Federal Claims. Senior PMs are rarely ASBCA participants personally, but their decisions — and their documentation — become the evidence. ASBCA cases routinely turn on: (1) whether government direction was communicated in writing or only verbally; (2) whether the contractor provided timely notice of a changed condition (failure to provide REQ notice waives the right to recover); (3) whether government delay was "excusable" (sovereign acts, weather) or "compensable" (government failure to perform its obligations). Build a file culture from day one: every significant decision in writing, every government-caused delay documented with specific dates and contract references. The ASBCA judge reading your file 5 years from now is your actual audience.',
+        },
+        ],
+      quiz: [
+          {
+            id: 'q1',
+            question: 'Which type of contract modification requires signatures from BOTH the contracting officer and the contractor?',
+            options: ['Change order', 'Administrative modification', 'Bilateral modification', 'Stop-work order'],
+            correct: 2,
+            explanation: 'A bilateral modification (Standard Form 30) is executed by both the CO and the contractor, typically reflecting a mutual agreement on scope, price, or schedule changes. Change orders and stop-work orders are unilateral modifications — signed only by the CO using an existing contract authority clause.',
+          },
+          {
+            id: 'q2',
+            question: 'A government program manager verbally tells a contractor\'s engineer to "add this new feature while you\'re at it" without a formal contract modification. This most likely creates:',
+            options: ['A valid contract change under the Changes clause', 'A constructive change — the contractor may pursue an REA based on government-directed work outside the contract SOW', 'No obligation since it was not in writing', 'An unauthorized commitment by the contractor'],
+            correct: 1,
+            explanation: 'Verbal direction to perform out-of-scope work without a formal modification is a classic constructive change. The contractor performed work beyond the contract requirements based on government direction. Even without a formal mod, the contractor has entitlement to an equitable adjustment. This is why COR authorities are strictly limited — informal technical direction can bind the government to pay for work without contractual authority.',
+          },
+          {
+            id: 'q3',
+            question: 'An Undefinitized Contract Action (UCA) must be definitized within how many days under DFARS 217.7404?',
+            options: ['30 days', '90 days', '180 days', '365 days'],
+            correct: 2,
+            explanation: 'DFARS 217.7404-3 requires UCAs to be definitized within 180 days of issuance of the authorization to proceed, or by the time 50% of the work is completed — whichever comes first. In practice, many UCAs remain undefinitized beyond this requirement. Every day a UCA is undefinitized, the government faces increasing cost risk because the contractor is billing actual costs with no negotiated price ceiling.',
+          },
+          {
+            id: 'q4',
+            question: 'A contractor submits an REA that grows into a formal claim of $2.5M. For the claim to be valid, it must be:',
+            options: ['Submitted within 30 days of the change', 'Certified by a senior company official and submitted as a written demand to the CO', 'Approved by DCAA before submission', 'Accompanied by a technical evaluation from DCMA'],
+            correct: 1,
+            explanation: 'Under the Contract Disputes Act (41 U.S.C. § 7103), claims exceeding $100K must be certified by an authorized contractor representative that the claim is made in good faith, supporting data are accurate and complete to the best of their knowledge, and the amount requested accurately reflects the contract adjustment believed to be due. False certification can expose the contractor to criminal liability under the False Claims Act.',
+          },
+          {
+            id: 'q5',
+            question: 'A "cardinal change" is significant because:',
+            options: ['It requires a 30-day waiting period before performance', 'It falls outside the general scope of the contract and cannot be directed unilaterally — it may constitute a breach', 'It always requires Congressional approval', 'It must be competed under full and open competition'],
+            correct: 1,
+            explanation: 'The cardinal change doctrine (developed through case law at the ASBCA and Court of Federal Claims) holds that changes so substantial they alter the nature of the bargained-for contract cannot be directed unilaterally under the Changes clause. Doing so constitutes a government breach, and the contractor is entitled to breach remedies. For PMs, this means very large scope additions should be scrutinized for cardinal change risk before direction is issued.',
+          },
+          {
+            id: 'q6',
+            question: 'A Contracting Officer Final Decision (COFD) in response to a contractor claim must be issued within:',
+            options: ['30 days of the claim', '60 days of the claim (or reasonable time with notification for complex claims)', '180 days', 'There is no time requirement'],
+            correct: 1,
+            explanation: 'The Contract Disputes Act requires the CO to issue a Final Decision within 60 days of a certified claim, or within a reasonable time for more complex claims — provided the CO notifies the contractor of the anticipated decision date. If the CO fails to issue a COFD, the contractor may treat the inaction as a denial and appeal directly to the ASBCA or Court of Federal Claims (deemed denial).',
+          },
+          {
+            id: 'q7',
+            question: 'Which of the following is an example of a constructive change based on defective government specifications?',
+            options: ['The CO directs a formal change to the system\'s performance requirements', 'Government-provided technical specifications contain errors that cause the contractor to perform excessive rework to meet the actual requirement', 'The contractor voluntarily redesigns the system to improve performance', 'The CO exercises an option on the contract'],
+            correct: 1,
+            explanation: 'Defective government specifications are one of the most common sources of constructive changes. When the government provides faulty specs that the contractor relies on — only to find they are incorrect or impossible to meet — the extra work required to correct the problem is a constructive change entitling the contractor to an equitable adjustment. The government warrants the accuracy of specifications it provides (the "Spearin Doctrine," 248 U.S. 132 (1918)).',
+          },
+          {
+            id: 'q8',
+            question: 'A bilateral modification that includes "full and final settlement" language regarding all claims related to a change means:',
+            options: ['The contractor retains the right to pursue additional claims for hidden costs', 'The contractor waives their right to future claims arising from that change — an accord and satisfaction', 'DCAA must approve the settlement before it is final', 'The modification automatically triggers a DCMA review'],
+            correct: 1,
+            explanation: '"Accord and satisfaction" in a bilateral mod means both parties agree the modification fully resolves all claims arising from the specified change. Once signed, the contractor generally cannot pursue additional claims for that change. This is a powerful tool for closing out changes cleanly — but contractors sometimes sign without fully understanding the financial waiver implications.',
+          },
+          {
+            id: 'q9',
+            question: 'The ASBCA (Armed Services Board of Contract Appeals) has jurisdiction over:',
+            options: ['Pre-award bid protests by losing offerors', 'Contractor appeals of Contracting Officer Final Decisions (COFDs) on contract disputes', 'DCAA audit disputes between contractors and auditors', 'Congressional notification of Nunn-McCurdy breaches'],
+            correct: 1,
+            explanation: 'The ASBCA (and its civilian counterpart, the CBCA) hears contractor appeals of CO Final Decisions under the Contract Disputes Act. It is an administrative tribunal (not a federal court), but its decisions can be appealed to the Court of Appeals for the Federal Circuit. The alternative forum is the U.S. Court of Federal Claims, a judicial (Article III) court.',
+          },
+          {
+            id: 'q10',
+            question: 'A Change Control Board (CCB) on a major defense program primarily serves to:',
+            options: ['Review and approve DCAA audit findings before they are released', 'Document, review, and approve all technical and contractual changes before execution — preventing constructive changes and scope creep', 'Authorize program managers to exceed budget without congressional notification', 'Approve new hire requests for the program office'],
+            correct: 1,
+            explanation: 'A CCB provides the formal process for evaluating and approving changes to the baseline — technical, schedule, and contractual. Every proposed change is evaluated for cost/schedule impact before it is directed. This prevents informal, undocumented changes (constructive changes) and gives the PM a documented record of all directed changes — essential for defending against REAs that claim the government directed more work than the formal record shows.',
+          },
+          {
+            id: 'q11',
+            type: 'drag_order',
+            question: 'Place the REA-to-Claim process in the correct sequence:',
+            options: [],
+            correct: 0,
+            explanation: 'The process flows: triggering change → contractor submits REA → government review/DCAA audit of cost proposal → negotiation → bilateral mod (ideal resolution). If negotiation fails, the REA becomes a certified claim → CO issues Final Decision → contractor may appeal to ASBCA or Court of Federal Claims. Each step that advances past bilateral mod resolution increases cost and time for both parties.',
+            orderedItems: [
+              'Government directs change (formal or constructive)|||Correct. The changes clause process begins when the government directs a change â either through a formal written order under the Changes clause (FAR 52.243-1 through -4) or through constructive change (government actions that effectively change the contract without formal direction).',
+              'Contractor submits REA with entitlement and cost proposal|||Correct. The contractor submits a Request for Equitable Adjustment (REA) that establishes: (1) entitlement â the legal basis for why a change occurred, and (2) the cost/schedule impact. The REA is not a certified claim â it is a negotiation opener.',
+              'DCAA audits REA cost proposal (if >$2M)|||Correct. For cost proposals over $2M, DCAA typically audits the REA cost proposal to assess cost reasonableness, allocability, and allowability. The audit opinion gives the CO a basis for evaluating the contractor\'s claimed costs before negotiation.',
+              'CO and contractor negotiate equitable adjustment|||Correct. After DCAA audit (if applicable), the CO and contractor negotiate the amount and terms of the equitable adjustment â the change in contract price and/or schedule to account for the directed change.',
+              'Bilateral modification definitizes the change (ideal outcome)|||Correct. A bilateral modification (signed by both the CO and contractor) is the preferred outcome â it definitizes the change and prevents future disputes. Once signed, the contractor cannot re-open the REA for additional compensation.',
+              'If failed: REA converts to certified Claim; CO issues Final Decision|||Correct. If REA negotiation fails, the contractor may convert the REA to a certified Claim under the Contract Disputes Act (CDA). The CO issues a Contracting Officer\'s Final Decision (COFD), which can be appealed to the Armed Services Board of Contract Appeals (ASBCA) or the Court of Federal Claims.',
+            ],
+          },
+          {
+            id: 'q12',
+            type: 'drag_match',
+            question: 'Match each modification or change concept to its correct definition:',
+            options: [],
+            correct: 0,
+            explanation: 'These concepts form the vocabulary of contract changes. Bilateral mods require consent; unilateral mods do not. Constructive changes happen informally. UCAs are open-ended cost risks. Cardinal changes exceed what can be directed unilaterally. Understanding each distinction allows PMs to manage scope, cost, and legal exposure effectively.',
+            pairs: [
+              { left: 'Bilateral Modification', right: 'Requires signatures from both CO and contractor' },
+              { left: 'Constructive Change', right: 'Informal government direction or inaction that effectively changes the work' },
+              { left: 'UCA (Letter Contract)', right: 'Work begins before price is agreed; must be definitized within 180 days' },
+              { left: 'Cardinal Change', right: 'Change outside original scope; cannot be directed unilaterally; may be a breach' },
+            ],
+          },
+        ],
+      },
+
+      {
+        id: 'foundations-4',
+        title: 'OTAs, FAR Part 12 & Streamlined Acquisition Authorities',
+        duration: '18 min',
+        description: 'Understand OTAs, FAR Part 12, and streamlined acquisition paths — and why these vehicles represent some of the biggest BD opportunities for defense contractors today.',
+        contractorNote: 'This lesson is especially relevant for contractors: OTAs are a major growth vehicle for non-traditional and tech companies, and FAR Part 12 commercial item status reduces your compliance burden significantly. Understanding these paths from the buyer\'s perspective is a BD and competitive advantage.',
+        keyTerms: [
+          { term: 'OTA', definition: 'Other Transaction Authority — statutory authority allowing DoD to enter agreements (not contracts) for prototype projects and follow-on production outside FAR/DFARS requirements.' },
+          { term: 'Other Transaction Agreement', definition: 'An agreement (not a procurement contract) executed under OTA authority. Not subject to FAR, DFARS, CAS, or most standard acquisition regulations.' },
+          { term: 'FAR Part 12', definition: 'Acquisition of Commercial Products and Commercial Services — streamlined procedures for buying items available in the commercial marketplace, with reduced regulatory burden.' },
+          { term: 'Commercial Item', definition: 'An item sold or offered in the commercial marketplace for non-government purposes. FAR Part 12 allows acquisition with fewer regulations and no certified cost or pricing data requirement.' },
+          { term: 'SAP', definition: 'Simplified Acquisition Procedures — streamlined procurement process for purchases below the SAT ($350K). Faster, less documentation, but still requires competition where practical.' },
+          { term: 'SAT', definition: 'Simplified Acquisition Threshold — $350K (effective October 1, 2025). Acquisitions below this threshold use SAP. Between SAT and $750K there are additional micro-purchase/simplified procedures.' },
+          { term: 'Micro-Purchase', definition: 'Purchases at or below $15K. May be made by any government employee with a purchase card without competition requirement (FAR Part 13.2).' },
+          { term: 'Sole Source', definition: 'Award without competition. Requires justification under FAR 6.302 — valid reasons include: only one responsible source, urgency, national security, follow-on R&D.' },
+          { term: 'COTS', definition: 'Commercial Off-The-Shelf — products sold or used commercially without modification. COTS acquisition is the fastest, cheapest path but requires active market research.' },
+          { term: '10 USC 4022', definition: 'The primary statutory authority for DoD prototype OTAs and follow-on production OTAs. Allows non-traditional defense contractors to participate without the FAR compliance burden.' },
+        ],
+        content: [
+          {
+            type: 'text',
+            heading: 'Why This Matters for Contractors — Not Just the Government',
+            body: 'Most people think OTAs and FAR Part 12 are just government tools. They are — but understanding them as a contractor is a competitive advantage. OTAs let the government bypass FAR entirely, which means they can award directly to non-traditional contractors (tech firms, startups, commercial companies) who refuse to comply with the full FAR/DFARS/CAS burden. If your company has commercial capabilities, an OTA is often the fastest path to a DoD contract. FAR Part 12 commercial item determinations reduce your regulatory compliance burden — no certified cost or pricing data, no CAS, no separate accounting system requirements. Knowing how the buyer sees these tools helps you position your offer, price competitively, and win work that never even reaches traditional procurement channels.\n\nFor government-side PMs: these paths exist because the full FAR/DFARS compliance burden was pricing out commercial technology firms. Google, Amazon, and many AI companies refuse to bid traditional DoD work. OTAs and FAR Part 12 were the answer.',
+          },
+          {
+            type: 'table',
+            heading: 'Acquisition Paths Compared — Regulatory Burden vs. Speed',
+            headers: ['Path', 'Regulatory Burden', 'Timeline', 'Best For', 'Key Limitation'],
+            rows: [
+              ['Traditional FAR/DFARS Contract', 'Full FAR/DFARS/CAS compliance', '12-36+ months', 'Complex development; cost-reimbursable R&D; traditional defense programs', 'Slow; excludes many commercial firms'],
+              ['FAR Part 12 Commercial', 'Reduced — no CAS, no certified cost data', '6-18 months', 'Products/services available commercially without substantial modification', 'Item must be genuinely commercial'],
+              ['OTA Prototype', 'No FAR/DFARS/CAS', '3-12 months', 'Innovative prototypes; non-traditional contractors; technology demonstration', 'Non-competitive follow-on must still meet criteria'],
+              ['OTA Production (follow-on)', 'No FAR/DFARS', '1-6 months if directly follows prototype', 'Production of successfully demonstrated OTA prototype', 'Requires successful prototype; scale limits apply'],
+              ['Simplified Acquisition Procedures', 'Minimal', 'Days to weeks', 'Purchases < $350K; immediate needs', '$350K ceiling; cannot be used to circumvent competition for larger requirements'],
+              ['Micro-Purchase', 'None', 'Hours', 'Purchases < $15K; credit card (GPC)', '$15K ceiling; no competition required'],
+            ],
+          },
+          {
+            type: 'text',
+            heading: 'Other Transaction Authority — The Most Powerful Tool You\'re Not Using Enough',
+            body: 'OTA was originally authorized in 1958 for NASA (10 USC 4001) and expanded dramatically for DoD prototyping in the 2010s. Under 10 USC 4022, DoD can enter prototype OTAs and — critically — non-competitively award follow-on production contracts to the OTA performer if the prototype is successfully demonstrated. This is a major advantage: a company can win prototype work through OTA, demonstrate success, and then convert directly to production without re-competing. For DoD, OTA allows engagement with commercial tech firms, startups, and nontraditional contractors who refuse FAR-regulated contracts. OTA agreements can include flexible payment terms, IP arrangements, and milestone-based payments that are impossible under FAR.',
+          },
+          {
+            type: 'callout',
+            heading: 'OTA Safeguards — What You Can\'t Do',
+            body: 'OTA is powerful but not unlimited. Key restrictions: (1) Prototype OTAs must include at least one "nontraditional defense contractor" (a company that has not received DoD contracts over $1M in the past year subject to full CAS compliance) OR significant government cost-share (one-third of total project cost). (2) The prototype must be for a "prototype project" — not production of a fielded system. (3) Follow-on production OTAs require a successful demonstration of the prototype. (4) Congress must be notified of OTAs over $500M. (5) OTAs over $250M generally require competitive processes. There is significant congressional scrutiny of OTA misuse — using OTA to avoid competition for production work that should be competitively bid.',
+          },
+          {
+            type: 'formula',
+            heading: 'FAR Part 12 Commercial Item Determination — The Test',
+            formula: 'FAR 2.101 defines "commercial product" — meets ANY of these:\n\n1. Sold/offered for sale in the commercial marketplace in the past 3 years\n2. Sold/offered in modified form (modifications customary to commercial market)\n3. An item that evolved from a commercial item through advances in technology\n4. Any item described in (1)-(3) for which modifications are described in (2)\n\nCOMMERCIAL SERVICES test (FAR 2.101):\n→ Offered and sold competitively to the general public\n→ Established catalog or market prices for specific tasks performed\n→ Not developed exclusively for government use\n\nIF COMMERCIAL → FAR Part 12 applies:\n  → No certified cost or pricing data (no TINA)\n  → No CAS\n  → Reduced DFARS clauses (FAR 52.212-4 and 52.212-5 replace dozens of clauses)\n  → Use of commercial warranty and terms\n  → No requirement for government-unique accounting\n  → Streamlined source selection using simplified procedures',
+            explanation: 'The commercial item determination is made by the contracting officer, but the PM drives the market research that supports it. Document your market research thoroughly — a challenged commercial item determination can unravel an entire acquisition strategy post-award.',
+          },
+          {
+            type: 'table',
+            heading: 'Sole Source Justifications Under FAR 6.302 — When Competition Is Not Required',
+            headers: ['Exception', 'FAR Cite', 'Example', 'Key Documentation Required'],
+            rows: [
+              ['Only one responsible source', 'FAR 6.302-1', 'Spare parts from OEM only; unique IP holder', 'J&A documenting why only one source can satisfy requirement'],
+              ['Unusual and compelling urgency', 'FAR 6.302-2', 'Time-critical mission need; emergency repair', 'J&A with timeline; limited period; must compete ASAP'],
+              ['Industrial mobilization; engineering development', 'FAR 6.302-3', 'Maintaining defense industrial base capability', 'D&F with SecDef or component secretary approval'],
+              ['International agreement', 'FAR 6.302-4', 'NATO standardization agreement requires specific vendor', 'Reference to international agreement'],
+              ['Authorized or required by statute', 'FAR 6.302-5', 'Small Business set-asides; 8(a) direct awards', 'Documentation of statutory authority'],
+              ['National security', 'FAR 6.302-6', 'Classified programs; ITAR restrictions', 'National security D&F'],
+            ],
+          },
+          {
+            type: 'text',
+            heading: 'Simplified Acquisition Procedures — Speed and Flexibility for Small Buys',
+            body: 'For purchases below $350K, FAR Part 13 allows significantly streamlined procedures. Competition is still encouraged — generally three quotes are sufficient — but the complex evaluation, documentation, and review requirements of FAR Part 15 do not apply. Below $15K (micro-purchase threshold), Government Purchase Card (GPC) holders can buy without any competition requirement. For PMs managing programs with many small supporting contracts, understanding SAP allows faster decisions without compromising legal compliance. However, SAP cannot be used to intentionally break up larger requirements to stay below the threshold (a practice called "split purchasing" — a federal violation).',
+          },
+          {
+            type: 'warning',
+            heading: 'OTA Abuse — A Growing Congressional Concern',
+            body: 'OTA use has grown dramatically — from $3.4B in FY2017 to over $23B in recent years. Congress has flagged concerns about OTA being used to circumvent competition requirements for production work that should be competitively bid, and about follow-on production OTAs being used well beyond the demonstrated prototype scope. PMs must ensure OTAs are used appropriately: for genuine prototypes, with nontraditional contractor participation, and for production only when the prototype was successfully demonstrated. An OTA that looks like a production contract without competition will face Congressional scrutiny and potential investigation.',
+          },
+          {
+            type: 'tip',
+            heading: 'Practical OTA Uses for Today\'s PM',
+            body: 'Modern defense PMs use OTAs for: AI/ML capability demonstrations with Silicon Valley firms; cybersecurity prototype testing with startups; rapid software prototyping with nontraditional vendors; cloud platform demonstrations. The key is ensuring your OTA is genuinely a prototype — a learning/demonstration activity — not production by another name. Work closely with your legal and contracting teams. The most common OTA mistake is treating it as a shortcut to sole-source production rather than a genuine innovation tool.',
+          },
+          {
+          type: 'text' as const,
+          level: 'intermediate' as const,
+          heading: 'OTA Strategy for Mid-Career PMs: When and How to Use Them',
+          body: 'Other Transaction Agreements under 10 U.S.C. § 4022 offer significant flexibility: no FAR applicability, no Cost Accounting Standards, and the ability to engage non-traditional defense contractors who won\'t bid on traditional contracts. For mid-career PMs, the critical skill is knowing when OTA fits — and when it doesn\'t. OTAs excel for prototype and rapid fielding work with commercial or non-traditional performers. They fail for programs requiring long-term cost accountability, competitive follow-on production (unless structured carefully), or sustained government oversight of contractor financials. An OTA that transitions to a sole-source production contract without competition will face legal scrutiny. Structure the prototype OTA from day one to enable competitive production awards.',
+        },
+        {
+          type: 'callout' as const,
+          level: 'advanced' as const,
+          heading: 'The Legal Boundaries of Streamlined Acquisition — Where Senior PMs Get Burned',
+          body: 'FAR Part 12 commercial item authority and OTAs are powerful tools, but senior PMs know the legal tripwires. Commercial item determinations require a market analysis demonstrating the item is sold to the general public in substantial quantities. Labeling something "commercial" without adequate justification creates GAO protest risk and audit exposure. For OTAs: the "significant non-traditional contractor involvement" requirement is frequently gamed but increasingly scrutinized — if your "non-traditional" partner is a JV with a traditional prime as the majority partner, a DoD IG audit will flag it. The OTA authority explicitly prohibits using them to circumvent the Clinger-Cohen Act or the Competition in Contracting Act for production. Know the statutory text, not just the guidance.',
+        },
+        ],
+      quiz: [
+          {
+            id: 'q1',
+            question: 'What makes OTA (Other Transaction Authority) attractive to non-traditional defense contractors like tech startups?',
+            options: ['OTA provides larger contracts than FAR-based contracts', 'OTA agreements are not subject to FAR, DFARS, or CAS requirements — eliminating compliance costs that deter commercial firms', 'OTA guarantees sole-source follow-on production', 'OTA eliminates all intellectual property protections for the government'],
+            correct: 1,
+            explanation: 'The primary appeal of OTA for nontraditional contractors is freedom from FAR/DFARS/CAS compliance — the accounting, reporting, and audit requirements that add significant overhead costs and complexity. Companies like commercial AI firms, cloud providers, and defense tech startups often refuse traditional DoD contracts specifically because of this compliance burden. OTA removes those barriers.',
+          },
+          {
+            id: 'q2',
+            question: 'Under 10 USC 4022, a follow-on production OTA (without competition) is permitted when:',
+            options: ['The program manager approves it', 'The prototype project was competitively awarded and successfully demonstrated', 'Congress has not objected within 30 days', 'The original OTA was below $100M'],
+            correct: 1,
+            explanation: 'A key benefit of prototype OTAs is the ability to award follow-on production to the same performer without competition — IF the prototype was competitively awarded (or met the nontraditional contractor requirement) AND was successfully demonstrated. This production must directly follow from the demonstrated prototype; using it to award unrelated production work is OTA misuse.',
+          },
+          {
+            id: 'q3',
+            question: 'A product qualifies as "commercial" under FAR Part 12 when:',
+            options: ['It was developed specifically for DoD', 'It has been sold or offered for sale in the commercial marketplace, or evolved from such an item through advances in technology', 'It costs less than the simplified acquisition threshold', 'The contractor certifies it does not require unique modifications'],
+            correct: 1,
+            explanation: 'FAR 2.101 defines commercial products broadly — sold in the commercial marketplace, offered with customary modifications, or evolved from commercial items. The CO makes the determination based on market research. Commercial item status eliminates CAS, certified cost or pricing data (TINA), and many DFARS clauses — dramatically reducing contractor compliance burden.',
+          },
+          {
+            id: 'q4',
+            question: 'The simplified acquisition threshold (SAT) is currently:',
+            options: ['$10,000', '$50,000', '$150,000', '$350,000'],
+            correct: 3,
+            explanation: 'The SAT is $350,000, effective October 1, 2025 per FAR 2.101 (updated by the Federal Acquisition Circular FAC 2025-07). Acquisitions below the SAT use simplified acquisition procedures (FAR Part 13). The micro-purchase threshold (no competition required) is $15,000. The SAT is adjusted periodically for inflation and certain exceptions apply (e.g., commercial items, construction).',
+          },
+          {
+            id: 'q5',
+            question: '"Split purchasing" — intentionally breaking a $500K requirement into three $150K purchases to use SAP — is:',
+            options: ['A legitimate use of simplified acquisition procedures', 'A violation of FAR 13.003(c) — requirements cannot be artificially split to circumvent competition or dollar thresholds', 'Permitted if the items are needed at different times', 'Only a problem if audited by DCAA'],
+            correct: 1,
+            explanation: 'FAR 13.003(c) explicitly prohibits splitting requirements into smaller purchases to avoid competition requirements or threshold limitations. This is a common compliance violation that auditors and inspectors general actively look for. The test is whether the items serve a single end purpose that should be acquired as one requirement — if so, they must be consolidated and competed appropriately.',
+          },
+          {
+            id: 'q6',
+            question: 'Which FAR clause replaces dozens of standard DFARS clauses when FAR Part 12 commercial item procedures are used?',
+            options: ['FAR 52.215-2 (Audit and Records)', 'FAR 52.212-4 (Contract Terms and Conditions — Commercial Products) and FAR 52.212-5', 'DFARS 252.204-7012 (Cybersecurity)', 'FAR 52.222-26 (Equal Opportunity)'],
+            correct: 1,
+            explanation: 'FAR 52.212-4 and 52.212-5 are the streamlined commercial terms clauses that substitute for the full list of individual standard FAR clauses normally required. This is what makes commercial acquisitions so much faster — instead of reviewing 30+ clause flowdown requirements, the CO simply incorporates 52.212-4/5, which contain the essential terms in a single, commercial-friendly format.',
+          },
+          {
+            id: 'q7',
+            question: 'A sole source justification under FAR 6.302-2 ("unusual and compelling urgency") requires the PM to demonstrate:',
+            options: ['The requirement is classified', 'There is an immediate danger to life, national security, or critical mission; and competition would cause unacceptable delay', 'The contractor is the only one in the world with the capability', 'The acquisition is below the simplified acquisition threshold'],
+            correct: 1,
+            explanation: 'FAR 6.302-2 urgency requires a genuine time-critical situation where competing the requirement would cause serious harm — not just inconvenience. The J&A must document the specific harm of delay, the limited period for the noncompetitive award, and a plan to compete follow-on requirements. "We didn\'t plan ahead" does not qualify as unusual and compelling urgency.',
+          },
+          {
+            id: 'q8',
+            question: 'A key OTA safeguard that prevents its use solely as a competition-avoidance tool for production is:',
+            options: ['OTAs must be reviewed by GAO before award', 'Production OTAs require the prototype to have been successfully demonstrated AND the OTA must include at least one nontraditional contractor OR significant government cost-share', 'OTAs are automatically cancelled after 2 years', 'All OTAs must be competitively awarded through a public notice'],
+            correct: 1,
+            explanation: 'The nontraditional contractor OR government cost-share requirement prevents traditional defense contractors from simply using OTA to avoid competition. The "successful demonstration" requirement ensures follow-on production is genuinely tied to demonstrated prototype results. Together, these safeguards are intended to prevent OTA from becoming a regulatory loophole for routine production contracting.',
+          },
+          {
+            id: 'q9',
+            question: 'Government Purchase Cards (GPCs) can be used without any competition requirement for purchases at or below:',
+            options: ['$2,500', '$10,000', '$15,000', '$50,000'],
+            correct: 2,
+            explanation: 'The micro-purchase threshold is $15,000 (FAR 13.201) — purchases at or below this amount may be made with a GPC by any authorized cardholder without a competition requirement. Above $15K, SAP competition standards apply. Above $350K (SAT), full competition and documentation requirements apply.',
+          },
+          {
+            id: 'q10',
+            question: 'Which statement best describes the relationship between OTA and FAR?',
+            options: ['OTAs are a type of contract governed by FAR Part 16', 'OTAs are agreements (not procurement contracts) that operate outside the FAR — they are governed by their own negotiated terms and the authorizing statute (10 USC 4022)', 'OTAs are subject to FAR but exempt from DFARS', 'OTAs must be converted to FAR contracts within 180 days'],
+            correct: 1,
+            explanation: 'OTAs are explicitly not procurement contracts and are not subject to the FAR or DFARS. They are governed by the statutory authority (10 USC 4022 for prototype and production), the negotiated agreement terms, and any agency-specific OTA guidance (like the OSD OTA Guide). This is the source of their flexibility — and the reason they require careful legal and policy oversight.',
+          },
+          {
+            id: 'q11',
+            type: 'drag_match',
+            question: 'Match each acquisition path to its best use case:',
+            options: [],
+            correct: 0,
+            explanation: 'Matching the acquisition strategy to the requirement type is a core PM competency. Traditional FAR contracts for complex regulated programs. FAR Part 12 for genuine commercial products. OTA for innovative prototypes with nontraditional contractors. SAP for small routine purchases. Each path exists to serve a specific need — using the wrong path creates legal, financial, and oversight risk.',
+            pairs: [
+              { left: 'Traditional FAR/DFARS Contract', right: 'Complex defense system requiring cost reimbursable R&D and CAS compliance' },
+              { left: 'FAR Part 12 Commercial', right: 'Cloud services or COTS software sold commercially without modification' },
+              { left: 'Other Transaction Authority (OTA)', right: 'AI prototype with Silicon Valley startup that refuses FAR compliance' },
+              { left: 'Simplified Acquisition Procedures', right: 'Routine supplies purchase of $180K for program support' },
+            ],
+          },
+          {
+            id: 'q12',
+            type: 'drag_order',
+            question: 'Order these acquisition paths from MOST regulated/slowest to LEAST regulated/fastest:',
+            options: [],
+            correct: 0,
+            explanation: 'Traditional FAR/DFARS contracts carry the full regulatory burden — CAS, DFARS business systems, certified cost data, competition requirements. FAR Part 12 is faster with reduced clause requirements. OTA eliminates FAR/DFARS entirely. SAP is streamlined for sub-SAT buys. Micro-purchases are immediate with no competition required. The trade-off: less regulation means less accountability — use the appropriate level for the risk.',
+            orderedItems: [
+              'Traditional FAR/DFARS Contract (full CAS, DFARS, TINA, competition)|||Correct. Traditional FAR/DFARS contracts carry the full weight of government procurement law â CAS for cost-type, DFARS clauses, TINA certified cost or pricing data requirements over $2M, and mandatory competition under FAR Part 6. These provide maximum oversight but maximum administrative burden.',
+              'FAR Part 12 Commercial Item (reduced clauses; no CAS; no certified cost data)|||Correct. FAR Part 12 commercial item acquisitions use a streamlined clause set. Contractors are not required to submit certified cost or pricing data, CAS does not apply, and standard commercial terms are accepted. Preferred for COTS and commercial services but requires a determination of commerciality.',
+              'Other Transaction Authority (no FAR/DFARS/CAS; negotiated terms only)|||Correct. OTAs are authorized under 10 U.S.C. 4021-4022 and allow DoD to negotiate agreements without FAR/DFARS constraints. They are designed to attract non-traditional defense contractors and accelerate prototyping and fielding. OTAs cannot be used for traditional services or routine supplies.',
+              'Simplified Acquisition Procedures (below $350K; three quotes; minimal docs)|||Correct. SAP applies to purchases below the Simplified Acquisition Threshold ($350K effective October 1, 2025). The CO can use simplified competition â typically three competitive quotes â with minimal documentation. This allows rapid procurement for routine, lower-dollar requirements.',
+              'Micro-Purchase / Government Purchase Card (below $15K; no competition required)|||Correct. Micro-purchases (below $15K generally) can be made by government purchase card without competition under FAR 13.2. No contract is required â the purchase is made directly on a government credit card. This is the fastest acquisition method.',
+            ],
+          },
+        ],
+      },
+
+      {
         id: 'foundations-2',
         title: 'Roles & Career Paths in DoD Acquisitions',
         duration: '10 min',
@@ -3392,1591 +4982,6 @@ export const modules: Module[] = [
             explanation: "The Pathways Recent Graduates program typically offers positions at GS-7 to GS-9 for recent graduates (within 2 years of degree completion). This provides a structured entry into federal service with formal training, mentoring, and a clear pathway to full career positions."
           }
         ]
-      },
-      {
-        id: 'foundations-4',
-        title: 'OTAs, FAR Part 12 & Streamlined Acquisition Authorities',
-        duration: '18 min',
-        description: 'Understand OTAs, FAR Part 12, and streamlined acquisition paths — and why these vehicles represent some of the biggest BD opportunities for defense contractors today.',
-        contractorNote: 'This lesson is especially relevant for contractors: OTAs are a major growth vehicle for non-traditional and tech companies, and FAR Part 12 commercial item status reduces your compliance burden significantly. Understanding these paths from the buyer\'s perspective is a BD and competitive advantage.',
-        keyTerms: [
-          { term: 'OTA', definition: 'Other Transaction Authority — statutory authority allowing DoD to enter agreements (not contracts) for prototype projects and follow-on production outside FAR/DFARS requirements.' },
-          { term: 'Other Transaction Agreement', definition: 'An agreement (not a procurement contract) executed under OTA authority. Not subject to FAR, DFARS, CAS, or most standard acquisition regulations.' },
-          { term: 'FAR Part 12', definition: 'Acquisition of Commercial Products and Commercial Services — streamlined procedures for buying items available in the commercial marketplace, with reduced regulatory burden.' },
-          { term: 'Commercial Item', definition: 'An item sold or offered in the commercial marketplace for non-government purposes. FAR Part 12 allows acquisition with fewer regulations and no certified cost or pricing data requirement.' },
-          { term: 'SAP', definition: 'Simplified Acquisition Procedures — streamlined procurement process for purchases below the SAT ($350K). Faster, less documentation, but still requires competition where practical.' },
-          { term: 'SAT', definition: 'Simplified Acquisition Threshold — $350K (effective October 1, 2025). Acquisitions below this threshold use SAP. Between SAT and $750K there are additional micro-purchase/simplified procedures.' },
-          { term: 'Micro-Purchase', definition: 'Purchases at or below $15K. May be made by any government employee with a purchase card without competition requirement (FAR Part 13.2).' },
-          { term: 'Sole Source', definition: 'Award without competition. Requires justification under FAR 6.302 — valid reasons include: only one responsible source, urgency, national security, follow-on R&D.' },
-          { term: 'COTS', definition: 'Commercial Off-The-Shelf — products sold or used commercially without modification. COTS acquisition is the fastest, cheapest path but requires active market research.' },
-          { term: '10 USC 4022', definition: 'The primary statutory authority for DoD prototype OTAs and follow-on production OTAs. Allows non-traditional defense contractors to participate without the FAR compliance burden.' },
-        ],
-        content: [
-          {
-            type: 'text',
-            heading: 'Why This Matters for Contractors — Not Just the Government',
-            body: 'Most people think OTAs and FAR Part 12 are just government tools. They are — but understanding them as a contractor is a competitive advantage. OTAs let the government bypass FAR entirely, which means they can award directly to non-traditional contractors (tech firms, startups, commercial companies) who refuse to comply with the full FAR/DFARS/CAS burden. If your company has commercial capabilities, an OTA is often the fastest path to a DoD contract. FAR Part 12 commercial item determinations reduce your regulatory compliance burden — no certified cost or pricing data, no CAS, no separate accounting system requirements. Knowing how the buyer sees these tools helps you position your offer, price competitively, and win work that never even reaches traditional procurement channels.\n\nFor government-side PMs: these paths exist because the full FAR/DFARS compliance burden was pricing out commercial technology firms. Google, Amazon, and many AI companies refuse to bid traditional DoD work. OTAs and FAR Part 12 were the answer.',
-          },
-          {
-            type: 'table',
-            heading: 'Acquisition Paths Compared — Regulatory Burden vs. Speed',
-            headers: ['Path', 'Regulatory Burden', 'Timeline', 'Best For', 'Key Limitation'],
-            rows: [
-              ['Traditional FAR/DFARS Contract', 'Full FAR/DFARS/CAS compliance', '12-36+ months', 'Complex development; cost-reimbursable R&D; traditional defense programs', 'Slow; excludes many commercial firms'],
-              ['FAR Part 12 Commercial', 'Reduced — no CAS, no certified cost data', '6-18 months', 'Products/services available commercially without substantial modification', 'Item must be genuinely commercial'],
-              ['OTA Prototype', 'No FAR/DFARS/CAS', '3-12 months', 'Innovative prototypes; non-traditional contractors; technology demonstration', 'Non-competitive follow-on must still meet criteria'],
-              ['OTA Production (follow-on)', 'No FAR/DFARS', '1-6 months if directly follows prototype', 'Production of successfully demonstrated OTA prototype', 'Requires successful prototype; scale limits apply'],
-              ['Simplified Acquisition Procedures', 'Minimal', 'Days to weeks', 'Purchases < $350K; immediate needs', '$350K ceiling; cannot be used to circumvent competition for larger requirements'],
-              ['Micro-Purchase', 'None', 'Hours', 'Purchases < $15K; credit card (GPC)', '$15K ceiling; no competition required'],
-            ],
-          },
-          {
-            type: 'text',
-            heading: 'Other Transaction Authority — The Most Powerful Tool You\'re Not Using Enough',
-            body: 'OTA was originally authorized in 1958 for NASA (10 USC 4001) and expanded dramatically for DoD prototyping in the 2010s. Under 10 USC 4022, DoD can enter prototype OTAs and — critically — non-competitively award follow-on production contracts to the OTA performer if the prototype is successfully demonstrated. This is a major advantage: a company can win prototype work through OTA, demonstrate success, and then convert directly to production without re-competing. For DoD, OTA allows engagement with commercial tech firms, startups, and nontraditional contractors who refuse FAR-regulated contracts. OTA agreements can include flexible payment terms, IP arrangements, and milestone-based payments that are impossible under FAR.',
-          },
-          {
-            type: 'callout',
-            heading: 'OTA Safeguards — What You Can\'t Do',
-            body: 'OTA is powerful but not unlimited. Key restrictions: (1) Prototype OTAs must include at least one "nontraditional defense contractor" (a company that has not received DoD contracts over $1M in the past year subject to full CAS compliance) OR significant government cost-share (one-third of total project cost). (2) The prototype must be for a "prototype project" — not production of a fielded system. (3) Follow-on production OTAs require a successful demonstration of the prototype. (4) Congress must be notified of OTAs over $500M. (5) OTAs over $250M generally require competitive processes. There is significant congressional scrutiny of OTA misuse — using OTA to avoid competition for production work that should be competitively bid.',
-          },
-          {
-            type: 'formula',
-            heading: 'FAR Part 12 Commercial Item Determination — The Test',
-            formula: 'FAR 2.101 defines "commercial product" — meets ANY of these:\n\n1. Sold/offered for sale in the commercial marketplace in the past 3 years\n2. Sold/offered in modified form (modifications customary to commercial market)\n3. An item that evolved from a commercial item through advances in technology\n4. Any item described in (1)-(3) for which modifications are described in (2)\n\nCOMMERCIAL SERVICES test (FAR 2.101):\n→ Offered and sold competitively to the general public\n→ Established catalog or market prices for specific tasks performed\n→ Not developed exclusively for government use\n\nIF COMMERCIAL → FAR Part 12 applies:\n  → No certified cost or pricing data (no TINA)\n  → No CAS\n  → Reduced DFARS clauses (FAR 52.212-4 and 52.212-5 replace dozens of clauses)\n  → Use of commercial warranty and terms\n  → No requirement for government-unique accounting\n  → Streamlined source selection using simplified procedures',
-            explanation: 'The commercial item determination is made by the contracting officer, but the PM drives the market research that supports it. Document your market research thoroughly — a challenged commercial item determination can unravel an entire acquisition strategy post-award.',
-          },
-          {
-            type: 'table',
-            heading: 'Sole Source Justifications Under FAR 6.302 — When Competition Is Not Required',
-            headers: ['Exception', 'FAR Cite', 'Example', 'Key Documentation Required'],
-            rows: [
-              ['Only one responsible source', 'FAR 6.302-1', 'Spare parts from OEM only; unique IP holder', 'J&A documenting why only one source can satisfy requirement'],
-              ['Unusual and compelling urgency', 'FAR 6.302-2', 'Time-critical mission need; emergency repair', 'J&A with timeline; limited period; must compete ASAP'],
-              ['Industrial mobilization; engineering development', 'FAR 6.302-3', 'Maintaining defense industrial base capability', 'D&F with SecDef or component secretary approval'],
-              ['International agreement', 'FAR 6.302-4', 'NATO standardization agreement requires specific vendor', 'Reference to international agreement'],
-              ['Authorized or required by statute', 'FAR 6.302-5', 'Small Business set-asides; 8(a) direct awards', 'Documentation of statutory authority'],
-              ['National security', 'FAR 6.302-6', 'Classified programs; ITAR restrictions', 'National security D&F'],
-            ],
-          },
-          {
-            type: 'text',
-            heading: 'Simplified Acquisition Procedures — Speed and Flexibility for Small Buys',
-            body: 'For purchases below $350K, FAR Part 13 allows significantly streamlined procedures. Competition is still encouraged — generally three quotes are sufficient — but the complex evaluation, documentation, and review requirements of FAR Part 15 do not apply. Below $15K (micro-purchase threshold), Government Purchase Card (GPC) holders can buy without any competition requirement. For PMs managing programs with many small supporting contracts, understanding SAP allows faster decisions without compromising legal compliance. However, SAP cannot be used to intentionally break up larger requirements to stay below the threshold (a practice called "split purchasing" — a federal violation).',
-          },
-          {
-            type: 'warning',
-            heading: 'OTA Abuse — A Growing Congressional Concern',
-            body: 'OTA use has grown dramatically — from $3.4B in FY2017 to over $23B in recent years. Congress has flagged concerns about OTA being used to circumvent competition requirements for production work that should be competitively bid, and about follow-on production OTAs being used well beyond the demonstrated prototype scope. PMs must ensure OTAs are used appropriately: for genuine prototypes, with nontraditional contractor participation, and for production only when the prototype was successfully demonstrated. An OTA that looks like a production contract without competition will face Congressional scrutiny and potential investigation.',
-          },
-          {
-            type: 'tip',
-            heading: 'Practical OTA Uses for Today\'s PM',
-            body: 'Modern defense PMs use OTAs for: AI/ML capability demonstrations with Silicon Valley firms; cybersecurity prototype testing with startups; rapid software prototyping with nontraditional vendors; cloud platform demonstrations. The key is ensuring your OTA is genuinely a prototype — a learning/demonstration activity — not production by another name. Work closely with your legal and contracting teams. The most common OTA mistake is treating it as a shortcut to sole-source production rather than a genuine innovation tool.',
-          },
-          {
-          type: 'text' as const,
-          level: 'intermediate' as const,
-          heading: 'OTA Strategy for Mid-Career PMs: When and How to Use Them',
-          body: 'Other Transaction Agreements under 10 U.S.C. § 4022 offer significant flexibility: no FAR applicability, no Cost Accounting Standards, and the ability to engage non-traditional defense contractors who won\'t bid on traditional contracts. For mid-career PMs, the critical skill is knowing when OTA fits — and when it doesn\'t. OTAs excel for prototype and rapid fielding work with commercial or non-traditional performers. They fail for programs requiring long-term cost accountability, competitive follow-on production (unless structured carefully), or sustained government oversight of contractor financials. An OTA that transitions to a sole-source production contract without competition will face legal scrutiny. Structure the prototype OTA from day one to enable competitive production awards.',
-        },
-        {
-          type: 'callout' as const,
-          level: 'advanced' as const,
-          heading: 'The Legal Boundaries of Streamlined Acquisition — Where Senior PMs Get Burned',
-          body: 'FAR Part 12 commercial item authority and OTAs are powerful tools, but senior PMs know the legal tripwires. Commercial item determinations require a market analysis demonstrating the item is sold to the general public in substantial quantities. Labeling something "commercial" without adequate justification creates GAO protest risk and audit exposure. For OTAs: the "significant non-traditional contractor involvement" requirement is frequently gamed but increasingly scrutinized — if your "non-traditional" partner is a JV with a traditional prime as the majority partner, a DoD IG audit will flag it. The OTA authority explicitly prohibits using them to circumvent the Clinger-Cohen Act or the Competition in Contracting Act for production. Know the statutory text, not just the guidance.',
-        },
-        ],
-      quiz: [
-          {
-            id: 'q1',
-            question: 'What makes OTA (Other Transaction Authority) attractive to non-traditional defense contractors like tech startups?',
-            options: ['OTA provides larger contracts than FAR-based contracts', 'OTA agreements are not subject to FAR, DFARS, or CAS requirements — eliminating compliance costs that deter commercial firms', 'OTA guarantees sole-source follow-on production', 'OTA eliminates all intellectual property protections for the government'],
-            correct: 1,
-            explanation: 'The primary appeal of OTA for nontraditional contractors is freedom from FAR/DFARS/CAS compliance — the accounting, reporting, and audit requirements that add significant overhead costs and complexity. Companies like commercial AI firms, cloud providers, and defense tech startups often refuse traditional DoD contracts specifically because of this compliance burden. OTA removes those barriers.',
-          },
-          {
-            id: 'q2',
-            question: 'Under 10 USC 4022, a follow-on production OTA (without competition) is permitted when:',
-            options: ['The program manager approves it', 'The prototype project was competitively awarded and successfully demonstrated', 'Congress has not objected within 30 days', 'The original OTA was below $100M'],
-            correct: 1,
-            explanation: 'A key benefit of prototype OTAs is the ability to award follow-on production to the same performer without competition — IF the prototype was competitively awarded (or met the nontraditional contractor requirement) AND was successfully demonstrated. This production must directly follow from the demonstrated prototype; using it to award unrelated production work is OTA misuse.',
-          },
-          {
-            id: 'q3',
-            question: 'A product qualifies as "commercial" under FAR Part 12 when:',
-            options: ['It was developed specifically for DoD', 'It has been sold or offered for sale in the commercial marketplace, or evolved from such an item through advances in technology', 'It costs less than the simplified acquisition threshold', 'The contractor certifies it does not require unique modifications'],
-            correct: 1,
-            explanation: 'FAR 2.101 defines commercial products broadly — sold in the commercial marketplace, offered with customary modifications, or evolved from commercial items. The CO makes the determination based on market research. Commercial item status eliminates CAS, certified cost or pricing data (TINA), and many DFARS clauses — dramatically reducing contractor compliance burden.',
-          },
-          {
-            id: 'q4',
-            question: 'The simplified acquisition threshold (SAT) is currently:',
-            options: ['$10,000', '$50,000', '$150,000', '$350,000'],
-            correct: 3,
-            explanation: 'The SAT is $350,000, effective October 1, 2025 per FAR 2.101 (updated by the Federal Acquisition Circular FAC 2025-07). Acquisitions below the SAT use simplified acquisition procedures (FAR Part 13). The micro-purchase threshold (no competition required) is $15,000. The SAT is adjusted periodically for inflation and certain exceptions apply (e.g., commercial items, construction).',
-          },
-          {
-            id: 'q5',
-            question: '"Split purchasing" — intentionally breaking a $500K requirement into three $150K purchases to use SAP — is:',
-            options: ['A legitimate use of simplified acquisition procedures', 'A violation of FAR 13.003(c) — requirements cannot be artificially split to circumvent competition or dollar thresholds', 'Permitted if the items are needed at different times', 'Only a problem if audited by DCAA'],
-            correct: 1,
-            explanation: 'FAR 13.003(c) explicitly prohibits splitting requirements into smaller purchases to avoid competition requirements or threshold limitations. This is a common compliance violation that auditors and inspectors general actively look for. The test is whether the items serve a single end purpose that should be acquired as one requirement — if so, they must be consolidated and competed appropriately.',
-          },
-          {
-            id: 'q6',
-            question: 'Which FAR clause replaces dozens of standard DFARS clauses when FAR Part 12 commercial item procedures are used?',
-            options: ['FAR 52.215-2 (Audit and Records)', 'FAR 52.212-4 (Contract Terms and Conditions — Commercial Products) and FAR 52.212-5', 'DFARS 252.204-7012 (Cybersecurity)', 'FAR 52.222-26 (Equal Opportunity)'],
-            correct: 1,
-            explanation: 'FAR 52.212-4 and 52.212-5 are the streamlined commercial terms clauses that substitute for the full list of individual standard FAR clauses normally required. This is what makes commercial acquisitions so much faster — instead of reviewing 30+ clause flowdown requirements, the CO simply incorporates 52.212-4/5, which contain the essential terms in a single, commercial-friendly format.',
-          },
-          {
-            id: 'q7',
-            question: 'A sole source justification under FAR 6.302-2 ("unusual and compelling urgency") requires the PM to demonstrate:',
-            options: ['The requirement is classified', 'There is an immediate danger to life, national security, or critical mission; and competition would cause unacceptable delay', 'The contractor is the only one in the world with the capability', 'The acquisition is below the simplified acquisition threshold'],
-            correct: 1,
-            explanation: 'FAR 6.302-2 urgency requires a genuine time-critical situation where competing the requirement would cause serious harm — not just inconvenience. The J&A must document the specific harm of delay, the limited period for the noncompetitive award, and a plan to compete follow-on requirements. "We didn\'t plan ahead" does not qualify as unusual and compelling urgency.',
-          },
-          {
-            id: 'q8',
-            question: 'A key OTA safeguard that prevents its use solely as a competition-avoidance tool for production is:',
-            options: ['OTAs must be reviewed by GAO before award', 'Production OTAs require the prototype to have been successfully demonstrated AND the OTA must include at least one nontraditional contractor OR significant government cost-share', 'OTAs are automatically cancelled after 2 years', 'All OTAs must be competitively awarded through a public notice'],
-            correct: 1,
-            explanation: 'The nontraditional contractor OR government cost-share requirement prevents traditional defense contractors from simply using OTA to avoid competition. The "successful demonstration" requirement ensures follow-on production is genuinely tied to demonstrated prototype results. Together, these safeguards are intended to prevent OTA from becoming a regulatory loophole for routine production contracting.',
-          },
-          {
-            id: 'q9',
-            question: 'Government Purchase Cards (GPCs) can be used without any competition requirement for purchases at or below:',
-            options: ['$2,500', '$10,000', '$15,000', '$50,000'],
-            correct: 2,
-            explanation: 'The micro-purchase threshold is $15,000 (FAR 13.201) — purchases at or below this amount may be made with a GPC by any authorized cardholder without a competition requirement. Above $15K, SAP competition standards apply. Above $350K (SAT), full competition and documentation requirements apply.',
-          },
-          {
-            id: 'q10',
-            question: 'Which statement best describes the relationship between OTA and FAR?',
-            options: ['OTAs are a type of contract governed by FAR Part 16', 'OTAs are agreements (not procurement contracts) that operate outside the FAR — they are governed by their own negotiated terms and the authorizing statute (10 USC 4022)', 'OTAs are subject to FAR but exempt from DFARS', 'OTAs must be converted to FAR contracts within 180 days'],
-            correct: 1,
-            explanation: 'OTAs are explicitly not procurement contracts and are not subject to the FAR or DFARS. They are governed by the statutory authority (10 USC 4022 for prototype and production), the negotiated agreement terms, and any agency-specific OTA guidance (like the OSD OTA Guide). This is the source of their flexibility — and the reason they require careful legal and policy oversight.',
-          },
-          {
-            id: 'q11',
-            type: 'drag_match',
-            question: 'Match each acquisition path to its best use case:',
-            options: [],
-            correct: 0,
-            explanation: 'Matching the acquisition strategy to the requirement type is a core PM competency. Traditional FAR contracts for complex regulated programs. FAR Part 12 for genuine commercial products. OTA for innovative prototypes with nontraditional contractors. SAP for small routine purchases. Each path exists to serve a specific need — using the wrong path creates legal, financial, and oversight risk.',
-            pairs: [
-              { left: 'Traditional FAR/DFARS Contract', right: 'Complex defense system requiring cost reimbursable R&D and CAS compliance' },
-              { left: 'FAR Part 12 Commercial', right: 'Cloud services or COTS software sold commercially without modification' },
-              { left: 'Other Transaction Authority (OTA)', right: 'AI prototype with Silicon Valley startup that refuses FAR compliance' },
-              { left: 'Simplified Acquisition Procedures', right: 'Routine supplies purchase of $180K for program support' },
-            ],
-          },
-          {
-            id: 'q12',
-            type: 'drag_order',
-            question: 'Order these acquisition paths from MOST regulated/slowest to LEAST regulated/fastest:',
-            options: [],
-            correct: 0,
-            explanation: 'Traditional FAR/DFARS contracts carry the full regulatory burden — CAS, DFARS business systems, certified cost data, competition requirements. FAR Part 12 is faster with reduced clause requirements. OTA eliminates FAR/DFARS entirely. SAP is streamlined for sub-SAT buys. Micro-purchases are immediate with no competition required. The trade-off: less regulation means less accountability — use the appropriate level for the risk.',
-            orderedItems: [
-              'Traditional FAR/DFARS Contract (full CAS, DFARS, TINA, competition)|||Correct. Traditional FAR/DFARS contracts carry the full weight of government procurement law â CAS for cost-type, DFARS clauses, TINA certified cost or pricing data requirements over $2M, and mandatory competition under FAR Part 6. These provide maximum oversight but maximum administrative burden.',
-              'FAR Part 12 Commercial Item (reduced clauses; no CAS; no certified cost data)|||Correct. FAR Part 12 commercial item acquisitions use a streamlined clause set. Contractors are not required to submit certified cost or pricing data, CAS does not apply, and standard commercial terms are accepted. Preferred for COTS and commercial services but requires a determination of commerciality.',
-              'Other Transaction Authority (no FAR/DFARS/CAS; negotiated terms only)|||Correct. OTAs are authorized under 10 U.S.C. 4021-4022 and allow DoD to negotiate agreements without FAR/DFARS constraints. They are designed to attract non-traditional defense contractors and accelerate prototyping and fielding. OTAs cannot be used for traditional services or routine supplies.',
-              'Simplified Acquisition Procedures (below $350K; three quotes; minimal docs)|||Correct. SAP applies to purchases below the Simplified Acquisition Threshold ($350K effective October 1, 2025). The CO can use simplified competition â typically three competitive quotes â with minimal documentation. This allows rapid procurement for routine, lower-dollar requirements.',
-              'Micro-Purchase / Government Purchase Card (below $15K; no competition required)|||Correct. Micro-purchases (below $15K generally) can be made by government purchase card without competition under FAR 13.2. No contract is required â the purchase is made directly on a government credit card. This is the fastest acquisition method.',
-            ],
-          },
-        ],
-      },
-            {
-        id: 'contracts-4',
-        title: 'Contracts vs. Task Orders: Know the Difference',
-        duration: '14 min',
-        description: 'Understand the fundamental distinction between base contracts and task orders — and why it matters for how work gets authorized, modified, and paid.',
-        keyTerms: [
-          { term: 'IDIQ', definition: 'Indefinite Delivery / Indefinite Quantity — a contract type that establishes terms and conditions for ordering supplies or services over time.' },
-          { term: 'Task Order (TO)', definition: 'An order for services placed under an IDIQ contract — the mechanism that authorizes and funds specific work.' },
-          { term: 'Delivery Order (DO)', definition: 'An order for supplies placed under an IDIQ contract (parallel to task order, but for products).' },
-          { term: 'MAC-IDIQ', definition: 'Multiple Award Contract IDIQ — competition is split among multiple awardees who then compete for individual task orders.' },
-          { term: 'GWAC', definition: 'Government-Wide Acquisition Contract — an IDIQ available for use by multiple federal agencies, awarded by a lead agency.' },
-          { term: 'Ordering Period', definition: 'The time window during which task orders may be placed under an IDIQ contract (distinct from the period of performance on individual TOs).' },
-          { term: 'Ceiling', definition: 'The maximum dollar value of all orders that may be placed under an IDIQ contract.' },
-          { term: 'Minimum Guarantee', definition: 'The minimum value the government is obligated to order under an IDIQ — typically a nominal amount ($1,000–$25,000).' },
-          { term: 'Fair Opportunity', definition: 'The requirement under FAR 16.505 to provide each MAC-IDIQ awardee a fair opportunity to compete for each task order over $3,500.' },
-          { term: 'BPA', definition: 'Blanket Purchase Agreement — a simplified ordering agreement under GSA Schedule or open market, similar in concept to an IDIQ but without minimum/maximum guarantees.' },
-        ],
-        content: [
-          {
-            type: 'text',
-            heading: "Two Levels of Agreement",
-            body: "In federal contracting, there are two distinct levels of agreement you must understand: the base contract and the order. The base contract (the IDIQ) establishes all the legal terms and conditions — pricing, labor categories, clauses, applicable regulations, and the overall ordering ceiling. The task order (TO) is where actual work gets authorized and funded. No work begins until a task order is issued. This two-level structure gives agencies flexibility to order services on demand without re-competing every single requirement."
-          },
-          {
-            type: 'table',
-            heading: "Contract vs. Task Order vs. BPA: Key Differences",
-            headers: ['Element', 'IDIQ Base Contract', 'Task Order', 'BPA'],
-            rows: [
-              ['What it does', 'Establishes legal framework, terms, clauses, labor rates', 'Authorizes & funds specific work', 'Sets up ordering arrangement (no guaranteed min/max)'],
-              ['When competed', 'Once, at contract award', 'Each order (fair opportunity)', 'Once, at BPA establishment'],
-              ['Funds obligated', 'Only minimum guarantee at award', 'Full amount of each order', 'At time of call (order) placement'],
-              ['Period', 'Ordering period (e.g., 5+5 years)', 'Task order PoP (can extend past IDIQ ordering period)', 'Typically 1 year, renewable'],
-              ['Modifications', 'Change terms, rates, ceiling, ordering period', 'Change scope/funding on that specific task', 'Modify terms of BPA arrangement'],
-              ['Competition', 'Full & open or small biz set-aside', 'Fair opportunity among awardees', 'Schedule price competition'],
-            ]
-          },
-          {
-            type: 'text',
-            heading: "How IDIQs Work: Single Award vs. Multiple Award",
-            body: "A Single Award IDIQ gives one contractor exclusive rights to receive all task orders — appropriate when a single firm has unique capabilities. A Multiple Award Contract IDIQ (MAC-IDIQ) awards the base contract to multiple vendors who then compete for individual task orders. FAR 16.504 establishes a preference for multiple awards because they maintain price competition at the task order level and give the government access to a pool of qualified vendors."
-          },
-          {
-            type: 'list',
-            heading: "The IDIQ Ordering Process (Step by Step)",
-            items: [
-              'Step 1: Requirement identified — program office describes work needed|||The quality of the SOW/PWS here determines the quality of proposals and performance. A vague SOW produces vague proposals and an ambiguous contract. A good task order SOW describes outcomes (performance-based), includes measurable acceptance criteria, and specifies deliverables with format and timing. This is the most underinvested step in task order contracting.',
-              'Step 2: Determine if an existing IDIQ can satisfy the requirement (scope check)|||The CO must conduct a scope determination to verify work falls within the original IDIQ\'s scope. Placing a task order outside the IDIQ\'s scope is an improper order — effectively a sole-source contract without a J&A. For GWACs like OASIS+, scope is broadly defined but still has limits.',
-              'Step 3: Issue a task order Request for Proposal (TORFP) to awardees in the pool|||TORFPs under MA-IDIQs must provide fair opportunity per FAR 16.505. Includes the SOW/PWS, evaluation factors, proposal instructions, and period of performance. Page limits are common (10–30 pages vs. 100+ for new vehicle bids). Response times are typically 7–30 days — much faster than full proposals.',
-              'Step 4: Provide fair opportunity — all pool members get a reasonable chance to compete|||Fair opportunity under FAR 16.505 is the default rule — it cannot be waived without documented justification. The ordering CO must ensure the task order RFP is distributed to all eligible pool holders simultaneously with equal response time. Selectively notifying preferred contractors or providing advance information to favorites is a protest-sustaining violation.',
-              'Step 5: Evaluate task order proposals (simplified process vs. full source selection)|||Task order evaluations are significantly lighter than full Part 15 source selections — no formal discussions, no SSAC, fewer documentation requirements. But the process must still be documented, consistent with the stated evaluation factors, and defensible. Task order award decisions are still protestable to the GAO.',
-              'Step 6: Award task order to the best value offeror|||Best value means the proposal offering the greatest combination of technical merit, past performance, and price for the government\'s needs — not necessarily the lowest price. The ordering CO documents the tradeoff rationale. For LPTA task orders, the lowest technically acceptable price wins. Most professional services use BVTO.',
-              'Step 7: Execute work; administer the task order like a standalone contract|||Task orders have their own period of performance, deliverables, and COR. The COR monitors performance against the task order PWS/SOW, not just the base contract. Performance is documented in CPARS at the task order level for large orders. Option years on the task order can be exercised independently of the base contract.',
-              'Step 8: Modify the task order (not the base contract) for scope/funding changes|||Task order modifications use the SF-30 and follow the same modification authorities as standalone contracts. Critically — changes go on the task order, not the base IDIQ contract. Adding scope beyond the task order ceiling requires a new modification with additional funding. The base IDIQ contract is modified only for vehicle-level changes (period of performance extension, ceiling increase).',
-            ]
-          },
-          {
-            type: 'callout',
-            heading: "The Fair Opportunity Requirement",
-            body: "FAR 16.505 requires that for MAC-IDIQ task orders over $3,500, all awardees must receive a fair opportunity to compete — meaning each must receive notice of the opportunity and a reasonable time to respond. Six narrow exceptions allow sole-source task orders: urgency, only one awardee is capable, follow-on to a prototype, logical follow-on, minimum guarantee, and national security. Bypassing fair opportunity without a valid exception is illegal and a common IG finding."
-          },
-          {
-            type: 'formula',
-            heading: "IDIQ Contract Structure",
-            formula: 'IDIQ Contract = Base Contract (terms, rates, ceiling) + n Task Orders\nTotal ordered value ≤ Maximum Ceiling\nTotal ordered value ≥ Minimum Guarantee\nEach Task Order = Independent Scope + Independent Funding + Independent PoP',
-            explanation: "The base contract ceiling sets the absolute limit on cumulative task order value. The minimum guarantee is the only amount the government is legally obligated to order — it protects the contractor's investment in the contract. Each task order is funded independently with its own period of performance."
-          },
-          {
-            type: 'table',
-            heading: "Common DoD IDIQ Vehicles by Type",
-            headers: ['Contract Vehicle', 'Type', 'Administered By', 'Best For'],
-            rows: [
-              ['OASIS+', 'MAC-IDIQ GWAC', 'GSA', 'Professional services across all disciplines'],
-              ['Alliant 2', 'MAC-IDIQ GWAC', 'GSA', 'Large-scale IT services and solutions'],
-              ['STARS III', 'MAC-IDIQ GWAC (SDVOSB/SB)', 'GSA', 'IT services — small business set-aside'],
-              ['SeaPort-NxG', 'MAC-IDIQ', 'NAVSEA', 'Navy engineering and program support'],
-              ['AFCAP IV', 'MAC-IDIQ', 'AFCEC', 'Air Force contingency base support'],
-              ['EAGLE II', 'MAC-IDIQ', 'DHS', 'IT solutions for DHS components'],
-            ]
-          },
-          {
-            type: 'tip',
-            heading: "Task Order vs. Contract Modification — Don't Confuse Them",
-            body: "A modification to a task order changes the scope, funding, or schedule of that specific task. A modification to the base IDIQ changes the contract-wide terms — labor rates, clauses, ceiling value, ordering period, or adding/removing CLINs. Most day-to-day changes (adding work, extending a PoP, adding funding) are task order mods. Changes to underlying pricing or terms require base contract modifications."
-          },
-          {
-          type: 'text' as const,
-          level: 'intermediate' as const,
-          heading: 'IDIQ Management: Ceiling vs. Scope vs. Competition',
-          body: 'Mid-career PMs using IDIQs and GWACs must navigate three overlapping constraints: (1) the IDIQ ceiling — you cannot exceed the maximum order value without a modification, but you can order below the minimum; (2) scope limitations — task orders must be within the IDIQ\'s scope (ordering outside scope violates CICA and creates protest risk); (3) competition requirements — most IDIQs require fair opportunity among all awardees for task orders above $3,500 (DARS 16.505). The most common mid-career mistake: treating an IDIQ as a preferred vehicle even when better-suited vehicles exist, or placing task orders that are technically "within scope" but stretch the scope definition to the breaking point. Contractors monitor IDIQ usage patterns and will protest if they believe scope is being stretched to steer work.',
-        },
-        {
-          type: 'callout' as const,
-          level: 'advanced' as const,
-          heading: 'Bridge Contracts and Option Exercise Discipline',
-          body: 'Two of the most common contracting failures senior PMs face: bridge contracts and missed option windows. Bridge contracts (short-term extensions to maintain continuity between contracts) are legal but signal poor acquisition planning, attract GAO scrutiny, and often pay above-market rates because competition is waived. The bridge becomes a habit — some programs have been on "bridge" for 5+ years, paying a sole-source premium indefinitely. Option exercise discipline: options must be exercised before expiration — missed windows forfeit the option and require a new competition. With 12-24 month options, build a calendar trigger 90 days before each option expiration. The J&A required for a bridge after a missed option is a career embarrassment that documents your planning failure for the record.',
-        },
-        ],
-      quiz: [
-          {
-            id: 'q1',
-            question: "Under a Multiple Award IDIQ contract, what is the primary mechanism that actually authorizes a contractor to begin work and obligates government funding?",
-            options: ['The base IDIQ contract award', 'A task order (or delivery order) issued under the IDIQ', 'A Blanket Purchase Agreement call', 'A contract modification to the base IDIQ'],
-            correct: 1,
-            explanation: "The IDIQ base contract establishes the legal framework and terms but does NOT authorize specific work or obligate funds. A task order (or delivery order for supplies) is the mechanism that authorizes a specific scope of work and obligates the corresponding funding. No work should begin without an issued task order."
-          },
-          {
-            id: 'q2',
-            question: "What is the minimum guarantee on an IDIQ contract, and why does it exist?",
-            options: ['50% of the contract ceiling, to ensure the contractor recovers setup costs', 'A nominal amount (typically $1K–$25K) obligated at award, protecting the contractor from a zero-value contract', 'The amount needed to fund the first task order', 'The government\'s estimated annual spend, used for market research'],
-            correct: 1,
-            explanation: "The minimum guarantee is a nominal amount (typically $1,000–$25,000) obligated at contract award that represents the government's only guaranteed obligation under the IDIQ. It protects the contractor from the scenario where no task orders are ever placed. Above the minimum, the government has no obligation to order any specific amount up to the ceiling."
-          },
-          {
-            id: 'q3',
-            question: "FAR 16.505 requires \"fair opportunity\" for MAC-IDIQ task orders above what threshold?",
-            options: ['$100,000', '$350,000', '$3,500', '$1,000,000'],
-            correct: 2,
-            explanation: "FAR 16.505 requires that all MAC-IDIQ awardees receive fair opportunity to compete for task orders exceeding $3,500. Below this threshold, the contracting officer may place orders without following the fair opportunity procedures. This relatively low threshold means nearly all meaningful task orders require fair opportunity competition."
-          },
-          {
-            id: 'q4',
-            question: "What distinguishes an IDIQ contract from a Blanket Purchase Agreement (BPA)?",
-            options: ['BPAs have a maximum ceiling; IDIQs do not', 'IDIQs have enforceable minimum/maximum quantities; BPAs have no such guarantees', 'BPAs require full and open competition; IDIQs do not', 'IDIQs are only for services; BPAs are only for supplies'],
-            correct: 1,
-            explanation: "IDIQs have both a minimum guarantee (legally obligated at award) and a maximum ceiling (cannot exceed). BPAs are simplified ordering arrangements — typically against GSA Schedule contracts — with no minimum guarantee and no maximum ceiling (though agencies usually set an estimated value). BPAs are simpler to establish but provide less legal certainty."
-          },
-          {
-            id: 'q5',
-            question: "The \"ordering period\" on an IDIQ contract refers to:",
-            options: ['The period of performance for individual task orders', 'The time window during which new task orders may be placed against the IDIQ', 'The fiscal year in which funds were appropriated', 'The time from award to the first task order competition'],
-            correct: 1,
-            explanation: "The ordering period defines when task orders may be placed. A common structure is 5 years base plus one 5-year option. Task order periods of performance CAN extend beyond the IDIQ ordering period (a common misconception) — what matters is that the task order itself was awarded before the ordering period closed."
-          },
-          {
-            id: 'q6',
-            question: "Which of the following is NOT a recognized exception to the fair opportunity requirement under FAR 16.505?",
-            options: ['Urgency — need so urgent that fair opportunity would cause harm', 'Only one IDIQ awardee is technically capable of performing the work', 'The contracting officer prefers working with a particular contractor', 'Minimum guarantee — task order to fulfill the contract\'s minimum'],
-            correct: 2,
-            explanation: "Personal preference is never a valid exception to fair opportunity. The six valid exceptions are: urgency, only one awardee is capable, logical follow-on to a prototype, follow-on for consistency, minimum guarantee order, and national security. Violating fair opportunity without a documented exception is a serious contracting violation."
-          },
-          {
-            id: 'q7',
-            question: "The IDIQ contract vehicle OASIS+ (administered by GSA) is best described as:",
-            options: ['A single-award IDIQ for IT services only', 'A Government-Wide Acquisition Contract (GWAC) MAC-IDIQ for professional services available to all federal agencies', 'A Navy-specific contract vehicle for shipbuilding support', 'A simplified acquisition tool for purchases under $350K'],
-            correct: 1,
-            explanation: "OASIS+ (One Acquisition Solution for Integrated Services Plus) is a GSA-administered GWAC MAC-IDIQ that provides professional services across multiple functional areas (management consulting, engineering, R&D, financial management, logistics, IT) to all federal agencies. It replaced the original OASIS contract and is structured with unrestricted and small business pools."
-          },
-          {
-            id: 'q8',
-            question: "A program manager wants to add new work to an existing task order that was not in the original task order statement of work. The correct action is to:",
-            options: ['Issue a new task order for the additional work', 'Verbally direct the contractor to start the new work immediately', 'Execute a task order modification adding the new scope and corresponding funding', 'Award a new sole-source contract for the additional work'],
-            correct: 2,
-            explanation: "New in-scope work under an existing task order should be incorporated through a task order modification (bilateral mod signed by both parties, or a unilateral mod if using Changes clause). The modification adds the scope and obligates additional funding. Simply directing the contractor to start work without a mod is an unauthorized commitment and a constructive change."
-          },
-          {
-            id: 'q9',
-            question: "Under a MAC-IDIQ, when a task order competition results in an award, which document governs the evaluation of task order proposals?",
-            options: ['The evaluation criteria in the original base IDIQ solicitation', 'The task order Request for Proposal (TORFP) issued to the pool', 'The Federal Acquisition Regulation Part 15 formal source selection process', 'The GSA Price List for schedule contracts'],
-            correct: 1,
-            explanation: "Task order competitions use a Task Order Request for Proposal (TORFP) that specifies the requirements, evaluation factors, and instructions for that specific task. This is typically a simplified process compared to full FAR Part 15 source selection — but the same principles of consistency and documentation apply, and task order awards can be protested to GAO or the CO."
-          },
-          {
-            id: 'q10',
-            question: "A government program has multiple contractors all holding IDIQ contracts under the same MAC vehicle. To place a task order, the ordering officer must:",
-            options: ['Select whichever contractor most recently won an order to balance workload', 'Issue a TORFP providing all eligible pool members a fair opportunity to compete', 'Always select the lowest-priced contractor from the original competition', 'Get CO approval only if the order exceeds the simplified acquisition threshold'],
-            correct: 1,
-            explanation: "Under a MAC-IDIQ, the ordering officer must provide all pool members a fair opportunity to compete by issuing a TORFP. This maintains competition at the task order level and is the core benefit of the MAC-IDIQ structure. Bypassing fair opportunity without a valid FAR 16.505 exception is illegal."
-          }
-        ]
-      },
-      // ── NEW LESSON: Contracts-5 (GSA Vehicles: OASIS+, FEDSIM, AAS-D — Advanced) ──
-      {
-        id: 'contracts-1',
-        title: 'Contract Types: Choosing the Right Vehicle',
-        duration: '16 min',
-        description: 'Understand the spectrum of contract types from FFP to Cost-Plus, and when to use each.',
-        keyTerms: [
-          { term: 'FFP', definition: 'Firm-Fixed-Price — price is set at award and does not change. Contractor bears 100% of cost risk. Most preferred by FAR. Used when requirements are well-defined and market competition exists. (FAR 16.202)' },
-          { term: 'FPIF', definition: 'Fixed-Price Incentive (Firm Target) — has a target cost, target fee, ceiling price, and share ratio. Contractor and government share cost savings/overruns up to the ceiling. Above the Point of Total Assumption (PTA), contractor absorbs 100%. (FAR 16.403-1)' },
-          { term: 'CPFF', definition: 'Cost-Plus-Fixed-Fee — government reimburses all allowable costs plus a fixed fee that does not change with cost performance. Contractor has no financial incentive to control costs. Used for R&D and early development where costs cannot be estimated. (FAR 16.306)' },
-          { term: 'CPIF', definition: 'Cost-Plus-Incentive-Fee — government reimburses all allowable costs, and the fee adjusts based on cost performance against a target. If the contractor beats the target cost, fee goes up; if they overspend, fee goes down. Still cost-reimbursable — government pays all costs regardless. (FAR 16.304)' },
-          { term: 'CPAF', definition: 'Cost-Plus-Award-Fee — government reimburses all allowable costs plus a base fee, with additional award fee determined subjectively by a Fee Determining Official (FDO) based on periodic performance evaluations. Unlike CPIF, the award fee is not tied to a formula — it is a judgment call. Used when performance quality matters more than cost control. (FAR 16.305)' },
-          { term: 'T&M', definition: 'Time & Materials — contractor is paid fixed hourly labor rates plus actual material costs. Government bears essentially all cost risk since there is no ceiling on hours. Requires CO surveillance and a not-to-exceed ceiling. D&F required to justify use. (FAR 16.601)' },
-          { term: 'Share Ratio', definition: 'In incentive contracts, the split of cost savings or overruns between government and contractor (e.g., 80/20 means government absorbs 80¢ and contractor keeps/loses 20¢ of every dollar above/below target cost).' },
-          { term: 'PTA', definition: 'Point of Total Assumption — on an FPIF contract, the cost level at which the contractor has lost all its fee and begins absorbing 100% of additional costs. Above the PTA, the contract behaves like FFP.' },
-          { term: 'D&F', definition: 'Determination and Findings — a documented government decision required to justify use of certain contract types (e.g., T&M, cost-reimbursable) or acquisition actions that deviate from standard FAR policy.' },
-        ],
-        content: [
-          {
-            type: 'text',
-            heading: "Contract Type = Risk Allocation",
-            body: "Choosing the right contract type is one of the most consequential decisions in acquisition strategy. Contract type determines who bears cost risk — the government or the contractor. The FAR's overarching principle is clear: use firm-fixed-price whenever possible. When market conditions, technology maturity, or performance uncertainty prevent FFP, you move along the spectrum toward cost-reimbursable contracts — but each step increases government risk and oversight burden."
-          },
-          {
-            type: 'table',
-            heading: "The Contract Type Spectrum",
-            headers: ['Type', 'Full Name', 'Who Bears Risk?', 'Best Used When', 'FAR Ref'],
-            rows: [
-              ['FFP',    'Firm-Fixed-Price',                  'Contractor (100%)',  'Well-defined requirements; stable design; competitive market', 'FAR 16.202'],
-              ['FPIF',   'Fixed-Price Incentive (Firm)',       'Shared via formula', 'Design fairly mature; some cost uncertainty remains', 'FAR 16.403'],
-              ['CPIF',   'Cost-Plus-Incentive-Fee',           'Shared via formula', 'Development programs where cost targets can be set', 'FAR 16.304'],
-              ['CPAF',   'Cost-Plus-Award-Fee',               'Mostly Government',  'Complex services where performance quality is hard to quantify', 'FAR 16.305'],
-              ['CPFF',   'Cost-Plus-Fixed-Fee',               'Government (100%)',  'Early R&D; high tech risk; level-of-effort work', 'FAR 16.306'],
-              ['T&M',    'Time & Materials',                  'Government (100%)',  'Cannot define hours/effort upfront; last resort; D&F required', 'FAR 16.601'],
-            ]
-          },
-          {
-            type: 'list',
-            heading: 'Contract Type Definitions — Know These Cold',
-            items: [
-              'FFP (Firm-Fixed-Price): Price locked at award. Contractor eats every dollar over budget. Government pays nothing extra. Maximum incentive for contractor efficiency.|||FAR 16.202. FFP is the government\'s preferred type — cost risk transfers to the contractor, creating strong efficiency incentives. Required for commercial items. Not appropriate for immature development: FFP on uncertain scope forces excessive contingency or creates underpriced contracts that result in default or claims.',
-              'FPIF (Fixed-Price Incentive Firm): Starts like FFP with a target cost and ceiling price. Cost savings/overruns are shared via a ratio (e.g., 80/20) until the Point of Total Assumption (PTA), where contractor absorbs 100%.|||FAR 16.403. Key numbers: Target Cost, Target Profit, Ceiling Price, and share ratio. The share ratio (e.g., 80/20) means for every dollar over target cost, contractor absorbs 80 cents; government absorbs 20. Above the Ceiling Price the contractor bears 100%. Standard for LRIP as programs transition from development to production.',
-              'CPIF (Cost-Plus-Incentive-Fee): Government pays all allowable costs. Contractor fee goes up if they beat the target cost, down if they overspend — but they always get reimbursed. Incentive is on cost performance.|||FAR 16.304. Appropriate for complex development where cost targets can be established. Fee range (min to max) must be specified — typically 4% to 12% of target cost. Gives the contractor a financial reason to control costs while protecting them from catastrophic loss on genuinely uncertain technical work.',
-              'CPAF (Cost-Plus-Award-Fee): Government pays all allowable costs plus a base fee. Additional award fee is determined subjectively by a Fee Determining Official (FDO) after each evaluation period. No formula — purely judgment-based. Incentive is on performance quality.|||FAR 16.305. The award fee is subjective — based on the government\'s evaluation of performance quality, responsiveness, and management, not formulas. An Award Fee Plan defines evaluation criteria and periods. The FDO (often the PM or PEO) evaluates performance each period. Award fees are powerful motivators but require significant government evaluation effort.',
-              'CPFF (Cost-Plus-Fixed-Fee): Government pays all allowable costs plus a fixed fee that never changes regardless of actual cost. No financial incentive for contractor to control costs. Used for early R&D where cost estimation is impossible.|||FAR 16.306. CPFF gives the least incentive to control costs — the fee doesn\'t change whether the contractor performs efficiently or not. Appropriate for exploratory R&D, studies, and work where scope is genuinely unknowable. Completion CPFF ties the fee to delivering a result; Term CPFF ties it to a level of effort with no specified end result.',
-              'T&M (Time & Materials): Government pays hourly labor rates plus materials at cost. No cap on hours unless a ceiling is set. Least preferred — requires a D&F that no other type is suitable and active CO surveillance.|||FAR 16.601. T&M is the riskiest type for the government. FAR requires documentation that no other type is suitable, a ceiling price, and enhanced COR surveillance. Most common for emergency repairs, undefinitized periods before FFP is negotiated, and situations where level of effort is genuinely unknowable.',
-            ]
-          },
-          {
-            type: 'risk_chart',
-          },
-          {
-            type: 'callout',
-            heading: "The FAR's Hierarchy of Preference",
-            body: "FAR 16.103(d) requires the contracting officer to document the contract type selection rationale in the written acquisition plan. The presumption is FFP. Every step away from FFP must be justified. An undocumented contract type decision is a significant finding in a contract audit."
-          },
-          {
-            type: 'formula',
-            heading: "Incentive Contract Math",
-            formula: 'Target Cost (TC): $10M | Target Fee (TF): $1M | Share Ratio: 80/20 (Gov/Contractor)\nIf actual cost = $9M (under target by $1M): Contractor earns TF + 20% × $1M = $1.2M fee\nIf actual cost = $11M (over target by $1M): Contractor earns TF - 20% × $1M = $0.8M fee\nPoint of Total Assumption (PTA): Where contractor absorbs 100% of overrun',
-            explanation: "In incentive contracts, sharing ratios motivate cost control. A 80/20 share ratio means for every dollar saved, the contractor keeps 20 cents. The PTA is critical — above it, all risk falls on the contractor (like FFP ceiling)."
-          },
-          {
-            type: 'warning',
-            heading: "T&M Contracts Require Special Justification",
-            body: "Time & Materials (T&M) and Labor-Hour (LH) contracts provide the least incentive for efficient performance. FAR 16.601(c) requires a D&F (Determination and Findings) that no other contract type is suitable. T&M contracts must also have a ceiling price that the contractor cannot exceed without CO approval."
-          },
-          {
-            type: 'tip',
-            heading: "Contract Type in Development Programs",
-            body: "Defense development programs often evolve through contract types: CPFF or CPIF during early development (high technical risk), transitioning to FPIF as design matures, then FFP for production. This progression mirrors the risk reduction achieved through the acquisition lifecycle."
-          },
-          {
-          type: 'text' as const,
-          level: 'intermediate' as const,
-          heading: 'Contract Type Strategy for Mid-Career PMs',
-          body: 'Contract type selection is one of the most consequential decisions a PM makes, and it\'s made during acquisition planning — before the contractor is even selected. Mid-career PMs must think beyond risk allocation (cost-type = government bears risk; fixed-price = contractor bears risk) to incentive design. A CPIF with a 80/20 share ratio incentivizes cost control; a 50/50 ratio gives the contractor less motivation to reduce costs since they keep more savings. For schedule incentives: use CPIF-CPAF combos where the fixed-fee portion covers profit at plan, the incentive fee rewards cost performance, and the award fee rewards schedule and technical performance. Complex programs often have multiple CLINs with different contract types — a development CLIN at CPFF and a production option at FFP. Design the structure so each CLIN type matches the risk profile of that work.',
-        },
-        {
-          type: 'callout' as const,
-          level: 'advanced' as const,
-          heading: 'Undefinitized Contract Actions (UCAs): The Most Dangerous Contract Tool',
-          body: 'UCAs (contracts or modifications executed before price is agreed) are authorized by FAR 16.603 and DFARS 217.74, but they are the source of some of the worst cost outcomes in DoD acquisition. DFARS requires definitization within 180 days or 40% of not-to-exceed value obligated — whichever comes first. In practice, programs routinely miss these deadlines, and definitization happens after the contractor has incurred most costs, eliminating negotiating leverage. The contractor who knows you MUST definitize has no incentive to reduce costs during definitization. Senior PMs minimize UCAs, use them only when true urgency justifies starting before price is agreed, and definitize aggressively — before the contractor has spent their way into a position of strength.',
-        },
-        ],
-      quiz: [
-          {
-            id: 'q1',
-            question: "Which contract type places 100% of cost risk on the contractor and is most preferred by the FAR?",
-            options: ['Cost-Plus-Fixed-Fee (CPFF)', 'Fixed-Price-Incentive-Firm (FPIF)', 'Firm-Fixed-Price (FFP)', 'Time & Materials (T&M)'],
-            correct: 2,
-            explanation: "Firm-Fixed-Price (FFP) is the government's most preferred contract type because it places maximum cost risk on the contractor, creating the strongest incentive for efficiency. Under FFP, if the contractor spends more than the agreed price, it absorbs the loss."
-          },
-          {
-            id: 'q2',
-            question: "On a Cost-Plus-Incentive-Fee contract with a 70/30 share ratio, if the contractor comes in $2M under the target cost, how much additional fee do they earn?",
-            options: ['$2M', '$1.4M', '$0.6M', '$0.7M'],
-            correct: 2,
-            explanation: "With a 70/30 (Government/Contractor) share ratio, the contractor earns 30% of cost savings. On a $2M underrun: contractor additional fee = 30% × $2M = $0.6M added to their target fee. The government retains 70% of the savings ($1.4M)."
-          },
-          {
-            id: 'q3',
-            question: "A Time & Materials contract requires what special documentation before award?",
-            options: ['A Nunn-McCurdy waiver', 'A Determination and Findings (D&F) that no other contract type is suitable', 'Congressional notification', 'A GAO protest review'],
-            correct: 1,
-            explanation: "Per FAR 16.601(d), T&M and Labor-Hour contracts require a written D&F (Determination and Findings) signed by the contracting officer (or higher official for contracts over $1M) justifying that no other contract type is suitable. T&M provides the least incentive for efficiency and must be used only when necessary."
-          },
-          {
-            id: 'q4',
-            question: "The Point of Total Assumption (PTA) on a Fixed-Price Incentive Firm (FPIF) contract is the point at which:",
-            options: ['The government assumes 100% of remaining cost risk', 'The contractor assumes 100% of cost overruns above the ceiling price', 'The target fee is fully earned', 'The contract converts to cost-plus'],
-            correct: 1,
-            explanation: "The PTA on an FPIF contract is the cost level at which the contractor absorbs 100% of additional costs — effectively making it FFP above that point. Beyond the PTA, the contractor's fee has been entirely eroded by the cost overrun sharing."
-          },
-          {
-            id: 'q5',
-            question: "Which contract type is most appropriate for a program in early technology development where cost and technical scope cannot be well-defined?",
-            options: ['FFP', 'FPIF', 'CPFF', 'BPA'],
-            correct: 2,
-            explanation: "CPFF (Cost-Plus-Fixed-Fee) is appropriate when technical risk is high and costs cannot be reliably estimated. The government pays all allowable costs plus a fixed fee that does not change with cost performance. It is the standard for early R&D work covered by FAR Part 35."
-          },
-          {
-            id: 'q6',
-            question: "Under FAR 16.103, what must the contracting officer document to justify the chosen contract type?",
-            options: ['A cost analysis certified by the comptroller', 'Written rationale in the acquisition plan explaining why the chosen type is appropriate', 'Congressional approval for non-FFP contracts', 'A GAO pre-award review'],
-            correct: 1,
-            explanation: "FAR 16.103(d) requires the contracting officer to document the contract type selection rationale in the written acquisition plan. This is a standard audit requirement — unsupported contract type decisions are a common finding in IG and GAO reviews."
-          },
-          {
-            id: 'q7',
-            question: "A Cost-Plus-Award-Fee (CPAF) contract is distinguished from CPIF in that the award fee is:",
-            options: ['Calculated using a fixed formula tied to cost performance', 'Subjectively determined by the government based on overall performance evaluation', 'Paid automatically at contract completion', 'The same as the base fee on a CPFF contract'],
-            correct: 1,
-            explanation: "CPAF award fees are subjectively evaluated by a government Fee Determining Official (FDO) based on qualitative performance criteria. This makes CPAF useful for service contracts where the quality of performance matters most. CPIF, by contrast, uses a formula-based fee tied to measurable cost targets."
-          },
-          {
-            id: 'q8',
-            question: "Which contract type is specifically PROHIBITED for use with commercial items under FAR Part 12?",
-            options: ['FFP', 'FPIF', 'Cost-reimbursable contracts (CPFF, CPIF, CPAF)', 'T&M'],
-            correct: 2,
-            explanation: "FAR 12.207 prohibits the use of cost-reimbursable contracts for the acquisition of commercial items. Commercial items must use FFP, FPIF, or T&M/LH contract types. This rule reflects the commercial marketplace reality that vendors sell at firm prices, not on a cost-reimbursable basis."
-          },
-          {
-            id: 'q9',
-            question: "What is the primary advantage of an FPIF contract over a pure FFP contract for a development program?",
-            options: ['FPIF requires less government oversight', 'FPIF shares cost risk while still incentivizing cost control', 'FPIF allows the contractor unlimited cost reimbursement', 'FPIF requires no competition'],
-            correct: 1,
-            explanation: "FPIF shares cost risk between government and contractor through a negotiated share ratio, while maintaining a firm ceiling price. This is appropriate when some cost uncertainty exists but a pure cost-plus arrangement is not warranted. The incentive structure motivates the contractor to control costs without fully absorbing unpredictable risk."
-          },
-          {
-            id: 'q10',
-            question: "The FAR preference for contract type selection, in order from most to least preferred, is:",
-            options: ['T&M → CPFF → FPIF → FFP', 'FFP → FPIF → CPIF → CPFF → T&M', 'CPFF → FFP → T&M', 'CPIF → FFP → CPFF → T&M'],
-            correct: 1,
-            explanation: "The FAR preference order moves from maximum contractor risk (FFP) to maximum government risk (T&M/CPFF): FFP → FPI → Cost-Reimbursable (CPIF, CPFF, CPAF) → T&M/LH. Each step requires additional justification and imposes greater government oversight obligations."
-          },
-          {
-            id: 'q11',
-            type: 'drag_order',
-            question: "Order these contract types from HIGHEST contractor risk to LOWEST contractor risk:",
-            options: [],
-            correct: 0,
-            explanation: "FFP places 100% cost risk on the contractor — they absorb every dollar over budget. FPIF shares risk via a formula up to the ceiling/PTA. CPIF reimburses all costs with incentive fee adjustments. CPAF reimburses all costs with subjective award fee. T&M reimburses hours + materials with no ceiling unless set — government bears virtually all cost risk.",
-            orderedItems: [
-              "FFP — Firm-Fixed-Price (Contractor 100%)",
-              "FPIF — Fixed-Price Incentive Firm (Shared, formula-based)",
-              "CPIF — Cost-Plus-Incentive-Fee (Mostly Government)",
-              "CPAF — Cost-Plus-Award-Fee (Mostly Government, subjective)",
-              "T&M — Time & Materials (Government ~100%)"
-            ]
-          },
-          {
-            id: 'q12',
-            type: 'drag_match',
-            question: "Match each contract type to the scenario where it is MOST appropriate:",
-            options: [],
-            correct: 0,
-            explanation: "Contract type selection must match the risk environment. FFP works when requirements are stable and competition exists. FPIF works when some cost uncertainty remains but a ceiling is feasible. CPFF works for early R&D where you truly can't estimate cost. T&M requires a D&F and is the last resort when effort is completely undefined.",
-            pairs: [
-              { left: 'FFP', right: 'Stable requirements, mature design, competitive market' },
-              { left: 'FPIF', right: 'Design mostly mature; some cost uncertainty remains' },
-              { left: 'CPFF', right: 'Early R&D; cost cannot be estimated with any confidence' },
-              { left: 'T&M', right: 'Undefined hours/effort; last resort; D&F required' }
-            ]
-          }
-        ]
-      },
-      {
-        id: 'contracts-5',
-        title: 'GSA Vehicles: OASIS+, FEDSIM, and AAS-D',
-        duration: '18 min',
-        description: 'Master the most important government-wide acquisition contracts for professional services — how they work, when to use them, and what the differences are.',
-        keyTerms: [
-          { term: 'GWAC', definition: 'Government-Wide Acquisition Contract — a task order contract established by one agency for use by any federal agency.' },
-          { term: 'OASIS+', definition: 'One Acquisition Solution for Integrated Services Plus — GSA\'s flagship GWAC for professional and technical services across all disciplines.' },
-          { term: 'FEDSIM', definition: 'Federal Systems Integration and Management Center — GSA\'s assisted acquisition service that manages the contracting process on behalf of customer agencies.' },
-          { term: 'AAS-D', definition: 'Assisted Acquisition Services — Defense — GSA\'s defense-focused assisted acquisition service supporting DoD agencies.' },
-          { term: 'Assisted Acquisition', definition: 'When one agency (the servicing agency) conducts an acquisition on behalf of another agency (the requesting agency) using an Economy Act or similar authority.' },
-          { term: 'Ordering Agency', definition: 'The agency that places task orders against a GWAC for its own requirements (distinct from the agency that holds the contract).' },
-          { term: 'Interagency Agreement (IAA)', definition: 'The agreement between the requesting agency and servicing agency (e.g., GSA/FEDSIM) that authorizes the assisted acquisition.' },
-          { term: 'Alliant 2', definition: 'GSA\'s large-scale IT GWAC for complex IT solutions, available to all federal agencies.' },
-          { term: 'STARS III', definition: '8(a) STARS III — GSA\'s GWAC for small business IT services, including 8(a) and HUBZone set-asides.' },
-          { term: 'Economy Act', definition: '31 U.S.C. § 1535 — the statutory authority allowing federal agencies to request services or supplies from other federal agencies.' },
-        ],
-        content: [
-          {
-            type: 'text',
-            heading: "Why GWACs Matter to DoD Program Managers",
-            body: "Government-Wide Acquisition Contracts (GWACs) allow agencies to place task orders without conducting a full standalone acquisition. For DoD program managers, understanding GSA GWACs — especially OASIS+ — is increasingly essential. These vehicles save acquisition lead time, maintain competition, and provide access to pre-vetted contractor pools. Knowing when to use a GWAC vs. competing a standalone contract is a key PM and contracting competency."
-          },
-          {
-            type: 'table',
-            heading: "Major GSA GWACs: At a Glance",
-            headers: ['Vehicle', 'Type', 'Focus', 'Ceiling', 'Pools'],
-            rows: [
-              ['OASIS+', 'MAC-IDIQ GWAC', 'Professional & technical services (all disciplines)', '$60B+', 'Unrestricted + SB pools by functional area'],
-              ['Alliant 2', 'MAC-IDIQ GWAC', 'Large-scale, complex IT services & solutions', '$50B', 'Unrestricted only (Large Business)'],
-              ['STARS III', 'MAC-IDIQ GWAC', 'IT services — small business', '$50B', '8(a), WOSB, SDVOSB, HUBZone pools'],
-              ['8(a) STARS III', 'MAC-IDIQ GWAC', 'IT services — 8(a) SDB only', '(part of STARS III)', '8(a) small disadvantaged business'],
-              ['MAS (Schedules)', 'IDIQ Schedule', 'Commercial products and services (broad)', 'No ceiling', 'Multiple SINs (Special Item Numbers)'],
-            ]
-          },
-          {
-            type: 'text',
-            heading: "OASIS+ In Depth",
-            body: "OASIS+ (One Acquisition Solution for Integrated Services Plus) is GSA's marquee professional services GWAC, replacing the original OASIS contract. It covers essentially all professional and technical service categories: management consulting, engineering, research & development, program management support, IT services, logistics, financial management, and more. OASIS+ is structured in two primary tracks — Unrestricted (large businesses and small businesses competing full-and-open) and Small Business — each with multiple functional area pools. A DoD agency can access OASIS+ by establishing an Interagency Agreement with GSA, then placing task orders directly against the appropriate pool using fair opportunity competition."
-          },
-          {
-            type: 'list',
-            heading: "How to Use OASIS+ as an Ordering Agency",
-            items: [
-              'Step 1: Determine the requirement fits OASIS+ scope (professional/technical services)|||OASIS+ covers complex professional services: program management, management consulting, logistics, engineering, scientific, and financial management services. It does NOT cover IT products, construction, or commercial off-the-shelf items. Before using OASIS+, the ordering CO must verify scope fit and document it. Misaligned orders are a protest risk. GSA\'s OASIS+ Program Office can assist with scope determinations.',
-              'Step 2: Identify the correct OASIS+ pool (unrestricted vs. small business, functional area)|||OASIS+ has separate pools for unrestricted (large business), small business, 8(a), HUBZone, SDVOSB, and WOSB. Within each pool, there are functional areas (domains) — the requirement must align to a pool where the work fits. Ordering from the wrong pool is a compliance error. The government must also decide whether to use a set-aside pool (if the requirement can be satisfied by SB pool holders) before going unrestricted.',
-              'Step 3: Establish an Interagency Acquisition Agreement (IAA) with GSA (if not already in place)|||An IAA (usually an Economy Act determination or assisted acquisition agreement) authorizes the ordering agency to use GSA\'s contract vehicle. The ordering agency CO must document the authority basis, confirm it\'s cost-effective vs. running an independent procurement, and comply with their own agency\'s ordering procedures. GSA charges an Industrial Funding Fee (IFF) of 0.75% on all OASIS+ orders — this must be included in the price analysis.',
-              'Step 4: Issue a Task Order Request for Proposal (TORFP) to the applicable pool|||The TORFP must provide fair opportunity to all pool holders — typically issued through eBuy (GSA\'s e-procurement system). The TORFP defines evaluation factors, proposal instructions, submission format, and the period of performance. The ordering CO issues the TORFP under their own agency\'s procurement authority, not GSA\'s. Exception: if using GSA as the contracting agent (assisted acquisition via FEDSIM/AAS), GSA runs the source selection.',
-              'Step 5: Provide fair opportunity to all eligible pool holders per FAR 16.505|||Fair opportunity is the default rule for all MA-IDIQ task orders. The CO must document how fair opportunity was provided. Exceptions are narrow: unusual urgency (documented and time-limited), only one awardee is capable (rare and risky to claim), public interest determination, logical follow-on to an existing order, or the order is below the simplified acquisition threshold. Using an improper exception is a top protest ground.',
-              'Step 6: Evaluate proposals and make best-value task order award|||Best Value Tradeoff (BVTO) is the standard evaluation approach. The technical approach and past performance typically carry more weight than price on complex services task orders. The Source Selection Authority (SSA) documents the tradeoff decision. Unlike formal FAR Part 15 source selections, task order source selections have lighter documentation requirements — but the decision must still be defensible to a protest.',
-              'Step 7: Administer the task order — the ordering agency\'s CO retains oversight|||The ordering CO and COR manage performance after award. CPARS ratings at task order completion are some of the most valuable past performance evidence in future competitions. Good contract administration — consistent documentation, timely deliverable acceptance, proactive issue resolution — is what protects the government\'s recompete position.',
-              'Note: GSA charges an Industrial Funding Fee (IFF) or similar fee on OASIS+ orders|||The IFF is currently 0.75% of the total task order value on OASIS+. Contractors remit the IFF to GSA; in practice, most build it into their pricing. Ordering agencies should factor this into their price analysis. The IFF funds GSA\'s contracting support infrastructure. Failing to account for IFF in price reasonableness determinations is a common oversight.',
-            ]
-          },
-          {
-            type: 'text',
-            heading: "FEDSIM: Assisted Acquisition Services",
-            body: "FEDSIM (Federal Systems Integration and Management Center) is GSA's assisted acquisition service. Rather than just providing a contract vehicle for agencies to use, FEDSIM acts as the contracting office on behalf of the customer agency. The customer agency defines its requirements and provides funding, and FEDSIM manages the entire acquisition process — drafting the solicitation, conducting source selection, awarding the contract, and administering it. FEDSIM commonly uses vehicles like Alliant 2, STARS III, and OASIS+ for IT and professional services acquisitions."
-          },
-          {
-            type: 'table',
-            heading: "OASIS+ Self-Service vs. FEDSIM Assisted Acquisition",
-            headers: ['Aspect', 'OASIS+ (Self-Service)', 'FEDSIM (Assisted)'],
-            rows: [
-              ['Who runs the acquisition?', 'Ordering agency\'s own CO', 'GSA/FEDSIM CO on behalf of customer'],
-              ['CO authority', 'Ordering agency retains CO authority', 'FEDSIM CO holds contracting authority'],
-              ['Best for', 'Agencies with strong in-house contracting capacity', 'Agencies without sufficient CO capacity or expertise'],
-              ['Timeline', 'Faster if agency has resources', 'May be slower due to coordination; adds FEDSIM process'],
-              ['Cost', 'IFF/fee to GSA for vehicle use', 'Acquisition management fee to FEDSIM (varies by contract value)'],
-              ['Vehicles used', 'OASIS+ pool directly', 'FEDSIM may use Alliant 2, STARS III, OASIS+, or others'],
-            ]
-          },
-          {
-            type: 'text',
-            heading: "AAS-D: GSA Defense Assisted Acquisition",
-            body: "AAS-D (Assisted Acquisition Services — Defense) is GSA's defense-specific assisted acquisition capability, designed for DoD agencies. Like FEDSIM, AAS-D can manage the entire acquisition process on behalf of a DoD program office. AAS-D has strong experience with DoD-specific requirements — DFARS compliance, classified acquisitions, and defense-unique contract clauses. DoD program offices use AAS-D when they need acquisition support but lack sufficient contracting office capacity, particularly for complex IT and professional services requirements that can be served by existing GWACs."
-          },
-          {
-            type: 'callout',
-            heading: "The Buy Decision: GWAC vs. Standalone Contract",
-            body: "A GWAC is not always the right answer. Use a GWAC when: (1) the requirement fits squarely within the vehicle's scope; (2) speed matters — GWACs eliminate re-competition of the base contract; (3) competition is maintained at the task order level. Consider a standalone contract when: (1) requirements are unique and don't fit any GWAC scope; (2) you need non-standard terms or special contract structure; (3) a single strategic partner relationship is more valuable than rotating competition. Misusing a GWAC by placing out-of-scope orders is a serious contracting violation and a recurring IG audit finding."
-          },
-          {
-            type: 'warning',
-            heading: "Scope Discipline: The IG's Favorite Finding",
-            body: "The most common GWAC compliance failure is awarding task orders that exceed the scope of the base contract. OASIS+ covers professional and technical services — it does NOT cover construction (use a construction IDIQ), supplies (use MAS schedules or standalone contracts), or highly classified programs requiring specialized contract structures. Every task order must be scope-checked against the GWAC's Statement of Objectives. Inspectors General regularly find out-of-scope orders on GWACs, resulting in contract actions being voided and requiring re-procurement."
-          },
-          {
-            type: 'tip',
-            heading: "FEDSIM vs. In-House — The Practical Decision",
-            body: "Many DoD program offices consider FEDSIM when their own contracting office is understaffed or lacks experience with a particular acquisition type. FEDSIM brings deep expertise and established processes, but adds coordination overhead and fees. The practical question is: does your contracting office have the bandwidth and skills to run a full competitive acquisition on this vehicle? If not, FEDSIM or AAS-D is a legitimate and efficient alternative — used by major DoD agencies including Army, Air Force, and numerous defense agencies."
-          },
-          {
-          type: 'text' as const,
-          level: 'intermediate' as const,
-          heading: 'GSA OASIS+ and FEDSIM: Navigating the Competitive Order Process',
-          body: 'Mid-career PMs using OASIS+ must understand that the task order competition is where outcomes are determined — not at the MAC vehicle level. For orders above $10M, FEDSIM (the GSA competition office) conducts the competition on your behalf. The government PM\'s role: write a well-scoped PWS, establish meaningful evaluation criteria, and review the price analysis. Common pitfalls: (1) PWS written so broadly that every OASIS+ contractor can qualify, leading to a lowest-price competition; (2) past performance evaluation relying on contractor-provided references that are selectively positive; (3) underestimating transition risk when switching from an incumbent. Build transition requirements directly into the PWS — require a 60-day joint transition with the incumbent, with knowledge transfer milestones and penalties for transition failures.',
-        },
-        {
-          type: 'callout' as const,
-          level: 'advanced' as const,
-          heading: 'MAC Vehicle Strategy: When to Use Which and Protest Risk Management',
-          body: 'Senior acquisition professionals understand that MAC vehicle selection is itself a strategic decision. OASIS+ for complex professional services; ALLIANT 3 for IT services; SeaPort NxG for Navy; CIO-SP4 for HHS/civilian. The wrong vehicle creates protest risk: using a vehicle whose scope doesn\'t cover your requirement, or using a sole-source exception under a MAC vehicle when fair opportunity competition was required. The most legally dangerous pattern: steering task orders to preferred contractors by writing evaluation criteria tailored to a specific firm\'s past performance or unique capabilities. Experienced protesters know how to document this, and GAO has sustained numerous protests on exactly these grounds. Run your task order strategy through your legal team before release.',
-        },
-        ],
-      quiz: [
-          {
-            id: 'q1',
-            question: "What does OASIS+ stand for, and what type of services does it primarily cover?",
-            options: [
-              'Optimized Acquisition Services — IT systems only|||Incorrect. OASIS+ stands for One Acquisition Solution for Integrated Services Plus. It is NOT limited to IT — it covers professional and technical services including program management, management consulting, engineering, scientific, financial, and logistics support. SEWP V is the GSA IT-focused GWAC.',
-              'One Acquisition Solution for Integrated Services Plus — professional and technical services across all disciplines|||Correct. OASIS+ is GSA\'s flagship professional and technical services GWAC. Awarded in 2023-2024, it replaced the original OASIS contract with an expanded scope covering management consulting, program management support, engineering, R&D, data analytics, logistics, and more.',
-              'Operations and Sustainment Integrated Services — logistics and supply chain only|||Incorrect. No GWAC uses the abbreviation OASIS+ to mean \'Operations and Sustainment Integrated Services.\' OASIS+ is a GSA GWAC for professional and technical services — not a logistics-only vehicle.',
-              'Ordered Acquisition System for IT Services — information technology only'
-            ],
-            correct: 1,
-            explanation: "OASIS+ (One Acquisition Solution for Integrated Services Plus) is GSA's flagship GWAC for professional and technical services, covering management consulting, engineering, R&D, program management, IT, logistics, financial management, and more. It is not limited to IT — that distinguishes it from vehicles like Alliant 2 and STARS III."
-          },
-          {
-            id: 'q2',
-            question: "FEDSIM (Federal Systems Integration and Management Center) differs from a self-service GWAC in that FEDSIM:",
-            options: [
-              'Provides a contract vehicle that agencies use independently|||Incorrect as a description of AAS-D. AAS-D\'s defining characteristic is that GSA manages the entire acquisition on behalf of the customer â acting as the contracting office. This is \'assisted acquisition\' â fundamentally different from simply providing a vehicle.',
-              'Manages the entire acquisition process on behalf of the customer agency, serving as the contracting office|||Correct. GSA\'s Assisted Acquisition Services - Defense (AAS-D) is an assisted acquisition service where GSA acts as the buying agency â managing the full acquisition lifecycle from requirements to award to contract administration â on behalf of DoD and other federal customers.',
-              'Only supports civilian agencies, not DoD|||Incorrect. AAS-D is specifically designed for DoD customers. The \'Defense\' designation in AAS-D indicates the primary customer base.',
-              'Is restricted to purchases under the simplified acquisition threshold'
-            ],
-            correct: 1,
-            explanation: "FEDSIM is an assisted acquisition service — it acts as the contracting office for customer agencies, managing solicitation, source selection, award, and administration on the customer's behalf. A self-service GWAC (like using OASIS+ directly) puts the ordering agency's own CO in charge of the process."
-          },
-          {
-            id: 'q3',
-            question: "A Government-Wide Acquisition Contract (GWAC) is distinct from an agency-specific IDIQ in that a GWAC:",
-            options: [
-              'Can only be used by the agency that established it|||Incorrect for GWACs. Government-Wide Acquisition Contracts â by definition â are available to all federal agencies. That government-wide accessibility is their defining feature.',
-              'Is available for use by any federal agency as an ordering agency|||Correct. GWACs are authorized under 40 U.S.C. 11314 and are open to all federal agencies. This cross-agency accessibility allows smaller agencies without acquisition expertise to leverage GWACs managed by agencies like GSA or NIH.',
-              'Does not require competition at the task order level|||Incorrect. Most GWACs require fair opportunity competition at the task order level under FAR 16.505. Awardees must be given a fair opportunity to submit offers for each task order. Exceptions are narrow.',
-              'Has no ceiling on total contract value'
-            ],
-            correct: 1,
-            explanation: "A GWAC is established by a lead agency (like GSA) for use by all federal agencies. Any agency can place task orders against the GWAC as an \"ordering agency.\" An agency-specific IDIQ is established by and for use by the establishing agency only — other agencies cannot place orders against it without a formal arrangement."
-          },
-          {
-            id: 'q4',
-            question: "Which GSA vehicle is specifically designed for large-scale, complex IT services and solutions, primarily for large businesses?",
-            options: ['OASIS+', 'STARS III', 'Alliant 2', 'MAS IT Schedule'],
-            correct: 2,
-            explanation: "Alliant 2 is GSA's GWAC specifically for large-scale IT services and solutions, targeting complex enterprise IT requirements. It is an unrestricted (large business) contract with a $50B ceiling. STARS III is the small business IT equivalent. OASIS+ covers professional services more broadly including IT but also non-IT disciplines."
-          },
-          {
-            id: 'q5',
-            question: "The Economy Act (31 U.S.C. § 1535) is relevant to assisted acquisitions because it:",
-            options: [
-              'Limits the total value of task orders under any GWAC|||Incorrect. There is no universal statutory cap on GWAC total value â individual GWACs have their own ceiling values set at award.',
-              'Provides statutory authority for one agency to procure services or supplies from another federal agency|||Correct. The Economy Act (31 U.S.C. 1535) authorizes interagency acquisitions â one agency using another agency\'s contracting resources or purchasing on their behalf.',
-              'Requires competition for all orders over $350K|||Incorrect for the Economy Act specifically. The Economy Act governs the relationship between federal agencies in interagency acquisitions â it does not set competition thresholds. Competition requirements at the ordering level are governed by the individual GWAC\'s terms and FAR 16.505.',
-              'Prohibits the use of GWACs for classified requirements'
-            ],
-            correct: 1,
-            explanation: "The Economy Act authorizes federal agencies to request goods or services from other federal agencies (the \"servicing agency\"). This is the legal foundation for arrangements like using FEDSIM or AAS-D — the customer agency uses Economy Act authority to have GSA conduct the acquisition on its behalf, reimbursing GSA for costs and fees."
-          },
-          {
-            id: 'q6',
-            question: "AAS-D (Assisted Acquisition Services — Defense) is specifically designed to serve:",
-            options: [
-              'Civilian agencies only|||Incorrect for AAS-D. AAS-D is specifically a defense-focused assisted acquisition service. DoD components regularly use AAS-D to leverage GSA\'s contracting expertise.',
-              'DoD agencies requiring assisted acquisition support, particularly for IT and professional services|||Correct. AAS-D serves DoD customers who need a skilled contracting office to manage acquisitions on their behalf â particularly valuable for program offices that lack acquisition expertise or contracting capacity.',
-              'Small businesses seeking to enter the defense market|||Incorrect. AAS-D is a customer-facing service for government agencies â not a vehicle for small businesses to enter the market. Small businesses participate as contractors; AAS-D is used by government agencies as the buyer-side mechanism.',
-              'Foreign military sales programs only'
-            ],
-            correct: 1,
-            explanation: "AAS-D is GSA's defense-focused assisted acquisition service that works specifically with DoD components. It has deep expertise in DFARS requirements, security requirements, and defense-specific contract structures. DoD program offices use AAS-D when they need acquisition support for requirements suited to existing GWACs."
-          },
-          {
-            id: 'q7',
-            question: "What is the primary compliance risk when using a GWAC like OASIS+?",
-            options: [
-              'Paying too high a price due to lack of competition|||Incorrect as primary GWAC risk. GWACs are pre-competed vehicles. The primary ordering-level risks are: scope creep (ordering work outside the GWAC\'s scope), improper use of the vehicle, and bypassing fair opportunity requirements.',
-              'Placing task orders for work outside the scope of the GWAC base contract|||Correct. This is the most legally significant risk when using GWACs. A task order placed for work outside the scope of the base IDIQ constitutes an unauthorized procurement â potentially triggering a protest or legal challenge.',
-              'Failing to meet small business goals|||Correct. Many GWACs have small business set-aside pools. Ordering agencies that consistently bypass small business pools may face scrutiny from the SBA and their agency\'s Office of Small Business Programs.',
-              'Exceeding the ordering period without an extension'
-            ],
-            correct: 1,
-            explanation: "The primary GWAC compliance risk is out-of-scope task orders — placing work that doesn't fit within the GWAC's established scope. This is the most common IG audit finding on GWACs and can result in orders being voided and requiring re-procurement. Every task order must be scope-checked against the GWAC's Statement of Objectives before placement."
-          },
-          {
-            id: 'q8',
-            question: "STARS III is best characterized as:",
-            options: [
-              'A large-business IT GWAC for complex solutions|||Correct for ALLIANT 2. ALLIANT 2 is a GSA GWAC for complex IT solutions, limited to large businesses. ALLIANT 3 is in procurement as of 2024. ALLIANT 2 Small Business is the companion vehicle. These vehicles cover IT services, systems integration, cybersecurity, and cloud solutions.',
-              'A small business IT GWAC with 8(a), WOSB, SDVOSB, and HUBZone pools|||Correct for ALLIANT 2 Small Business or SEWP V small business. These GWACs organize small business participation into socioeconomic pools: 8(a) (SBA-certified disadvantaged businesses), WOSB (women-owned), SDVOSB (service-disabled veteran-owned), and HUBZone.',
-              'A professional services GWAC for all service disciplines|||Correct for OASIS+. OASIS+ is GSA\'s flagship professional services GWAC covering management consulting, program management, engineering, logistics, data analytics, and more â for both large and small businesses across multiple pools.',
-              'A GSA Schedule for commercial IT products'
-            ],
-            correct: 1,
-            explanation: "STARS III (Streamlined Technology Acquisition Resources for Services) is GSA's small business IT GWAC. It includes pools for different small business categories: 8(a) Small Disadvantaged Business, Woman-Owned Small Business (WOSB), Service-Disabled Veteran-Owned Small Business (SDVOSB), and HUBZone. It's a key vehicle for meeting small business goals on IT programs."
-          },
-          {
-            id: 'q9',
-            question: "When should a DoD PM recommend using FEDSIM rather than using a GWAC directly?",
-            options: [
-              'When the acquisition is under $350K and competition is not required|||Incorrect. AAS-D is used for significant acquisitions â particularly complex services benefiting from GSA\'s contracting expertise. Small purchases under the SAT would typically be handled through simplified acquisition or purchase card.',
-              'When the program office\'s contracting office lacks capacity, expertise, or bandwidth to run the full acquisition|||Correct. This is the primary driver for using AAS-D. Program offices with technical expertise but limited acquisition personnel benefit from GSA\'s experienced acquisition teams managing the process.',
-              'When competition is not desired to protect the incumbent contractor|||Incorrect. AAS-D does not facilitate non-competitive awards as a matter of policy. Any acquisition through AAS-D must still comply with competition requirements.',
-              'When the requirement exceeds the GWAC ceiling'
-            ],
-            correct: 1,
-            explanation: "FEDSIM is the right choice when the program office contracting office doesn't have the resources or specialized expertise to run the acquisition effectively. FEDSIM brings experienced contracting professionals who manage the process end-to-end. The tradeoff is coordination overhead and fees — for programs with strong in-house contracting capacity, self-service GWAC use is typically faster and cheaper."
-          },
-          {
-            id: 'q10',
-            question: "An Interagency Acquisition Agreement (IAA) between a DoD program office and GSA for OASIS+ use primarily documents:",
-            options: [
-              'The technical requirements for the specific task order|||Correct. The Task Order SOW/PWS/SOO describes what the contractor will actually do â the scope, deliverables, performance standards, and period of performance for that specific task order.',
-              'The mutual terms under which the ordering agency will use the GWAC, including funding transfer and responsibilities|||Correct. An Interagency Agreement (IAA) â including a MIPR or Economy Act Order â establishes the terms of the relationship between the ordering agency and the contracting agency, covering funding transfer and responsibilities.',
-              'The competition strategy for individual task orders|||Correct. The Acquisition Plan or Task Order Acquisition Strategy defines how the agency will conduct fair opportunity for a specific task order â factors, evaluation methodology, oral presentation requirements, past performance approach, and price reasonableness determination.',
-              'The contractor team members who will perform the work'
-            ],
-            correct: 1,
-            explanation: "An IAA (often in the form of a Reimbursable Work Order or Economy Act agreement) between the ordering agency and GSA establishes the terms for the assisted acquisition or GWAC use — including funding transfer, fee arrangements, roles and responsibilities, and performance expectations. It must be in place before task orders are placed under the assisted acquisition arrangement."
-          }
-        ]
-      }
-,
-{
-        id: 'contracts-2',
-        title: 'Source Selection: How the Government Chooses',
-        duration: '15 min',
-        description: 'Walk through the source selection process from RFP to award decision.',
-        keyTerms: [
-          { term: 'RFP', definition: 'Request for Proposal — the government\'s solicitation document inviting offerors to submit proposals.' },
-          { term: 'SSEB', definition: 'Source Selection Evaluation Board — the team that evaluates proposals against established criteria.' },
-          { term: 'SSAC', definition: 'Source Selection Advisory Council — senior advisory body that reviews SSEB results.' },
-          { term: 'SSA', definition: 'Source Selection Authority — the individual with authority to make the award decision.' },
-          { term: 'LPTA', definition: 'Lowest Price Technically Acceptable — award to the lowest priced proposal that meets minimum requirements.' },
-          { term: 'Best Value', definition: 'Award to the proposal offering the best combination of technical merit and price.' },
-          { term: 'Past Performance', definition: 'An evaluation factor assessing the offeror\'s track record on similar contracts.' },
-        ],
-        content: [
-          {
-            type: 'text',
-            heading: "The Source Selection Process",
-            body: "Source selection is the competitive process by which the government evaluates proposals and selects a contractor. For most DoD acquisitions above the simplified acquisition threshold ($350K), competition is required by the Competition in Contracting Act (CICA). The process must be objective, documented, and defensible — any deviation from the stated evaluation criteria is grounds for a GAO bid protest."
-          },
-          {
-            type: 'list',
-            heading: "Source Selection Steps",
-            items: [
-              'Step 1: Develop Acquisition Strategy — contract type, competition, evaluation approach|||The Acquisition Strategy is approved by the MDA/CO supervisor before the solicitation is drafted. It documents contract type rationale, competition approach (full and open, set-aside, or sole source), evaluation methodology (LPTA vs. BVTO), and estimated schedule. For large acquisitions, an RFI or industry day often precedes the strategy.',
-              'Step 2: Draft RFP — Sections L (instructions) and M (evaluation factors) are most critical|||Inconsistency between Section L (how to prepare proposals) and Section M (how they\'ll be evaluated) is the most common protest ground. Every evaluation factor in Section M must have corresponding instructions in Section L. The Source Selection Plan (SSP), written before RFP release, defines criteria, weights, rating scales, and procedures.',
-              'Step 3: Issue Draft RFP — industry review and comment period (30-45 days typical)|||Draft RFP releases are best practice for complex acquisitions. Industry comments improve clarity, identify unrealistic requirements, and reduce protest risk. The government reviews all comments and provides a written responses or incorporates changes. Programs that skip draft RFP release often face more protests and more scope ambiguity post-award.',
-              'Step 4: Issue Final RFP — proposals due date typically 45-60 days out|||Proposal preparation time must be adequate for the complexity of the requirement. FAR 5.203 recommends minimum 30 days for large/complex acquisitions. Tight timelines disadvantage smaller firms without large proposal teams and increase the risk of non-compliant proposals from otherwise qualified contractors.',
-              'Step 5: SSEB Evaluation — each proposal scored against stated evaluation factors|||The Source Selection Evaluation Board (SSEB) applies the stated evaluation criteria consistently across all proposals. Each evaluator documents their findings with specific references to proposal content. Undocumented findings, subjective assessments without proposal citations, and inconsistent application of criteria are the most common protest-sustaining evaluation errors.',
-              'Step 6: Competitive Range Determination — eliminate clearly unacceptable proposals|||The competitive range includes all proposals that have a reasonable chance of award. Excluding a proposal from the competitive range is a significant decision — it ends that offeror\'s participation. The CO documents the rationale. Offerors excluded from competitive range are entitled to a post-exclusion debriefing.',
-              'Step 7: Discussions (if applicable) — exchanges with offerors in competitive range|||Discussions (different from clarifications) allow the government to identify deficiencies and weaknesses and give offerors a chance to revise. If discussions are opened with any offeror, they must be opened with all offerors in the competitive range. The CO must not engage in auction-style negotiations or reveal competitor pricing.',
-              'Step 8: Final Proposal Revisions — offerors submit best and final offers (BAFOs)|||After discussions, the CO issues a Final Proposal Revision (FPR) request establishing a common deadline for all offerors to submit their best revised proposals. Offerors can only improve proposals — they cannot worsen terms or retract revisions already submitted. This is typically the highest-pressure phase of the source selection.',
-              'Step 9: SSAC Review — advisory recommendation to the SSA|||The Source Selection Advisory Council (SSAC) reviews the SSEB findings and prepares an independent comparative assessment with a recommended award decision. The SSAC is advisory only — the SSA is not bound by the recommendation. For large acquisitions, the SSAC provides a valuable independent check on evaluation consistency.',
-              'Step 10: SSA Award Decision — documented source selection decision statement|||The Source Selection Decision Document (SSDD) is the legal foundation for the award. It must document the rationale for each significant tradeoff — why the technical advantages of the selected offeror justify any price premium over a lower-priced alternative. A weak SSDD is the government\'s most common vulnerability in bid protests.',
-            ]
-          },
-          {
-            type: 'table',
-            heading: "LPTA vs. Best Value Tradeoff",
-            headers: ['Approach', 'When to Use', 'Risk', 'Example'],
-            rows: [
-              ['LPTA', 'Well-defined requirements; commoditized services; minimal performance variation', 'Risk of minimum acceptable quality', 'Janitorial services, standard IT help desk'],
-              ['Best Value Tradeoff', 'Complex programs; performance matters; clear benefit to paying more', 'More subjective; higher protest risk', 'Software development, systems integration'],
-              ['Value Adjusted Total Evaluated Price (VATEP)', 'When non-cost factors can be monetized', 'Requires thorough methodology', 'Logistics support with reliability trade-offs'],
-            ]
-          },
-          {
-            type: 'callout',
-            heading: "The \"Equal\" Evaluation Obligation",
-            body: "Every offeror must be evaluated against the same factors, using the same standards. If the SSEB gives credit to offeror A for a feature not mentioned in Section L, and the same feature is overlooked in offeror B's proposal, that is a basis for a successful bid protest. Disciplined source selection panels document every finding."
-          },
-          {
-            type: 'tip',
-            heading: "Protest Risk Management",
-            body: "GAO bid protest rates have risen steadily. Best practices to minimize protest risk: use clear, specific evaluation criteria in Section M; document all evaluation findings with specific proposal citations; ensure debriefs are conducted professionally within 5 days of request; never deviate from stated evaluation factors regardless of CO or PM preference."
-          },
-          {
-          type: 'text' as const,
-          level: 'intermediate' as const,
-          heading: 'Shaping the Solicitation: What Mid-Career PMs Can Control',
-          body: 'By the time an RFP is released, the source selection outcome is largely determined by the evaluation criteria. Mid-career PMs who engage early in PWS/SOW development and Section M criteria weighting have the most influence. Push for evaluation factors that discriminate on the qualities that matter: management approach (how does the contractor plan to staff and manage the program?), cost realism (does their estimate reflect what the work actually costs?), and relevant past performance (not just any past performance). Weight price lower on high-complexity development work — the cheapest proposal is rarely the best value. The most common mistake: writing evaluation criteria so broad they discriminate on nothing, leading to a selection driven entirely by price.',
-        },
-        {
-          type: 'callout' as const,
-          level: 'advanced' as const,
-          heading: 'Protest-Proofing Your Source Selection',
-          body: 'GAO sustains about 15-20% of bid protests it reviews. Most sustained protests result not from wrong decisions, but from inadequate documentation of correct decisions. Senior PMs preparing for a source selection must ensure: (1) the SSDD documents the SSA\'s independent judgment — not just a recitation of SSAC recommendations; (2) every strength and weakness is documented with specific proposal references; (3) the best-value tradeoff explicitly states why higher price is (or is not) worth better technical factors; (4) all offerors in the competitive range received equal treatment during discussions. The most protest-prone decision is the competitive range determination — excluding an offeror requires thorough documentation of why their proposal has no realistic chance of award. Assume every decision will be reviewed by a GAO attorney.',
-        },
-        ],
-      quiz: [
-          {
-            id: 'q1',
-            question: "Which RFP section describes the evaluation factors and their relative importance used to select the contractor?",
-            options: ['Section L', 'Section M', 'Section C', 'Section H'],
-            correct: 1,
-            explanation: "Section M of a DoD RFP contains the evaluation factors and their relative importance (e.g., Technical > Past Performance > Price, or they may be listed as equal). Section L contains the instructions for proposal preparation. Offerors must directly address Section L requirements, knowing they'll be evaluated against Section M."
-          },
-          {
-            id: 'q2',
-            question: "LPTA (Lowest Price Technically Acceptable) is most appropriate when:",
-            options: ['The acquisition is for a complex, technically challenging development program', 'Requirements are well-defined and there is minimal performance benefit to paying more', 'Past performance is the most important evaluation factor', 'International competition is expected'],
-            correct: 1,
-            explanation: "LPTA is used when requirements can be expressed precisely and performance above the minimum offers no added value. It's common for commodity services (janitorial, food service, standard IT maintenance). For complex programs where better performance justifies higher cost, Best Value Tradeoff is more appropriate."
-          },
-          {
-            id: 'q3',
-            question: "The Source Selection Authority (SSA) is the individual who:",
-            options: ['Evaluates proposals on the SSEB', 'Has final authority to make the contract award decision', 'Chairs the Source Selection Advisory Council', 'Prepares the government\'s independent cost estimate'],
-            correct: 1,
-            explanation: "The SSA is the senior official with final authority to make the source selection decision and execute the award. Depending on program value, the SSA may be the CO, PEO, or even a senior Service official. The SSA reviews the SSAC recommendation but is not bound by it — and must document the rationale for any deviation."
-          },
-          {
-            id: 'q4',
-            question: "A contractor files a GAO bid protest after losing a contract award. What is the standard GAO resolution timeframe?",
-            options: ['30 days', '60 days', '100 days', '180 days'],
-            correct: 2,
-            explanation: "GAO is required to issue a decision within 100 days of the protest filing. An express option exists for 65 days. During this time, performance on the protested contract is typically suspended unless the agency overrides the stay. This 100-day window creates significant program schedule risk."
-          },
-          {
-            id: 'q5',
-            question: "The Competition in Contracting Act (CICA) requires competition for most DoD acquisitions above what threshold?",
-            options: ['$10,000', '$25,000', '$350,000 (Simplified Acquisition Threshold)', '$1,000,000'],
-            correct: 2,
-            explanation: "CICA requires full and open competition for acquisitions above the Simplified Acquisition Threshold (SAT), currently $350,000. Below the SAT, simplified acquisition procedures apply. Sole-source awards above the SAT require a written Justification and Approval (J&A)."
-          },
-          {
-            id: 'q6',
-            question: "During source selection, the Competitive Range Determination is used to:",
-            options: ['Set the government\'s should-cost estimate range', 'Identify proposals with a reasonable chance of award to focus discussions', 'Determine whether LPTA or Best Value applies', 'Establish the price range for negotiations'],
-            correct: 1,
-            explanation: "The Competitive Range Determination (FAR 15.306) identifies which offerors have a reasonable chance of being selected for award, allowing the government to focus discussions on viable competitors. Proposals outside the competitive range are eliminated. However, COs must document this decision carefully as exclusions are a common protest basis."
-          },
-          {
-            id: 'q7',
-            question: "Discussions during source selection (FAR 15.306) must be conducted with:",
-            options: ['Only the incumbent contractor', 'All offerors, regardless of technical rating', 'All offerors within the competitive range equally', 'Only offerors whose price is within 10% of the lowest bid'],
-            correct: 2,
-            explanation: "FAR 15.306 requires that if discussions are held, they must be conducted with all offerors in the competitive range. The government must address significant weaknesses or deficiencies with each offeror. Engaging only certain offerors is a violation and a strong basis for a successful protest."
-          },
-          {
-            id: 'q8',
-            question: "What is a \"best value tradeoff\" analysis primarily used to determine?",
-            options: ['Which offeror has the lowest cost per unit', 'Whether the additional technical merit of a higher-priced proposal justifies the price premium', 'The maximum price the government is willing to pay', 'The government\'s should-cost estimate'],
-            correct: 1,
-            explanation: "Best Value Tradeoff analysis weighs technical merit, past performance, and price against each other. The SSA must document that any price premium paid over the lowest-priced technically acceptable offer is justified by demonstrably superior technical or performance features."
-          },
-          {
-            id: 'q9',
-            question: "A offeror requests a debriefing after losing a source selection. The government is required to provide the debriefing within:",
-            options: ['5 business days of the request', '10 business days of request', '30 calendar days of award', 'Only if required by statute'],
-            correct: 0,
-            explanation: "FAR 15.505-15.506 requires that post-award debriefings be provided within 5 business days of the debriefing request. Timely, professional debriefs are critical — they help contractors improve future proposals and reduce protest likelihood by explaining the award rationale."
-          },
-          {
-            id: 'q10',
-            question: "The SSEB (Source Selection Evaluation Board) evaluates proposals against which established document?",
-            options: ['The government\'s cost estimate', 'The evaluation criteria published in Section M of the RFP', 'The offeror\'s past performance database only', 'The program office\'s internal scoring matrix not shared with offerors'],
-            correct: 1,
-            explanation: "The SSEB evaluates every proposal exclusively against the criteria and standards stated in Section M of the RFP. Using unstated criteria or changing the evaluation standard mid-process is a violation of FAR Part 15 and the basis for a successful protest. Consistency and documentation are the SSEB's most important obligations."
-          }
-        ]
-      },
-      {
-        id: 'contracts-3',
-        title: 'Contract Administration & COR Fundamentals',
-        duration: '14 min',
-        description: 'Learn how contracts are administered after award and the critical role of the COR.',
-        keyTerms: [
-          { term: 'ACO', definition: 'Administrative Contracting Officer — responsible for contract administration after award.' },
-          { term: 'DCMA', definition: 'Defense Contract Management Agency — the primary government agency for DoD contract administration.' },
-          { term: 'CDRL', definition: 'Contract Data Requirements List — the official list of data deliverables required under the contract.' },
-          { term: 'SOW', definition: 'Statement of Work — defines the technical requirements and work the contractor must perform.' },
-          { term: 'PWS', definition: 'Performance Work Statement — outcome-based work description focused on desired results, not methods.' },
-          { term: 'Constructive Change', definition: 'An informal action by the government that changes contract scope without a formal contract modification.' },
-        ],
-        content: [
-          {
-            type: 'text',
-            heading: "The Post-Award Phase",
-            body: "Contract award is not the end — it's the beginning of the most critical phase. The vast majority of cost growth, schedule delays, and disputes occur during contract administration, not before award. A program office that does excellent source selection but weak contract administration will still fail. Understanding the roles of the CO, ACO, COR, and DCMA is essential for any PM."
-          },
-          {
-            type: 'table',
-            heading: "Key Contract Administration Roles",
-            headers: ['Role', 'Responsibility', 'Key Authority'],
-            rows: [
-              ['PCO', 'Award and modification authority; contract terms and conditions', 'Only one who can change contract scope or price'],
-              ['ACO', 'Day-to-day administration; payments; contractor compliance', 'Can approve interim payments; suspend work'],
-              ['COR', 'Technical oversight; performance monitoring; CDRL acceptance', 'NO contract authority — advisory only to CO'],
-              ['DCMA', 'On-site contractor oversight; quality, delivery, and finance surveillance', 'Can withhold payment for non-conforming items'],
-            ]
-          },
-          {
-            type: 'warning',
-            heading: "The Constructive Change Trap",
-            body: "A \"constructive change\" occurs when a government action effectively changes the contract's scope, schedule, or cost without a formal contract modification. Common examples: a COR directing \"a little extra work,\" a PM verbally approving scope expansion, or government-caused delays. These are legally binding and can result in large, retroactive contractor claims. All changes must go through the CO via a formal contract modification (mod)."
-          },
-          {
-            type: 'list',
-            heading: "Critical COR Responsibilities",
-            items: [
-              'Monitor contractor performance against the PWS/SOW and CDRLs daily/weekly|||The COR is the government\'s eyes and ears on contract performance. Monitoring includes reviewing deliverables, attending status meetings, and verifying labor categories match the contract. Documentation is critical — undocumented COR observations have no legal standing in disputes or CPARS assessments.',
-              'Document all contractor communications — emails, meeting minutes, phone notes|||The contract file is a legal document. In a dispute or claim, the government\'s case rests on contemporaneous documentation. A COR who verbally agrees to a scope change without documentation has potentially created an unauthorized commitment — a legally binding obligation without contracting authority. Rule: if it\'s not in writing and in the file, it didn\'t happen.',
-              'Review and accept/reject deliverables within the specified timeframe|||Most contracts specify an acceptance period (e.g., 30 days). If the government doesn\'t accept or reject within that period, constructive acceptance may occur — the government is deemed to have accepted even without explicit action. This waives the right to reject on quality grounds. CORs must review promptly and document acceptance or provide written rejection with specific deficiencies cited.',
-              'Notify the CO immediately of any performance deficiencies, schedule slips, or scope issues|||The COR\'s notification obligation is immediate and in writing — verbal notifications don\'t create a legal record. The CO needs the documented notification to issue cure notices, show cause letters, or contract modifications. CORs who delay notification to avoid conflict give contractors time to dig deeper into performance problems.',
-              'Maintain a surveillance plan and daily/weekly surveillance records|||The Quality Assurance Surveillance Plan (QASP) defines how the COR monitors performance — what gets inspected, how often, and what the acceptance criteria are. Surveillance records must be detailed enough to support CPARS ratings and claims resolution. Spotty or absent records consistently disadvantage the government in disputes.',
-              'Never direct the contractor to do work not in the contract scope — that creates constructive changes|||A constructive change is a government-directed change to the contract that occurs without a formal modification. If the COR tells the contractor to "just add this" without CO authorization, the contractor may have a valid claim for additional compensation. The COR has no authority to change scope — only the CO does.',
-              'Track invoices against actual work performed; do not accept invoices for work not completed|||Invoice acceptance is a COR responsibility on many contracts. Accepting an invoice for work not performed or not accepted is improper payment — potentially a False Claims Act issue. The COR must verify deliverables are accepted, work is performed as described, and hours/materials are accurate before recommending payment.',
-            ]
-          },
-          {
-            type: 'callout',
-            heading: "CDRL Management",
-            body: "CDRLs (Contract Data Requirements Lists, DD Form 1423) are the formal mechanism for requiring data deliverables from contractors. A PM who fails to review CDRLs on time and provide Government Furnished Information (GFI) on schedule may inadvertently waive the government's right to reject substandard work or trigger an excusable delay claim. Every CDRL has a review period — track them religiously."
-          },
-          {
-            type: 'tip',
-            heading: "QASP and Surveillance",
-            body: "Every services contract should have a Quality Assurance Surveillance Plan (QASP). The QASP defines how the government will monitor performance, what metrics are tracked, and what constitutes acceptable performance. A well-executed QASP provides the documentation needed to support negative past performance ratings, withhold award fees, or terminate for cause."
-          },
-          {
-          type: 'text' as const,
-          level: 'intermediate' as const,
-          heading: 'COR Oversight of High-Risk Performance Areas',
-          body: 'Mid-career PMs must direct their COR\'s oversight efforts to the highest-risk contract areas — not just routine deliverable acceptance. Risk areas that warrant enhanced COR attention: (1) subcontractor performance (prime contractors often absorb subcontractor failures rather than escalating to the government, masking systemic problems); (2) key personnel substitutions (contractors routinely propose senior experts who disappear post-award — CORs must verify key personnel presence); (3) Government-Furnished Equipment (GFE) receipt and accountability; and (4) cybersecurity compliance under DFARS 252.204-7012. A COR who only reviews deliverables is missing 80% of performance risk. Build a COR surveillance plan that maps oversight activities to contract risk, not just to deliverable schedules.',
-        },
-        {
-          type: 'callout' as const,
-          level: 'advanced' as const,
-          heading: 'Cure Notices, Show Cause, and Termination for Default: The Escalation Ladder',
-          body: 'Senior PMs have a contract escalation ladder they must understand thoroughly. Cure Notice (FAR 49.607): when a contractor is in danger of default, the CO issues a cure notice giving typically 10 days to cure the condition. Show Cause Notice: when default appears imminent, requires contractor to explain why the contract should not be terminated. Termination for Default (T4D): the nuclear option — the government terminates, the contractor loses all rights to claim for termination costs, and the government can reprocure at the contractor\'s expense. T4D creates its own risks: contractors routinely convert T4D to Termination for Convenience through litigation by arguing the default was government-caused (weather, GFE delays, government-directed changes). Document government actions meticulously throughout performance — the paper trail determines whether T4D survives a challenge.',
-        },
-        ],
-      quiz: [
-          {
-            id: 'q1',
-            question: "Which individual is the ONLY person with authority to change a contract's scope, price, or delivery schedule?",
-            options: ['Program Manager', 'COR (Contracting Officer\'s Representative)', 'Contracting Officer (CO)', 'DCMA Quality Assurance Representative'],
-            correct: 2,
-            explanation: "Only a warranted Contracting Officer (CO) with appropriate authority has legal power to modify a contract. The PM, COR, and government technical personnel cannot direct changes to scope, price, or schedule. Doing so creates an unauthorized commitment and potential constructive change claim."
-          },
-          {
-            id: 'q2',
-            question: "DCMA (Defense Contract Management Agency) primarily provides which service to DoD?",
-            options: ['Contract award and source selection support', 'On-site contractor oversight including quality, delivery, and financial surveillance', 'Independent cost estimates for program offices', 'Legal review of contract disputes'],
-            correct: 1,
-            explanation: "DCMA provides post-award contract administration and on-site oversight at contractor facilities, including quality assurance, production surveillance, delivery monitoring, EVMS surveillance, and property management. They act as the government's eyes and ears at the contractor's facility."
-          },
-          {
-            id: 'q3',
-            question: "A constructive change claim may arise when:",
-            options: ['A CO issues a formal bilateral modification', 'A COR verbally directs the contractor to perform work beyond the contract scope', 'DCMA approves a contractor\'s quality plan', 'An offeror submits a proposal for additional work'],
-            correct: 1,
-            explanation: "A constructive change occurs when a government action — including informal direction from a COR or government technical personnel — effectively changes contract scope without a formal modification. The contractor can file a claim for the additional cost. All scope direction must go through the CO via formal contract modification."
-          },
-          {
-            id: 'q4',
-            question: "The Performance Work Statement (PWS) differs from a Statement of Work (SOW) in that a PWS:",
-            options: ['Lists every specific task the contractor must perform', 'Focuses on desired outcomes and performance standards rather than prescribing how work is done', 'Is only used for cost-plus contracts', 'Requires the contractor to use government-specified methods and procedures'],
-            correct: 1,
-            explanation: "A PWS defines the outcomes and standards the contractor must achieve, not the specific methods or procedures. This gives the contractor flexibility to innovate while holding them accountable for results. An SOW, by contrast, specifies exactly what tasks must be performed. PWS is required for performance-based services contracts."
-          },
-          {
-            id: 'q5',
-            question: "A CDRL (Contract Data Requirements List) is used to:",
-            options: ['List all government-furnished equipment provided to the contractor', 'Formally specify data deliverables the contractor must provide under the contract', 'Define the contract quality inspection criteria', 'Identify subcontractor qualifications required'],
-            correct: 1,
-            explanation: "CDRLs (DD Form 1423) are the contractually binding list of data deliverables — reports, technical documents, test plans, drawings — that the contractor must deliver. Each CDRL specifies the data item description (DID), frequency, format, and review period. Failure to track and respond to CDRLs is a common government oversight failure."
-          },
-          {
-            id: 'q6',
-            question: "What is a Quality Assurance Surveillance Plan (QASP) primarily used for?",
-            options: ['Contractor proposal evaluation during source selection', 'Defining how the government will monitor, measure, and document contractor performance', 'Approving contractor subcontracting plans', 'Setting contract award fee criteria'],
-            correct: 1,
-            explanation: "The QASP defines the government's plan for monitoring contract performance — what will be measured, how often, by whom, and what constitutes acceptable vs. unacceptable performance. A QASP is required for performance-based services contracts and provides the documentation baseline for past performance assessments and award fee decisions."
-          },
-          {
-            id: 'q7',
-            question: "A COR discovers a contractor has submitted an invoice for deliverables not yet completed. The COR should:",
-            options: ['Approve the invoice to maintain the contractor relationship', 'Reject the invoice and immediately notify the Contracting Officer with documentation', 'Ignore it and wait for the CO to review all invoices', 'Direct the contractor to complete the work and resubmit'],
-            correct: 1,
-            explanation: "CORs have a responsibility to verify work completion before approving invoices. Accepting invoices for work not performed is improper payment — potentially a fraud issue. The COR should reject the invoice, document the discrepancy, and immediately notify the CO so proper action can be taken."
-          },
-          {
-            id: 'q8',
-            question: "The Administrative Contracting Officer (ACO) differs from the Procuring Contracting Officer (PCO) in that the ACO:",
-            options: ['Has authority to award new contracts and modifications', 'Handles post-award administration including payments, contractor compliance, and closeout', 'Is responsible for source selection only', 'Reports directly to the program manager'],
-            correct: 1,
-            explanation: "The PCO focuses on pre-award activities (strategy, solicitation, negotiation, award) and significant modifications. The ACO handles ongoing contract administration after award — processing invoices, monitoring compliance, managing property, and handling routine modifications within delegated authority."
-          },
-          {
-            id: 'q9',
-            question: "A contractor misses a contractual delivery milestone due to a government delay in providing Government Furnished Equipment (GFE). This may entitle the contractor to:",
-            options: ['Termination for convenience', 'An excusable delay extension to the contract schedule', 'Increased profit on remaining work', 'Conversion to a cost-plus contract type'],
-            correct: 1,
-            explanation: "When government-caused events — like late delivery of GFE, late approval of drawings, or government-directed changes — impact the contractor's schedule, the contractor is generally entitled to an \"excusable delay\" — a schedule extension with no liability for delay damages. PMs must track GFE and GFI delivery dates carefully to avoid creating government-caused delays."
-          },
-          {
-            id: 'q10',
-            question: "Past Performance Assessments (PPAs) in the Contractor Performance Assessment Reporting System (CPARS) are important because:",
-            options: ['They determine the contractor\'s fee on the current contract', 'They become part of the contractor\'s official record and are used in future source selections', 'They trigger mandatory audits by DCAA', 'They are only used to document contractor failures'],
-            correct: 1,
-            explanation: "CPARS records are used in future source selections as the past performance evaluation factor. Both positive and negative assessments follow contractors for 3 years. CORs and PMs have a legal and ethical obligation to complete CPARS assessments accurately and on time — they are the government's institutional memory of contractor performance."
-          }
-        ]
-      },
-      // ── NEW LESSON: Contracts-4 (Contracts vs. Task Orders — Fundamental) ──
-      {
-        id: 'contracts-6',
-        title: 'Modifications, REAs & Claims: When Contracts Change',
-        duration: '22 min',
-        description: 'Master contract modifications, constructive changes, Requests for Equitable Adjustment, and the claims process — the most contentious and costly aspects of contract administration.',
-        keyTerms: [
-          { term: 'Bilateral Modification', definition: 'A contract change signed by both the contractor and the contracting officer. Used for definitized changes, price adjustments, and scope changes both parties agree to.' },
-          { term: 'Unilateral Modification', definition: 'A contract change signed only by the contracting officer, using a contract authority clause (e.g., Changes clause, stop-work order, exercise of option). Contractor may disagree but must perform.' },
-          { term: 'Changes Clause', definition: 'FAR 52.243-1 through 52.243-4 — authorizes the CO to direct changes within the general scope of the contract. Contractor must perform the change; has right to an equitable adjustment.' },
-          { term: 'Constructive Change', definition: 'A change that is not formally directed but results from government action or inaction that effectively changes the contractor\'s work. Examples: defective specifications, government-caused delays, over-inspection.' },
-          { term: 'REA', definition: 'Request for Equitable Adjustment — a contractor\'s formal request for a contract price or schedule adjustment due to a government-directed or constructive change. Precursor to a claim.' },
-          { term: 'Claim', definition: 'A written demand by a contractor to the CO for payment of a specific sum, adjustment to contract terms, or other relief — subject to the Contract Disputes Act. Claims over $100K must be certified.' },
-          { term: 'Definitization', definition: 'The process of negotiating and finalizing the price and terms of an undefinitized contract action (UCA) — converting a letter contract or other interim vehicle to a fully priced contract.' },
-          { term: 'UCA', definition: 'Undefinitized Contract Action — a contract where work begins before price is agreed. Risky for government — contractor has little incentive to control costs before definitization.' },
-          { term: 'Contract Disputes Act', definition: '41 U.S.C. § 7101 et seq. — establishes the process for resolving government contract disputes, including CO Final Decisions, ASBCA appeals, and Court of Federal Claims.' },
-          { term: 'ASBCA', definition: 'Armed Services Board of Contract Appeals — administrative tribunal that hears contractor appeals of Contracting Officer Final Decisions on contract disputes.' },
-        ],
-        content: [
-          {
-            type: 'text',
-            heading: 'Why Contract Changes Are Every PM\'s Biggest Financial Risk',
-            body: 'The initial contract price is a starting point — not the final cost. On complex defense programs, contract modifications routinely add 20-50% to the original contract value. Every undefinitized UCA, every government-caused delay, every specification change, every constructive change creates entitlement for the contractor to more money. PMs who do not understand modification authority, REA management, and claims risk losing budget discipline entirely. The contractors\' contracts and claims departments are professional — PMs must be equally sophisticated.',
-          },
-          {
-            type: 'table',
-            heading: 'Types of Contract Modifications — Know the Difference',
-            headers: ['Type', 'Who Signs', 'Authority', 'Common Use', 'Key Risk'],
-            rows: [
-              ['Bilateral Mod (SF30)', 'CO + Contractor', 'Mutual agreement', 'Definitize changes; price supplements; scope adjustments', 'Scope creep if poorly scoped; waiver of claims if "accord & satisfaction" language added'],
-              ['Unilateral Mod — Change Order', 'CO only', 'Changes Clause (FAR 52.243-1)', 'Direct contractor to change work; price to be negotiated after', 'Contractor has 30 days to submit REA; undefinitized cost risk grows over time'],
-              ['Unilateral Mod — Admin', 'CO only', 'Administrative necessity', 'Correct errors, change COR, update addresses, issue/modify options', 'Low risk if truly administrative; never use to sneak in scope changes'],
-              ['Letter Contract / UCA', 'CO + Contractor', 'FAR 16.603 / DFARS 217.74', 'Begin urgent work before price is agreed; requires definitization schedule', 'Highest risk — contractor bills costs with limited incentive to control; DFARS requires definitization within 180 days'],
-            ],
-          },
-          {
-            type: 'text',
-            heading: 'The Changes Clause — Your Most Important Tool and Risk',
-            body: 'The Changes clause (FAR 52.243-1 for fixed-price supply, 52.243-2 for cost-reimbursable, etc.) is one of the most powerful tools in government contracting. It allows the CO to unilaterally direct changes to the contract\'s technical requirements, delivery schedule, place of performance, or other specified areas — without the contractor\'s consent. The contractor must perform. But the Changes clause also creates the contractor\'s entitlement to an equitable adjustment for any change that increases cost or time. The PM must ensure every directed change is formally documented — verbal direction to "just go do it" is a constructive change waiting to happen.',
-          },
-          {
-            type: 'callout',
-            heading: 'Constructive Changes — The Silent Budget Killer',
-            body: 'A constructive change is not a formal directive — it is a government action or inaction that effectively changes the contractor\'s work without formal paperwork. Common examples: Government-issued specifications that turn out to be defective (requiring rework); CO over-inspection that goes beyond contract standards; Government delay in furnishing data, GFE, or approvals; Government interference with contractor methods of performance; Informal technical direction from a COR or Government engineer that exceeds their authority. The contractor can pursue an REA or claim for a constructive change years after the work was performed. The best defense is meticulous daily documentation of all government-contractor interactions.',
-          },
-          {
-            type: 'formula',
-            heading: 'The REA Process — Timeline and Requirements',
-            formula: 'TRIGGER: Government directs change (formal or constructive)\n\nSTEP 1: Contractor submits REA\n  → Must include: Factual basis (what changed), legal entitlement (what clause), quantum (how much $)\n  → No specific time limit — but best practice is 30-60 days after the triggering event\n  → Informal REAs: "We think we\'re entitled" without full cost detail\n  → Formal REAs: Full cost proposal with certified cost/pricing data if >$2M\n\nSTEP 2: Government review\n  → ACO/CO reviews entitlement and quantum\n  → DCAA may audit the REA cost proposal if >$2M\n  → Government requests additional information as needed\n\nSTEP 3: Negotiate bilateral modification\n  → Both parties agree on price and schedule adjustment\n  → Signed bilateral mod definitizes the change\n  → IDEAL OUTCOME: Bilateral mod settles the REA; no claim necessary\n\nIF NEGOTIATIONS FAIL → REA converts to Claim:\n  → Contractor certifies the claim (if >$100K)\n  → CO issues Contracting Officer Final Decision (COFD) within 60 days\n  → Contractor may appeal: ASBCA (administrative) or Court of Federal Claims (judicial)\n  → Interest runs from date of claim submission at Renegotiation Act rate',
-            explanation: 'The earlier you can resolve an REA via bilateral modification, the better. Once an REA becomes a claim and enters dispute resolution, costs escalate for both sides and relationships deteriorate. PMs should push for rapid, fair REA resolution — a contractor that knows its REAs will be resolved promptly is less likely to inflate future REAs.',
-          },
-          {
-            type: 'text',
-            heading: 'Undefinitized Contract Actions (UCAs) — The Highest-Risk Modification',
-            body: 'A UCA (also called a letter contract or undefinitized change order) authorizes a contractor to begin work before the price is agreed. UCAs are necessary for urgent national security situations — but they create serious cost risk. A contractor performing under a UCA has no price ceiling and a weak incentive to control costs: they bill actual costs and know the government will pay them regardless of final negotiated price. DFARS 217.7404 requires definitization within 180 days of initial performance. In practice, many UCAs run for years undefinitized. For PMs, every open UCA is a financial exposure that should be tracked and closed as quickly as possible.',
-          },
-          {
-            type: 'table',
-            heading: 'Cardinal Change Doctrine — When a Change Becomes a Breach',
-            headers: ['Concept', 'Definition', 'Example', 'Consequence'],
-            rows: [
-              ['Within-Scope Change', 'Change is within the general scope of the original contract — CO can direct it unilaterally', 'Changing radar frequency range on a radar development contract', 'Contractor must perform; entitled to equitable adjustment'],
-              ['Cardinal Change', 'Change so significant it falls outside the general scope — essentially a new contract requirement', 'Changing a radar development contract to also develop a missile guidance system', 'Cannot be directed unilaterally; must be competed separately or bilateral agreement required'],
-              ['Change vs. Breach', 'An unauthorized direction that constitutes a cardinal change is a government breach — contractor can terminate for cause', 'CO directs contractor to provide services not contemplated anywhere in the original SOW', 'Contractor entitled to settlement as if for termination for convenience'],
-            ],
-          },
-          {
-            type: 'tip',
-            heading: 'The PM\'s Best Defense: An Active Change Control Board',
-            body: 'Every major program should have a formal Change Control Board (CCB) that reviews, approves, and documents every technical, schedule, or contract change before it is executed. The CCB records: what changed, why, who authorized it, and the estimated cost/schedule impact. Good CCB discipline prevents constructive changes (changes that happen informally), gives the PM visibility into cumulative scope growth, and provides documentation if a contractor\'s REA is disputed. PMs who run informal programs without CCBs routinely lose REA negotiations because they cannot reconstruct what was actually directed.',
-          },
-          {
-            type: 'warning',
-            heading: 'Accord & Satisfaction — Read Every Bilateral Mod Carefully',
-            body: 'When a contractor signs a bilateral modification that includes "accord and satisfaction" language (or "full and final settlement"), they may be waiving their right to any future claim related to that change. Contractors sometimes sign these under time pressure without fully recognizing the financial waiver. As a PM working with the CO, be aware that modification language matters legally. Conversely, if you want to definitively close out all claims associated with a change, including "full and final settlement" language is appropriate — just ensure both parties understand what they are agreeing to.',
-          },
-          {
-          type: 'text' as const,
-          level: 'intermediate' as const,
-          heading: 'Constructive Changes: The Most Expensive Undocumented Government Actions',
-          body: 'A constructive change occurs when government actions — without a formal modification — effectively change the contract\'s scope, schedule, or performance requirements. Examples: a government engineer verbally directing the contractor to add features not in the SOW; a COR demanding deliverables in a format not specified in the contract; unreasonable inspection failures that require rework not called for by contract quality standards. Contractors document every instance and compile them into REAs at contract closeout. Mid-career PMs prevent constructive changes by enforcing a single communication protocol: all direction goes through the CO, all informal guidance is labeled as "information only, not direction," and CORs are trained that they cannot direct scope changes. Track every verbal exchange with contractors at the technical level.',
-        },
-        {
-          type: 'callout' as const,
-          level: 'advanced' as const,
-          heading: 'Armed Services Board of Contract Appeals: What Senior PMs Need to Know',
-          body: 'When REAs become claims and claims become disputes, they go to the Armed Services Board of Contract Appeals (ASBCA) or the Court of Federal Claims. Senior PMs are rarely ASBCA participants personally, but their decisions — and their documentation — become the evidence. ASBCA cases routinely turn on: (1) whether government direction was communicated in writing or only verbally; (2) whether the contractor provided timely notice of a changed condition (failure to provide REQ notice waives the right to recover); (3) whether government delay was "excusable" (sovereign acts, weather) or "compensable" (government failure to perform its obligations). Build a file culture from day one: every significant decision in writing, every government-caused delay documented with specific dates and contract references. The ASBCA judge reading your file 5 years from now is your actual audience.',
-        },
-        ],
-      quiz: [
-          {
-            id: 'q1',
-            question: 'Which type of contract modification requires signatures from BOTH the contracting officer and the contractor?',
-            options: ['Change order', 'Administrative modification', 'Bilateral modification', 'Stop-work order'],
-            correct: 2,
-            explanation: 'A bilateral modification (Standard Form 30) is executed by both the CO and the contractor, typically reflecting a mutual agreement on scope, price, or schedule changes. Change orders and stop-work orders are unilateral modifications — signed only by the CO using an existing contract authority clause.',
-          },
-          {
-            id: 'q2',
-            question: 'A government program manager verbally tells a contractor\'s engineer to "add this new feature while you\'re at it" without a formal contract modification. This most likely creates:',
-            options: ['A valid contract change under the Changes clause', 'A constructive change — the contractor may pursue an REA based on government-directed work outside the contract SOW', 'No obligation since it was not in writing', 'An unauthorized commitment by the contractor'],
-            correct: 1,
-            explanation: 'Verbal direction to perform out-of-scope work without a formal modification is a classic constructive change. The contractor performed work beyond the contract requirements based on government direction. Even without a formal mod, the contractor has entitlement to an equitable adjustment. This is why COR authorities are strictly limited — informal technical direction can bind the government to pay for work without contractual authority.',
-          },
-          {
-            id: 'q3',
-            question: 'An Undefinitized Contract Action (UCA) must be definitized within how many days under DFARS 217.7404?',
-            options: ['30 days', '90 days', '180 days', '365 days'],
-            correct: 2,
-            explanation: 'DFARS 217.7404-3 requires UCAs to be definitized within 180 days of issuance of the authorization to proceed, or by the time 50% of the work is completed — whichever comes first. In practice, many UCAs remain undefinitized beyond this requirement. Every day a UCA is undefinitized, the government faces increasing cost risk because the contractor is billing actual costs with no negotiated price ceiling.',
-          },
-          {
-            id: 'q4',
-            question: 'A contractor submits an REA that grows into a formal claim of $2.5M. For the claim to be valid, it must be:',
-            options: ['Submitted within 30 days of the change', 'Certified by a senior company official and submitted as a written demand to the CO', 'Approved by DCAA before submission', 'Accompanied by a technical evaluation from DCMA'],
-            correct: 1,
-            explanation: 'Under the Contract Disputes Act (41 U.S.C. § 7103), claims exceeding $100K must be certified by an authorized contractor representative that the claim is made in good faith, supporting data are accurate and complete to the best of their knowledge, and the amount requested accurately reflects the contract adjustment believed to be due. False certification can expose the contractor to criminal liability under the False Claims Act.',
-          },
-          {
-            id: 'q5',
-            question: 'A "cardinal change" is significant because:',
-            options: ['It requires a 30-day waiting period before performance', 'It falls outside the general scope of the contract and cannot be directed unilaterally — it may constitute a breach', 'It always requires Congressional approval', 'It must be competed under full and open competition'],
-            correct: 1,
-            explanation: 'The cardinal change doctrine (developed through case law at the ASBCA and Court of Federal Claims) holds that changes so substantial they alter the nature of the bargained-for contract cannot be directed unilaterally under the Changes clause. Doing so constitutes a government breach, and the contractor is entitled to breach remedies. For PMs, this means very large scope additions should be scrutinized for cardinal change risk before direction is issued.',
-          },
-          {
-            id: 'q6',
-            question: 'A Contracting Officer Final Decision (COFD) in response to a contractor claim must be issued within:',
-            options: ['30 days of the claim', '60 days of the claim (or reasonable time with notification for complex claims)', '180 days', 'There is no time requirement'],
-            correct: 1,
-            explanation: 'The Contract Disputes Act requires the CO to issue a Final Decision within 60 days of a certified claim, or within a reasonable time for more complex claims — provided the CO notifies the contractor of the anticipated decision date. If the CO fails to issue a COFD, the contractor may treat the inaction as a denial and appeal directly to the ASBCA or Court of Federal Claims (deemed denial).',
-          },
-          {
-            id: 'q7',
-            question: 'Which of the following is an example of a constructive change based on defective government specifications?',
-            options: ['The CO directs a formal change to the system\'s performance requirements', 'Government-provided technical specifications contain errors that cause the contractor to perform excessive rework to meet the actual requirement', 'The contractor voluntarily redesigns the system to improve performance', 'The CO exercises an option on the contract'],
-            correct: 1,
-            explanation: 'Defective government specifications are one of the most common sources of constructive changes. When the government provides faulty specs that the contractor relies on — only to find they are incorrect or impossible to meet — the extra work required to correct the problem is a constructive change entitling the contractor to an equitable adjustment. The government warrants the accuracy of specifications it provides (the "Spearin Doctrine," 248 U.S. 132 (1918)).',
-          },
-          {
-            id: 'q8',
-            question: 'A bilateral modification that includes "full and final settlement" language regarding all claims related to a change means:',
-            options: ['The contractor retains the right to pursue additional claims for hidden costs', 'The contractor waives their right to future claims arising from that change — an accord and satisfaction', 'DCAA must approve the settlement before it is final', 'The modification automatically triggers a DCMA review'],
-            correct: 1,
-            explanation: '"Accord and satisfaction" in a bilateral mod means both parties agree the modification fully resolves all claims arising from the specified change. Once signed, the contractor generally cannot pursue additional claims for that change. This is a powerful tool for closing out changes cleanly — but contractors sometimes sign without fully understanding the financial waiver implications.',
-          },
-          {
-            id: 'q9',
-            question: 'The ASBCA (Armed Services Board of Contract Appeals) has jurisdiction over:',
-            options: ['Pre-award bid protests by losing offerors', 'Contractor appeals of Contracting Officer Final Decisions (COFDs) on contract disputes', 'DCAA audit disputes between contractors and auditors', 'Congressional notification of Nunn-McCurdy breaches'],
-            correct: 1,
-            explanation: 'The ASBCA (and its civilian counterpart, the CBCA) hears contractor appeals of CO Final Decisions under the Contract Disputes Act. It is an administrative tribunal (not a federal court), but its decisions can be appealed to the Court of Appeals for the Federal Circuit. The alternative forum is the U.S. Court of Federal Claims, a judicial (Article III) court.',
-          },
-          {
-            id: 'q10',
-            question: 'A Change Control Board (CCB) on a major defense program primarily serves to:',
-            options: ['Review and approve DCAA audit findings before they are released', 'Document, review, and approve all technical and contractual changes before execution — preventing constructive changes and scope creep', 'Authorize program managers to exceed budget without congressional notification', 'Approve new hire requests for the program office'],
-            correct: 1,
-            explanation: 'A CCB provides the formal process for evaluating and approving changes to the baseline — technical, schedule, and contractual. Every proposed change is evaluated for cost/schedule impact before it is directed. This prevents informal, undocumented changes (constructive changes) and gives the PM a documented record of all directed changes — essential for defending against REAs that claim the government directed more work than the formal record shows.',
-          },
-          {
-            id: 'q11',
-            type: 'drag_order',
-            question: 'Place the REA-to-Claim process in the correct sequence:',
-            options: [],
-            correct: 0,
-            explanation: 'The process flows: triggering change → contractor submits REA → government review/DCAA audit of cost proposal → negotiation → bilateral mod (ideal resolution). If negotiation fails, the REA becomes a certified claim → CO issues Final Decision → contractor may appeal to ASBCA or Court of Federal Claims. Each step that advances past bilateral mod resolution increases cost and time for both parties.',
-            orderedItems: [
-              'Government directs change (formal or constructive)|||Correct. The changes clause process begins when the government directs a change â either through a formal written order under the Changes clause (FAR 52.243-1 through -4) or through constructive change (government actions that effectively change the contract without formal direction).',
-              'Contractor submits REA with entitlement and cost proposal|||Correct. The contractor submits a Request for Equitable Adjustment (REA) that establishes: (1) entitlement â the legal basis for why a change occurred, and (2) the cost/schedule impact. The REA is not a certified claim â it is a negotiation opener.',
-              'DCAA audits REA cost proposal (if >$2M)|||Correct. For cost proposals over $2M, DCAA typically audits the REA cost proposal to assess cost reasonableness, allocability, and allowability. The audit opinion gives the CO a basis for evaluating the contractor\'s claimed costs before negotiation.',
-              'CO and contractor negotiate equitable adjustment|||Correct. After DCAA audit (if applicable), the CO and contractor negotiate the amount and terms of the equitable adjustment â the change in contract price and/or schedule to account for the directed change.',
-              'Bilateral modification definitizes the change (ideal outcome)|||Correct. A bilateral modification (signed by both the CO and contractor) is the preferred outcome â it definitizes the change and prevents future disputes. Once signed, the contractor cannot re-open the REA for additional compensation.',
-              'If failed: REA converts to certified Claim; CO issues Final Decision|||Correct. If REA negotiation fails, the contractor may convert the REA to a certified Claim under the Contract Disputes Act (CDA). The CO issues a Contracting Officer\'s Final Decision (COFD), which can be appealed to the Armed Services Board of Contract Appeals (ASBCA) or the Court of Federal Claims.',
-            ],
-          },
-          {
-            id: 'q12',
-            type: 'drag_match',
-            question: 'Match each modification or change concept to its correct definition:',
-            options: [],
-            correct: 0,
-            explanation: 'These concepts form the vocabulary of contract changes. Bilateral mods require consent; unilateral mods do not. Constructive changes happen informally. UCAs are open-ended cost risks. Cardinal changes exceed what can be directed unilaterally. Understanding each distinction allows PMs to manage scope, cost, and legal exposure effectively.',
-            pairs: [
-              { left: 'Bilateral Modification', right: 'Requires signatures from both CO and contractor' },
-              { left: 'Constructive Change', right: 'Informal government direction or inaction that effectively changes the work' },
-              { left: 'UCA (Letter Contract)', right: 'Work begins before price is agreed; must be definitized within 180 days' },
-              { left: 'Cardinal Change', right: 'Change outside original scope; cannot be directed unilaterally; may be a breach' },
-            ],
-          },
-        ],
-      },
-      {
-        id: 'contracts-7',
-        title: 'A&AS, IDIQs, and GWACs: The Defense Vehicle Landscape',
-        duration: '18 min',
-        description: 'Master the full spectrum of defense contract vehicles — from IDIQ structures and fair opportunity rules to A&AS categories and GWACs that define how defense contractors win recurring work.',
-        keyTerms: [
-          { term: 'IDIQ', definition: 'Indefinite Delivery, Indefinite Quantity — a contract type that establishes a ceiling value and minimum guarantee, under which the government orders services or supplies via task or delivery orders.' },
-          { term: 'Single Award IDIQ', definition: 'An IDIQ where one contractor holds the vehicle and receives all task orders without further competition. Highest revenue certainty; hardest to win.' },
-          { term: 'MA-IDIQ', definition: 'Multiple Award IDIQ — the dominant defense contracting model. Multiple contractors hold the vehicle; task orders are competed among awardees under fair opportunity provisions (FAR 16.505).' },
-          { term: 'Fair Opportunity', definition: 'FAR 16.505 requirement that all MA-IDIQ awardees receive a fair opportunity to be considered for each task order. Exceptions are narrow and scrutinized.' },
-          { term: 'A&AS', definition: 'Advisory and Assistance Services — a formal acquisition category under FAR 37.2 covering management advisory functions, studies and analyses, and engineering and technical services.' },
-          { term: 'GWAC', definition: 'Government-Wide Acquisition Contract — a pre-competed IDIQ vehicle available to all federal agencies. Examples: OASIS+, CIO-SP4, Alliant 3, STARS III.' },
-          { term: 'GSA MAS', definition: 'GSA Multiple Award Schedule — allows contractors to sell pre-negotiated commercial products and services to federal agencies. A marketing platform, not a revenue guarantee.' },
-          { term: 'BPA', definition: 'Blanket Purchase Agreement — a simplified acquisition mechanism for recurring needs, established against an existing contract or GSA Schedule.' },
-          { term: 'MAC', definition: 'Multiple Award Contract — umbrella term for any contract vehicle where multiple awardees compete for individual task orders.' },
-          { term: 'A&AS-D', definition: 'Advisory and Assistance Services — Digital. Emerging subcategory covering digital engineering, DevSecOps support, and digital transformation advisory. Growing across Air Force and Space Force.' },
-          { term: 'OASIS+', definition: 'One Acquisition Solution for Integrated Services Plus — GSA\'s flagship professional services GWAC replacing the legacy OASIS vehicle. Covers complex professional services including program management, management consulting, and engineering.' },
-          { term: 'CIO-SP4', definition: 'Chief Information Officer Solutions and Partners 4 — NIH\'s GWAC for IT services and solutions. One of the most widely used GWACs across civilian and defense agencies.' },
-        ],
-        content: [
-          {
-            type: 'text',
-            heading: 'Why Vehicle Strategy Is Your Most Important BD Decision',
-            body: 'Before a single proposal is written, before a capture plan is built, the most consequential BD decision a defense contractor makes is which contract vehicles to pursue and hold. The vehicle you\'re on determines what opportunities you can see, which agencies you can serve, and whether you\'re competing in a pool of 3 contractors or 300. Winning a place on the right IDIQ vehicles is the infrastructure of a sustainable defense business — task order wins are built on top of it.',
-          },
-          {
-            type: 'table',
-            heading: 'Contract Vehicle Types — Know the Differences',
-            headers: ['Vehicle Type', 'Scope', 'Who Can Use', 'Entry Difficulty', 'Best For'],
-            rows: [
-              ['IDIQ (Agency-Specific)', 'Agency-specific requirements', 'Named awardees only', 'Moderate–High', 'Recurring work with target agency'],
-              ['GWAC', 'Government-wide', 'All federal agencies', 'High — rigorous qualification', 'IT, professional services across agencies'],
-              ['GSA MAS', 'Commercial items/services', 'All federal agencies', 'Low–Moderate', 'Commercial-type offerings, product sales'],
-              ['BPA', 'Agency/base-level recurring needs', 'Specific CO only', 'Low', 'Recurring small purchases, simplified acquisitions'],
-              ['OTA', 'R&D / Prototype only', 'Sponsoring agency', 'Moderate (consortium model)', 'Innovation, rapid prototyping under 10 U.S.C. § 4022'],
-            ],
-          },
-          {
-            type: 'text',
-            heading: 'Single Award vs. Multiple Award IDIQ — The Revenue Tradeoff',
-            body: 'The choice between single and multiple award structures reflects a fundamental government tradeoff between competition and efficiency. Single award IDIQs deliver maximum revenue certainty for the winner — but they require the government to demonstrate that only one firm is capable, which is increasingly difficult to defend. Multiple award IDIQs dominate the defense services landscape precisely because they maintain competition at the task order level while reducing the procurement overhead of re-competing each requirement from scratch.',
-          },
-          {
-            type: 'callout',
-            heading: 'Fair Opportunity Is the Rule — Exceptions Are Narrow',
-            body: 'Under FAR 16.505, the government must give all MA-IDIQ awardees a fair opportunity to be considered for every task order. The five exceptions — unusual urgency, only one awardee capable, public interest sole source, logical follow-on, and minimum order — are each legally constrained and routinely protested. Never assume an exception applies. If a competitor receives a task order without fair opportunity competition, GAO protest is a viable and often successful remedy.',
-          },
-          {
-            type: 'table',
-            heading: 'Single vs. Multiple Award IDIQ — Side by Side',
-            headers: ['Feature', 'Standalone Contract', 'Single Award IDIQ', 'Multiple Award IDIQ'],
-            rows: [
-              ['Competition Level', 'Full & Open or Set-Aside', 'Single competition at award', 'Competition at vehicle + each task order'],
-              ['Revenue Certainty', 'High (if awarded)', 'Very High', 'Moderate — depends on win rate'],
-              ['Entry Difficulty', 'Moderate to High', 'Very High', 'Moderate'],
-              ['Typical Duration', '1–5 years', '5–10 years', '5–10 years'],
-              ['BD Effort Post-Award', 'Low', 'Low', 'High — continuous task order competition'],
-              ['Common Use Cases', 'Unique, defined scope', 'Specialized capability, single source', 'Broad services, IT, professional services'],
-            ],
-          },
-          {
-            type: 'text',
-            heading: 'Advisory and Assistance Services (A&AS) — What It Means for Contractors',
-            body: 'A&AS is not just a label — it is a formal acquisition category under FAR 37.2 with regulatory implications for how contracts are structured, what personnel qualifications may be required, and how inherently governmental function boundaries are applied. Being categorized as A&AS often means higher scrutiny, more demanding performance standards, and greater government oversight of your personnel qualifications. But it also means access to some of the most stable, high-value recurring work in the defense space.',
-          },
-          {
-            type: 'list',
-            heading: 'The Three A&AS Subcategories — Know Yours',
-            items: [
-              'Management and Professional Support Services — program management support, financial management consulting, organizational studies, strategic advisory. This is where most large defense service firms compete.|||This subcategory covers program office support contracts — the analysts, program managers, financial advisors, and organizational consultants that work alongside government personnel. These are among the most sensitive A&AS contracts because contractors are often deeply embedded in government decision-making processes, raising inherently governmental function concerns.',
-
-              'Studies, Analyses, and Evaluations — research, assessments, analytical work products, independent evaluations. Requires demonstrated analytical methodology and cleared personnel for sensitive assessments.|||This covers FFRDC-type work performed by for-profit contractors: alternatives analyses, cost-benefit studies, program assessments, policy research. Contractors in this space must be especially careful about organizational conflicts of interest — if you evaluate a program for which your parent company is also bidding, that\'s a textbook OCI.',
-
-              'Engineering and Technical Services — support to acquisition programs including systems engineering, technical advice, test support, and logistics engineering. The backbone of major program office support contracts.|||This is the largest A&AS subcategory by dollar volume. SETA (Systems Engineering and Technical Assistance) contracts provide integrated engineering support to program offices. SETA contractors often have significant influence over requirements and acquisition strategy — which makes OCI management critical and inherently governmental function boundaries essential to enforce.',
-
-              'A&AS-D (Digital) — emerging Air Force/Space Force category covering digital engineering, DevSecOps support, software factory integration, and digital transformation advisory. Contractors without demonstrated digital credentials will find these task orders increasingly difficult to compete.|||A&AS-D reflects the DAF\'s push toward digital-first acquisition. Contractors must demonstrate Platform One familiarity, IL4/IL5 cloud delivery experience, and DevSecOps credentials. This category is growing rapidly — contractors without demonstrated digital engineering credentials are increasingly finding traditional A&AS work difficult to retain on recompete.',
-
-            ],
-          },
-          {
-            type: 'text',
-            heading: 'The Major GWACs — Which Vehicles to Target',
-            body: 'GWACs represent the premium tier of the defense contracting vehicle landscape. They require the most rigorous qualification process and carry the highest competition at task order level — but they open the entire federal marketplace, not just a single agency. The strategic value of a GWAC position compounds over time as you build past performance, expand to new agencies, and develop relationships across the federal enterprise.',
-          },
-          {
-            type: 'table',
-            heading: 'Key Defense & Federal GWACs',
-            headers: ['GWAC', 'Managed By', 'Scope', 'Key For', 'Set-Aside Pools'],
-            rows: [
-              ['OASIS+', 'GSA', 'Complex professional services: PM, management consulting, engineering, logistics', 'Large businesses + SB set-aside pools', 'Yes — SB, SDB, 8(a), SDVOSB, HUBZone, WOSB'],
-              ['CIO-SP4', 'NIH', 'IT services and solutions', 'IT-focused defense contractors', 'Yes — unrestricted + small business'],
-              ['Alliant 3', 'GSA', 'Large-scale IT solutions and services', 'Large prime IT integrators', 'Unrestricted only'],
-              ['STARS III', 'GSA', 'IT services for small businesses', 'Small businesses in IT/cyber/cloud', 'Small business only'],
-              ['SEWP VI', 'NASA', 'IT products and product-related services', 'Product-heavy offerings', 'Mixed pools'],
-            ],
-          },
-          {
-            type: 'tip',
-            heading: 'OTA Warning for Contractors',
-            body: 'Other Transaction Agreements under 10 U.S.C. § 4022 are NOT contracts in the FAR sense — they bypass standard procurement regulations. This makes them attractive for speed but requires careful legal and DCAA awareness. OTAs executed through consortium managers (like NSTXL, AFWERX, or DIU) have different terms than traditional contracts. Always have acquisition counsel review OTA terms before executing — particularly around IP rights, audit access, and flow-down requirements.',
-          },
-          {
-            type: 'text',
-            heading: 'Building Your Vehicle Portfolio Strategy',
-            body: 'A mature defense contractor does not pursue every vehicle — it builds a deliberate portfolio aligned to its core capabilities, target agencies, and growth strategy. The right vehicle mix balances near-term revenue (agency-specific IDIQs where you have relationships) with long-term expansion (GWACs that open new agencies) and specialized positioning (set-aside vehicles that leverage socioeconomic certifications). Map every pursuit in your pipeline to a vehicle before you commit proposal resources.',
-          },
-        ],
-        quiz: [
-          {
-            id: 'q1',
-            question: 'Under FAR 16.505, what is the default rule for task order competition on a Multiple Award IDIQ?',
-            options: [
-              'The government may award to any awardee at its sole discretion|||Incorrect for MAIDIQ. Under FAR 16.505, Multiple Award IDIQ contracts require a \'fair opportunity\' process for task orders over the threshold. Every awardee must be given a fair opportunity to compete. Sole discretion applies only to Single Award IDIQs.',
-              'All awardees must receive a fair opportunity to be considered|||Correct. FAR 16.505(b)(1) requires fair opportunity procedures for task orders over the threshold. Each MAIDIQ awardee must be notified, given the opportunity to submit a proposal, and evaluated using the criteria established in the base IDIQ.',
-              'Task orders under $150,000 require full and open competition|||Incorrect. Task orders under $150,000 are often exempt from fair opportunity requirements â the CO may award at their discretion. It\'s orders OVER $3,500 (and especially over $150,000 for civilian agencies, $6M for DoD) that trigger increasing fair opportunity formality.',
-              'The incumbent contractor receives right of first refusal|||Incorrect. There is no statutory right of first refusal for incumbent contractors on MAIDIQ task orders. All awardees must receive fair opportunity. While past performance is a legitimate evaluation factor, it does not give the incumbent a contractual preference.',
-            ],
-            correct: 1,
-            explanation: 'FAR 16.505 requires the government to provide all MA-IDIQ awardees a fair opportunity to be considered for each task order. This is the default rule — exceptions (unusual urgency, only one awardee capable, public interest, logical follow-on, minimum order) are narrow and legally constrained.',
-          },
-          {
-            id: 'q2',
-            question: 'Which A&AS subcategory covers digital engineering support, DevSecOps, and software factory integration?',
-            options: [
-              'Management and Professional Support Services|||Correct. This is one of the four A&AS (Advisory and Assistance Services) categories defined in FAR 37.2. It covers management analysis, organizational studies, training, and professional support. Defense agencies use this category for program management support and strategic planning assistance.',
-              'Studies, Analyses, and Evaluations|||Correct. This A&AS category covers independent research, operational analysis, technical evaluations, and studies. It includes policy analysis, program assessments, and alternatives analysis â work that informs government decisions without directly executing them.',
-              'Engineering and Technical Services|||Correct. This A&AS category covers technical expertise supporting government programs â systems engineering, technical review, test support, and engineering advisory services. It is the most commonly used A&AS category in DoD acquisition programs.',
-              'A&AS-D (Digital)|||Incorrect. The correct expansion is A&AS-D = Advisory and Assistance Services â Defense (or specifically, GSA\'s AAS-D = Assisted Acquisition Services - Defense). There is no \'Digital\' designation in the standard A&AS taxonomy.',
-            ],
-            correct: 3,
-            explanation: 'A&AS-D (Digital) is the emerging subcategory gaining traction across the Air Force and Space Force that specifically covers digital engineering, DevSecOps support, software factory integration, and digital transformation advisory.',
-          },
-          {
-            id: 'q3',
-            question: 'What is the key distinction between a GWAC and an agency-specific IDIQ?',
-            options: [
-              'GWACs have higher minimum guarantees than agency IDIQs|||Incorrect. GWAC minimum guarantees are often very low â sometimes $1 per awardee â to minimize the government\'s financial commitment while maintaining a large awardee pool. The minimum guarantee comparison between GWACs and agency IDIQs varies by vehicle.',
-              'GWACs are available to all federal agencies; agency IDIQs are limited to named awardees|||Partially correct but conflated. GWACs are available to all federal agencies as ordering agencies. Agency IDIQs are typically limited to the establishing agency or named ordering activities. The key difference is who can ORDER â not who can hold the contract.',
-              'Agency IDIQs require Congressional notification; GWACs do not|||Incorrect. There is no general rule requiring Congressional notification for agency IDIQs vs. GWACs. Large contracts may trigger Congressional notification under specific statutes (e.g., Nunn-McCurdy for cost growth on MDAPs), but that is program-specific, not vehicle-type-specific.',
-              'GWACs are only for small businesses; agency IDIQs are unrestricted|||Incorrect. GWACs are available to all businesses — large and small. Some GWACs have small business pools alongside large business pools (e.g., OASIS+, ALLIANT 2). Agency IDIQs can also be set-aside for small businesses. The restriction to small businesses is a set-aside decision, not inherent to GWACs.',
-            ],
-            correct: 1,
-            explanation: 'The defining characteristic of a GWAC is that it is available government-wide — any federal agency can place orders against it. Agency-specific IDIQs are limited to the ordering agency and named awardees only.',
-          },
-          {
-            id: 'q4',
-            question: 'An OTA (Other Transaction Agreement) differs from a traditional FAR contract primarily because:',
-            options: [
-              'OTAs have lower dollar thresholds|||Incorrect. OTAs do not have lower thresholds than FAR contracts â in fact, they are often used for larger, more complex prototype and production programs. The value of OTAs is regulatory flexibility, not cost threshold reduction.',
-              'OTAs bypass standard FAR procurement regulations|||Correct. OTAs are authorized under 10 U.S.C. 4021-4022. They are explicitly not subject to the FAR, DFARS, or most standard procurement regulations. This allows DoD to negotiate customized agreements and attract non-traditional defense contractors. However, OTAs require a prototype purpose.',
-              'OTAs require Congressional approval|||Incorrect. OTA authority is already granted by Congress through statute (10 U.S.C. 4021). Individual OTA agreements do not require separate Congressional approval.',
-              'OTAs are only available to small businesses|||Incorrect. OTAs are available to any contractor. One requirement is that at least one \'non-traditional defense contractor\' participates. Large defense contractors can and do use OTAs when working with non-traditional partners.',
-            ],
-            correct: 1,
-            explanation: 'OTAs under 10 U.S.C. § 4022 are NOT contracts in the FAR sense — they bypass standard procurement regulations. This makes them attractive for speed and innovation but requires careful legal review, particularly around IP rights, DCAA access, and flow-down requirements.',
-          },
-          {
-            id: 'q5',
-            question: 'Which of the following best describes the GSA Multiple Award Schedule (MAS)?',
-            options: [
-              'A guaranteed revenue source for qualified contractors|||Incorrect. Being on the Federal Supply Schedule does not guarantee revenue. Schedule contractors must still market their offerings and compete for individual orders. Many schedule holders receive little or no government business.',
-              'A pre-competed vehicle available only to defense agencies|||Incorrect. The GSA Multiple Award Schedule (MAS/FSS) is available to all federal agencies â civilian and defense. It is managed by GSA and is government-wide.',
-              'A marketing platform with pre-negotiated commercial terms available to all federal agencies|||Correct. The GSA Multiple Award Schedule (MAS) is a long-term contract vehicle with pre-established pricing that any federal agency can use. Contractors list their products and services at pre-negotiated prices, and agencies can order directly.',
-              'An IDIQ requiring annual task order competitions|||Incorrect. MAS orders are simplified â for orders below $15K, the ordering agency can select any MAS contractor; for orders over $15K, the agency must provide fair opportunity to three or more MAS awardees. There is no annual re-competition requirement.',
-            ],
-            correct: 2,
-            explanation: 'The GSA MAS allows contractors to sell pre-negotiated commercial products and services to federal agencies — but it is a marketing platform, not a revenue guarantee. Contractors must actively pursue orders; simply holding a schedule generates no revenue.',
-          },
-          {
-            id: 'q6',
-            question: 'OASIS+ is best described as:',
-            options: [
-              'An Army-specific IDIQ for base operations services|||Incorrect. AFICC (Air Force Installation Contracting Center) is an Air Force contracting organization â not Army. AFICC manages Air Force installation contracting across all CONUS Air Force installations.',
-              'GSA\'s flagship GWAC for complex professional services including program management and engineering|||Correct for OASIS+. OASIS+ is GSA\'s largest and most comprehensive professional services GWAC. Recompeted in 2023-2024, it provides access to a large pool of qualified contractors for complex, integrated professional services across all disciplines.',
-              'A NASA GWAC for IT products and services|||Correct. SEWP (Solutions for Enterprise-Wide Procurement) is a NASA-managed GWAC for IT products and services â hardware, software, and related services. SEWP V is the current generation, with very fast ordering timelines (24-48 hours for simple orders).',
-              'A DoD-only vehicle for classified program support|||Incorrect. Major GWACs (OASIS+, SEWP, ALLIANT) are unclassified and available to all agencies. Classified program acquisitions typically use separate, program-specific vehicles.',
-            ],
-            correct: 1,
-            explanation: 'OASIS+ (One Acquisition Solution for Integrated Services Plus) is GSA\'s flagship GWAC for complex professional services — covering program management, management consulting, engineering, logistics, and scientific services. It replaced the legacy OASIS vehicle and includes both unrestricted and small business set-aside pools.',
-          },
-        ],
-      },
-      {
-        id: 'contracts-8',
-        title: 'Who\'s Buying: Navigating the DoD Contracting Enterprise',
-        duration: '16 min',
-        description: 'Map the organizations that actually issue defense contracts — from AFICC/ESS and base-level contracting squadrons to MAJCOM contracting offices — and build a BD strategy aligned to the right customer.',
-        keyTerms: [
-          { term: 'AFICC', definition: 'Air Force Installation Contracting Center — manages enterprise-level contracting for installation and mission support requirements across the Air Force. Its Enterprise Sourcing Squadrons (ESS) handle large-dollar, multi-year service acquisitions.' },
-          { term: 'ESS', definition: 'Enterprise Sourcing Squadron — AFICC\'s operational contracting units that manage large-dollar, enterprise-level acquisitions across installations and functional areas (sustainment, services, IT infrastructure).' },
-          { term: 'MAJCOM', definition: 'Major Command — top-level Air Force organizational units (ACC, AMC, AFSOC, USAFE-AFAFRICA, etc.) with aligned contracting support for operationally-driven, often classified requirements.' },
-          { term: 'SAP', definition: 'Simplified Acquisition Procedures — streamlined procurement methods for purchases below the Simplified Acquisition Threshold ($350,000). Base-level contracting heavily uses SAP.' },
-          { term: 'SAT', definition: 'Simplified Acquisition Threshold — currently $350,000. Purchases below this threshold may use simplified procedures; above it requires more formal competition requirements.' },
-          { term: 'BPA', definition: 'Blanket Purchase Agreement — a simplified acquisition mechanism used heavily at base level for recurring, predictable requirements. Issued against GSA Schedules or open market.' },
-          { term: 'PWS', definition: 'Performance Work Statement — outcome-based description of work required; used in performance-based service acquisitions. Base-level and ESS offices increasingly require PWS-style solicitations.' },
-          { term: 'SAM.gov', definition: 'System for Award Management — the official federal database for contract opportunities, awardee registration, and past performance. Primary source of visible solicitations above SAT.' },
-          { term: 'CPARS', definition: 'Contractor Performance Assessment Reporting System — the government\'s official record of contractor performance on federal contracts. Past Performance in CPARS is one of the most important factors in source selection.' },
-        ],
-        content: [
-          {
-            type: 'text',
-            heading: 'The Most Underestimated Competitive Advantage in Defense BD',
-            body: 'One of the most underestimated competitive advantages a defense contractor can develop is a precise understanding of who actually issues the contract. The Air Force contracting enterprise — and the DoD contracting enterprise broadly — is not monolithic. It is divided into distinct organizational layers, each with different authorities, contract size thresholds, mission focus, and levels of accessibility to industry. Contractors who confuse these layers build misaligned BD strategies, waste proposal resources, and miss opportunities that better-informed competitors capture.',
-          },
-          {
-            type: 'table',
-            heading: 'The Three Layers of Air Force Contracting',
-            headers: ['Layer', 'Typical Contract Size', 'Competition Type', 'Entry Difficulty', 'Visibility (SAM.gov)', 'Relationship Weight'],
-            rows: [
-              ['AFICC / ESS', '$1M–$100M+', 'Formal source selection, written proposals, oral presentations', 'Moderate–High', 'High', 'Moderate'],
-              ['Base-Level Contracting Squadrons', 'Under $1M (SAP range)', 'Simplified acquisition, BPAs, sole-source justifications', 'Low–Moderate', 'Moderate', 'Very High'],
-              ['MAJCOM / Service Component', '$500K–$50M+ (varies)', 'Formal to streamlined; often classified or operationally sensitive', 'High (clearance, access required)', 'Low–Moderate', 'High'],
-            ],
-          },
-          {
-            type: 'text',
-            heading: 'AFICC / Enterprise Sourcing Squadrons — The Primary Entry Point',
-            body: 'The Air Force Installation Contracting Center and its Enterprise Sourcing Squadrons represent the most accessible entry point for mid-size to large contractors seeking multi-year service contracts. ESS offices typically manage requirements from $1M to well over $100M, running formal source selections with written proposals, oral presentations, and structured evaluation criteria. These competitions reward thorough market research, strong PWS/SOW alignment, and credible past performance. AFICC covers enterprise services across installations — sustainment, base operations, information technology infrastructure, and logistics support are common requirement types.',
-          },
-          {
-            type: 'callout',
-            heading: 'How to Engage AFICC/ESS Offices',
-            body: 'ESS offices publish pre-solicitation notices, Requests for Information, and Sources Sought notices on SAM.gov. Responding to these is not optional for serious competitors — it shapes the requirement, establishes your firm in the CO\'s market research, and gives you intelligence about the acquisition timeline and competitive landscape. Industry Days, when offered, are your best opportunity to understand evaluation criteria priorities and ask questions that competitors who don\'t attend will not know to ask.',
-          },
-          {
-            type: 'text',
-            heading: 'Base-Level Contracting Squadrons — Where Relationships Win',
-            body: 'Base-level contracting squadrons are where relationships matter most. These offices process thousands of smaller actions annually — blanket purchase agreements, simplified acquisitions, and sole-source justifications under SAP thresholds. For small businesses and new market entrants, base-level contracting provides the fastest pathway to building past performance. Contracting Officers at the base level value reliable incumbents highly, making early market entry and COR relationship-building critical investments. A $150,000 BPA awarded today can become the past performance reference that wins a $5M ESS contract in two years.',
-          },
-          {
-            type: 'list',
-            heading: 'Base-Level BD Strategy — What Actually Works',
-            items: [
-              'Identify the installation contracting squadron through the Air Force\'s Installation directory or SAM.gov agency searches. Every installation with a significant contracting footprint has a publicly accessible contracting office.|||The Air Force Installation and Mission Support Center (AFICC) website and SAM.gov both list contracting office locations and contact information. Before investing BD resources at a base, verify the contracting office has authority over the types of requirements you pursue. Base contracting handles simplified acquisitions; large enterprise requirements route through ESS offices.',
-              'Attend base-level small business events and installation open houses. Base contracting squadrons actively engage with industry — especially small businesses — in ways that larger enterprise offices cannot.|||Small Business Day events and Industry Days at bases are among the highest-ROI BD activities for small businesses. You meet the CO, the contracting officers, and often the technical requirements owners in the same room. The program manager who remembers your company from a base event is far more likely to include you in market research for the next requirement.',
-              'Build relationships with Contracting Officer Representatives (CORs), not just Contracting Officers. The COR is your day-to-day performance evaluator and one of the most influential voices in CPARS ratings and recompete positioning.|||CORs write performance observations that feed directly into CPARS. They also influence future requirements by describing what the current contractor does well or poorly. A contractor who invests in COR relationship management — proactive status reporting, documenting issue resolution, making the COR look good to leadership — consistently outperforms competitors who treat the COR as a contract monitor rather than a strategic relationship.',
-              'Focus on performance above all else. At the base level, your reputation spreads rapidly. A single strong CPARS rating from a base installation can be leveraged across the entire AFICC enterprise.|||CPARS ratings are portable competitive assets. Exceptional ratings from base-level work become past performance references in ESS and MAJCOM-level source selections. The defense contracting community at any given installation is small — reputation spreads through the contracting officer network faster than through formal channels.',
-            ],
-          },
-          {
-            type: 'text',
-            heading: 'MAJCOM Contracting — High Barrier, Lower Competition',
-            body: 'MAJCOM-aligned contracting, such as the contracting operations supporting USAFE-AFAFRICA or Air Combat Command, handles operationally-driven requirements that often carry unique classification, OCONUS, or mission-specific constraints. These opportunities are less visible on SAM.gov and often require security clearances, theater knowledge, and existing relationships with program offices. Entry is harder, but competition is typically less crowded. For cleared defense firms with specialized mission-area expertise, MAJCOM contracting represents some of the most defensible, long-term contract opportunities in the Air Force portfolio.',
-          },
-          {
-            type: 'table',
-            heading: 'Key Air Force MAJCOMs and Their Contracting Focus',
-            headers: ['MAJCOM', 'Mission Focus', 'Contracting Characteristics', 'Best For'],
-            rows: [
-              ['Air Force Materiel Command (AFMC)', 'Acquisition, sustainment, R&D across Air Force programs', 'Largest acquisition authority; manages most ACAT programs', 'Prime contractors, engineering support firms'],
-              ['Air Combat Command (ACC)', 'Combat air forces, CONUS fighter and bomber units', 'Operations support, training, base services', 'Mid-tier services firms with operational support experience'],
-              ['Air Mobility Command (AMC)', 'Airlift, air refueling, aeromedical evacuation', 'Logistics, maintenance, ground support services', 'Logistics and sustainment contractors'],
-              ['USAFE-AFAFRICA', 'European and African theater air forces', 'OCONUS work, NATO coordination, classified requirements', 'Cleared firms with international operations capability'],
-              ['Air Force Special Operations Command (AFSOC)', 'Special operations aviation', 'Small, highly specialized contracts; classified requirements', 'Niche capability firms with AFSOC relationships'],
-            ],
-          },
-          {
-            type: 'text',
-            heading: 'Applying This Framework Beyond the Air Force',
-            body: 'While this lesson uses the Air Force enterprise as the primary example, the same three-tier structure exists across all military services and many defense agencies. The Army has Installation Management Command (IMCOM) contracting, Army Contracting Command (ACC), and theater-level contracting offices. The Navy has NAVSUP Fleet Logistics Centers, SPAWAR (now NAVWAR), and fleet-level contracting. Understanding which tier of any service\'s contracting enterprise you are engaging — and aligning your BD approach accordingly — is one of the clearest markers of a mature defense contractor.',
-          },
-          {
-            type: 'tip',
-            heading: 'Build a Customer Map Before You Build a Pipeline',
-            body: 'Before you populate a BD pipeline, build a customer map. For each target installation or command, identify: the contracting squadron or office, the contracting officer(s) for your NAICS codes, the program offices or functional areas you support, and the CORs on any current or adjacent contracts. This map is the infrastructure of a disciplined BD strategy — without it, you\'re pursuing opportunities without knowing who controls the award decision.',
-          },
-        ],
-        quiz: [
-          {
-            id: 'q1',
-            question: 'AFICC Enterprise Sourcing Squadrons (ESS) are primarily responsible for:',
-            options: [
-              'Processing simplified acquisitions under the Simplified Acquisition Threshold|||Incorrect for AFICC ESS specifically. Base-level contracting squadrons handle simplified acquisitions for individual installations. AFICC Enterprise Sourcing Squadrons focus on enterprise-level, higher-value acquisitions across the Air Force.',
-              'Large-dollar, enterprise-level acquisitions across installations and functional areas|||Correct. AFICC Enterprise Sourcing Squadrons (ESS) specialize in large, complex acquisitions spanning multiple Air Force installations or functional areas â base operations support, IT services, professional services.',
-              'Classified acquisition programs for AFSOC and special operations|||Incorrect. AFICC ESS is not specifically a classified AFSOC vehicle. AFSOC has its own acquisition infrastructure for classified requirements. ESS focuses on enterprise services, not classified special operations.',
-              'Small business set-aside competitions at individual base levels|||Incorrect for AFICC ESS. Small business set-asides at individual bases are managed by base-level contracting squadrons. ESS focuses on large enterprise acquisitions.',
-            ],
-            correct: 1,
-            explanation: 'AFICC ESS offices handle large-dollar, enterprise-level acquisitions ($1M to $100M+) across Air Force installations — covering sustainment, services, and IT infrastructure. They run formal source selections with written proposals and structured evaluation criteria.',
-          },
-          {
-            id: 'q2',
-            question: 'For a small business entering the defense market, which contracting tier typically offers the fastest pathway to building past performance?',
-            options: [
-              'AFICC / Enterprise Sourcing Squadrons|||Correct. AFICC (Air Force Installation Contracting Center) ESS are the specialized acquisition organizations within AFICC that manage enterprise-wide service contracts. They are organized by functional portfolio (base operations, IT, professional services).',
-              'MAJCOM contracting offices|||Correct. Major Command (MAJCOM) contracting offices (e.g., ACC Contracting, AMC Contracting) manage acquisitions for their respective command\'s unique operational requirements. They are distinct from AFICC in organizational alignment.',
-              'Base-level contracting squadrons|||Correct. Base contracting squadrons (e.g., 88th Contracting Squadron at Wright-Patterson AFB) handle local installation day-to-day acquisition needs â base support services, facilities projects, equipment â up to their delegated contracting authority limits.',
-              'Defense Pricing and Contracting (DPC)|||Correct. DPC (formerly DPAP) is the OSD-level policy organization setting contracting policy guidance for all DoD components. DPC issues the DFARS, policy memoranda, and class deviations. It is not a contracting office but a policy authority.',
-            ],
-            correct: 2,
-            explanation: 'Base-level contracting squadrons process thousands of smaller actions annually under simplified acquisition procedures. For small businesses and new market entrants, this is the fastest pathway to building past performance through BPAs, sole-source justifications, and simplified acquisitions below the SAT.',
-          },
-          {
-            id: 'q3',
-            question: 'Why are MAJCOM contracting opportunities typically less visible on SAM.gov?',
-            options: [
-              'MAJCOM offices are exempt from public procurement posting requirements|||Incorrect. MAJCOM contracting offices must post synopsis notices on SAM.gov like all other federal contracting offices (FAR 5.203). Classified requirements have different posting rules, but the general rule requires public posting.',
-              'Requirements are often operationally sensitive, classified, or OCONUS|||Correct. Command-unique requirements often involve operational sensitivity â which may affect the solicitation process (shorter posting periods, classified appendices), security requirements in contract clauses, and teaming considerations for contractors.',
-              'MAJCOM contracts are below the SAT and don\'t require posting|||Incorrect. MAJCOMs execute multi-million and multi-billion dollar contracts â far above the Simplified Acquisition Threshold. MAJCOM contracting offices are full acquisition authorities with large portfolios.',
-              'MAJCOM contracting is conducted exclusively through GWACs|||Incorrect. MAJCOMs use a variety of contracting mechanisms â standalone competitive acquisitions, GWACs, OTAs, SAPs, and interagency agreements. MAJCOM-unique requirements often require standalone competitions.',
-            ],
-            correct: 1,
-            explanation: 'MAJCOM-aligned contracting handles operationally-driven requirements that often carry unique classification, OCONUS, or mission-specific constraints. These characteristics reduce their SAM.gov visibility, but also mean less crowded competition for firms with the right clearances and relationships.',
-          },
-          {
-            id: 'q4',
-            question: 'Which Air Force MAJCOM manages the largest acquisition authority and most ACAT programs?',
-            options: [
-              'Air Combat Command (ACC)|||Correct. ACC (Air Combat Command) is a major USAF command responsible for combat air forces. ACC contracting manages requirements for aircraft maintenance, operations support, and systems unique to ACC-assigned forces.',
-              'Air Mobility Command (AMC)|||Correct. AMC is responsible for global air mobility and strategic airlift. AMC contracting handles LOGCAP-type support, aerial port operations, tanker support, and mobility-related services across the AMC enterprise.',
-              'Air Force Materiel Command (AFMC)|||Correct. AFMC is the science and technology, acquisition, and sustainment command. AFMC includes Air Force Research Laboratory (AFRL), Program Executive Officers, and Air Force Life Cycle Management Center (AFLCMC). The largest share of Air Force acquisition spending flows through AFMC.',
-              'USAFE-AFAFRICA|||Correct. USAFE-AFAFRICA is the Air Force component of European Command and Africa Command. Its contracting offices manage OCONUS acquisitions in support of European and African theater operations, often involving host-nation agreements and Status of Forces Agreement compliance.',
-            ],
-            correct: 2,
-            explanation: 'Air Force Materiel Command (AFMC) manages acquisition, sustainment, and R&D across Air Force programs. It has the largest acquisition authority of any Air Force MAJCOM and manages most ACAT-designated programs, making it the primary target for prime contractors and engineering support firms.',
-          },
-          {
-            id: 'q5',
-            question: 'What is the strategic value of building a strong CPARS rating at the base installation level?',
-            options: [
-              'It automatically qualifies your firm for AFICC ESS competitions|||Incorrect. No single past performance award automatically qualifies a firm for future competitions. Past performance on AFICC contracts is a strong advantage in future AFICC source selections, but each competition has its own qualification criteria.',
-              'It can be leveraged as past performance across the entire AFICC enterprise in future source selections|||Correct. Past performance on one AFICC base or enterprise contract is highly relevant to future AFICC competitions. Evaluators within the AFICC enterprise share knowledge of contractor performance history, and CPARS ratings from AFICC contracts are visible across the enterprise.',
-              'It exempts your firm from oral presentation requirements|||Incorrect. There is no such exemption. Each source selection team designs its own evaluation process. Oral presentations are a common evaluation tool in AFICC competitions â particularly for complex management approach sub-factors.',
-              'It qualifies your firm for sole-source awards on all future base requirements|||Incorrect. Sole-source awards require specific statutory justification (FAR 6.302). Prior performance creates a track record but does not entitle a contractor to sole-source treatment.',
-            ],
-            correct: 1,
-            explanation: 'A strong CPARS rating from base-level performance is compelling past performance evidence that can be used in source selections across the AFICC enterprise. Past performance is a key evaluation factor in most formal source selections — quality ratings from any installation are portable competitive assets.',
-          },
-        ],
       },
     ],
     assessment: [
