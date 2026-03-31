@@ -216,7 +216,20 @@ function ExpandableBulletItem({
             open ? "text-primary" : "text-primary/60 group-hover:text-primary"
           )} />
         </span>
-        <span className="flex-1">{bulletText}</span>
+        <span className="flex-1">
+          {(() => {
+            const dashIdx = bulletText.indexOf(' — ');
+            const hyphenIdx = bulletText.indexOf(': ');
+            const splitIdx = dashIdx > 0 ? dashIdx : (hyphenIdx > 0 && hyphenIdx < 60 ? hyphenIdx : -1);
+            if (splitIdx > 0) {
+              const label = bulletText.slice(0, splitIdx);
+              const rest = bulletText.slice(splitIdx);
+              return <><span className="font-semibold text-foreground">{label}</span><span>{rest}</span></>;
+            }
+            return bulletText;
+          })()
+          }
+        </span>
       </button>
       {open && (
         <div className="ml-6 mt-1 mb-2 px-3 py-2.5 bg-primary/5 border border-primary/15 rounded-lg">
@@ -802,7 +815,13 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               return (
                 <div key={i} className="bg-card border border-border rounded-xl p-5">
                   {block.heading && <h2 className="font-semibold text-base mb-3">{block.heading}</h2>}
-                  {block.body && <p className="text-sm text-muted-foreground leading-relaxed">{block.body}</p>}
+                  {block.body && block.body.split('\n\n').filter(Boolean).map((para, pi) => (
+                    <p key={pi} className={`text-sm text-muted-foreground leading-relaxed${pi > 0 ? ' mt-3' : ''}`}>
+                      {para.trim().split(/\*\*([^*]+)\*\*/).map((seg, si) =>
+                        si % 2 === 1 ? <strong key={si} className="font-semibold text-foreground">{seg}</strong> : seg
+                      )}
+                    </p>
+                  ))}
                 </div>
               );
             }
@@ -814,7 +833,9 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     <Lightbulb className="w-4.5 h-4.5 text-primary flex-shrink-0 mt-0.5" />
                     <div>
                       {block.heading && <h3 className="font-semibold text-sm mb-2 text-primary">{block.heading}</h3>}
-                      {block.body && <p className="text-sm text-muted-foreground leading-relaxed">{block.body}</p>}
+                      {block.body && block.body.split('\n\n').filter(Boolean).map((para, pi) => (
+                        <p key={pi} className={`text-sm text-muted-foreground leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>{para.trim()}</p>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -842,7 +863,9 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     <Award className="w-4.5 h-4.5 text-amber-500 flex-shrink-0 mt-0.5" />
                     <div>
                       {block.heading && <h3 className="font-semibold text-sm mb-2 text-amber-700 dark:text-amber-400">{block.heading}</h3>}
-                      {block.body && <p className="text-sm text-muted-foreground leading-relaxed">{block.body}</p>}
+                      {block.body && block.body.split('\n\n').filter(Boolean).map((para, pi) => (
+                        <p key={pi} className={`text-sm text-muted-foreground leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>{para.trim()}</p>
+                      ))}
                     </div>
                   </div>
                 </div>
