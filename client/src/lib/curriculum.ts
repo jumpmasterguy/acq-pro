@@ -3780,23 +3780,7 @@ export const modules: Module[] = [
             body: "In federal contracting, there are two distinct levels of agreement you must understand: the base contract and the order. The base contract (the IDIQ) establishes all the legal terms and conditions — pricing, labor categories, clauses, applicable regulations, and the overall ordering ceiling. The task order (TO) is where actual work gets authorized and funded. No work begins until a task order is issued. This two-level structure gives agencies flexibility to order services on demand without re-competing every single requirement."
           },
           {
-            type: 'stat_row',
-            heading: 'Three Instruments — One Layered System',
-            stats: [
-              { value: '📋', label: 'IDIQ Base Contract', sub: 'The umbrella. Sets terms, rates, and ceiling. Competed once. Money obligated: just the minimum.' },
-              { value: '📝', label: 'Task Order', sub: 'The actual work. Competed among pool holders. Money obligated: the full order amount.' },
-              { value: '🛒', label: 'BPA', sub: 'A simplified ordering arrangement. Like a store account — no guaranteed min/max, just agreed pricing.' },
-            ],
-          },
-          {
-            type: 'two_col',
-            heading: 'How They Compare',
-            rows: [
-              { label: 'What binds money', text: 'Only the task order obligates real dollars. The IDIQ base just sets the framework — winning a spot on an IDIQ does not mean revenue. A BPA call (order) obligates funds at the time it is placed.' },
-              { label: 'Who competes', text: 'IDIQ base: full & open competition (or small business set-aside). Task orders: fair opportunity among existing pool holders — lighter and faster. BPA: competed against GSA Schedule pricing.' },
-              { label: 'Period of performance', text: 'IDIQ: ordering period is typically 5+5 years. A task order can extend past the IDIQ ordering period if the PoP was set before it closed. BPA: typically 1 year, renewable.' },
-              { label: 'How to modify', text: 'Modify the base IDIQ to change rates, ceiling, or ordering period. Modify the task order to change scope or funding on that specific job. Never cross them — a task order mod cannot change base IDIQ terms.' },
-            ],
+            type: 'instrument_compare',
           },
           {
             type: 'text',
@@ -3808,13 +3792,13 @@ export const modules: Module[] = [
             heading: "The IDIQ Ordering Process (Step by Step)",
             items: [
               'Step 1: Requirement identified — program office describes work needed|||The quality of the SOW/PWS here determines the quality of proposals and performance. A vague SOW produces vague proposals and an ambiguous contract. A good task order SOW describes outcomes (performance-based), includes measurable acceptance criteria, and specifies deliverables with format and timing. This is the most underinvested step in task order contracting.',
-              'Step 2: Determine if an existing IDIQ can satisfy the requirement (scope check)|||The CO must conduct a scope determination to verify work falls within the original IDIQ\'s scope. Placing a task order outside the IDIQ\'s scope is an improper order — effectively a sole-source contract without a J&A. For GWACs like OASIS+, scope is broadly defined but still has limits.',
-              'Step 3: Issue a task order Request for Proposal (TORFP) to awardees in the pool|||TORFPs under MA-IDIQs must provide fair opportunity per FAR 16.505. Includes the SOW/PWS, evaluation factors, proposal instructions, and period of performance. Page limits are common (10–30 pages vs. 100+ for new vehicle bids). Response times are typically 7–30 days — much faster than full proposals.',
+              'Step 2 — Scope check: does an existing IDIQ cover this requirement?|||The CO must conduct a scope determination to verify work falls within the original IDIQ\'s scope. Placing a task order outside the IDIQ\'s scope is an improper order — effectively a sole-source contract without a J&A. For GWACs like OASIS+, scope is broadly defined but still has limits.',
+              'Step 3 — Issue a TORFP to all pool holders|||TORFPs under MA-IDIQs must provide fair opportunity per FAR 16.505. Includes the SOW/PWS, evaluation factors, proposal instructions, and period of performance. Page limits are common (10–30 pages vs. 100+ for new vehicle bids). Response times are typically 7–30 days — much faster than full proposals.',
               'Step 4: Provide fair opportunity — all pool members get a reasonable chance to compete|||Fair opportunity under FAR 16.505 is the default rule — it cannot be waived without documented justification. The ordering CO must ensure the task order RFP is distributed to all eligible pool holders simultaneously with equal response time. Selectively notifying preferred contractors or providing advance information to favorites is a protest-sustaining violation.',
-              'Step 5: Evaluate task order proposals (simplified process vs. full source selection)|||Task order evaluations are significantly lighter than full Part 15 source selections — no formal discussions, no SSAC, fewer documentation requirements. But the process must still be documented, consistent with the stated evaluation factors, and defensible. Task order award decisions are still protestable to the GAO.',
-              'Step 6: Award task order to the best value offeror|||Best value means the proposal offering the greatest combination of technical merit, past performance, and price for the government\'s needs — not necessarily the lowest price. The ordering CO documents the tradeoff rationale. For LPTA task orders, the lowest technically acceptable price wins. Most professional services use BVTO.',
-              'Step 7: Execute work; administer the task order like a standalone contract|||Task orders have their own period of performance, deliverables, and COR. The COR monitors performance against the task order PWS/SOW, not just the base contract. Performance is documented in CPARS at the task order level for large orders. Option years on the task order can be exercised independently of the base contract.',
-              'Step 8: Modify the task order (not the base contract) for scope/funding changes|||Task order modifications use the SF-30 and follow the same modification authorities as standalone contracts. Critically — changes go on the task order, not the base IDIQ contract. Adding scope beyond the task order ceiling requires a new modification with additional funding. The base IDIQ contract is modified only for vehicle-level changes (period of performance extension, ceiling increase).',
+              'Step 5 — Evaluate proposals (lighter than a full competition)|||Task order evaluations are significantly lighter than full Part 15 source selections — no formal discussions, no SSAC, fewer documentation requirements. But the process must still be documented, consistent with the stated evaluation factors, and defensible. Task order award decisions are still protestable to the GAO.',
+              'Step 6 — Award to best value|||Best value means the proposal offering the greatest combination of technical merit, past performance, and price for the government\'s needs — not necessarily the lowest price. The ordering CO documents the tradeoff rationale. For LPTA task orders, the lowest technically acceptable price wins. Most professional services use BVTO.',
+              'Step 7 — Execute and administer the task order like its own contract|||Task orders have their own period of performance, deliverables, and COR. The COR monitors performance against the task order PWS/SOW, not just the base contract. Performance is documented in CPARS at the task order level for large orders. Option years on the task order can be exercised independently of the base contract.',
+              'Step 8 — Modify the task order (never the base IDIQ) for scope or funding changes|||Task order modifications use the SF-30 and follow the same modification authorities as standalone contracts. Critically — changes go on the task order, not the base IDIQ contract. Adding scope beyond the task order ceiling requires a new modification with additional funding. The base IDIQ contract is modified only for vehicle-level changes (period of performance extension, ceiling increase).',
             ]
           },
           {

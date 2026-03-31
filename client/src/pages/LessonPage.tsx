@@ -219,14 +219,15 @@ function ExpandableBulletItem({
         <span className="flex-1">
           {(() => {
             const dashIdx = bulletText.indexOf(' — ');
-            // Only split on em-dash — colon is too ambiguous and causes random bolds mid-sentence
+            // Only split on em-dash — colon splits are too ambiguous
             if (dashIdx > 0) {
               const label = bulletText.slice(0, dashIdx);
               const rest = bulletText.slice(dashIdx);
               return <><span className="font-semibold text-foreground">{label}</span><span>{rest}</span></>;
             }
-            // Short items with no em-dash — bold the whole thing
-            if (bulletText.length < 50) {
+            // Bold short items only if they don't look like numbered steps
+            const isNumberedStep = /^Step \d+[:\s]/i.test(bulletText);
+            if (!isNumberedStep && bulletText.length < 50) {
               return <span className="font-semibold text-foreground">{bulletText}</span>;
             }
             return bulletText;
@@ -1038,6 +1039,74 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                       <span className="text-[10px] text-primary/50 italic">— Lucas, Acqlerate</span>
                     </div>
                   </div>
+                </div>
+              );
+            }
+
+            // ── instrument_compare: IDIQ / Task Order / BPA side-by-side ────────
+            if (block.type === 'instrument_compare') {
+              const cols = [
+                {
+                  icon: '📋', label: 'IDIQ Base Contract', color: 'text-primary',
+                  tagline: 'The umbrella',
+                  rows: [
+                    { key: 'What it is', val: 'Legal framework, terms, rates, ceiling. No specific work authorized.' },
+                    { key: 'Competed', val: 'Once — full & open or small biz set-aside.' },
+                    { key: 'Money obligated', val: 'Only the minimum guarantee at award.' },
+                    { key: 'Period', val: 'Ordering period, e.g. 5+5 years.' },
+                    { key: 'Modify to change', val: 'Rates, ceiling, ordering period, clauses.' },
+                  ]
+                },
+                {
+                  icon: '📝', label: 'Task Order', color: 'text-amber-400',
+                  tagline: 'The actual work',
+                  rows: [
+                    { key: 'What it is', val: 'Specific scope, deliverables, funding. This is what the contractor actually executes.' },
+                    { key: 'Competed', val: 'Each order — fair opportunity among pool holders (FAR 16.505).' },
+                    { key: 'Money obligated', val: 'Full amount of each order — this is where revenue lives.' },
+                    { key: 'Period', val: 'Task order PoP — can extend past IDIQ ordering period.' },
+                    { key: 'Modify to change', val: 'Scope or funding on that specific task only.' },
+                  ]
+                },
+                {
+                  icon: '🛒', label: 'BPA', color: 'text-slate-400',
+                  tagline: 'A pre-arranged account',
+                  rows: [
+                    { key: 'What it is', val: 'Simplified ordering arrangement against GSA Schedule. No guaranteed min/max.' },
+                    { key: 'Competed', val: 'Once at BPA establishment — schedule price competition.' },
+                    { key: 'Money obligated', val: 'At time of call (order) placement.' },
+                    { key: 'Period', val: 'Typically 1 year, renewable.' },
+                    { key: 'Modify to change', val: 'Terms of the BPA arrangement.' },
+                  ]
+                },
+              ];
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl overflow-hidden">
+                  <div className="px-5 py-3.5 border-b border-border bg-muted/30">
+                    <h3 className="font-semibold text-sm">Three Instruments — One Layered System</h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">Winning an IDIQ is a hunting license, not a paycheck. The task order is where money flows.</p>
+                  </div>
+                  {/* Column headers */}
+                  <div className="grid grid-cols-3 border-b border-border">
+                    {cols.map(col => (
+                      <div key={col.label} className="px-4 py-3.5 border-r border-border last:border-r-0 text-center">
+                        <div className="text-xl mb-1">{col.icon}</div>
+                        <div className={`text-xs font-bold ${col.color} leading-tight`}>{col.label}</div>
+                        <div className="text-[10px] text-muted-foreground mt-0.5 italic">{col.tagline}</div>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Comparison rows */}
+                  {cols[0].rows.map((_, ri) => (
+                    <div key={ri} className={`grid grid-cols-3 ${ri % 2 === 0 ? '' : 'bg-muted/10'}`}>
+                      {cols.map((col, ci) => (
+                        <div key={ci} className="px-4 py-3 border-r border-border/50 last:border-r-0">
+                          {ci === 0 && <div className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider mb-1">{col.rows[ri].key}</div>}
+                          <div className="text-xs text-muted-foreground leading-relaxed">{col.rows[ri].val}</div>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
                 </div>
               );
             }
