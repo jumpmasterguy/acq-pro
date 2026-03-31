@@ -1,16 +1,14 @@
 import { useState } from "react";
-import { modules, getTotalLessons, getModuleTotalMinutes, formatDuration } from "@/lib/curriculum";
+import { modules, getTotalLessons, getModuleTotalMinutes, formatDuration, parseDuration } from "@/lib/curriculum";
 import { getModuleProgress, getLevel, calculateXP, FREE_MODULES } from "@/lib/progress";
 import type { UserProgress } from "@/lib/progress";
-import { getLearningPath, ROLE_LABELS, GOAL_LABELS } from "@/lib/learningPaths";
 import type { UserProfile } from "@/pages/AuthPage";
 import {
-  Shield, Award, Lock, ChevronRight, Star, Zap,
-  ChevronDown, ChevronUp, Beaker, Settings,
+  Award, Lock, ChevronRight, Zap,
+  ChevronDown, ChevronUp, Beaker,
   BookOpen, CheckCircle2, Circle, Target, TrendingUp, Clock,
   Briefcase, Building2, FileText, LayoutGrid, Filter
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
@@ -24,7 +22,7 @@ interface DashboardProps {
   onEditProfile?: () => void;
 }
 
-// ── Career path filter definitions ─────────────────────────────────────────
+// ── Career track lesson-level definitions ───────────────────────────────────
 type FilterMode = 'career' | 'subject';
 type CareerTrackId = 'usg_pm' | 'contractor_pm' | 'contracting_officer' | 'capture_bd';
 type SubjectGroupId = 'acquisition_foundations' | 'finance_contracts' | 'capture_analytics' | 'pm_operations';
@@ -35,10 +33,120 @@ interface CareerTrack {
   shortLabel: string;
   icon: React.ReactNode;
   desc: string;
-  /** Module IDs in priority order */
-  primaryModules: string[];
-  bonusModules: string[];
+  /** Lesson IDs in this track — ordered within each module. */
+  primaryLessons: string[];
+  /** Lesson IDs that are supplementary (visible but dimmed / in bonus). */
+  bonusLessons: string[];
 }
+
+const CAREER_TRACKS: CareerTrack[] = [
+  {
+    id: 'usg_pm',
+    label: 'USG Program Manager',
+    shortLabel: 'USG PM',
+    icon: <Building2 className="w-3.5 h-3.5" />,
+    desc: 'Government-side PM managing programs, budgets, oversight, and the full acquisition lifecycle',
+    primaryLessons: [
+      // Foundations — all relevant
+      'foundations-intro', 'foundations-players', 'foundations-contracts',
+      'foundations-lifecycle', 'foundations-money', 'foundations-1', 'foundations-3',
+      'foundations-4', 'foundations-2',
+      // Finance — budget/oversight/EVM focus
+      'finance-1', 'finance-4', 'finance-3', 'finance-2', 'finance-5', 'finance-7',
+      // Contracts — source selection, admin, mods
+      'contracts-2', 'contracts-3', 'contracts-6',
+      // Data — metrics, EVM deep dive, IPMR
+      'data-1', 'data-2', 'data-3', 'data-4',
+      // Ops — risk, stakeholders, PM mistakes
+      'ops-1', 'ops-2', 'ops-5',
+    ],
+    bonusLessons: [
+      'finance-6', 'finance-8',
+      'contracts-8', 'contracts-1', 'contracts-4', 'contracts-9', 'contracts-7', 'contracts-5',
+      'capture-1', 'capture-3', 'capture-2', 'capture-4', 'capture-5',
+      'ops-3', 'ops-4', 'ops-6', 'ops-7',
+    ],
+  },
+  {
+    id: 'contractor_pm',
+    label: 'DoD Contractor PM',
+    shortLabel: 'Contractor PM',
+    icon: <Briefcase className="w-3.5 h-3.5" />,
+    desc: 'Industry-side PM executing contracts, managing costs, task orders, and subcontractors',
+    primaryLessons: [
+      // Foundations — the essentials, skip lifecycle depth and ACAT/OTA
+      'foundations-intro', 'foundations-players', 'foundations-contracts', 'foundations-money',
+      // Contracts — the day-to-day world of a contractor PM
+      'contracts-8', 'contracts-1', 'contracts-4', 'contracts-9', 'contracts-3', 'contracts-6',
+      'contracts-7', 'contracts-5',
+      // Finance — cost structure, EVM, DCAA, CPAF burn rate
+      'finance-2', 'finance-5', 'finance-6', 'finance-7', 'finance-8',
+      // Data — metrics, EVM terms, IPMR
+      'data-1', 'data-3', 'data-4',
+      // Ops — risk, comms, subs, PM mistakes, what PMs actually do
+      'ops-1', 'ops-2', 'ops-4', 'ops-5', 'ops-7',
+    ],
+    bonusLessons: [
+      'foundations-lifecycle', 'foundations-1', 'foundations-3', 'foundations-4', 'foundations-2',
+      'finance-1', 'finance-4', 'finance-3',
+      'contracts-2',
+      'data-2',
+      'capture-1', 'capture-3', 'capture-2', 'capture-4', 'capture-5',
+      'ops-3', 'ops-6',
+    ],
+  },
+  {
+    id: 'contracting_officer',
+    label: 'Contracting Officer (1102)',
+    shortLabel: '1102 / CO',
+    icon: <FileText className="w-3.5 h-3.5" />,
+    desc: '1102 series — source selection, contract administration, FAR/DFARS compliance',
+    primaryLessons: [
+      // Foundations — full picture needed
+      'foundations-intro', 'foundations-players', 'foundations-contracts',
+      'foundations-lifecycle', 'foundations-money', 'foundations-1', 'foundations-3',
+      'foundations-4', 'foundations-2',
+      // Contracts — everything, this is the CO's core domain
+      'contracts-1', 'contracts-2', 'contracts-3', 'contracts-6',
+      'contracts-4', 'contracts-8', 'contracts-7', 'contracts-5', 'contracts-9',
+      // Finance — appropriations, cost estimating
+      'finance-4', 'finance-3',
+    ],
+    bonusLessons: [
+      'finance-1', 'finance-2', 'finance-5', 'finance-6', 'finance-7', 'finance-8',
+      'data-1', 'data-2', 'data-3', 'data-4',
+      'capture-1', 'capture-2', 'capture-3', 'capture-4', 'capture-5',
+      'ops-1', 'ops-2', 'ops-3', 'ops-4', 'ops-5', 'ops-6', 'ops-7',
+    ],
+  },
+  {
+    id: 'capture_bd',
+    label: 'Capture & BD',
+    shortLabel: 'Capture / BD',
+    icon: <LayoutGrid className="w-3.5 h-3.5" />,
+    desc: 'Win more business — master the capture lifecycle, proposals, and source selection strategy',
+    primaryLessons: [
+      // Foundations — the essentials
+      'foundations-intro', 'foundations-players', 'foundations-contracts',
+      // Contracts — vehicles, who's buying, source selection from buyer's side
+      'contracts-8', 'contracts-1', 'contracts-4', 'contracts-7', 'contracts-5', 'contracts-9',
+      'contracts-2',
+      // Capture — entire module is core
+      'capture-1', 'capture-3', 'capture-2', 'capture-4', 'capture-5',
+      // Ops — stakeholder comms matters for BD
+      'ops-2',
+    ],
+    bonusLessons: [
+      'foundations-lifecycle', 'foundations-money', 'foundations-1', 'foundations-3',
+      'foundations-4', 'foundations-2',
+      'finance-6', 'finance-8',
+      'contracts-3', 'contracts-6',
+      'data-1', 'data-2', 'data-3', 'data-4',
+      'finance-1', 'finance-4', 'finance-3', 'finance-2', 'finance-5', 'finance-7',
+      'ops-1', 'ops-3', 'ops-4', 'ops-5', 'ops-6', 'ops-7',
+    ],
+  },
+];
 
 interface SubjectGroup {
   id: SubjectGroupId;
@@ -49,51 +157,12 @@ interface SubjectGroup {
   moduleIds: string[];
 }
 
-const CAREER_TRACKS: CareerTrack[] = [
-  {
-    id: 'usg_pm',
-    label: 'USG Program Manager',
-    shortLabel: 'USG PM',
-    icon: <Building2 className="w-3.5 h-3.5" />,
-    desc: 'Government-side PM managing programs, budgets, and contractor oversight',
-    primaryModules: ['foundations', 'finance', 'contracts', 'data', 'ops'],
-    bonusModules: ['capture'],
-  },
-  {
-    id: 'contractor_pm',
-    label: 'DoD Contractor PM',
-    shortLabel: 'Contractor PM',
-    icon: <Briefcase className="w-3.5 h-3.5" />,
-    desc: 'Industry-side PM executing contracts, managing costs, and delivering programs',
-    primaryModules: ['foundations', 'contracts', 'finance', 'data', 'ops'],
-    bonusModules: ['capture'],
-  },
-  {
-    id: 'contracting_officer',
-    label: 'Contracting Officer',
-    shortLabel: '1102 / CO',
-    icon: <FileText className="w-3.5 h-3.5" />,
-    desc: '1102 series — source selection, contract administration, FAR/DFARS compliance',
-    primaryModules: ['foundations', 'contracts', 'finance'],
-    bonusModules: ['data', 'capture', 'ops'],
-  },
-  {
-    id: 'capture_bd',
-    label: 'Capture & BD',
-    shortLabel: 'Capture / BD',
-    icon: <LayoutGrid className="w-3.5 h-3.5" />,
-    desc: 'Win more business — master the capture lifecycle, proposals, and source selection',
-    primaryModules: ['foundations', 'capture', 'contracts'],
-    bonusModules: ['finance', 'data', 'ops'],
-  },
-];
-
 const SUBJECT_GROUPS: SubjectGroup[] = [
   {
     id: 'acquisition_foundations',
     label: 'Acquisition Foundations',
     shortLabel: 'Foundations',
-    icon: <Shield className="w-3.5 h-3.5" />,
+    icon: <Building2 className="w-3.5 h-3.5" />,
     desc: 'Lifecycle, key players, contract basics — the framework everything else builds on',
     moduleIds: ['foundations'],
   },
@@ -123,84 +192,103 @@ const SUBJECT_GROUPS: SubjectGroup[] = [
   },
 ];
 
-// ── Color configs ───────────────────────────────────────────────────────────
-const LIGHT_COLORS: Record<string, {
-  border: string; accentLight: string; checkLight: string; progressLight: string;
-}> = {
-  navy:  { border: 'border-blue-200  dark:border-blue-800/40',  accentLight: 'text-blue-600  dark:text-blue-400',  checkLight: 'text-blue-500  dark:text-blue-400',  progressLight: '[&>div]:bg-blue-500'  },
-  gold:  { border: 'border-yellow-200 dark:border-yellow-800/40', accentLight: 'text-yellow-600 dark:text-yellow-400', checkLight: 'text-yellow-500 dark:text-yellow-400', progressLight: '[&>div]:bg-yellow-500' },
-  blue:  { border: 'border-cyan-200   dark:border-cyan-800/40',   accentLight: 'text-cyan-600   dark:text-cyan-400',   checkLight: 'text-cyan-500   dark:text-cyan-400',   progressLight: '[&>div]:bg-cyan-500'   },
-  teal:  { border: 'border-teal-200   dark:border-teal-800/40',   accentLight: 'text-teal-600   dark:text-teal-400',   checkLight: 'text-teal-500   dark:text-teal-400',   progressLight: '[&>div]:bg-teal-500'   },
-  amber: { border: 'border-amber-200  dark:border-amber-800/40',  accentLight: 'text-amber-600  dark:text-amber-400',  checkLight: 'text-amber-500  dark:text-amber-400',  progressLight: '[&>div]:bg-amber-500'  },
-  slate: { border: 'border-slate-300  dark:border-slate-700/40',  accentLight: 'text-slate-600  dark:text-slate-300',  checkLight: 'text-slate-400  dark:text-slate-400',  progressLight: '[&>div]:bg-slate-400'  },
+// ── Color config ─────────────────────────────────────────────────────────────
+const COLORS: Record<string, { border: string; accent: string; check: string; progress: string; headerGrad: string }> = {
+  navy:  { border: 'border-blue-200  dark:border-blue-800/40',  accent: 'text-blue-600  dark:text-blue-400',  check: 'text-blue-500  dark:text-blue-400',  progress: '[&>div]:bg-blue-500',  headerGrad: 'from-blue-600  to-blue-700  dark:from-blue-800  dark:to-blue-900  border-blue-700/50'  },
+  gold:  { border: 'border-yellow-200 dark:border-yellow-800/40', accent: 'text-yellow-600 dark:text-yellow-400', check: 'text-yellow-500 dark:text-yellow-400', progress: '[&>div]:bg-yellow-500', headerGrad: 'from-yellow-500 to-amber-600  dark:from-yellow-800 dark:to-amber-900  border-yellow-600/50' },
+  blue:  { border: 'border-cyan-200   dark:border-cyan-800/40',   accent: 'text-cyan-600   dark:text-cyan-400',   check: 'text-cyan-500   dark:text-cyan-400',   progress: '[&>div]:bg-cyan-500',   headerGrad: 'from-cyan-500   to-cyan-700   dark:from-cyan-800   dark:to-cyan-900   border-cyan-600/50'   },
+  teal:  { border: 'border-teal-200   dark:border-teal-800/40',   accent: 'text-teal-600   dark:text-teal-400',   check: 'text-teal-500   dark:text-teal-400',   progress: '[&>div]:bg-teal-500',   headerGrad: 'from-teal-500   to-teal-700   dark:from-teal-800   dark:to-teal-900   border-teal-600/50'   },
+  amber: { border: 'border-amber-200  dark:border-amber-800/40',  accent: 'text-amber-600  dark:text-amber-400',  check: 'text-amber-500  dark:text-amber-400',  progress: '[&>div]:bg-amber-500',  headerGrad: 'from-amber-500  to-orange-600 dark:from-amber-800  dark:to-orange-900  border-amber-600/50'  },
+  slate: { border: 'border-slate-300  dark:border-slate-700/40',  accent: 'text-slate-600  dark:text-slate-300',  check: 'text-slate-400  dark:text-slate-400',  progress: '[&>div]:bg-slate-400',  headerGrad: 'from-slate-500  to-slate-700  dark:from-slate-700  dark:to-slate-900  border-slate-600/50'  },
 };
 
-// ── Module Card ─────────────────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+/** Lessons in a module that are in the primary set — preserving module order */
+function getPrimaryLessons(mod: typeof modules[0], primarySet: Set<string>) {
+  return mod.lessons.filter(l => primarySet.has(l.id));
+}
+
+function getModuleTrackMinutes(mod: typeof modules[0], primarySet: Set<string>): number {
+  return mod.lessons
+    .filter(l => primarySet.has(l.id))
+    .reduce((acc, l) => acc + parseDuration(l.duration), 0);
+}
+
+// ── Module Card ──────────────────────────────────────────────────────────────
 function ModuleCard({
-  mod, seqNum, isFirst, progress, onSelect, onUpgrade, isPrimary
+  mod, seqNum, isFirst, progress, onSelect, onUpgrade,
+  primaryLessons, // lesson IDs in this track for this module
+  isCareerMode,
 }: {
   mod: typeof modules[0];
-  seqNum?: number;
+  seqNum: number;
   isFirst?: boolean;
   progress: UserProgress;
   onSelect: () => void;
   onUpgrade: () => void;
-  isPrimary?: boolean;
+  primaryLessons: string[];   // IDs for track-relevant lessons in this module
+  isCareerMode: boolean;
 }) {
   const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
   const lessonIds = mod.lessons.map(l => l.id);
   const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
-  const colors = LIGHT_COLORS[mod.color] || LIGHT_COLORS.slate;
+  const c = COLORS[mod.color] || COLORS.slate;
+
   const totalMins = getModuleTotalMinutes(mod.id);
 
-  const previewLessons = mod.lessons.slice(0, 5);
-  const remaining = mod.lessons.length - previewLessons.length;
+  // In career mode: show only primary lessons in preview (up to 5)
+  // In subject mode: show first 5 lessons
+  const primarySet = new Set(primaryLessons);
+  const displayLessons = isCareerMode
+    ? mod.lessons.filter(l => primarySet.has(l.id)).slice(0, 5)
+    : mod.lessons.slice(0, 5);
+  const trackMins = isCareerMode ? getModuleTrackMinutes(mod, primarySet) : totalMins;
+  const trackLessonCount = isCareerMode ? primaryLessons.length : mod.lessons.length;
+  const remainingInTrack = isCareerMode
+    ? Math.max(0, primaryLessons.length - 5)
+    : Math.max(0, mod.lessons.length - 5);
 
   return (
     <div
       className={cn(
         "group relative rounded-2xl border overflow-hidden transition-all duration-200 bg-card shadow-sm",
-        colors.border,
+        c.border,
         isAccessible ? "hover:shadow-lg hover:-translate-y-0.5 cursor-pointer" : "opacity-70",
         isFirst ? "ring-2 ring-primary/30" : "",
-        !isPrimary ? "opacity-80" : ""
       )}
       onClick={() => isAccessible ? onSelect() : onUpgrade()}
       data-testid={`module-${mod.id}`}
     >
-      {/* Colored gradient header */}
-      <div className={cn(
-        "px-5 py-4 border-b bg-gradient-to-r",
-        mod.color === 'navy'  ? "from-blue-600 to-blue-700 dark:from-blue-800 dark:to-blue-900 border-blue-700/50" :
-        mod.color === 'gold'  ? "from-yellow-500 to-amber-600 dark:from-yellow-800 dark:to-amber-900 border-yellow-600/50" :
-        mod.color === 'blue'  ? "from-cyan-500 to-cyan-700 dark:from-cyan-800 dark:to-cyan-900 border-cyan-600/50" :
-        mod.color === 'teal'  ? "from-teal-500 to-teal-700 dark:from-teal-800 dark:to-teal-900 border-teal-600/50" :
-        mod.color === 'amber' ? "from-amber-500 to-orange-600 dark:from-amber-800 dark:to-orange-900 border-amber-600/50" :
-                                "from-slate-500 to-slate-700 dark:from-slate-700 dark:to-slate-900 border-slate-600/50"
-      )}>
+      {/* Gradient header */}
+      <div className={cn("px-5 py-4 border-b bg-gradient-to-r", c.headerGrad)}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {seqNum !== undefined ? (
-              <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 text-white text-xs font-bold tabular-nums border border-white/30">
-                {String(seqNum).padStart(2, '0')}
-              </span>
-            ) : (
-              <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 text-white text-xs font-medium border border-white/30">★</span>
-            )}
+            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 text-white text-xs font-bold tabular-nums border border-white/30">
+              {String(seqNum).padStart(2, '0')}
+            </span>
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-lg leading-none">{mod.icon}</span>
                 <span className="font-bold text-white text-sm">{mod.title}</span>
               </div>
-              {/* Minutes + lessons in subtitle */}
               <div className="flex items-center gap-2 mt-0.5">
                 <span className="text-[11px] text-white/60">{mod.subtitle}</span>
                 <span className="text-white/30 text-[10px]">·</span>
                 <span className="text-[11px] text-white/80 font-medium flex items-center gap-1">
-                  <Clock className="w-2.5 h-2.5 inline" /> {formatDuration(totalMins)}
+                  <Clock className="w-2.5 h-2.5 inline" />
+                  {isCareerMode && trackMins !== totalMins
+                    ? <>{formatDuration(trackMins)} <span className="text-white/50 font-normal">of {formatDuration(totalMins)}</span></>
+                    : formatDuration(totalMins)
+                  }
                 </span>
                 <span className="text-white/30 text-[10px]">·</span>
-                <span className="text-[11px] text-white/70">{mod.lessons.length} lessons</span>
+                <span className="text-[11px] text-white/70">
+                  {isCareerMode && trackLessonCount !== mod.lessons.length
+                    ? <>{trackLessonCount} <span className="text-white/50">of {mod.lessons.length}</span> lessons</>
+                    : <>{mod.lessons.length} lessons</>
+                  }
+                </span>
               </div>
             </div>
           </div>
@@ -224,30 +312,26 @@ function ModuleCard({
       <div className="p-5">
         <p className="text-xs text-muted-foreground mb-4 leading-relaxed line-clamp-2">{mod.description}</p>
 
-        {/* Lesson sub-list */}
+        {/* Lesson list */}
         <div className="space-y-1 mb-4">
-          {previewLessons.map((lesson) => {
+          {displayLessons.map(lesson => {
             const done = progress.completedLessons.has(lesson.id);
             return (
               <div key={lesson.id} className="flex items-center gap-2.5">
-                {done ? (
-                  <CheckCircle2 className={cn("w-3.5 h-3.5 flex-shrink-0", colors.checkLight)} />
-                ) : (
-                  <Circle className="w-3.5 h-3.5 flex-shrink-0 text-muted-foreground/40" />
-                )}
-                <span className={cn(
-                  "text-xs leading-snug truncate",
-                  done ? "text-muted-foreground line-through" : "text-foreground/80"
-                )}>
+                {done
+                  ? <CheckCircle2 className={cn("w-3.5 h-3.5 flex-shrink-0", c.check)} />
+                  : <Circle className="w-3.5 h-3.5 flex-shrink-0 text-muted-foreground/40" />
+                }
+                <span className={cn("text-xs leading-snug truncate", done ? "text-muted-foreground line-through" : "text-foreground/80")}>
                   {lesson.title}
                 </span>
                 <span className="ml-auto text-[10px] text-muted-foreground/50 flex-shrink-0">{lesson.duration}</span>
               </div>
             );
           })}
-          {remaining > 0 && (
-            <div className={cn("text-[11px] font-medium mt-1 pl-6", colors.accentLight)}>
-              + {remaining} more lesson{remaining > 1 ? 's' : ''}
+          {remainingInTrack > 0 && (
+            <div className={cn("text-[11px] font-medium mt-1 pl-6", c.accent)}>
+              + {remainingInTrack} more lesson{remainingInTrack > 1 ? 's' : ''}
             </div>
           )}
         </div>
@@ -256,18 +340,18 @@ function ModuleCard({
         <div className="border-t border-border pt-3 mt-3">
           <div className="flex items-center justify-between mb-1.5">
             <div className="flex items-center gap-1.5">
-              <BookOpen className={cn("w-3 h-3", colors.accentLight)} />
+              <BookOpen className={cn("w-3 h-3", c.accent)} />
               <span className="text-xs text-muted-foreground">{mod.lessons.length} lessons</span>
             </div>
-            <span className={cn("text-xs font-semibold", isAccessible && progressPct > 0 ? colors.accentLight : 'text-muted-foreground')}>
+            <span className={cn("text-xs font-semibold", isAccessible && progressPct > 0 ? c.accent : 'text-muted-foreground')}>
               {isAccessible ? (progressPct > 0 ? `${progressPct}% done` : 'Not started') : 'Locked'}
             </span>
           </div>
-          <Progress value={isAccessible ? progressPct : 0} className={cn("h-1.5", colors.progressLight)} />
+          <Progress value={isAccessible ? progressPct : 0} className={cn("h-1.5", c.progress)} />
         </div>
 
         {isAccessible && (
-          <div className={cn("flex items-center gap-1 mt-3 text-xs font-medium", colors.accentLight)}>
+          <div className={cn("flex items-center gap-1 mt-3 text-xs font-medium", c.accent)}>
             <span>{progressPct > 0 ? 'Continue' : 'Start module'}</span>
             <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </div>
@@ -277,7 +361,7 @@ function ModuleCard({
   );
 }
 
-// ── Filter Tab Button ───────────────────────────────────────────────────────
+// ── Filter tab ───────────────────────────────────────────────────────────────
 function FilterTab({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
     <button
@@ -294,44 +378,63 @@ function FilterTab({ active, onClick, children }: { active: boolean; onClick: ()
   );
 }
 
-// ── Main Dashboard ──────────────────────────────────────────────────────────
-export default function Dashboard({ progress, onSelectModule, onUpgrade, userProfile, username, onEditProfile }: DashboardProps) {
+// ── Main Dashboard ───────────────────────────────────────────────────────────
+export default function Dashboard({ progress, onSelectModule, onUpgrade, username }: DashboardProps) {
   const totalLessons = getTotalLessons();
   const completedCount = progress.completedLessons.size;
   const xp = calculateXP(progress.completedLessons, progress.quizScores);
   const levelInfo = getLevel(xp);
 
-  // Filter state
   const [filterMode, setFilterMode] = useState<FilterMode>('career');
   const [activeCareer, setActiveCareer] = useState<CareerTrackId>('usg_pm');
   const [activeSubject, setActiveSubject] = useState<SubjectGroupId>('acquisition_foundations');
   const [bonusExpanded, setBonusExpanded] = useState(false);
 
-  // Resolve display order from filters
-  const { orderedPrimary, orderedBonus } = (() => {
+  // ── Resolve which modules + lessons to show ──────────────────────────────
+  const { primaryModuleOrder, bonusModuleOrder, primaryLessonSetForModule } = (() => {
     if (filterMode === 'career') {
       const track = CAREER_TRACKS.find(t => t.id === activeCareer)!;
-      const primary = track.primaryModules.map(id => modules.find(m => m.id === id)).filter(Boolean) as typeof modules;
-      const bonus = track.bonusModules.map(id => modules.find(m => m.id === id)).filter(Boolean) as typeof modules;
-      // Any module not in either list
-      const extra = modules.filter(m => !track.primaryModules.includes(m.id) && !track.bonusModules.includes(m.id));
-      return { orderedPrimary: [...primary, ...extra], orderedBonus: bonus };
+      const primarySet = new Set(track.primaryLessons);
+      const bonusSet = new Set(track.bonusLessons);
+
+      // Order modules by which has primary lessons, preserving natural module order
+      const moduleOrder = ['foundations', 'finance', 'contracts', 'data', 'capture', 'ops'];
+
+      // A module is "primary" if it has at least 1 primary lesson
+      const primary = moduleOrder
+        .map(id => modules.find(m => m.id === id))
+        .filter(Boolean)
+        .filter(m => m!.lessons.some(l => primarySet.has(l.id))) as typeof modules;
+
+      // A module is "bonus" if it has bonus lessons but NO primary lessons in this track
+      const bonus = moduleOrder
+        .map(id => modules.find(m => m.id === id))
+        .filter(Boolean)
+        .filter(m => !m!.lessons.some(l => primarySet.has(l.id))) as typeof modules;
+
+      // For each module, which lessons are in the primary set
+      const lessonMap: Record<string, string[]> = {};
+      for (const mod of [...primary, ...bonus]) {
+        lessonMap[mod.id] = mod.lessons.filter(l => primarySet.has(l.id)).map(l => l.id);
+      }
+
+      return { primaryModuleOrder: primary, bonusModuleOrder: bonus, primaryLessonSetForModule: lessonMap };
     } else {
-      // Subject mode: show group's modules prominently, others as bonus
+      // Subject mode: show group's modules, rest as bonus
       const group = SUBJECT_GROUPS.find(g => g.id === activeSubject)!;
       const primary = group.moduleIds.map(id => modules.find(m => m.id === id)).filter(Boolean) as typeof modules;
       const bonus = modules.filter(m => !group.moduleIds.includes(m.id));
-      return { orderedPrimary: primary, orderedBonus: bonus };
+      const lessonMap: Record<string, string[]> = {};
+      for (const mod of modules) {
+        lessonMap[mod.id] = mod.lessons.map(l => l.id); // show all
+      }
+      return { primaryModuleOrder: primary, bonusModuleOrder: bonus, primaryLessonSetForModule: lessonMap };
     }
   })();
 
-  // Seq numbers (primary modules only)
-  const moduleSeqNum: Record<string, number> = {};
-  orderedPrimary.forEach((m, i) => { moduleSeqNum[m.id] = i + 1; });
-
-  // Next lesson (across all modules)
+  // Next incomplete lesson (primary modules first)
   const nextLesson = (() => {
-    for (const mod of [...orderedPrimary, ...orderedBonus]) {
+    for (const mod of [...primaryModuleOrder, ...bonusModuleOrder]) {
       const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
       if (!isAccessible) continue;
       for (const lesson of mod.lessons) {
@@ -341,8 +444,6 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, userPro
     return null;
   })();
 
-  const learningPath = getLearningPath(userProfile);
-
   const statsStrip = [
     { icon: <CheckCircle2 className="w-5 h-5 text-emerald-500" />, value: completedCount, label: 'Lessons done', sub: `of ${totalLessons} total` },
     { icon: <Zap className="w-5 h-5 text-yellow-500" />, value: xp, label: 'XP earned', sub: `Lv ${levelInfo.level} · ${levelInfo.title}` },
@@ -350,15 +451,15 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, userPro
     { icon: <TrendingUp className="w-5 h-5 text-cyan-500" />, value: `${Math.round((completedCount / totalLessons) * 100)}%`, label: 'Overall progress', sub: `${totalLessons - completedCount} remaining` },
   ];
 
-  // Active filter description
-  const activeFilterDesc = filterMode === 'career'
-    ? CAREER_TRACKS.find(t => t.id === activeCareer)!.desc
-    : SUBJECT_GROUPS.find(g => g.id === activeSubject)!.desc;
+  const activeTrack = CAREER_TRACKS.find(t => t.id === activeCareer);
+  const activeGroup = SUBJECT_GROUPS.find(g => g.id === activeSubject);
+  const activeFilterDesc = filterMode === 'career' ? activeTrack!.desc : activeGroup!.desc;
+  const activeFilterLabel = filterMode === 'career' ? activeTrack!.label + ' Path' : activeGroup!.label;
 
   return (
     <div className="space-y-8">
 
-      {/* Welcome Header */}
+      {/* Welcome */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
@@ -385,14 +486,11 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, userPro
         </div>
       </div>
 
-      {/* Stats Strip */}
+      {/* Stats strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {statsStrip.map((s, i) => (
           <div key={i} className="bg-card border border-border rounded-xl p-3.5 flex flex-col gap-1 shadow-sm">
-            <div className="flex items-center gap-2">
-              {s.icon}
-              <span className="text-xl font-bold tabular-nums">{s.value}</span>
-            </div>
+            <div className="flex items-center gap-2">{s.icon}<span className="text-xl font-bold tabular-nums">{s.value}</span></div>
             <div className="text-xs font-medium text-foreground/80">{s.label}</div>
             <div className="text-[10px] text-muted-foreground">{s.sub}</div>
           </div>
@@ -424,9 +522,8 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, userPro
         </div>
       )}
 
-      {/* ── Filter Bar ─────────────────────────────────────────────────── */}
+      {/* ── Filter Bar ─────────────────────────────────────────────────────── */}
       <div className="space-y-3">
-        {/* Mode toggle */}
         <div className="flex items-center gap-2">
           <Filter className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mr-1">View by</span>
@@ -440,7 +537,6 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, userPro
           </div>
         </div>
 
-        {/* Career path tabs */}
         {filterMode === 'career' && (
           <div className="flex flex-wrap gap-2">
             {CAREER_TRACKS.map(track => (
@@ -454,14 +550,12 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, userPro
                     : "bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-foreground"
                 )}
               >
-                {track.icon}
-                {track.shortLabel}
+                {track.icon}{track.shortLabel}
               </button>
             ))}
           </div>
         )}
 
-        {/* Subject group tabs */}
         {filterMode === 'subject' && (
           <div className="flex flex-wrap gap-2">
             {SUBJECT_GROUPS.map(group => (
@@ -475,52 +569,44 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, userPro
                     : "bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-foreground"
                 )}
               >
-                {group.icon}
-                {group.shortLabel}
+                {group.icon}{group.shortLabel}
               </button>
             ))}
           </div>
         )}
 
-        {/* Active filter description */}
         <p className="text-xs text-muted-foreground italic">{activeFilterDesc}</p>
       </div>
 
-      {/* ── Primary Modules ───────────────────────────────────────────── */}
+      {/* ── Primary Modules ───────────────────────────────────────────────── */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-bold">
-            {filterMode === 'career'
-              ? CAREER_TRACKS.find(t => t.id === activeCareer)!.label + ' Path'
-              : SUBJECT_GROUPS.find(g => g.id === activeSubject)!.label}
-          </h2>
+          <h2 className="text-base font-bold">{activeFilterLabel}</h2>
           <span className="text-xs text-muted-foreground">
-            {orderedPrimary.length} module{orderedPrimary.length !== 1 ? 's' : ''}
+            {primaryModuleOrder.length} module{primaryModuleOrder.length !== 1 ? 's' : ''}
           </span>
         </div>
         <div className="grid md:grid-cols-2 gap-5">
-          {orderedPrimary.map((mod, i) => (
+          {primaryModuleOrder.map((mod, i) => (
             <ModuleCard
               key={mod.id}
               mod={mod}
-              seqNum={moduleSeqNum[mod.id]}
+              seqNum={i + 1}
               isFirst={i === 0}
               progress={progress}
               onSelect={() => onSelectModule(mod.id)}
               onUpgrade={onUpgrade}
-              isPrimary
+              primaryLessons={primaryLessonSetForModule[mod.id] ?? []}
+              isCareerMode={filterMode === 'career'}
             />
           ))}
         </div>
       </div>
 
-      {/* ── Supporting Modules ────────────────────────────────────────── */}
-      {orderedBonus.length > 0 && (
+      {/* ── Bonus Modules ─────────────────────────────────────────────────── */}
+      {bonusModuleOrder.length > 0 && (
         <div>
-          <button
-            onClick={() => setBonusExpanded(e => !e)}
-            className="w-full flex items-center gap-3 group mb-1"
-          >
+          <button onClick={() => setBonusExpanded(e => !e)} className="w-full flex items-center gap-3 group mb-1">
             <div className="flex items-center gap-2 flex-1">
               <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
                 <Beaker className="w-4 h-4 text-muted-foreground" />
@@ -530,7 +616,7 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, userPro
                   {filterMode === 'career' ? 'Bonus Modules' : 'Other Modules'}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  {orderedBonus.length} module{orderedBonus.length !== 1 ? 's' : ''} —{' '}
+                  {bonusModuleOrder.length} module{bonusModuleOrder.length !== 1 ? 's' : ''} —{' '}
                   {filterMode === 'career' ? 'outside this career track, but valuable context' : 'outside this subject group'}
                 </div>
               </div>
@@ -542,16 +628,16 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, userPro
 
           {bonusExpanded && (
             <div className="mt-4 grid md:grid-cols-2 gap-5">
-              {orderedBonus.map(mod => (
+              {bonusModuleOrder.map((mod, i) => (
                 <ModuleCard
                   key={mod.id}
                   mod={mod}
-                  seqNum={undefined}
-                  isFirst={false}
+                  seqNum={primaryModuleOrder.length + i + 1}
                   progress={progress}
                   onSelect={() => onSelectModule(mod.id)}
                   onUpgrade={onUpgrade}
-                  isPrimary={false}
+                  primaryLessons={primaryLessonSetForModule[mod.id] ?? mod.lessons.map(l => l.id)}
+                  isCareerMode={filterMode === 'career'}
                 />
               ))}
             </div>
