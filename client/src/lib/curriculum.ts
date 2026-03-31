@@ -3487,19 +3487,19 @@ export const modules: Module[] = [
                   body: 'For anyone new to defense contracting — or new to a specific service or installation — start at the base level. One BPA (Blanket Purchase Agreement) or simplified acquisition win gives you:\n\n- A real CPARS rating with a real CO and COR\n- A name in the base contracting office\'s market research files\n- A reference for future enterprise-level competitions\n- A relationship with the COR who is your biggest competitive asset for recompetes\n\nThe $150K base-level BPA you win this year is the past performance reference that wins the $5M enterprise contract in two years.',
                 },
                 {
+                  type: 'highlight',
+                  body: 'The COR writes your CPARS rating. **That rating follows you to every future competition.** Invest in the relationship before you need it.',
+                },
+                {
                   type: 'list',
                   heading: 'SAM.gov: Your Intelligence Feed',
                   items: [
                     'Monitor SAM.gov daily for Sources Sought and RFI notices — these are the government\'s market research phase|||Sources Sought and RFIs are not contracts — they\'re the government asking "who\'s out there?" Responding is free, shapes requirements, and gets your company into the CO\'s market research file. Many contractors ignore these and then wonder why the final RFP seems written for someone else.',
                     'Respond to every Sources Sought for requirements in your capability area — even if you can\'t win yet|||Your response tells the CO your firm exists, understands the requirement, and is interested. It costs almost nothing. Over time, your responses build a paper trail of engagement that influences how requirements are scoped.',
                     'Attend Industry Days and Pre-solicitation Conferences — they\'re not optional for serious competitors|||Industry Days are where you learn the CO\'s priorities, the COR\'s pain points, and the evaluation criteria they\'re thinking about — before the RFP drops. Competitors who attend understand what the government actually wants. Competitors who don\'t are guessing.',
-                    'Set up automated SAM.gov email alerts for your NAICS codes and target agencies|||SAM.gov allows email notifications for new opportunities by NAICS (North American Industry Classification System) code, agency, and geographic location. Without alerts, you\'re doing manual searches and missing time-sensitive opportunities.',
+                    'Set up automated SAM.gov email alerts for your NAICS codes and target agencies — do it today if you haven\'t|||SAM.gov allows email notifications for new opportunities by NAICS (North American Industry Classification System) code, agency, and geographic location. Without alerts, you\'re doing manual searches and missing time-sensitive opportunities. Takes five minutes to set up.',
                     'Track incumbent contracts using FPDS-NG — every award above the micro-purchase threshold is public|||FPDS-NG (Federal Procurement Data System — Next Generation) shows you who holds the current contract, what they\'re being paid, when it expires, and what vehicle it\'s on. Knowing who the incumbent is and when their contract recompetes is the foundation of any serious capture plan.',
                   ],
-                },
-                {
-                  type: 'highlight',
-                  body: 'The COR writes your CPARS rating. **That rating follows you to every future competition.** Invest in the relationship before you need it.',
                 },
                 {
                   type: 'lucas_note',
