@@ -65,7 +65,7 @@ const CAREER_TRACKS: CareerTrack[] = [
     shortLabel: 'Contractor PM',
     icon: <Briefcase className="w-3.5 h-3.5" />,
     desc: 'Industry-side PM executing contracts, managing costs, and delivering programs',
-    primaryModules: ['contracts', 'finance', 'data', 'ops', 'foundations'],
+    primaryModules: ['foundations', 'contracts', 'finance', 'data', 'ops'],
     bonusModules: ['capture'],
   },
   {
@@ -74,7 +74,7 @@ const CAREER_TRACKS: CareerTrack[] = [
     shortLabel: '1102 / CO',
     icon: <FileText className="w-3.5 h-3.5" />,
     desc: '1102 series — source selection, contract administration, FAR/DFARS compliance',
-    primaryModules: ['contracts', 'foundations', 'finance'],
+    primaryModules: ['foundations', 'contracts', 'finance'],
     bonusModules: ['data', 'capture', 'ops'],
   },
   {
@@ -83,7 +83,7 @@ const CAREER_TRACKS: CareerTrack[] = [
     shortLabel: 'Capture / BD',
     icon: <LayoutGrid className="w-3.5 h-3.5" />,
     desc: 'Win more business — master the capture lifecycle, proposals, and source selection',
-    primaryModules: ['capture', 'contracts', 'foundations'],
+    primaryModules: ['foundations', 'capture', 'contracts'],
     bonusModules: ['finance', 'data', 'ops'],
   },
 ];
