@@ -219,16 +219,14 @@ function ExpandableBulletItem({
         <span className="flex-1">
           {(() => {
             const dashIdx = bulletText.indexOf(' — ');
-            const colonIdx = bulletText.indexOf(': ');
-            // Split on em-dash or colon if both label and rest are present
-            const splitIdx = dashIdx > 0 ? dashIdx : (colonIdx > 0 && colonIdx < 55 ? colonIdx : -1);
-            if (splitIdx > 0) {
-              const label = bulletText.slice(0, splitIdx);
-              const rest = bulletText.slice(splitIdx);
+            // Only split on em-dash — colon is too ambiguous and causes random bolds mid-sentence
+            if (dashIdx > 0) {
+              const label = bulletText.slice(0, dashIdx);
+              const rest = bulletText.slice(dashIdx);
               return <><span className="font-semibold text-foreground">{label}</span><span>{rest}</span></>;
             }
-            // Short items with no split — bold the whole thing
-            if (bulletText.length < 55) {
+            // Short items with no em-dash — bold the whole thing
+            if (bulletText.length < 50) {
               return <span className="font-semibold text-foreground">{bulletText}</span>;
             }
             return bulletText;
@@ -964,63 +962,53 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             if (block.type === 'risk_chart') {
+              // contractorColor: how risky is it FOR THE CONTRACTOR (high % = red)
+              // govColor: how risky is it FOR THE GOVERNMENT (high % = amber/red)
               const contracts = [
-                { name: 'FFP',  full: 'Firm-Fixed-Price',             contractorRisk: 100, govRisk: 0,  costRisk: 'Contractor', perfRisk: 'Contractor', color: '#16a34a' },
-                { name: 'FPIF', full: 'Fixed-Price Incentive (Firm)', contractorRisk: 70,  govRisk: 30, costRisk: 'Shared',     perfRisk: 'Contractor', color: '#65a30d' },
-                { name: 'CPIF', full: 'Cost-Plus-Incentive-Fee',      contractorRisk: 25,  govRisk: 75, costRisk: 'Government', perfRisk: 'Shared',     color: '#d97706' },
-                { name: 'CPAF', full: 'Cost-Plus-Award-Fee',          contractorRisk: 15,  govRisk: 85, costRisk: 'Government', perfRisk: 'Gov (FDO)',  color: '#ea580c' },
-                { name: 'CPFF', full: 'Cost-Plus-Fixed-Fee',          contractorRisk: 10,  govRisk: 90, costRisk: 'Government', perfRisk: 'Shared',     color: '#dc2626' },
-                { name: 'T&M',  full: 'Time & Materials',             contractorRisk: 5,   govRisk: 95, costRisk: 'Government', perfRisk: 'Government', color: '#991b1b' },
+                { name: 'FFP',  full: 'Firm-Fixed-Price',             contractorRisk: 100, govRisk: 0,  costRisk: 'Contractor', perfRisk: 'Contractor' },
+                { name: 'FPIF', full: 'Fixed-Price Incentive (Firm)', contractorRisk: 70,  govRisk: 30, costRisk: 'Shared',     perfRisk: 'Contractor' },
+                { name: 'CPIF', full: 'Cost-Plus-Incentive-Fee',      contractorRisk: 25,  govRisk: 75, costRisk: 'Government', perfRisk: 'Shared'     },
+                { name: 'CPAF', full: 'Cost-Plus-Award-Fee',          contractorRisk: 15,  govRisk: 85, costRisk: 'Government', perfRisk: 'Gov (FDO)'  },
+                { name: 'CPFF', full: 'Cost-Plus-Fixed-Fee',          contractorRisk: 10,  govRisk: 90, costRisk: 'Government', perfRisk: 'Shared'     },
+                { name: 'T&M',  full: 'Time & Materials',             contractorRisk: 5,   govRisk: 95, costRisk: 'Government', perfRisk: 'Government' },
               ];
+              // Contractor risk: high = red (bad for contractor), low = green (safe for contractor)
+              const contractorColor = (pct: number) => pct >= 70 ? '#dc2626' : pct >= 40 ? '#ea580c' : pct >= 15 ? '#d97706' : '#16a34a';
+              // Gov risk: high = amber/red (bad for gov), low = slate (safe for gov)
+              const govColor = (pct: number) => pct >= 80 ? '#b45309' : pct >= 50 ? '#d97706' : pct >= 20 ? '#ca8a04' : '#64748b';
               return (
                 <div key={i} className="bg-card border border-border rounded-xl overflow-hidden">
                   <div className="px-5 py-3.5 border-b border-border bg-muted/30">
                     <h3 className="font-semibold text-sm">Risk Allocation by Contract Type</h3>
-                    <p className="text-xs text-muted-foreground mt-0.5">Who absorbs cost overruns, performance failures, and technical risk</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Who absorbs cost overruns — red means that side bears more risk</p>
                   </div>
-                  <div className="p-5 space-y-5">
+                  <div className="p-5 space-y-4">
                     <div className="flex items-center gap-5 text-xs">
-                      <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-primary inline-block" />Contractor Risk</div>
-                      <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-muted-foreground/30 inline-block" />Government Risk</div>
+                      <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-red-600 inline-block" />Contractor bears risk</div>
+                      <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-amber-600 inline-block" />Government bears risk</div>
                     </div>
                     {contracts.map((c) => (
                       <div key={c.name} className="space-y-1.5">
                         <div className="flex items-center justify-between text-xs">
                           <div className="flex items-center gap-2">
-                            <span className="font-bold w-10" style={{ color: c.color }}>{c.name}</span>
+                            <span className="font-bold w-10 text-foreground">{c.name}</span>
                             <span className="text-muted-foreground text-[10px] hidden sm:inline">{c.full}</span>
                           </div>
                           <span className="text-muted-foreground text-[10px]">Cost: <span className="font-medium text-foreground">{c.costRisk}</span> · Perf: <span className="font-medium text-foreground">{c.perfRisk}</span></span>
                         </div>
                         <div className="flex h-6 rounded-lg overflow-hidden w-full gap-0.5">
-                          <div
-                            className="flex items-center justify-center text-[10px] font-bold text-white transition-all"
-                            style={{ width: `${c.contractorRisk}%`, backgroundColor: c.color, minWidth: c.contractorRisk > 0 ? '2px' : '0' }}
-                          >
+                          <div className="flex items-center justify-center text-[10px] font-bold text-white transition-all"
+                            style={{ width: `${c.contractorRisk}%`, backgroundColor: contractorColor(c.contractorRisk), minWidth: c.contractorRisk > 0 ? '2px' : '0' }}>
                             {c.contractorRisk >= 20 ? `${c.contractorRisk}%` : ''}
                           </div>
-                          <div
-                            className="flex items-center justify-center text-[10px] font-bold text-white bg-slate-400 dark:bg-slate-600 transition-all"
-                            style={{ width: `${c.govRisk}%`, minWidth: c.govRisk > 0 ? '2px' : '0' }}
-                          >
+                          <div className="flex items-center justify-center text-[10px] font-bold text-white transition-all"
+                            style={{ width: `${c.govRisk}%`, backgroundColor: govColor(c.govRisk), minWidth: c.govRisk > 0 ? '2px' : '0' }}>
                             {c.govRisk >= 20 ? `${c.govRisk}%` : ''}
                           </div>
                         </div>
                       </div>
                     ))}
-                    <div className="border-t border-border pt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      {[
-                        { label: '💰 Cost Risk', desc: 'Who pays for cost overruns above the target/ceiling price?' },
-                        { label: '⚙️ Performance Risk', desc: 'Who absorbs losses if the deliverable underperforms or needs rework?' },
-                        { label: '🔬 Technical Risk', desc: 'Who bears the burden if the technology proves harder than expected?' },
-                      ].map(({ label, desc }) => (
-                        <div key={label} className="bg-muted/30 rounded-lg p-3">
-                          <div className="text-xs font-semibold mb-1">{label}</div>
-                          <div className="text-[11px] text-muted-foreground leading-relaxed">{desc}</div>
-                        </div>
-                      ))}
-                    </div>
-                    <p className="text-[11px] text-muted-foreground italic">FAR 16.103(a): The contract type must be appropriate for the circumstances — risk must be commensurate with the government's ability to define requirements and manage performance.</p>
+                    <p className="text-[11px] text-muted-foreground italic pt-2 border-t border-border">The higher the contractor risk, the more they’re on the hook for cost overruns. The higher the government risk, the more taxpayers absorb when things go wrong.</p>
                   </div>
                 </div>
               );

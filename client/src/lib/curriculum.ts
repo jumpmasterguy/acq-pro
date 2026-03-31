@@ -3780,17 +3780,23 @@ export const modules: Module[] = [
             body: "In federal contracting, there are two distinct levels of agreement you must understand: the base contract and the order. The base contract (the IDIQ) establishes all the legal terms and conditions — pricing, labor categories, clauses, applicable regulations, and the overall ordering ceiling. The task order (TO) is where actual work gets authorized and funded. No work begins until a task order is issued. This two-level structure gives agencies flexibility to order services on demand without re-competing every single requirement."
           },
           {
-            type: 'table',
-            heading: "Contract vs. Task Order vs. BPA: Key Differences",
-            headers: ['Element', 'IDIQ Base Contract', 'Task Order', 'BPA'],
+            type: 'stat_row',
+            heading: 'Three Instruments — One Layered System',
+            stats: [
+              { value: '📋', label: 'IDIQ Base Contract', sub: 'The umbrella. Sets terms, rates, and ceiling. Competed once. Money obligated: just the minimum.' },
+              { value: '📝', label: 'Task Order', sub: 'The actual work. Competed among pool holders. Money obligated: the full order amount.' },
+              { value: '🛒', label: 'BPA', sub: 'A simplified ordering arrangement. Like a store account — no guaranteed min/max, just agreed pricing.' },
+            ],
+          },
+          {
+            type: 'two_col',
+            heading: 'How They Compare',
             rows: [
-              ['What it does', 'Establishes legal framework, terms, clauses, labor rates', 'Authorizes & funds specific work', 'Sets up ordering arrangement (no guaranteed min/max)'],
-              ['When competed', 'Once, at contract award', 'Each order (fair opportunity)', 'Once, at BPA establishment'],
-              ['Funds obligated', 'Only minimum guarantee at award', 'Full amount of each order', 'At time of call (order) placement'],
-              ['Period', 'Ordering period (e.g., 5+5 years)', 'Task order PoP (can extend past IDIQ ordering period)', 'Typically 1 year, renewable'],
-              ['Modifications', 'Change terms, rates, ceiling, ordering period', 'Change scope/funding on that specific task', 'Modify terms of BPA arrangement'],
-              ['Competition', 'Full & open or small biz set-aside', 'Fair opportunity among awardees', 'Schedule price competition'],
-            ]
+              { label: 'What binds money', text: 'Only the task order obligates real dollars. The IDIQ base just sets the framework — winning a spot on an IDIQ does not mean revenue. A BPA call (order) obligates funds at the time it is placed.' },
+              { label: 'Who competes', text: 'IDIQ base: full & open competition (or small business set-aside). Task orders: fair opportunity among existing pool holders — lighter and faster. BPA: competed against GSA Schedule pricing.' },
+              { label: 'Period of performance', text: 'IDIQ: ordering period is typically 5+5 years. A task order can extend past the IDIQ ordering period if the PoP was set before it closed. BPA: typically 1 year, renewable.' },
+              { label: 'How to modify', text: 'Modify the base IDIQ to change rates, ceiling, or ordering period. Modify the task order to change scope or funding on that specific job. Never cross them — a task order mod cannot change base IDIQ terms.' },
+            ],
           },
           {
             type: 'text',
@@ -4804,15 +4810,30 @@ export const modules: Module[] = [
             body: "Contract award is not the end — it's the beginning of the most critical phase. The vast majority of cost growth, schedule delays, and disputes occur during contract administration, not before award. A program office that does excellent source selection but weak contract administration will still fail. Understanding the roles of the CO, ACO, COR, and DCMA is essential for any PM."
           },
           {
-            type: 'table',
-            heading: "Key Contract Administration Roles",
-            headers: ['Role', 'Responsibility', 'Key Authority'],
+            type: 'two_col',
+            heading: 'The Four People Running Your Contract',
             rows: [
-              ['PCO', 'Award and modification authority; contract terms and conditions', 'Only one who can change contract scope or price'],
-              ['ACO', 'Day-to-day administration; payments; contractor compliance', 'Can approve interim payments; suspend work'],
-              ['COR', 'Technical oversight; performance monitoring; CDRL acceptance', 'NO contract authority — advisory only to CO'],
-              ['DCMA', 'On-site contractor oversight; quality, delivery, and finance surveillance', 'Can withhold payment for non-conforming items'],
-            ]
+              {
+                label: 'PCO',
+                badge: 'Signs the contract',
+                text: 'Procuring Contracting Officer. The person who awarded the contract and is the only one who can legally change its scope, price, or terms. If a contractor wants more money or a schedule extension, it has to go through the PCO. Nobody else — not the COR, not the PM — can commit the government to additional work or cost.',
+              },
+              {
+                label: 'ACO',
+                badge: 'Runs it day-to-day',
+                text: 'Administrative Contracting Officer. Handles the daily life of the contract after award — approving invoices, managing modifications, monitoring compliance, issuing cure notices. On major contracts, the ACO is typically a DCMA official. Think of them as the property manager after the real estate deal is signed.',
+              },
+              {
+                label: 'COR',
+                badge: 'Your eyes on performance',
+                text: 'Contracting Officer\'s Representative. The technical expert the CO delegates to monitor contractor performance day-to-day — reviewing deliverables, attending status meetings, documenting issues. Critical distinction: the COR has ZERO contract authority. They cannot direct new work, approve scope changes, or obligate money. Only the CO can. A COR who directs extra work without CO authorization creates an unauthorized commitment — a legal problem.',
+              },
+              {
+                label: 'DCMA',
+                badge: 'On-site oversight',
+                text: 'Defense Contract Management Agency. Government officials physically present at contractor facilities on major programs. They validate EVM systems, oversee quality, review invoices, and can withhold payment for non-conforming deliverables. Not to be confused with DCAA (the auditors) — DCMA manages performance, DCAA audits the money.',
+              },
+            ],
           },
           {
             type: 'warning',
