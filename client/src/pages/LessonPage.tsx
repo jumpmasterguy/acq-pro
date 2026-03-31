@@ -1029,36 +1029,20 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             // ── lucas_note: personal aside ───────────────────────────────────
             if (block.type === 'lucas_note') {
               return (
-                <div key={i} className="relative my-4" style={{marginLeft: '-8px', marginRight: '-8px'}}>
-                  {/* Rotated tab — flush left, fully visible */}
-                  <div className="absolute left-0 top-8" style={{zIndex: 10}}>
-                    <div
-                      className="bg-primary text-white font-black shadow-lg"
-                      style={{
-                        writingMode: 'vertical-lr',
-                        transform: 'rotate(180deg)',
-                        fontSize: '9px',
-                        letterSpacing: '0.18em',
-                        padding: '10px 5px',
-                        borderRadius: '0 6px 6px 0',
-                        textTransform: 'uppercase',
-                      }}
-                    >
-                      From Lucas
-                    </div>
-                  </div>
-                  {/* Card — offset right to clear the tab, angled slightly */}
+                <div key={i} className="my-6 flex justify-end pr-1">
                   <div
-                    className="relative bg-[#0d2137] border-2 border-primary rounded-xl shadow-xl overflow-hidden"
-                    style={{marginLeft: '32px', transform: 'rotate(-0.4deg)'}}
+                    className="relative bg-[#0d2137] border-2 border-primary rounded-xl shadow-2xl overflow-hidden"
+                    style={{ width: '92%', transform: 'rotate(0.6deg)' }}
                   >
-                    {/* Gold top bar */}
-                    <div className="h-1 w-full bg-gradient-to-r from-[#f5c842] via-primary to-[#f5c842] opacity-90" />
-                    <div className="px-6 pt-4 pb-5">
+                    {/* Gold pinstripe top */}
+                    <div className="h-[3px] w-full bg-gradient-to-r from-transparent via-[#f5c842] to-transparent" />
+                    <div className="px-5 pt-4 pb-2">
+                      {/* Header row */}
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-white text-[11px] font-black flex-shrink-0">L</div>
-                        <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Personal Note</span>
+                        <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white text-[10px] font-black flex-shrink-0">L</div>
+                        <span className="text-[9px] font-black text-[#f5c842] uppercase tracking-[0.25em]">From Lucas</span>
                       </div>
+                      {/* Body */}
                       {block.body && block.body.split('\n\n').filter(Boolean).map((para: string, pi: number) => (
                         <p key={pi} className={`text-sm text-slate-200 leading-relaxed${pi > 0 ? ' mt-3' : ''}`}>
                           {para.trim().split(/\*\*([^*]+)\*\*/).map((seg: string, si: number) =>
@@ -1069,8 +1053,9 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                         </p>
                       ))}
                     </div>
-                    <div className="px-6 pb-4 flex items-center gap-2">
-                      <div className="h-px flex-1 bg-primary/25" />
+                    {/* Signature */}
+                    <div className="px-5 py-3 flex items-center gap-2">
+                      <div className="h-px flex-1 bg-primary/20" />
                       <span className="text-[10px] text-primary/50 italic">— Lucas, Acqlerate</span>
                     </div>
                   </div>
