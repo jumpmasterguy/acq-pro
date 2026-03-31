@@ -3584,7 +3584,7 @@ export const modules: Module[] = [
         id: 'contracts-1',
         title: 'Contract Types: Choosing the Right Vehicle',
         duration: '16 min',
-        description: 'Understand the spectrum of contract types from FFP to Cost-Plus, and when to use each.',
+        description: 'Every contract you work on has a type — and that type determines who absorbs cost risk, how your fee is calculated, and what the government will scrutinize. Know FFP, FPIF, CPIF, CPAF, CPFF, and T&M cold. They shape your entire financial life on a program.',
         keyTerms: [
           { term: 'FFP', definition: 'Firm-Fixed-Price — price is set at award and does not change. Contractor bears 100% of cost risk. Most preferred by FAR. Used when requirements are well-defined and market competition exists. (FAR 16.202)' },
           { term: 'FPIF', definition: 'Fixed-Price Incentive (Firm Target) — has a target cost, target fee, ceiling price, and share ratio. Contractor and government share cost savings/overruns up to the ceiling. Above the Point of Total Assumption (PTA), contractor absorbs 100%. (FAR 16.403-1)' },
@@ -3600,7 +3600,7 @@ export const modules: Module[] = [
           {
             type: 'text',
             heading: "Contract Type = Risk Allocation",
-            body: "Choosing the right contract type is one of the most consequential decisions in acquisition strategy. Contract type determines who bears cost risk — the government or the contractor. The FAR's overarching principle is clear: use firm-fixed-price whenever possible. When market conditions, technology maturity, or performance uncertainty prevent FFP, you move along the spectrum toward cost-reimbursable contracts — but each step increases government risk and oversight burden."
+            body: "Every contract has a type. That type is the single biggest factor in who bears the financial risk if things go wrong.\n\nThe FAR's overarching principle is simple: use Firm-Fixed-Price whenever possible. When you can define requirements clearly and competition exists, FFP transfers cost risk to the contractor — maximum incentive for efficiency, minimum government oversight.\n\nWhen you can't define requirements precisely — when technology is immature, scope is uncertain, or effort is unknowable — you move toward cost-reimbursable contracts. Each step along that spectrum shifts more risk to the government and increases oversight burden. There's no free lunch: more government protection means more government involvement in your business."
           },
           {
             type: 'table',
@@ -3631,6 +3631,10 @@ export const modules: Module[] = [
             type: 'risk_chart',
           },
           {
+            type: 'lucas_note',
+            body: "The contract type you\'re on is not just legal vocabulary. It determines your daily life.\n\nOn **FFP**, you eat every dollar over budget. Budget discipline is survival. On **CPAF**, your fee is someone\'s subjective judgment call — which means your relationship with the COR and program office PM directly determines whether you get paid well for the same work. On **T&M**, the government watches your hours like a hawk and questions everything.\n\n**Know your contract type before your first status meeting.** Understand how your fee is calculated, what the government is evaluating, and what the financial upside and downside look like. If you\'re on a CPAF contract and you don\'t know when the next award fee period ends, you are leaving money on the table.",
+          },
+          {
             type: 'callout',
             heading: "The FAR's Hierarchy of Preference",
             body: "FAR 16.103(d) requires the contracting officer to document the contract type selection rationale in the written acquisition plan. The presumption is FFP. Every step away from FFP must be justified. An undocumented contract type decision is a significant finding in a contract audit."
@@ -3655,13 +3659,13 @@ export const modules: Module[] = [
           type: 'text' as const,
           level: 'intermediate' as const,
           heading: 'Contract Type Strategy for Mid-Career PMs',
-          body: 'Contract type selection is one of the most consequential decisions a PM makes, and it\'s made during acquisition planning — before the contractor is even selected. Mid-career PMs must think beyond risk allocation (cost-type = government bears risk; fixed-price = contractor bears risk) to incentive design. A CPIF with a 80/20 share ratio incentivizes cost control; a 50/50 ratio gives the contractor less motivation to reduce costs since they keep more savings. For schedule incentives: use CPIF-CPAF combos where the fixed-fee portion covers profit at plan, the incentive fee rewards cost performance, and the award fee rewards schedule and technical performance. Complex programs often have multiple CLINs with different contract types — a development CLIN at CPFF and a production option at FFP. Design the structure so each CLIN type matches the risk profile of that work.',
+          body: 'Contract type is decided during acquisition planning — before the contractor is even selected. By the time the RFP drops, the risk structure is locked in.\n\nMid-career PMs need to think beyond "who bears risk" to incentive design. A CPIF with an 80/20 share ratio incentivizes cost control. A 50/50 ratio gives the contractor less motivation — they keep more of every dollar saved, which sounds good, but also absorbs less of every overrun.\n\nFor schedule incentives: CPIF-CPAF combinations work well. The fixed fee covers profit at plan, the incentive fee rewards cost performance, and the award fee rewards schedule and technical performance.\n\nComplex programs often use multiple CLINs with different contract types — a development CLIN at CPFF, a production option at FFP. Design the structure so each CLIN type matches the actual risk profile of that work, not a one-size-fits-all label.',
         },
         {
           type: 'callout' as const,
           level: 'advanced' as const,
           heading: 'Undefinitized Contract Actions (UCAs): The Most Dangerous Contract Tool',
-          body: 'UCAs (contracts or modifications executed before price is agreed) are authorized by FAR 16.603 and DFARS 217.74, but they are the source of some of the worst cost outcomes in DoD acquisition. DFARS requires definitization within 180 days or 40% of not-to-exceed value obligated — whichever comes first. In practice, programs routinely miss these deadlines, and definitization happens after the contractor has incurred most costs, eliminating negotiating leverage. The contractor who knows you MUST definitize has no incentive to reduce costs during definitization. Senior PMs minimize UCAs, use them only when true urgency justifies starting before price is agreed, and definitize aggressively — before the contractor has spent their way into a position of strength.',
+          body: 'A UCA (Undefinitized Contract Action) is a contract started before price is agreed. They\'re authorized under FAR 16.603 and DFARS 217.74 — but they\'re the source of some of the worst cost outcomes in DoD acquisition.\n\nDFARS requires definitization within 180 days or 40% of not-to-exceed value obligated — whichever comes first. In practice, programs routinely miss these deadlines. Definitization happens after the contractor has already incurred most costs, which completely eliminates your negotiating leverage.\n\nThe contractor who knows you MUST definitize has zero incentive to reduce costs. They\'ve already spent the money. You\'re just arguing over who pays for it.\n\nSenior PMs: minimize UCAs. Use them only when genuine urgency justifies starting before price is agreed. And when you do use one, definitize aggressively — before the contractor has spent their way into a position of strength.',
         },
         ],
       quiz: [
