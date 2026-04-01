@@ -940,7 +940,7 @@ export async function registerRoutes(
     try {
       const lead = await storage.saveLead(email.toLowerCase().trim(), source || 'landing_page');
       // Send lead nurture email (non-blocking — never delay the response)
-      sendLeadNurtureEmail(email.toLowerCase().trim()).catch((err) =>
+      sendLeadNurtureEmail(email.toLowerCase().trim(), source || 'landing_page').catch((err) =>
         console.error('[email] Lead nurture send failed:', err)
       );
       return res.json({ ok: true, id: lead.id });

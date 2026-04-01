@@ -504,8 +504,42 @@ export async function sendEmail7(to: string, username: string): Promise<void> {
  * Tells them their kit is tailored to their role — drives them to register
  * and complete the onboarding flow, which triggers sendStarterKitEmail().
  */
-export async function sendLeadNurtureEmail(to: string): Promise<void> {
+export async function sendLeadNurtureEmail(to: string, source?: string): Promise<void> {
   if (!resend) { console.log('[email] RESEND_API_KEY not set — skipping lead nurture email'); return; }
+
+  // Teams playbook source gets a dedicated direct-download email
+  if (source === 'teams_playbook') {
+    const body = `
+      <div style="font-size:18px;font-weight:800;color:#0d2137;margin:0 0 8px">Your GovCon Onboarding Playbook is ready.</div>
+      <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 20px">Thanks for downloading. Here’s your copy of the 30-day onboarding playbook for building acquisition-fluent GovCon teams.</p>
+      <div style="background:#f0f9fa;border:2px solid #01696f;border-radius:12px;padding:24px 28px;margin-bottom:24px;text-align:center">
+        <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#01696f;margin-bottom:10px">GovCon Onboarding Playbook</div>
+        <div style="font-size:22px;font-weight:800;color:#0d2137;margin-bottom:8px">How to onboard new hires into<br>DoD acquisition in 30 days</div>
+        <p style="font-size:13px;color:#374151;margin:0 0 20px;line-height:1.6">A 9-page practical guide covering the 30-day framework, role-specific learning paths, common onboarding mistakes, and a Day 1 checklist.</p>
+        <a href="${APP_URL}/govcon-onboarding-playbook.pdf"
+           style="display:inline-block;background:#01696f;color:#ffffff;font-weight:800;font-size:15px;padding:13px 32px;border-radius:8px;text-decoration:none">
+          Download the Playbook →
+        </a>
+      </div>
+      <div style="background:#0d2137;border-radius:12px;padding:24px 28px;text-align:center;margin-bottom:24px">
+        <p style="color:#ffffff;font-size:14px;font-weight:700;margin:0 0 6px">Put it into practice with Acqlerate.</p>
+        <p style="color:rgba(255,255,255,0.65);font-size:13px;margin:0 0 16px;line-height:1.6">Module 01 is completely free. Give your team a structured path through DoD acquisition — no classroom, no scheduling, no per-seat contracts.</p>
+        <a href="${APP_URL}/app#/register"
+           style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:14px;padding:12px 28px;border-radius:8px;text-decoration:none">
+          Start Free →
+        </a>
+      </div>
+      <p style="font-size:12px;color:#9ca3af;line-height:1.7;margin:0">You’re receiving this because you requested the GovCon Onboarding Playbook from acqlerate.com. No spam — unsubscribe anytime.</p>
+    `;
+    await resend.emails.send({
+      from: FROM,
+      to,
+      subject: 'Your GovCon Onboarding Playbook is ready to download',
+      html: emailShell('GovCon Onboarding Playbook — download inside', body),
+    });
+    console.log(`[email] Playbook delivery email sent to ${to}`);
+    return;
+  }
 
   const body = `
     <div style="font-size:18px;font-weight:800;color:#0d2137;margin:0 0 8px">Your Acquisition Starter Kit is ready.</div>

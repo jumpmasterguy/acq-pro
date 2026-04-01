@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- Google Analytics 4 — G-SW42SFY999 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SW42SFY999"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SW42SFY999', {
+      page_title: document.title,
+      page_location: window.location.href,
+    });
+  </script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acqlerate for GovCon Teams — DoD Acquisition Training for Defense Contractors</title>
+  <meta name="description" content="Give your GovCon team the acquisition fluency that improves proposal quality and delivery. Self-paced DoD acquisition academy built for defense contractors — PMs, capture leads, and analysts." />
+  <meta property="og:title" content="Acqlerate for GovCon Teams" />
+  <meta property="og:description" content="Your team wins more when they understand how the government buys. Self-paced DoD acquisition academy for defense contractors." />
+  <meta property="og:url" content="https://acqlerate.com/teams" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #01696F;
+      --teal-dark: #0C4E54;
+      --teal-light: #E6F2F3;
+      --teal-mid: #4F98A3;
+      --navy: #0D1B2A;
+      --navy-mid: #1B2D3E;
+      --text: #1A1A1A;
+      --text-muted: #6B7280;
+      --text-faint: #9CA3AF;
+      --border: #E5E7EB;
+      --bg: #FFFFFF;
+      --surface: #F9FAFB;
+      --gold: #D19900;
+      --gold-bg: #FEF9E7;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-icon {
+      width: 36px; height: 36px; background: var(--teal); border-radius: 9px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .nav-logo-icon svg { width: 22px; height: 22px; }
+    .nav-logo-text { font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+    .nav-logo-text span { color: var(--teal); }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .btn-ghost {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-muted); font-size: 0.9rem; font-weight: 500;
+      padding: 8px 12px; border-radius: 8px; text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+    }
+    .btn-ghost:hover { color: var(--text); background: var(--surface); }
+    .btn-primary {
+      background: var(--teal); color: white; border: none; cursor: pointer;
+      font-size: 0.9rem; font-weight: 600; padding: 9px 20px;
+      border-radius: 9px; text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(160deg, #0D1B2A 0%, #122A38 60%, #0C4E54 100%);
+      padding: 90px 2rem 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 110%, rgba(1,105,111,0.35) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(79,152,163,0.2); border: 1px solid rgba(79,152,163,0.4);
+      color: #7ECFD6; font-size: 0.8rem; font-weight: 600;
+      padding: 5px 14px; border-radius: 100px; margin-bottom: 28px;
+      letter-spacing: 0.04em;
+    }
+    .hero-badge-dot { width: 7px; height: 7px; background: #4F98A3; border-radius: 50%; }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 800; line-height: 1.12;
+      color: white; letter-spacing: -0.03em;
+      max-width: 820px; margin: 0 auto 20px;
+    }
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      color: rgba(255,255,255,0.65);
+      max-width: 620px; margin: 0 auto 40px; line-height: 1.7;
+    }
+    .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-hero-primary {
+      background: var(--teal); color: white; border: none; cursor: pointer;
+      font-size: 1rem; font-weight: 700; padding: 15px 32px;
+      border-radius: 10px; text-decoration: none;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+      box-shadow: 0 4px 20px rgba(1,105,111,0.4);
+    }
+    .btn-hero-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(1,105,111,0.5); }
+    .btn-hero-secondary {
+      background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.25);
+      cursor: pointer; font-size: 1rem; font-weight: 600; padding: 15px 32px;
+      border-radius: 10px; text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn-hero-secondary:hover { background: rgba(255,255,255,0.18); transform: translateY(-2px); }
+
+    /* ── SECTIONS ── */
+    section { padding: 80px 2rem; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-eyebrow {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: 12px;
+      text-align: center;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 800; letter-spacing: -0.025em;
+      color: var(--text); line-height: 1.2; margin-bottom: 16px;
+      text-align: center;
+    }
+    .section-sub {
+      font-size: 1rem; color: var(--text-muted);
+      max-width: 600px; line-height: 1.7; margin-bottom: 48px;
+      text-align: center; margin-left: auto; margin-right: auto;
+    }
+
+    /* ── OUTCOMES CARDS ── */
+    .outcomes-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;
+    }
+    .outcome-card {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 16px; padding: 32px 28px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .outcome-card:hover { border-color: var(--teal-mid); box-shadow: 0 4px 20px rgba(1,105,111,0.08); }
+    .outcome-icon { font-size: 2.2rem; margin-bottom: 16px; }
+    .outcome-title { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+    .outcome-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.65; }
+
+    /* ── COMPARISON TABLE ── */
+    .comparison-section { background: var(--surface); }
+    .comparison-wrap { overflow-x: auto; }
+    .comparison-table {
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden;
+      font-size: 0.9rem;
+    }
+    .comparison-table thead th {
+      padding: 16px 24px; font-weight: 700; font-size: 0.82rem;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      background: var(--navy); color: rgba(255,255,255,0.55);
+      text-align: left;
+    }
+    .comparison-table thead th:first-child { color: rgba(255,255,255,0.35); }
+    .comparison-table thead th.col-acqlerate {
+      color: #4FC3CB;
+      background: #0C3A40;
+      border-left: 3px solid var(--teal);
+    }
+    .comparison-table tbody tr:last-child td { border-bottom: none; }
+    .comparison-table tbody td {
+      padding: 16px 24px; border-bottom: 1px solid var(--border);
+      vertical-align: top; color: var(--text-muted); line-height: 1.55;
+      background: white;
+    }
+    .comparison-table tbody td:first-child {
+      font-weight: 700; color: var(--text);
+      background: var(--surface);
+    }
+    .comparison-table tbody td.col-acqlerate {
+      background: rgba(1,105,111,0.04);
+      border-left: 3px solid var(--teal);
+      color: var(--text);
+    }
+    .comparison-table tbody tr:hover td { background: #f0fafb; }
+    .comparison-table tbody tr:hover td:first-child { background: #e8f5f5; }
+    .comparison-table tbody tr:hover td.col-acqlerate { background: rgba(1,105,111,0.08); }
+    .acqlerate-check { color: var(--teal); font-weight: 700; }
+
+    /* ── FAQ ── */
+    .faq-list { max-width: 740px; margin: 0 auto; display: flex; flex-direction: column; gap: 4px; }
+    .faq-item { border: 1.5px solid var(--border); border-radius: 12px; }
+    .faq-q {
+      width: 100%; background: none; border: none; cursor: pointer;
+      padding: 18px 20px; text-align: left; font-family: inherit;
+      font-size: 0.95rem; font-weight: 600; color: var(--text);
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      transition: background 0.15s;
+    }
+    .faq-q:hover { background: var(--surface); }
+    .faq-chevron { flex-shrink: 0; color: var(--text-muted); transition: transform 0.25s; font-size: 1rem; }
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+    .faq-a {
+      padding: 0 20px; max-height: 0; overflow: hidden;
+      font-size: 0.9rem; color: var(--text-muted); line-height: 1.7;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+    .faq-item.open .faq-a { max-height: 400px; padding: 0 20px 18px; }
+
+    /* ── LEAD MAGNET ── */
+    .lead-magnet {
+      background: var(--teal);
+      padding: 80px 2rem;
+      text-align: center;
+    }
+    .lead-magnet h2 {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 800; color: white; letter-spacing: -0.025em; margin-bottom: 12px;
+    }
+    .lead-magnet .lm-sub {
+      font-size: 1rem; color: rgba(255,255,255,0.8);
+      max-width: 520px; margin: 0 auto 36px; line-height: 1.7;
+    }
+    .lm-form-wrap { max-width: 480px; margin: 0 auto; }
+    .lm-form {
+      display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+    }
+    .lm-input {
+      flex: 1; min-width: 220px; padding: 13px 18px;
+      border: 2px solid rgba(255,255,255,0.3); border-radius: 10px;
+      font-size: 0.95rem; font-family: inherit;
+      background: rgba(255,255,255,0.12); color: white;
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .lm-input::placeholder { color: rgba(255,255,255,0.55); }
+    .lm-input:focus { border-color: rgba(255,255,255,0.65); background: rgba(255,255,255,0.18); }
+    .btn-lm {
+      background: white; color: var(--teal-dark); border: none; cursor: pointer;
+      font-size: 0.95rem; font-weight: 700; padding: 13px 24px;
+      border-radius: 10px; white-space: nowrap;
+      transition: transform 0.1s, box-shadow 0.15s;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+    .btn-lm:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.18); }
+    .lm-success { color: white; font-size: 1rem; font-weight: 600; display: none; margin-bottom: 12px; }
+    .lm-note { font-size: 0.78rem; color: rgba(255,255,255,0.55); margin-top: 14px; }
+
+    /* ── FINAL CTA ── */
+    .final-cta {
+      background: var(--navy);
+      text-align: center; padding: 80px 2rem;
+    }
+    .final-cta h2 {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 800; color: white; letter-spacing: -0.025em; margin-bottom: 16px;
+    }
+    .final-cta p {
+      font-size: 1rem; color: rgba(255,255,255,0.6);
+      max-width: 440px; margin: 0 auto 36px; line-height: 1.7;
+    }
+    .btn-cta-white {
+      background: white; color: var(--teal-dark); border: none; cursor: pointer;
+      font-size: 1rem; font-weight: 700; padding: 15px 36px;
+      border-radius: 10px; text-decoration: none;
+      transition: transform 0.1s, box-shadow 0.15s;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      display: inline-block;
+    }
+    .btn-cta-white:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.25); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy); padding: 36px 2rem 28px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-brand { font-size: 1rem; font-weight: 800; color: white; letter-spacing: -0.02em; }
+    .footer-brand span { color: var(--teal-mid); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a {
+      font-size: 0.82rem; color: rgba(255,255,255,0.4);
+      text-decoration: none; transition: color 0.15s;
+    }
+    .footer-links a:hover { color: rgba(255,255,255,0.7); }
+    .footer-copy {
+      font-size: 0.78rem; color: rgba(255,255,255,0.25);
+      width: 100%; margin-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 16px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      nav { padding: 0 1rem; }
+      .nav-actions .btn-ghost { display: none; }
+      section { padding: 56px 1.25rem; }
+      .hero { padding: 64px 1.25rem 56px; }
+      .lm-form { flex-direction: column; }
+      .lm-input { min-width: unset; width: 100%; }
+      .btn-lm { width: 100%; }
+      .comparison-table thead th,
+      .comparison-table tbody td { padding: 12px 14px; font-size: 0.82rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="50,22 71.2,36 71.2,64 50,78 28.8,64 28.8,36"
+            fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+          <polygon points="50,34 63.9,42 63.9,58 50,66 36.1,58 36.1,42"
+            fill="none" stroke="white" stroke-width="5" stroke-linejoin="round"
+            transform="rotate(30,50,50)"/>
+          <circle cx="50" cy="50" r="5" fill="white"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">Acql<span>erate</span></span>
+    </a>
+    <div class="nav-actions">
+      <a href="/app#/auth" class="btn-ghost">Sign In</a>
+      <a href="/app#/auth" class="btn-primary" onclick="gtag('event','teams_cta_click',{label:'nav_start_free'})">Start Free →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <div class="hero-badge-dot"></div>
+    For GovCon Teams
+  </div>
+  <h1>Your team wins more when they understand how the government buys.</h1>
+  <p class="hero-sub">Acqlerate is a self-paced DoD acquisition academy built for defense contractors. Give your PMs, capture leads, and analysts the acquisition fluency that improves proposal quality and delivery — without $1,500/person training.</p>
+  <div class="hero-ctas">
+    <a href="/app#/auth"
+       class="btn-hero-primary"
+       onclick="gtag('event','teams_cta_click',{label:'hero_start_trial'})">
+      Start a Free Team Trial →
+    </a>
+    <a href="/govcon-onboarding-playbook.pdf"
+       class="btn-hero-secondary"
+       download
+       onclick="gtag('event','teams_cta_click',{label:'hero_download_playbook'})">
+      Download the GovCon Onboarding Playbook
+    </a>
+  </div>
+</section>
+
+<!-- THREE OUTCOMES -->
+<section style="background: white; border-top: 1px solid var(--border);">
+  <div class="section-inner">
+    <div class="section-eyebrow">Why It Matters</div>
+    <h2 class="section-title">Three things that change when your team speaks acquisition</h2>
+    <div class="outcomes-grid">
+      <div class="outcome-card">
+        <div class="outcome-icon">🎯</div>
+        <div class="outcome-title">Better proposals</div>
+        <div class="outcome-desc">Teams who understand how government evaluates proposals write to Section M, not just the SOW. Evaluators notice.</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-icon">⚡</div>
+        <div class="outcome-title">Faster onboarding</div>
+        <div class="outcome-desc">New PMs and BD hires get up to speed in weeks, not a full year of shadowing senior staff.</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-icon">📊</div>
+        <div class="outcome-title">Stronger execution</div>
+        <div class="outcome-desc">Contract admin, EVM, modifications, and COR relationships stop being mystery items and start being managed proactively.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON TABLE -->
+<section class="comparison-section">
+  <div class="section-inner">
+    <div class="section-eyebrow">The Comparison</div>
+    <h2 class="section-title">Acqlerate vs. traditional training</h2>
+    <p class="section-sub">Not a replacement for DAU. A replacement for the $1,500-per-seat conference course your team won't remember in 30 days.</p>
+    <div class="comparison-wrap">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th style="width: 22%;"></th>
+            <th style="width: 39%;">Traditional training</th>
+            <th class="col-acqlerate" style="width: 39%;">Acqlerate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cost</td>
+            <td>$1,500–$3,500 per person, per course</td>
+            <td class="col-acqlerate"><span class="acqlerate-check">✓</span> Starting at $5.99/mo or $149 lifetime</td>
+          </tr>
+          <tr>
+            <td>Format</td>
+            <td>Scheduled classes, fixed dates</td>
+            <td class="col-acqlerate"><span class="acqlerate-check">✓</span> Self-paced, available 24/7</td>
+          </tr>
+          <tr>
+            <td>Relevance</td>
+            <td>Often broad or generic</td>
+            <td class="col-acqlerate"><span class="acqlerate-check">✓</span> DoD and GovCon-specific topics only</td>
+          </tr>
+          <tr>
+            <td>Scalability</td>
+            <td>Hard to deploy for every new hire</td>
+            <td class="col-acqlerate"><span class="acqlerate-check">✓</span> Easy to roll out across the whole team</td>
+          </tr>
+          <tr>
+            <td>Does it replace DAU?</td>
+            <td>N/A</td>
+            <td class="col-acqlerate">No — it complements it. DAU = compliance. Acqlerate = practical fluency.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="background: white;">
+  <div class="section-inner" style="text-align: center;">
+    <div class="section-eyebrow">FAQ</div>
+    <h2 class="section-title" style="margin-bottom: 8px;">Common questions from team leads</h2>
+    <p class="section-sub" style="margin: 0 auto 40px;">Here's what we hear most from GovCon managers and team leads before they get started.</p>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Does Acqlerate replace DAU certifications?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-a">No. DAU certification courses are mandatory for the DoD workforce and focused on compliance and career credentialing. Acqlerate is focused on practical knowledge you can apply immediately — understanding concepts deeply, not just checking boxes. Most of our users do both. DAU gets you certified; Acqlerate helps you actually understand what you learned.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How long does it take to onboard a new hire using Acqlerate?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-a">Most users complete the foundational module in 2–3 hours. A full-track completion (6 modules, tailored to role) takes 8–12 hours over a few weeks. The self-paced format means hires learn on their schedule, not yours — and the gamification keeps them engaged.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What roles get the most out of Acqlerate?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-a">Contractor PMs, capture managers, proposal managers, BD professionals, and financial analysts. Anyone on your team who touches a contract, a proposal, or a program review benefits from understanding how the government side actually thinks.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEAD MAGNET -->
+<section class="lead-magnet">
+  <div class="section-inner">
+    <h2>Free: GovCon Onboarding Playbook</h2>
+    <p class="lm-sub">How to onboard new hires into DoD acquisition in 30 days. Used by defense contractors to ramp up PMs, BD staff, and capture teams faster.</p>
+    <div class="lm-form-wrap">
+      <div class="lm-success" id="lmSuccess">✓ Check your inbox — the playbook is on its way.</div>
+      <form class="lm-form" id="lmForm" onsubmit="submitLeadMagnet(event)">
+        <input
+          type="email"
+          class="lm-input"
+          id="lmEmail"
+          placeholder="your@email.com"
+          required
+        />
+        <button type="submit" class="btn-lm" onclick="gtag('event','teams_cta_click',{label:'lead_magnet_submit'})">Send Me the Playbook</button>
+      </form>
+      <p class="lm-note">No spam. Unsubscribe anytime. We send acquisition updates worth reading.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<div class="final-cta">
+  <h2>Ready to build a sharper team?</h2>
+  <p>Start free with Module 01 — no credit card required.</p>
+  <a
+    href="/app#/auth"
+    class="btn-cta-white"
+    onclick="gtag('event','teams_cta_click',{label:'footer_cta_start_free'})"
+  >
+    Start Free Now →
+  </a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">Acql<span>erate</span></div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/blog">Blog</a>
+      <a href="/app#/auth">Sign In</a>
+    </div>
+  </div>
+  <div class="footer-inner">
+    <div class="footer-copy">
+      © 2026 Acqlerate · acqlerate.com · Built for DoD acquisition professionals.
+    </div>
+  </div>
+</footer>
+
+<script>
+  // FAQ accordion
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Lead magnet form submission
+  async function submitLeadMagnet(e) {
+    e.preventDefault();
+    const email = document.getElementById('lmEmail').value.trim();
+    if (!email) return;
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: 'teams_playbook' }),
+      });
+      if (res.ok) {
+        document.getElementById('lmForm').style.display = 'none';
+        document.getElementById('lmSuccess').style.display = 'block';
+        gtag('event', 'teams_cta_click', { label: 'lead_magnet_success' });
+      }
+    } catch (err) {
+      console.error('Lead capture error:', err);
+    }
+  }
+</script>
+</body>
+</html>
