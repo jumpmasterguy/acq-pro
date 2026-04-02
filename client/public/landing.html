@@ -574,23 +574,92 @@
 </section>
 
 
-<!-- EDITORIAL QUOTE STRIP -->
-<section style="background:#F7F6F2;border-top:1px solid #E5E7EB;border-bottom:1px solid #E5E7EB;padding:48px 2rem;">
-  <div style="max-width:860px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px;">
-    <div style="border-left:3px solid #01696F;padding-left:20px;">
-      <p style="font-size:1rem;font-style:italic;color:#1A1A1A;line-height:1.7;margin:0 0 10px;">“The room is full of people who don’t know what they don’t know. This is your edge.”</p>
-      <span style="font-size:0.8rem;font-weight:700;color:#01696F;text-transform:uppercase;letter-spacing:0.06em;">Lucas Cruz — Acqlerate</span>
-    </div>
-    <div style="border-left:3px solid #01696F;padding-left:20px;">
-      <p style="font-size:1rem;font-style:italic;color:#1A1A1A;line-height:1.7;margin:0 0 10px;">“A PM who takes care of their people creates a team that surfaces problems early. That’s the job.”</p>
-      <span style="font-size:0.8rem;font-weight:700;color:#01696F;text-transform:uppercase;letter-spacing:0.06em;">PM Operations & Leadership — Module 06</span>
-    </div>
-    <div style="border-left:3px solid #01696F;padding-left:20px;">
-      <p style="font-size:1rem;font-style:italic;color:#1A1A1A;line-height:1.7;margin:0 0 10px;">“The IDIQ vehicle is the hunting license. The task order is the hunt.”</p>
-      <span style="font-size:0.8rem;font-weight:700;color:#01696F;text-transform:uppercase;letter-spacing:0.06em;">Defense Contracting — Module 03</span>
-    </div>
+<!-- LESSON TICKER -->
+<section style="background:#0D1B2A;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);padding:52px 2rem;overflow:hidden;">
+  <div style="max-width:760px;margin:0 auto;text-align:center;">
+    <div style="font-size:0.7rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#4FC3CB;margin-bottom:24px;">From the curriculum</div>
+    <div id="lesson-ticker" style="min-height:90px;display:flex;align-items:center;justify-content:center;"></div>
+    <div id="ticker-dots" style="display:flex;justify-content:center;gap:6px;margin-top:24px;"></div>
   </div>
 </section>
+
+<script>
+(function() {
+  var lessons = [
+    { text: "The IDIQ vehicle is the hunting license. The task order is the hunt.", source: "Defense Contracting Fundamentals", module: "03" },
+    { text: "Color of money isn’t a metaphor. Use O&M to buy a $400K piece of equipment and you’ve got an ADA violation.", source: "Defense Finance & Budgeting", module: "02" },
+    { text: "A PM who takes care of their people creates a team that surfaces problems early. That’s the entire job.", source: "PM Operations & Leadership", module: "06" },
+    { text: "September 30th is real. Every contracting office in DoD is drowning in the last 30 days of the fiscal year. Plan around it.", source: "Defense Finance & Budgeting", module: "02" },
+    { text: "If your COR asks you to do something not in your SOW — stop. Three words protect everyone: ‘Can we get a mod?’", source: "Defense Contracting Fundamentals", module: "03" },
+    { text: "Read Section M before you read anything else in an RFP. It’s the scoring rubric. Everything else exists to score well against it.", source: "Capture Management & BD", module: "05" },
+    { text: "A risk register nobody updates is just a paperwork exercise. If a risk has been yellow for 90 days with no movement, someone’s not working it.", source: "PM Operations & Leadership", module: "06" },
+    { text: "Winning the vehicle gets you in the door. Winning task orders is how you actually make money.", source: "Defense Contracting Fundamentals", module: "03" },
+    { text: "EVM tells you right now whether your program will finish on time and on budget. Most programs generate the reports and never use the information.", source: "Data Analytics for PMs", module: "04" },
+    { text: "Becoming a PM is a lateral move into a different discipline. The skills that made you a great engineer are different from the skills that make a great PM.", source: "PM Operations & Leadership", module: "06" },
+    { text: "Sources Sought and RFIs are the government asking who’s out there. Responding is free. Not responding means they don’t know you exist.", source: "Capture Management & BD", module: "05" },
+    { text: "The best program review I ever sat in had zero green stoplight charts. Everything was yellow or red. Every item had an owner and a date.", source: "PM Operations & Leadership", module: "06" }
+  ];
+
+  var current = 0;
+  var container = document.getElementById('lesson-ticker');
+  var dotsContainer = document.getElementById('ticker-dots');
+  var timer;
+
+  lessons.forEach(function(_, i) {
+    var dot = document.createElement('div');
+    dot.style.cssText = 'width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,0.2);transition:all 0.3s;cursor:pointer;flex-shrink:0;';
+    dot.addEventListener('click', function() { goTo(i); });
+    dotsContainer.appendChild(dot);
+  });
+
+  function updateDots(idx) {
+    Array.from(dotsContainer.children).forEach(function(d, i) {
+      d.style.background = i === idx ? '#4FC3CB' : 'rgba(255,255,255,0.2)';
+      d.style.width = i === idx ? '20px' : '6px';
+    });
+  }
+
+  function render(idx, dir) {
+    var l = lessons[idx];
+    var incoming = document.createElement('div');
+    incoming.style.cssText = 'opacity:0;transition:opacity 0.45s ease;width:100%;';
+    incoming.innerHTML =
+      '<p style="font-size:clamp(1rem,2vw,1.18rem);font-weight:600;color:#ffffff;line-height:1.7;margin:0 0 14px;">' +
+        '“' + l.text + '”' +
+      '</p>' +
+      '<span style="font-size:0.72rem;font-weight:800;color:#4FC3CB;text-transform:uppercase;letter-spacing:0.09em;">' +
+        l.source + ' — Module ' + l.module +
+      '</span>';
+    container.innerHTML = '';
+    container.appendChild(incoming);
+    updateDots(idx);
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() { incoming.style.opacity = '1'; });
+    });
+  }
+
+  function goTo(idx) {
+    clearInterval(timer);
+    current = idx;
+    render(idx);
+    startTimer();
+  }
+
+  function startTimer() {
+    timer = setInterval(function() {
+      var el = container.firstChild;
+      if (el) el.style.opacity = '0';
+      setTimeout(function() {
+        current = (current + 1) % lessons.length;
+        render(current);
+      }, 450);
+    }, 4500);
+  }
+
+  render(0);
+  startTimer();
+})();
+</script>
 
 <!-- WHO IT'S FOR -->
 <section id="who" style="padding:0;overflow:hidden;">
