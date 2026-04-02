@@ -20,9 +20,9 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Acqlerate — Master DoD Acquisition. Built for the Professionals Who Win.</title>
-  <meta name="description" content="Acqlerate is a self-paced DoD acquisition academy that upskills GovCon teams — PMs, capture leads, and analysts — so they win more contracts and deliver better. Start free." />
+  <meta name="description" content="DoD acquisition training from a leader’s perspective. Plain-English modules for program managers, contractors, and capture teams. Start free." />
   <meta property="og:title" content="Acqlerate — Master DoD Acquisition" />
-  <meta property="og:description" content="Plain-English DoD acquisition training for PMs, contractors, and capture teams. No jargon walls. No classroom. Start free." />
+  <meta property="og:description" content="The room is full of people who don’t know what they don’t know. Show up prepared. Free module at acqlerate.com." />
   <meta property="og:url" content="https://acqlerate.com" />
     <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg" />
@@ -116,18 +116,55 @@
 
     /* ── HERO ── */
     .hero {
-      background: linear-gradient(160deg, #0D1B2A 0%, #122A38 60%, #0C4E54 100%);
-      padding: 90px 2rem 80px;
+      background: #0D1B2A;
+      padding: 0;
       text-align: center;
       position: relative;
       overflow: hidden;
     }
-    .hero::before {
+    .hero::before { display: none; }
+    .hero-image-wrap {
+      position: relative;
+      width: 100%;
+      height: clamp(400px, 52vw, 620px);
+      overflow: hidden;
+    }
+    .hero-image-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center 25%;
+      display: block;
+    }
+    .hero-image-wrap::after {
       content: '';
       position: absolute; inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 110%, rgba(1,105,111,0.35) 0%, transparent 70%);
-      pointer-events: none;
+      background: linear-gradient(to bottom,
+        rgba(13,27,42,0.2) 0%,
+        rgba(13,27,42,0.6) 55%,
+        rgba(13,27,42,0.97) 100%);
     }
+    .hero-text-layer {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 32px 2rem 44px;
+      z-index: 2;
+    }
+    .hero-stats-bar {
+      background: #0D1B2A;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 24px 2rem;
+    }
+    .hero-bullets {
+      background: #0D1B2A;
+      padding: 0 2rem 40px;
+      display: flex; flex-wrap: wrap;
+      justify-content: center; gap: 10px 32px;
+      max-width: 800px; margin: 0 auto;
+    }
+    .hero-bullet {
+      display: flex; align-items: center; gap: 8px;
+      color: rgba(255,255,255,0.8); font-size: 0.875rem;
+    }
+    .hero-bullet-check { color: #4FC3CB; font-weight: 700; }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 8px;
       background: rgba(79,152,163,0.2); border: 1px solid rgba(79,152,163,0.4);
@@ -426,16 +463,21 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-badge">
-    <div class="hero-badge-dot"></div>
-    Built for Defense Professionals
+  <div class="hero-image-wrap">
+    <img src="/img-hero-pm.jpg" alt="Defense program manager reviewing acquisition documents" loading="eager" />
+    <div class="hero-text-layer">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        Built for Defense Professionals
+      </div>
+      <h1>DoD acquisition is hard.<br><em>It doesn’t have to be confusing.</em></h1>
+      <p class="hero-sub">A plain-English academy for program managers, contractors, and capture teams. The knowledge that helps you show up prepared — not just credentialed.</p>
+      <div class="hero-ctas">
+        <a href="/app#/auth" class="btn-hero-primary">Start Free — Module 01 Foundations</a>
+      </div>
+    </div>
   </div>
-  <h1>DoD acquisition is hard.<br><em>It doesn’t have to be confusing.</em></h1>
-  <p class="hero-sub">Acqlerate is a plain-English academy for program managers, contractors, and capture teams. No jargon walls. No classroom scheduling. Just the knowledge that actually helps you do your job better.</p>
-  <div class="hero-ctas">
-    <a href="/app#/auth" class="btn-hero-primary">Start Free — Module 01 Foundations</a>
-  </div>
-  <div class="hero-stats">
+  <div class="hero-stats-bar"><div class="hero-stats">
     <div class="hero-stat">
       <div class="hero-stat-num">6</div>
       <div class="hero-stat-label">Modules</div>
@@ -521,12 +563,39 @@
   </div>
 </section>
 
+
+<!-- EDITORIAL QUOTE STRIP -->
+<section style="background:#F7F6F2;border-top:1px solid #E5E7EB;border-bottom:1px solid #E5E7EB;padding:48px 2rem;">
+  <div style="max-width:860px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px;">
+    <div style="border-left:3px solid #01696F;padding-left:20px;">
+      <p style="font-size:1rem;font-style:italic;color:#1A1A1A;line-height:1.7;margin:0 0 10px;">“The room is full of people who don’t know what they don’t know. This is your edge.”</p>
+      <span style="font-size:0.8rem;font-weight:700;color:#01696F;text-transform:uppercase;letter-spacing:0.06em;">Lucas Cruz — Acqlerate</span>
+    </div>
+    <div style="border-left:3px solid #01696F;padding-left:20px;">
+      <p style="font-size:1rem;font-style:italic;color:#1A1A1A;line-height:1.7;margin:0 0 10px;">“A PM who takes care of their people creates a team that surfaces problems early. That’s the job.”</p>
+      <span style="font-size:0.8rem;font-weight:700;color:#01696F;text-transform:uppercase;letter-spacing:0.06em;">PM Operations & Leadership — Module 06</span>
+    </div>
+    <div style="border-left:3px solid #01696F;padding-left:20px;">
+      <p style="font-size:1rem;font-style:italic;color:#1A1A1A;line-height:1.7;margin:0 0 10px;">“The IDIQ vehicle is the hunting license. The task order is the hunt.”</p>
+      <span style="font-size:0.8rem;font-weight:700;color:#01696F;text-transform:uppercase;letter-spacing:0.06em;">Defense Contracting — Module 03</span>
+    </div>
+  </div>
+</section>
+
 <!-- WHO IT'S FOR -->
-<section id="who">
-  <div class="section-inner">
-    <div class="section-eyebrow">Who It's For</div>
-    <h2 class="section-title">Built for three distinct paths</h2>
-    <p class="section-sub">Whether you're on the government side, the contractor side, or making the switch — Acqlerate meets you where you are and shows you exactly what to learn first.</p>
+<section id="who" style="padding:0;overflow:hidden;">
+  <!-- Team image banner -->
+  <div style="width:100%;height:clamp(220px,28vw,320px);overflow:hidden;position:relative;">
+    <img src="/img-team.jpg" alt="Defense acquisition team collaborating in a secure facility" style="width:100%;height:100%;object-fit:cover;object-position:center 35%;display:block;" loading="lazy" />
+    <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(13,27,42,0.82) 0%,rgba(13,27,42,0.4) 55%,transparent 100%);"></div>
+    <div style="position:absolute;top:50%;left:0;transform:translateY(-50%);padding:0 clamp(24px,4vw,56px);max-width:520px;">
+      <div style="font-size:0.72rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#4FC3CB;margin-bottom:10px;">Who It’s For</div>
+      <h2 style="font-size:clamp(1.3rem,2.5vw,1.9rem);font-weight:800;color:white;letter-spacing:-0.02em;line-height:1.25;margin:0;">Three paths. One thing in common:<br>they show up prepared.</h2>
+    </div>
+  </div>
+  <div style="padding:56px 2rem 72px;">
+  <div class="section-inner" style="padding:0;">
+    <p class="section-sub" style="text-align:center;margin-bottom:40px;">Whether you’re on the government side, the contractor side, or making the switch — Acqlerate meets you where you are.</p>
     <div class="avatars">
       <div class="avatar-card">
         <div class="avatar-icon">🏛️</div>
@@ -562,6 +631,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 </section>
 
