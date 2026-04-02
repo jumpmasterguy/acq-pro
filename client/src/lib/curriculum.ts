@@ -4880,7 +4880,7 @@ export const modules: Module[] = [
           },
           {
             type: 'lucas_note',
-            body: `The constructive change is the trap I see contractor PMs fall into constantly. The COR asks for something — a little extra analysis, a slightly different format, a new briefing that wasn't in the SOW — and the PM just says yes because they want to keep the relationship smooth.\n\nThat's admirable. But here's the problem: you just did work that isn't on contract. If you do it enough times, you've created scope creep, burned hours you can't bill, and potentially set a precedent for what "standard" looks like. And if you ever try to get paid for it via an REA, you now have no documentation.\n\nThe right answer isn't to say no. It's to say: "Happy to do that — let's make sure there's a mod." Three words that protect everyone.`,
+            body: `The constructive change is the trap I see contractor PMs fall into constantly. The COR asks for something — a little extra analysis, a slightly different format, a new briefing that wasn't in the SOW — and the PM just says yes because they want to keep the relationship smooth.\n\nThat's admirable. But here's the problem: you just did work that isn't on contract. If you do it enough times, you've created scope creep, burned hours you can't bill, and potentially set a precedent for what "standard" looks like. And if you ever try to get paid for it via an REA, you now have no documentation.\n\nThe right answer isn't to say no. It's to say: "Happy to do that — let's make sure there's a mod." Simple. And it protects everyone.`,
           },
           {
           type: 'text' as const,
