@@ -188,7 +188,7 @@ const SUBJECT_GROUPS: SubjectGroup[] = [
     shortLabel: 'PM Operations',
     icon: <TrendingUp className="w-3.5 h-3.5" />,
     desc: 'Risk management, stakeholder communication, career roadmap, and subcontractor oversight',
-    moduleIds: ['ops'],
+    moduleIds: ['operations'],
   },
 ];
 
@@ -398,7 +398,7 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
       const bonusSet = new Set(track.bonusLessons);
 
       // Order modules by which has primary lessons, preserving natural module order
-      const moduleOrder = ['foundations', 'finance', 'contracts', 'data', 'capture', 'ops'];
+      const moduleOrder = ['foundations', 'finance', 'contracts', 'data', 'capture', 'operations'];
 
       // A module is "primary" if it has at least 1 primary lesson
       const primary = moduleOrder
