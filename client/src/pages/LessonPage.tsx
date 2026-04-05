@@ -219,8 +219,9 @@ function ExpandableBulletItem({
         <span className="flex-1">
           {(() => {
             const dashIdx = bulletText.indexOf(' — ');
-            // Only split on em-dash — colon splits are too ambiguous
-            if (dashIdx > 0) {
+            // Only bold on em-dash split if the label is short/punchy (≤45 chars)
+            // Long labels before an em-dash are descriptive sentences, not key terms
+            if (dashIdx > 0 && dashIdx <= 45) {
               const label = bulletText.slice(0, dashIdx);
               const rest = bulletText.slice(dashIdx);
               return <><span className="font-semibold text-foreground">{label}</span><span>{rest}</span></>;
