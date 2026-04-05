@@ -86,12 +86,25 @@ function ExpandableListItemCard({ item }: { item: ExpandableItem }) {
               )}
               {section.type === 'bullets' && section.items && (
                 <ul className="space-y-1.5">
-                  {section.items.map((item, ii) => (
-                    <li key={ii} className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <ChevronRight className="w-3.5 h-3.5 text-primary flex-shrink-0 mt-0.5" />
-                      {item}
-                    </li>
-                  ))}
+                  {section.items.map((item, ii) => {
+                    // Strip ||| detail text — only show the visible bullet portion
+                    const bulletText = item.split('|||')[0];
+                    // Em-dash split bold (same rule as main list items: label ≤45 chars)
+                    const dashIdx = bulletText.indexOf(' — ');
+                    const label = dashIdx > 0 && dashIdx <= 45 ? bulletText.slice(0, dashIdx) : null;
+                    const rest = label ? bulletText.slice(dashIdx) : null;
+                    return (
+                      <li key={ii} className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <ChevronRight className="w-3.5 h-3.5 text-primary flex-shrink-0 mt-0.5" />
+                        <span>
+                          {label
+                            ? <><span className="font-semibold text-foreground">{label}</span><span>{rest}</span></>
+                            : bulletText
+                          }
+                        </span>
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
               {section.type === 'grid' && section.grid && (
