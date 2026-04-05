@@ -482,7 +482,10 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
   const [dragOrders, setDragOrders] = useState<Record<string, string[]>>({});
   // Drag-match answers: questionId → { leftKey: rightValue }
   const [dragMatches, setDragMatches] = useState<Record<string, Record<string, string>>>({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
+  // If user already has a stored score for this lesson, start in submitted state
+  const hasPriorScore = lessonId in (progress.quizScores ?? {});
+  const [quizSubmitted, setQuizSubmitted] = useState(hasPriorScore);
+  const [storedScore] = useState<number | null>(hasPriorScore ? (progress.quizScores[lessonId] ?? 0) : null);
   const [expandedTerm, setExpandedTerm] = useState<string | null>(null);
   // Active viewing level — defaults to the unlocked level, can be toggled down
   const [viewLevel, setViewLevel] = useState<SkillLevel>(unlockedLevel);
@@ -591,7 +594,9 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
     setQuizSubmitted(false);
   };
 
-  const quizScore = quizSubmitted ? calcScore() : null;
+  const quizScore = quizSubmitted
+    ? (Object.keys(quizAnswers).length > 0 ? calcScore() : (storedScore ?? 0))
+    : null;
 
   // ── All-answered check ──
   const isAllAnswered = () => {
