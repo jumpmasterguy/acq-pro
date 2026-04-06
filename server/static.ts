@@ -92,6 +92,16 @@ export function serveStatic(app: Express) {
     return res.redirect("/blog");
   });
 
+  // Static informational pages
+  const staticPages = ['terms', 'privacy', 'teams', 'sitemap'];
+  staticPages.forEach(page => {
+    app.get([`/${page}`, `/${page}/`], (_req: Request, res: Response) => {
+      const filePath = path.resolve(distPath, `${page}.html`);
+      if (fs.existsSync(filePath)) return res.sendFile(filePath);
+      return res.redirect('/');
+    });
+  });
+
   // Serve all other static assets (JS, CSS, images, etc.)
   app.use(express.static(distPath));
 
