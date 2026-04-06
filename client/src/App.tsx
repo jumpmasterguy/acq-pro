@@ -523,6 +523,10 @@ function AppContent() {
             <LogOut className="w-3.5 h-3.5" />
             Sign Out
           </button>
+          <div className="flex gap-3 px-3 pt-2 pb-1">
+            <a href="/privacy" className="text-[10px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Privacy</a>
+            <a href="/terms" className="text-[10px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Terms</a>
+          </div>
         </div>
       </aside>
 
