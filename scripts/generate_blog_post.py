@@ -538,6 +538,12 @@ def assemble_post(title: str, deck: str, body_html: str, topic: dict,
   <meta property="og:title" content="{title}" />
   <meta property="og:description" content="{deck}" />
   <meta property="og:url" content="https://acqlerate.com/blog/{slug}" />
+  <meta property="og:image" content="https://acqlerate.com/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://acqlerate.com/og-image.jpg" />
   <link rel="canonical" href="https://acqlerate.com/blog/{slug}" />
   <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg" />
