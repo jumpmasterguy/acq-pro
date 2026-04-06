@@ -158,24 +158,36 @@
       padding: 32px 2rem 44px;
       z-index: 2;
     }
-    /* On mobile: image is shorter, text sits BELOW it */
+    /* On mobile: flip layout — text FIRST, image BELOW */
     @media (max-width: 640px) {
       .hero-image-wrap {
-        height: 220px;
+        /* On mobile, reverse the flex order so text comes first */
+        display: flex;
+        flex-direction: column-reverse;
+        height: auto;
+      }
+      .hero-image-wrap > img {
+        position: static;
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        object-position: center 30%;
+        display: block;
+        flex-shrink: 0;
       }
       .hero-image-wrap::after {
-        background: linear-gradient(to bottom,
-          rgba(13,27,42,0.2) 0%,
-          rgba(13,27,42,0.7) 100%);
+        display: none; /* gradient baked into text-layer bg instead */
       }
       .hero-text-layer {
         position: static;
         background: #0D1B2A;
-        padding: 28px 1.25rem 32px;
+        padding: 32px 1.25rem 24px;
         text-align: center;
+        flex: 1;
       }
-      .hero h1 { font-size: 1.75rem; }
-      .hero-sub { font-size: 0.95rem; }
+      .hero h1 { font-size: 1.75rem; line-height: 1.15; }
+      .hero-sub { font-size: 0.95rem; margin-bottom: 28px; }
+      .hero-badge { margin-bottom: 20px; }
     }
     .hero-stats-bar {
       background: #0D1B2A;
@@ -529,21 +541,11 @@
 
   </div>
   <!-- Benefit bullets -->
-  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px 28px;margin-top:32px;max-width:720px;margin-left:auto;margin-right:auto;">
-    <div style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.85);font-size:0.875rem;">
-      <span style="color:#4FC3CB;font-size:1rem;">✓</span>
-      <span>Write better proposals when your team understands how the government actually evaluates them</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.85);font-size:0.875rem;">
-      <span style="color:#4FC3CB;font-size:1rem;">✓</span>
-      <span>Get new hires contributing faster — weeks instead of a year of on-the-job osmosis</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.85);font-size:0.875rem;">
-      <span style="color:#4FC3CB;font-size:1rem;">✓</span>
-      <span>Skip the $1,500/seat conference course your team won’t remember in 30 days</span>
-    </div>
+  <div class="hero-bullets">
+    <div class="hero-bullet"><span class="hero-bullet-check">✓</span><span>Understand your contract, your funding, and your risk — before someone asks you in a review</span></div>
+    <div class="hero-bullet"><span class="hero-bullet-check">✓</span><span>Know why the rules exist, not just what they say — so you can navigate when it matters</span></div>
+    <div class="hero-bullet"><span class="hero-bullet-check">✓</span><span>Learn from someone who's actually been in the room — no filler, no jargon walls</span></div>
   </div>
-</section>
 
 <!-- EMAIL CAPTURE BAR -->
 <div class="email-capture-bar">
