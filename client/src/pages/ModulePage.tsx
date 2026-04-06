@@ -1,7 +1,7 @@
 import { modules, type SkillLevel } from "@/lib/curriculum";
 import { getModuleProgress, FREE_MODULES } from "@/lib/progress";
 import type { UserProgress } from "@/lib/progress";
-import { ArrowLeft, Clock, CheckCircle, Lock, ChevronRight, BookOpen, Trophy, Target } from "lucide-react";
+import { ArrowLeft, Clock, CheckCircle, Lock, ChevronRight, BookOpen, Trophy, Target, Award, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -78,6 +78,20 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                   </div>
                   <Progress value={progressPct} className="h-2" />
                 </div>
+                {/* Certificate download — show when module is 100% complete */}
+                {progressPct === 100 && (
+                  <a
+                    href={`/api/certificate/${mod.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary rounded-lg px-3 py-2 text-xs font-semibold transition-colors"
+                    data-testid="download-certificate"
+                  >
+                    <Award className="w-3.5 h-3.5" />
+                    Download Certificate of Completion
+                    <Download className="w-3 h-3 ml-0.5" />
+                  </a>
+                )}
                 {/* Skill level badge + assessment button */}
                 {mod.assessment?.length ? (
                   <div className="flex items-center gap-3 flex-wrap">

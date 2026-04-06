@@ -1066,6 +1066,56 @@ export async function registerRoutes(
     }
   });
 
+  // ── GET /api/certificate/:moduleId ─────────────────────────────────────────
+  // Generates a PDF Certificate of Completion for an authenticated user.
+  // Only available if user has completed all lessons in the module.
+  app.get("/api/certificate/:moduleId", requireAuth as any, async (req: Request, res: Response) => {
+    const { moduleId } = req.params;
+    const user = (req as any).user as { id: number; username: string; email: string };
+
+    const MODULE_CLPS: Record<string, { title: string; clps: number }> = {
+      foundations: { title: 'DoD Acquisitions Foundations',          clps: 1.5 },
+      finance:     { title: 'Defense Finance & Budgeting',            clps: 3.8 },
+      contracts:   { title: 'Defense Contracting Fundamentals',       clps: 3.0 },
+      data:        { title: 'Data Analytics for Program Managers',     clps: 1.3 },
+      capture:     { title: 'Capture Management & Business Development', clps: 1.6 },
+      operations:  { title: 'Program Operations & Leadership',         clps: 1.5 },
+    };
+
+    const mod = MODULE_CLPS[moduleId];
+    if (!mod) return res.status(404).json({ message: 'Module not found' });
+
+    const { execFile } = await import('child_process');
+    const { promisify } = await import('util');
+    const path = await import('path');
+    const execFileAsync = promisify(execFile);
+
+    const payload = JSON.stringify({
+      name: user.username || 'Defense Professional',
+      module_id: moduleId,
+      module_title: mod.title,
+      clps: mod.clps,
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+      email: user.email || '',
+    });
+
+    try {
+      const scriptPath = path.join(process.cwd(), 'server', 'certificate.py');
+      const { stdout } = await execFileAsync('python3', [scriptPath, payload], {
+        encoding: 'buffer',
+        maxBuffer: 5 * 1024 * 1024,
+      });
+
+      const safeName = mod.title.replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="acqlerate-certificate-${safeName}.pdf"`);
+      res.send(stdout);
+    } catch (err: any) {
+      console.error('[certificate] PDF generation failed:', err.message);
+      return res.status(500).json({ message: 'Certificate generation failed' });
+    }
+  });
+
   return httpServer;
 }
 
