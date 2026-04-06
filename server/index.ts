@@ -6,6 +6,15 @@ import { serveStatic } from "./static";
 import { createServer } from "http";
 
 const app = express();
+
+// Redirect acqlerate.app → acqlerate.com (301 permanent)
+app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
+  const host = req.hostname;
+  if (host && host.endsWith('acqlerate.app')) {
+    return res.redirect(301, `https://acqlerate.com${req.originalUrl}`);
+  }
+  next();
+});
 const httpServer = createServer(app);
 
 declare module "http" {
