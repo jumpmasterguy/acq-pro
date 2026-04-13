@@ -541,6 +541,40 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
     return;
   }
 
+  // Pay guide source gets a dedicated delivery email
+  if (source === 'pay_guide') {
+    const body = `
+      <div style="font-size:18px;font-weight:800;color:#0d2137;margin:0 0 8px">Your pay guide is ready.</div>
+      <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 20px">Thanks for downloading. Here's your copy of <em>How Your Pay Works on a Government Contract</em> — the honest explanation nobody gave you when you started.</p>
+      <div style="background:#f0f9fa;border:2px solid #01696f;border-radius:12px;padding:24px 28px;margin-bottom:24px;text-align:center">
+        <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#01696f;margin-bottom:10px">Free Download</div>
+        <div style="font-size:22px;font-weight:800;color:#0d2137;margin-bottom:8px">How Your Pay Works on a<br>Government Contract</div>
+        <p style="font-size:13px;color:#374151;margin:0 0 20px;line-height:1.6">10 pages. Plain English. The full breakdown of rate structures, overhead, raises, contract types, and the questions you should be asking.</p>
+        <a href="${APP_URL}/how-your-pay-works.pdf"
+           style="display:inline-block;background:#01696f;color:#ffffff;font-weight:800;font-size:15px;padding:13px 32px;border-radius:8px;text-decoration:none">
+          Download the Guide →
+        </a>
+      </div>
+      <div style="background:#0d2137;border-radius:12px;padding:24px 28px;text-align:center;margin-bottom:24px">
+        <p style="color:#ffffff;font-size:14px;font-weight:700;margin:0 0 6px">If this made you curious about the bigger picture —</p>
+        <p style="color:rgba(255,255,255,0.65);font-size:13px;margin:0 0 16px;line-height:1.6">Module 01 at acqlerate.com is completely free. It covers the full DoD acquisition system in plain English — who the players are, how money flows, and how contracts actually get awarded.</p>
+        <a href="${APP_URL}/app#/register"
+           style="display:inline-block;background:#c8972a;color:#ffffff;font-weight:800;font-size:14px;padding:12px 28px;border-radius:8px;text-decoration:none">
+          Start Module 01 — Free →
+        </a>
+      </div>
+      <p style="font-size:12px;color:#9ca3af;line-height:1.7;margin:0">You're receiving this because you requested the pay guide from acqlerate.com. No spam — unsubscribe anytime.</p>
+    `;
+    await resend.emails.send({
+      from: FROM,
+      to,
+      subject: 'Your pay guide is ready — How Your Pay Works on a Government Contract',
+      html: emailShell('How Your Pay Works on a Government Contract — download inside', body),
+    });
+    console.log(`[email] Pay guide delivery email sent to ${to}`);
+    return;
+  }
+
   const body = `
     <div style="font-size:18px;font-weight:800;color:#0d2137;margin:0 0 8px">Your Acquisition Starter Kit is ready.</div>
     <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 20px">We just need to know which side of the table you're on — so we can send you the right version.</p>

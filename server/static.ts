@@ -93,7 +93,7 @@ export function serveStatic(app: Express) {
   });
 
   // Static informational pages
-  const staticPages = ['terms', 'privacy', 'teams', 'sitemap'];
+  const staticPages = ['terms', 'privacy', 'teams', 'sitemap', 'pay-guide'];
   staticPages.forEach(page => {
     app.get([`/${page}`, `/${page}/`], (_req: Request, res: Response) => {
       const filePath = path.resolve(distPath, `${page}.html`);

@@ -15,7 +15,9 @@ from datetime import datetime
 from pathlib import Path
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyCb5cYnJh16swSRh7C1q7nEipBfgKAaW18")
-RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
+# Resend key — set via env var or hardcoded fallback
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")  # injected by cron environment or set below
+# If not in environment, the send_email function will print to stdout instead
 TO_EMAIL = os.environ.get("ADMIN_EMAILS", "lucas.l.cruz.es@gmail.com").split(",")[0].strip()
 APP_URL = os.environ.get("APP_URL", "https://acqlerate.com")
 

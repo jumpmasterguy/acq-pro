@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- Google Analytics 4 — G-SW42SFY999 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SW42SFY999"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SW42SFY999', {
+      page_title: document.title,
+      page_location: window.location.href,
+    });
+  </script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How Your Pay Works on a Government Contract | Acqlerate</title>
+  <meta name="description" content="The honest explanation nobody gave you. 10 pages, plain English, free." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="How Your Pay Works on a Government Contract | Acqlerate" />
+  <meta property="og:description" content="The honest explanation nobody gave you. 10 pages, plain English, free." />
+  <meta property="og:url" content="https://acqlerate.com/pay-guide" />
+  <meta property="og:image" content="https://acqlerate.com/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://acqlerate.com/og-image.jpg" />
+  <meta name="twitter:title" content="How Your Pay Works on a Government Contract | Acqlerate" />
+  <meta name="twitter:description" content="The honest explanation nobody gave you. 10 pages, plain English, free." />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://acqlerate.com/pay-guide" />
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0C2340;
+      --navy-mid: #1B2D3E;
+      --teal: #01696F;
+      --teal-dark: #0C4E54;
+      --teal-light: #E6F2F3;
+      --gold: #C8972A;
+      --text: #1A1A1A;
+      --text-muted: #6B7280;
+      --text-faint: #9CA3AF;
+      --border: #E5E7EB;
+      --bg: #FFFFFF;
+      --surface: #F9FAFB;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-icon {
+      width: 36px; height: 36px; background: var(--teal); border-radius: 9px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .nav-logo-icon svg { width: 22px; height: 22px; }
+    .nav-logo-text { font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+    .nav-logo-text span { color: var(--teal); }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .btn-primary {
+      background: var(--teal); color: white; border: none; cursor: pointer;
+      font-size: 0.9rem; font-weight: 600; padding: 9px 20px;
+      border-radius: 9px; text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--navy);
+      padding: 72px 2rem 80px;
+      text-align: center;
+    }
+    .hero-inner { max-width: 720px; margin: 0 auto; }
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(200, 151, 42, 0.12);
+      border: 1px solid rgba(200, 151, 42, 0.3);
+      padding: 5px 14px; border-radius: 20px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(1.9rem, 5vw, 3rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+    .hero-sub {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+    .hero-bullets {
+      list-style: none;
+      text-align: left;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 0;
+    }
+    .hero-bullets li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.5;
+    }
+    .hero-bullets li .check {
+      color: #01B3BC;
+      font-size: 1.1rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── CAPTURE CARD ── */
+    .capture-section {
+      background: var(--surface);
+      padding: 56px 2rem;
+    }
+    .capture-card {
+      max-width: 520px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+      padding: 40px 48px;
+      text-align: center;
+    }
+    .capture-card h2 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .capture-card p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .capture-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .capture-form input[type="email"] {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 9px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .capture-form input[type="email"]:focus {
+      border-color: var(--teal);
+    }
+    .capture-form input[type="email"]::placeholder {
+      color: var(--text-faint);
+    }
+    .btn-capture {
+      width: 100%;
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 14px 24px;
+      border-radius: 9px;
+      font-family: inherit;
+      transition: background 0.15s, transform 0.1s;
+      letter-spacing: -0.01em;
+    }
+    .btn-capture:hover { background: var(--teal-dark); transform: translateY(-1px); }
+    .btn-capture:active { transform: translateY(0); }
+    .capture-note {
+      font-size: 0.8rem;
+      color: var(--text-faint);
+      margin-top: 8px;
+    }
+    .capture-success {
+      display: none;
+      background: var(--teal-light);
+      border: 1.5px solid var(--teal);
+      border-radius: 10px;
+      padding: 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--teal-dark);
+    }
+
+    /* ── SOCIAL PROOF STRIP ── */
+    .proof-strip {
+      background: var(--navy);
+      padding: 20px 2rem;
+      text-align: center;
+    }
+    .proof-strip p {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.55);
+      font-style: italic;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── WHAT'S INSIDE ── */
+    .inside-section {
+      padding: 72px 2rem;
+      background: var(--surface);
+    }
+    .inside-section .section-label {
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 12px;
+    }
+    .inside-section h2 {
+      text-align: center;
+      font-size: clamp(1.5rem, 3.5vw, 2rem);
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -0.025em;
+      margin-bottom: 48px;
+    }
+    .inside-grid {
+      max-width: 920px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 640px) {
+      .inside-grid { grid-template-columns: 1fr; }
+    }
+    .inside-card {
+      background: #fff;
+      border-radius: 12px;
+      border-top: 3px solid var(--teal);
+      padding: 24px 28px;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+    }
+    .inside-card-num {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 8px;
+    }
+    .inside-card h3 {
+      font-size: 1.0rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 8px;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+    .inside-card p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── SECOND CTA ── */
+    .second-cta {
+      background: var(--teal);
+      padding: 72px 2rem;
+      text-align: center;
+    }
+    .second-cta h2 {
+      font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.025em;
+      margin-bottom: 8px;
+    }
+    .second-cta .sub {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 32px;
+    }
+    .second-cta .capture-card {
+      background: rgba(255,255,255,0.12);
+      box-shadow: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 32px 40px;
+    }
+    .second-cta .capture-form input[type="email"] {
+      background: rgba(255,255,255,0.92);
+    }
+    .second-cta .btn-capture {
+      background: var(--navy);
+    }
+    .second-cta .btn-capture:hover { background: var(--navy-mid); }
+    .second-cta .capture-note { color: rgba(255,255,255,0.55); }
+    .second-cta .capture-success {
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.4);
+      color: #fff;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy);
+      padding: 28px 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+      padding: 6px 0;
+    }
+    .footer-brand {
+      font-size: 1rem; font-weight: 800; color: rgba(255,255,255,0.7);
+      letter-spacing: -0.02em;
+    }
+    .footer-brand span { color: var(--teal); }
+    .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-links a {
+      color: rgba(255,255,255,0.45); font-size: 0.85rem;
+      text-decoration: none; transition: color 0.15s;
+    }
+    .footer-links a:hover { color: rgba(255,255,255,0.8); }
+    .footer-copy {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px; width: 100%;
+      font-size: 0.78rem; color: rgba(255,255,255,0.3);
+    }
+    .footer-copy a { color: rgba(255,255,255,0.4); text-decoration: none; }
+    .footer-copy a:hover { color: rgba(255,255,255,0.7); }
+
+    @media (max-width: 640px) {
+      .capture-card { padding: 28px 24px; }
+      .second-cta .capture-card { padding: 24px 20px; }
+      .hero { padding: 52px 1.25rem 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV — logo + Start Free only (no module/pricing links) -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="50,22 71.2,36 71.2,64 50,78 28.8,64 28.8,36"
+            fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+          <polygon points="50,34 63.9,42 63.9,58 50,66 36.1,58 36.1,42"
+            fill="none" stroke="white" stroke-width="5" stroke-linejoin="round"
+            transform="rotate(30,50,50)"/>
+          <circle cx="50" cy="50" r="5" fill="white"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">Acql<span>erate</span></span>
+    </a>
+    <div class="nav-actions">
+      <a href="/app#/auth" class="btn-primary">Start Free →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">FREE DOWNLOAD</div>
+    <h1>How Your Pay Works on a Government Contract</h1>
+    <p class="hero-sub">The honest explanation nobody gave you when you started. 10 pages. No jargon. Real answers.</p>
+    <ul class="hero-bullets">
+      <li>
+        <span class="check">✓</span>
+        <span>Why your raise is harder than it should be — and when to ask</span>
+      </li>
+      <li>
+        <span class="check">✓</span>
+        <span>What your company takes before you see a dollar (and why it's legal)</span>
+      </li>
+      <li>
+        <span class="check">✓</span>
+        <span>The 5 questions to ask your manager that most people never think to ask</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- EMAIL CAPTURE -->
+<section class="capture-section">
+  <div class="capture-card">
+    <h2>Get the free guide</h2>
+    <p>Enter your email and we'll send it straight to your inbox.</p>
+    <div id="captureFormWrap1">
+      <form class="capture-form" onsubmit="submitLead(event, 'pay_guide', 'captureFormWrap1', 'captureSuccess1')">
+        <input type="email" id="captureEmail1" placeholder="you@company.com" required autocomplete="email" />
+        <button type="submit" class="btn-capture">Send Me the Guide →</button>
+      </form>
+      <p class="capture-note">No spam. Takes 30 seconds. Unsubscribe anytime.</p>
+    </div>
+    <div id="captureSuccess1" class="capture-success">
+      ✓ Check your inbox — the guide is on its way.
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF STRIP -->
+<div class="proof-strip">
+  <p>Used by defense contractors, program managers, and analysts who want to understand the system.</p>
+</div>
+
+<!-- WHAT'S INSIDE -->
+<section class="inside-section">
+  <div class="section-label">What's inside</div>
+  <h2>10 pages that explain what nobody tells you</h2>
+  <div class="inside-grid">
+    <div class="inside-card">
+      <div class="inside-card-num">Section 01</div>
+      <h3>Where your paycheck actually comes from</h3>
+      <p>The rate structure your company agreed to before you were hired</p>
+    </div>
+    <div class="inside-card">
+      <div class="inside-card-num">Section 02</div>
+      <h3>What your company takes — and why</h3>
+      <p>The full breakdown of overhead, fringe, and profit</p>
+    </div>
+    <div class="inside-card">
+      <div class="inside-card-num">Section 03</div>
+      <h3>Why raises are harder on government contracts</h3>
+      <p>Three ways raises actually happen (and when to ask)</p>
+    </div>
+    <div class="inside-card">
+      <div class="inside-card-num">Section 04</div>
+      <h3>How the contract type affects your pay</h3>
+      <p>Fixed-price vs. cost-plus vs. T&amp;M in plain English</p>
+    </div>
+    <div class="inside-card">
+      <div class="inside-card-num">Section 05</div>
+      <h3>What the recompete means for your job</h3>
+      <p>The one date everyone on a government program should know</p>
+    </div>
+    <div class="inside-card">
+      <div class="inside-card-num">Section 06</div>
+      <h3>The 5 questions to ask that most people never ask</h3>
+      <p>Know what category you're in, when renewal is, and what your clearance is worth</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECOND CTA -->
+<section class="second-cta">
+  <h2>Ready to understand your contract?</h2>
+  <p class="sub">Free. Instant. No account needed.</p>
+  <div class="capture-card">
+    <div id="captureFormWrap2">
+      <form class="capture-form" onsubmit="submitLead(event, 'pay_guide', 'captureFormWrap2', 'captureSuccess2')">
+        <input type="email" id="captureEmail2" placeholder="you@company.com" required autocomplete="email" />
+        <button type="submit" class="btn-capture">Send Me the Guide →</button>
+      </form>
+      <p class="capture-note">No spam. Unsubscribe anytime.</p>
+    </div>
+    <div id="captureSuccess2" class="capture-success">
+      ✓ Check your inbox — the guide is on its way.
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">Acql<span>erate</span></div>
+    <div class="footer-links">
+      <a href="/app#/auth">Sign In</a>
+      <a href="/blog">Blog</a>
+    </div>
+  </div>
+  <div class="footer-inner">
+    <div class="footer-copy">
+      <span>© 2026 Acqlerate. All rights reserved. Not affiliated with DoD.</span>
+      <span style="display:flex;gap:16px;">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  async function submitLead(e, source, wrapId, successId) {
+    e.preventDefault();
+    const emailInputId = wrapId === 'captureFormWrap1' ? 'captureEmail1' : 'captureEmail2';
+    const email = document.getElementById(emailInputId).value.trim();
+    if (!email) return;
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source }),
+      });
+      if (res.ok) {
+        document.getElementById(wrapId).style.display = 'none';
+        document.getElementById(successId).style.display = 'block';
+        // Fire GA4 event
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'lead_capture', { source: source });
+        }
+      }
+    } catch (err) {
+      console.error('Lead capture error:', err);
+    }
+  }
+</script>
+</body>
+</html>
