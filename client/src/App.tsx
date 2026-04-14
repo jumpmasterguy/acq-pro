@@ -14,14 +14,18 @@ import InstallPrompt from "@/components/InstallPrompt";
 
 // Tiny inline component — sidebar link that triggers PWA install
 function PWAInstallLink() {
-  const isStandalone = window.matchMedia("(display-mode: standalone)").matches ||
-    (window.navigator as any).standalone === true;
-  if (isStandalone) return null;
+  // Guard: window.matchMedia not available in all environments
+  try {
+    const isStandalone =
+      typeof window !== 'undefined' &&
+      (window.matchMedia("(display-mode: standalone)").matches ||
+      (window.navigator as any).standalone === true);
+    if (isStandalone) return null;
+  } catch { return null; }
   return (
     <button
       onClick={() => {
-        // Dispatch custom event that InstallPrompt listens for
-        window.dispatchEvent(new Event('pwa-install-request'));
+        try { window.dispatchEvent(new Event('pwa-install-request')); } catch {}
       }}
       className="text-[10px] text-primary/60 hover:text-primary transition-colors"
     >

@@ -6,59 +6,48 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
-/**
- * PWA Install Prompt
- * - Shows a dismissible banner when the browser fires beforeinstallprompt
- * - On iOS (where that event doesn't fire), shows manual instructions
- * - Persists dismissal in sessionStorage so it doesn't re-appear on every page
- */
 export default function InstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
 
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isInStandaloneMode =
-    window.matchMedia("(display-mode: standalone)").matches ||
-    (window.navigator as any).standalone === true;
-
   useEffect(() => {
-    // Already installed — never show
-    if (isInStandaloneMode) {
-      setIsInstalled(true);
-      return;
+    // All window/navigator access inside useEffect — safe in all environments
+    try {
+      const isStandalone =
+        window.matchMedia("(display-mode: standalone)").matches ||
+        (window.navigator as any).standalone === true;
+
+      if (isStandalone) { setIsInstalled(true); return; }
+      if (sessionStorage.getItem("pwa-prompt-dismissed")) { setDismissed(true); return; }
+
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+      const handler = (e: Event) => {
+        e.preventDefault();
+        setDeferredPrompt(e as BeforeInstallPromptEvent);
+      };
+      window.addEventListener("beforeinstallprompt", handler);
+
+      let iosTimer: ReturnType<typeof setTimeout> | undefined;
+      if (isIOS) {
+        iosTimer = setTimeout(() => setShowIOSGuide(true), 45000);
+      }
+
+      return () => {
+        window.removeEventListener("beforeinstallprompt", handler);
+        if (iosTimer) clearTimeout(iosTimer);
+      };
+    } catch {
+      // Silently fail — PWA features are non-critical
     }
-
-    // Previously dismissed this session
-    if (sessionStorage.getItem("pwa-prompt-dismissed")) {
-      setDismissed(true);
-      return;
-    }
-
-    // Android/Chrome — listen for native prompt
-    const handler = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-    };
-    window.addEventListener("beforeinstallprompt", handler);
-
-    // iOS — show manual guide after 45s of use (not immediately)
-    let iosTimer: ReturnType<typeof setTimeout>;
-    if (isIOS && !isInStandaloneMode) {
-      iosTimer = setTimeout(() => setShowIOSGuide(true), 45000);
-    }
-
-    return () => {
-      window.removeEventListener("beforeinstallprompt", handler);
-      if (iosTimer) clearTimeout(iosTimer);
-    };
   }, []);
 
   const dismiss = () => {
     setDismissed(true);
     setShowIOSGuide(false);
-    sessionStorage.setItem("pwa-prompt-dismissed", "1");
+    try { sessionStorage.setItem("pwa-prompt-dismissed", "1"); } catch {}
   };
 
   const handleInstall = async () => {
@@ -70,10 +59,9 @@ export default function InstallPrompt() {
     dismiss();
   };
 
-  // Nothing to show
   if (isInstalled || dismissed || (!deferredPrompt && !showIOSGuide)) return null;
 
-  // ── Android / Chrome native prompt ────────────────────────────────────────
+  // ── Android / Chrome native prompt ──────────────────────────────────────
   if (deferredPrompt) {
     return (
       <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm z-50
@@ -83,12 +71,8 @@ export default function InstallPrompt() {
           <Smartphone className="w-5 h-5 text-[#4FC3CB]" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-white text-sm font-semibold leading-snug">
-            Add Acqlerate to your home screen
-          </p>
-          <p className="text-white/60 text-xs mt-0.5 leading-snug">
-            Faster access, works offline, no App Store needed.
-          </p>
+          <p className="text-white text-sm font-semibold leading-snug">Add Acqlerate to your home screen</p>
+          <p className="text-white/60 text-xs mt-0.5 leading-snug">Faster access, works offline, no App Store needed.</p>
           <button
             onClick={handleInstall}
             className="mt-2.5 inline-flex items-center gap-1.5 bg-[#01696F] hover:bg-[#0C4E54]
@@ -104,8 +88,8 @@ export default function InstallPrompt() {
     );
   }
 
-  // ── iOS manual guide ───────────────────────────────────────────────────────
-  if (showIOSGuide && isIOS) {
+  // ── iOS manual guide ─────────────────────────────────────────────────────
+  if (showIOSGuide) {
     return (
       <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm z-50
                       bg-[#0C2340] border border-[#01696F]/40 rounded-2xl shadow-2xl p-4
@@ -119,13 +103,10 @@ export default function InstallPrompt() {
             <X className="w-4 h-4" />
           </button>
         </div>
-        <p className="text-white/70 text-xs mb-3 leading-relaxed">
-          Install Acqlerate as an app for faster access and offline lesson caching:
-        </p>
         <ol className="space-y-2">
           {[
-            <>Tap the <span className="text-[#4FC3CB] font-semibold">Share</span> button at the bottom of Safari <span className="text-white/50">(the box with an arrow pointing up)</span></>,
-            <>Scroll down and tap <span className="text-[#4FC3CB] font-semibold">"Add to Home Screen"</span></>,
+            <>Tap the <span className="text-[#4FC3CB] font-semibold">Share</span> button at the bottom of Safari</>,
+            <>Tap <span className="text-[#4FC3CB] font-semibold">"Add to Home Screen"</span></>,
             <>Tap <span className="text-[#4FC3CB] font-semibold">Add</span> in the top right</>,
           ].map((step, i) => (
             <li key={i} className="flex items-start gap-2.5 text-xs text-white/80 leading-relaxed">
