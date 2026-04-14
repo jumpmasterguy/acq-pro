@@ -127,6 +127,7 @@ function AppContent() {
   const [authState, setAuthState] = useState<AuthState>({ status: 'loading' });
   // Module assessment modal state
   const [assessmentModuleId, setAssessmentModuleId] = useState<string | null>(null);
+  const [showLevels, setShowLevels] = useState(false);
 
   // Derived progress from server auth
   const isPremium =
@@ -373,7 +374,6 @@ function AppContent() {
   const isAdmin = user.isAdmin === true;
   const xp = progress.xp;
   const completedCount = completedLessons.size;
-  const [showLevels, setShowLevels] = useState(false);
 
   const ALL_LEVELS = [
     { level: 1, title: 'Acquisition Trainee',    threshold: 0,    nextXP: 200,  desc: 'Just getting started. Learning the landscape.' },
