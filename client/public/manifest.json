@@ -1,17 +1,34 @@
 {
-  "name": "Acqlerate — Defense Acquisitions Academy",
+  "name": "Acqlerate \u2014 Defense Acquisitions Academy",
   "short_name": "Acqlerate",
   "description": "Master DoD acquisitions: finance, contracts, capture management, and program operations.",
-  "start_url": "/",
+  "start_url": "/app",
   "display": "standalone",
-  "background_color": "#1e3a5f",
-  "theme_color": "#1e3a5f",
+  "background_color": "#0C2340",
+  "theme_color": "#0C2340",
   "orientation": "portrait-primary",
-  "categories": ["education", "business"],
+  "categories": [
+    "education",
+    "business"
+  ],
   "icons": [
-    { "src": "/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
-    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
   ],
   "screenshots": [
     {
@@ -20,6 +37,33 @@
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Acqlerate Dashboard"
+    }
+  ],
+  "scope": "/",
+  "shortcuts": [
+    {
+      "name": "My Dashboard",
+      "short_name": "Dashboard",
+      "description": "Jump to your learning dashboard",
+      "url": "/app#/",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Continue Learning",
+      "short_name": "Learn",
+      "description": "Continue where you left off",
+      "url": "/app#/",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }

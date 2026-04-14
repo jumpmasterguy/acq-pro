@@ -10,6 +10,25 @@ import { isNativeApp } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
 import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, Lock } from "lucide-react";
 import { AcqlerateLogo } from "@/components/AcqlerateLogo";
+import InstallPrompt from "@/components/InstallPrompt";
+
+// Tiny inline component — sidebar link that triggers PWA install
+function PWAInstallLink() {
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches ||
+    (window.navigator as any).standalone === true;
+  if (isStandalone) return null;
+  return (
+    <button
+      onClick={() => {
+        // Dispatch custom event that InstallPrompt listens for
+        window.dispatchEvent(new Event('pwa-install-request'));
+      }}
+      className="text-[10px] text-primary/60 hover:text-primary transition-colors"
+    >
+      Install App
+    </button>
+  );
+}
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -526,6 +545,7 @@ function AppContent() {
           <div className="flex gap-3 px-3 pt-2 pb-1">
             <a href="/privacy" className="text-[10px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Privacy</a>
             <a href="/terms" className="text-[10px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Terms</a>
+            <PWAInstallLink />
           </div>
         </div>
       </aside>
@@ -654,6 +674,9 @@ function AppContent() {
         />
       );
     })()}
+
+    {/* PWA install prompt */}
+    <InstallPrompt />
 
     {/* ── Level Progression Modal ── */}
     {showLevels && (
