@@ -338,3 +338,35 @@ footer {
   .nav-actions .nav-blog { display: inline-flex; }
   nav { padding: 0; }
 }
+
+/* ── FEATURED POST CARD ── */
+.post-card-featured {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, #0d2137 0%, #0c4e54 100%);
+  border: none;
+  color: white;
+}
+.post-card-featured:hover {
+  border-color: transparent;
+  box-shadow: 0 8px 40px rgba(1,105,111,0.25);
+}
+.post-card-featured .post-card-inner { padding: 32px 36px; }
+.post-card-featured h2 {
+  font-size: 1.4rem;
+  color: white;
+  margin-bottom: 12px;
+  max-width: 700px;
+}
+.post-card-featured p {
+  color: rgba(255,255,255,0.72);
+  font-size: 1rem;
+  max-width: 640px;
+  margin-bottom: 20px;
+}
+.post-card-featured .post-date { color: rgba(255,255,255,0.45); }
+.post-card-featured .post-footer { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; color: rgba(255,255,255,0.45); }
+.post-card-featured .read-more { color: #f5c842; font-size: 0.9rem; }
+.post-tag-hot {
+  background: #f5c842;
+  color: #0d2137;
+}

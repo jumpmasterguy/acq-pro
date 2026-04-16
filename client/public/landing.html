@@ -473,6 +473,8 @@
       .email-input { width: 100%; }
       .btn-capture { width: 100%; }
       .pricing-cards { grid-template-columns: 1fr; max-width: 480px; }
+      .blog-featured-stats { display: none !important; }
+      .blog-featured-card { grid-template-columns: 1fr !important; }
     }
   </style>
   <script type="application/ld+json">
@@ -987,77 +989,110 @@
 
 
 <!-- BLOG TEASER -->
-<section id="blog-teaser" style="background:#fff;padding:80px 2rem;border-top:1px solid var(--border)">
+<section id="blog-teaser" style="background:#F7F9FB;padding:88px 2rem;border-top:1px solid var(--border)">
   <div style="max-width:1100px;margin:0 auto">
-    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:40px">
+
+    <!-- Section header -->
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:36px">
       <div>
-        <div class="section-eyebrow" style="text-align:left">Free Resource</div>
+        <div style="display:inline-flex;align-items:center;gap:8px;background:#E8F5F5;border:1px solid rgba(1,105,111,0.2);border-radius:20px;padding:5px 14px;margin-bottom:14px">
+          <span style="width:7px;height:7px;background:#01696f;border-radius:50%;display:inline-block"></span>
+          <span style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#01696f">Free — No Account Required</span>
+        </div>
         <h2 class="section-title" style="text-align:left;margin-bottom:8px">The Acquisition Intel Blog</h2>
-        <p style="font-size:1rem;color:var(--text-muted);margin:0;max-width:520px">Practical guides, regulatory updates, and career strategy — written for people who actually work in defense acquisitions. No fluff, no paywalls.</p>
+        <p style="font-size:1rem;color:var(--text-muted);margin:0;max-width:540px;line-height:1.65">Real insights on defense acquisitions, budget changes, and career strategy — written for people actually doing this work. No fluff, no paywalls, no login required.</p>
       </div>
-      <a href="/blog" style="display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:white;font-weight:700;font-size:0.9rem;padding:11px 22px;border-radius:10px;text-decoration:none;white-space:nowrap;transition:background 0.15s" onmouseover="this.style.background='#015a5f'" onmouseout="this.style.background='var(--teal)'">View All Posts →</a>
+      <a href="/blog" style="display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:white;font-weight:700;font-size:0.9rem;padding:12px 24px;border-radius:10px;text-decoration:none;white-space:nowrap;transition:background 0.15s;flex-shrink:0" onmouseover="this.style.background='#015a5f'" onmouseout="this.style.background='var(--teal)'">Browse All Posts →</a>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px">
-
-      <!-- Post 1 -->
-      <a href="/blog/pmp-pdus-defense-acquisition-training" style="display:block;text-decoration:none;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform 0.15s,box-shadow 0.15s" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
-        <div style="background:linear-gradient(135deg,#0d2137 0%,#01696f 100%);padding:28px 24px 20px">
-          <div style="font-size:1.8rem;margin-bottom:10px">🎓</div>
-          <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.5);margin-bottom:6px">Career · PMI</div>
+    <!-- FEATURED post — full width -->
+    <a href="/blog/fy27-dod-budget-what-it-means-for-acquisition" class="blog-featured-card" style="display:grid;grid-template-columns:1fr auto;gap:0;text-decoration:none;background:linear-gradient(135deg,#0d2137 0%,#0c4e54 100%);border-radius:16px;overflow:hidden;margin-bottom:24px;transition:box-shadow 0.2s" onmouseover="this.style.boxShadow='0 12px 48px rgba(1,105,111,0.28)'" onmouseout="this.style.boxShadow=''">
+      <div style="padding:36px 40px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+          <span style="background:#f5c842;color:#0d2137;font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:4px 10px;border-radius:4px">🔥 Latest Post</span>
+          <span style="font-size:0.75rem;color:rgba(255,255,255,0.4)">Apr 16, 2026 · 10 min read</span>
         </div>
-        <div style="padding:20px 24px 24px">
-          <h3 style="font-size:1rem;font-weight:700;color:var(--text);line-height:1.4;margin:0 0 10px">PMP PDUs for Defense Acquisition: Earn 10+ PDUs With Online Training</h3>
-          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;margin:0 0 16px">PMPs need 60 PDUs every 3 years. Defense acquisition online courses qualify — here's exactly how to earn and log them.</p>
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <span style="font-size:0.75rem;color:var(--text-muted)">Mar 10, 2026</span>
-            <span style="font-size:0.8rem;font-weight:600;color:var(--teal)">Read →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Post 2 -->
-      <a href="/blog/bd-to-capture-lifecycle" style="display:block;text-decoration:none;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform 0.15s,box-shadow 0.15s" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
-        <div style="background:linear-gradient(135deg,#1B2D3E 0%,#2d4a6b 100%);padding:28px 24px 20px">
-          <div style="font-size:1.8rem;margin-bottom:10px">🎯</div>
-          <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.5);margin-bottom:6px">BD · Capture</div>
-        </div>
-        <div style="padding:20px 24px 24px">
-          <h3 style="font-size:1rem;font-weight:700;color:var(--text);line-height:1.4;margin:0 0 10px">The BD-to-Capture Lifecycle: How Defense Contractors Win Before RFP Drop</h3>
-          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;margin:0 0 16px">The five stages that separate contractors who consistently win from those who are perpetually surprised by the results.</p>
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <span style="font-size:0.75rem;color:var(--text-muted)">Feb 17, 2026</span>
-            <span style="font-size:0.8rem;font-weight:600;color:var(--teal)">Read →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Post 3 -->
-      <a href="/blog/best-dod-acquisition-training-courses-2026" style="display:block;text-decoration:none;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform 0.15s,box-shadow 0.15s" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
-        <div style="background:linear-gradient(135deg,#1a1a2e 0%,#3d2b6b 100%);padding:28px 24px 20px">
-          <div style="font-size:1.8rem;margin-bottom:10px">📚</div>
-          <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.5);margin-bottom:6px">Training · Comparison</div>
-        </div>
-        <div style="padding:20px 24px 24px">
-          <h3 style="font-size:1rem;font-weight:700;color:var(--text);line-height:1.4;margin:0 0 10px">Best DoD Acquisition Training Courses in 2026 (Compared)</h3>
-          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;margin:0 0 16px">DAU, Management Concepts, Coursera, and Acqlerate — side by side. What actually makes sense for your career and budget.</p>
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <span style="font-size:0.75rem;color:var(--text-muted)">Feb 5, 2026</span>
-            <span style="font-size:0.8rem;font-weight:600;color:var(--teal)">Read →</span>
-          </div>
-        </div>
-      </a>
-
-    </div>
-
-    <!-- Bottom CTA strip -->
-    <div style="margin-top:40px;background:linear-gradient(135deg,#0d2137,#0c4e54);border-radius:14px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
-      <div>
-        <div style="font-size:1rem;font-weight:700;color:#fff;margin-bottom:4px">New posts every Tuesday &amp; Saturday</div>
-        <div style="font-size:0.875rem;color:rgba(255,255,255,0.6)">Acquisition news, regulatory updates, and career strategy — always free.</div>
+        <h3 style="font-size:clamp(1.15rem,2.5vw,1.55rem);font-weight:800;color:white;line-height:1.3;letter-spacing:-0.02em;margin:0 0 14px;max-width:560px">FY27 DoD Budget: $1.5 Trillion and What It Actually Means for Acquisition</h3>
+        <p style="font-size:0.95rem;color:rgba(255,255,255,0.65);line-height:1.7;margin:0 0 24px;max-width:560px">The largest defense budget in U.S. history just dropped. Missiles up 188%. Ships up $65B. THAAD going from 55 to 857 interceptors. Here's what's real, what's political, and what you need to do right now.</p>
+        <div style="display:inline-flex;align-items:center;gap:8px;background:#f5c842;color:#0d2137;font-weight:800;font-size:0.875rem;padding:11px 22px;border-radius:9px">Read the Analysis →</div>
       </div>
-      <a href="/blog" style="display:inline-flex;align-items:center;gap:8px;background:#f5c842;color:#0d2137;font-weight:800;font-size:0.9rem;padding:11px 22px;border-radius:10px;text-decoration:none;white-space:nowrap">Browse All Articles →</a>
+      <div class="blog-featured-stats" style="background:rgba(0,0,0,0.15);min-width:180px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:32px 28px;gap:20px;border-left:1px solid rgba(255,255,255,0.07)">
+        <div style="text-align:center">
+          <div style="font-size:2rem;font-weight:900;color:white;line-height:1">$1.5T</div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px">FY27 Request</div>
+        </div>
+        <div style="width:1px;height:32px;background:rgba(255,255,255,0.1)"></div>
+        <div style="text-align:center">
+          <div style="font-size:2rem;font-weight:900;color:#f5c842;line-height:1">+44%</div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px">vs FY26</div>
+        </div>
+        <div style="width:1px;height:32px;background:rgba(255,255,255,0.1)"></div>
+        <div style="text-align:center">
+          <div style="font-size:2rem;font-weight:900;color:white;line-height:1">188%</div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px">Missile ↑</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- 3-column recent posts -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:32px">
+
+      <a href="/blog/cpars-ratings-guide" style="display:block;text-decoration:none;background:white;border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:transform 0.15s,box-shadow 0.15s,border-color 0.15s" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.07)';this.style.borderColor='#01696f'" onmouseout="this.style.transform='';this.style.boxShadow='';this.style.borderColor='var(--border)'">
+        <div style="background:linear-gradient(135deg,#1B2D3E 0%,#2d4a6b 100%);padding:22px 24px 18px">
+          <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45)">Performance</div>
+        </div>
+        <div style="padding:20px 22px 22px">
+          <h3 style="font-size:0.97rem;font-weight:700;color:var(--text);line-height:1.4;margin:0 0 8px">CPARS Ratings: What They Mean and Why They Control Your Next Win</h3>
+          <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.6;margin:0 0 14px">A weak CPARS score can eliminate you before the evaluators even read your proposal. Here's the plain-English breakdown.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:0.72rem;color:var(--text-muted)">Mar 14, 2026</span>
+            <span style="font-size:0.8rem;font-weight:700;color:var(--teal)">Read →</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/blog/ota-vs-far-contracts" style="display:block;text-decoration:none;background:white;border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:transform 0.15s,box-shadow 0.15s,border-color 0.15s" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.07)';this.style.borderColor='#01696f'" onmouseout="this.style.transform='';this.style.boxShadow='';this.style.borderColor='var(--border)'">
+        <div style="background:linear-gradient(135deg,#0d2137 0%,#01696f 100%);padding:22px 24px 18px">
+          <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45)">Contracting</div>
+        </div>
+        <div style="padding:20px 22px 22px">
+          <h3 style="font-size:0.97rem;font-weight:700;color:var(--text);line-height:1.4;margin:0 0 8px">OTA vs. FAR Contracts: When the Government Goes Around the Rulebook</h3>
+          <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.6;margin:0 0 14px">Other Transaction Agreements let DoD move fast. Here's when they use them, how they work, and what it means for contractors.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:0.72rem;color:var(--text-muted)">Mar 2026</span>
+            <span style="font-size:0.8rem;font-weight:700;color:var(--teal)">Read →</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/blog/bd-to-capture-lifecycle" style="display:block;text-decoration:none;background:white;border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:transform 0.15s,box-shadow 0.15s,border-color 0.15s" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.07)';this.style.borderColor='#01696f'" onmouseout="this.style.transform='';this.style.boxShadow='';this.style.borderColor='var(--border)'">
+        <div style="background:linear-gradient(135deg,#1a1a2e 0%,#3d2b6b 100%);padding:22px 24px 18px">
+          <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45)">BD · Capture</div>
+        </div>
+        <div style="padding:20px 22px 22px">
+          <h3 style="font-size:0.97rem;font-weight:700;color:var(--text);line-height:1.4;margin:0 0 8px">The BD-to-Capture Lifecycle: How Contractors Win Before RFP Drop</h3>
+          <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.6;margin:0 0 14px">The five stages that separate contractors who consistently win from those who are always surprised by the results.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:0.72rem;color:var(--text-muted)">Feb 17, 2026</span>
+            <span style="font-size:0.8rem;font-weight:700;color:var(--teal)">Read →</span>
+          </div>
+        </div>
+      </a>
+
     </div>
+
+    <!-- Bottom strip -->
+    <div style="background:white;border:1.5px solid var(--border);border-radius:14px;padding:24px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="width:10px;height:10px;background:#01696f;border-radius:50%;animation:pulse 2s infinite"></div>
+        <div>
+          <div style="font-size:0.95rem;font-weight:700;color:var(--text);margin-bottom:2px">New posts every Tuesday &amp; Saturday</div>
+          <div style="font-size:0.82rem;color:var(--text-muted)">34+ articles published. Always free. No account needed.</div>
+        </div>
+      </div>
+      <a href="/blog" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:white;font-weight:800;font-size:0.875rem;padding:11px 22px;border-radius:10px;text-decoration:none;white-space:nowrap;transition:background 0.15s" onmouseover="this.style.background='#1B2D3E'" onmouseout="this.style.background='var(--navy)'">Browse All 34+ Articles →</a>
+    </div>
+
   </div>
 </section>
 
