@@ -100,7 +100,7 @@ const CAREER_TRACKS: CareerTrack[] = [
     label: 'Contracting Specialist / KO',
     shortLabel: 'KO / Specialist',
     icon: <FileText className="w-3.5 h-3.5" />,
-    desc: 'Contracting Specialist or KO — source selection, contract administration, FAR/DFARS compliance',
+    desc: 'Contracting Specialist or KO — source selection, contract administration, FAR/DFARS (the government contracting rulebooks) compliance',
     primaryLessons: [
       // Foundations — full picture needed
       'foundations-intro', 'foundations-players', 'foundations-contracts',
@@ -121,7 +121,7 @@ const CAREER_TRACKS: CareerTrack[] = [
   },
   {
     id: 'capture_bd',
-    label: 'Capture & BD',
+    label: 'Capture & Business Development (BD)',
     shortLabel: 'Capture / BD',
     icon: <LayoutGrid className="w-3.5 h-3.5" />,
     desc: 'Win more business — master the capture lifecycle, proposals, and source selection strategy',
@@ -171,7 +171,7 @@ const SUBJECT_GROUPS: SubjectGroup[] = [
     label: 'Finance & Contracting',
     shortLabel: 'Finance + Contracts',
     icon: <FileText className="w-3.5 h-3.5" />,
-    desc: 'Appropriations, EVM, contract types, source selection, COR, and modifications',
+    desc: 'Appropriations, EVM (Earned Value Management), contract types, source selection, COR (Contracting Officer\'s Rep), and modifications',
     moduleIds: ['finance', 'contracts'],
   },
   {
@@ -179,7 +179,7 @@ const SUBJECT_GROUPS: SubjectGroup[] = [
     label: 'Capture, BD & Analytics',
     shortLabel: 'Capture + Data',
     icon: <Target className="w-3.5 h-3.5" />,
-    desc: 'Winning work and measuring it — proposals, pipelines, dashboards, and KPIs',
+    desc: 'Winning work and measuring it — proposals, pipelines, dashboards, and KPIs (Key Performance Indicators)',
     moduleIds: ['capture', 'data'],
   },
   {

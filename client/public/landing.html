@@ -476,6 +476,55 @@
       .blog-featured-stats { display: none !important; }
       .blog-featured-card { grid-template-columns: 1fr !important; }
     }
+
+    /* ── JARGON TOOLTIPS ── */
+    .jt {
+      border-bottom: 1px dashed rgba(1,105,111,0.5);
+      cursor: help;
+      position: relative;
+      display: inline;
+      white-space: nowrap;
+    }
+    .jt::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0d2137;
+      color: rgba(255,255,255,0.92);
+      font-size: 0.72rem;
+      font-weight: 500;
+      line-height: 1.45;
+      padding: 7px 11px;
+      border-radius: 7px;
+      white-space: normal;
+      width: max-content;
+      max-width: 220px;
+      text-align: left;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+      z-index: 100;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    }
+    .jt::before {
+      content: '';
+      position: absolute;
+      bottom: calc(100% + 3px);
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #0d2137;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+      z-index: 100;
+    }
+    .jt:hover::after, .jt:hover::before { opacity: 1; }
+    /* Dark-surface variant — tooltip goes white-on-dark */
+    .jt-light::after { background: white; color: #0d2137; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+    .jt-light::before { border-top-color: white; }
   </style>
   <script type="application/ld+json">
   {
@@ -484,7 +533,7 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "Can I use Acqlerate to earn CLPs toward my DAWIA requirement?",
+        "name": "Can I use Acqlerate to earn CLPs (Continuous Learning Points) toward my DAWIA certification requirement?",
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "Yes. Defense Acquisition Workforce members can self-report Acqlerate modules as External Training in their DAU learning portal. Each module generates a Certificate of Completion. All 6 modules combined equal 14.2 CLPs — nearly 20% of the 80-point biennial requirement."
@@ -673,15 +722,15 @@
 <script>
 (function() {
   var lessons = [
-    { text: "The IDIQ vehicle is the hunting license. The task order is the hunt.", source: "Defense Contracting Fundamentals", module: "03" },
+    { text: "The IDIQ (Indefinite Delivery, Indefinite Quantity) vehicle is the hunting license. The task order is the hunt.", source: "Defense Contracting Fundamentals", module: "03" },
     { text: "Color of money isn’t a metaphor. Use O&M to buy a $400K piece of equipment and you’ve got an ADA violation.", source: "Defense Finance & Budgeting", module: "02" },
     { text: "A PM who takes care of their people creates a team that surfaces problems early. That’s the entire job.", source: "PM Operations & Leadership", module: "06" },
     { text: "September 30th is real. Every contracting office in DoD is drowning in the last 30 days of the fiscal year. Plan around it.", source: "Defense Finance & Budgeting", module: "02" },
-    { text: "If your COR asks you to do something not in your SOW — stop. Just say: ‘Can we get a mod first?’ It protects everyone.", source: "Defense Contracting Fundamentals", module: "03" },
+    { text: "If your COR (Contracting Officer's Rep) asks you to do something outside your SOW (Statement of Work) — stop. Just say: 'Can we get a mod first?' It protects everyone.", source: "Defense Contracting Fundamentals", module: "03" },
     { text: "Read Section M before you read anything else in an RFP. It’s the scoring rubric. Everything else exists to score well against it.", source: "Capture Management & BD", module: "05" },
     { text: "A risk register nobody updates is just a paperwork exercise. If a risk has been yellow for 90 days with no movement, someone’s not working it.", source: "PM Operations & Leadership", module: "06" },
     { text: "Winning the vehicle gets you in the door. Winning task orders is how you actually make money.", source: "Defense Contracting Fundamentals", module: "03" },
-    { text: "EVM tells you right now whether your program will finish on time and on budget. Most programs generate the reports and never use the information.", source: "Data Analytics for PMs", module: "04" },
+    { text: "EVM (Earned Value Management) tells you right now whether your program will finish on time and on budget. Most programs generate the reports and never actually use the information.", source: "Data Analytics for PMs", module: "04" },
     { text: "Becoming a PM is a lateral move into a different discipline. The skills that made you a great engineer are different from the skills that make a great PM.", source: "PM Operations & Leadership", module: "06" },
     { text: "Sources Sought and RFIs are the government asking who’s out there. Responding is free. Not responding means they don’t know you exist.", source: "Capture Management & BD", module: "05" },
     { text: "The best program review I ever sat in had zero green stoplight charts. Everything was yellow or red. Every item had an owner and a date.", source: "PM Operations & Leadership", module: "06" }
@@ -756,7 +805,7 @@
       <!-- Left: value prop -->
       <div>
         <div style="font-size:0.72rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#01696F;margin-bottom:14px;">For the Defense Acquisition Workforce</div>
-        <h2 style="font-size:clamp(1.5rem,2.8vw,2rem);font-weight:800;color:#1A1A1A;letter-spacing:-0.025em;line-height:1.25;margin-bottom:16px;">Earn CLPs you're already required to get.</h2>
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2rem);font-weight:800;color:#1A1A1A;letter-spacing:-0.025em;line-height:1.25;margin-bottom:16px;">Earn <span class="jt" data-tip="CLPs = Continuous Learning Points. The DoD requires acquisition professionals to earn 80 CLPs every two years to keep their certifications current.">CLPs</span> you're already required to get.</h2>
         <p style="font-size:1rem;color:#4B5563;line-height:1.75;margin-bottom:20px;">Defense Acquisition Workforce members must earn <strong>80 Continuous Learning Points every two years</strong>. Every completed Acqlerate module counts — and comes with a signed Certificate of Completion you can self-report in your DAU learning portal.</p>
         <p style="font-size:0.95rem;color:#4B5563;line-height:1.75;margin-bottom:28px;">No waiting for a class to be scheduled. No travel. No block of time off your calendar. You earn CLPs while you actually learn something useful.</p>
         <div style="display:flex;flex-direction:column;gap:8px;">
@@ -770,7 +819,7 @@
           </div>
           <div style="display:flex;align-items:flex-start;gap:10px;font-size:0.875rem;color:#1A1A1A;line-height:1.5;">
             <span style="color:#01696F;font-weight:800;">✓</span>
-            <span>Certificate includes module name, date, hours, and DAWIA functional area mapping</span>
+            <span>Certificate includes module name, date, hours, and <span class="jt" data-tip="DAWIA = Defense Acquisition Workforce Improvement Act. The law that sets training and certification requirements for DoD acquisition professionals.">DAWIA</span> functional area mapping</span>
           </div>
           <div style="display:flex;align-items:flex-start;gap:10px;font-size:0.875rem;color:#1A1A1A;line-height:1.5;">
             <span style="color:#01696F;font-weight:800;">✓</span>
@@ -817,7 +866,7 @@
           </tbody>
         </table></div>
         <div style="padding:14px 20px;background:#F9FAFB;border-top:1px solid #E5E7EB;">
-          <p style="font-size:0.75rem;color:#9CA3AF;margin:0;line-height:1.5;">Self-reportable in CAPPMIS (Army), eDACM (Navy/Marine/AF), and FAITAS (Civilian). Certificate includes DAWIA functional area mapping.</p>
+          <p style="font-size:0.75rem;color:#9CA3AF;margin:0;line-height:1.5;">Self-reportable in CAPPMIS (Army), eDACM (Navy/Marine/AF), and FAITAS (Civilian). Certificate includes <span class="jt" data-tip="DAWIA = Defense Acquisition Workforce Improvement Act. Sets the training and certification requirements for DoD acquisition professionals.">DAWIA</span> functional area mapping.</p>
         </div>
       </div>
     </div>
@@ -1102,7 +1151,7 @@
     <div style="text-align:center;margin-bottom:48px">
       <div style="font-size:0.75rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#4F98A3;margin-bottom:12px">For PMP Holders</div>
       <h2 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:white;letter-spacing:-0.025em;margin-bottom:16px">Earn Up to 10 PMI PDUs</h2>
-      <p style="font-size:1rem;color:rgba(255,255,255,0.55);max-width:560px;margin:0 auto;line-height:1.7">Every Acqlerate lesson counts as Self-Paced Online Learning. Log them directly in PMI CCRS — no pre-approval needed. 1 hour = 1 PDU.</p>
+      <p style="font-size:1rem;color:rgba(255,255,255,0.55);max-width:560px;margin:0 auto;line-height:1.7">Every Acqlerate lesson counts as Self-Paced Online Learning. Log them directly in PMI CCRS (the PMI certification portal) — no pre-approval needed. 1 hour = 1 PDU (Professional Development Unit).</p>
     </div>
 
     <!-- PDU table -->
@@ -1206,8 +1255,8 @@
 
       <!-- Card 2: GS-1102 / DAWIA -->
       <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(79,195,203,0.25);border-top:3px solid #4FC3CB;border-radius:12px;padding:28px 24px;">
-        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#4FC3CB;margin-bottom:10px;">OPM / USD A&S · DAWIA</div>
-        <div style="font-weight:800;font-size:1rem;color:white;margin-bottom:10px;line-height:1.3;">GS-1102 Professional Standards & DAWIA Functional Areas</div>
+        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#4FC3CB;margin-bottom:10px;">OPM / USD A&S · DAWIA (Defense Acquisition Workforce Improvement Act)</div>
+        <div style="font-weight:800;font-size:1rem;color:white;margin-bottom:10px;line-height:1.3;">Contracting Specialist Professional Standards & DAWIA Functional Areas</div>
         <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.65;margin-bottom:16px;">The qualification standard and functional area competencies for DoD acquisition workforce members — spanning Program Management (PM), Contracting (CON), and Business Financial Management (BFM).</p>
         <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);font-style:italic;margin-bottom:14px;">Acqlerate modules aligned:</div>
         <div style="display:flex;flex-direction:column;gap:6px;">
