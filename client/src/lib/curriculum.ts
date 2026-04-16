@@ -5385,7 +5385,7 @@ export const modules: Module[] = [
             headers: ['Career Field', 'Primary Role', 'Key Certification'],
             rows: [
               ['Program Management (PM)', 'Lead and manage acquisition programs from cradle to grave', 'DAU PM certifications (FL I, II, III)'],
-              ['Contracting (1102)', 'Manage the contracting process, award and administer contracts', 'DAWIA Contracting + FAC-C'],
+              ['Contracting Specialist / KO', 'Manage the contracting process, award and administer contracts', 'DAWIA Contracting + FAC-C'],
               ['Financial Management', 'Budget formulation, execution, and cost analysis', 'DAWIA FM + CDFM'],
               ['Systems Engineering (SE)', 'Technical oversight and systems architecture', 'DAWIA SE certifications'],
               ['Logistics', 'Lifecycle sustainment planning and execution', 'DAWIA LOG certifications'],
@@ -5412,7 +5412,7 @@ export const modules: Module[] = [
           },
           {
             type: 'callout',
-            heading: 'The Contracting Officer (CO/1102) Role',
+            heading: 'The Contracting Officer (CO) Role',
             body: 'The Contracting Officer is the only person legally authorized to obligate the U.S. government to spend money on a contract. They hold a \"warrant\" — a written delegation of authority specifying dollar thresholds they can sign up to. COs manage the full contract lifecycle: developing solicitations, evaluating proposals, negotiating terms, awarding contracts, issuing contract modifications, and closing out contracts. They are the legal guardians of the procurement process and must ensure every action complies with the FAR, DFARS, and applicable agency supplements. Without a CO\'s signature, nothing is official — not a delivery order, not a modification, not even a letter acknowledging a contractor claim.',
           },
           {
@@ -5424,7 +5424,7 @@ export const modules: Module[] = [
               'Business acumen — understands contractor cost structures, profit motives, and market dynamics|||COs who understand that a contractor\'s fully burdened labor rate includes fringe, overhead, and G&A — not just salary — negotiate more effectively and make better contract type decisions. Understanding industry economics also helps COs identify when a proposal is unrealistically low (likely to lead to disputes) or inflated (requiring harder negotiation).',
               'Legal judgment — recognizes unauthorized commitments, organizational conflicts of interest, and protest risks|||Unauthorized commitments — when a government employee without contracting authority directs contractor work — create major legal and financial problems. The CO must prevent them before they happen and ratify them correctly when they do. OCI recognition and mitigation is also critical; an OCI that isn\'t identified early can invalidate an entire source selection.',
               'Writing precision — contract language must be unambiguous and legally defensible|||Ambiguous contract language is the most common source of claims. If the SOW can be read two ways, the contractor will read it the way that supports more money. Every clause, performance standard, and deliverable description should have a single clear interpretation that both parties agree to before award.',
-              'Series 1102 federal position + DAWIA Contracting certification (Foundational, Practitioner, Advanced)|||The 1102 series is the career field designation for government contracting specialists. DAWIA (Defense Acquisition Workforce Improvement Act) certifications at three levels are required for career progression. The contracting warrant — which grants actual authority to obligate the government — is issued separately by the Head of Contracting Activity based on demonstrated competence and certification.',
+              'Contracting Specialist position (federal Series 1102) + DAWIA Contracting certification (Foundational, Practitioner, Advanced)|||The 1102 series is the career field code for government contracting specialists -- you will see it on USAJOBS when job hunting. DAWIA (Defense Acquisition Workforce Improvement Act) certifications at three levels are required for career progression. The contracting warrant -- which grants actual authority to obligate the government -- is issued separately by the Head of Contracting Activity based on demonstrated competence and certification.',
               'FAC-C certification (for civilian agencies); warrant issued by the Head of Contracting Activity (HCA)|||FAC-C (Federal Acquisition Certification in Contracting) is the civilian agency equivalent of DAWIA for contracting. DoD primarily uses DAWIA. Both certification paths require coursework, experience, and continuous learning. The contracting warrant is the specific legal authority granted to an individual CO — it specifies the dollar threshold up to which they can independently sign contracts.',
             ]
           },
@@ -7978,8 +7978,8 @@ export const modules: Module[] = [
             definition: 'The federal government\'s training institution for acquisition professionals. It offers hundreds of courses — most of them free to government employees — covering contracting, program management, finance, logistics, and more. If you\'re on the government track, DAU isn\'t optional. Start with ACQ 101 (Fundamentals of Systems Acquisition Management), which is free and available online.',
           },
           {
-            term: 'Series 1102 / 1101',
-            definition: 'The federal job classification codes used to categorize acquisition roles. Series 1102 is the Contracting Officer track — the people who write and award contracts. Series 1101 is a broader Program Management / Acquisition Support category. When searching USAJOBS.gov, filtering by these series codes is the fastest way to find acquisition jobs and cuts through the noise.',
+            term: 'Series 1102 / 1101 (Job Series Codes)',
+            definition: 'Federal job classification codes used to categorize acquisition roles. Series 1102 is the Contracting Specialist / Contracting Officer track — the people who write and award contracts. Series 1101 is a broader Program Management / Acquisition Support category. When searching USAJOBS.gov, filtering by these series codes is the fastest way to find acquisition jobs and cuts through the noise.',
           },
           {
             term: 'Pathways Program',
@@ -8050,7 +8050,7 @@ export const modules: Module[] = [
             heading: 'Getting In: Government Track',
             items: [
               'Start your security clearance process immediately|||You cannot start the official clearance process until you have a job offer, but you can prepare. Know your full employment history, foreign contacts, and financial history. The most common delay isn\'t a disqualifying event — it\'s missing information. Clearances typically take 6 to 18 months; TS/SCI can take longer. Disclose everything honestly. Adjudicators care far more about honesty and context than about the underlying facts.',
-              'USAJOBS.gov is the only place government jobs are posted|||There is no LinkedIn Easy Apply for federal jobs. Every civilian government position must be posted on USAJOBS.gov. When you search, filter by job series — Series 1102 (Contracting) or 1101 (Program Management/Acquisition) will surface most acquisition roles. Read the job announcement carefully and mirror its exact language in your application materials. Automated screening systems look for keyword matches before a human ever sees your resume.',
+              'USAJOBS.gov is the only place government jobs are posted|||There is no LinkedIn Easy Apply for federal jobs. Every civilian government position must be posted on USAJOBS.gov. When you search, filter by job series — Series 1102 (Contracting Specialist / KO) or 1101 (Program Management/Acquisition) will surface most acquisition roles. Read the job announcement carefully and mirror its exact language in your application materials. Automated screening systems look for keyword matches before a human ever sees your resume.',
               'The Pathways Program is the best entry door for recent graduates|||If you graduated from college in the last two years, the Pathways Recent Graduates Program is designed specifically for you. It places you in a one-year developmental assignment at GS-7 or GS-9, with a structured training plan and a conversion pathway to a permanent position. This is how many acquisition professionals get their first federal job — without needing prior government experience.',
               'DAU training is free for government employees — start now|||Defense Acquisition University (DAU) offers free online courses for all government acquisition employees. ACQ 101 (Fundamentals of Systems Acquisition Management) is the right starting point and takes roughly eight hours. You will need DAU certifications to advance — they are required, not optional, for most GS-13 and above positions. The earlier you start, the less it feels like a checkbox and the more it feels like actual knowledge.',
               'The defense community is small — network accordingly|||AFCEA (Armed Forces Communications and Electronics Association) events, industry days, and LinkedIn are all legitimate networking channels. The DoD acquisition community is genuinely small. You will keep running into the same people throughout your career. Treat every interaction — including informational interviews with people more senior than you — as a long-term relationship investment. The person you help out at GS-9 may be a SES member when you\'re a GS-14.',
@@ -8178,15 +8178,15 @@ export const modules: Module[] = [
           {
             id: 'q6',
             type: 'mc',
-            question: 'What do the Series 1102 and 1101 codes mean in the context of a federal job search?',
+            question: 'What do job series codes like 1102 and 1101 mean when searching for federal acquisition jobs?',
             options: [
               'They are security classification levels for acquisition programs|||Classification levels are a separate system. ACAT levels classify programs by size and oversight; classification levels (Secret, Top Secret) govern information access.',
               'They are DAU certification levels for program managers|||DAU uses its own certification structure under DAPA. Series codes are entirely separate and are part of the federal job classification system.',
-              'They are federal job classification codes — 1102 for Contracting Officers and 1101 for Program Management and Acquisition Support roles|||Correct. Filtering USAJOBS.gov by these series codes is the most effective way to find acquisition jobs, cutting through thousands of unrelated federal postings.',
+              'They are federal job classification codes — 1102 covers Contracting Specialist and KO positions, 1101 covers Program Management and Acquisition Support roles|||Correct. Filtering USAJOBS.gov by these series codes is the most effective way to find acquisition jobs, cutting through thousands of unrelated federal postings.',
               'They identify the GS pay grade range for entry-level acquisition jobs|||GS grades and job series codes are separate systems. The series identifies the type of work; the GS grade identifies the pay level.',
             ],
             correct: 2,
-            explanation: 'Series codes are the federal government\'s job classification system. Series 1102 covers Contracting Officer positions; Series 1101 covers broader Program Management and Acquisition Support roles. When searching USAJOBS.gov, using these series codes as filters is the fastest way to surface acquisition-specific positions.',
+            explanation: 'Series codes are the federal government\'s job classification system. Series 1102 covers Contracting Specialist and KO positions; Series 1101 covers broader Program Management and Acquisition Support roles. When searching USAJOBS.gov, using these series codes as filters is the fastest way to surface acquisition-specific positions.',
           },
           {
             id: 'q7',

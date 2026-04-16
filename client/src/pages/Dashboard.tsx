@@ -97,10 +97,10 @@ const CAREER_TRACKS: CareerTrack[] = [
   },
   {
     id: 'contracting_officer',
-    label: 'Contracting Officer (1102)',
-    shortLabel: '1102 / CO',
+    label: 'Contracting Specialist / KO',
+    shortLabel: 'KO / Specialist',
     icon: <FileText className="w-3.5 h-3.5" />,
-    desc: '1102 series — source selection, contract administration, FAR/DFARS compliance',
+    desc: 'Contracting Specialist or KO — source selection, contract administration, FAR/DFARS compliance',
     primaryLessons: [
       // Foundations — full picture needed
       'foundations-intro', 'foundations-players', 'foundations-contracts',
