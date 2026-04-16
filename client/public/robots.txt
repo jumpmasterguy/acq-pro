@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
+Allow: /blog/
+Allow: /blog
+Allow: /teams
+Allow: /pay-guide
 Disallow: /app
 Disallow: /api/
 
