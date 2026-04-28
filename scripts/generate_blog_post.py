@@ -699,20 +699,37 @@ def git_push(slug: str, title: str) -> bool:
             ["git", "commit", "-m", f"blog: publish '{title[:60]}'"],
         ]:
             subprocess.run(cmd, cwd=REPO_ROOT, check=True, capture_output=True)
-        # Push using gh auth token (avoids invalid origin credentials)
-        import shutil
+        # Push using gh auth token — with multiple fallback strategies
+        import shutil, os
+
+        token = ""
+
+        # Strategy 1: gh auth token CLI
         gh = shutil.which("gh")
         if gh:
             token_result = subprocess.run([gh, "auth", "token"], capture_output=True, text=True)
             token = token_result.stdout.strip()
-            if token:
-                subprocess.run(
-                    ["git", "-c", f"http.https://github.com/.extraheader=Authorization: token {token}",
-                     "push", "https://github.com/jumpmasterguy/acq-pro.git", "HEAD:main"],
-                    cwd=REPO_ROOT, check=True, capture_output=True
-                )
-            else:
-                raise subprocess.CalledProcessError(1, "gh auth token", b"", b"No token returned")
+
+        # Strategy 2: GH_TOKEN / GITHUB_TOKEN env vars
+        if not token:
+            token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN") or ""
+
+        # Strategy 3: GH_ENTERPRISE_TOKEN (Perplexity Computer env)
+        if not token:
+            token = os.environ.get("GH_ENTERPRISE_TOKEN") or ""
+
+        if token:
+            subprocess.run(
+                ["git", "-c", f"http.https://github.com/.extraheader=Authorization: token {token}",
+                 "push", "https://github.com/jumpmasterguy/acq-pro.git", "HEAD:main"],
+                cwd=REPO_ROOT, check=True, capture_output=True
+            )
+        else:
+            # Strategy 4: try plain push in case origin is already configured with credentials
+            subprocess.run(
+                ["git", "push", "https://github.com/jumpmasterguy/acq-pro.git", "HEAD:main"],
+                cwd=REPO_ROOT, check=True, capture_output=True
+            )
         return True
     except subprocess.CalledProcessError as e:
         print(f"Git error: {e.stderr.decode() if e.stderr else e}")
