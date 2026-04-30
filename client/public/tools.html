@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- Google Analytics 4 — G-SW42SFY999 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SW42SFY999"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SW42SFY999', {
+      page_title: document.title,
+      page_location: window.location.href,
+    });
+  </script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free Acquisition Tools & Resources — Acqlerate</title>
+  <meta name="description" content="Free acquisition tools for KOs, program managers, and defense contractors — organized by role, with plain-English guides on how to actually use them." />
+  <link rel="canonical" href="https://acqlerate.com/tools" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Free Acquisition Tools & Resources — Acqlerate" />
+  <meta property="og:description" content="Free acquisition tools for KOs, program managers, and defense contractors — organized by role, with plain-English guides on how to actually use them." />
+  <meta property="og:url" content="https://acqlerate.com/tools" />
+  <meta property="og:image" content="https://acqlerate.com/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://acqlerate.com/og-image.jpg" />
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0D1B2A;
+      --navy-mid: #1B2D3E;
+      --navy-alt: #0d2137;
+      --teal: #01696F;
+      --teal-dark: #0C4E54;
+      --teal-light: #E6F2F3;
+      --teal-mid: #4F98A3;
+      --gold: #F5C842;
+      --gold-dark: #B88600;
+      --gold-bg: #FEF9E7;
+      --text: #1A1A1A;
+      --text-muted: #6B7280;
+      --text-faint: #9CA3AF;
+      --border: #E5E7EB;
+      --bg: #FFFFFF;
+      --surface: #F7F9FB;
+
+      /* Role badge colors */
+      --role-ko: #01696F;
+      --role-pm: #0D1B2A;
+      --role-contractor: #B88600;
+      --role-bd: #6B21A8;
+      --role-all: #4B5563;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-icon {
+      width: 36px; height: 36px; background: var(--teal); border-radius: 9px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .nav-logo-icon svg { width: 22px; height: 22px; }
+    .nav-logo-text { font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+    .nav-logo-text span { color: var(--teal); }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .nav-blog-pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(1,105,111,0.08); border: 1px solid rgba(1,105,111,0.25);
+      color: var(--teal); font-size: 0.85rem; font-weight: 600;
+      padding: 6px 14px; border-radius: 20px; text-decoration: none;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .nav-blog-pill:hover { background: rgba(1,105,111,0.15); border-color: rgba(1,105,111,0.45); }
+    .nav-blog-badge {
+      background: var(--teal); color: white; font-size: 0.65rem;
+      font-weight: 700; padding: 1px 6px; border-radius: 10px;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .btn-ghost {
+      background: none; border: 1px solid var(--border); cursor: pointer;
+      color: var(--text-muted); font-size: 0.9rem; font-weight: 500;
+      padding: 7px 16px; border-radius: 8px; text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+    }
+    .btn-ghost:hover { color: var(--text); background: var(--surface); }
+    .btn-primary {
+      background: var(--teal); color: white; border: none; cursor: pointer;
+      font-size: 0.9rem; font-weight: 600; padding: 9px 20px;
+      border-radius: 9px; text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: var(--navy-alt);
+      padding: 72px 2rem 64px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(1,105,111,0.2); border: 1px solid rgba(79,152,163,0.4);
+      color: #7ECFD6; font-size: 0.75rem; font-weight: 700;
+      padding: 5px 14px; border-radius: 100px; margin-bottom: 24px;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 800; color: white; letter-spacing: -0.03em;
+      line-height: 1.12; max-width: 800px; margin: 0 auto 20px;
+    }
+    .hero h1 em { font-style: normal; color: #4FC3CB; }
+    .hero-sub {
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      color: rgba(255,255,255,0.7);
+      max-width: 600px; margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ─── FILTER TABS ─── */
+    .filter-bar {
+      position: sticky; top: 60px; z-index: 100;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+    .filter-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; gap: 0; overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .filter-inner::-webkit-scrollbar { display: none; }
+    .filter-tab {
+      flex-shrink: 0;
+      background: none; border: none; cursor: pointer;
+      font-family: inherit; font-size: 0.875rem; font-weight: 600;
+      color: var(--text-muted); padding: 14px 20px;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .filter-tab:hover { color: var(--text); }
+    .filter-tab.active { color: var(--teal); border-bottom-color: var(--teal); }
+
+    /* ─── MAIN CONTENT ─── */
+    .content-wrap {
+      max-width: 1100px; margin: 0 auto;
+      padding: 52px 2rem 80px;
+    }
+
+    /* ─── CATEGORY SECTION ─── */
+    .cat-section { margin-bottom: 64px; }
+    .cat-header {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 24px;
+    }
+    .cat-number {
+      flex-shrink: 0;
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--navy); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 800; letter-spacing: 0.02em;
+    }
+    .cat-title {
+      font-size: 1.2rem; font-weight: 800; color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .cat-divider {
+      flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* ─── TOOL CARD ─── */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 18px;
+    }
+    .tool-card {
+      background: white;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 20px 18px;
+      display: flex; flex-direction: column; gap: 12px;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
+    .tool-card:hover {
+      border-color: var(--teal-mid);
+      box-shadow: 0 4px 20px rgba(1,105,111,0.09);
+      transform: translateY(-2px);
+    }
+    .tool-card.hidden { display: none; }
+
+    .tool-card-top {
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
+    }
+    .tool-name {
+      font-size: 1rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.01em; line-height: 1.3;
+    }
+    .tool-name .tool-sub {
+      font-size: 0.78rem; font-weight: 500; color: var(--text-muted);
+      display: block; margin-top: 2px;
+    }
+    .tool-free-label {
+      flex-shrink: 0;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
+      padding: 3px 9px; border-radius: 100px;
+      background: #ECFDF5; color: #065F46; border: 1px solid #6EE7B7;
+    }
+    .tool-free-label.paid {
+      background: #FFF8ED; color: #92400E; border-color: #FBD38D;
+    }
+
+    .tool-desc {
+      font-size: 0.875rem; color: var(--text-muted);
+      line-height: 1.6; flex: 1;
+    }
+
+    .tool-roles {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .role-badge {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.03em;
+      padding: 3px 10px; border-radius: 100px;
+      color: white;
+    }
+    .role-badge.ko { background: var(--role-ko); }
+    .role-badge.pm { background: var(--role-pm); }
+    .role-badge.contractor { background: var(--role-contractor); }
+    .role-badge.bd { background: var(--role-bd); }
+    .role-badge.all { background: var(--role-all); }
+    .role-badge.small-biz { background: #1D4ED8; }
+    .role-badge.schedule { background: #0891B2; }
+    .role-badge.gov { background: #374151; }
+    .role-badge.tech { background: #7C3AED; }
+
+    .tool-actions {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      padding-top: 4px; border-top: 1px solid var(--border);
+    }
+    .tool-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.82rem; font-weight: 600; color: var(--teal);
+      text-decoration: none; padding: 6px 12px;
+      border: 1.5px solid var(--teal-light); border-radius: 7px;
+      background: var(--teal-light);
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .tool-link:hover { background: #cce8ea; border-color: var(--teal-mid); }
+    .tool-learn {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 0.78rem; font-weight: 600; color: var(--text-muted);
+      text-decoration: none; padding: 6px 10px;
+      border: 1.5px solid var(--border); border-radius: 7px;
+      background: white;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .tool-learn:hover { color: var(--navy); border-color: var(--navy); }
+
+    /* ─── AI CALLOUT BOX ─── */
+    .ai-callout {
+      margin-top: 28px;
+      background: linear-gradient(135deg, #0D1B2A 0%, #0C3A40 100%);
+      border: 1.5px solid rgba(79,152,163,0.4);
+      border-radius: 16px;
+      padding: 28px 28px 24px;
+      display: flex; gap: 18px; align-items: flex-start;
+    }
+    .ai-callout-icon {
+      flex-shrink: 0;
+      width: 44px; height: 44px;
+      background: rgba(245,200,66,0.15);
+      border: 1.5px solid rgba(245,200,66,0.3);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+    }
+    .ai-callout-body { flex: 1; }
+    .ai-callout-body p {
+      font-size: 0.95rem; color: rgba(255,255,255,0.85);
+      line-height: 1.7;
+    }
+    .ai-callout-body strong { color: var(--gold); }
+
+    /* ─── BOTTOM CTA ─── */
+    .bottom-cta {
+      background: var(--navy-alt);
+      padding: 80px 2rem;
+      text-align: center;
+    }
+    .bottom-cta h2 {
+      font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+      font-weight: 800; color: white; letter-spacing: -0.025em;
+      max-width: 680px; margin: 0 auto 18px; line-height: 1.2;
+    }
+    .bottom-cta p {
+      font-size: 1rem; color: rgba(255,255,255,0.6);
+      max-width: 540px; margin: 0 auto 40px; line-height: 1.7;
+    }
+    .bottom-cta-btns {
+      display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+    }
+    .btn-teal-lg {
+      background: var(--teal); color: white; border: none; cursor: pointer;
+      font-size: 1rem; font-weight: 700; padding: 14px 32px;
+      border-radius: 10px; text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+      box-shadow: 0 4px 20px rgba(1,105,111,0.4);
+    }
+    .btn-teal-lg:hover { background: var(--teal-dark); transform: translateY(-2px); }
+    .btn-ghost-lg {
+      background: rgba(255,255,255,0.07); color: white;
+      border: 1.5px solid rgba(255,255,255,0.2); cursor: pointer;
+      font-size: 1rem; font-weight: 600; padding: 14px 32px;
+      border-radius: 10px; text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn-ghost-lg:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--navy); padding: 40px 2rem 28px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-brand { font-size: 1rem; font-weight: 800; color: white; letter-spacing: -0.02em; }
+    .footer-brand span { color: var(--teal-mid); }
+    .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-links a {
+      font-size: 0.82rem; color: rgba(255,255,255,0.4);
+      text-decoration: none; transition: color 0.15s;
+    }
+    .footer-links a:hover { color: rgba(255,255,255,0.7); }
+    .footer-copy {
+      font-size: 0.78rem; color: rgba(255,255,255,0.25);
+      width: 100%; margin-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 16px;
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .filter-tab { padding: 12px 14px; font-size: 0.82rem; }
+      .tools-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 0 1rem; }
+      .nav-actions .btn-ghost { display: none; }
+      .hero { padding: 52px 1.25rem 48px; }
+      .content-wrap { padding: 36px 1.25rem 60px; }
+      .cat-section { margin-bottom: 48px; }
+      .ai-callout { flex-direction: column; gap: 14px; }
+      .bottom-cta { padding: 60px 1.25rem; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Acqlerate logo mark">
+          <path d="M4 17L11 5L18 17" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6.5 13H15.5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">Acql<span>erate</span></span>
+    </a>
+    <div class="nav-actions">
+      <a href="/blog" class="nav-blog-pill">
+        Blog <span class="nav-blog-badge">FREE</span>
+      </a>
+      <a href="https://app.acqlerate.com/sign-in" class="btn-ghost">Sign In</a>
+      <a href="https://app.acqlerate.com/sign-up" class="btn-primary">Start Free →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Free Reference</div>
+  <h1>Tools &amp; Resources for<br><em>Acquisition Professionals</em></h1>
+  <p class="hero-sub">The best free government tools — organized by what you're trying to do, with plain-English explanations of how to use them.</p>
+</section>
+
+<!-- ROLE FILTER TABS -->
+<div class="filter-bar" id="filter-bar">
+  <div class="filter-inner">
+    <button class="filter-tab active" data-role="all">All</button>
+    <button class="filter-tab" data-role="ko">Contracting Specialists &amp; KOs</button>
+    <button class="filter-tab" data-role="pm">Program Managers</button>
+    <button class="filter-tab" data-role="contractor">Contractors &amp; BD</button>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content-wrap">
+
+  <!-- 1. REGISTRATION & ENTITY MANAGEMENT -->
+  <div class="cat-section" id="cat-registration">
+    <div class="cat-header">
+      <div class="cat-number">01</div>
+      <h2 class="cat-title">Registration &amp; Entity Management</h2>
+      <div class="cat-divider"></div>
+    </div>
+    <div class="tools-grid">
+
+      <!-- SAM.gov -->
+      <div class="tool-card" data-roles="all">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">SAM.gov
+              <span class="tool-sub">sam.gov</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">Mandatory registration for any company receiving federal contracts. Also the authoritative source for UEI lookup, debarment checks, and exclusion verification. Every contractor must be active here before award.</p>
+        <div class="tool-roles">
+          <span class="role-badge all">All Roles</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://sam.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Contracts Module →</a>
+        </div>
+      </div>
+
+      <!-- Beta.SAM.gov -->
+      <div class="tool-card" data-roles="all">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">Beta.SAM.gov
+              <span class="tool-sub">Unified SAM Interface</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">The new consolidated interface for SAM.gov — merges FBO.gov, FPDS-NG, and legacy SAM into one platform. Use this for registrations, opportunities search, and federal contract data in a single login.</p>
+        <div class="tool-roles">
+          <span class="role-badge all">All Roles</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://sam.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 2. FINDING OPPORTUNITIES -->
+  <div class="cat-section" id="cat-opportunities">
+    <div class="cat-header">
+      <div class="cat-number">02</div>
+      <h2 class="cat-title">Finding Opportunities</h2>
+      <div class="cat-divider"></div>
+    </div>
+    <div class="tools-grid">
+
+      <!-- SAM.gov Opportunities -->
+      <div class="tool-card" data-roles="contractor ko bd">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">SAM.gov Opportunities
+              <span class="tool-sub">sam.gov/search/opportunities</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">Every federal solicitation over $25K — RFPs, RFQs, Sources Sought notices, and awards. Filter by NAICS code, agency, set-aside type, and dollar threshold. This is where capture starts.</p>
+        <div class="tool-roles">
+          <span class="role-badge contractor">Contractors</span>
+          <span class="role-badge bd">BD</span>
+          <span class="role-badge ko">KOs</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://sam.gov/search/opportunities" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Capture Module →</a>
+        </div>
+      </div>
+
+      <!-- USASpending.gov -->
+      <div class="tool-card" data-roles="all">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">USASpending.gov
+              <span class="tool-sub">usaspending.gov</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">Every awarded federal contract since 2008. Use it for competitor research, agency buying patterns, historical pricing benchmarks, and incumbent identification. The single most powerful BD research tool that most people underuse.</p>
+        <div class="tool-roles">
+          <span class="role-badge all">All Roles</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://usaspending.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Capture + Finance →</a>
+        </div>
+      </div>
+
+      <!-- SBA SUB-Net -->
+      <div class="tool-card" data-roles="contractor bd">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">SBA SUB-Net
+              <span class="tool-sub">eweb1.sba.gov/subnet</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">Subcontracting opportunities posted directly by prime contractors. If you're a small business looking to team on a large program, start here. Primes list subcontracting goals, NAICS codes, and contact info.</p>
+        <div class="tool-roles">
+          <span class="role-badge small-biz">Small Business</span>
+          <span class="role-badge bd">BD</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://eweb1.sba.gov/subnet/client/dsp_Landing.cfm" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+        </div>
+      </div>
+
+      <!-- GSA eBuy -->
+      <div class="tool-card" data-roles="contractor bd">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">GSA eBuy
+              <span class="tool-sub">ebuy.gsa.gov</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">RFQs issued specifically to GSA Schedule holders. If your company has a GSA Multiple Award Schedule, agencies use eBuy to request quotes. Only accessible to registered Schedule contractors.</p>
+        <div class="tool-roles">
+          <span class="role-badge schedule">GSA Schedule</span>
+          <span class="role-badge contractor">Contractors</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://www.ebuy.gsa.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 3. PRICING & COST ESTIMATING -->
+  <div class="cat-section" id="cat-pricing">
+    <div class="cat-header">
+      <div class="cat-number">03</div>
+      <h2 class="cat-title">Pricing &amp; Cost Estimating</h2>
+      <div class="cat-divider"></div>
+    </div>
+    <div class="tools-grid">
+
+      <!-- GSA CALC+ -->
+      <div class="tool-card" data-roles="ko pm contractor">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">GSA CALC+
+              <span class="tool-sub">calc.gsa.gov</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">The best free tool for IGCE labor pricing. Search 230,000+ labor rates from GSA Multiple Award Schedule contracts by job title, experience level, and contract type. KOs use it to build IGCEs; contractors use it to sanity-check their rates.</p>
+        <div class="tool-roles">
+          <span class="role-badge ko">KOs</span>
+          <span class="role-badge pm">PMs</span>
+          <span class="role-badge contractor">Contractors</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://calc.gsa.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Finance Module →</a>
+        </div>
+      </div>
+
+      <!-- BLS OEWS -->
+      <div class="tool-card" data-roles="ko contractor">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">BLS OEWS
+              <span class="tool-sub">bls.gov/oes</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">Bureau of Labor Statistics Occupational Employment &amp; Wage Statistics. ~830 occupations × 530 metro areas. Useful for establishing a wage baseline in IGCE development, especially for labor categories that don't appear in GSA CALC+.</p>
+        <div class="tool-roles">
+          <span class="role-badge ko">KOs</span>
+          <span class="role-badge contractor">Contractors</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://www.bls.gov/oes/" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Finance Module →</a>
+        </div>
+      </div>
+
+      <!-- GSA Per Diem -->
+      <div class="tool-card" data-roles="ko pm contractor">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">GSA Per Diem Rates
+              <span class="tool-sub">gsa.gov/perdiem</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">Official federal travel per diem by city and county — lodging, M&amp;IE, and incidental rates. Required for travel cost proposals and IGCEs that include travel line items. Updated annually each October.</p>
+        <div class="tool-roles">
+          <span class="role-badge ko">KOs</span>
+          <span class="role-badge pm">PMs</span>
+          <span class="role-badge contractor">Contractors</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://www.gsa.gov/travel/plan-book/per-diem-rates" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 4. REGULATIONS & POLICY -->
+  <div class="cat-section" id="cat-regulations">
+    <div class="cat-header">
+      <div class="cat-number">04</div>
+      <h2 class="cat-title">Regulations &amp; Policy</h2>
+      <div class="cat-divider"></div>
+    </div>
+    <div class="tools-grid">
+
+      <!-- eCFR.gov -->
+      <div class="tool-card" data-roles="ko pm">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">eCFR.gov (FAR / DFARS)
+              <span class="tool-sub">ecfr.gov</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">Daily-updated electronic Code of Federal Regulations — the authoritative source for FAR, DFARS, and agency supplements. Full text search, redline comparisons, and amendment history. Bookmark this over any unofficial FAR site.</p>
+        <div class="tool-roles">
+          <span class="role-badge ko">KOs</span>
+          <span class="role-badge pm">PMs</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://www.ecfr.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Contracts Module →</a>
+        </div>
+      </div>
+
+      <!-- Acquisition.gov -->
+      <div class="tool-card" data-roles="ko">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">Acquisition.gov
+              <span class="tool-sub">acquisition.gov</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">Official FAR text with linked DFARS, agency supplements, and policy updates from DAU and FAI. Good for navigating the supplement hierarchy and understanding how agency-specific rules layer onto the base FAR.</p>
+        <div class="tool-roles">
+          <span class="role-badge ko">KOs</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://www.acquisition.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+        </div>
+      </div>
+
+      <!-- DAU ACQuipedia -->
+      <div class="tool-card" data-roles="all">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">DAU ACQuipedia
+              <span class="tool-sub">acquipedia.dau.edu</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">Plain-English acquisition encyclopedia with definitions, policy references, and community annotations. Look up any acronym, milestone, or process — written by practitioners for practitioners. Great first stop when you encounter unfamiliar jargon.</p>
+        <div class="tool-roles">
+          <span class="role-badge all">All Roles</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://acquipedia.dau.edu" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+        </div>
+      </div>
+
+      <!-- Defense Acquisition Guidebook -->
+      <div class="tool-card" data-roles="pm ko">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">Defense Acquisition Guidebook
+              <span class="tool-sub">dag.dau.edu</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">DoD's detailed step-by-step guidance on executing acquisition programs — from requirements through sustainment. Chapters organized by phase (Materiel Solution Analysis through Operations &amp; Support). Essential for PMs managing ACAT programs.</p>
+        <div class="tool-roles">
+          <span class="role-badge pm">PMs</span>
+          <span class="role-badge ko">KOs</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://dag.dau.edu" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 5. MARKET RESEARCH & INTELLIGENCE -->
+  <div class="cat-section" id="cat-market">
+    <div class="cat-header">
+      <div class="cat-number">05</div>
+      <h2 class="cat-title">Market Research &amp; Intelligence</h2>
+      <div class="cat-divider"></div>
+    </div>
+    <div class="tools-grid">
+
+      <!-- USASpending (repeat) -->
+      <div class="tool-card" data-roles="all">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">USASpending.gov
+              <span class="tool-sub">usaspending.gov — Market Research View</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">Worth repeating: the award history database is the foundation of federal market research. Find who's winning in your space, at what prices, under which contract vehicles, and how long awards last. This is how smart BD shops do their homework.</p>
+        <div class="tool-roles">
+          <span class="role-badge all">All Roles</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://usaspending.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Capture Module →</a>
+        </div>
+      </div>
+
+      <!-- FPDS-NG -->
+      <div class="tool-card" data-roles="ko bd">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">FPDS-NG / SAM.gov Contract Data
+              <span class="tool-sub">fpds.gov · sam.gov</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">Federal Procurement Data System — the underlying data source for USASpending. Use the raw FPDS interface for detailed contract-level queries, action-by-action history, and API access to procurement data for custom analysis.</p>
+        <div class="tool-roles">
+          <span class="role-badge ko">KOs</span>
+          <span class="role-badge bd">BD</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://www.fpds.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+        </div>
+      </div>
+
+      <!-- SBA DSBS -->
+      <div class="tool-card" data-roles="ko contractor bd">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">SBA Dynamic Small Business Search
+              <span class="tool-sub">dsbs.sba.gov</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">Search the SBA's database of small businesses by NAICS code, socioeconomic certifications (8(a), WOSB, SDVOSB, HUBZone), and location. KOs use it for market research and small biz sourcing. Contractors use it to find teaming partners.</p>
+        <div class="tool-roles">
+          <span class="role-badge ko">KOs</span>
+          <span class="role-badge contractor">Contractors</span>
+          <span class="role-badge bd">BD</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://dsbs.sba.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+        </div>
+      </div>
+
+      <!-- USA.gov Agencies -->
+      <div class="tool-card" data-roles="bd contractor">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">USA.gov Agency Directory
+              <span class="tool-sub">usa.gov/agencies</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">Comprehensive directory of all federal agencies, departments, and sub-agencies with contact info, mission statements, and website links. Useful when you're mapping out a new agency target and need to understand its structure and buying offices.</p>
+        <div class="tool-roles">
+          <span class="role-badge bd">BD</span>
+          <span class="role-badge contractor">Contractors</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://www.usa.gov/agencies" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 6. TRAINING & CERTIFICATIONS -->
+  <div class="cat-section" id="cat-training">
+    <div class="cat-header">
+      <div class="cat-number">06</div>
+      <h2 class="cat-title">Training &amp; Certifications</h2>
+      <div class="cat-divider"></div>
+    </div>
+    <div class="tools-grid">
+
+      <!-- DAU -->
+      <div class="tool-card" data-roles="pm ko">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">Defense Acquisition University (DAU)
+              <span class="tool-sub">dau.edu</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free (Gov)</span>
+        </div>
+        <p class="tool-desc">Free training for DoD civilian and military acquisition professionals. Mandatory DAWIA certification courses, CLPs, and continuous learning modules. If you're a government employee, DAU is your primary certification path — Acqlerate supplements it, not replaces it.</p>
+        <div class="tool-roles">
+          <span class="role-badge pm">PMs</span>
+          <span class="role-badge ko">KOs</span>
+          <span class="role-badge gov">Government</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://www.dau.edu" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+        </div>
+      </div>
+
+      <!-- FAI -->
+      <div class="tool-card" data-roles="ko">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">Federal Acquisition Institute (FAI)
+              <span class="tool-sub">fai.gov</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free (Gov)</span>
+        </div>
+        <p class="tool-desc">Civilian agency acquisition training and FAC-C (Federal Acquisition Certification in Contracting) certification. The civilian equivalent to DAU's DAWIA. If you're a contracting officer at a non-DoD agency, your cert path runs through FAI.</p>
+        <div class="tool-roles">
+          <span class="role-badge ko">KOs</span>
+          <span class="role-badge gov">Civilian Agencies</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://www.fai.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+        </div>
+      </div>
+
+      <!-- Acqlerate -->
+      <div class="tool-card" data-roles="all" style="border-color: var(--teal); box-shadow: 0 4px 20px rgba(1,105,111,0.12);">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">Acqlerate
+              <span class="tool-sub">acqlerate.com</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free to Start</span>
+        </div>
+        <p class="tool-desc">Plain-English acquisition education for every role — KOs, PMs, contractors, and BD teams. Six modules covering the full acquisition lifecycle. Earns CLPs (self-reportable) and PMI PDUs. Module 1 is completely free, no credit card required.</p>
+        <div class="tool-roles">
+          <span class="role-badge all">All Roles</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://app.acqlerate.com/sign-up" class="tool-link" style="background: var(--teal); color: white; border-color: var(--teal);">Start Free →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 7. AI TOOLS FOR ACQUISITION -->
+  <div class="cat-section" id="cat-ai">
+    <div class="cat-header">
+      <div class="cat-number">07</div>
+      <h2 class="cat-title">AI Tools for Acquisition</h2>
+      <div class="cat-divider"></div>
+    </div>
+    <div class="tools-grid">
+
+      <!-- 1102tools.com -->
+      <div class="tool-card" data-roles="ko contractor">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">1102tools.com
+              <span class="tool-sub">Free Open-Source AI Toolkit</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free</span>
+        </div>
+        <p class="tool-desc">Free open-source AI tools purpose-built for acquisition professionals: MCP servers that connect AI to live SAM.gov data, USASpending.gov, FAR/DFARS, and BLS wage data. Includes a SOW/PWS builder and IGCE builder. Requires ~30 min setup. Best for tech-comfortable users.</p>
+        <div class="tool-roles">
+          <span class="role-badge tech">Tech-Savvy KOs</span>
+          <span class="role-badge contractor">Contractors</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://1102tools.com" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+        </div>
+      </div>
+
+      <!-- Claude Desktop + MCP -->
+      <div class="tool-card" data-roles="ko contractor">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">Claude Desktop + MCP
+              <span class="tool-sub">claude.ai/download</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free / Paid</span>
+        </div>
+        <p class="tool-desc">Connect the Claude AI desktop app to live federal data using 1102tools' MCP servers. Once configured, you can ask Claude to pull real-time SAM opportunities, look up contract awards, or query BLS wage data — without leaving your chat window.</p>
+        <div class="tool-roles">
+          <span class="role-badge tech">Tech-Savvy KOs</span>
+          <span class="role-badge contractor">Contractors</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://claude.ai/download" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+          <a href="https://1102tools.com" target="_blank" rel="noopener" class="tool-learn">Setup via 1102tools →</a>
+        </div>
+      </div>
+
+      <!-- ChatGPT -->
+      <div class="tool-card" data-roles="all">
+        <div class="tool-card-top">
+          <div>
+            <div class="tool-name">ChatGPT
+              <span class="tool-sub">chatgpt.com</span>
+            </div>
+          </div>
+          <span class="tool-free-label">Free / Paid</span>
+        </div>
+        <p class="tool-desc">General-purpose AI drafting for SOWs, market research summaries, IGCE narratives, and evaluation criteria. Excellent at structuring acquisition documents if you give it the right context. Note: never input sensitive contract data, CUI, or source selection information.</p>
+        <div class="tool-roles">
+          <span class="role-badge all">All Roles</span>
+        </div>
+        <div class="tool-actions">
+          <a href="https://chatgpt.com" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- AI Callout Box -->
+    <div class="ai-callout">
+      <div class="ai-callout-icon">&#9889;</div>
+      <div class="ai-callout-body">
+        <p><strong>These tools are powerful. But they assume you already know the system.</strong> An AI that queries SAM.gov for you is only useful if you understand what a Sources Sought is, why it matters, and what to do with the results. The same goes for IGCE builders, SOW generators, and pricing tools — the output is only as good as the judgment of the person reading it. That's what Acqlerate teaches: the acquisition foundation that makes every tool more effective.</p>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /content-wrap -->
+
+<!-- BOTTOM CTA -->
+<section class="bottom-cta">
+  <h2>The tools are only as powerful as the person using them.</h2>
+  <p>Acqlerate teaches you the acquisition system in plain English — so when you pick up these tools, you know exactly what you're doing with them.</p>
+  <div class="bottom-cta-btns">
+    <a href="https://app.acqlerate.com/sign-up" class="btn-teal-lg">Start Learning Free →</a>
+    <a href="/blog" class="btn-ghost-lg">Browse the Blog</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">Acql<span>erate</span></div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/tools">Tools</a>
+      <a href="/blog">Blog</a>
+      <a href="https://app.acqlerate.com/sign-up">Start Free</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+    </div>
+  </div>
+  <div class="footer-inner">
+    <div class="footer-copy">
+      <span>&copy; 2025 Acqlerate. All rights reserved.</span>
+      <span>Built for acquisition professionals.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ROLE FILTER SCRIPT -->
+<script>
+  (function() {
+    var tabs = document.querySelectorAll('.filter-tab');
+    var cards = document.querySelectorAll('.tool-card');
+    var activeRole = 'all';
+
+    // Role aliases: tab 'contractor' matches cards with 'contractor' OR 'bd'
+    var roleAliases = {
+      'contractor': ['contractor', 'bd', 'small-biz', 'schedule'],
+      'ko': ['ko'],
+      'pm': ['pm'],
+      'all': ['all']
+    };
+
+    function filterCards(role) {
+      var matchRoles = roleAliases[role] || [role];
+      cards.forEach(function(card) {
+        if (role === 'all') {
+          card.classList.remove('hidden');
+        } else {
+          var cardRoles = (card.dataset.roles || '').split(' ');
+          // A card is visible if it has any matching role, OR if it has 'all' as a role
+          var visible = cardRoles.some(function(r) {
+            return matchRoles.indexOf(r) !== -1 || r === 'all';
+          });
+          if (visible) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        }
+      });
+
+      // Hide/show category sections based on visible cards
+      document.querySelectorAll('.cat-section').forEach(function(section) {
+        var visibleCards = section.querySelectorAll('.tool-card:not(.hidden)');
+        section.style.display = visibleCards.length === 0 ? 'none' : '';
+      });
+    }
+
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        tabs.forEach(function(t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        activeRole = tab.dataset.role;
+        filterCards(activeRole);
+      });
+    });
+
+
+  })();
+</script>
+
+</body>
+</html>
