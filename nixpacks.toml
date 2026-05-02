@@ -1,0 +1,5 @@
+[phases.build]
+cmds = ["node script/build.mjs"]
+
+[start]
+cmd = "NODE_ENV=production node dist/index.cjs"
