@@ -1,9 +1,9 @@
 [build]
 builder = "nixpacks"
-buildCommand = "npm install --prefer-offline=false --no-audit --no-fund && npm run build"
+buildCommand = "npm install --no-audit --no-fund && npm run build"
 
 [deploy]
-startCommand = "npm start"
+startCommand = "node dist/index.cjs"
 healthcheckPath = "/api/health"
 healthcheckTimeout = 30
 restartPolicyType = "on_failure"
