@@ -10,6 +10,15 @@ export function serveStatic(app: Express) {
     );
   }
 
+  // Redirect www to apex domain
+  app.use((req: Request, res: Response, next) => {
+    const host = req.headers.host || '';
+    if (host.startsWith('www.')) {
+      return res.redirect(301, `https://acqlerate.com${req.url}`);
+    }
+    next();
+  });
+
   // Helper: send file with no-cache headers to bust Cloudflare edge cache
   const sendNoCache = (res: Response, filePath: string) => {
     res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
