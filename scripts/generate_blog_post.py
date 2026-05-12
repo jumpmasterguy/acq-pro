@@ -704,19 +704,25 @@ def git_push(slug: str, title: str) -> bool:
 
         token = ""
 
-        # Strategy 1: gh auth token CLI
-        gh = shutil.which("gh")
-        if gh:
-            token_result = subprocess.run([gh, "auth", "token"], capture_output=True, text=True)
-            token = token_result.stdout.strip()
+        # Strategy 1: GH_ENTERPRISE_TOKEN (most reliable in cron environment)
+        token = os.environ.get("GH_ENTERPRISE_TOKEN") or ""
+        if token:
+            print(f"Using GH_ENTERPRISE_TOKEN ({len(token)} chars)")
 
         # Strategy 2: GH_TOKEN / GITHUB_TOKEN env vars
         if not token:
             token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN") or ""
+            if token:
+                print(f"Using GH_TOKEN/GITHUB_TOKEN ({len(token)} chars)")
 
-        # Strategy 3: GH_ENTERPRISE_TOKEN (Perplexity Computer env)
+        # Strategy 3: gh auth token CLI
         if not token:
-            token = os.environ.get("GH_ENTERPRISE_TOKEN") or ""
+            gh = shutil.which("gh")
+            if gh:
+                token_result = subprocess.run([gh, "auth", "token"], capture_output=True, text=True)
+                token = token_result.stdout.strip()
+                if token:
+                    print(f"Using gh auth token ({len(token)} chars)")
 
         if token:
             subprocess.run(
