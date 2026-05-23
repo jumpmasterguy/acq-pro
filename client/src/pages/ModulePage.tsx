@@ -1,5 +1,5 @@
 import { modules, type SkillLevel } from "@/lib/curriculum";
-import { getModuleProgress, FREE_MODULES } from "@/lib/progress";
+import { getModuleProgress, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
 import type { UserProgress } from "@/lib/progress";
 import { ArrowLeft, Clock, CheckCircle, Lock, ChevronRight, BookOpen, Trophy, Target, Award, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -130,7 +130,8 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
         <div className="space-y-2">
           {mod.lessons.map((lesson, index) => {
             const isCompleted = progress.completedLessons.has(lesson.id);
-            const isLocked = !isAccessible;
+            const isFreePreview = FREE_PREVIEW_LESSONS.includes(lesson.id);
+            const isLocked = !isAccessible && !isFreePreview;
 
             return (
               <div
@@ -162,7 +163,12 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-sm">{lesson.title}</div>
+                  <div className="font-medium text-sm flex items-center gap-2">
+                    {lesson.title}
+                    {isFreePreview && !isAccessible && (
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 dark:bg-emerald-950/50 dark:text-emerald-400 px-1.5 py-0.5 rounded">Free Preview</span>
+                    )}
+                  </div>
                   <div className="text-xs text-muted-foreground mt-0.5">{lesson.description}</div>
                   <div className="flex items-center gap-3 mt-1.5">
                     <span className="flex items-center gap-1 text-xs text-muted-foreground">

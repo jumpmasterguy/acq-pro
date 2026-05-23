@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { modules, getTotalLessons, getModuleTotalMinutes, formatDuration, parseDuration } from "@/lib/curriculum";
-import { getModuleProgress, getLevel, calculateXP, FREE_MODULES } from "@/lib/progress";
+import { getModuleProgress, getLevel, calculateXP, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
 import type { UserProgress } from "@/lib/progress";
 import type { UserProfile } from "@/pages/AuthPage";
 import {

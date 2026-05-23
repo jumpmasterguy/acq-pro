@@ -9,6 +9,15 @@ export interface UserProgress {
 
 export const FREE_MODULES = ['foundations'];
 
+// First lesson of each non-free module — accessible as a free preview
+export const FREE_PREVIEW_LESSONS = [
+  'foundations-1',   // Finance module — first lesson
+  'contracts-8',     // Contracts module — first lesson  
+  'data-1',          // Data module — first lesson
+  'capture-1',       // Capture module — first lesson
+  'ops-3',           // Operations module — first lesson
+];
+
 export const calculateXP = (completedLessons: Set<string>, quizScores: Record<string, number>) => {
   let xp = completedLessons.size * 100;
   Object.values(quizScores).forEach(score => {

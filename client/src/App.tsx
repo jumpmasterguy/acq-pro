@@ -5,7 +5,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { FREE_MODULES, getModuleProgress, getLevel } from "@/lib/progress";
+import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel } from "@/lib/progress";
 import { isNativeApp } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
 import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, Lock } from "lucide-react";
@@ -499,6 +499,7 @@ function AppContent() {
             const lessonIds = mod.lessons.map(l => l.id);
             const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
             const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
+            const hasPreview = mod.lessons.some(l => FREE_PREVIEW_LESSONS.includes(l.id));
 
             return (
               <button
@@ -514,7 +515,9 @@ function AppContent() {
               >
                 <span className="text-base">{mod.icon}</span>
                 <span className="flex-1 text-left text-xs leading-tight">{mod.title}</span>
-                {!isAccessible ? (
+                {!isAccessible && hasPreview ? (
+                  <span className="text-[10px] text-emerald-400">▶ Free</span>
+                ) : !isAccessible ? (
                   <span className="text-[10px] text-sidebar-foreground/40">🔒</span>
                 ) : progressPct === 100 ? (
                   <span className="text-[10px] text-green-400">✓</span>

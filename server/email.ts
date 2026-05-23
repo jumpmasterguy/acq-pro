@@ -196,14 +196,14 @@ export async function sendStarterKitEmail(to: string, username: string, role: Us
   console.log(`[email] Starter kit email sent to ${to} (role: ${role})`);
 }
 
-// ─── Email 2: Why acquisition literacy matters (Day 2) ─────────────────────
+// ─── Email 2: The language barrier (Day 3) ─────────────────────────────────
 
 export async function sendEmail2(to: string, username: string): Promise<void> {
   if (!resend) return;
 
   const body = `
     <div class="greeting">Hey ${username} —</div>
-    <p>You signed up a couple of days ago, so I wanted to share something that might reframe how you think about what you're learning.</p>
+    <p>The hardest part about breaking into defense acquisition isn't the workload. It's the language.</p>
 
     <div class="section-label">The real cost of not knowing</div>
     <p>The DoD spends roughly <strong>$400 billion per year</strong> on acquisition and contracting. That's not a rounding error — it's the largest discretionary procurement system in the world. And yet the people working inside it — program offices, contracting shops, defense contractors — often operate with significant knowledge gaps that nobody talks about openly.</p>
@@ -708,17 +708,126 @@ export async function sendAdminNotification(
 
 // ─── Dispatch helper ───────────────────────────────────────────────────────
 
+// ─── Email 2 NEW: The language barrier (Day 3) ──────────────────────────────
+
+export async function sendEmail2New(to: string, username: string): Promise<void> {
+  if (!resend) return;
+  const body = `
+    <div class="greeting">Hey ${username} —</div>
+    <p>The hardest part about breaking into defense acquisition isn't the workload. It's the language.</p>
+    <p>Walk into a program office without context and you'll hear PPBE, ACAT, CDRL, EVM, and color of money in the same sentence. Nobody explains it. You're just expected to keep up.</p>
+    <div class="highlight-box">
+      <p>That's the exact problem Foundations solves. By the time you finish it, you won't just know what those terms mean — you'll understand <strong>why the system is built the way it is.</strong> That shift changes how you read a program document, sit in a meeting, or respond to a CO's question.</p>
+      <p style="margin-top:10px">It's the difference between translating every word and actually speaking the language.</p>
+    </div>
+    <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
+      <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Nine lessons. No time limit. No acronym walls — I promise.</p>
+      <a href="${APP_URL}/app" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Continue Foundations →</a>
+    </div>
+    <p style="font-size:14px;color:#0d2137;font-weight:700;margin-top:4px">— Lucas</p>
+  `;
+  await resend.emails.send({
+    from: FROM, to, replyTo: "lucas.l.cruz.es@gmail.com",
+    subject: "The question I get most from people like you",
+    html: emailShell("It's not the regulations. It's the language — and here's how to fix that fast.", body),
+  });
+  console.log(`[email] Email 2 new (day 3) sent to ${to}`);
+}
+
+// ─── Email 3 NEW: Free preview modules (Day 7) ──────────────────────────────
+
+export async function sendEmail3New(to: string, username: string): Promise<void> {
+  if (!resend) return;
+  const body = `
+    <div class="greeting">Hey ${username} —</div>
+    <p>You've had a week with Acqlerate. Hope Foundations has been useful.</p>
+    <p>Here's something worth knowing: your account also includes <strong>free preview lessons in five other modules.</strong> Most people don't realize they're there.</p>
+    <div class="highlight-box">
+      <p><strong>Defense Finance</strong> — where the budget actually lives<br/>
+      <strong>Contracts</strong> — the mechanism that makes everything happen<br/>
+      <strong>Data & Analytics</strong> — increasingly how acquisition decisions get made<br/>
+      <strong>Capture & BD</strong> — how contractors win and how the government selects them<br/>
+      <strong>Operations</strong> — the day-to-day of running a program</p>
+    </div>
+    <p>These aren't bonus content. These are the modules where the real money is made in this field — whether you're on the government side or industry side.</p>
+    <p>I'd start with <strong>Contracts</strong> or <strong>Defense Finance</strong>. They show up in almost every acquisition conversation.</p>
+    <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
+      <a href="${APP_URL}/app" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Try the Free Preview Lessons →</a>
+    </div>
+    <p style="font-size:14px;color:#0d2137;font-weight:700;margin-top:4px">— Lucas</p>
+  `;
+  await resend.emails.send({
+    from: FROM, to, replyTo: "lucas.l.cruz.es@gmail.com",
+    subject: "You've had a week. Here's what most people miss.",
+    html: emailShell("Five free preview lessons are in your account — these are the modules where careers get made.", body),
+  });
+  console.log(`[email] Email 3 new (day 7) sent to ${to}`);
+}
+
+// ─── Email 4 NEW: Pricing (Day 12) ──────────────────────────────────────────
+
+export async function sendEmail4New(to: string, username: string): Promise<void> {
+  if (!resend) return;
+  const body = `
+    <div class="greeting">Hey ${username} —</div>
+    <p>Let me be direct about the value here.</p>
+    <p>A DAU resident course runs <strong>$1,500 or more</strong> once you factor in travel and time off. Management Concepts charges <strong>$2,000+ per course.</strong> Graduate School USA is in the same range.</p>
+    <p>Acqlerate is <strong>$5.99/month.</strong></p>
+    <div class="highlight-box">
+      <p>For that, you unlock all 6 modules (42 lessons), the AI Study Assistant, CLP certificates for every module, and PDU credit for PMP holders.</p>
+      <p style="margin-top:10px">If you'd rather not pay monthly, the <strong>lifetime option is $149</strong> — less than a single day of government-sponsored classroom training.</p>
+    </div>
+    <p>You've already seen what Foundations looks like. The other five modules are built the same way.</p>
+    <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
+      <a href="${APP_URL}/app#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Upgrade Now →</a>
+      <p style="color:rgba(255,255,255,0.55);font-size:13px;margin:16px 0 0">Not ready? The free preview lessons are still there when you want them.</p>
+    </div>
+    <p style="font-size:14px;color:#0d2137;font-weight:700;margin-top:4px">— Lucas</p>
+  `;
+  await resend.emails.send({
+    from: FROM, to, replyTo: "lucas.l.cruz.es@gmail.com",
+    subject: "What $5.99 actually buys you in this field",
+    html: emailShell("DAU courses run $1,500+. Management Concepts charges $2,000. Here's the math instead.", body),
+  });
+  console.log(`[email] Email 4 new (day 12) sent to ${to}`);
+}
+
+// ─── Email 7 NEW: Last nudge (Day 21) ───────────────────────────────────────
+
+export async function sendEmail7New(to: string, username: string): Promise<void> {
+  if (!resend) return;
+  const body = `
+    <div class="greeting">Hey ${username} —</div>
+    <p>This is the last email I'll send about upgrading. I mean that.</p>
+    <p>You may not be in a place right now where $5.99/month makes sense. That's okay. Timing is real.</p>
+    <p>What I will say — just from watching people move through this field for years — is that the ones who do best aren't necessarily the ones with the most credentials or the most experience.</p>
+    <div class="highlight-box">
+      <p><strong>They're the ones who kept learning even when nobody was asking them to.</strong></p>
+    </div>
+    <p>The blog is always free: <a href="${APP_URL}/blog" style="color:#01696f;font-weight:600">acqlerate.com/blog</a></p>
+    <p>And when the time is right to go deeper, the full platform will be here: <a href="${APP_URL}/app#/upgrade" style="color:#01696f;font-weight:600">acqlerate.com/app</a></p>
+    <p>No countdown timer. No pressure. Just the door stays open.</p>
+    <p>Thanks for giving this a shot.</p>
+    <p style="font-size:14px;color:#0d2137;font-weight:700;margin-top:4px">— Lucas<br/><span style="font-weight:400;font-style:italic">Built by someone who's been in the room. Made for people trying to get there.</span></p>
+  `;
+  await resend.emails.send({
+    from: FROM, to, replyTo: "lucas.l.cruz.es@gmail.com",
+    subject: "Last thing I'll say about this",
+    html: emailShell("No pressure. But one thing I've noticed about the people who do well in this field...", body),
+  });
+  console.log(`[email] Email 7 new (day 21) sent to ${to}`);
+}
+
+
 const EMAIL_SEQUENCE: Array<{
   day: number;
   fn: (to: string, username: string) => Promise<void>;
 }> = [
   { day: 0,  fn: sendWelcomeEmail },
-  { day: 2,  fn: sendEmail2 },
-  { day: 4,  fn: sendEmail3 },
-  { day: 7,  fn: sendEmail4 },
-  { day: 10, fn: sendEmail5 },
-  { day: 14, fn: sendEmail6 },
-  { day: 21, fn: sendEmail7 },
+  { day: 3,  fn: sendEmail2New },
+  { day: 7,  fn: sendEmail3New },
+  { day: 12, fn: sendEmail4New },
+  { day: 21, fn: sendEmail7New },
 ];
 
 /**
