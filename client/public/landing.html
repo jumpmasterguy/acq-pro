@@ -469,7 +469,9 @@
       section { padding: 56px 1.25rem; }
       .hero { padding: 64px 1.25rem 56px; }
       .hero-stats { gap: 24px; }
-      .email-form { width: 100%; }
+      .email-capture-inner { flex-direction: column; align-items: stretch; gap: 10px; text-align: center; }
+      .email-capture-label { font-size: 0.9rem; }
+      .email-form { width: 100%; flex-direction: column; }
       .email-input { width: 100%; }
       .btn-capture { width: 100%; }
       .pricing-cards { grid-template-columns: 1fr; max-width: 480px; }
@@ -651,7 +653,7 @@
       <div class="hero-stat-label">Skill Levels</div>
     </div>
     <div class="hero-stat">
-      <div class="hero-stat-num">AI</div>
+      <div class="hero-stat-num" style="font-size:1.1rem;letter-spacing:-0.01em">AI ✦</div>
       <div class="hero-stat-label">Study Assistant</div>
     </div>
 
@@ -667,7 +669,7 @@
 <div class="email-capture-bar">
   <div class="email-capture-inner">
     <div class="email-capture-label">
-      📥 Get the free <strong>Acquisition Starter Kit</strong> — key terms, career paths & quick-reference guide
+      📥 Free: <strong>Acquisition Starter Kit</strong>
     </div>
     <form class="email-form" id="captureForm" onsubmit="submitLead(event, 'hero_bar')">
       <input type="email" class="email-input" id="captureEmail" placeholder="your@email.com" required />
