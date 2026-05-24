@@ -329,7 +329,7 @@ export async function sendEmail4(to: string, username: string): Promise<void> {
     </ul>
 
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
-      <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Start at $5.99/month — or get lifetime access for a one-time payment of $149. Either way, you're covered by a 30-day money-back guarantee.</p>
+      <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Start at $5.99/month — or get lifetime access for a one-time payment of $99. Either way, you're covered by a 30-day money-back guarantee.</p>
       <a href="${APP_URL}/#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Unlock All 6 Modules →</a>
     </div>
 
@@ -481,7 +481,7 @@ export async function sendEmail7(to: string, username: string): Promise<void> {
 
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
       <p style="color:#ffffff !important;font-size:16px;font-weight:800;margin:0 0 6px">Start at $5.99/month</p>
-      <p style="color:#ffffff !important;font-size:13px;margin:0 0 20px;opacity:0.8">or $149 one-time for lifetime access — no renewals, ever</p>
+      <p style="color:#ffffff !important;font-size:13px;margin:0 0 20px;opacity:0.8">or $99 one-time for lifetime access — no renewals, ever</p>
       <a href="${APP_URL}/#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none;margin-bottom:10px">Unlock Pro Access →</a>
       <p style="color:#ffffff !important;font-size:12px;margin:12px 0 0;opacity:0.7">30-day money-back guarantee. No questions asked.</p>
     </div>
@@ -775,7 +775,7 @@ export async function sendEmail4New(to: string, username: string): Promise<void>
     <p>Acqlerate is <strong>$5.99/month.</strong></p>
     <div class="highlight-box">
       <p>For that, you unlock all 6 modules (42 lessons), the AI Study Assistant, CLP certificates for every module, and PDU credit for PMP holders.</p>
-      <p style="margin-top:10px">If you'd rather not pay monthly, the <strong>lifetime option is $149</strong> — less than a single day of government-sponsored classroom training.</p>
+      <p style="margin-top:10px">If you'd rather not pay monthly, the <strong>lifetime option is $99</strong> — less than a single day of government-sponsored classroom training.</p>
     </div>
     <p>You've already seen what Foundations looks like. The other five modules are built the same way.</p>
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
