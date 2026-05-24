@@ -8691,6 +8691,17 @@ export const modules: Module[] = [
             body: "As a government Program Manager, you have a legal relationship only with the prime contractor — not with its subcontractors. But that does not mean you ignore what happens below the prime. Subcontractor failures are the leading cause of program schedule slips and technical shortfalls. The PM\'s job is to ensure the prime has robust subcontract management processes, adequate oversight, and effective escalation paths when subcontractor issues arise. When a subcontractor misses a delivery, the prime is accountable to the government — period."
           },
           {
+            type: 'lucas_note',
+            heading: 'What Does "Manage" a Subcontractor Actually Mean?',
+            body: `When people say you need to "manage" the subcontractor, what does that actually look like in practice?
+
+First — don't overobligate funding. The government gave you $1M in funding on your contract. That doesn't mean you write your sub a $1.4M subcontract. Your subcontract value cannot exceed your prime contract funding without a mod. I've seen this mistake tank programs.
+
+Second — keep teeth in the subcontract. Don't fund the sub in full upfront. For T&Ms, fund them incrementally — release the next tranche when they hit the previous milestone. For FFPs, structure payments around deliverable acceptance. This is your leverage. A fully-funded sub with nothing left to lose is harder to motivate than one that still needs your signature to get paid.
+
+Third — the sub's schedule is your schedule. Their milestone is your deliverable. Don't wait for them to tell you there's a problem. Build your own visibility into their status — monthly reviews at minimum, direct access to their PM, and don't accept "we're working on it" without a date.`,
+          },
+          {
             type: 'callout',
             heading: "Government Insight vs. Oversight",
             body: "The government has 'insight' (the right to receive information and review data) into subcontractor performance but does not have direct 'oversight' authority over subcontractors — that belongs to the prime. You can ask the prime to provide subcontractor performance data, attend sub reviews, and explain their mitigation plans. You cannot direct subcontractors independently. Violating this boundary creates unauthorized contractual commitments."
@@ -8707,6 +8718,19 @@ export const modules: Module[] = [
               'Government insight mechanisms: data rights, audit access, review participation|||Standard government insight into subcontractors flows through the prime: DCMA surveillance of the prime\'s purchasing system, prime-submitted IPMR/CPR data that includes sub EVM, and audit access through the prime\'s cost reporting. For critical subs, program offices sometimes negotiate direct insight rights in the prime contract — particularly for major development subcontracts where subcontractor performance is the dominant technical risk.',
               'Small business subcontracting plan goals and tracking methodology|||Large primes on federal contracts above $750K must submit a Small Business Subcontracting Plan (FAR 52.219-9) with specific percentage goals for SB, SDB, WOSB, HUBZone, SDVOSB, and VOSB categories. Failure to make good faith efforts to meet plan goals can result in liquidated damages. Individual Subcontracting Reports (ISRs) and Summary Subcontracting Reports (SSRs) are filed semi-annually and annually in eSRS.',
             ]
+          },
+          {
+            type: 'lucas_note',
+            heading: 'The Sub Goes Silent. Now What?',
+            body: `The most dangerous sub isn't the one who tells you they're behind. It's the one who stops communicating.
+
+When a sub starts missing status calls, submitting vague updates, or their PM suddenly "isn't available" — that's the signal. Not the official notification. The silence.
+
+At that point, stop waiting for the prime to escalate. They may be trying to solve it internally to avoid embarrassing themselves with you. Call the prime PM directly: "Walk me through where your sub stands on [deliverable] right now."
+
+If the prime can't give you specifics, that's your answer. Pull your next incremental funding tranche. Formalize a Corrective Action Request in writing. Put a 30-day cure notice on the table if it's critical path.
+
+You have more leverage before a missed milestone than after it. Use it early.`,
           },
           {
             type: 'table',
