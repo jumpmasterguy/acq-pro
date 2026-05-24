@@ -1,6 +1,13 @@
 /* ── Acqlerate Blog Styles ──────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 
+html { scroll-behavior: smooth; }
+
+/* Offset anchor scroll for sticky nav height */
+h2[id], h3[id] {
+  scroll-margin-top: 80px;
+}
+
 :root {
   --teal: #01696F;
   --teal-dark: #0C4E54;
