@@ -724,18 +724,22 @@ def git_push(slug: str, title: str) -> bool:
                 if token:
                     print(f"Using gh auth token ({len(token)} chars)")
 
+        if not token:
+            print("No token found from env or gh CLI — push will fail")
+
         if token:
-            subprocess.run(
+            result = subprocess.run(
                 ["git", "-c", f"http.https://github.com/.extraheader=Authorization: token {token}",
                  "push", "https://github.com/jumpmasterguy/acq-pro.git", "HEAD:main"],
-                cwd=REPO_ROOT, check=True, capture_output=True
+                cwd=REPO_ROOT, capture_output=True
             )
+            if result.returncode != 0:
+                err = result.stderr.decode() if result.stderr else ""
+                print(f"Push failed (token strategy): {err}")
+                raise subprocess.CalledProcessError(result.returncode, "git push", stderr=result.stderr)
+            print("Push succeeded via token")
         else:
-            # Strategy 4: try plain push in case origin is already configured with credentials
-            subprocess.run(
-                ["git", "push", "https://github.com/jumpmasterguy/acq-pro.git", "HEAD:main"],
-                cwd=REPO_ROOT, check=True, capture_output=True
-            )
+            raise subprocess.CalledProcessError(1, "git push", b"", b"No token available")
         return True
     except subprocess.CalledProcessError as e:
         print(f"Git error: {e.stderr.decode() if e.stderr else e}")
