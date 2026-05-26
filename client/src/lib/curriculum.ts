@@ -575,6 +575,12 @@ export const modules: Module[] = [
             ],
           },
           {
+            type: 'lesson_image',
+            src: '/industry-team-comic.png',
+            alt: 'Comical illustration of the Industry Acquisition Team — BD, Capture Manager, Proposal Manager, PM, Contracts Manager, and Subcontractor',
+            caption: 'Different roles. One mission. Win the work. Deliver the promise. (Note: the Proposal Manager has three mugs of "Proposal Fuel" for a reason.)',
+          },
+          {
             type: 'table',
             heading: 'Government Role vs. Industry Counterpart',
             headers: ['Government Role', 'What They Do', 'Industry Counterpart'],
