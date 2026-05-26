@@ -1162,6 +1162,103 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               );
             }
 
+            // ── evm_visual: CPI/SPI traffic light gauge ──────────────────
+            if (block.type === 'evm_visual') {
+              const gauges = block.gauges || [];
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-bold text-sm mb-1">{block.heading}</h3>}
+                  {block.sub && <p className="text-xs text-muted-foreground mb-4">{block.sub}</p>}
+                  <div className="grid grid-cols-1 gap-3">
+                    {gauges.map((g: any, gi: number) => {
+                      const val = g.value;
+                      const isGood = val >= 1.0;
+                      const isWarn = val >= 0.9 && val < 1.0;
+                      const isBad = val < 0.9;
+                      const color = isGood ? '#22c55e' : isWarn ? '#f59e0b' : '#ef4444';
+                      const label = isGood ? 'ON TRACK' : isWarn ? 'WATCH' : 'AT RISK';
+                      const pct = Math.min(Math.max((val / 1.3) * 100, 5), 100);
+                      return (
+                        <div key={gi} className="bg-muted/20 rounded-xl p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <div>
+                              <span className="text-xs font-black uppercase tracking-widest" style={{color}}>{g.name}</span>
+                              <span className="ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded" style={{background: color+'22', color}}>{label}</span>
+                            </div>
+                            <span className="text-2xl font-black" style={{color}}>{val.toFixed(2)}</span>
+                          </div>
+                          <div className="h-2.5 bg-muted rounded-full overflow-hidden">
+                            <div className="h-full rounded-full transition-all" style={{width: `${pct}%`, background: color}} />
+                          </div>
+                          <div className="flex justify-between mt-1">
+                            <span className="text-[10px] text-muted-foreground">{g.formula}</span>
+                            <span className="text-[10px] text-muted-foreground">{g.meaning}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {block.note && <p className="text-xs text-muted-foreground mt-3 italic border-t border-border/40 pt-3">{block.note}</p>}
+                </div>
+              );
+            }
+
+            // ── visual_spectrum: horizontal spectrum bar ──────────────────
+            if (block.type === 'visual_spectrum') {
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-bold text-sm mb-1">{block.heading}</h3>}
+                  {block.sub && <p className="text-xs text-muted-foreground mb-4">{block.sub}</p>}
+                  <div className="relative mt-2">
+                    <div className="flex rounded-xl overflow-hidden h-10">
+                      {block.segments?.map((seg: any, si: number) => (
+                        <div key={si} className="flex items-center justify-center flex-1 text-[10px] font-black text-white uppercase tracking-wide" style={{background: seg.color}}>
+                          {seg.label}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex mt-2">
+                      {block.segments?.map((seg: any, si: number) => (
+                        <div key={si} className="flex-1 text-center px-1">
+                          <div className="text-[10px] font-bold" style={{color: seg.color}}>{seg.title}</div>
+                          <div className="text-[9px] text-muted-foreground leading-tight mt-0.5">{seg.desc}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {block.note && <p className="text-xs text-muted-foreground mt-3 italic border-t border-border/40 pt-3">{block.note}</p>}
+                </div>
+              );
+            }
+
+            // ── funding_flow: visual budget flow diagram ──────────────────
+            if (block.type === 'funding_flow') {
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-bold text-sm mb-1">{block.heading}</h3>}
+                  {block.sub && <p className="text-xs text-muted-foreground mb-4">{block.sub}</p>}
+                  <div className="space-y-2">
+                    {block.steps?.map((step: any, si: number) => (
+                      <div key={si}>
+                        <div className="flex items-center gap-3">
+                          <div className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-black" style={{background: step.color || '#01696f'}}>{si + 1}</div>
+                          <div className="flex-1 rounded-lg p-3" style={{background: (step.color || '#01696f') + '18', borderLeft: `3px solid ${step.color || '#01696f'}`}}>
+                            <div className="text-xs font-black" style={{color: step.color || '#01696f'}}>{step.phase}</div>
+                            <div className="text-xs text-foreground font-medium">{step.desc}</div>
+                            {step.note && <div className="text-[10px] text-muted-foreground mt-0.5">{step.note}</div>}
+                          </div>
+                        </div>
+                        {si < (block.steps?.length ?? 0) - 1 && (
+                          <div className="ml-3.5 w-0.5 h-3 bg-border mx-auto" style={{marginLeft: '13px'}} />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  {block.note && <p className="text-xs text-muted-foreground mt-3 italic border-t border-border/40 pt-3">{block.note}</p>}
+                </div>
+              );
+            }
+
             // ── two_col: label | explanation rows ──────────────────────────
             if (block.type === 'two_col') {
               return (

@@ -1594,6 +1594,19 @@ export const modules: Module[] = [
             body: "Your program's funding is not automatic. Every year, program managers must compete for resources within the PPBE process. Understanding this cycle — who makes decisions, when, and based on what criteria — is the difference between a well-funded program and one that gets cut or restructured. Missing a POM submission window can delay your program by 2 years."
           },
           {
+            type: 'funding_flow',
+            heading: 'How Money Flows from Strategy to Your Program',
+            sub: 'The full PPBE cycle spans ~2 years. Here\'s each phase and what it means for your program.',
+            steps: [
+              { phase: 'Planning (Year -2)', desc: 'DoD identifies capability gaps and strategic priorities. Your program must connect to a validated need or it won\'t survive.', note: 'Miss this and you wait another 2 years.', color: '#6366f1' },
+              { phase: 'Programming (Year -2 to -1)', desc: 'Services build their POM — a 5-year spending plan. This is when PMs make the case for funding across the FYDP.', note: 'POM season is the most important time of year for program health.', color: '#8b5cf6' },
+              { phase: 'Budgeting (Year -1)', desc: 'OSD scrubs the POM. President\'s Budget Request goes to Congress. Programs can be cut, restructured, or receive Congressional adds.', color: '#01696f' },
+              { phase: 'Appropriation (Year 0)', desc: 'Congress passes appropriations. CRs delay this and cap execution at prior-year levels. Colors of money are established.', note: 'No appropriation = no contract authority.', color: '#0284c7' },
+              { phase: 'Execution (Year 0-1)', desc: 'Funds are obligated. Contracts are awarded. Work happens. Unobligated funds expire: O&M in 1 yr, RDT&E in 2 yrs, Procurement in 3 yrs.', note: 'Right money + right purpose + right time. All three matter.', color: '#16a34a' },
+            ],
+            note: 'The lag between planning and execution is why DoD struggles to respond fast. What you\'re executing today was planned 2 years ago.',
+          },
+          {
             type: 'table',
             heading: "The PPBE Annual Cycle",
             headers: ['Phase', 'When', 'Key Activity', 'Key Players'],
@@ -5687,6 +5700,21 @@ export const modules: Module[] = [
           {
             type: 'table',
             heading: "Core PM Dashboard Metrics",
+          },
+          {
+            type: 'evm_visual',
+            heading: 'Live Example: Reading a Program\'s Health',
+            sub: 'This program has spent $9M of budget and completed $8M of planned work on a $20M contract. Here\'s what the numbers say:',
+            gauges: [
+              { name: 'CPI — Cost Performance Index', value: 0.89, formula: 'EV ÷ AC = $8M ÷ $9M', meaning: 'Getting $0.89 of work per $1 spent' },
+              { name: 'SPI — Schedule Performance Index', value: 0.80, formula: 'EV ÷ PV = $8M ÷ $10M', meaning: '80% of planned work complete' },
+              { name: 'TCPI — To-Complete Performance Index', value: 1.17, formula: '(BAC-EV) ÷ (BAC-AC) = $12M ÷ $11M', meaning: 'Must earn $1.17 per $1 to hit budget' },
+            ],
+            note: 'CPI < 0.90 and SPI < 0.90 means this program is both over budget and behind schedule. TCPI > 1.10 means recovery to original budget is unrealistic — EAC needs to be updated.',
+          },
+          {
+            type: 'table',
+            heading: "Core PM Dashboard Metrics",
             headers: ['Category', 'Metric', 'What It Tells You', 'Warning Sign'],
             rows: [
               ['Cost', 'CPI (EV/AC)', 'Cost efficiency of work performed', 'CPI < 0.90'],
@@ -6634,6 +6662,20 @@ export const modules: Module[] = [
             type: 'text',
             heading: "How Defense Contractors Win Business",
             body: "Winning government contracts is not an accident — it\'s a disciplined process that begins years before the RFP is released. The best capture managers are already executing their win strategy while competitors are just becoming aware of the opportunity. Understanding this lifecycle helps both government PMs (who interact with BD teams) and industry professionals who want to build winning capture programs."
+          },
+          {
+            type: 'visual_spectrum',
+            heading: 'The BD-to-Award Pipeline',
+            sub: 'Where your opportunity sits determines what you should be doing right now.',
+            segments: [
+              { label: 'Identify', color: '#64748b', title: 'Identify', desc: 'Market research. No RFP yet. Pwin < 20%.' },
+              { label: 'Qualify', color: '#6366f1', title: 'Qualify', desc: 'Go/no-go decision. Customer access. Pwin 20-40%.' },
+              { label: 'Shape', color: '#8b5cf6', title: 'Shape', desc: 'Influence requirements. Build discriminators. Pwin 40-60%.' },
+              { label: 'Capture', color: '#0284c7', title: 'Capture', desc: 'Black hat. Teaming. Win strategy locked. Pwin 60-75%.' },
+              { label: 'Propose', color: '#01696f', title: 'Propose', desc: 'Write and submit. L&M discipline. Pwin 75%+.' },
+              { label: 'Award', color: '#16a34a', title: 'Award', desc: 'Contract awarded. Program execution begins.' },
+            ],
+            note: 'Most contractors enter the pipeline at "Propose" and wonder why they lose. Winning contractors are in the conversation 18-24 months before the RFP drops.',
           },
           {
             type: 'expandable_list',
