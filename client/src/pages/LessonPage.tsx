@@ -1162,6 +1162,18 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               );
             }
 
+            // ── lesson_image: inline image with optional caption ───────────
+            if (block.type === 'lesson_image') {
+              return (
+                <div key={i} className="rounded-xl overflow-hidden border border-border">
+                  <img src={block.src} alt={block.alt || ''} className="w-full h-auto" loading="lazy" />
+                  {block.caption && (
+                    <div className="px-4 py-2.5 bg-muted/30 text-xs text-muted-foreground italic text-center">{block.caption}</div>
+                  )}
+                </div>
+              );
+            }
+
             // ── evm_visual: CPI/SPI traffic light gauge ──────────────────
             if (block.type === 'evm_visual') {
               const gauges = block.gauges || [];

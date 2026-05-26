@@ -547,6 +547,12 @@ export const modules: Module[] = [
             ],
           },
           {
+            type: 'lesson_image',
+            src: '/acquisition-chain-comic.png',
+            alt: 'Comical illustration of the Government Acquisition Chain from Congress to the COR',
+            caption: 'The acquisition chain in all its glory. Everyone above the COR is very busy. The COR is the one at the actual construction site.',
+          },
+          {
             type: 'callout',
             heading: 'The PM-CO Relationship Is the Engine of Every Program',
             body: 'The Program Manager and Contracting Officer must work as partners, but they have different authorities and different accountability chains. The PM is accountable for delivering capability. The CO is accountable for contracting integrity. A PM cannot direct a contractor to do work outside the contract — only the CO can authorize that. A CO cannot unilaterally change technical requirements — that\'s the PM\'s lane. When this partnership works well, programs run smoothly. When it breaks down, you get delays, disputes, and claims.',
