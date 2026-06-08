@@ -15,6 +15,7 @@ export interface IStorage {
   getUserByGoogleId(googleId: string): Promise<User | undefined>;
   getUserByStripeCustomerId(customerId: string): Promise<User | undefined>;
   getAllUsers(): Promise<User[]>;
+  deleteUser(userId: string): Promise<void>;
   createUser(user: InsertUser): Promise<User>;
   upsertGoogleUser(data: InsertGoogleUser & { avatarUrl?: string }): Promise<User>;
   saveUserProfile(userId: string, profile: Record<string, any>): Promise<User | undefined>;
@@ -101,6 +102,10 @@ export class DrizzleStorage implements IStorage {
 
   async getAllUsers(): Promise<User[]> {
     return this.db.select().from(users).orderBy(users.email);
+  }
+
+  async deleteUser(userId: string): Promise<void> {
+    await this.db.delete(users).where(eq(users.id, userId));
   }
 
   // Find or create a user for Google OAuth — links by email if account already exists
@@ -351,6 +356,10 @@ export class MemStorage implements IStorage {
 
   async getAllUsers(): Promise<User[]> {
     return Array.from(this.users.values()).sort((a, b) => a.email.localeCompare(b.email));
+  }
+
+  async deleteUser(userId: string): Promise<void> {
+    this.users.delete(userId);
   }
 
   async upsertGoogleUser(data: InsertGoogleUser & { avatarUrl?: string }): Promise<User> {

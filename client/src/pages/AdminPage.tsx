@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Shield, Users, Crown, UserX, RefreshCw, ChevronDown,
   BarChart2, Clock, Zap, TrendingUp, Activity, Star,
-  BookOpen, Target, LogIn,
+  BookOpen, Target, LogIn, Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -103,6 +103,7 @@ export default function AdminPage() {
   const { toast } = useToast();
   const qc = useQueryClient();
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<AdminTab>("users");
   const [sortField, setSortField] = useState<keyof AnalyticsUser>("xp");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
@@ -165,6 +166,27 @@ export default function AdminPage() {
     },
     onError: (err: Error) => {
       toast({ title: "Backfill failed", description: err.message, variant: "destructive" });
+    },
+  });
+
+  const deleteUser = useMutation({
+    mutationFn: async (userId: string) => {
+      const res = await apiRequest("DELETE", `/api/admin/users/${userId}`);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ message: "Delete failed" }));
+        throw new Error(err.message);
+      }
+      return res.json();
+    },
+    onMutate: (userId) => setPendingId(userId),
+    onSettled: () => { setPendingId(null); setConfirmDeleteId(null); },
+    onSuccess: (data) => {
+      toast({ title: "User deleted", description: data.message });
+      qc.invalidateQueries({ queryKey: ["/api/admin/users"] });
+      qc.invalidateQueries({ queryKey: ["/api/admin/analytics"] });
+    },
+    onError: (err: Error) => {
+      toast({ title: "Delete failed", description: err.message, variant: "destructive" });
     },
   });
 
@@ -396,6 +418,21 @@ export default function AdminPage() {
                               >
                                 <UserX className="w-3.5 h-3.5" />
                                 Revoke Pro (→ Free)
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  if (confirmDeleteId === user.id) {
+                                    deleteUser.mutate(user.id);
+                                  } else {
+                                    setConfirmDeleteId(user.id);
+                                    setTimeout(() => setConfirmDeleteId(null), 4000);
+                                  }
+                                }}
+                                className="gap-2 cursor-pointer text-destructive focus:text-destructive font-semibold"
+                                data-testid={`admin-delete-${user.id}`}
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                                {confirmDeleteId === user.id ? "⚠ Confirm Delete" : "Delete User"}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>

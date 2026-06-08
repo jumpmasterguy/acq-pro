@@ -684,6 +684,18 @@ export async function registerRoutes(
     return res.json({ message: `${user.email} is now ${status}`, userId: user.id });
   });
 
+  // DELETE /api/admin/users/:userId
+  app.delete("/api/admin/users/:userId", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
+    const { userId } = req.params;
+    // Prevent self-deletion
+    if (userId === req.user!.id) return res.status(400).json({ message: "Cannot delete your own account" });
+    const user = await storage.getUser(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    await storage.deleteUser(userId);
+    return res.json({ message: `${user.email} deleted` });
+  });
+
   // ─── Activity Tracking ────────────────────────────────────────────────────
 
   // POST /api/track-activity
