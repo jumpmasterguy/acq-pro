@@ -152,7 +152,8 @@ export async function setupAuth(app: Express): Promise<void> {
             if (!email) {
               return done(null, false);
             }
-            const username = profile.displayName || email.split("@")[0];
+            // Use email as username to guarantee uniqueness; displayName stored separately if needed
+            const username = email;
             const user = await storage.upsertGoogleUser({
               googleId: profile.id,
               email,

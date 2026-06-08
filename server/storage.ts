@@ -120,7 +120,7 @@ export class DrizzleStorage implements IStorage {
       return linked[0];
     }
 
-    // New user — create account
+    // New user — create account (ON CONFLICT on username: link googleId to existing row)
     const id = randomUUID();
     const result = await this.db
       .insert(users)
@@ -137,6 +137,10 @@ export class DrizzleStorage implements IStorage {
         quizScores: {},
         moduleSkillLevels: {},
         moduleAssessmentScores: {},
+      })
+      .onConflictDoUpdate({
+        target: users.username,
+        set: { googleId: data.googleId },
       })
       .returning();
     return result[0];
