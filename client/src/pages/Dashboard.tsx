@@ -523,14 +523,11 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
       )}
 
       {/* ── Filter Bar ─────────────────────────────────────────────────────── */}
-      <div className="space-y-3">
-        {/* Mode context + toggle on one row */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-          <div className="flex items-center gap-2">
-            <Filter className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">View by</span>
-          </div>
-          <div className="flex items-center gap-1.5 bg-muted/40 rounded-xl p-1">
+      <div className="space-y-2">
+        {/* Row 1: toggle + pills in one line */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* View-by toggle */}
+          <div className="flex items-center gap-1 bg-muted/40 rounded-lg p-0.5 flex-shrink-0">
             <FilterTab active={filterMode === 'career'} onClick={() => setFilterMode('career')}>
               Career Path
             </FilterTab>
@@ -538,55 +535,45 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
               Subject Matter
             </FilterTab>
           </div>
-          {/* Context hint */}
-          <p className="text-[11px] text-muted-foreground sm:ml-1">
-            {filterMode === 'career'
-              ? <><span className="font-semibold text-foreground/70">Career Path</span> — shows only the lessons most relevant to your role. Pick your track below to customize the order and lesson list.</>              
-              : <><span className="font-semibold text-foreground/70">Subject Matter</span> — browse all modules grouped by topic. Best if you want to study a specific area regardless of career role.</>
-            }
-          </p>
+
+          {/* Divider */}
+          <div className="w-px h-5 bg-border hidden sm:block" />
+
+          {/* Role / subject pills — inline with toggle */}
+          {filterMode === 'career'
+            ? CAREER_TRACKS.map(track => (
+                <button
+                  key={track.id}
+                  onClick={() => setActiveCareer(track.id)}
+                  className={cn(
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all",
+                    activeCareer === track.id
+                      ? "bg-primary/10 border-primary/40 text-primary"
+                      : "bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-foreground"
+                  )}
+                >
+                  {track.icon}{track.shortLabel}
+                </button>
+              ))
+            : SUBJECT_GROUPS.map(group => (
+                <button
+                  key={group.id}
+                  onClick={() => setActiveSubject(group.id)}
+                  className={cn(
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all",
+                    activeSubject === group.id
+                      ? "bg-primary/10 border-primary/40 text-primary"
+                      : "bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-foreground"
+                  )}
+                >
+                  {group.icon}{group.shortLabel}
+                </button>
+              ))
+          }
         </div>
 
-        {filterMode === 'career' && (
-          <div className="flex flex-wrap gap-2">
-            {CAREER_TRACKS.map(track => (
-              <button
-                key={track.id}
-                onClick={() => setActiveCareer(track.id)}
-                className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all",
-                  activeCareer === track.id
-                    ? "bg-primary/10 border-primary/40 text-primary"
-                    : "bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-foreground"
-                )}
-              >
-                {track.icon}{track.shortLabel}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {filterMode === 'subject' && (
-          <div className="flex flex-wrap gap-2">
-            {SUBJECT_GROUPS.map(group => (
-              <button
-                key={group.id}
-                onClick={() => setActiveSubject(group.id)}
-                className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all",
-                  activeSubject === group.id
-                    ? "bg-primary/10 border-primary/40 text-primary"
-                    : "bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-foreground"
-                )}
-              >
-                {group.icon}{group.shortLabel}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Active track/group description */}
-        <p className="text-[11px] text-muted-foreground pl-0.5">
+        {/* Row 2: single-line description of active selection */}
+        <p className="text-[11px] text-muted-foreground">
           {filterMode === 'career'
             ? CAREER_TRACKS.find(t => t.id === activeCareer)!.desc
             : SUBJECT_GROUPS.find(g => g.id === activeSubject)!.desc

@@ -578,11 +578,11 @@ function AppContent() {
             )}
             <button
               onClick={toggleDark}
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors border border-border"
               data-testid="theme-toggle"
               aria-label="Toggle theme"
             >
-              {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              {darkMode ? <><Sun className="w-3.5 h-3.5" /><span className="hidden sm:inline">Light</span></> : <><Moon className="w-3.5 h-3.5" /><span className="hidden sm:inline">Dark</span></>}
             </button>
           </div>
         </header>
