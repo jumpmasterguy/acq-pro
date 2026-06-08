@@ -949,6 +949,512 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               );
             }
 
+
+            // ── table_visual: clean card-style table (replaces raw table type) ──
+            if ((block as any).type === 'table_visual') {
+              const b = block as any;
+              return (
+                <div key={i} className="space-y-2">
+                  {b.heading && <h3 className="font-bold text-sm">{b.heading}</h3>}
+                  <div className="overflow-x-auto rounded-xl border border-border">
+                    <table className="w-full text-sm">
+                      {b.headers && (
+                        <thead>
+                          <tr className="bg-muted/60 border-b border-border">
+                            {b.headers.map((h: string, hi: number) => (
+                              <th key={hi} className="text-left px-4 py-2.5 text-xs font-bold text-muted-foreground uppercase tracking-wide whitespace-nowrap">{h}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                      )}
+                      <tbody>
+                        {b.rows?.map((row: string[], ri: number) => (
+                          <tr key={ri} className={`border-b border-border/50 last:border-0 ${ri % 2 === 0 ? '' : 'bg-muted/20'}`}>
+                            {row.map((cell: string, ci: number) => (
+                              <td key={ci} className={`px-4 py-2.5 text-xs leading-relaxed ${ci === 0 ? 'font-semibold' : 'text-muted-foreground'}`}>{cell}</td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  {b.explanation && <p className="text-xs text-muted-foreground leading-relaxed">{b.explanation}</p>}
+                </div>
+              );
+            }
+
+            // ── burn_rate_visual ──────────────────────────────────────────────
+            if ((block as any).type === 'burn_rate_visual') {
+              return (
+                <div key={i} className="rounded-xl border border-border bg-card p-5 space-y-4">
+                  <h3 className="font-bold text-sm">{(block as any).heading}</h3>
+                  <div className="grid sm:grid-cols-3 gap-3">
+                    {[
+                      { label: 'Total Obligation Authority', symbol: '÷', desc: 'Total funded ceiling on the contract', color: 'bg-blue-500/10 text-blue-600 dark:text-blue-400', icon: '💵' },
+                      { label: 'Execution Months', symbol: '=', desc: 'Months in the period of performance', color: 'bg-violet-500/10 text-violet-600 dark:text-violet-400', icon: '📅' },
+                      { label: 'Monthly Burn Rate', symbol: '', desc: 'What you should be spending per month', color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400', icon: '🔥' },
+                    ].map((item, ii) => (
+                      <div key={ii} className={`rounded-xl p-4 ${item.color.split(' ')[0]} border border-border/50 text-center`}>
+                        <div className="text-2xl mb-1">{item.icon}</div>
+                        <p className={`text-sm font-bold ${item.color.split(' ').slice(1).join(' ')}`}>{item.label}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="bg-amber-500/10 border border-amber-400/30 rounded-lg p-4">
+                    <p className="text-xs font-bold text-amber-600 dark:text-amber-400 mb-1">⚠️ Red flag: If actual spend {'>'} burn rate target — you're on track to exhaust funding early</p>
+                    <p className="text-xs text-muted-foreground">Finance tracks burn rate weekly. A PM who ignores it ends up with zero funds and a team who can't work.</p>
+                  </div>
+                  {(block as any).explanation && <p className="text-xs text-muted-foreground">{(block as any).explanation}</p>}
+                </div>
+              );
+            }
+
+            // ── color_of_money_visual ─────────────────────────────────────────
+            if ((block as any).type === 'color_of_money_visual') {
+              const moneys = [
+                { color: '#4f86c6', label: 'RDT&E', full: 'Research, Development, Test & Evaluation', uses: 'Developing & testing new systems', expires: '2 years', icon: '🔬' },
+                { color: '#5cb85c', label: 'Procurement', full: 'Procurement Appropriations', uses: 'Buying production units & end items', expires: '3 years', icon: '🛒' },
+                { color: '#f0ad4e', label: 'O&M', full: 'Operations & Maintenance', uses: 'Day-to-day services & operations', expires: '1 year', icon: '⚙️' },
+                { color: '#d9534f', label: 'MILCON', full: 'Military Construction', uses: 'Building facilities & infrastructure', expires: '5 years', icon: '🏗️' },
+                { color: '#9b59b6', label: 'MPAF', full: 'Military Personnel', uses: 'Salaries & allowances for military members', expires: '1 year', icon: '🎖️' },
+              ];
+              return (
+                <div key={i} className="space-y-3">
+                  <h3 className="font-bold text-sm">{(block as any).heading}</h3>
+                  <p className="text-xs text-muted-foreground">Every dollar is tagged to a purpose. Spend it on the wrong thing and you've violated federal law.</p>
+                  <div className="space-y-2">
+                    {moneys.map((m, mi) => (
+                      <div key={mi} className="flex items-center gap-3 p-3 rounded-lg border border-border bg-card">
+                        <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-xs font-black flex-shrink-0" style={{backgroundColor: m.color}}>{m.label}</div>
+                        <span className="text-xl flex-shrink-0">{m.icon}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold">{m.full}</p>
+                          <p className="text-xs text-muted-foreground">{m.uses}</p>
+                        </div>
+                        <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-full whitespace-nowrap">{m.expires}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {(block as any).explanation && <p className="text-xs text-muted-foreground">{(block as any).explanation}</p>}
+                </div>
+              );
+            }
+
+            // ── evm_metrics_visual (EVM core metrics) ────────────────────────
+            if ((block as any).type === 'evm_metrics_visual') {
+              const metrics = [
+                { abbr: 'CV', name: 'Cost Variance', formula: 'EV − AC', good: 'Positive = under budget', bad: 'Negative = over budget', color: 'text-blue-600 dark:text-blue-400 bg-blue-500/10' },
+                { abbr: 'SV', name: 'Schedule Variance', formula: 'EV − PV', good: 'Positive = ahead of schedule', bad: 'Negative = behind schedule', color: 'text-violet-600 dark:text-violet-400 bg-violet-500/10' },
+                { abbr: 'CPI', name: 'Cost Performance Index', formula: 'EV ÷ AC', good: '> 1.0 = under budget', bad: '< 1.0 = over budget', color: 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10' },
+                { abbr: 'SPI', name: 'Schedule Performance Index', formula: 'EV ÷ PV', good: '> 1.0 = ahead of schedule', bad: '< 1.0 = behind schedule', color: 'text-amber-600 dark:text-amber-400 bg-amber-500/10' },
+              ];
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {metrics.map((m, mi) => (
+                      <div key={mi} className="rounded-xl border border-border bg-card p-4 space-y-2">
+                        <div className="flex items-center gap-2">
+                          <span className={`text-sm font-black px-2.5 py-1 rounded-lg ${m.color}`}>{m.abbr}</span>
+                          <span className="text-sm font-semibold">{m.name}</span>
+                        </div>
+                        <div className={`text-base font-mono font-bold px-3 py-1.5 rounded-lg ${m.color}`}>{m.formula}</div>
+                        <div className="space-y-0.5">
+                          <p className="text-xs text-emerald-600 dark:text-emerald-400">✓ {m.good}</p>
+                          <p className="text-xs text-destructive">✗ {m.bad}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // ── eac_quick_visual ──────────────────────────────────────────────
+            if ((block as any).type === 'eac_quick_visual') {
+              const methods = [
+                { formula: 'BAC ÷ CPI', when: 'Most common — assumes same efficiency going forward', color: 'border-primary/40 bg-primary/5' },
+                { formula: 'AC + (BAC − EV)', when: 'Remaining work at original planned rate', color: 'border-blue-400/40 bg-blue-500/5' },
+                { formula: 'AC + Re-estimate', when: 'You have a specific bottom-up re-estimate', color: 'border-violet-400/40 bg-violet-500/5' },
+                { formula: 'AC + (BAC − EV) ÷ (CPI × SPI)', when: 'Both cost AND schedule are in trouble', color: 'border-amber-400/40 bg-amber-500/5' },
+              ];
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="space-y-2">
+                    {methods.map((m, mi) => (
+                      <div key={mi} className={`flex items-center gap-4 p-3 rounded-xl border-2 ${m.color}`}>
+                        <code className="text-sm font-mono font-bold whitespace-nowrap">{m.formula}</code>
+                        <span className="text-xs text-muted-foreground">{m.when}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // ── eac_methods_visual ────────────────────────────────────────────
+            if ((block as any).type === 'eac_methods_visual') {
+              const methods = [
+                { num: '1', formula: 'BAC ÷ CPI', title: 'Trend Continuation', when: 'Future work will mirror past efficiency', best: 'Stable programs', color: 'border-primary/40 bg-primary/5 text-primary' },
+                { num: '2', formula: 'AC + (BAC − EV)', title: 'Optimistic Reset', when: 'Remaining work at original planned rate', best: 'One-time anomaly caused the overrun', color: 'border-blue-400/40 bg-blue-500/5 text-blue-600 dark:text-blue-400' },
+                { num: '3', formula: 'AC + Re-estimate', title: 'Bottom-Up', when: 'You re-estimated remaining work from scratch', best: 'Major scope change or re-baseline', color: 'border-violet-400/40 bg-violet-500/5 text-violet-600 dark:text-violet-400' },
+                { num: '4', formula: 'AC + (BAC−EV) ÷ (CPI×SPI)', title: 'Composite', when: 'Both cost and schedule are degraded', best: 'Programs in double trouble', color: 'border-amber-400/40 bg-amber-500/5 text-amber-600 dark:text-amber-400' },
+              ];
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {methods.map((m, mi) => (
+                      <div key={mi} className={`rounded-xl border-2 p-4 space-y-2 ${m.color.split(' ').slice(0,2).join(' ')}`}>
+                        <div className="flex items-center gap-2">
+                          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black text-white ${m.color.split(' ')[0].replace('border-','bg-').replace('/40','')}`}>{m.num}</span>
+                          <span className="text-sm font-bold">{m.title}</span>
+                        </div>
+                        <code className={`text-sm font-mono block font-bold ${m.color.split(' ')[2]}`}>{m.formula}</code>
+                        <p className="text-xs text-muted-foreground">{m.when}</p>
+                        <p className="text-[11px] bg-muted/60 rounded px-2 py-1">Best for: {m.best}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // ── vac_tcpi_visual ───────────────────────────────────────────────
+            if ((block as any).type === 'vac_tcpi_visual') {
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div className="rounded-xl border-2 border-blue-400/40 bg-blue-500/5 p-4 space-y-2">
+                      <span className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-wide">VAC</span>
+                      <p className="text-sm font-bold">Variance at Completion</p>
+                      <code className="text-base font-mono font-bold text-blue-600 dark:text-blue-400 block">BAC − EAC</code>
+                      <div className="space-y-0.5 text-xs">
+                        <p className="text-emerald-600 dark:text-emerald-400">✓ Positive = projected underrun (good)</p>
+                        <p className="text-destructive">✗ Negative = projected overrun (bad)</p>
+                      </div>
+                    </div>
+                    <div className="rounded-xl border-2 border-violet-400/40 bg-violet-500/5 p-4 space-y-2">
+                      <span className="text-xs font-black text-violet-600 dark:text-violet-400 uppercase tracking-wide">TCPI</span>
+                      <p className="text-sm font-bold">To-Complete Performance Index</p>
+                      <code className="text-base font-mono font-bold text-violet-600 dark:text-violet-400 block">(BAC − EV) ÷ (BAC − AC)</code>
+                      <div className="space-y-0.5 text-xs">
+                        <p className="text-emerald-600 dark:text-emerald-400">✓ {'<'} 1.0 = achievable</p>
+                        <p className="text-amber-600 dark:text-amber-400">⚠ {'>'} 1.1 = essentially unachievable</p>
+                      </div>
+                    </div>
+                  </div>
+                  {(block as any).explanation && <p className="text-xs text-muted-foreground">{(block as any).explanation}</p>}
+                </div>
+              );
+            }
+
+            // ── dcaa_audits_visual ────────────────────────────────────────────
+            if ((block as any).type === 'dcaa_audits_visual') {
+              const phases = [
+                { phase: 'Pre-Award', color: 'bg-blue-500', items: ['Accounting System Survey', 'Estimating System Survey', 'Forward Pricing Rate Audit', 'Pre-Award Accounting System Survey'] },
+                { phase: 'During Performance', color: 'bg-violet-500', items: ['Provisional Billing Rate Review', 'Incurred Cost Audit (annual)', 'Labor Timekeeping Audit', 'Progress Payment Reviews'] },
+                { phase: 'Post-Award', color: 'bg-emerald-500', items: ['Incurred Cost Submission (ICS) Audit', 'Closeout Audit', 'Cost Accounting Standards Audit', 'Defective Pricing Audit'] },
+              ];
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="space-y-3">
+                    {phases.map((p, pi) => (
+                      <div key={pi} className="rounded-xl border border-border overflow-hidden">
+                        <div className={`${p.color} px-4 py-2`}>
+                          <span className="text-white text-xs font-bold uppercase tracking-wide">{p.phase}</span>
+                        </div>
+                        <div className="p-3 grid sm:grid-cols-2 gap-1.5">
+                          {p.items.map((item, ii) => (
+                            <div key={ii} className="flex items-center gap-2 text-xs">
+                              <div className={`w-1.5 h-1.5 rounded-full ${p.color} flex-shrink-0`} />
+                              {item}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {(block as any).explanation && <p className="text-xs text-muted-foreground">{(block as any).explanation}</p>}
+                </div>
+              );
+            }
+
+            // ── cpif_share_visual ─────────────────────────────────────────────
+            if ((block as any).type === 'cpif_share_visual') {
+              return (
+                <div key={i} className="rounded-xl border border-border bg-card p-5 space-y-4">
+                  <h3 className="font-bold text-sm">{(block as any).heading}</h3>
+                  <div className="grid grid-cols-3 gap-3 text-center">
+                    {[
+                      { label: 'Target Cost', value: '$10M', sub: 'What both sides agreed to', color: 'bg-primary/10 text-primary' },
+                      { label: 'Target Fee', value: '$1M', sub: '10% of target cost', color: 'bg-blue-500/10 text-blue-600 dark:text-blue-400' },
+                      { label: 'Share Ratio', value: '80/20', sub: 'Gov/Contractor split', color: 'bg-violet-500/10 text-violet-600 dark:text-violet-400' },
+                    ].map((item, ii) => (
+                      <div key={ii} className={`rounded-xl p-3 ${item.color.split(' ')[0]}`}>
+                        <p className={`text-xl font-black ${item.color.split(' ').slice(1).join(' ')}`}>{item.value}</p>
+                        <p className="text-xs font-semibold mt-1">{item.label}</p>
+                        <p className="text-[10px] text-muted-foreground">{item.sub}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="space-y-2">
+                    {[
+                      { scenario: 'Came in at $9M (under by $1M)', gov: '-$800K', contractor: '+$200K', color: 'bg-emerald-500/10 border-emerald-400/30', label: '✓ Under budget' },
+                      { scenario: 'Came in at $11M (over by $1M)', gov: '+$800K', contractor: '-$200K', color: 'bg-destructive/10 border-destructive/30', label: '✗ Over budget' },
+                    ].map((s, si) => (
+                      <div key={si} className={`rounded-lg border p-3 ${s.color}`}>
+                        <p className="text-xs font-semibold mb-1">{s.label}: {s.scenario}</p>
+                        <div className="flex gap-4 text-xs text-muted-foreground">
+                          <span>Government absorbs: <strong>{s.gov}</strong></span>
+                          <span>Contractor absorbs: <strong>{s.contractor}</strong></span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {(block as any).explanation && <p className="text-xs text-muted-foreground">{(block as any).explanation}</p>}
+                </div>
+              );
+            }
+
+            // ── idiq_structure_visual ─────────────────────────────────────────
+            if ((block as any).type === 'idiq_structure_visual') {
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-4 space-y-3">
+                    <div className="text-center p-3 rounded-lg bg-primary/10 border border-primary/20">
+                      <p className="text-sm font-black text-primary">📋 IDIQ Base Contract</p>
+                      <p className="text-xs text-muted-foreground">Sets terms, rates, ceiling value — no work ordered here</p>
+                    </div>
+                    <div className="flex items-center justify-center gap-1 text-muted-foreground text-xs">↓ Task Orders issued against base ↓</div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {['Task Order 1', 'Task Order 2', 'Task Order N'].map((to, ti) => (
+                        <div key={ti} className="text-center p-2 rounded-lg border border-border bg-card">
+                          <p className="text-xs font-semibold">{to}</p>
+                          <p className="text-[10px] text-muted-foreground">Specific work scope</p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="border-t border-primary/20 pt-2 grid grid-cols-2 gap-2 text-xs">
+                      <div><span className="font-semibold">Min guaranteed:</span> <span className="text-muted-foreground">$1 (typical)</span></div>
+                      <div><span className="font-semibold">Max ceiling:</span> <span className="text-muted-foreground">Set in base contract</span></div>
+                    </div>
+                  </div>
+                  {(block as any).explanation && <p className="text-xs text-muted-foreground">{(block as any).explanation}</p>}
+                </div>
+              );
+            }
+
+            // ── rea_process_visual ────────────────────────────────────────────
+            if ((block as any).type === 'rea_process_visual') {
+              const steps = [
+                { num: '1', label: 'Government Directs Change', desc: 'Formal or constructive direction outside contract scope', icon: '📢', color: 'bg-blue-500' },
+                { num: '2', label: 'Contractor Submits REA', desc: 'Must include: factual basis, legal entitlement, quantified cost impact', icon: '📝', color: 'bg-violet-500' },
+                { num: '3', label: 'Contracting Officer Reviews', desc: 'CO has 60 days to issue final decision (FAR 33.211)', icon: '🔍', color: 'bg-amber-500' },
+                { num: '4', label: 'Negotiation', desc: 'Both parties negotiate the equitable adjustment amount', icon: '🤝', color: 'bg-emerald-500' },
+                { num: '5', label: 'Contract Modification Issued', desc: 'Bilateral mod executed — price and/or schedule adjusted', icon: '✅', color: 'bg-primary' },
+              ];
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="space-y-2">
+                    {steps.map((s, si) => (
+                      <div key={si} className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-full ${s.color} text-white text-xs font-black flex items-center justify-center flex-shrink-0`}>{s.num}</div>
+                        <span className="text-xl flex-shrink-0">{s.icon}</span>
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold">{s.label}</p>
+                          <p className="text-xs text-muted-foreground">{s.desc}</p>
+                        </div>
+                        {si < steps.length - 1 && <div className="absolute ml-4 mt-8 w-0.5 h-4 bg-border" />}
+                      </div>
+                    ))}
+                  </div>
+                  {(block as any).explanation && <p className="text-xs text-muted-foreground">{(block as any).explanation}</p>}
+                </div>
+              );
+            }
+
+            // ── commercial_item_visual ────────────────────────────────────────
+            if ((block as any).type === 'commercial_item_visual') {
+              const tests = [
+                { label: 'Sold commercially', desc: 'Offered for sale in commercial marketplace', icon: '🏬' },
+                { label: 'Catalog pricing', desc: 'Has established catalog or market prices', icon: '📖' },
+                { label: 'Minor modification', desc: 'Commercial item with minor government-specific mods', icon: '🔧' },
+                { label: 'Evolved from commercial', desc: 'Derived from commercial items via minor mods', icon: '🔄' },
+                { label: 'Used by general public', desc: 'Used by general public or non-government entities', icon: '👥' },
+              ];
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <p className="text-xs text-muted-foreground">Meets ANY ONE of these criteria = commercial item. Qualifies for streamlined FAR Part 12 acquisition.</p>
+                  <div className="space-y-2">
+                    {tests.map((t, ti) => (
+                      <div key={ti} className="flex items-center gap-3 p-3 rounded-lg border border-border bg-muted/30">
+                        <span className="text-xl flex-shrink-0">{t.icon}</span>
+                        <div>
+                          <p className="text-sm font-semibold">{t.label}</p>
+                          <p className="text-xs text-muted-foreground">{t.desc}</p>
+                        </div>
+                        <div className="ml-auto w-6 h-6 rounded-full bg-emerald-500/10 border border-emerald-400/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-xs font-bold">✓</div>
+                      </div>
+                    ))}
+                  </div>
+                  {(block as any).explanation && <p className="text-xs text-muted-foreground">{(block as any).explanation}</p>}
+                </div>
+              );
+            }
+
+            // ── risk_formula_visual ───────────────────────────────────────────
+            if ((block as any).type === 'risk_formula_visual') {
+              const levels = [
+                { level: 'High', range: 'Score ≥ 10', prob: '≥ 50%', impact: '≥ 3', color: 'bg-red-500', badge: 'bg-red-500/15 text-red-600 dark:text-red-400', action: 'Immediate mitigation required' },
+                { level: 'Medium', range: 'Score 4–9', prob: '20–49%', impact: '2–4', color: 'bg-amber-500', badge: 'bg-amber-500/15 text-amber-600 dark:text-amber-400', action: 'Monitor actively, plan mitigation' },
+                { level: 'Low', range: 'Score 1–3', prob: '< 20%', impact: '1–2', color: 'bg-emerald-500', badge: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400', action: 'Accept, log in risk register' },
+              ];
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="rounded-xl border border-border bg-card p-4 text-center">
+                    <p className="text-2xl font-black text-primary">Risk Score = Probability × Impact</p>
+                    <p className="text-xs text-muted-foreground mt-1">Both rated 1–5. Max possible score: 25.</p>
+                  </div>
+                  <div className="space-y-2">
+                    {levels.map((l, li) => (
+                      <div key={li} className="flex items-center gap-3 p-3 rounded-lg border border-border bg-card">
+                        <div className={`w-3 h-10 rounded-full ${l.color} flex-shrink-0`} />
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${l.badge}`}>{l.level} Risk</span>
+                            <span className="text-xs text-muted-foreground">{l.range}</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-0.5">{l.action}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // ── cost_risk_visual ──────────────────────────────────────────────
+            if ((block as any).type === 'cost_risk_visual') {
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="rounded-xl border border-border bg-card p-4 space-y-3">
+                    <div className="text-center">
+                      <code className="text-sm font-mono font-bold text-primary">(P80 Cost − Point Estimate) ÷ Point Estimate × 100%</code>
+                    </div>
+                    <div className="grid grid-cols-3 gap-3 text-center text-xs">
+                      {[
+                        { label: 'Low Risk', range: '< 10%', color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' },
+                        { label: 'Medium Risk', range: '10–30%', color: 'bg-amber-500/10 text-amber-600 dark:text-amber-400' },
+                        { label: 'High Risk', range: '> 30%', color: 'bg-red-500/10 text-red-600 dark:text-red-400' },
+                      ].map((r, ri) => (
+                        <div key={ri} className={`rounded-lg p-2 ${r.color.split(' ')[0]}`}>
+                          <p className={`font-black text-base ${r.color.split(' ').slice(1).join(' ')}`}>{r.range}</p>
+                          <p className="font-semibold">{r.label}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-xs text-muted-foreground">Historical DoD average cost overrun: 20–30%. If your P80 is more than 30% above your point estimate, re-examine your assumptions.</p>
+                  </div>
+                </div>
+              );
+            }
+
+            // ── compa_ratio_visual ────────────────────────────────────────────
+            if ((block as any).type === 'compa_ratio_visual') {
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="rounded-xl border border-border bg-card p-4 space-y-3">
+                    <code className="text-sm font-mono font-bold text-primary block text-center">Compa-Ratio = Employee Salary ÷ Pay Band Midpoint</code>
+                    <div className="space-y-2">
+                      {[
+                        { ratio: '< 0.90', label: 'Below midpoint', meaning: 'Underpaid vs. market — flight risk', color: 'bg-red-500/10 text-red-600 dark:text-red-400' },
+                        { ratio: '0.90–1.10', label: 'At midpoint', meaning: 'Competitively priced — target range', color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' },
+                        { ratio: '> 1.10', label: 'Above midpoint', meaning: 'Overpaid vs. band — cost risk at recompete', color: 'bg-amber-500/10 text-amber-600 dark:text-amber-400' },
+                      ].map((r, ri) => (
+                        <div key={ri} className={`flex items-center gap-3 p-3 rounded-lg ${r.color.split(' ')[0]}`}>
+                          <span className={`text-lg font-black w-16 text-center ${r.color.split(' ').slice(1).join(' ')}`}>{r.ratio}</span>
+                          <div>
+                            <p className="text-xs font-semibold">{r.label}</p>
+                            <p className="text-xs text-muted-foreground">{r.meaning}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {(block as any).explanation && <p className="text-xs text-muted-foreground">{(block as any).explanation}</p>}
+                </div>
+              );
+            }
+
+            // ── acat_requirements_visual ──────────────────────────────────────
+            if ((block as any).type === 'acat_requirements_visual') {
+              const reqs = [
+                { label: 'Selected Acquisition Report (SAR)', when: 'Annual — submitted to Congress', icon: '📊' },
+                { label: 'Defense Acquisition Board (DAB) Review', when: 'At each major milestone', icon: '🏛️' },
+                { label: 'Full Funding Policy', when: 'Must budget procurement in single year', icon: '💰' },
+                { label: 'Independent Cost Estimate (ICE)', when: 'Before Milestone B & C', icon: '🔢' },
+                { label: 'Operational Test & Evaluation (OT&E)', when: 'Before full-rate production', icon: '🧪' },
+                { label: 'Nunn-McCurdy Reporting', when: 'If cost growth exceeds thresholds', icon: '⚠️' },
+              ];
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <p className="text-xs text-muted-foreground">ACAT I programs (MDAPs) have the heaviest congressional oversight. These are non-negotiable.</p>
+                  <div className="grid sm:grid-cols-2 gap-2">
+                    {reqs.map((r, ri) => (
+                      <div key={ri} className="flex items-start gap-3 p-3 rounded-lg border border-border bg-card">
+                        <span className="text-xl flex-shrink-0">{r.icon}</span>
+                        <div>
+                          <p className="text-xs font-semibold">{r.label}</p>
+                          <p className="text-[11px] text-muted-foreground">{r.when}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {(block as any).explanation && <p className="text-xs text-muted-foreground">{(block as any).explanation}</p>}
+                </div>
+              );
+            }
+
+            // ── nunn_mccurdy_visual ───────────────────────────────────────────
+            if ((block as any).type === 'nunn_mccurdy_visual') {
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="space-y-2">
+                    {[
+                      { level: 'Significant Breach', threshold: 'APB Unit Cost × 1.15', desc: 'Requires written notification to Congress within 45 days', color: 'border-amber-400/50 bg-amber-500/5', badge: 'bg-amber-500/15 text-amber-600 dark:text-amber-400' },
+                      { level: 'Critical Breach', threshold: 'APB Unit Cost × 1.25', desc: 'Program must be restructured or terminated. SecDef certification required.', color: 'border-red-400/50 bg-red-500/5', badge: 'bg-red-500/15 text-red-600 dark:text-red-400' },
+                    ].map((l, li) => (
+                      <div key={li} className={`rounded-xl border-2 p-4 space-y-2 ${l.color}`}>
+                        <div className="flex items-center justify-between">
+                          <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${l.badge}`}>{l.level}</span>
+                          <code className="text-sm font-mono font-bold">{l.threshold}</code>
+                        </div>
+                        <p className="text-xs text-muted-foreground">{l.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="bg-muted/40 rounded-lg p-3 text-xs text-muted-foreground">
+                    💡 APB = Acquisition Program Baseline — the cost, schedule, and performance goals set at Milestone B. Nunn-McCurdy thresholds are calculated against this baseline.
+                  </div>
+                  {(block as any).explanation && <p className="text-xs text-muted-foreground">{(block as any).explanation}</p>}
+                </div>
+              );
+            }
+
+
             // ── fee_limits_visual: contract type fee cap cards ────────────────
             if ((block as any).type === 'fee_limits_visual') {
               const contracts = [

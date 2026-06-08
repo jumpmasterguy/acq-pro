@@ -142,7 +142,7 @@ export const modules: Module[] = [
             body: 'Every defense acquisition involves two sides: the government side and the industry side. Understanding both perspectives is one of the most valuable things you can do in this field.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'Government Side vs. Industry Side — How Each Experiences Acquisition',
             headers: ['Aspect', 'Government Side (USG)', 'Industry Side (Contractor)'],
             rows: [
@@ -581,7 +581,7 @@ export const modules: Module[] = [
             caption: 'Different roles. One mission. Win the work. Deliver the promise. (Note: the Proposal Manager has three mugs of "Proposal Fuel" for a reason.)',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'Government Role vs. Industry Counterpart',
             headers: ['Government Role', 'What They Do', 'Industry Counterpart'],
             rows: [
@@ -716,7 +716,7 @@ export const modules: Module[] = [
             body: 'Winning a spot on an IDIQ vehicle does NOT guarantee revenue. It guarantees the right to compete for task orders. Battle 1 is winning the IDIQ. Battle 2 — which never ends — is winning task orders. Many contractors make the mistake of treating an IDIQ win as a revenue event. It is a hunting license, not a paycheck.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'Standalone Contract vs. Task Order Under an IDIQ',
             headers: ['Factor', 'Standalone Contract', 'Task Order (IDIQ)'],
             rows: [
@@ -869,7 +869,7 @@ export const modules: Module[] = [
             body: 'This is where a lot of people get confused because the old "DoD 5000" process was a single, linear lifecycle that every program had to follow. The new Adaptive Acquisition Framework (AAF) recognizes that a simple services contract doesn\'t need the same oversight structure as a $10 billion aircraft program. There are now six distinct pathways.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'The Six AAF Pathways at a Glance',
             headers: ['Pathway', 'Best For', 'Key Timeline', 'Governing Instruction'],
             rows: [
@@ -892,7 +892,7 @@ export const modules: Module[] = [
             body: 'The MCA pathway is organized into phases separated by milestone review decisions. Each phase has a specific purpose, and a program can only advance to the next phase after a Milestone Decision Authority (MDA) reviews the program\'s progress and approves the next step.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'The MCA Lifecycle Phases',
             headers: ['Phase', 'Gate In / Gate Out', 'What Happens Here'],
             rows: [
@@ -1021,7 +1021,7 @@ export const modules: Module[] = [
             body: 'Once Congress appropriates money to the DoD, it\'s divided into different "pots" — each with its own authorized uses and time limits. These are called appropriations, and the informal term is "color of money." Using the wrong color for a purchase is not a paperwork error — it\'s potentially a federal law violation.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'The Five Main DoD Appropriation Types',
             headers: ['Appropriation', 'Nickname', 'What It Pays For', 'Obligation Period', 'Common Mistake'],
             rows: [
@@ -1243,7 +1243,7 @@ export const modules: Module[] = [
             ]
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "Acquisition Program Categories",
             headers: ['Category', 'Threshold', 'Oversight Level'],
             rows: [
@@ -1270,7 +1270,7 @@ export const modules: Module[] = [
             body: "These three systems are interdependent, and the seams between them are where programs fail. A requirement validated by JROC but not funded through PPBE is just a wish list. Funding programmed through POM but without a validated requirement can't proceed to contract. And an acquisition program without a funded, validated requirement will hit a Milestone roadblock. As a mid-career PM, you need to own all three timelines simultaneously: your JROC review schedule, your POM submission window, and your acquisition milestone dates. When they slip out of sync, programs get delayed at Milestone B waiting for funding or requirements that aren't ready."
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             level: 'intermediate',
             heading: "AAF Pathways: When to Use Each",
             headers: ['Pathway', 'Best For', 'Key Characteristic', 'Typical Timeline'],
@@ -1421,7 +1421,7 @@ export const modules: Module[] = [
             body: 'The first question asked about any new DoD acquisition is: what ACAT is this program? The answer determines who approves your milestones, how many oversight reviews you will conduct, whether you need an independent cost estimate, whether you must report to Congress, and how much staff support you will have. An ACAT I program like the F-35 involves USD(A&S) as the MDA, mandatory SAR reports to Congress, CAPE independent cost estimates, and DoD-level reviews at every milestone. An ACAT III program may be approved by a PEO with minimal external oversight. Understanding ACAT levels is the starting point for understanding any DoD program\'s regulatory environment.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'ACAT Levels — Thresholds, MDA, and Key Requirements',
             headers: ['ACAT', 'Cost Threshold (2024)', 'MDA', 'Key Requirements', 'Reporting'],
             rows: [
@@ -1438,7 +1438,7 @@ export const modules: Module[] = [
             body: 'DoDI 5000.02 (updated in 2020) introduced the Adaptive Acquisition Framework (AAF), replacing the previous "one-size-fits-all" linear acquisition model with six distinct pathways. Each pathway is tailored to a specific type of acquisition: (1) Major Capability Acquisition (MCA) — the traditional ACAT process for large, complex defense systems; (2) Middle Tier of Acquisition (MTA) — Rapid Prototyping (2 years) or Rapid Fielding (5 years); (3) Software Acquisition — for software-intensive systems using Agile/DevSecOps; (4) Defense Business Systems (DBS) — for ERP and business IT systems; (5) Acquisition of Services — for services contracts managed under the service acquisition framework; (6) Urgent Capability Acquisition — for combat-emergent needs addressable within 2 years.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'AAF Pathway Selection Guide',
             headers: ['Pathway', 'Best For', 'Timeline', 'Key Advantage'],
             rows: [
@@ -1461,9 +1461,8 @@ export const modules: Module[] = [
             body: 'For ACAT I programs (MDAPs), the PM must produce a Selected Acquisition Report (SAR) annually — or whenever a Nunn-McCurdy breach or other significant change occurs. The SAR is submitted to Congress and covers: current program description, total program cost (including all variants), cost and schedule changes from original baseline, current schedule, and performance status. The SAR is a legal disclosure document — PMs must ensure all data is accurate. False or misleading SARs can trigger Congressional investigations. For an experienced PM, the SAR is also a professional document that reflects directly on your program\'s credibility and your ability to manage to a baseline.',
           },
           {
-            type: 'formula',
+            type: 'acat_requirements_visual' as any,
             heading: 'Key ACAT I Statutory Requirements — What Congress Requires',
-            formula: 'MANDATORY FOR ACAT I (MDAP) PROGRAMS:\n\n1. Selected Acquisition Report (SAR)\n   → Annual submission to Congress\n   → Unit cost growth > 15% (significant breach) triggers special SAR\n\n2. Independent Cost Estimate (ICE)\n   → Required at each Milestone (A, B, C)\n   → CAPE prepares for ACAT ID; Service cost center for ACAT IC\n\n3. Nunn-McCurdy Unit Cost Reporting\n   → Significant breach: 15% cost growth over baseline\n   → Critical breach: 25% cost growth over baseline → Congressional notification + USD(A&S) certification\n\n4. Acquisition Program Baseline (APB)\n   → Formally documents cost, schedule, and performance objectives\n   → Breaches of APB thresholds trigger reporting and review\n\n5. Test and Evaluation Master Plan (TEMP)\n   → Documents all DT&E, OT&E, and LFT&E requirements\n   → Must be approved by DOT&E for major programs',
             explanation: 'These requirements are statutory — they come from law (USC Title 10), not just DoD policy. That means Congress mandated them, and they cannot be tailored away regardless of what the PM or MDA prefers. As an ACAT I PM, these are non-negotiable obligations.',
           },
           {
@@ -1619,7 +1618,7 @@ export const modules: Module[] = [
             note: 'The lag between planning and execution is why DoD struggles to respond fast. What you\'re executing today was planned 2 years ago.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "The PPBE Annual Cycle",
             headers: ['Phase', 'When', 'Key Activity', 'Key Players'],
             rows: [
@@ -1646,10 +1645,8 @@ export const modules: Module[] = [
             ]
           },
           {
-            type: 'formula',
-            heading: "Burn Rate Formula",
-            formula: 'Monthly Burn Rate = Total Obligation Authority ÷ Number of Execution Months',
-            explanation: "Tracking burn rate against plan is critical. If you're burning faster than planned, you may need supplemental funding or a scope reduction. If you're under-executing, you risk losing future-year funding — the \"use it or lose it\" trap."
+            type: 'burn_rate_visual' as any,
+            heading: 'Monthly Burn Rate Formula',
           },
           {
             type: 'warning',
@@ -1794,7 +1791,7 @@ export const modules: Module[] = [
             body: "Every appropriation type has strict statutory limits on what it can buy. Using RDT&E money to fund a production contract, or O&M money to fund a capital acquisition, is a federal violation of the Purpose Statute (31 U.S.C. § 1301). Program Managers who ignore these rules face potential Antideficiency Act violations, personal liability, and career termination. Understanding each appropriation's \"color\" — and matching the right color to the right expenditure — is non-negotiable."
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "Major Appropriation Types: Rules & Period of Availability",
             headers: ['Appropriation', 'What It Funds', 'Period of Availability', 'Key Rule'],
             rows: [
@@ -1811,7 +1808,7 @@ export const modules: Module[] = [
             body: "Three statutory principles govern every spending decision in DoD: (1) The Purpose Statute (31 U.S.C. § 1301) — funds may only be used for what Congress intended. (2) The Time Statute (31 U.S.C. § 1502) — funds may only obligate for needs arising within their period of availability. (3) The Amount Statute / Antideficiency Act (31 U.S.C. §§ 1341, 1342) — cannot obligate more than was appropriated. Violating any of these three is a federal offense."
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "Per-Service Treasury Account Symbols (TAS) — Key Accounts",
             headers: ['Service', 'Appropriation', 'TAS', 'What It Funds'],
             rows: [
@@ -1843,10 +1840,8 @@ export const modules: Module[] = [
             body: "Air Force 3400 (O&M) is the most frequently used appropriation in day-to-day AF program management. It funds training, logistics, maintenance, most advisory & assistance services, and sustainment contracts. When PMs confuse 3400 (O&M) with 3600 (RDT&E) — for example, using 3400 to pay for developmental testing — they violate the Purpose Statute. Always ask: \"Is this work developing/testing a new capability (RDT&E), buying a production item (Procurement), or sustaining/operating an existing capability (O&M)?\""
           },
           {
-            type: 'formula',
-            heading: "The Appropriation Decision Framework",
-            formula: 'Is it research/development/testing? → RDT&E\nIs it buying production units/end items? → Procurement (aircraft, ships, missiles, vehicles)\nIs it day-to-day operations/maintenance/services? → O&M\nIs it permanent construction ($1.5M+)? → MILCON\nIs it military pay/allowances? → MILPERS',
-            explanation: "Apply this framework before every obligation decision. When in doubt, consult your budget officer. The consequences of misusing appropriations are serious — every obligation must be traceable to the correct appropriation type."
+            type: 'color_of_money_visual' as any,
+            heading: 'Color of Money — Which Appropriation?',
           },
           {
             type: 'text',
@@ -1990,10 +1985,8 @@ export const modules: Module[] = [
             body: "The Cost Assessment and Program Evaluation (CAPE) office, within OSD, provides independent cost assessments for major defense acquisition programs. Their estimates are typically higher than program office estimates — and statistically, CAPE is more often correct. When CAPE's estimate exceeds the program office estimate by 20%+, Congress and leadership take note."
           },
           {
-            type: 'formula',
-            heading: "Key Cost Estimating Metrics",
-            formula: 'Cost Risk = (P80 Cost - Point Estimate) / Point Estimate × 100%\nMean Cost Overrun (historical DoD) ≈ 20-30% above Milestone B estimate',
-            explanation: "DoD programs historically overrun by 20-30% at completion. Always include cost risk analysis in your estimates. The 80th percentile cost (P80) means there's an 80% probability the actual cost will be at or below that figure — this is the standard threshold DoD uses for major program budgeting."
+            type: 'cost_risk_visual' as any,
+            heading: 'Cost Risk Calculation',
           },
           {
             type: 'tip',
@@ -2006,7 +1999,7 @@ export const modules: Module[] = [
             body: "When a contractor submits a cost proposal, the single largest line item — typically 50-70% of total contract cost — is direct labor. That labor is not proposed as a lump sum. It is built from Labor Categories (LCATs): defined, titled skill levels that specify the education, years of experience, and functional role a person must have to work in that slot. Examples: \"Systems Engineer Level II (SE-II)\" requires a BS in engineering + 5-8 years experience. \"Program Manager Level III (PM-III)\" requires 10+ years managing programs > $50M. Each LCAT has a specific direct labor rate — the hourly base wage — that is burdened with fringe, overhead, and G&A before you see the final billing rate. As a PM, your ability to evaluate whether a contractor's proposed labor mix is realistic directly determines whether your cost estimate is credible."
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "LCAT Structure: How a Contractor Builds a Labor Proposal",
             headers: ['LCAT Title', 'Skill Level Indicators', 'Typical Direct Labor Rate ($/hr)', 'Fully Burdened Rate Example'],
             rows: [
@@ -2026,10 +2019,8 @@ export const modules: Module[] = [
             body: "On IDIQ contracts and GWACs (like SEAPORT-NXG, OASIS, GSAM), labor rates are negotiated and fixed in the base contract — these are called pre-priced labor categories. When a task order is competed under that vehicle, the contractor cannot re-price their LCATs above the contract ceiling rates. This is powerful for the government: you are comparing proposals on the same rate structure, so competition becomes about hours and approach rather than rate games. As a PM, when you use a pre-priced IDIQ, verify the ceiling rates were set competitively and recently — rates negotiated 5 years ago may no longer reflect the labor market, and contractors may propose fewer hours at higher mix levels to compensate."
           },
           {
-            type: 'formula',
-            heading: "Job Codes, Pay Bands, and the Compensation Ratio",
-            formula: 'Compa-Ratio = Employee Annual Salary ÷ Pay Band Midpoint\n\nExample:\n  Employee salary: $95,000\n  LCAT \"Systems Engineer II\" pay band: $75,000 – $105,000 (midpoint: $90,000)\n  Compa-Ratio = $95,000 ÷ $90,000 = 1.056 (slightly above midpoint = fair)\n\nCompa-Ratio Interpretation:\n  < 0.80 = Underpaid relative to market (retention risk; DCAA flag)\n  0.80–1.00 = Below midpoint (new hire, lower experience)\n  1.00 = Exactly at midpoint (market rate)\n  1.00–1.20 = Above midpoint (senior, high performer)\n  > 1.20 = Significantly above midpoint (may require justification)',
-            explanation: "Every contractor employee has a job code — an internal HR identifier that maps them to a specific LCAT and pay band. When DCAA audits a contractor's labor charging, they pull the job code and verify: (1) Is this employee actually qualified for the LCAT they're charging? (2) Is their salary consistent with the pay band? (3) Are they charging the correct contract? A compa-ratio above 1.20 is not illegal, but it prompts DCAA to verify the employee's qualifications match the LCAT. If a contractor is billing a junior employee at a senior LCAT rate, that is a False Claims Act violation. As a PM, understanding this structure lets you challenge a cost proposal that looks too heavy at senior levels."
+            type: 'compa_ratio_visual' as any,
+            heading: 'Compa-Ratio — Labor Rate Health Check',
           },
           {
             type: 'text',
@@ -2198,16 +2189,12 @@ export const modules: Module[] = [
             body: "Imagine you\'re flying a plane with two gauges: one shows how much fuel you\'ve burned, and one shows how far you\'ve traveled. Separately, each gauge tells you something. Together, they tell you whether you\'re going to make it to your destination. EVM — Earned Value Management — is both gauges for a defense program. It tells you whether you\'re getting the work done you planned to get done, at the cost you planned to spend, at any point in time. Without it, a program can look on budget but be six months behind — or look on schedule while burning through money at twice the expected rate. The DoD requires EVM on most contracts over $20M because \"how much have we spent?\" only answers half the question."
           },
           {
-            type: 'formula',
-            heading: "Core EVM Formulas",
-            formula: 'CV = EV - AC (Cost Variance: positive = under budget)\nSV = EV - PV (Schedule Variance: positive = ahead of schedule)\nCPI = EV / AC (>1.0 = under budget; <1.0 = over budget)\nSPI = EV / PV (>1.0 = ahead of schedule; <1.0 = behind)',
-            explanation: "Memorize these. At any program review, you should be able to calculate CPI and SPI instantly and explain what they mean for the program's trajectory."
+            type: 'evm_metrics_visual' as any,
+            heading: 'EVM Core Metrics at a Glance',
           },
           {
-            type: 'formula',
-            heading: "Estimate at Completion (EAC)",
-            formula: 'EAC = BAC / CPI (most common — assumes future work at current efficiency)\nEAC = AC + (BAC - EV) (assumes remaining work on original budget)\nEAC = AC + [(BAC - EV) / (CPI × SPI)] (combined factor)',
-            explanation: "BAC = Budget at Completion (the total approved budget). Choose your EAC method based on the nature of variances. The CPI method (BAC/CPI) is statistically the most accurate predictor for programs that are 20%+ complete."
+            type: 'eac_quick_visual' as any,
+            heading: 'EAC Quick Reference',
           },
           {
             type: 'callout',
@@ -2215,7 +2202,7 @@ export const modules: Module[] = [
             body: "Research by David Christensen (1993) showed that the CPI at 20% program completion is highly predictive of final CPI. Programs rarely recover a CPI worse than 0.8. If your program shows a CPI of 0.75 at 20% completion, plan for overruns — the data is telling you something systemic is wrong."
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "EVM Performance Indicator Benchmarks",
             headers: ['Indicator', 'Green', 'Yellow', 'Red'],
             rows: [
@@ -2343,13 +2330,12 @@ export const modules: Module[] = [
             body: 'Never manage to the EAC you want — manage to the EAC the data tells you. PMs who "sandbag" EACs to avoid leadership scrutiny are not protecting their programs — they are destroying their credibility. Leaders at the PEO and SAE level have seen thousands of programs. They know when an EAC is unrealistic, and a PM who consistently produces optimistic EACs that then miss is far more damaging than one who delivers accurate, uncomfortable forecasts early.',
           },
           {
-            type: 'formula',
+            type: 'eac_methods_visual' as any,
             heading: 'The Four EAC Methods — Know All of Them',
-            formula: 'METHOD 1: EAC = BAC / CPI\n  → Assumes: Future work will be performed at the same efficiency as to date\n  → When to use: Program is ≥20% complete; CPI has stabilized; systemic cost problems exist\n  → Most statistically accurate for mature programs\n  → Example: BAC = $200M, CPI = 0.85 → EAC = $200M / 0.85 = $235.3M\n\nMETHOD 2: EAC = AC + (BAC - EV)\n  → Assumes: All remaining work will be performed at budgeted rates (original plan)\n  → When to use: Current overrun is a one-time anomaly; not expected to recur\n  → Most optimistic method; use only when you can defend why the past won\'t predict the future\n  → Example: AC = $50M, BAC = $200M, EV = $40M → EAC = $50M + $160M = $210M\n\nMETHOD 3: EAC = AC + [(BAC - EV) / CPI]\n  → Assumes: Remaining work performed at current cost efficiency\n  → Same as Method 1 but written differently to show ETC separately\n  → ETC = (BAC - EV) / CPI\n\nMETHOD 4: EAC = AC + [(BAC - EV) / (CPI × SPI)]\n  → Assumes: Both cost AND schedule inefficiency will continue to affect remaining work\n  → When to use: Program has both cost and schedule problems; recovery will take time\n  → Most conservative (highest EAC) method\n  → Example: AC = $50M, BAC = $200M, EV = $40M, CPI = 0.85, SPI = 0.90\n  → EAC = $50M + [$160M / (0.85 × 0.90)] = $50M + $209.2M = $259.2M',
             explanation: 'Having four methods is not a trick to pick the one that looks best — each reflects a different assumption about the future. A mature PM can articulate exactly why they chose a specific EAC method and defend it against scrutiny. The method you choose tells leadership what your theory of the program\'s cost future is.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'EAC Method Selection Guide',
             headers: ['Method', 'Assumption', 'Best For', 'Red Flag If Used When...'],
             rows: [
@@ -2360,9 +2346,8 @@ export const modules: Module[] = [
             ],
           },
           {
-            type: 'formula',
+            type: 'vac_tcpi_visual' as any,
             heading: 'VAC and TCPI — The "So What" Numbers',
-            formula: 'VAC (Variance at Completion) = BAC - EAC\n  → Negative = projected overrun → Positive = projected underrun\n  → Example: BAC = $200M, EAC = $235M → VAC = -$35M (overrun)\n\nTCPI (To-Complete Performance Index) = (BAC - EV) / (EAC - AC)\n  → What cost efficiency must you achieve on ALL remaining work to hit your EAC?\n  → TCPI > 1.10 is generally considered unachievable (you\'d need to be 10%+ more efficient than you\'ve ever been)\n  → TCPI = 1.00 means remaining work at current efficiency gets you to EAC exactly\n  → TCPI < 1.00 means you can afford to be less efficient and still make EAC (program is in good shape)\n\nExample: BAC = $200M, EV = $40M, AC = $50M, EAC = $235M\n  → TCPI = ($200M - $40M) / ($235M - $50M) = $160M / $185M = 0.865\n  → You only need 86.5% efficiency on remaining work to hit EAC — achievable',
             explanation: 'TCPI is the reality check on your EAC. If you claim an EAC that requires a TCPI of 1.25, you are telling leadership you will be 25% more efficient on remaining work than you have ever been — that is not credible. Reconcile your EAC until the TCPI is defensible.',
           },
           {
@@ -2371,7 +2356,7 @@ export const modules: Module[] = [
             body: 'Program executives and PEOs do not look at a single EAC number — they look at EAC trends over time. A steadily rising EAC signals a systemic problem that corrective action is not fixing. A "hockey stick" EAC (stable for months, then sharp jump) signals that someone was managing the EAC rather than reporting reality. Leaders expect EAC to be updated every IPMR reporting period and to reflect current risk. If your EAC has not moved in 6 months while the program has cost and schedule variances, expect scrutiny. The EAC should be living data.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'EAC as a Leadership Decision Tool',
             headers: ['EAC Signal', 'What Leadership Sees', 'Likely Action'],
             rows: [
@@ -2565,7 +2550,7 @@ export const modules: Module[] = [
             heading: 'The Weighted Guidelines Method — How Profit is Determined',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'Cost Accounting Standards (CAS) — What PMs Need to Know',
             headers: ['Standard', 'Subject', 'PM Relevance'],
             rows: [
@@ -2732,7 +2717,7 @@ export const modules: Module[] = [
             body: 'Every major defense PM operates within a three-way oversight structure: the PCO (Procuring Contracting Officer) awarded the contract, DCMA administers it day-to-day, and DCAA audits the financial side. Many new PMs confuse DCAA and DCMA — they have different missions, different authorities, and different relationships with your program. Understanding what each can and cannot do determines whether you use them as effective oversight tools or accidentally create friction that slows your program down.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'DCAA vs. DCMA: Side-by-Side Comparison',
             headers: ['Attribute', 'DCAA', 'DCMA'],
             rows: [
@@ -2757,9 +2742,8 @@ export const modules: Module[] = [
             body: 'When DCAA finds a contractor\'s accounting system "inadequate," it is a program emergency. An inadequate finding means the system does not properly identify, accumulate, and segregate costs by contract — which means you cannot trust the costs being billed to your program. In extreme cases, the ACO may suspend contractor billing or require withholds (typically 5-10% of billings) until the system is corrected. If your contractor has an open inadequate accounting system finding, flag it to your PCO immediately and track the remediation plan.',
           },
           {
-            type: 'formula',
+            type: 'dcaa_audits_visual' as any,
             heading: 'DCAA Audit Universe — Major Audit Types',
-            formula: 'PRE-AWARD:\n  → Accounting System Adequacy Survey (before cost-type contract award)\n  → Estimating System Survey (before >$50M proposals)\n  → Billing System Review (before >$50M contracts)\n\nONGOING:\n  → Provisional Billing Rate Review (quarterly/annually)\n  → Forward Pricing Rate Audits (supporting FPRA)\n  → Consent to Subcontract Reviews (for major subs)\n\nPOST-AWARD:\n  → Incurred Cost Submission (ICS) Audit (annual, often years delayed)\n  → TINA/Defective Pricing Audit (if >$2M cost or pricing data was required)\n  → Contractor Insurance & Pension Review (CIPR)\n  → Labor Timekeeping Reviews (direct/indirect labor allocations)',
             explanation: 'PMs should know which DCAA audits are open on their major contractors. Open, unresolved audits create financial exposure — the government may owe money (for underbilled rates) or be owed money (for overbilled rates or unallowable costs). DCAA maintains a public database of audit backlogs — multi-year ICS backlogs are common.',
           },
           {
@@ -2768,7 +2752,7 @@ export const modules: Module[] = [
             body: 'DCMA is the operational arm of government contract oversight. On major programs, DCMA assigns a resident Administrative Contracting Officer (ACO) and team directly to the contractor\'s facility. This team monitors schedule, quality, property management, and contract compliance on a daily basis. DCMA\'s ACO has the authority to: consent to or disapprove major subcontracts, accept or reject deliverables, issue cure notices, issue show cause letters before termination, and manage Government-Furnished Property (GFP). For PMs, the ACO is your proxy at the contractor — your most direct source of real-time performance intelligence.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'DCMA Key Functions and PM Interactions',
             headers: ['DCMA Function', 'What They Do', 'PM\'s Role'],
             rows: [
@@ -3484,7 +3468,7 @@ export const modules: Module[] = [
                   ],
                 },
                 {
-                  type: 'table',
+                  type: 'table_visual' as any,
                   heading: 'Air Force Example: The Three-Tier Map',
                   headers: ['Layer', 'Who runs it', 'Typical size', 'Entry difficulty', 'Relationship weight'],
                   rows: [
@@ -3630,7 +3614,7 @@ export const modules: Module[] = [
             body: "Every contract has a type. That type is the single biggest factor in who bears the financial risk if things go wrong.\n\nThe FAR's overarching principle is simple: use Firm-Fixed-Price whenever possible. When you can define requirements clearly and competition exists, FFP transfers cost risk to the contractor — maximum incentive for efficiency, minimum government oversight.\n\nWhen you can't define requirements precisely — when technology is immature, scope is uncertain, or effort is unknowable — you move toward cost-reimbursable contracts. Each step along that spectrum shifts more risk to the government and increases oversight burden. There's no free lunch: more government protection means more government involvement in your business."
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "The Contract Type Spectrum",
             headers: ['Type', 'Full Name', 'Who Bears Risk?', 'Best Used When', 'FAR Ref'],
             rows: [
@@ -3667,10 +3651,8 @@ export const modules: Module[] = [
             body: "FAR 16.103(d) requires the contracting officer to document the contract type selection rationale in the written acquisition plan. The presumption is FFP. Every step away from FFP must be justified. An undocumented contract type decision is a significant finding in a contract audit."
           },
           {
-            type: 'formula',
-            heading: "Incentive Contract Math",
-            formula: 'Target Cost (TC): $10M | Target Fee (TF): $1M | Share Ratio: 80/20 (Gov/Contractor)\nIf actual cost = $9M (under target by $1M): Contractor earns TF + 20% × $1M = $1.2M fee\nIf actual cost = $11M (over target by $1M): Contractor earns TF - 20% × $1M = $0.8M fee\nPoint of Total Assumption (PTA): Where contractor absorbs 100% of overrun',
-            explanation: "In incentive contracts, sharing ratios motivate cost control. A 80/20 share ratio means for every dollar saved, the contractor keeps 20 cents. The PTA is critical — above it, all risk falls on the contractor (like FFP ceiling)."
+            type: 'cpif_share_visual' as any,
+            heading: 'CPIF Share Ratio — How It Works',
           },
           {
             type: 'warning',
@@ -3849,17 +3831,15 @@ export const modules: Module[] = [
             body: "FAR 16.505 requires that for MAC-IDIQ task orders over $3,500, all awardees must receive a fair opportunity to compete — meaning each must receive notice of the opportunity and a reasonable time to respond. Six narrow exceptions allow sole-source task orders: urgency, only one awardee is capable, follow-on to a prototype, logical follow-on, minimum guarantee, and national security. Bypassing fair opportunity without a valid exception is illegal and a common IG finding."
           },
           {
-            type: 'formula',
-            heading: "IDIQ Contract Structure",
-            formula: 'IDIQ Contract = Base Contract (terms, rates, ceiling) + n Task Orders\nTotal ordered value ≤ Maximum Ceiling\nTotal ordered value ≥ Minimum Guarantee\nEach Task Order = Independent Scope + Independent Funding + Independent PoP',
-            explanation: "The base contract ceiling sets the absolute limit on cumulative task order value. The minimum guarantee is the only amount the government is legally obligated to order — it protects the contractor from winning a vehicle and getting zero work. Each task order is funded independently with its own period of performance."
+            type: 'idiq_structure_visual' as any,
+            heading: 'IDIQ Contract Structure',
           },
           {
             type: 'lucas_note',
             body: `Three things a PM on a MAC-IDIQ needs to know cold: their **task order** (what work is authorized), their **SOW/PWS** (what they're obligated to deliver), and their **funding** (how much is actually on contract).\n\nThe IDIQ base contract is the vehicle. The task order is the game. I've seen PMs confused about why their invoices aren't getting paid — and it's because they were billing against a CLIN that doesn't have money on the task order. Know your TO like you know your own name.`
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "Common DoD IDIQ Vehicles by Type",
             headers: ['Contract Vehicle', 'Type', 'Administered By', 'Best For'],
             rows: [
@@ -4056,7 +4036,7 @@ export const modules: Module[] = [
             body: 'One of the most common sources of confusion in defense contracting is understanding exactly what type of acquisition instrument you\'re dealing with — and what it can and can\'t do. Here\'s the full stack, from most complex to most granular.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             level: 'intermediate' as const,
             title: 'Acquisition Instrument Comparison',
             headers: ['Instrument', 'What It Is', 'Where the Money Lives', 'Who Uses It Daily'],
@@ -4297,7 +4277,7 @@ export const modules: Module[] = [
             body: 'Before a single proposal is written, before a capture plan is built, the most consequential BD decision a defense contractor makes is which contract vehicles to pursue and hold. The vehicle you\'re on determines what opportunities you can see, which agencies you can serve, and whether you\'re competing in a pool of 3 contractors or 300. Winning a place on the right IDIQ vehicles is the infrastructure of a sustainable defense business — task order wins are built on top of it.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'Contract Vehicle Types — Know the Differences',
             headers: ['Vehicle Type', 'Scope', 'Who Can Use', 'Entry Difficulty', 'Best For'],
             rows: [
@@ -4319,7 +4299,7 @@ export const modules: Module[] = [
             body: 'Under FAR 16.505, the government must give all MA-IDIQ awardees a fair opportunity to be considered for every task order. The five exceptions — unusual urgency, only one awardee capable, public interest sole source, logical follow-on, and minimum order — are each legally constrained and routinely protested. Never assume an exception applies. If a competitor receives a task order without fair opportunity competition, GAO protest is a viable and often successful remedy.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'Single vs. Multiple Award IDIQ — Side by Side',
             headers: ['Feature', 'Standalone Contract', 'Single Award IDIQ', 'Multiple Award IDIQ'],
             rows: [
@@ -4356,7 +4336,7 @@ export const modules: Module[] = [
             body: 'GWACs represent the premium tier of the defense contracting vehicle landscape. They require the most rigorous qualification process and carry the highest competition at task order level — but they open the entire federal marketplace, not just a single agency. The strategic value of a GWAC position compounds over time as you build past performance, expand to new agencies, and develop relationships across the federal enterprise.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'Key Defense & Federal GWACs',
             headers: ['GWAC', 'Managed By', 'Scope', 'Key For', 'Set-Aside Pools'],
             rows: [
@@ -4478,7 +4458,7 @@ export const modules: Module[] = [
             body: "Imagine you need consultants but the normal procurement takes 18 months and you need them in 6. GWACs -- Government-Wide Acquisition Contracts -- solve this. They are pre-competed, pre-approved contract vehicles that any federal agency can use to buy professional services quickly, without a full competition from scratch. Think of it like a wholesale club: someone already negotiated prices with pre-vetted vendors, and members just place orders. For defense PMs, knowing which vehicles exist and when to use them can cut procurement time from 18 months to 6."
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "Major GSA GWACs: At a Glance",
             headers: ['Vehicle', 'Type', 'Focus', 'Ceiling', 'Pools'],
             rows: [
@@ -4514,7 +4494,7 @@ export const modules: Module[] = [
             body: "FEDSIM (Federal Systems Integration and Management Center) is GSA's assisted acquisition service. Rather than just providing a contract vehicle for agencies to use, FEDSIM acts as the contracting office on behalf of the customer agency. The customer agency defines its requirements and provides funding, and FEDSIM manages the entire acquisition process — drafting the solicitation, conducting source selection, awarding the contract, and administering it. FEDSIM commonly uses vehicles like Alliant 2, STARS III, and OASIS+ for IT and professional services acquisitions."
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "OASIS+ Self-Service vs. FEDSIM Assisted Acquisition",
             headers: ['Aspect', 'OASIS+ (Self-Service)', 'FEDSIM (Assisted)'],
             rows: [
@@ -4714,7 +4694,7 @@ export const modules: Module[] = [
             ]
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "LPTA vs. Best Value Tradeoff",
             headers: ['Approach', 'When to Use', 'Risk', 'Example'],
             rows: [
@@ -5012,7 +4992,7 @@ export const modules: Module[] = [
             body: 'The initial contract price is a starting point — not the final cost. On complex defense programs, contract modifications routinely add 20-50% to the original contract value. Every undefinitized UCA, every government-caused delay, every specification change, every constructive change creates entitlement for the contractor to more money. PMs who do not understand modification authority, REA management, and claims risk losing budget discipline entirely. The contractors\' contracts and claims departments are professional — PMs must be equally sophisticated.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'Types of Contract Modifications — Know the Difference',
             headers: ['Type', 'Who Signs', 'Authority', 'Common Use', 'Key Risk'],
             rows: [
@@ -5033,9 +5013,8 @@ export const modules: Module[] = [
             body: 'A constructive change is not a formal directive — it is a government action or inaction that effectively changes the contractor\'s work without formal paperwork. Common examples: Government-issued specifications that turn out to be defective (requiring rework); CO over-inspection that goes beyond contract standards; Government delay in furnishing data, GFE, or approvals; Government interference with contractor methods of performance; Informal technical direction from a COR or Government engineer that exceeds their authority. The contractor can pursue an REA or claim for a constructive change years after the work was performed. The best defense is meticulous daily documentation of all government-contractor interactions.',
           },
           {
-            type: 'formula',
+            type: 'rea_process_visual' as any,
             heading: 'The REA Process — Timeline and Requirements',
-            formula: 'TRIGGER: Government directs change (formal or constructive)\n\nSTEP 1: Contractor submits REA\n  → Must include: Factual basis (what changed), legal entitlement (what clause), quantum (how much $)\n  → No specific time limit — but best practice is 30-60 days after the triggering event\n  → Informal REAs: "We think we\'re entitled" without full cost detail\n  → Formal REAs: Full cost proposal with certified cost/pricing data if >$2M\n\nSTEP 2: Government review\n  → ACO/CO reviews entitlement and quantum\n  → DCAA may audit the REA cost proposal if >$2M\n  → Government requests additional information as needed\n\nSTEP 3: Negotiate bilateral modification\n  → Both parties agree on price and schedule adjustment\n  → Signed bilateral mod definitizes the change\n  → IDEAL OUTCOME: Bilateral mod settles the REA; no claim necessary\n\nIF NEGOTIATIONS FAIL → REA converts to Claim:\n  → Contractor certifies the claim (if >$100K)\n  → CO issues Contracting Officer Final Decision (COFD) within 60 days\n  → Contractor may appeal: ASBCA (administrative) or Court of Federal Claims (judicial)\n  → Interest runs from date of claim submission at Renegotiation Act rate',
             explanation: 'The earlier you can resolve an REA via bilateral modification, the better. Once an REA becomes a claim and enters dispute resolution, costs escalate for both sides and relationships deteriorate. PMs should push for rapid, fair REA resolution — a contractor that knows its REAs will be resolved promptly is less likely to inflate future REAs.',
           },
           {
@@ -5044,7 +5023,7 @@ export const modules: Module[] = [
             body: 'A UCA (also called a letter contract or undefinitized change order) authorizes a contractor to begin work before the price is agreed. UCAs are necessary for urgent national security situations — but they create serious cost risk. A contractor performing under a UCA has no price ceiling and a weak incentive to control costs: they bill actual costs and know the government will pay them regardless of final negotiated price. DFARS 217.7404 requires definitization within 180 days of initial performance. In practice, many UCAs run for years undefinitized. For PMs, every open UCA is a financial exposure that should be tracked and closed as quickly as possible.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'Cardinal Change Doctrine — When a Change Becomes a Breach',
             headers: ['Concept', 'Definition', 'Example', 'Consequence'],
             rows: [
@@ -5209,7 +5188,7 @@ export const modules: Module[] = [
             body: 'Most people think OTAs and FAR Part 12 are just government tools. They are — but understanding them as a contractor is a competitive advantage. OTAs let the government bypass FAR entirely, which means they can award directly to non-traditional contractors (tech firms, startups, commercial companies) who refuse to comply with the full FAR/DFARS/CAS burden. If your company has commercial capabilities, an OTA is often the fastest path to a DoD contract. FAR Part 12 commercial item determinations reduce your regulatory compliance burden — no certified cost or pricing data, no CAS, no separate accounting system requirements. Knowing how the buyer sees these tools helps you position your offer, price competitively, and win work that never even reaches traditional procurement channels.\n\nFor government-side PMs: these paths exist because the full FAR/DFARS compliance burden was pricing out commercial technology firms. Google, Amazon, and many AI companies refuse to bid traditional DoD work. OTAs and FAR Part 12 were the answer.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'Acquisition Paths Compared — Regulatory Burden vs. Speed',
             headers: ['Path', 'Regulatory Burden', 'Timeline', 'Best For', 'Key Limitation'],
             rows: [
@@ -5232,9 +5211,8 @@ export const modules: Module[] = [
             body: 'OTA is powerful but not unlimited. Key restrictions: (1) Prototype OTAs must include at least one "nontraditional defense contractor" (a company that has not received DoD contracts over $1M in the past year subject to full CAS compliance) OR significant government cost-share (one-third of total project cost). (2) The prototype must be for a "prototype project" — not production of a fielded system. (3) Follow-on production OTAs require a successful demonstration of the prototype. (4) Congress must be notified of OTAs over $500M. (5) OTAs over $250M generally require competitive processes. There is significant congressional scrutiny of OTA misuse — using OTA to avoid competition for production work that should be competitively bid.',
           },
           {
-            type: 'formula',
+            type: 'commercial_item_visual' as any,
             heading: 'FAR Part 12 Commercial Item Determination — The Test',
-            formula: 'FAR 2.101 defines "commercial product" — meets ANY of these:\n\n1. Sold/offered for sale in the commercial marketplace in the past 3 years\n2. Sold/offered in modified form (modifications customary to commercial market)\n3. An item that evolved from a commercial item through advances in technology\n4. Any item described in (1)-(3) for which modifications are described in (2)\n\nCOMMERCIAL SERVICES test (FAR 2.101):\n→ Offered and sold competitively to the general public\n→ Established catalog or market prices for specific tasks performed\n→ Not developed exclusively for government use\n\nIF COMMERCIAL → FAR Part 12 applies:\n  → No certified cost or pricing data (no TINA)\n  → No CAS\n  → Reduced DFARS clauses (FAR 52.212-4 and 52.212-5 replace dozens of clauses)\n  → Use of commercial warranty and terms\n  → No requirement for government-unique accounting\n  → Streamlined source selection using simplified procedures',
             explanation: 'The commercial item determination is made by the contracting officer, but the PM drives the market research that supports it. Document your market research thoroughly — a challenged commercial item determination can unravel an entire acquisition strategy post-award.',
           },
           {
@@ -5399,7 +5377,7 @@ export const modules: Module[] = [
             body: "The DoD acquisition workforce comprises over 150,000 professionals across 14+ career fields. These individuals are responsible for planning, managing, and overseeing the acquisition of goods and services from the private sector. The workforce is governed by DAWIA (Defense Acquisition Workforce Improvement Act), which establishes education, training, and experience requirements for each career field."
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "Key Acquisition Career Fields",
             headers: ['Career Field', 'Primary Role', 'Key Certification'],
             rows: [
@@ -5502,7 +5480,7 @@ export const modules: Module[] = [
             body: 'Logistics professionals plan how a system will be supported throughout its operational life — maintenance, spare parts, technical manuals, training, and depot support. The Life Cycle Sustainment Plan (LCSP) is their primary product and is reviewed at every milestone. Sustainment costs often exceed development and procurement costs over a system\'s lifetime: for many defense systems, 70% of total ownership cost is sustainment. A Logistics professional who engages late — after the design is locked — has almost no ability to reduce those costs. Early involvement in design trade-offs (reliability, maintainability, testability) is where sustainment value is created.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'How the Roles Work Together on a Program',
             headers: ['Role', 'Primary Authority', 'What They Own', 'Key Limitation'],
             rows: [
@@ -5698,7 +5676,7 @@ export const modules: Module[] = [
             body: "Think of program metrics the way a doctor thinks about vital signs. Blood pressure, heart rate, temperature: each tells you something specific about what's happening and what might go wrong. A good PM has a small set of metrics that do the same for their program: cost burn rate, schedule variance, technical progress, risk burn-down. The goal isn't to collect data -- it's to see problems coming before they become visible to everyone else. The PM who walks into a program review already knowing what's wrong, why it's wrong, and what they're doing about it is the PM leadership trusts."
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "Core PM Dashboard Metrics",
           },
           {
@@ -5713,7 +5691,7 @@ export const modules: Module[] = [
             note: 'CPI < 0.90 and SPI < 0.90 means this program is both over budget and behind schedule. TCPI > 1.10 means recovery to original budget is unrealistic — EAC needs to be updated.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "Core PM Dashboard Metrics",
             headers: ['Category', 'Metric', 'What It Tells You', 'Warning Sign'],
             rows: [
@@ -5877,7 +5855,7 @@ export const modules: Module[] = [
             body: "Executive briefings demand different data presentation than program team reviews. For executives: lead with the conclusion (not the data), use traffic light color coding (red/yellow/green), limit to 3 charts maximum, and have backup data ready for questions. For program teams: show all the detail — waterfall variances, WBS-level trends, and root cause analysis."
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "Chart Selection Guide",
             headers: ['What You Want to Show', 'Best Chart Type'],
             rows: [
@@ -7892,7 +7870,7 @@ export const modules: Module[] = [
             body: 'A Statement of Work tells you what to do in prescriptive, task-level detail. A Performance Work Statement tells you what outcome to achieve, leaving the method to the contractor. These are not interchangeable — and responding to a PWS with a SOW-style proposal (listing activities instead of outcomes) is a red flag to evaluators. It signals your team doesn\'t understand performance-based contracting, which is the dominant acquisition model in services. PWS-based proposals should describe your management framework, quality metrics, and how you measure and demonstrate outcomes — not a labor hour breakdown by task.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'SOW vs. PWS — How Your Proposal Should Respond',
             headers: ['Element', 'SOW-Based Contract', 'PWS-Based Contract'],
             rows: [
@@ -7928,7 +7906,7 @@ export const modules: Module[] = [
             body: 'Contractors routinely focus 90% of their capture energy on new business while neglecting the most winnable opportunity in their portfolio: the contract they already hold. The incumbent win rate on federal contracts is not as high as most contractors assume — and a poorly executed recompete can erase years of revenue in a single award decision. Recompete planning should begin at contract award — not 12 months before expiration. A recompete plan documents performance wins, maintains CPARS narrative alignment, tracks staffing continuity risks, monitors competitive intelligence on challenger firms, and coordinates capture strategy with delivery teams in real time.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'Recompete Planning Timeline — Start at Award',
             headers: ['Phase', 'Timing', 'Key Actions'],
             rows: [
@@ -8142,7 +8120,7 @@ export const modules: Module[] = [
             body: 'Here\'s the honest version of what both sides are looking for: problem solvers, not task completers.\n\nAnyone can say they "supported a program" or "managed acquisition actions." The candidates who get hired — and get promoted — are the ones who can tell a specific story about a problem they diagnosed, a solution they built, and an outcome they drove.\n\nThis is what that sounds like in practice: "We were 18 months out from Milestone B — a major program review — and our schedule showed we were going to miss it. I identified the critical path issues early, built a recovery plan with three options, briefed leadership with a clear recommendation, and we made the milestone on time."\n\nThat answer has: a problem, an analysis, a decision, and an outcome. It shows judgment, not just activity.\n\nCertifications get you in the door. They signal baseline competence and show you took the time to invest in the field. But problem-solving keeps you in the room — and gets you the next job.\n\nWhen you\'re preparing for interviews, build a library of five to seven specific stories like this from your own experience. Use the STAR format (Situation, Task, Action, Result) if it helps structure your thinking. The specific details — the program name, the dollar amount, the schedule date — are what make the story credible. Vague stories sound like resume filler. Specific stories sound like experience.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'Salary Reality Check (2025 Estimates)',
             headers: ['Track', 'Role / Grade', 'Approximate Annual Salary', 'Notes'],
             rows: [
@@ -8328,13 +8306,11 @@ export const modules: Module[] = [
             body: "Think of a risk register like a weather forecast for your program. You can\'t stop the storm — but if you know it\'s coming, you can prepare. A PM who says their program has no risks isn\'t running a risk-free program. They\'re running a program where nobody\'s looking. Every defense program has technical risks (will it actually work?), schedule risks (will it be done in time?), funding risks (will Congress cut the budget mid-program?), and supply chain risks (can you get the parts?). The job isn\'t to eliminate uncertainty — it\'s to track it honestly and have a plan before problems become crises. DoD calls this framework RIO: Risk, Issue, and Opportunity management. Risk = might happen. Issue = already happening. Opportunity = something that could make things better if you act on it."
           },
           {
-            type: 'formula',
-            heading: "Risk Assessment Matrix",
-            formula: 'Risk Level = Probability × Impact\nHigh Risk: P ≥ 50% AND Impact ≥ 3 (on 5-point scale)\nMedium Risk: P 20-49% OR Impact = 2-3\nLow Risk: P < 20% AND Impact ≤ 2',
-            explanation: "Use a 5×5 risk matrix (Probability: 1-5, Impact: 1-5) to plot and prioritize risks. Focus mitigation resources on high-probability, high-impact risks first. Track risk burn-down over time as a program health indicator."
+            type: 'risk_formula_visual' as any,
+            heading: 'Risk Scoring Formula',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: '5×5 Risk Matrix — DoD Standard (Score = Probability × Impact)',
             headers: ['Probability ↓  /  Impact →', 'Impact 1 (Minimal)', 'Impact 2 (Minor)', 'Impact 3 (Moderate)', 'Impact 4 (Significant)', 'Impact 5 (Critical)'],
             rows: [
@@ -8351,7 +8327,7 @@ export const modules: Module[] = [
             body: 'GREEN (Low, 1–4): Monitor only — log in risk register, review quarterly. Example: mild weather delay on a outdoor test range. YELLOW (Medium, 5–9): Develop mitigation plan with assigned owner and due date. Example: single-source supplier for a critical subcomponent. RED (High, 10–25): Immediate PM attention — active mitigation, management reserve may be needed, brief MDA at next program review. Example: key technology not yet at TRL 6 entering EMD, or contractor staffing 20% below plan on critical path tasks.'
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'Sample Risk Register — Active Program Risks',
             headers: ['Risk ID', 'Description', 'P', 'I', 'Score', 'Level', 'Mitigation', 'Owner'],
             rows: [
@@ -8380,7 +8356,7 @@ export const modules: Module[] = [
             body: "MR is budget held back from the Performance Measurement Baseline (PMB) to fund identified risks. Typically 5-10% of the program budget. Using MR requires formal documentation and CO approval on cost-reimbursable contracts. PMs who protect their MR have the flexibility to weather surprises; those who spend it early on routine work find themselves with no cushion when real problems hit."
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "Risk vs. Issue vs. Opportunity",
             headers: ['Category', 'Definition', 'Management Action'],
             rows: [
@@ -8559,7 +8535,7 @@ export const modules: Module[] = [
             body: "Structure every executive brief as: 1 core message (what do I need you to know?), 3 supporting data points (why should you believe me?), 5 minutes maximum for the verbal summary. Senior leaders are making decisions across dozens of programs — the PM who can brief clearly and confidently earns trust and resources."
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "Common Defense Program Reviews",
             headers: ['Review', 'Purpose', 'Audience', 'Typical Cadence'],
             rows: [
@@ -8775,7 +8751,7 @@ If the prime can't give you specifics, that's your answer. Pull your next increm
 You have more leverage before a missed milestone than after it. Use it early.`,
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "Key DFARS Flow-Down Clauses",
             headers: ['Clause', 'Requirement', 'Applies To'],
             rows: [
@@ -8793,7 +8769,7 @@ You have more leverage before a missed milestone than after it. Use it early.`,
             body: "On cost-reimbursable contracts, the government\'s Contracting Officer must \"consent to subcontract\" before the prime can award subcontracts above certain thresholds (typically $1.5M for cost-type; higher for FFP). This consent process reviews the proposed subcontractor\'s cost or price reasonableness, qualifications, and competition. As PM, you should be aware of upcoming consent requests and ensure the CO has the technical information needed to make a sound decision quickly."
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: "Subcontract Type vs. Government Visibility",
             headers: ['Subcontract Type', 'Government Visibility', 'Key Oversight Mechanism'],
             rows: [
@@ -8999,9 +8975,8 @@ You have more leverage before a missed milestone than after it. Use it early.`,
             body: 'Many new PMs know Nunn-McCurdy exists but have never calculated their program\'s specific breach thresholds in dollar terms. This is dangerous. The Nunn-McCurdy Act requires Congressional notification when an ACAT I program\'s unit cost grows beyond specific thresholds: a 15% increase over the current APB baseline triggers a "significant" breach notification, while a 25% increase over the original APB baseline triggers a "critical" breach — requiring USD(A&S) certification or program termination. You should know, at any given moment, exactly how much cost growth in total dollars separates your program from each threshold. Brief your PEO on this quarterly. Never let a potential breach be a surprise to your chain of command.',
           },
           {
-            type: 'formula',
+            type: 'nunn_mccurdy_visual' as any,
             heading: 'Calculating Your Nunn-McCurdy Thresholds',
-            formula: 'Significant Breach Threshold = Current APB Unit Cost × 1.15\n  → 15% above current APB baseline\n  → Requires written notification to Congress\n  → PM must explain root cause and corrective action\n\nCritical Breach Threshold = Original APB Unit Cost × 1.25\n  → 25% above original (Milestone B) APB baseline\n  → Requires USD(A&S) certification to Congress that:\n     1. Program is essential to national security\n     2. No alternatives exist at lower cost\n     3. New APB is reasonable\n  → If not certified within 60 days, program is terminated\n\nExample:\n  Original APB Unit Cost = $100M\n  Current APB Unit Cost = $112M (after restructure)\n  Significant breach = $112M × 1.15 = $128.8M\n  Critical breach = $100M × 1.25 = $125M\n  \n  Note: Critical threshold uses ORIGINAL APB — even if the program has been restructured',
             explanation: 'The asymmetry between "significant" (current baseline) and "critical" (original baseline) thresholds catches many PMs off guard. On a program that has already been restructured upward, the critical breach threshold may be lower than the significant breach threshold in dollar terms — meaning you could hit a critical breach without first hitting a significant one.',
           },
           {
@@ -9010,7 +8985,7 @@ You have more leverage before a missed milestone than after it. Use it early.`,
             body: 'EVM is the most powerful program health diagnostic tool available to PMs — and one of the most misunderstood. New PMs often focus on SPI and CPI as standalone numbers without understanding the trend direction or the to-complete indices. A CPI of 0.92 may be acceptable if it has been trending upward for three months; the same CPI trending downward signals a fundamentally failing program. Equally important: EVM only reflects what has been authorized, budgeted, and reported by the contractor. If your EVMS surveillance is weak or your contractor\'s system is not DCMA-accepted, your EVM data may be telling you a story that bears no resemblance to actual program performance.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'Reading EVM Signals — What to Look For',
             headers: ['Signal', 'What It Means', 'PM Action Required'],
             rows: [
@@ -9043,7 +9018,7 @@ You have more leverage before a missed milestone than after it. Use it early.`,
             body: 'Program managers who focus exclusively on technical and contractual execution — while neglecting the human terrain of their stakeholder network — consistently struggle at milestone reviews and budget hearings. Your stakeholders include your PEO, the operational user community, the requirements community, CAPE, the Comptroller, congressional staffers, and your prime contractor\'s leadership. Each has different equities, different information needs, and different definitions of program success. New PMs often wait until a problem is visible before engaging upward — this is a mistake. Build your stakeholder communication plan on Day 1 and treat it as seriously as your IMS.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'Program Manager Stakeholder Map — Know Your Audience',
             headers: ['Stakeholder', 'Primary Concern', 'Communication Frequency', 'What They Need From You'],
             rows: [
@@ -9148,7 +9123,7 @@ You have more leverage before a missed milestone than after it. Use it early.`,
             body: 'CMMI rates how mature and disciplined a company\'s processes are — does the organization have repeatable, predictable methods, or is every project starting from scratch? DoD cares because when spending hundreds of millions on a system, you need a contractor who can consistently deliver quality work. CMMI rates organizations on a 1–5 scale. Level 1 is chaotic and unpredictable. Level 5 is data-driven continuous improvement. ML3 is the common DoD threshold — processes are defined, documented, and followed consistently across the organization.',
           },
           {
-            type: 'table',
+            type: 'table_visual' as any,
             heading: 'CMMI Maturity Levels at a Glance',
             headers: ['Level', 'Name', 'What It Means', 'DoD Relevance'],
             rows: [
