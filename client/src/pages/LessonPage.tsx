@@ -949,6 +949,115 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               );
             }
 
+            // ── wrap_rate_visual: stacked cost build-up graphic ─────────────
+            if ((block as any).type === 'wrap_rate_visual') {
+              const layers = [
+                { label: 'Base Salary', sublabel: 'What you actually earn', amount: '$65.00/hr', color: 'bg-slate-500', width: '47%', icon: '👤' },
+                { label: 'Fringe Benefits', sublabel: 'Health, PTO, retirement (32%)', amount: '+$20.80', color: 'bg-blue-500', width: '15%', icon: '🏥' },
+                { label: 'Overhead', sublabel: 'Facilities, managers, IT (45%)', amount: '+$29.25', color: 'bg-violet-500', width: '21%', icon: '🏢' },
+                { label: 'G&A', sublabel: 'CEO, legal, HR (12%)', amount: '+$13.81', color: 'bg-amber-500', width: '10%', icon: '📊' },
+                { label: 'Fee / Profit', sublabel: 'Company profit (8%)', amount: '+$10.31', color: 'bg-emerald-500', width: '7%', icon: '💰' },
+              ];
+              return (
+                <div key={i} className="rounded-xl border border-border bg-card p-5 space-y-4">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  {/* Stacked bar */}
+                  <div className="flex h-10 rounded-lg overflow-hidden gap-0.5">
+                    {layers.map((l, li) => (
+                      <div key={li} className={`${l.color} flex items-center justify-center`} style={{width: l.width}} title={l.label} />
+                    ))}
+                  </div>
+                  {/* Legend rows */}
+                  <div className="space-y-2">
+                    {layers.map((l, li) => (
+                      <div key={li} className="flex items-center gap-3">
+                        <div className={`w-3 h-3 rounded-sm flex-shrink-0 ${l.color}`} />
+                        <span className="text-xl">{l.icon}</span>
+                        <div className="flex-1">
+                          <span className="text-sm font-semibold">{l.label}</span>
+                          <span className="text-xs text-muted-foreground ml-2">{l.sublabel}</span>
+                        </div>
+                        <span className="text-sm font-bold tabular-nums">{l.amount}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Total callout */}
+                  <div className="bg-primary/10 border border-primary/30 rounded-lg px-4 py-3 flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-bold text-primary">Government pays: $139.17/hr</p>
+                      <p className="text-xs text-muted-foreground">for an engineer earning $65/hr</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-muted-foreground">Wrap rate multiplier</p>
+                      <p className="text-2xl font-black text-primary">2.14×</p>
+                    </div>
+                  </div>
+                  {(block as any).explanation && (
+                    <p className="text-xs text-muted-foreground leading-relaxed border-t border-border pt-3">{(block as any).explanation}</p>
+                  )}
+                </div>
+              );
+            }
+
+            // ── rate_comparison_visual: contractor size rate cards ───────────
+            if ((block as any).type === 'rate_comparison_visual') {
+              const companies = [
+                {
+                  label: 'Small Business', sublabel: 'Under 500 employees', icon: '🏪',
+                  fringe: '28–35%', overhead: '40–70%', ga: '8–15%',
+                  wrap: '2.5×–3.0×', color: 'border-blue-400/40 bg-blue-500/5',
+                  badge: 'bg-blue-500/10 text-blue-600 dark:text-blue-400',
+                },
+                {
+                  label: 'Mid-Size', sublabel: 'SAIC, Leidos, CACI', icon: '🏬',
+                  fringe: '30–38%', overhead: '50–80%', ga: '10–18%',
+                  wrap: '2.8×–3.5×', color: 'border-violet-400/40 bg-violet-500/5',
+                  badge: 'bg-violet-500/10 text-violet-600 dark:text-violet-400',
+                },
+                {
+                  label: 'Large Prime', sublabel: 'Lockheed, Raytheon, Boeing', icon: '🏭',
+                  fringe: '32–42%', overhead: '60–100%', ga: '12–22%',
+                  wrap: '3.0×–4.0×', color: 'border-amber-400/40 bg-amber-500/5',
+                  badge: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
+                },
+              ];
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="grid sm:grid-cols-3 gap-3">
+                    {companies.map((c, ci) => (
+                      <div key={ci} className={`rounded-xl border-2 ${c.color} p-4 space-y-3`}>
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl">{c.icon}</span>
+                          <div>
+                            <p className="text-sm font-bold">{c.label}</p>
+                            <p className="text-[11px] text-muted-foreground">{c.sublabel}</p>
+                          </div>
+                        </div>
+                        <div className="space-y-1.5">
+                          {[
+                            { name: 'Fringe', val: c.fringe },
+                            { name: 'Overhead', val: c.overhead },
+                            { name: 'G&A', val: c.ga },
+                          ].map((row, ri) => (
+                            <div key={ri} className="flex justify-between items-center">
+                              <span className="text-xs text-muted-foreground">{row.name}</span>
+                              <span className="text-xs font-semibold">{row.val}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <div className={`rounded-lg px-3 py-2 text-center ${c.badge}`}>
+                          <p className="text-[11px] font-medium opacity-70">Wrap Rate</p>
+                          <p className="text-lg font-black">{c.wrap}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground">Large primes have higher rates because of larger corporate overhead structures — not necessarily because they're less efficient. DCAA monitors all of these.</p>
+                </div>
+              );
+            }
+
             if (block.type === 'formula') {
               return (
                 <div key={i} className="bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 rounded-xl p-5">

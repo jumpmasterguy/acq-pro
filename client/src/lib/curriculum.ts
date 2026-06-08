@@ -2537,23 +2537,13 @@ export const modules: Module[] = [
             body: 'Direct costs are the foundation of any cost estimate. Direct Labor — the hours your program pays for directly, billed at the contractor\'s direct labor rate for each labor category (e.g., Systems Engineer Level III: $75/hour direct). Direct Materials — hardware, software licenses, test equipment, and supplies that can be traced to your contract. Other Direct Costs (ODCs) — travel, subcontractor costs, consultant fees, special test equipment. Direct costs are identifiable, auditable, and must be allocable to your contract under CAS and FAR Part 31.',
           },
           {
-            type: 'formula',
+            type: 'wrap_rate_visual' as any,
             heading: 'Building a Wrap Rate from the Ground Up',
-            formula: 'DIRECT LABOR RATE (DLR): e.g., Systems Engineer Level III = $65.00/hr\n\n+ FRINGE BENEFITS (applied to DLR)\n  Fringe Rate Example: 32% of DLR\n  Fringe = $65.00 × 0.32 = $20.80\n  Labor + Fringe = $85.80/hr\n\n+ OVERHEAD (applied to Direct Labor + Fringe, or to DLR alone depending on contractor)\n  Overhead Rate Example: 45% of DLR\n  Overhead = $65.00 × 0.45 = $29.25\n  Subtotal = $85.80 + $29.25 = $115.05/hr\n\n+ G&A (applied to Total Cost Input = all direct + overhead costs)\n  G&A Rate Example: 12% of Total Cost Input\n  G&A = $115.05 × 0.12 = $13.81\n  Subtotal = $115.05 + $13.81 = $128.86/hr\n\n+ FEE / PROFIT (applied to Total Estimated Cost)\n  Fee Rate Example: 8% of Total Cost\n  Fee = $128.86 × 0.08 = $10.31\n  WRAP RATE = $128.86 + $10.31 = $139.17/hr\n\nINTERPRETATION: Every hour of SE-III time on your contract costs the government $139.17 — \n  even though the engineer earns $65/hr in direct labor.',
             explanation: 'This is why government contracts cost what they do. The $65/hr engineer actually costs $139/hr by the time fringe, overhead, G&A, and fee are applied. Understanding each layer allows PMs to challenge unreasonable rates — a G&A of 25% when industry average is 12-15% is a red flag worth questioning.',
           },
           {
-            type: 'table',
+            type: 'rate_comparison_visual' as any,
             heading: 'Typical Rate Ranges by Contractor Size (Defense Industry)',
-            headers: ['Rate Type', 'Small Business', 'Mid-Size Contractor', 'Large Prime (LM, RTNA, Boeing)'],
-            rows: [
-              ['Fringe Benefits', '28-35%', '30-38%', '32-42%'],
-              ['Overhead (Engineering)', '40-70%', '50-80%', '60-100%'],
-              ['G&A', '8-15%', '10-18%', '12-22%'],
-              ['Total Wrap Rate (multiplier)', '2.5× – 3.0× DLR', '2.8× – 3.5× DLR', '3.0× – 4.0× DLR'],
-              ['Typical Fee (Cost-Plus)', '7-10%', '7-10%', '7-12%'],
-              ['Typical Fee (FFP)', '10-15% embedded', '10-18% embedded', '12-20% embedded'],
-            ],
           },
           {
             type: 'text',
