@@ -420,24 +420,39 @@ export default function AdminPage() {
                                 Revoke Pro (→ Free)
                               </DropdownMenuItem>
                               <DropdownMenuItem
-                                onClick={() => {
-                                  if (confirmDeleteId === user.id) {
-                                    deleteUser.mutate(user.id);
-                                  } else {
-                                    setConfirmDeleteId(user.id);
-                                    setTimeout(() => setConfirmDeleteId(null), 4000);
-                                  }
-                                }}
+                                onClick={() => setConfirmDeleteId(user.id)}
                                 className="gap-2 cursor-pointer text-destructive focus:text-destructive font-semibold"
                                 data-testid={`admin-delete-${user.id}`}
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
-                                {confirmDeleteId === user.id ? "⚠ Confirm Delete" : "Delete User"}
+                                Delete User
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </td>
                       </tr>
+                      {confirmDeleteId === user.id && (
+                        <tr className="border-b border-destructive/30 bg-destructive/5">
+                          <td colSpan={5} className="px-5 py-3">
+                            <div className="flex items-center gap-3">
+                              <span className="text-sm text-destructive font-semibold">Delete <strong>{user.username || user.email}</strong>? This cannot be undone.</span>
+                              <button
+                                onClick={() => deleteUser.mutate(user.id)}
+                                disabled={pendingId === user.id}
+                                className="px-3 py-1 bg-destructive text-white text-xs font-bold rounded-lg hover:bg-destructive/80 transition-colors disabled:opacity-50"
+                              >
+                                {pendingId === user.id ? 'Deleting…' : 'Yes, Delete'}
+                              </button>
+                              <button
+                                onClick={() => setConfirmDeleteId(null)}
+                                className="px-3 py-1 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
                     ))}
                   </tbody>
                 </table>
