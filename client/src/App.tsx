@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Component } from "react";
+import type { ReactNode } from "react";
 import { Router } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -11,6 +12,28 @@ import { modules } from "@/lib/curriculum";
 import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, Lock } from "lucide-react";
 import { AcqlerateLogo } from "@/components/AcqlerateLogo";
 import InstallPrompt from "@/components/InstallPrompt";
+
+// ── Error Boundary — catches render crashes and shows a recovery UI ─────────
+class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { error: null };
+  }
+  static getDerivedStateFromError(error: Error) { return { error }; }
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4 p-8 text-center">
+          <div className="text-3xl">⚠️</div>
+          <h2 className="text-lg font-bold">Something went wrong</h2>
+          <p className="text-sm text-muted-foreground max-w-md font-mono bg-muted px-3 py-2 rounded">{this.state.error.message}</p>
+          <button onClick={() => this.setState({ error: null })} className="text-sm text-primary underline">← Try again</button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 // Tiny inline component — sidebar link that triggers PWA install
 function PWAInstallLink() {
@@ -605,6 +628,7 @@ function AppContent() {
 
         {/* Page Content */}
         <main className="flex-1 p-4 lg:p-6 max-w-4xl mx-auto w-full relative z-10">
+        <ErrorBoundary>
           {view.type === 'dashboard' && (
             <Dashboard
               progress={progress}
@@ -664,6 +688,7 @@ function AppContent() {
           {view.type === 'analytics' && isAdmin && (
             <AdminAnalytics onBack={() => setView({ type: 'admin' })} />
           )}
+        </ErrorBoundary>
         </main>
       </div>
     </div>
