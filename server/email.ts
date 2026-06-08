@@ -819,6 +819,30 @@ export async function sendEmail7New(to: string, username: string): Promise<void>
 }
 
 
+// ─── Newsletter broadcast ────────────────────────────────────────────────────
+
+export async function sendNewsletterIssue(
+  to: string,
+  subject: string,
+  previewText: string,
+  html: string
+): Promise<void> {
+  if (!resend) { console.warn('[newsletter] Resend not configured'); return; }
+
+  // Wrap the html in the email shell if it's a partial
+  const fullHtml = html.includes('<!DOCTYPE') ? html : emailShell(previewText, html);
+
+  await resend.emails.send({
+    from: FROM,
+    to,
+    replyTo: "lucas.l.cruz.es@gmail.com",
+    subject,
+    html: fullHtml,
+  });
+  console.log(`[newsletter] Sent to ${to}`);
+}
+
+
 const EMAIL_SEQUENCE: Array<{
   day: number;
   fn: (to: string, username: string) => Promise<void>;
