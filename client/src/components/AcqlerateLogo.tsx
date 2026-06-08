@@ -70,7 +70,7 @@ export function AcqlerateLogo({
             fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
           }}
         >
-          <span style={{ color: "white" }}>Acql</span>
+          <span className="text-sidebar-foreground">Acql</span>
           <span style={{ color: "#01696f" }}>erate</span>
         </span>
       )}

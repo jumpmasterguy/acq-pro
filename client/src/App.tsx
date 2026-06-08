@@ -558,7 +558,19 @@ function AppContent() {
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 lg:ml-64 flex flex-col min-h-screen">
+      <div className="flex-1 lg:ml-64 flex flex-col min-h-screen relative">
+        {/* Subtle hexagon grid background */}
+        <div aria-hidden="true" className="pointer-events-none fixed lg:left-64 inset-y-0 right-0 z-0 overflow-hidden opacity-[0.035] dark:opacity-[0.04]">
+          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="hex-grid" x="0" y="0" width="56" height="48" patternUnits="userSpaceOnUse">
+                <polygon points="28,2 54,16 54,32 28,46 2,32 2,16" fill="none" stroke="#01696f" strokeWidth="1" />
+                <polygon points="0,16 2,16 2,32 0,32" fill="none" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#hex-grid)" />
+          </svg>
+        </div>
         {/* Top Bar */}
         <header className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-20 flex items-center justify-between px-4 lg:px-6 safe-top" style={{minHeight: '3.5rem'}}>
           <button
@@ -588,7 +600,7 @@ function AppContent() {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-4 lg:p-6 max-w-4xl mx-auto w-full">
+        <main className="flex-1 p-4 lg:p-6 max-w-4xl mx-auto w-full relative z-10">
           {view.type === 'dashboard' && (
             <Dashboard
               progress={progress}
