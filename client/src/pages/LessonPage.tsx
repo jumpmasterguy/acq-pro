@@ -949,6 +949,116 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               );
             }
 
+            // ── fee_limits_visual: contract type fee cap cards ────────────────
+            if ((block as any).type === 'fee_limits_visual') {
+              const contracts = [
+                {
+                  name: 'Cost-Plus Fixed Fee', abbr: 'CPFF', icon: '📋', color: 'border-blue-400/50 bg-blue-500/5',
+                  badge: 'bg-blue-500/15 text-blue-600 dark:text-blue-400',
+                  rules: [
+                    { label: 'Completion contracts', value: 'Max 10%' },
+                    { label: 'Term contracts', value: 'Max 7%' },
+                    { label: 'Reference', value: 'FAR 15.404-4(c)(4)' },
+                  ],
+                  note: 'Fixed fee paid regardless of performance.',
+                },
+                {
+                  name: 'Cost-Plus Incentive Fee', abbr: 'CPIF', icon: '🎯', color: 'border-violet-400/50 bg-violet-500/5',
+                  badge: 'bg-violet-500/15 text-violet-600 dark:text-violet-400',
+                  rules: [
+                    { label: 'Max total fee', value: '15% of target cost' },
+                    { label: 'Min fee floor', value: '0% (never negative)' },
+                    { label: 'Structure', value: 'Share ratio splits over/under' },
+                  ],
+                  note: 'Fee tied to cost efficiency — do better, earn more.',
+                },
+                {
+                  name: 'Cost-Plus Award Fee', abbr: 'CPAF', icon: '⭐', color: 'border-amber-400/50 bg-amber-500/5',
+                  badge: 'bg-amber-500/15 text-amber-600 dark:text-amber-400',
+                  rules: [
+                    { label: 'Base fee', value: '0–3% (guaranteed)' },
+                    { label: 'Award fee pool', value: '5–10% of est. cost' },
+                    { label: 'Combined max', value: '~10–15% typical' },
+                  ],
+                  note: 'Award fee earned through performance ratings.',
+                },
+                {
+                  name: 'Fixed-Price Contracts', abbr: 'FFP / FPIF', icon: '🔒', color: 'border-emerald-400/50 bg-emerald-500/5',
+                  badge: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400',
+                  rules: [
+                    { label: 'Statutory cap', value: 'None — embedded in price' },
+                    { label: 'Typical profit', value: '7–15%' },
+                    { label: 'Governed by', value: 'Weighted Guidelines (DFARS 215.404-4)' },
+                  ],
+                  note: 'Contractor keeps every dollar saved — all the incentive to be efficient.',
+                },
+              ];
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {contracts.map((c, ci) => (
+                      <div key={ci} className={`rounded-xl border-2 ${c.color} p-4 space-y-2.5`}>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">{c.icon}</span>
+                          <div className="flex-1">
+                            <p className="text-sm font-bold leading-tight">{c.name}</p>
+                          </div>
+                          <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${c.badge}`}>{c.abbr}</span>
+                        </div>
+                        <div className="space-y-1">
+                          {c.rules.map((r, ri) => (
+                            <div key={ri} className="flex justify-between items-center gap-2">
+                              <span className="text-xs text-muted-foreground">{r.label}</span>
+                              <span className="text-xs font-semibold text-right">{r.value}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <p className="text-[11px] text-muted-foreground border-t border-border/50 pt-2 italic">{c.note}</p>
+                      </div>
+                    ))}
+                  </div>
+                  {(block as any).explanation && (
+                    <p className="text-xs text-muted-foreground leading-relaxed">{(block as any).explanation}</p>
+                  )}
+                </div>
+              );
+            }
+
+            // ── weighted_guidelines_visual: 5-factor scoring breakdown ───────────
+            if ((block as any).type === 'weighted_guidelines_visual') {
+              const factors = [
+                { num: '01', label: 'Performance Risk', desc: 'How technically difficult and risky is the work?', icon: '⚠️', weight: 'High impact' },
+                { num: '02', label: 'Contract Type Risk', desc: 'How much cost risk is the contractor bearing?', icon: '📄', weight: 'High impact' },
+                { num: '03', label: 'Facilities Capital', desc: 'How much has the contractor invested in equipment?', icon: '🏭', weight: 'Medium impact' },
+                { num: '04', label: 'Cost Efficiency', desc: 'Is the contractor managing costs well historically?', icon: '📊', weight: 'Medium impact' },
+                { num: '05', label: 'Independent Development', desc: 'Has the contractor invested in tech beneficial to DoD?', icon: '🔬', weight: 'Lower impact' },
+              ];
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <p className="text-xs text-muted-foreground">The government scores 5 factors to set a target profit rate. Higher risk = higher fee earned. This is why contractors can't just claim "this work is risky" — the method already accounts for it.</p>
+                  <div className="space-y-2">
+                    {factors.map((f, fi) => (
+                      <div key={fi} className="flex items-center gap-3 p-3 rounded-lg bg-muted/40 border border-border/50">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-xs font-black text-primary flex-shrink-0">{f.num}</div>
+                        <span className="text-lg flex-shrink-0">{f.icon}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold leading-tight">{f.label}</p>
+                          <p className="text-xs text-muted-foreground">{f.desc}</p>
+                        </div>
+                        <span className="text-[10px] font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded-full whitespace-nowrap">{f.weight}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="bg-primary/5 border border-primary/20 rounded-lg px-4 py-3">
+                    <p className="text-xs font-semibold text-primary">Result: a target profit % between 7–15%</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Each factor gets a score → multiplied by its weight → summed into a final rate the government uses as its negotiation anchor.</p>
+                  </div>
+                </div>
+              );
+            }
+
             // ── wrap_rate_visual: stacked cost build-up graphic ─────────────
             if ((block as any).type === 'wrap_rate_visual') {
               const layers = [

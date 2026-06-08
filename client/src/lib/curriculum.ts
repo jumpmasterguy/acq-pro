@@ -2556,15 +2556,13 @@ export const modules: Module[] = [
             body: 'An FPRA is a negotiated agreement between a large contractor and DCAA/ACO that establishes the indirect cost rates to be used for pricing future proposals for a set period (typically 1-2 years). Once an FPRA is in place, contractors must use those rates in all proposals — they cannot negotiate rates individually on each contract. For PMs, FPRAs mean two things: (1) you know what rates to expect from major contractors — they are public record in FPRA letters; (2) if a contractor\'s actual rates come in higher than their FPRA rates, the government may be owed money via an equitable adjustment.',
           },
           {
-            type: 'formula',
+            type: 'fee_limits_visual' as any,
             heading: 'Fee Limits Under DFARS — What Profit Is Actually Capped At',
-            formula: 'DFARS 215.404-4 — Profit/Fee Limits by Contract Type:\n\nCost-Plus-Fixed-Fee (CPFF):\n  → Completion contracts: Max fee = 10% of estimated cost\n  → Term contracts: Max fee = 7% of estimated cost\n  → (FAR 15.404-4(c)(4))\n\nCost-Plus-Incentive-Fee (CPIF):\n  → Max total fee = 15% of target cost\n  → Min fee cannot be below 0% (contractor cannot owe money)\n\nCost-Plus-Award-Fee (CPAF):\n  → Base fee: typically 0-3%\n  → Award fee pool: typically 5-10% of estimated cost\n  → Combined max: varies by program; typically 10-15%\n\nFixed-Price contracts:\n  → No statutory profit cap — profit is embedded in price\n  → Government uses profit analysis (DFARS 215.404-4) to assess reasonableness\n  → Weighted Guidelines Method produces a target profit rate (7-15% typical)',
             explanation: 'Fee caps exist because cost-reimbursable contracts have no price ceiling — without caps, contractors could earn unlimited profit by simply spending more. For PMs on cost-plus contracts, understanding fee structure means you can verify the contractor is not manipulating cost estimates to maximize award fee under CPAF.',
           },
           {
-            type: 'text',
+            type: 'weighted_guidelines_visual' as any,
             heading: 'The Weighted Guidelines Method — How Profit is Determined',
-            body: 'For negotiated defense contracts, the government uses the Weighted Guidelines Method (DFARS 215.404-71) to determine a target profit/fee rate. The method scores five factors: (1) Performance Risk — how technically difficult and risky is the work? (2) Contract Type Risk — how much cost risk is the contractor bearing? (3) Facilities Capital Employed — how much has the contractor invested in its own equipment and facilities? (4) Cost Efficiency — is the contractor managing costs well? (5) Independent Development — has the contractor invested in technology beneficial to DoD? Each factor gets a weight and score, and the result is a target profit percentage. PMs should understand this because when contractors claim they need higher fee to cover "risk," the Weighted Guidelines method already accounts for that.',
           },
           {
             type: 'table',
