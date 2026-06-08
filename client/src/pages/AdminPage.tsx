@@ -357,6 +357,7 @@ export default function AdminPage() {
                   </thead>
                   <tbody>
                     {users.map((user, i) => (
+                      <>
                       <tr
                         key={user.id}
                         className={`border-b border-border last:border-0 hover:bg-muted/20 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}
@@ -453,6 +454,7 @@ export default function AdminPage() {
                           </td>
                         </tr>
                       )}
+                      </>
                     ))}
                   </tbody>
                 </table>
