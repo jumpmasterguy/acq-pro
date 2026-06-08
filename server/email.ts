@@ -65,7 +65,7 @@ export async function sendWelcomeEmail(to: string, username: string): Promise<vo
 
   await resend.emails.send({
     from: FROM, to,
-      replyTo: "lucas.l.cruz.es@gmail.com",
+      replyTo: "hello@acqlerate.com",
     subject: "Welcome to Acqlerate — your first module is ready",
     html: emailShell("Start Module 01 right now — it's free and takes 20 minutes.", body),
   });
@@ -188,7 +188,7 @@ export async function sendStarterKitEmail(to: string, username: string, role: Us
 
   await resend.emails.send({
     from: FROM,
-      replyTo: "lucas.l.cruz.es@gmail.com",
+      replyTo: "hello@acqlerate.com",
     to,
     subject: `Your Acqlerate Starter Kit is ready to download`,
     html: emailShell('Your free acquisition reference guide — tailored to your role.', body),
@@ -236,7 +236,7 @@ export async function sendEmail2(to: string, username: string): Promise<void> {
 
   await resend.emails.send({
     from: FROM, to,
-      replyTo: "lucas.l.cruz.es@gmail.com",
+      replyTo: "hello@acqlerate.com",
     subject: "Why acquisition literacy actually matters (and a quick win from Foundations)",
     html: emailShell("The DoD spends $400B/year. Here's why understanding it gives you a career edge.", body),
   });
@@ -284,7 +284,7 @@ export async function sendEmail3(to: string, username: string): Promise<void> {
 
   await resend.emails.send({
     from: FROM, to,
-      replyTo: "lucas.l.cruz.es@gmail.com",
+      replyTo: "hello@acqlerate.com",
     subject: "The feature inside Acqlerate most people underuse",
     html: emailShell("Your AI Study Assistant can answer any acquisition question in real time.", body),
   });
@@ -339,7 +339,7 @@ export async function sendEmail4(to: string, username: string): Promise<void> {
 
   await resend.emails.send({
     from: FROM, to,
-      replyTo: "lucas.l.cruz.es@gmail.com",
+      replyTo: "hello@acqlerate.com",
     subject: "What's waiting after Module 01 (and what users are saying)",
     html: emailShell("Real feedback from defense professionals — and what Pro unlocks.", body),
   });
@@ -387,7 +387,7 @@ export async function sendEmail5(to: string, username: string): Promise<void> {
 
   await resend.emails.send({
     from: FROM, to,
-      replyTo: "lucas.l.cruz.es@gmail.com",
+      replyTo: "hello@acqlerate.com",
     subject: "A preview of what's inside Defense Finance & Contracting",
     html: emailShell("Color of money, Nunn-McCurdy, and the real difference between FFP and Cost-Plus.", body),
   });
@@ -444,7 +444,7 @@ export async function sendEmail6(to: string, username: string): Promise<void> {
 
   await resend.emails.send({
     from: FROM, to,
-      replyTo: "lucas.l.cruz.es@gmail.com",
+      replyTo: "hello@acqlerate.com",
     subject: "Your personalized path through Acqlerate (based on your role)",
     html: emailShell("USG personnel vs. contractor side — here's the sequence that fits your situation.", body),
   });
@@ -498,7 +498,7 @@ export async function sendEmail7(to: string, username: string): Promise<void> {
 
   await resend.emails.send({
     from: FROM, to,
-      replyTo: "lucas.l.cruz.es@gmail.com",
+      replyTo: "hello@acqlerate.com",
     subject: "One last note (and why I think Acqlerate is worth it)",
     html: emailShell("Module 01 stays free forever. But here's what's on the other side.", body),
   });
@@ -541,7 +541,7 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
     `;
     await resend.emails.send({
       from: FROM,
-      replyTo: "lucas.l.cruz.es@gmail.com",
+      replyTo: "hello@acqlerate.com",
       to,
       subject: 'Your GovCon Onboarding Playbook is ready to download',
       html: emailShell('GovCon Onboarding Playbook — download inside', body),
@@ -576,7 +576,7 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
     `;
     await resend.emails.send({
       from: FROM,
-      replyTo: "lucas.l.cruz.es@gmail.com",
+      replyTo: "hello@acqlerate.com",
       to,
       subject: 'Your pay guide is ready — How Your Pay Works on a Government Contract',
       html: emailShell('How Your Pay Works on a Government Contract — download inside', body),
@@ -636,7 +636,7 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
 
   await resend.emails.send({
     from: FROM,
-      replyTo: "lucas.l.cruz.es@gmail.com",
+      replyTo: "hello@acqlerate.com",
     to,
     subject: 'Your Acquisition Starter Kit — which side of the table are you on?',
     html: emailShell('USG or Contractor? Pick your path and get the right kit.', body),
@@ -727,7 +727,7 @@ export async function sendEmail2New(to: string, username: string): Promise<void>
     <p style="font-size:14px;color:#0d2137;font-weight:700;margin-top:4px">— Lucas</p>
   `;
   await resend.emails.send({
-    from: FROM, to, replyTo: "lucas.l.cruz.es@gmail.com",
+    from: FROM, to, replyTo: "hello@acqlerate.com",
     subject: "The question I get most from people like you",
     html: emailShell("It's not the regulations. It's the language — and here's how to fix that fast.", body),
   });
@@ -757,7 +757,7 @@ export async function sendEmail3New(to: string, username: string): Promise<void>
     <p style="font-size:14px;color:#0d2137;font-weight:700;margin-top:4px">— Lucas</p>
   `;
   await resend.emails.send({
-    from: FROM, to, replyTo: "lucas.l.cruz.es@gmail.com",
+    from: FROM, to, replyTo: "hello@acqlerate.com",
     subject: "You've had a week. Here's what most people miss.",
     html: emailShell("Five free preview lessons are in your account — these are the modules where careers get made.", body),
   });
@@ -785,7 +785,7 @@ export async function sendEmail4New(to: string, username: string): Promise<void>
     <p style="font-size:14px;color:#0d2137;font-weight:700;margin-top:4px">— Lucas</p>
   `;
   await resend.emails.send({
-    from: FROM, to, replyTo: "lucas.l.cruz.es@gmail.com",
+    from: FROM, to, replyTo: "hello@acqlerate.com",
     subject: "What $5.99 actually buys you in this field",
     html: emailShell("DAU courses run $1,500+. Management Concepts charges $2,000. Here's the math instead.", body),
   });
@@ -811,7 +811,7 @@ export async function sendEmail7New(to: string, username: string): Promise<void>
     <p style="font-size:14px;color:#0d2137;font-weight:700;margin-top:4px">— Lucas<br/><span style="font-weight:400;font-style:italic">Built by someone who's been in the room. Made for people trying to get there.</span></p>
   `;
   await resend.emails.send({
-    from: FROM, to, replyTo: "lucas.l.cruz.es@gmail.com",
+    from: FROM, to, replyTo: "hello@acqlerate.com",
     subject: "Last thing I'll say about this",
     html: emailShell("No pressure. But one thing I've noticed about the people who do well in this field...", body),
   });
@@ -835,7 +835,7 @@ export async function sendNewsletterIssue(
   await resend.emails.send({
     from: FROM,
     to,
-    replyTo: "lucas.l.cruz.es@gmail.com",
+    replyTo: "hello@acqlerate.com",
     subject,
     html: fullHtml,
   });
