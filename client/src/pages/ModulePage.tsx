@@ -177,11 +177,11 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                     </span>
                     <span className="flex items-center gap-1 text-xs text-muted-foreground">
                       <BookOpen className="w-3 h-3" />
-                      {lesson.keyTerms.length} key terms
+                      {(lesson.keyTerms?.length ?? 0)} key terms
                     </span>
-                    {lesson.quiz.length > 0 && (
+                    {(lesson.quiz?.length ?? 0) > 0 && (
                       <span className="text-xs text-muted-foreground">
-                        · {lesson.quiz.length} quiz questions
+                        · {lesson.quiz?.length} quiz questions
                       </span>
                     )}
                   </div>
