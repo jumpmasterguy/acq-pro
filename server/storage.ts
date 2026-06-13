@@ -247,6 +247,50 @@ export class DrizzleStorage implements IStorage {
     return result[0];
   }
 
+
+  // Streak update — call whenever a user completes a lesson, quiz, or daily challenge
+  async updateUserStreak(userId: string): Promise<User | undefined> {
+    const user = await this.getUser(userId);
+    if (!user) return undefined;
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const lastDate = (user as any).lastStreakDate;
+    let currentStreak = (user as any).currentStreak ?? 0;
+    let longestStreak = (user as any).longestStreak ?? 0;
+    if (lastDate === todayStr) return user;
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().slice(0, 10);
+    if (lastDate === yesterdayStr) {
+      currentStreak += 1;
+    } else {
+      currentStreak = 1;
+    }
+    longestStreak = Math.max(longestStreak, currentStreak);
+    const result = await this.db
+      .update(users)
+      .set({ currentStreak, longestStreak, lastStreakDate: todayStr } as any)
+      .where(eq(users.id, userId))
+      .returning();
+    return result[0];
+  }
+
+  async completeDailyChallenge(userId: string, score: number, xpEarned: number): Promise<User | undefined> {
+    const user = await this.getUser(userId);
+    if (!user) return undefined;
+    const todayStr = new Date().toISOString().slice(0, 10);
+    if ((user as any).lastChallengeDate === todayStr) return user;
+    const history = ((user as any).challengeHistory ?? []) as any[];
+    history.push({ date: todayStr, score, xpEarned });
+    const newXp = (user.xp ?? 0) + xpEarned;
+    const result = await this.db
+      .update(users)
+      .set({ lastChallengeDate: todayStr, challengeHistory: history, xp: newXp } as any)
+      .where(eq(users.id, userId))
+      .returning();
+    await this.updateUserStreak(userId);
+    return result[0];
+  }
+
   async saveUserProfile(userId: string, profile: Record<string, any>): Promise<User | undefined> {
     const result = await this.db
       .update(users)

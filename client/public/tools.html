@@ -436,6 +436,80 @@
   <p class="hero-sub">The best free government tools — organized by what you're trying to do, with plain-English explanations of how to use them.</p>
 </section>
 
+<!-- FAR CLAUSE TRANSLATOR -->
+<section style="background:#0a1628;border-bottom:1px solid rgba(255,255,255,0.07);padding:40px 1.25rem;">
+  <div style="max-width:700px;margin:0 auto;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <span style="font-size:1.5rem;">⚡</span>
+      <h2 style="margin:0;font-size:1.2rem;font-weight:800;color:#fff;">FAR Clause Translator</h2>
+      <span style="font-size:11px;font-weight:700;background:#01696f22;color:#4FC3CB;border:1px solid #4FC3CB44;padding:2px 10px;border-radius:20px;">AI-Powered</span>
+    </div>
+    <p style="color:#94a3b8;font-size:0.875rem;margin:0 0 18px;">Type any FAR/DFARS clause number or topic — get a plain-English breakdown in seconds. No law degree required.</p>
+    <div style="display:flex;gap:10px;">
+      <input id="far-input" type="text" placeholder="e.g. FAR 52.212-4, DFARS 252.204-7012, cost-plus contract..." 
+        style="flex:1;background:#0d1f3c;border:1px solid #1e3a5f;border-radius:10px;padding:12px 16px;color:#fff;font-size:0.9rem;outline:none;"
+        onkeydown="if(event.key==='Enter')translateFAR()" />
+      <button onclick="translateFAR()" id="far-btn"
+        style="background:#01696f;color:#fff;border:none;border-radius:10px;padding:12px 22px;font-weight:700;font-size:0.9rem;cursor:pointer;white-space:nowrap;">
+        Translate
+      </button>
+    </div>
+    <div id="far-result" style="margin-top:16px;display:none;"></div>
+    <p style="color:#4a6274;font-size:11px;margin-top:10px;">Powered by Acqlerate AI &mdash; requires free account. Results are for educational purposes only, not legal advice.</p>
+  </div>
+</section>
+
+<script>
+async function translateFAR() {
+  const input = document.getElementById('far-input');
+  const result = document.getElementById('far-result');
+  const btn = document.getElementById('far-btn');
+  const clause = input.value.trim();
+  if (!clause) return;
+  
+  btn.textContent = 'Translating...';
+  btn.disabled = true;
+  result.style.display = 'none';
+  
+  try {
+    const resp = await fetch('/api/far-translate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ clause }),
+    });
+    const data = await resp.json();
+    
+    if (!resp.ok) {
+      if (resp.status === 401) {
+        result.innerHTML = `<div style="background:#1e1a2e;border:1px solid #7c3aed44;border-radius:12px;padding:16px;color:#a78bfa;"><strong>Sign in required</strong> &mdash; <a href="/app" style="color:#4FC3CB;">Create a free account</a> to use the FAR Translator.</div>`;
+      } else {
+        result.innerHTML = `<div style="background:#1e0a0a;border:1px solid #7f1d1d44;border-radius:12px;padding:16px;color:#fca5a5;">${data.message || 'Something went wrong.'}</div>`;
+      }
+    } else {
+      // Format markdown-style bold headings
+      const formatted = data.result
+        .replace(/\*\*(.+?)\*\*/g, '<strong style="color:#4FC3CB;">$1</strong>')
+        .replace(/\n•/g, '<br>&bull;')
+        .replace(/\n-/g, '<br>&bull;')
+        .replace(/\n/g, '<br>');
+      result.innerHTML = `
+        <div style="background:#0d1f3c;border:1px solid #1e3a5f;border-radius:12px;padding:20px;">
+          <div style="font-size:11px;font-weight:700;color:#4FC3CB;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">Plain-English Translation: ${data.clause}</div>
+          <div style="color:#cbd5e1;font-size:0.875rem;line-height:1.7;">${formatted}</div>
+        </div>`;
+    }
+    result.style.display = 'block';
+  } catch(e) {
+    result.innerHTML = `<div style="color:#fca5a5;">Network error. Try again.</div>`;
+    result.style.display = 'block';
+  }
+  
+  btn.textContent = 'Translate';
+  btn.disabled = false;
+}
+</script>
+
 <!-- ROLE FILTER TABS -->
 <div class="filter-bar" id="filter-bar">
   <div class="filter-inner">

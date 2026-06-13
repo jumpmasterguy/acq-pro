@@ -222,6 +222,13 @@ app.use((req, res, next) => {
         // Email drip tracking
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS registered_at TEXT NOT NULL DEFAULT now()::text`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS sent_email_days JSONB NOT NULL DEFAULT '[]'::JSONB`,
+        // Streak tracking
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS current_streak INTEGER NOT NULL DEFAULT 0`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS longest_streak INTEGER NOT NULL DEFAULT 0`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_streak_date TEXT`,
+        // Daily challenge tracking
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_challenge_date TEXT`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS challenge_history JSONB NOT NULL DEFAULT '[]'::JSONB`,
       ];
       // email_leads table for landing page opt-ins
       try {

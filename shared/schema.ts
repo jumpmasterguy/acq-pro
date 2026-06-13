@@ -29,6 +29,13 @@ export const users = pgTable("users", {
   loginCount: integer("login_count").notNull().default(0),
   totalMinutesActive: integer("total_minutes_active").notNull().default(0),
   xp: integer("xp").notNull().default(0),
+  // Streak tracking
+  currentStreak: integer("current_streak").notNull().default(0),
+  longestStreak: integer("longest_streak").notNull().default(0),
+  lastStreakDate: text("last_streak_date"),  // YYYY-MM-DD of last activity
+  // Daily challenge tracking
+  lastChallengeDate: text("last_challenge_date"), // YYYY-MM-DD of last completed challenge
+  challengeHistory: jsonb("challenge_history").notNull().default(sql`'[]'::jsonb`), // [{date, score, xpEarned}]
   // Email drip tracking
   registeredAt: text("registered_at").notNull().default(sql`now()::text`),
   sentEmailDays: jsonb("sent_email_days").notNull().default(sql`'[]'::jsonb`), // number[]

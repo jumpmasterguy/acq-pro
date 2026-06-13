@@ -115,6 +115,9 @@ export async function registerRoutes(
         moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
         moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
         userProfile: (user as any).userProfile ?? null,
+        currentStreak: (user as any).currentStreak ?? 0,
+        longestStreak: (user as any).longestStreak ?? 0,
+        lastChallengeDate: (user as any).lastChallengeDate ?? null,
       });
     });
   });
@@ -164,6 +167,9 @@ export async function registerRoutes(
             moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
             moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
             userProfile: (user as any).userProfile ?? null,
+        currentStreak: (user as any).currentStreak ?? 0,
+        longestStreak: (user as any).longestStreak ?? 0,
+        lastChallengeDate: (user as any).lastChallengeDate ?? null,
           });
         });
       }
@@ -198,6 +204,9 @@ export async function registerRoutes(
       moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
       moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
       userProfile: user.userProfile ?? null,
+        currentStreak: (user as any).currentStreak ?? 0,
+        longestStreak: (user as any).longestStreak ?? 0,
+        lastChallengeDate: (user as any).lastChallengeDate ?? null,
     });
   });
 
@@ -300,6 +309,9 @@ export async function registerRoutes(
     if (!updated) {
       return res.status(500).json({ message: "Failed to save progress" });
     }
+
+    // Update streak on lesson completion
+    await storage.updateUserStreak(userId);
 
     // Refresh the session user
     req.user!.completedLessons = updated.completedLessons ?? [];
@@ -696,6 +708,83 @@ export async function registerRoutes(
     return res.json({ message: `${user.email} deleted` });
   });
 
+  // ─── Daily Challenge ──────────────────────────────────────────────────
+
+  // GET /api/daily-challenge — returns today's 5 questions (date-seeded, same for all users)
+  app.get("/api/daily-challenge", requireAuth as any, async (req: Request, res: Response) => {
+    const user = req.user!;
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const alreadyCompleted = (user as any).lastChallengeDate === todayStr;
+
+    // Build full quiz bank from all modules
+    // We inline a seed-based shuffle here on the server
+    const seed = parseInt(todayStr.replace(/-/g, ''), 10);
+    function seededRandom(s: number) {
+      let x = Math.sin(s) * 10000;
+      return x - Math.floor(x);
+    }
+
+    // Import curriculum questions — read from the built client bundle is not possible server-side
+    // Instead we maintain a minimal question bank inline here
+    const questionBank = [
+      { id: 'dc1', q: 'What does IDIQ stand for?', options: ['Indefinite Delivery Indefinite Quantity', 'Incremental Delivery Immediate Quality', 'Independent Delivery Internal Quality', 'Integrated Defense and Inventory Quantity'], correct: 0, module: 'Contracts' },
+      { id: 'dc2', q: 'A Cost Performance Index (CPI) of 0.85 means:', options: ['You are 15% ahead of budget', 'You are spending $1.18 for every $1.00 of work done', 'You are 15% under budget', 'Your schedule is 85% complete'], correct: 1, module: 'Data Analytics' },
+      { id: 'dc3', q: 'Which appropriation type funds day-to-day operations and maintenance?', options: ['RDT&E', 'Procurement', 'O&M', 'MILCON'], correct: 2, module: 'Finance' },
+      { id: 'dc4', q: 'The Simplified Acquisition Threshold (SAT) as of Oct 1, 2025 is:', options: ['$150,000', '$250,000', '$350,000', '$500,000'], correct: 2, module: 'Contracts' },
+      { id: 'dc5', q: 'A fixed-price contract puts cost risk primarily on:', options: ['The government', 'The contractor', 'DCAA', 'The program office'], correct: 1, module: 'Contracts' },
+      { id: 'dc6', q: 'EVM stands for:', options: ['Estimated Value Measurement', 'Earned Value Management', 'Execution Variance Metric', 'Enterprise Value Method'], correct: 1, module: 'Data Analytics' },
+      { id: 'dc7', q: 'A wrap rate multiplies your base labor rate to cover:', options: ['Profit only', 'Fringe, overhead, G&A, and profit', 'Government taxes', 'Equipment costs'], correct: 1, module: 'Finance' },
+      { id: 'dc8', q: 'Who is the only person authorized to obligate the government to additional costs?', options: ['The COR', 'The Program Manager', 'The Contracting Officer', 'The TPOC'], correct: 2, module: 'Contracts' },
+      { id: 'dc9', q: 'Schedule Performance Index (SPI) > 1.0 means:', options: ['Over budget', 'Behind schedule', 'Ahead of schedule', 'At risk of Nunn-McCurdy'], correct: 2, module: 'Data Analytics' },
+      { id: 'dc10', q: 'The PPBE cycle stands for:', options: ['Planning, Programming, Budgeting and Execution', 'Program, Procurement, Budget and Evaluation', 'Priority, Planning, Budget and Execution', 'Program, Process, Build and Execute'], correct: 0, module: 'Finance' },
+      { id: 'dc11', q: 'A PWS (Performance Work Statement) describes:', options: ['How work must be performed', 'What outcomes must be achieved', 'Who performs the work', 'The contract price'], correct: 1, module: 'Contracts' },
+      { id: 'dc12', q: 'DCAA stands for:', options: ['Defense Contract Audit Agency', 'Department of Contract Award Administration', 'Defense Cost Accounting Authority', 'DoD Contract and Acquisition Agency'], correct: 0, module: 'Finance' },
+      { id: 'dc13', q: 'A "color of money" violation means:', options: ['Funds were spent on a prohibited vendor', 'Appropriated funds were spent outside their authorized purpose', 'A contract modification was unsigned', 'The contractor exceeded the ceiling price'], correct: 1, module: 'Finance' },
+      { id: 'dc14', q: 'What does BAC stand for in EVM?', options: ['Budget At Completion', 'Baseline Actual Cost', 'Budgeted Acquisition Cost', 'Base Allocation Cost'], correct: 0, module: 'Data Analytics' },
+      { id: 'dc15', q: 'An ACAT I program is also known as a:', options: ['Major Defense Acquisition Program (MDAP)', 'Minor Defense Acquisition Program', 'Sole Source Acquisition', 'Multiple Award Contract'], correct: 0, module: 'Foundations' },
+      { id: 'dc16', q: 'A Cost-Plus-Award-Fee (CPAF) base fee is typically:', options: ['0% — all fee is at risk', '0-3% guaranteed regardless of performance', '10% fixed', '15% of target cost'], correct: 1, module: 'Finance' },
+      { id: 'dc17', q: 'Obligated funding means:', options: ['Money has been spent', 'Money has been formally committed via contract action', 'Money has been requested from Congress', 'Money has been approved by the PM'], correct: 1, module: 'Finance' },
+      { id: 'dc18', q: 'The FAR (Federal Acquisition Regulation) applies to:', options: ['State government contracts only', 'All executive branch federal procurement', 'DoD contracts only', 'Contracts over $1M only'], correct: 1, module: 'Contracts' },
+      { id: 'dc19', q: 'Capture management is primarily focused on:', options: ['Managing contract modifications', 'Winning new business through strategic positioning', 'Tracking obligated funds', 'Managing subcontractors'], correct: 1, module: 'Capture' },
+      { id: 'dc20', q: 'A Variance at Completion (VAC) of -$500K means:', options: ['You will finish $500K under budget', 'You are projected to overrun by $500K', 'Your schedule slipped $500K worth of work', 'Your EAC is $500K lower than BAC'], correct: 1, module: 'Data Analytics' },
+    ];
+
+    // Seed-shuffle and pick 5
+    const shuffled = [...questionBank].sort((a, b) => {
+      const ra = seededRandom(seed + a.id.charCodeAt(2));
+      const rb = seededRandom(seed + b.id.charCodeAt(2));
+      return ra - rb;
+    });
+    const todaysQuestions = shuffled.slice(0, 5).map(({ id, q, options, correct, module }) => ({
+      id, question: q, options, correct, module,
+    }));
+
+    return res.json({
+      date: todayStr,
+      alreadyCompleted,
+      lastChallengeDate: (user as any).lastChallengeDate ?? null,
+      currentStreak: (user as any).currentStreak ?? 0,
+      longestStreak: (user as any).longestStreak ?? 0,
+      questions: todaysQuestions,
+    });
+  });
+
+  // POST /api/daily-challenge/complete
+  app.post("/api/daily-challenge/complete", requireAuth as any, async (req: Request, res: Response) => {
+    const userId = req.user!.id;
+    const { score } = req.body as { score: number }; // 0-5
+    const xpEarned = score === 5 ? 50 : score >= 3 ? 25 : 10;
+    const updated = await storage.completeDailyChallenge(userId, score, xpEarned);
+    if (!updated) return res.status(500).json({ message: 'Failed to record challenge' });
+    return res.json({
+      score,
+      xpEarned,
+      currentStreak: (updated as any).currentStreak ?? 0,
+      longestStreak: (updated as any).longestStreak ?? 0,
+      message: score === 5 ? 'Perfect score! +50 XP' : score >= 3 ? 'Nice work! +25 XP' : 'Keep going! +10 XP',
+    });
+  });
+
   // ─── Activity Tracking ────────────────────────────────────────────────────
 
   // POST /api/track-activity
@@ -898,6 +987,55 @@ export async function registerRoutes(
         if (resp.ok) {
           const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
           if (text) return res.json({ detail: text.trim() });
+        }
+        lastErr = data?.error?.message ?? `HTTP ${resp.status}`;
+        if (resp.status === 429) break;
+      } catch (err: any) {
+        lastErr = err?.message ?? 'fetch error';
+      }
+    }
+    return res.status(500).json({ message: `Failed: ${lastErr}` });
+  });
+
+  // POST /api/far-translate — FAR/DFARS clause plain-English translator
+  app.post("/api/far-translate", requireAuth as any, async (req: Request, res: Response) => {
+    const { clause } = req.body as { clause: string };
+    if (!clause?.trim()) return res.status(400).json({ message: 'Clause number or keyword required' });
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) return res.status(503).json({ message: 'AI not configured' });
+
+    const prompt = `You are a plain-English DoD acquisition expert. A defense contractor or program manager wants to understand FAR/DFARS clause or topic: "${clause.trim()}"
+
+Provide a structured response with exactly these four sections (use these exact headings):
+
+**What it is:**
+One sentence explaining what this clause/regulation is in plain English. No jargon.
+
+**What it means for you:**
+2-3 bullet points on the practical implications for a contractor PM or program manager.
+
+**When you'll see it:**
+One sentence on what contract types or situations it typically appears in.
+
+**Watch out for:**
+One common pitfall or misunderstanding related to this clause.
+
+If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly. Keep the total response under 200 words. Be direct and practical.`;
+
+    const modelNames = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-flash-latest'];
+    let lastErr = '';
+    for (const modelName of modelNames) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+        });
+        const data: any = await resp.json();
+        if (resp.ok) {
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+          if (text) return res.json({ result: text.trim(), clause: clause.trim() });
         }
         lastErr = data?.error?.message ?? `HTTP ${resp.status}`;
         if (resp.status === 429) break;

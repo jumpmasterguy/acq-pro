@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { modules, getTotalLessons, getModuleTotalMinutes, formatDuration, parseDuration } from "@/lib/curriculum";
 import { getModuleProgress, getLevel, calculateXP, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
 import type { UserProgress } from "@/lib/progress";
@@ -10,6 +10,7 @@ import {
   Briefcase, Building2, FileText, LayoutGrid, Filter
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { apiRequest } from "@/lib/queryClient";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 
@@ -385,6 +386,37 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
   const xp = calculateXP(progress.completedLessons, progress.quizScores);
   const levelInfo = getLevel(xp);
 
+  // Streak + daily challenge state
+  const [streak, setStreak] = useState({ currentStreak: 0, longestStreak: 0, alreadyCompleted: false, date: '' });
+  const [challenge, setChallenge] = useState<{ questions: any[], date: string } | null>(null);
+  const [challengeActive, setChallengeActive] = useState(false);
+  const [challengeAnswers, setChallengeAnswers] = useState<Record<string, number>>({});
+  const [challengeSubmitted, setChallengeSubmitted] = useState(false);
+  const [challengeResult, setChallengeResult] = useState<{ score: number, xpEarned: number, message: string } | null>(null);
+
+  useEffect(() => {
+    apiRequest('GET', '/api/daily-challenge')
+      .then(r => r.json())
+      .then(data => {
+        setStreak({ currentStreak: data.currentStreak, longestStreak: data.longestStreak, alreadyCompleted: data.alreadyCompleted, date: data.date });
+        setChallenge({ questions: data.questions, date: data.date });
+        if (data.alreadyCompleted) setChallengeSubmitted(true);
+      })
+      .catch(() => {});
+  }, []);
+
+  async function submitChallenge() {
+    if (!challenge) return;
+    const score = challenge.questions.filter((q: any) => challengeAnswers[q.id] === q.correct).length;
+    try {
+      const res = await apiRequest('POST', '/api/daily-challenge/complete', { score });
+      const data = await res.json();
+      setChallengeResult(data);
+      setChallengeSubmitted(true);
+      setStreak(s => ({ ...s, currentStreak: data.currentStreak, longestStreak: data.longestStreak }));
+    } catch {}
+  }
+
   const [filterMode, setFilterMode] = useState<FilterMode>('career');
   const [activeCareer, setActiveCareer] = useState<CareerTrackId>('usg_pm');
   const [activeSubject, setActiveSubject] = useState<SubjectGroupId>('acquisition_foundations');
@@ -518,6 +550,95 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
                 Continue <ChevronRight className="w-3.5 h-3.5 ml-1" />
               </Button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Streak + Daily Challenge ───────────────────────────────────────── */}
+      <div className="grid sm:grid-cols-2 gap-3">
+        {/* Streak card */}
+        <div className="rounded-2xl border border-border bg-card p-4 flex items-center gap-4">
+          <div className="text-4xl">{streak.currentStreak > 0 ? '🔥' : '💤'}</div>
+          <div className="flex-1">
+            <p className="text-xl font-black">{streak.currentStreak} day{streak.currentStreak !== 1 ? 's' : ''}</p>
+            <p className="text-xs text-muted-foreground">Current streak · Best: {streak.longestStreak}</p>
+          </div>
+          {streak.currentStreak >= 7 && (
+            <div className="text-xs font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 px-2 py-1 rounded-full">🏆 {streak.currentStreak}d</div>
+          )}
+        </div>
+
+        {/* Daily challenge card */}
+        <div className={`rounded-2xl border p-4 ${challengeSubmitted ? 'border-emerald-400/30 bg-emerald-500/5' : 'border-primary/30 bg-primary/5 cursor-pointer hover:bg-primary/10 transition-colors'}`}
+          onClick={() => !challengeSubmitted && setChallengeActive(true)}>
+          {challengeSubmitted && challengeResult ? (
+            <div className="flex items-center gap-3">
+              <div className="text-3xl">✅</div>
+              <div>
+                <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{challengeResult.message}</p>
+                <p className="text-xs text-muted-foreground">Score: {challengeResult.score}/5 · +{challengeResult.xpEarned} XP · Come back tomorrow</p>
+              </div>
+            </div>
+          ) : challengeSubmitted ? (
+            <div className="flex items-center gap-3">
+              <div className="text-3xl">✅</div>
+              <div>
+                <p className="text-sm font-bold">Today's challenge complete</p>
+                <p className="text-xs text-muted-foreground">Come back tomorrow for a new set</p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <div className="text-3xl">⚡</div>
+              <div className="flex-1">
+                <p className="text-sm font-bold text-primary">Today's Daily Challenge</p>
+                <p className="text-xs text-muted-foreground">5 questions · ~2 min · Earn up to 50 XP</p>
+              </div>
+              <div className="text-primary text-lg">→</div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Daily challenge modal */}
+      {challengeActive && challenge && !challengeSubmitted && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setChallengeActive(false)}>
+          <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="font-bold text-lg">⚡ Daily Challenge</h2>
+                <p className="text-xs text-muted-foreground">{challenge.date} · 5 questions</p>
+              </div>
+              <button onClick={() => setChallengeActive(false)} className="text-muted-foreground hover:text-foreground text-xl">✕</button>
+            </div>
+            <div className="space-y-5">
+              {challenge.questions.map((q: any, qi: number) => (
+                <div key={q.id} className="space-y-2">
+                  <p className="text-sm font-semibold">{qi + 1}. {q.question}</p>
+                  <div className="space-y-1.5">
+                    {q.options.map((opt: string, oi: number) => (
+                      <button
+                        key={oi}
+                        onClick={() => setChallengeAnswers(a => ({ ...a, [q.id]: oi }))}
+                        className={cn(
+                          "w-full text-left text-xs px-3 py-2 rounded-lg border transition-all",
+                          challengeAnswers[q.id] === oi
+                            ? "border-primary bg-primary/10 text-primary font-semibold"
+                            : "border-border hover:border-primary/40 hover:bg-muted/40"
+                        )}
+                      >{opt}</button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <Button
+              className="w-full mt-5"
+              disabled={Object.keys(challengeAnswers).length < challenge.questions.length}
+              onClick={submitChallenge}
+            >
+              Submit Answers
+            </Button>
           </div>
         </div>
       )}
