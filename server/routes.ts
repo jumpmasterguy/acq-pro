@@ -1004,7 +1004,9 @@ export async function registerRoutes(
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) return res.status(503).json({ message: 'AI not configured' });
 
-    const prompt = `You are a plain-English DoD acquisition expert. A defense contractor or program manager wants to understand FAR/DFARS clause or topic: "${clause.trim()}"
+    const prompt = `You are a plain-English DoD acquisition expert with precise knowledge of the Federal Acquisition Regulation. A defense contractor or program manager wants to understand: "${clause.trim()}"
+
+IMPORTANT: If a specific clause number is provided (e.g. FAR 31.205-35), you MUST look up and explain that EXACT clause — do not confuse it with a different clause number. FAR 31.205-35 is Relocation Costs. FAR 31.205-22 is Lobbying. Get the clause number right before responding.
 
 Provide a structured response with exactly these four sections (use these exact headings):
 
