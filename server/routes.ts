@@ -1018,7 +1018,7 @@ One sentence explaining what this clause/regulation is in plain English. No jarg
 One sentence on what contract types or situations it typically appears in.
 
 **Watch out for:**
-One common pitfall or misunderstanding. Include any relevant time limits, deadlines, or regulatory timeframes (e.g. notice periods, response windows, expiration dates) — if they exist for this clause or topic.
+One common pitfall or misunderstanding. You MUST include any embedded time conditions, minimums, or thresholds baked into the clause itself — for example: minimum time an employee must stay before relocation costs are allowable, how long a contractor has to submit a claim, when a clause expires, notice periods, cure notice windows, option exercise deadlines, or any other timeframe that would surprise someone who didn't read the fine print. If a specific time condition exists, state it explicitly (e.g. "Employee must remain at the new location for at least 12 months or costs become unallowable").
 
 If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly. Keep the total response under 200 words. Be direct and practical.`;
 
