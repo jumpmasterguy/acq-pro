@@ -1018,7 +1018,7 @@ One sentence explaining what this clause/regulation is in plain English. No jarg
 One sentence on what contract types or situations it typically appears in.
 
 **Watch out for:**
-One common pitfall or misunderstanding related to this clause.
+One common pitfall or misunderstanding. Include any relevant time limits, deadlines, or regulatory timeframes (e.g. notice periods, response windows, expiration dates) — if they exist for this clause or topic.
 
 If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly. Keep the total response under 200 words. Be direct and practical.`;
 
