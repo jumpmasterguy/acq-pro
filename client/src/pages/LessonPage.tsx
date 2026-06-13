@@ -1455,6 +1455,128 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
 
+
+            // ── principal_agent_visual ────────────────────────────────────────
+            if ((block as any).type === 'principal_agent_visual') {
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {/* Agent */}
+                    <div className="rounded-xl border-2 border-red-400/40 bg-red-500/5 p-4 space-y-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">📦</span>
+                        <div>
+                          <p className="text-sm font-bold">Agent (The Middleman)</p>
+                          <span className="text-[11px] bg-red-500/15 text-red-600 dark:text-red-400 px-2 py-0.5 rounded-full font-semibold">Books NET only</span>
+                        </div>
+                      </div>
+                      <div className="space-y-1.5 text-xs text-muted-foreground">
+                        <p>✗ No ownership of delivery</p>
+                        <p>✗ No technical value added</p>
+                        <p>✗ No performance risk</p>
+                        <p>✗ Just moves goods or information</p>
+                      </div>
+                      <div className="bg-red-500/10 rounded-lg p-3 text-center">
+                        <p className="text-xs text-muted-foreground">On a $10M contract with $500K fee</p>
+                        <p className="text-xl font-black text-red-600 dark:text-red-400">Books $500K</p>
+                      </div>
+                    </div>
+                    {/* Principal */}
+                    <div className="rounded-xl border-2 border-emerald-400/40 bg-emerald-500/5 p-4 space-y-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">🔧</span>
+                        <div>
+                          <p className="text-sm font-bold">Principal (The Partner)</p>
+                          <span className="text-[11px] bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full font-semibold">Books GROSS</span>
+                        </div>
+                      </div>
+                      <div className="space-y-1.5 text-xs text-muted-foreground">
+                        <p>✓ Owns the delivery</p>
+                        <p>✓ Integrates, hardens, secures</p>
+                        <p>✓ Bears performance risk</p>
+                        <p>✓ Manages the lifecycle</p>
+                      </div>
+                      <div className="bg-emerald-500/10 rounded-lg p-3 text-center">
+                        <p className="text-xs text-muted-foreground">On a $10M contract with $500K fee</p>
+                        <p className="text-xl font-black text-emerald-600 dark:text-emerald-400">Books $10M</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-primary/5 border border-primary/20 rounded-lg px-4 py-2 text-center">
+                    <p className="text-xs text-muted-foreground">Same contract. Same work. The documentation determines which column you're in.</p>
+                  </div>
+                </div>
+              );
+            }
+
+            // ── five_step_revenue_visual ──────────────────────────────────────
+            if ((block as any).type === 'five_step_revenue_visual') {
+              const steps = [
+                { num: '1', label: 'Identify the Contract', desc: 'Is the scope airtight? A vague SOW cannot support a performance obligation.', question: 'Is this scope clearly defined?', icon: '📋' },
+                { num: '2', label: 'Define Obligations', desc: 'What specifically are you building, integrating, or engineering? Each deliverable must be distinct.', question: 'What exactly are we delivering?', icon: '🎯' },
+                { num: '3', label: 'Determine the Price', desc: 'Is the value clearly attached to each obligation? Vague pricing = vague revenue.', question: 'Is the price tied to the work?', icon: '💵' },
+                { num: '4', label: 'Allocate the Price', desc: 'Does the money match the effort? If you\'re engineering 80% of the work, 80% of the revenue should be there.', question: 'Does the money match the effort?', icon: '⚖️' },
+                { num: '5', label: 'Recognize Revenue', desc: 'Only book when the technical work is actually done. Not when invoiced. Not when awarded.', question: 'Is the work actually complete?', icon: '✅' },
+              ];
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="space-y-2">
+                    {steps.map((s, si) => (
+                      <div key={si} className="flex items-start gap-3 p-3 rounded-xl border border-border bg-card">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 text-primary text-xs font-black flex items-center justify-center flex-shrink-0 mt-0.5">{s.num}</div>
+                        <span className="text-xl flex-shrink-0 mt-0.5">{s.icon}</span>
+                        <div className="flex-1">
+                          <p className="text-sm font-bold">{s.label}</p>
+                          <p className="text-xs text-muted-foreground">{s.desc}</p>
+                        </div>
+                        <div className="text-right flex-shrink-0">
+                          <p className="text-[10px] text-muted-foreground italic max-w-[120px] leading-snug">{s.question}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground">All five steps must be satisfied. Weakness in any one step can trigger an Agent reclassification during an audit.</p>
+                </div>
+              );
+            }
+
+            // ── value_add_examples_visual ─────────────────────────────────────
+            if ((block as any).type === 'value_add_examples_visual') {
+              const examples = [
+                { before: 'Deliver 50 servers', after: 'Deliver, configure, and security-harden 50 servers per DISA STIG requirements', icon: '🖥️' },
+                { before: 'Provide IT support services', after: 'Provide Tier 1–3 IT support with SLA-governed incident management and monthly reporting', icon: '🛠️' },
+                { before: 'Supply network equipment', after: 'Supply, rack, configure, and integrate network equipment into existing infrastructure with cutover testing', icon: '🌐' },
+                { before: 'Deliver software licenses', after: 'Deliver, install, configure, and provide user training for enterprise software with 90-day post-deployment support', icon: '💻' },
+              ];
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="space-y-2">
+                    {examples.map((ex, ei) => (
+                      <div key={ei} className="rounded-xl border border-border overflow-hidden">
+                        <div className="flex items-center gap-2 px-4 py-2 bg-red-500/5 border-b border-border/50">
+                          <span className="text-base">{ex.icon}</span>
+                          <span className="text-[11px] font-bold text-red-600 dark:text-red-400 uppercase tracking-wide">Agent / Logistics</span>
+                        </div>
+                        <div className="px-4 py-2 bg-red-500/5">
+                          <p className="text-xs text-muted-foreground italic">"{ex.before}"</p>
+                        </div>
+                        <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/5 border-t border-b border-border/50">
+                          <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">↓ Principal / Engineering</span>
+                        </div>
+                        <div className="px-4 py-2 bg-emerald-500/5">
+                          <p className="text-xs font-medium">"{ex.after}"</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground">The technical work may be identical. The language determines the revenue classification.</p>
+                </div>
+              );
+            }
+
             // ── fee_limits_visual: contract type fee cap cards ────────────────
             if ((block as any).type === 'fee_limits_visual') {
               const contracts = [

@@ -3414,6 +3414,117 @@ export const modules: Module[] = [
     ],
   },
 
+
+        {
+          id: 'finance-9',
+          title: 'Revenue Recognition & The Value-Add',
+          duration: '14 min',
+          description: 'Why how you describe your work determines how much your company is worth — and how shifting from logistics to engineering changes your financial picture.',
+          keyTerms: [
+            { term: 'ASC 606', definition: 'The accounting standard (issued by FASB) that governs when and how companies recognize revenue. For government contractors it matters because it determines whether you book gross contract value or just your fee — which directly affects how investors and lenders value your company.' },
+            { term: 'Principal vs. Agent', definition: 'A core ASC 606 distinction. A Principal takes ownership of delivery, adds value, and bears risk — they book gross revenue. An Agent is a pass-through middleman who just moves goods or information — they can only book their fee. On a $10M contract with a $500K fee, the Principal books $10M; the Agent books $500K.' },
+            { term: 'Revenue Recognition', definition: 'The point at which revenue is officially recorded on the income statement. Under ASC 606 this happens when a performance obligation is satisfied — meaning the technical work is actually delivered, not just invoiced.' },
+            { term: 'Performance Obligation', definition: 'A specific promise to deliver a distinct good or service. Each obligation must be clearly defined in the contract. If it is not documented, it is not a performance obligation — and the engineering work you did doesn\'t count toward gross revenue recognition.' },
+            { term: 'Value-Add', definition: 'Technical work that transforms, integrates, secures, or manages a product or service — not just reselling it. Security hardening, system integration, lifecycle management, and configuration work all qualify as value-add. The presence of value-add is what moves you from Agent to Principal.' },
+            { term: 'GAAP', definition: 'Generally Accepted Accounting Principles — the standard accounting rules U.S. companies follow. ASC 606 is a GAAP standard. Your company\'s financial statements, investor presentations, and bank covenants are all governed by GAAP. How you classify revenue has real legal and financial consequences.' },
+            { term: 'Gross vs. Net Revenue', definition: 'Gross revenue = total contract value. Net revenue = just your fee. If you\'re a $50M contractor but booking net, you might actually look like a $3M company on paper. This affects your ability to compete on larger contracts that require revenue minimums, get financing, or attract investors.' },
+          ],
+          content: [
+            {
+              type: 'text',
+              heading: 'Why This Lesson Exists',
+              body: 'Most PMs never think about how revenue gets reported. That\'s a problem — because the way your company describes your work on paper determines how much the business is worth. Two companies can do identical work on the same DoD contract and end up with wildly different financial profiles depending on whether they\'re classified as a Principal or an Agent. One looks like an engineering firm. The other looks like a logistics company. The difference is documentation.',
+            },
+            {
+              type: 'text',
+              heading: 'The Core Rule: ASC 606',
+              body: 'ASC 606 is the accounting standard that governs revenue recognition. It was designed to make revenue reporting consistent and honest — revenue gets recorded when work is actually delivered, not just when an invoice goes out. For government contractors, the most important piece of ASC 606 is the Principal vs. Agent distinction. It directly determines whether you book the full contract value or just your fee.',
+            },
+            {
+              type: 'principal_agent_visual' as any,
+              heading: 'Principal vs. Agent — The $9.5M Difference',
+            },
+            {
+              type: 'text',
+              heading: 'The 5-Step Revenue Test',
+              body: 'To recognize revenue as a Principal under ASC 606, your company must satisfy five steps. This is not optional — auditors and investors use this framework. As a PM, your job is to make sure the work you manage is documented in a way that passes each step.',
+            },
+            {
+              type: 'five_step_revenue_visual' as any,
+              heading: 'The 5-Step Revenue Recognition Framework',
+            },
+            {
+              type: 'lucas_note',
+              heading: 'From Lucas',
+              body: 'I\'ve sat in rooms where a company was pitching to a potential acquirer and the first question was "are you booking gross or net?" If the answer is net, the valuation conversation changes immediately. The acquirer knows you\'re a middleman — not a mission partner. Your CPARS might be perfect, your team might be excellent, but on paper you\'re a pass-through. That matters when you\'re trying to grow, borrow money, win larger contracts, or sell the company. This isn\'t just accounting — it\'s strategy.',
+            },
+            {
+              type: 'text',
+              heading: 'The "Hardware Dump" Problem',
+              body: 'One of the most common revenue recognition traps in defense contracting is the hardware dump — a Statement of Work that only asks for hardware delivery with no engineering work described. If your SOW just says "deliver 50 servers," you\'re an Agent. You move boxes. You book your fee. But if that same SOW says "deliver, configure, harden, integrate, and test 50 servers per the government\'s cybersecurity requirements," you\'re a Principal. You\'re engineering. You book gross.',
+            },
+            {
+              type: 'callout',
+              style: 'warning',
+              heading: 'If it\'s not documented, it didn\'t happen',
+              body: 'From an auditor\'s perspective, verbal work and undocumented engineering are invisible. If your team spent 300 hours integrating a system but the SOW doesn\'t describe integration as a performance obligation, that work doesn\'t support a Principal classification. The documentation must exist before the work happens — not after.',
+            },
+            {
+              type: 'value_add_examples_visual' as any,
+              heading: 'From Logistics to Engineering — The Language Shift',
+            },
+            {
+              type: 'text',
+              heading: 'What This Means at the PM Level',
+              body: 'You may not write the financial statements, but you control the inputs. The SOW language, the deliverable descriptions, the CDRLs, the technical documentation — all of it flows from your program. When you push for tighter SOW language that describes the engineering work, when you ensure your team documents what they built, when you insist on deliverables that prove technical value was added — you are directly improving your company\'s financial health. That is not an accounting problem. That is a PM responsibility.',
+            },
+            {
+              type: 'callout',
+              style: 'tip',
+              heading: 'The upgrade move every BD team should know',
+              body: 'During proposal development, review every hardware or supply line item. Ask: "What engineering work happens before, during, or after this delivery?" If any exists, document it as an explicit performance obligation. Security hardening. Configuration. Integration testing. Lifecycle management. Each of these moves the line item from logistics to engineering — and moves your company from Agent to Principal.',
+            },
+          ],
+          quiz: [
+            {
+              id: 'f9q1',
+              question: 'Under ASC 606, a contractor who takes ownership of delivery, adds technical value, and bears performance risk is classified as:',
+              options: ['An Agent', 'A Subcontractor', 'A Principal', 'A Pass-Through Entity'],
+              correct: 2,
+              explanation: 'A Principal controls the delivery of a good or service before it is transferred to the customer and bears the risk of delivery. They book gross revenue — the full contract value. An Agent, by contrast, only arranges for another party to deliver and books only the net fee.',
+            },
+            {
+              id: 'f9q2',
+              question: 'A SOW says "Deliver 100 laptops to the government." With no other engineering work described, this contractor would most likely be classified as:',
+              options: ['A Principal — hardware delivery is always gross revenue', 'An Agent — no value-add is documented', 'A Subcontractor under ASC 605', 'A Principal if the laptops cost more than $150K'],
+              correct: 1,
+              explanation: 'Without documented engineering work (configuration, hardening, integration), a hardware delivery SOW describes a pass-through arrangement. The contractor books only their fee as revenue — not the gross hardware cost. Adding documented value-add obligations to the SOW would change this classification.',
+            },
+            {
+              id: 'f9q3',
+              question: 'Which of the following best describes "revenue recognition" under ASC 606?',
+              options: ['Revenue is recorded when an invoice is sent', 'Revenue is recorded when payment is received', 'Revenue is recorded when a performance obligation is satisfied', 'Revenue is recorded at contract award'],
+              correct: 2,
+              explanation: 'ASC 606 requires revenue to be recognized when (or as) a performance obligation is satisfied — meaning control of the promised good or service has transferred to the customer. For government contractors, this typically happens as work is performed on cost-plus contracts or at delivery milestones on fixed-price contracts.',
+            },
+            {
+              id: 'f9q4',
+              question: 'A PM ensures the SOW includes language describing "security hardening, system integration, and lifecycle testing." The primary financial benefit of this documentation is:',
+              options: ['It increases the contract ceiling', 'It supports Principal classification and gross revenue recognition', 'It qualifies the contract for CPIF fee structure', 'It satisfies the Nunn-McCurdy threshold requirement'],
+              correct: 1,
+              explanation: 'Documenting engineering work as explicit performance obligations is what separates a Principal from an Agent under ASC 606. By describing the technical value-add in the SOW, the PM provides the audit trail that supports booking gross contract revenue rather than just the fee — directly improving the company\'s reported financials.',
+            },
+          ],
+          keyTerms: [
+            { term: 'ASC 606', definition: 'The FASB accounting standard governing revenue recognition. Determines when and how revenue is recorded — and whether the full contract value or just the fee is recognized as revenue.' },
+            { term: 'Principal', definition: 'A party that controls delivery of goods or services and bears performance risk. Books gross revenue under ASC 606.' },
+            { term: 'Agent', definition: 'A party that arranges delivery but does not control it or bear risk. Books only the fee as revenue.' },
+            { term: 'Performance Obligation', definition: 'A documented promise to deliver a distinct good or service. Must be specified in the contract to support revenue recognition.' },
+            { term: 'Value-Add', definition: 'Technical work — integration, hardening, configuration, testing — that transforms a product and supports Principal classification.' },
+            { term: 'GAAP', definition: 'Generally Accepted Accounting Principles. The accounting rules your company\'s financials follow. ASC 606 is part of GAAP.' },
+            { term: 'Gross vs. Net Revenue', definition: 'Gross = full contract value. Net = fee only. The difference determines how large and valuable your company appears to investors and lenders.' },
+          ],
+        },
   // ─────────────────────────────────────────────────────────────
   // MODULE 3 — CONTRACTS
   // ─────────────────────────────────────────────────────────────
