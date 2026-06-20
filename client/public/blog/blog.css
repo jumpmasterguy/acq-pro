@@ -344,6 +344,13 @@ footer {
   .nav-actions .btn-ghost { display: none; }
   .nav-actions .nav-blog { display: inline-flex; }
   nav { padding: 0; }
+  .nav-inner { padding: 0 1rem; gap: 8px; }
+  .nav-logo-text { font-size: 0.95rem; }
+  .nav-logo-icon { width: 30px; height: 30px; border-radius: 7px; }
+  .nav-logo-icon svg { width: 18px; height: 18px; }
+  .nav-blog-pill { padding: 5px 10px; font-size: 0.78rem; gap: 5px; }
+  .nav-blog-badge { font-size: 0.6rem; padding: 1px 5px; }
+  .btn-cta { padding: 8px 14px; font-size: 0.8rem; white-space: nowrap; }
 }
 
 /* ── FEATURED POST CARD ── */
