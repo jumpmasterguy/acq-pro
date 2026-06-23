@@ -679,6 +679,15 @@ def add_to_index(slug: str, title: str, excerpt: str, topic: dict, read_time: in
       </div>
     </a>
 """
+    # Remove old featured tag and add to the new card
+    import re as _re
+    content = _re.sub(r' post-card-featured', '', content)
+    content = _re.sub(r'<span class="post-tag post-tag-hot">[^<]*</span>', '', content)
+    # Make the new card featured
+    card = card.replace('class="post-card"', 'class="post-card post-card-featured"', 1)
+    card = card.replace(f'<span class="post-tag">{topic["badge"]}</span>',
+                        f'<span class="post-tag post-tag-hot">🔥 Latest</span>', 1)
+
     marker = '  <div class="posts-grid">\n'
     if marker in content:
         content = content.replace(marker, marker + card, 1)
