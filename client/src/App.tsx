@@ -410,7 +410,7 @@ function AppContent() {
   const currentLevel = getLevel(xp);
 
   return (
-    <>
+    <ErrorBoundary>
     <div className="min-h-screen bg-background flex">
       {/* Mobile overlay */}
       {sidebarOpen && (
@@ -833,7 +833,7 @@ function AppContent() {
         </div>
       </div>
     )}
-  </>
+  </ErrorBoundary>
   );
 }
 
