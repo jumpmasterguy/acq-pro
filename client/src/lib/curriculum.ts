@@ -3349,7 +3349,85 @@ export const modules: Module[] = [
                 explanation:
                   'The financial stakes of documentation are concrete and calculable. On a $3M award fee pool, the difference between Excellent (97.5% earned = $2.925M) and Good (50% earned = $1.5M) performance is $1.425M. If that gap is caused by undocumented achievements — work that was actually done but not recorded and presented — it is a permanent, unrecoverable operating income loss. Documentation is not bureaucratic overhead; it is the mechanism through which excellent work converts to earnings.',
               },
-            ],
+                {
+          id: 'finance-9',
+          title: 'Revenue Recognition & The Value-Add',
+          duration: '14 min',
+          description: 'Why how you describe your work determines how much your company is worth — and how shifting from logistics to engineering changes your financial picture.',
+          keyTerms: [
+            { term: 'ASC 606', definition: 'The FASB accounting standard governing revenue recognition. Determines when and how revenue is recorded — and whether the full contract value or just the fee is recognized as revenue.' },
+            { term: 'Principal', definition: 'A party that controls delivery of goods or services and bears performance risk. Books gross revenue under ASC 606.' },
+            { term: 'Agent', definition: 'A party that arranges delivery but does not control it or bear risk. Books only the fee as revenue.' },
+            { term: 'Performance Obligation', definition: 'A documented promise to deliver a distinct good or service. Must be specified in the contract to support revenue recognition.' },
+            { term: 'Value-Add', definition: 'Technical work — integration, hardening, configuration, testing — that transforms a product and supports Principal classification.' },
+            { term: 'GAAP', definition: 'Generally Accepted Accounting Principles. The accounting rules your company\'s financials follow. ASC 606 is part of GAAP.' },
+            { term: 'Gross vs. Net Revenue', definition: 'Gross = full contract value. Net = fee only. The difference determines how large and valuable your company appears to investors and lenders.' },
+          ],
+          content: [
+            {
+              type: 'text',
+              heading: 'Why This Lesson Exists',
+              body: 'Most PMs never think about how revenue gets reported. The way your company describes your work on paper determines how much the business is worth. Two companies can do identical work on the same DoD contract and end up with wildly different financial profiles depending on whether they are classified as a Principal or an Agent.',
+            },
+            {
+              type: 'principal_agent_visual' as any,
+              heading: 'Principal vs. Agent — The $9.5M Difference',
+            },
+            {
+              type: 'text',
+              heading: 'The 5-Step Revenue Test',
+              body: 'To recognize revenue as a Principal under ASC 606, your company must satisfy five steps. As a PM, your job is to make sure the work you manage is documented in a way that passes each step.',
+            },
+            {
+              type: 'five_step_revenue_visual' as any,
+              heading: 'The 5-Step Revenue Recognition Framework',
+            },
+            {
+              type: 'lucas_note',
+              heading: 'From Lucas',
+              body: 'I\'ve sat in rooms where a company was pitching to a potential acquirer and the first question was "are you booking gross or net?" If the answer is net, the valuation conversation changes immediately. Your CPARS might be perfect, your team might be excellent, but on paper you\'re a pass-through. That matters when you\'re trying to grow, borrow money, win larger contracts, or sell the company.',
+            },
+            {
+              type: 'text',
+              heading: 'The Hardware Dump Problem',
+              body: 'One of the most common traps in defense contracting is the hardware dump — a Statement of Work that only asks for hardware delivery with no engineering work described. If your SOW just says "deliver 50 servers," you\'re an Agent. But if that same SOW says "deliver, configure, harden, integrate, and test 50 servers per the government\'s cybersecurity requirements," you\'re a Principal.',
+            },
+            {
+              type: 'value_add_examples_visual' as any,
+              heading: 'From Logistics to Engineering — The Language Shift',
+            },
+            {
+              type: 'callout',
+              style: 'warning',
+              heading: 'If it is not documented, it did not happen',
+              body: 'From an auditor\'s perspective, verbal work and undocumented engineering are invisible. If your team spent 300 hours integrating a system but the SOW does not describe integration as a performance obligation, that work does not support a Principal classification.',
+            },
+          ],
+          quiz: [
+            {
+              id: 'f9q1',
+              question: 'Under ASC 606, a contractor who takes ownership of delivery, adds technical value, and bears performance risk is classified as:',
+              options: ['An Agent', 'A Subcontractor', 'A Principal', 'A Pass-Through Entity'],
+              correct: 2,
+              explanation: 'A Principal controls the delivery of a good or service and bears the risk of delivery. They book gross revenue — the full contract value. An Agent arranges delivery but does not control it, and books only the net fee.',
+            },
+            {
+              id: 'f9q2',
+              question: 'A SOW says "Deliver 100 laptops to the government." With no other engineering work described, this contractor would most likely be classified as:',
+              options: ['A Principal — hardware delivery is always gross revenue', 'An Agent — no value-add is documented', 'A Subcontractor under ASC 605', 'A Principal if the laptops cost more than $150K'],
+              correct: 1,
+              explanation: 'Without documented engineering work, a hardware delivery SOW describes a pass-through arrangement. The contractor books only their fee as revenue — not the gross hardware cost.',
+            },
+            {
+              id: 'f9q3',
+              question: 'A PM ensures the SOW includes "security hardening, system integration, and lifecycle testing." The primary financial benefit is:',
+              options: ['It increases the contract ceiling', 'It supports Principal classification and gross revenue recognition', 'It qualifies the contract for CPIF fee structure', 'It satisfies Nunn-McCurdy threshold requirements'],
+              correct: 1,
+              explanation: 'Documenting engineering work as explicit performance obligations supports booking gross contract revenue rather than just the fee — directly improving the company\'s reported financials.',
+            },
+          ],
+        },
+    ],
           },
         },
       },
