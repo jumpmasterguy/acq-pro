@@ -167,9 +167,9 @@ export async function registerRoutes(
             moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
             moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
             userProfile: (user as any).userProfile ?? null,
-        currentStreak: (user as any).currentStreak ?? 0,
-        longestStreak: (user as any).longestStreak ?? 0,
-        lastChallengeDate: (user as any).lastChallengeDate ?? null,
+            currentStreak: (user as any).currentStreak ?? 0,
+            longestStreak: (user as any).longestStreak ?? 0,
+            lastChallengeDate: (user as any).lastChallengeDate ?? null,
           });
         });
       }
@@ -204,9 +204,9 @@ export async function registerRoutes(
       moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
       moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
       userProfile: user.userProfile ?? null,
-        currentStreak: (user as any).currentStreak ?? 0,
-        longestStreak: (user as any).longestStreak ?? 0,
-        lastChallengeDate: (user as any).lastChallengeDate ?? null,
+      currentStreak: (user as any).currentStreak ?? 0,
+      longestStreak: (user as any).longestStreak ?? 0,
+      lastChallengeDate: (user as any).lastChallengeDate ?? null,
     });
   });
 
