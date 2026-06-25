@@ -117,6 +117,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack }: AuthPage
       const res = await apiRequest("POST", "/api/auth/login", values);
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Invalid email or password");
+      if (!data.id || !data.email) throw new Error("Invalid session response — please try again");
       onAuthenticated(data);
     } catch (err: any) {
       toast({ title: "Login failed", description: getErrorMessage(err), variant: "destructive" });
