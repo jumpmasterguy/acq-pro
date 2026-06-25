@@ -227,6 +227,8 @@ function AppContent() {
             // If saved view was admin but user lost admin, fall back to dashboard
             if (saved.type === 'admin' && !user.isAdmin) {
               setView({ type: 'dashboard' });
+            } else if (saved.type === 'analytics' && !user.isAdmin) {
+              setView({ type: 'dashboard' });
             } else {
               setView(saved);
             }
@@ -687,6 +689,12 @@ function AppContent() {
           )}
           {view.type === 'analytics' && isAdmin && (
             <AdminAnalytics onBack={() => setView({ type: 'admin' })} />
+          )}
+          {view.type === 'pdu' && (
+            <PDUTracker
+              onBack={() => setView({ type: 'dashboard' })}
+              completedLessons={Array.from(completedLessons)}
+            />
           )}
         </ErrorBoundary>
         </main>
