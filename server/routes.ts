@@ -1200,7 +1200,12 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       const sendNewsletterIssue = emailModule.sendNewsletterIssue;
       const allUsers = await storage.getAllUsers();
       const recipients = allUsers
-        .filter((u: any) => u.email && !u.email.includes('.pr@gmail'))
+        .filter((u: any) => {
+          if (!u.email) return false;
+          if (u.email.includes('.pr@gmail')) return false; // lucas test account
+          if (u.email === 'jumpmasterguy@gmail.com') return false; // throwaway
+          return true;
+        })
         .map((u: any) => u.email);
 
       if (testOnly) {
