@@ -27,11 +27,8 @@ export function serveStatic(app: Express) {
     return res.sendFile(filePath);
   };
 
-  // Serve landing page at root for unauthenticated visitors
-  app.get("/", (req: Request, res: Response) => {
-    if ((req as any).isAuthenticated && (req as any).isAuthenticated()) {
-      return res.sendFile(path.resolve(distPath, "index.html"));
-    }
+  // Always serve landing page at root — app lives at /app
+  app.get("/", (_req: Request, res: Response) => {
     const landingPath = path.resolve(distPath, "landing.html");
     if (fs.existsSync(landingPath)) {
       return res.sendFile(landingPath);
