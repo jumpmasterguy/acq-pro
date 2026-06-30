@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Shield, Users, Crown, UserX, RefreshCw, ChevronDown,
   BarChart2, Clock, Zap, TrendingUp, Activity, Star,
-  BookOpen, Target, LogIn, Trash2,
+  BookOpen, Target, LogIn, Trash2, Share2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +24,10 @@ interface AdminUser {
   email: string;
   subscriptionStatus: string;
   completedLessons: number;
+  referralCode: string | null;
+  referredBy: string | null;
+  referralCount: number;
+  referralRewardGranted: number;
 }
 
 interface AnalyticsUser {
@@ -97,7 +101,7 @@ function formatMinutes(mins: number): string {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-type AdminTab = "users" | "analytics";
+type AdminTab = "users" | "analytics" | "referrals";
 
 export default function AdminPage() {
   const { toast } = useToast();
@@ -281,6 +285,19 @@ export default function AdminPage() {
           <span className="flex items-center gap-1.5">
             <BarChart2 className="w-4 h-4" />
             Analytics
+          </span>
+        </button>
+        <button
+          onClick={() => setActiveTab("referrals")}
+          className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+            activeTab === "referrals"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <span className="flex items-center gap-1.5">
+            <Share2 className="w-4 h-4" />
+            Referrals
           </span>
         </button>
       </div>
@@ -706,6 +723,151 @@ export default function AdminPage() {
             </>
           )}
         </>
+      )}
+
+      {/* ── REFERRALS TAB ─────────────────────────────────────────────────────── */}
+      {activeTab === "referrals" && (
+        <div className="space-y-6 pt-2">
+
+          {/* Referrers — who has sent people */}
+          <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-border">
+              <h3 className="font-semibold text-sm">Who Has Referred People</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">Users who have at least 1 signup from their referral link. Every 2 signups = 1 year Pro.</p>
+            </div>
+            {usersLoading ? (
+              <p className="text-sm text-muted-foreground p-5">Loading...</p>
+            ) : (
+              <table className="w-full text-sm">
+                <thead className="bg-muted/40">
+                  <tr>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">User</th>
+                    <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Referrals</th>
+                    <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Rewards Earned</th>
+                    <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Rewards Granted</th>
+                    <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {users
+                    .filter(u => (u.referralCount ?? 0) > 0)
+                    .sort((a, b) => (b.referralCount ?? 0) - (a.referralCount ?? 0))
+                    .map(u => {
+                      const earned = Math.floor((u.referralCount ?? 0) / 2);
+                      const granted = u.referralRewardGranted ?? 0;
+                      const owes = earned - granted;
+                      return (
+                        <tr key={u.id} className={`hover:bg-muted/20 transition-colors ${owes > 0 ? 'bg-amber-50/40 dark:bg-amber-900/10' : ''}`}>
+                          <td className="px-4 py-3.5">
+                            <div className="font-medium">{u.username}</div>
+                            <div className="text-xs text-muted-foreground">{u.email}</div>
+                          </td>
+                          <td className="px-4 py-3.5 text-center">
+                            <span className="font-bold text-primary">{u.referralCount}</span>
+                          </td>
+                          <td className="px-4 py-3.5 text-center">
+                            <span className={`font-semibold ${earned > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-muted-foreground'}`}>
+                              {earned} yr{earned !== 1 ? 's' : ''}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3.5 text-center">
+                            {owes > 0 ? (
+                              <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 rounded-full">
+                                ⚠ {owes} owed
+                              </span>
+                            ) : (
+                              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">✓ Up to date</span>
+                            )}
+                          </td>
+                          <td className="px-4 py-3.5 text-right">
+                            <button
+                              className="text-xs bg-primary text-primary-foreground px-3 py-1.5 rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50"
+                              disabled={pendingId === u.id}
+                              onClick={async () => {
+                                setPendingId(u.id);
+                                try {
+                                  await fetch(`/api/admin/users/${u.id}/grant-yearly-pro`, { method: 'POST', credentials: 'include' });
+                                  await refetchUsers();
+                                  toast({ title: '1 Year Pro granted', description: `${u.email} now has 1 year of Pro access` });
+                                } catch { toast({ title: 'Error', description: 'Failed to grant Pro', variant: 'destructive' }); }
+                                finally { setPendingId(null); }
+                              }}
+                            >
+                              {pendingId === u.id ? 'Granting…' : 'Grant 1 Yr Pro'}
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  }
+                  {users.filter(u => (u.referralCount ?? 0) > 0).length === 0 && (
+                    <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-muted-foreground">No referrals yet.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            )}
+          </div>
+
+          {/* Referred users — who signed up via a code */}
+          <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-border">
+              <h3 className="font-semibold text-sm">Who Signed Up Via Referral</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">Users who joined using someone else's referral code.</p>
+            </div>
+            {usersLoading ? (
+              <p className="text-sm text-muted-foreground p-5">Loading...</p>
+            ) : (
+              <table className="w-full text-sm">
+                <thead className="bg-muted/40">
+                  <tr>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">User</th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Plan</th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Referred By Code</th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Referrer</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {users
+                    .filter(u => u.referredBy)
+                    .map(u => {
+                      const referrer = users.find(r => r.referralCode === u.referredBy);
+                      return (
+                        <tr key={u.id} className="hover:bg-muted/20 transition-colors">
+                          <td className="px-4 py-3.5">
+                            <div className="font-medium">{u.username}</div>
+                            <div className="text-xs text-muted-foreground">{u.email}</div>
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[u.subscriptionStatus] ?? statusColors.free}`}>
+                              {statusLabel[u.subscriptionStatus] ?? 'Free'}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <code className="text-xs bg-muted px-1.5 py-0.5 rounded">{u.referredBy}</code>
+                          </td>
+                          <td className="px-4 py-3.5">
+                            {referrer ? (
+                              <div>
+                                <div className="text-sm font-medium">{referrer.username}</div>
+                                <div className="text-xs text-muted-foreground">{referrer.email}</div>
+                              </div>
+                            ) : (
+                              <span className="text-xs text-muted-foreground">Unknown</span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  }
+                  {users.filter(u => u.referredBy).length === 0 && (
+                    <tr><td colSpan={4} className="px-4 py-8 text-center text-sm text-muted-foreground">No referred signups yet.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            )}
+          </div>
+
+        </div>
       )}
     </div>
   );

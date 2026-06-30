@@ -7,7 +7,7 @@ import {
   Award, Lock, ChevronRight, Zap,
   ChevronDown, ChevronUp, Beaker,
   BookOpen, CheckCircle2, Circle, Target, TrendingUp, Clock,
-  Briefcase, Building2, FileText, LayoutGrid, Filter
+  Briefcase, Building2, FileText, LayoutGrid, Filter, Users
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiRequest } from "@/lib/queryClient";
@@ -21,6 +21,7 @@ interface DashboardProps {
   userProfile?: UserProfile | null;
   username?: string;
   onEditProfile?: () => void;
+  isAdmin?: boolean;
 }
 
 // ── Career track lesson-level definitions ───────────────────────────────────
@@ -380,7 +381,7 @@ function FilterTab({ active, onClick, children }: { active: boolean; onClick: ()
 }
 
 // ── Main Dashboard ───────────────────────────────────────────────────────────
-export default function Dashboard({ progress, onSelectModule, onUpgrade, username }: DashboardProps) {
+export default function Dashboard({ progress, onSelectModule, onUpgrade, username, isAdmin }: DashboardProps) {
   const totalLessons = getTotalLessons();
   const completedCount = progress.completedLessons.size;
   const xp = calculateXP(progress.completedLessons, progress.quizScores);
@@ -388,6 +389,7 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
 
   // Streak + daily challenge state
   const [streak, setStreak] = useState({ currentStreak: 0, longestStreak: 0, alreadyCompleted: false, date: '' });
+  const [adminStats, setAdminStats] = useState<{ totalUsers: number; proUsers: number; freeUsers: number } | null>(null);
   const [referral, setReferral] = useState<{ referralCode: string; referralCount: number; rewardsEarned: number; referralLink: string; nextRewardAt: number } | null>(null);
   const [referralCopied, setReferralCopied] = useState(false);
   const [challenge, setChallenge] = useState<{ questions: any[], date: string } | null>(null);
@@ -402,6 +404,14 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
       .then(data => { if (data.referralCode) setReferral(data); })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    apiRequest('GET', '/api/admin/growth')
+      .then(r => r.json())
+      .then(data => { if (data.totalUsers !== undefined) setAdminStats(data); })
+      .catch(() => {});
+  }, [isAdmin]);
 
   useEffect(() => {
     apiRequest('GET', '/api/daily-challenge')
@@ -490,6 +500,9 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
     { icon: <Zap className="w-5 h-5 text-yellow-500" />, value: xp, label: 'XP earned', sub: `Lv ${levelInfo.level} · ${levelInfo.title}` },
     { icon: <Target className="w-5 h-5 text-primary" />, value: progress.isPremium ? modules.length : FREE_MODULES.length, label: 'Modules unlocked', sub: `of ${modules.length} available` },
     { icon: <TrendingUp className="w-5 h-5 text-cyan-500" />, value: `${Math.round((completedCount / totalLessons) * 100)}%`, label: 'Overall progress', sub: `${totalLessons - completedCount} remaining` },
+    ...(isAdmin && adminStats ? [
+      { icon: <Users className="w-5 h-5 text-violet-500" />, value: adminStats.totalUsers, label: 'Total signups', sub: `${adminStats.proUsers} paid · ${adminStats.freeUsers} free` },
+    ] : []),
   ];
 
   const activeTrack = CAREER_TRACKS.find(t => t.id === activeCareer);

@@ -639,6 +639,7 @@ function AppContent() {
               userProfile={authState.status === 'authenticated' ? (authState.user.userProfile as UserProfile | null) : null}
               username={authState.status === 'authenticated' ? authState.user.username : undefined}
               onEditProfile={handleEditProfile}
+              isAdmin={isAdmin}
             />
           )}
           {view.type === 'module' && (() => {

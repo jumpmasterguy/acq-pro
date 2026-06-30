@@ -676,6 +676,10 @@ export async function registerRoutes(
       email: u.email,
       subscriptionStatus: u.subscriptionStatus,
       completedLessons: (u.completedLessons ?? []).length,
+      referralCode: u.referralCode ?? null,
+      referredBy: u.referredBy ?? null,
+      referralCount: u.referralCount ?? 0,
+      referralRewardGranted: u.referralRewardGranted ?? 0,
     })));
   });
 
@@ -718,6 +722,17 @@ export async function registerRoutes(
     const updated = await storage.grantYearlyPro(userId);
     if (!updated) return res.status(404).json({ message: "User not found" });
     return res.json({ message: `${updated.email} granted 1 year of Pro access`, userId });
+  });
+
+  // GET /api/admin/growth — lightweight signup counts for dashboard stat card
+  app.get("/api/admin/growth", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
+    const allUsers = await storage.getAllUsers();
+    const totalUsers = allUsers.length;
+    const proUsers = allUsers.filter((u: any) =>
+      u.subscriptionStatus === "active" || u.subscriptionStatus === "lifetime"
+    ).length;
+    return res.json({ totalUsers, proUsers, freeUsers: totalUsers - proUsers });
   });
 
   // GET /api/admin/referrals — referral stats overview
