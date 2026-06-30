@@ -434,16 +434,17 @@ function AppContent() {
         "fixed left-0 top-0 h-full w-64 bg-sidebar text-sidebar-foreground border-r border-sidebar-border z-40 flex flex-col transition-transform duration-300 safe-top",
         sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
-        {/* Logo — click goes to the real acqlerate.com marketing site.
-            Auth cookie persists, so Sign In on the marketing site sends them
-            straight back into the app with no password re-entry. */}
+        {/* Logo — opens the real acqlerate.com marketing site in a new tab
+            so the user's authenticated dashboard tab stays open. */}
         <div className="px-5 py-5 border-b border-sidebar-border flex items-center justify-between">
           <a
             href="https://acqlerate.com/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center hover:opacity-80 transition-opacity cursor-pointer"
             data-testid="sidebar-logo-home"
-            aria-label="Go to acqlerate.com"
-            title="acqlerate.com"
+            aria-label="Open acqlerate.com in a new tab"
+            title="Open acqlerate.com"
           >
             <AcqlerateLogo iconSize={32} />
           </a>
