@@ -9,7 +9,7 @@ interface AcqllerateLogoProps {
 
 /**
  * Official Acqlerate brand logo.
- * Teal rounded-square icon + "Acql" (dark) + "erate" (teal) wordmark.
+ * Teal rounded-square icon + "Acq" (dark) + "lerate" (teal) wordmark.
  */
 export function AcqlerateLogo({
   iconSize = 36,
@@ -70,8 +70,8 @@ export function AcqlerateLogo({
             fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
           }}
         >
-          <span className="text-sidebar-foreground">Acql</span>
-          <span style={{ color: "#01696f" }}>erate</span>
+          <span className="text-sidebar-foreground">Acq</span>
+          <span style={{ color: "#01696f" }}>lerate</span>
         </span>
       )}
     </div>
