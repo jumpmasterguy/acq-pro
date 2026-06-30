@@ -223,6 +223,11 @@ app.use((req, res, next) => {
         // Email drip tracking
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS registered_at TEXT NOT NULL DEFAULT now()::text`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS sent_email_days JSONB NOT NULL DEFAULT '[]'::JSONB`,
+        // Referral tracking
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS referral_code TEXT`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS referred_by TEXT`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS referral_count INTEGER NOT NULL DEFAULT 0`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS referral_reward_granted INTEGER NOT NULL DEFAULT 0`,
         // Streak tracking
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS current_streak INTEGER NOT NULL DEFAULT 0`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS longest_streak INTEGER NOT NULL DEFAULT 0`,

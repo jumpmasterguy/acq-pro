@@ -388,11 +388,20 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
 
   // Streak + daily challenge state
   const [streak, setStreak] = useState({ currentStreak: 0, longestStreak: 0, alreadyCompleted: false, date: '' });
+  const [referral, setReferral] = useState<{ referralCode: string; referralCount: number; rewardsEarned: number; referralLink: string; nextRewardAt: number } | null>(null);
+  const [referralCopied, setReferralCopied] = useState(false);
   const [challenge, setChallenge] = useState<{ questions: any[], date: string } | null>(null);
   const [challengeActive, setChallengeActive] = useState(false);
   const [challengeAnswers, setChallengeAnswers] = useState<Record<string, number>>({});
   const [challengeSubmitted, setChallengeSubmitted] = useState(false);
   const [challengeResult, setChallengeResult] = useState<{ score: number, xpEarned: number, message: string } | null>(null);
+
+  useEffect(() => {
+    apiRequest('GET', '/api/my-referral')
+      .then(r => r.json())
+      .then(data => { if (data.referralCode) setReferral(data); })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     apiRequest('GET', '/api/daily-challenge')
@@ -639,6 +648,38 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
             >
               Submit Answers
             </Button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Referral Card ─────────────────────────────────────────────── */}
+      {referral && (
+        <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <p className="text-sm font-bold text-primary mb-0.5">🎁 Spread the word, earn a year of Pro</p>
+              <p className="text-xs text-muted-foreground">
+                Get 2 people to sign up free and you earn <strong>1 year of Pro access</strong>. Every 2 signups = another year.
+              </p>
+              <div className="mt-2 flex items-center gap-2">
+                <code className="text-xs bg-muted px-2 py-1 rounded font-mono">{referral.referralLink}</code>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(referral.referralLink);
+                    setReferralCopied(true);
+                    setTimeout(() => setReferralCopied(false), 2000);
+                  }}
+                  className="text-xs text-primary font-semibold hover:underline flex-shrink-0"
+                >
+                  {referralCopied ? '✓ Copied!' : 'Copy link'}
+                </button>
+              </div>
+            </div>
+            <div className="text-right flex-shrink-0">
+              <p className="text-2xl font-black text-primary">{referral.referralCount}</p>
+              <p className="text-[10px] text-muted-foreground">signups</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">{referral.nextRewardAt - referral.referralCount} more to next reward</p>
+            </div>
           </div>
         </div>
       )}

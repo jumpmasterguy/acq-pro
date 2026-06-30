@@ -885,3 +885,37 @@ export async function processDripEmails(
 
   return updated;
 }
+
+// ── Referral Reward Email ─────────────────────────────────────────────────────
+export async function sendReferralRewardEmail(to: string, username: string): Promise<void> {
+  const name = username?.split('@')[0] || 'there';
+  await resend.emails.send({
+    from: 'Lucas Cruz | Acqlerate <hello@acqlerate.com>',
+    to,
+    bcc: ['lucas.l.cruz.es@gmail.com'],
+    reply_to: 'hello@acqlerate.com',
+    subject: "You earned it — 1 year of Acqlerate Pro on us",
+    html: `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#060f1e;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <div style="max-width:560px;margin:0 auto;padding:40px 20px;">
+    <div style="margin-bottom:28px;">
+      <span style="color:#fff;font-weight:800;font-size:1.1rem;">Acql<span style="color:#4FC3CB">erate</span></span>
+    </div>
+    <div style="background:#0d1a2e;border:1px solid #1e2f4a;border-radius:16px;padding:36px;margin-bottom:24px;">
+      <div style="text-align:center;margin-bottom:24px;">
+        <div style="font-size:3rem;">🎉</div>
+      </div>
+      <h1 style="color:#fff;font-size:1.5rem;font-weight:800;margin:0 0 16px;text-align:center;">You just earned 1 year of Pro.</h1>
+      <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.8;margin:0 0 16px;">Hey ${name} — two people signed up through your referral link. That means you've earned a full year of Acqlerate Pro, on us.</p>
+      <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.8;margin:0 0 24px;">Your account has already been upgraded. Full access to all 6 modules, 44 lessons, unlimited AI study assistant, and everything we add going forward — for a year.</p>
+      <div style="background:#01696f22;border:1px solid #01696f44;border-radius:12px;padding:16px 20px;margin-bottom:24px;">
+        <p style="color:#4FC3CB;font-size:0.85rem;margin:0;font-weight:600;">Keep sharing your link — every 2 new signups earns another year of Pro.</p>
+      </div>
+      <a href="https://acqlerate.com/app" style="display:inline-block;background:#01696f;color:#fff;text-decoration:none;padding:14px 28px;border-radius:10px;font-weight:700;font-size:0.95rem;">Go to Acqlerate →</a>
+    </div>
+    <p style="color:#4a6274;font-size:0.75rem;text-align:center;">Acqlerate · acqlerate.com</p>
+  </div>
+</body></html>`,
+  });
+}

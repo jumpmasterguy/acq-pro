@@ -36,6 +36,11 @@ export const users = pgTable("users", {
   // Daily challenge tracking
   lastChallengeDate: text("last_challenge_date"), // YYYY-MM-DD of last completed challenge
   challengeHistory: jsonb("challenge_history").notNull().default(sql`'[]'::jsonb`), // [{date, score, xpEarned}]
+  // Referral tracking
+  referralCode: text("referral_code"),          // user's unique share code (e.g. 'LUCAS42')
+  referredBy: text("referred_by"),              // referral code used at signup
+  referralCount: integer("referral_count").notNull().default(0), // # of free signups via their code
+  referralRewardGranted: integer("referral_reward_granted").notNull().default(0), // # of yearly-pro rewards given
   // Email drip tracking
   registeredAt: text("registered_at").notNull().default(sql`now()::text`),
   sentEmailDays: jsonb("sent_email_days").notNull().default(sql`'[]'::jsonb`), // number[]

@@ -406,10 +406,26 @@ export default function AdminPage() {
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => makePro.mutate({ userId: user.id, plan: "active" })}
+                              >
+                                <Crown className="w-3.5 h-3.5" />
+                                Make Monthly Pro
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={async () => {
+                                  await fetch(`/api/admin/users/${user.id}/grant-yearly-pro`, { method: 'POST', credentials: 'include' });
+                                  qc.invalidateQueries({ queryKey: ["/api/admin/users"] });
+                                  toast({ title: '1 Year Pro granted', description: `${user.email} has 1 year of Pro access` });
+                                }}
                                 className="gap-2 cursor-pointer"
-                                data-testid={`admin-grant-monthly-${user.id}`}
                               >
                                 <Crown className="w-3.5 h-3.5 text-emerald-500" />
+                                Grant 1 Year Pro
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => makePro.mutate({ userId: user.id, plan: "active" })}
+                                className="gap-2 cursor-pointer"
+                              >
+                                <Crown className="w-3.5 h-3.5" />
                                 Grant Monthly Pro
                               </DropdownMenuItem>
                               <DropdownMenuItem

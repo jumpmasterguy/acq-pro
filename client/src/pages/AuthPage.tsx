@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -78,6 +78,18 @@ const highlights = [
 
 export default function AuthPage({ onAuthenticated, darkMode, onBack }: AuthPageProps) {
   const [tab, setTab] = useState<"login" | "register">("register");
+  const [referralCode, setReferralCode] = useState<string>("");
+
+  // Pick up ?ref=CODE from URL hash params
+  useEffect(() => {
+    const hash = window.location.hash; // e.g. #/auth?ref=LUCAS123
+    const queryStart = hash.indexOf('?');
+    if (queryStart >= 0) {
+      const params = new URLSearchParams(hash.slice(queryStart + 1));
+      const ref = params.get('ref');
+      if (ref) { setReferralCode(ref); setTab('register'); }
+    }
+  }, []);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -130,7 +142,10 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack }: AuthPage
     setLoading(true);
     try {
       const { confirmPassword, ...payload } = values;
-      const res = await apiRequest("POST", "/api/auth/register", payload);
+      const res = await apiRequest("POST", "/api/auth/register", {
+        ...payload,
+        ...(referralCode ? { referralCode } : {}),
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Registration failed");
       toast({ title: "Welcome to Acqlerate!", description: "Your account has been created." });

@@ -85,7 +85,22 @@ export async function registerRoutes(
 
     // Hash password and create user
     const passwordHash = await hashPassword(password);
+    const referredBy = (req.body.referralCode as string) || null;
     const user = await storage.createUser({ username, email, passwordHash });
+
+    // Generate and save referral code for new user
+    const referralCode = storage.generateReferralCode(email);
+    await storage.updateUserFields(user.id, { referralCode, referredBy });
+
+    // If referred, record the referral and potentially reward the referrer
+    if (referredBy) {
+      const { rewarded, referrer } = await storage.recordReferral(referredBy);
+      if (rewarded && referrer) {
+        // Notify referrer they earned a year of pro
+        const { sendReferralRewardEmail } = await import('./email.js') as any;
+        sendReferralRewardEmail?.(referrer.email, referrer.username).catch(() => {});
+      }
+    }
 
     // Send welcome email + admin notification (non-blocking)
     sendWelcomeEmail(user.email, user.username).catch(() => {});
@@ -694,6 +709,53 @@ export async function registerRoutes(
     const status = plan === "free" ? "free" : plan === "lifetime" ? "lifetime" : "active";
     await storage.updateUserSubscription(user.id, { subscriptionStatus: status });
     return res.json({ message: `${user.email} is now ${status}`, userId: user.id });
+  });
+
+  // POST /api/admin/users/:userId/grant-yearly-pro
+  app.post("/api/admin/users/:userId/grant-yearly-pro", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
+    const { userId } = req.params;
+    const updated = await storage.grantYearlyPro(userId);
+    if (!updated) return res.status(404).json({ message: "User not found" });
+    return res.json({ message: `${updated.email} granted 1 year of Pro access`, userId });
+  });
+
+  // GET /api/admin/referrals — referral stats overview
+  app.get("/api/admin/referrals", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
+    const allUsers = await storage.getAllUsers();
+    const stats = allUsers
+      .filter((u: any) => (u.referralCount ?? 0) > 0 || (u.referralCode))
+      .map((u: any) => ({
+        email: u.email,
+        referralCode: u.referralCode,
+        referralCount: u.referralCount ?? 0,
+        rewardsGranted: u.referralRewardGranted ?? 0,
+        rewardsEarned: Math.floor((u.referralCount ?? 0) / 2),
+      }))
+      .sort((a: any, b: any) => b.referralCount - a.referralCount);
+    return res.json({ stats, totalReferrals: stats.reduce((s: number, u: any) => s + u.referralCount, 0) });
+  });
+
+  // GET /api/my-referral — get current user's referral code and stats
+  app.get("/api/my-referral", requireAuth as any, async (req: Request, res: Response) => {
+    const user = await storage.getUser(req.user!.id);
+    if (!user) return res.status(404).json({ message: "Not found" });
+    const u = user as any;
+    // Auto-generate referral code if they don't have one
+    if (!u.referralCode) {
+      const code = storage.generateReferralCode(user.email);
+      await storage.updateUserFields(user.id, { referralCode: code });
+      u.referralCode = code;
+    }
+    return res.json({
+      referralCode: u.referralCode,
+      referralCount: u.referralCount ?? 0,
+      rewardsEarned: Math.floor((u.referralCount ?? 0) / 2),
+      rewardsGranted: u.referralRewardGranted ?? 0,
+      referralLink: `https://acqlerate.com/app?ref=${u.referralCode}`,
+      nextRewardAt: ((Math.floor((u.referralCount ?? 0) / 2) + 1) * 2),
+    });
   });
 
   // DELETE /api/admin/users/:userId
