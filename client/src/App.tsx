@@ -9,7 +9,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel } from "@/lib/progress";
 import { isNativeApp } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
-import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, Lock } from "lucide-react";
+import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock } from "lucide-react";
 import { AcqlerateLogo } from "@/components/AcqlerateLogo";
 import InstallPrompt from "@/components/InstallPrompt";
 
@@ -147,6 +147,7 @@ function AppContent() {
     return true; // default dark
   });
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
   const [authState, setAuthState] = useState<AuthState>({ status: 'loading' });
   // Module assessment modal state
   const [assessmentModuleId, setAssessmentModuleId] = useState<string | null>(null);
@@ -536,38 +537,119 @@ function AppContent() {
           </div>
 
           {modules.map((mod) => {
-            const isActive = view.type === 'module' && (view as { type: 'module'; moduleId: string }).moduleId === mod.id;
-            const isLessonInMod = view.type === 'lesson' &&
-              mod.lessons.some(l => l.id === (view as { type: 'lesson'; lessonId: string }).lessonId);
+            const isModActive = view.type === 'module' && (view as any).moduleId === mod.id;
+            const activeLessonId = view.type === 'lesson' ? (view as any).lessonId : null;
+            const isLessonInMod = mod.lessons.some(l => l.id === activeLessonId);
             const lessonIds = mod.lessons.map(l => l.id);
             const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
             const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
             const hasPreview = mod.lessons.some(l => FREE_PREVIEW_LESSONS.includes(l.id));
 
+            // Auto-expand if a lesson in this module is active
+            const isExpanded = expandedModules.has(mod.id) || isLessonInMod || isModActive;
+
+            const toggleExpand = (e: React.MouseEvent) => {
+              e.stopPropagation();
+              setExpandedModules(prev => {
+                const next = new Set(prev);
+                if (next.has(mod.id)) next.delete(mod.id); else next.add(mod.id);
+                return next;
+              });
+            };
+
+            // Module accent colors
+            const moduleColors: Record<string, { accent: string; dot: string; lessonHover: string; activeLesson: string; activeLessonText: string }> = {
+              foundations: { accent: '#3b82f6', dot: 'bg-blue-500',    lessonHover: 'hover:bg-blue-500/10',   activeLesson: 'bg-blue-500/15',   activeLessonText: 'text-blue-400' },
+              finance:     { accent: '#f59e0b', dot: 'bg-amber-400',   lessonHover: 'hover:bg-amber-400/10',  activeLesson: 'bg-amber-400/15',  activeLessonText: 'text-amber-400' },
+              contracts:   { accent: '#6366f1', dot: 'bg-indigo-400',  lessonHover: 'hover:bg-indigo-400/10', activeLesson: 'bg-indigo-400/15', activeLessonText: 'text-indigo-400' },
+              data:        { accent: '#14b8a6', dot: 'bg-teal-400',    lessonHover: 'hover:bg-teal-400/10',   activeLesson: 'bg-teal-400/15',   activeLessonText: 'text-teal-400' },
+              capture:     { accent: '#f97316', dot: 'bg-orange-400',  lessonHover: 'hover:bg-orange-400/10', activeLesson: 'bg-orange-400/15', activeLessonText: 'text-orange-400' },
+              operations:  { accent: '#8b5cf6', dot: 'bg-violet-400',  lessonHover: 'hover:bg-violet-400/10', activeLesson: 'bg-violet-400/15', activeLessonText: 'text-violet-400' },
+            };
+            const mc = moduleColors[mod.id] ?? moduleColors.foundations;
+
             return (
-              <button
-                key={mod.id}
-                onClick={() => { setView({ type: 'module', moduleId: mod.id }); setSidebarOpen(false); }}
-                className={cn(
-                  "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
-                  (isActive || isLessonInMod)
-                    ? "bg-sidebar-accent text-sidebar-foreground"
-                    : "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+              <div key={mod.id}>
+                {/* Module header row */}
+                <div
+                  className={cn(
+                    "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-colors cursor-pointer select-none",
+                    (isModActive || isLessonInMod)
+                      ? "bg-sidebar-accent text-sidebar-foreground"
+                      : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                  )}
+                  onClick={(e) => {
+                    setView({ type: 'module', moduleId: mod.id });
+                    setSidebarOpen(false);
+                    // Also expand
+                    setExpandedModules(prev => { const n = new Set(prev); n.add(mod.id); return n; });
+                  }}
+                  data-testid={`sidebar-${mod.id}`}
+                >
+                  <span className="text-sm flex-shrink-0">{mod.icon}</span>
+                  <span className="flex-1 text-left text-xs font-medium leading-tight">{mod.title}</span>
+                  {/* Progress / lock badge */}
+                  {!isAccessible && hasPreview ? (
+                    <span className="text-[10px] text-emerald-400 flex-shrink-0">Free</span>
+                  ) : !isAccessible ? (
+                    <span className="text-[10px] text-sidebar-foreground/40 flex-shrink-0">🔒</span>
+                  ) : progressPct === 100 ? (
+                    <span className="text-[10px] text-green-400 flex-shrink-0">✓</span>
+                  ) : progressPct > 0 ? (
+                    <span className="text-[10px] flex-shrink-0" style={{ color: mc.accent }}>{progressPct}%</span>
+                  ) : null}
+                  {/* Chevron toggle */}
+                  <button
+                    onClick={toggleExpand}
+                    className="flex-shrink-0 text-sidebar-foreground/40 hover:text-sidebar-foreground transition-colors p-0.5 rounded"
+                    aria-label={isExpanded ? 'Collapse' : 'Expand'}
+                  >
+                    <ChevronDown className={cn("w-3 h-3 transition-transform duration-200", isExpanded && "rotate-180")} />
+                  </button>
+                </div>
+
+                {/* Lesson list */}
+                {isExpanded && (
+                  <div className="ml-3 mt-0.5 mb-1 border-l-2 pl-2.5 space-y-0.5" style={{ borderColor: mc.accent + '55' }}>
+                    {mod.lessons.map((lesson) => {
+                      const isActive = lesson.id === activeLessonId;
+                      const isDone = progress.completedLessons.has(lesson.id);
+                      const isPreview = FREE_PREVIEW_LESSONS.includes(lesson.id);
+                      const canAccess = isAccessible || isPreview;
+
+                      return (
+                        <button
+                          key={lesson.id}
+                          onClick={() => {
+                            if (!canAccess) { setView({ type: 'upgrade' }); setSidebarOpen(false); return; }
+                            setView({ type: 'lesson', lessonId: lesson.id });
+                            setSidebarOpen(false);
+                          }}
+                          className={cn(
+                            "w-full text-left text-[11px] px-2 py-1.5 rounded-md transition-colors flex items-center gap-1.5 leading-tight group",
+                            isActive
+                              ? mc.activeLesson + ' ' + mc.activeLessonText + ' font-semibold'
+                              : canAccess
+                                ? 'text-sidebar-foreground/60 ' + mc.lessonHover + ' hover:text-sidebar-foreground'
+                                : 'text-sidebar-foreground/30 cursor-default'
+                          )}
+                        >
+                          {/* Status dot */}
+                          <span className={cn(
+                            "w-1.5 h-1.5 rounded-full flex-shrink-0 transition-colors",
+                            isActive ? mc.dot
+                              : isDone ? 'bg-green-500'
+                              : 'bg-sidebar-foreground/20'
+                          )} />
+                          <span className="flex-1 truncate">{lesson.title}</span>
+                          {!canAccess && <span className="text-[9px] flex-shrink-0">🔒</span>}
+                          {isDone && !isActive && <span className="text-[9px] text-green-400 flex-shrink-0">✓</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
                 )}
-                data-testid={`sidebar-${mod.id}`}
-              >
-                <span className="text-base">{mod.icon}</span>
-                <span className="flex-1 text-left text-xs leading-tight">{mod.title}</span>
-                {!isAccessible && hasPreview ? (
-                  <span className="text-[10px] text-emerald-400">▶ Free</span>
-                ) : !isAccessible ? (
-                  <span className="text-[10px] text-sidebar-foreground/40">🔒</span>
-                ) : progressPct === 100 ? (
-                  <span className="text-[10px] text-green-400">✓</span>
-                ) : progressPct > 0 ? (
-                  <span className="text-[10px] text-sidebar-primary">{progressPct}%</span>
-                ) : null}
-              </button>
+              </div>
             );
           })}
         </nav>
