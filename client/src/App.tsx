@@ -434,17 +434,19 @@ function AppContent() {
         "fixed left-0 top-0 h-full w-64 bg-sidebar text-sidebar-foreground border-r border-sidebar-border z-40 flex flex-col transition-transform duration-300 safe-top",
         sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
-        {/* Logo — click returns to the marketing landing page without signing out */}
+        {/* Logo — click goes to the real acqlerate.com marketing site.
+            Auth cookie persists, so Sign In on the marketing site sends them
+            straight back into the app with no password re-entry. */}
         <div className="px-5 py-5 border-b border-sidebar-border flex items-center justify-between">
-          <button
-            onClick={() => { setView({ type: 'landing' }); setSidebarOpen(false); }}
+          <a
+            href="https://acqlerate.com/"
             className="flex items-center hover:opacity-80 transition-opacity cursor-pointer"
             data-testid="sidebar-logo-home"
-            aria-label="Go to Acqlerate home"
-            title="Acqlerate home"
+            aria-label="Go to acqlerate.com"
+            title="acqlerate.com"
           >
             <AcqlerateLogo iconSize={32} />
-          </button>
+          </a>
           <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-sidebar-foreground/60 hover:text-sidebar-foreground">
             <X className="w-4 h-4" />
           </button>
