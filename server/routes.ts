@@ -9,6 +9,7 @@ import { storage } from "./storage";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema, userProfileSchema } from "@shared/schema";
 import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail } from "./email";
+import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 
 // Initialize Stripe — will be undefined if key not set
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
@@ -1074,16 +1075,32 @@ export async function registerRoutes(
     return res.status(500).json({ message: `Failed: ${lastErr}` });
   });
 
-  // POST /api/far-translate — FAR/DFARS clause plain-English translator
+  // POST /api/far-translate — FAR/DFARS clause plain-English translator (v2)
+  // v2: deterministic timing scanner feeds findings as hard constraints to the LLM,
+  // so embedded deadlines / day-type ambiguities / silent-acceptance traps are never dropped.
   app.post("/api/far-translate", requireAuth as any, async (req: Request, res: Response) => {
     const { clause } = req.body as { clause: string };
     if (!clause?.trim()) return res.status(400).json({ message: 'Clause number or keyword required' });
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) return res.status(503).json({ message: 'AI not configured' });
 
+    // Run deterministic scanner on the input text
+    const findings: TimingFinding[] = scanForTimingTraps(clause.trim());
+    const findingsBlock = findings.length
+      ? findings.map((f, i) => `${i + 1}. [${f.category}] "${f.excerpt}" — ${f.implication}`).join('\n')
+      : '(scanner found no explicit timing constructs — still surface any implied deadlines from your own knowledge of the clause)';
+
     const prompt = `You are a plain-English DoD acquisition expert with precise knowledge of the Federal Acquisition Regulation. A defense contractor or program manager wants to understand: "${clause.trim()}"
 
 IMPORTANT: If a specific clause number is provided (e.g. FAR 31.205-35), you MUST look up and explain that EXACT clause — do not confuse it with a different clause number. FAR 31.205-35 is Relocation Costs. FAR 31.205-22 is Lobbying. Get the clause number right before responding.
+
+PLAIN ENGLISH RULES (non-negotiable):
+- No "shall", "hereunder", "thereto", "pursuant to", "notwithstanding". Use "must", "under this", "to it", "under", "despite".
+- Use digits for numbers (10, not ten). Always say "calendar days" or "business days" — never just "days".
+- Active voice. Short sentences. Talk like you'd talk to a colleague, not a judge.
+
+DETERMINISTIC TIMING FINDINGS (treat as hard constraints — every one MUST appear in "Watch out for"):
+${findingsBlock}
 
 Provide a structured response with exactly these four sections (use these exact headings):
 
@@ -1097,9 +1114,9 @@ One sentence explaining what this clause/regulation is in plain English. No jarg
 One sentence on what contract types or situations it typically appears in.
 
 **Watch out for:**
-One common pitfall or misunderstanding. You MUST include any embedded time conditions, minimums, or thresholds baked into the clause itself — for example: minimum time an employee must stay before relocation costs are allowable, how long a contractor has to submit a claim, when a clause expires, notice periods, cure notice windows, option exercise deadlines, or any other timeframe that would surprise someone who didn't read the fine print. If a specific time condition exists, state it explicitly (e.g. "Employee must remain at the new location for at least 12 months or costs become unallowable").
+List every deadline, clock, and trap, one per line, each prefixed with ⏱ for time-related items. Non-timing watch-outs get ⚠. Cover every finding above plus any embedded time conditions, minimums, or thresholds baked into the clause itself — minimum tenure before costs are allowable, claim submission windows, cure notice periods, option exercise deadlines, silent-acceptance windows, stop-work limits, anything that would surprise someone who didn't read the fine print. State each one explicitly with the exact number and day type (e.g. "⏱ Cure notice gives you 10 calendar days, not business days, to fix the issue").
 
-If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly. Keep the total response under 200 words. Be direct and practical.`;
+If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly. Keep the total response under 250 words. Be direct and practical.`;
 
     const modelNames = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-flash-latest'];
     let lastErr = '';
