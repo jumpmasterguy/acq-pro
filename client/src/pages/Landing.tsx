@@ -1,14 +1,16 @@
 import { Link } from "wouter";
 import { modules, getTotalLessons } from "@/lib/curriculum";
-import { Shield, TrendingUp, BookOpen, Award, ChevronRight, Star, CheckCircle, Lock } from "lucide-react";
+import { Shield, TrendingUp, BookOpen, Award, ChevronRight, Star, CheckCircle, Lock, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 interface LandingProps {
   onGetStarted: () => void;
+  isAuthenticated?: boolean;
+  onBackToDashboard?: () => void;
 }
 
-export default function Landing({ onGetStarted }: LandingProps) {
+export default function Landing({ onGetStarted, isAuthenticated, onBackToDashboard }: LandingProps) {
   const totalLessons = getTotalLessons();
   
   const stats = [
@@ -54,12 +56,26 @@ export default function Landing({ onGetStarted }: LandingProps) {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" onClick={onGetStarted} data-testid="nav-login">
-              Sign In
-            </Button>
-            <Button size="sm" onClick={onGetStarted} data-testid="nav-cta">
-              Start Free
-            </Button>
+            {isAuthenticated && onBackToDashboard ? (
+              <Button
+                size="sm"
+                onClick={onBackToDashboard}
+                data-testid="nav-back-to-dashboard"
+                className="gap-1.5"
+              >
+                <LayoutDashboard className="w-3.5 h-3.5" />
+                Back to Dashboard
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" onClick={onGetStarted} data-testid="nav-login">
+                  Sign In
+                </Button>
+                <Button size="sm" onClick={onGetStarted} data-testid="nav-cta">
+                  Start Free
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </header>

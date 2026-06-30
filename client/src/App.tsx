@@ -363,9 +363,16 @@ function AppContent() {
     );
   }
 
-  // Landing page (no sidebar)
+  // Landing page (no sidebar). When already authenticated, we still allow it
+  // so the user can return to the marketing page without signing out.
   if (view.type === 'landing') {
-    return <Landing onGetStarted={handleGetStarted} />;
+    return (
+      <Landing
+        onGetStarted={handleGetStarted}
+        isAuthenticated={authState.status === 'authenticated'}
+        onBackToDashboard={() => setView({ type: 'dashboard' })}
+      />
+    );
   }
 
   // Auth page (no sidebar)
@@ -427,9 +434,17 @@ function AppContent() {
         "fixed left-0 top-0 h-full w-64 bg-sidebar text-sidebar-foreground border-r border-sidebar-border z-40 flex flex-col transition-transform duration-300 safe-top",
         sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
-        {/* Logo */}
+        {/* Logo — click returns to the marketing landing page without signing out */}
         <div className="px-5 py-5 border-b border-sidebar-border flex items-center justify-between">
-          <AcqlerateLogo iconSize={32} />
+          <button
+            onClick={() => { setView({ type: 'landing' }); setSidebarOpen(false); }}
+            className="flex items-center hover:opacity-80 transition-opacity cursor-pointer"
+            data-testid="sidebar-logo-home"
+            aria-label="Go to Acqlerate home"
+            title="Acqlerate home"
+          >
+            <AcqlerateLogo iconSize={32} />
+          </button>
           <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-sidebar-foreground/60 hover:text-sidebar-foreground">
             <X className="w-4 h-4" />
           </button>
