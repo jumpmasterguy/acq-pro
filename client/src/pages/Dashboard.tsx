@@ -541,15 +541,32 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
       </div>
 
       {/* Stats strip */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {statsStrip.map((s, i) => (
-          <div key={i} className="bg-card border border-border rounded-xl p-3.5 flex flex-col gap-1 shadow-sm">
-            <div className="flex items-center gap-2">{s.icon}<span className="text-xl font-bold tabular-nums">{s.value}</span></div>
-            <div className="text-xs font-medium text-foreground/80">{s.label}</div>
-            <div className="text-[10px] text-muted-foreground">{s.sub}</div>
+      {(() => {
+        const mainStats = statsStrip.filter(s => s.label !== 'Total signups');
+        const adminStat = statsStrip.find(s => s.label === 'Total signups');
+        return (
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {mainStats.map((s, i) => (
+                <div key={i} className="bg-card border border-border rounded-xl p-3.5 flex flex-col gap-1 shadow-sm">
+                  <div className="flex items-center gap-2">{s.icon}<span className="text-xl font-bold tabular-nums">{s.value}</span></div>
+                  <div className="text-xs font-medium text-foreground/80">{s.label}</div>
+                  <div className="text-[10px] text-muted-foreground">{s.sub}</div>
+                </div>
+              ))}
+            </div>
+            {adminStat && (
+              <div className="bg-card border border-border rounded-xl p-3.5 flex items-center gap-4 shadow-sm">
+                <div className="flex items-center gap-2">{adminStat.icon}<span className="text-xl font-bold tabular-nums">{adminStat.value}</span></div>
+                <div>
+                  <div className="text-xs font-medium text-foreground/80">{adminStat.label}</div>
+                  <div className="text-[10px] text-muted-foreground">{adminStat.sub}</div>
+                </div>
+              </div>
+            )}
           </div>
-        ))}
-      </div>
+        );
+      })()}
 
       {/* Continue Learning */}
       {nextLesson && (
@@ -668,30 +685,32 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
       {/* ── Referral Card ─────────────────────────────────────────────── */}
       {referral && (
         <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1">
-              <p className="text-sm font-bold text-primary mb-0.5">🎁 Spread the word, earn a year of Pro</p>
-              <p className="text-xs text-muted-foreground">
-                Get 2 people to sign up free and you earn <strong>1 year of Pro access</strong>. Every 2 signups = another year.
-              </p>
-              <div className="mt-2 flex items-center gap-2">
-                <code className="text-xs bg-muted px-2 py-1 rounded font-mono">{referral.referralLink}</code>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(referral.referralLink);
-                    setReferralCopied(true);
-                    setTimeout(() => setReferralCopied(false), 2000);
-                  }}
-                  className="text-xs text-primary font-semibold hover:underline flex-shrink-0"
-                >
-                  {referralCopied ? '✓ Copied!' : 'Copy link'}
-                </button>
+          <div className="space-y-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-bold text-primary mb-0.5">🎁 Spread the word, earn a year of Pro</p>
+                <p className="text-xs text-muted-foreground">
+                  Get 2 people to sign up free and you earn <strong>1 year of Pro access</strong>. Every 2 signups = another year.
+                </p>
+              </div>
+              <div className="text-right flex-shrink-0 bg-primary/10 rounded-xl px-3 py-2">
+                <p className="text-2xl font-black text-primary leading-none">{referral.referralCount}</p>
+                <p className="text-[10px] text-muted-foreground">signups</p>
+                <p className="text-[10px] text-primary/70 font-medium mt-0.5">{referral.nextRewardAt - referral.referralCount} to go</p>
               </div>
             </div>
-            <div className="text-right flex-shrink-0">
-              <p className="text-2xl font-black text-primary">{referral.referralCount}</p>
-              <p className="text-[10px] text-muted-foreground">signups</p>
-              <p className="text-[10px] text-muted-foreground mt-0.5">{referral.nextRewardAt - referral.referralCount} more to next reward</p>
+            <div className="flex items-center gap-2">
+              <code className="text-xs bg-muted px-2 py-1 rounded font-mono truncate flex-1 min-w-0 block">{referral.referralLink}</code>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(referral.referralLink);
+                  setReferralCopied(true);
+                  setTimeout(() => setReferralCopied(false), 2000);
+                }}
+                className="text-xs text-primary font-semibold hover:underline flex-shrink-0"
+              >
+                {referralCopied ? '✓ Copied!' : 'Copy link'}
+              </button>
             </div>
           </div>
         </div>
