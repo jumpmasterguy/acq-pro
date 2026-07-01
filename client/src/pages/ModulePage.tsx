@@ -125,77 +125,140 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
       </div>
 
       {/* Lessons List */}
-      <div>
-        <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-3">Lessons</h2>
-        <div className="space-y-2">
-          {mod.lessons.map((lesson, index) => {
-            const isCompleted = progress.completedLessons.has(lesson.id);
-            const isFreePreview = FREE_PREVIEW_LESSONS.includes(lesson.id);
-            const isLocked = !isAccessible && !isFreePreview;
+      {(() => {
+        // Module accent colors
+        const accentMap: Record<string, { border: string; numBg: string; numText: string; dot: string; barColor: string }> = {
+          foundations: { border: 'hover:border-blue-400/50',    numBg: 'bg-blue-500/15',   numText: 'text-blue-400',   dot: 'bg-blue-400',   barColor: '#3b82f6' },
+          finance:     { border: 'hover:border-amber-400/50',   numBg: 'bg-amber-400/15',  numText: 'text-amber-400',  dot: 'bg-amber-400',  barColor: '#f59e0b' },
+          contracts:   { border: 'hover:border-indigo-400/50',  numBg: 'bg-indigo-400/15', numText: 'text-indigo-400', dot: 'bg-indigo-400', barColor: '#6366f1' },
+          data:        { border: 'hover:border-teal-400/50',    numBg: 'bg-teal-400/15',   numText: 'text-teal-400',   dot: 'bg-teal-400',   barColor: '#14b8a6' },
+          capture:     { border: 'hover:border-orange-400/50',  numBg: 'bg-orange-400/15', numText: 'text-orange-400', dot: 'bg-orange-400', barColor: '#f97316' },
+          operations:  { border: 'hover:border-violet-400/50',  numBg: 'bg-violet-400/15', numText: 'text-violet-400', dot: 'bg-violet-400', barColor: '#8b5cf6' },
+        };
+        const ac = accentMap[mod.id] ?? accentMap.foundations;
+        const completedInModule = mod.lessons.filter(l => progress.completedLessons.has(l.id)).length;
 
-            return (
-              <div
-                key={lesson.id}
-                className={`flex items-center gap-4 p-4 rounded-xl border bg-card transition-all duration-200 ${
-                  isLocked
-                    ? 'opacity-60 cursor-not-allowed'
-                    : 'hover:border-primary/40 hover:shadow-sm cursor-pointer group'
-                }`}
-                onClick={() => isLocked ? onUpgrade() : onSelectLesson(lesson.id)}
-                data-testid={`lesson-item-${lesson.id}`}
-              >
-                {/* Number or Status */}
-                <div className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-semibold ${
-                  isCompleted
-                    ? 'bg-green-100 dark:bg-green-950 text-green-600 dark:text-green-400'
-                    : isLocked
-                    ? 'bg-muted text-muted-foreground'
-                    : 'bg-primary/10 text-primary'
-                }`}>
-                  {isCompleted ? (
-                    <CheckCircle className="w-4.5 h-4.5" />
-                  ) : isLocked ? (
-                    <Lock className="w-4 h-4" />
-                  ) : (
-                    index + 1
-                  )}
-                </div>
+        return (
+          <div>
+            {/* Header row */}
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-widest">Lessons</h2>
+              <span className="text-xs text-muted-foreground">{completedInModule} / {mod.lessons.length} done</span>
+            </div>
 
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-sm flex items-center gap-2">
-                    {lesson.title}
-                    {isFreePreview && !isAccessible && (
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 dark:bg-emerald-950/50 dark:text-emerald-400 px-1.5 py-0.5 rounded">Free Preview</span>
+            <div className="space-y-2">
+              {mod.lessons.map((lesson, index) => {
+                const isCompleted = progress.completedLessons.has(lesson.id);
+                const isFreePreview = FREE_PREVIEW_LESSONS.includes(lesson.id);
+                const isLocked = !isAccessible && !isFreePreview;
+                const hasQuiz = (lesson.quiz?.length ?? 0) > 0;
+                const termCount = lesson.keyTerms?.length ?? 0;
+
+                return (
+                  <div
+                    key={lesson.id}
+                    onClick={() => isLocked ? onUpgrade() : onSelectLesson(lesson.id)}
+                    data-testid={`lesson-item-${lesson.id}`}
+                    className={cn(
+                      'group relative flex items-stretch gap-0 rounded-2xl border bg-card overflow-hidden transition-all duration-200',
+                      isLocked
+                        ? 'opacity-50 cursor-not-allowed border-border'
+                        : cn('cursor-pointer border-border shadow-sm hover:shadow-md', ac.border)
                     )}
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-0.5">{lesson.description}</div>
-                  <div className="flex items-center gap-3 mt-1.5">
-                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Clock className="w-3 h-3" />
-                      {lesson.duration}
-                    </span>
-                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <BookOpen className="w-3 h-3" />
-                      {(lesson.keyTerms?.length ?? 0)} key terms
-                    </span>
-                    {(lesson.quiz?.length ?? 0) > 0 && (
-                      <span className="text-xs text-muted-foreground">
-                        · {lesson.quiz?.length} quiz questions
-                      </span>
-                    )}
-                  </div>
-                </div>
+                  >
+                    {/* Left accent strip + number */}
+                    <div className={cn(
+                      'flex flex-col items-center justify-start gap-1 px-3 pt-4 pb-3 flex-shrink-0 min-w-[48px]',
+                      isCompleted ? 'bg-green-500/10' : isLocked ? 'bg-muted/30' : ac.numBg
+                    )}>
+                      <div className={cn(
+                        'w-7 h-7 rounded-full flex items-center justify-center text-xs font-black',
+                        isCompleted
+                          ? 'bg-green-500 text-white'
+                          : isLocked
+                          ? 'bg-muted-foreground/20 text-muted-foreground'
+                          : cn('text-white', ac.numBg.replace('/15', ''))
+                      )} style={!isCompleted && !isLocked ? { background: ac.barColor } : {}}>
+                        {isCompleted ? (
+                          <CheckCircle className="w-3.5 h-3.5" />
+                        ) : isLocked ? (
+                          <Lock className="w-3 h-3" />
+                        ) : (
+                          index + 1
+                        )}
+                      </div>
+                      {/* Connector line (not on last item) */}
+                      {index < mod.lessons.length - 1 && (
+                        <div className={cn('w-0.5 flex-1 rounded-full mt-1', isCompleted ? 'bg-green-500/40' : 'bg-border')} />
+                      )}
+                    </div>
 
-                {/* Arrow */}
-                {!isLocked && (
-                  <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
+                    {/* Main content */}
+                    <div className="flex-1 min-w-0 px-4 py-3.5">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          {/* Title */}
+                          <p className={cn(
+                            'font-semibold text-sm leading-snug',
+                            isCompleted ? 'text-muted-foreground line-through decoration-muted-foreground/40' : 'text-foreground'
+                          )}>
+                            {lesson.title}
+                          </p>
+                          {/* Description */}
+                          <p className="text-xs text-muted-foreground mt-1 leading-relaxed line-clamp-2">
+                            {lesson.description}
+                          </p>
+                        </div>
+                        {/* Arrow / lock */}
+                        {!isLocked && (
+                          <ChevronRight className={cn(
+                            'w-4 h-4 flex-shrink-0 mt-0.5 transition-transform duration-150',
+                            isCompleted ? 'text-green-400' : 'text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5'
+                          )} />
+                        )}
+                      </div>
+
+                      {/* Meta chips */}
+                      <div className="flex flex-wrap items-center gap-1.5 mt-2.5">
+                        {/* Duration */}
+                        <span className="inline-flex items-center gap-1 text-[11px] font-medium bg-muted/60 text-muted-foreground rounded-full px-2 py-0.5">
+                          <Clock className="w-2.5 h-2.5" />
+                          {lesson.duration}
+                        </span>
+                        {/* Key terms */}
+                        {termCount > 0 && (
+                          <span className="inline-flex items-center gap-1 text-[11px] font-medium bg-muted/60 text-muted-foreground rounded-full px-2 py-0.5">
+                            <BookOpen className="w-2.5 h-2.5" />
+                            {termCount} terms
+                          </span>
+                        )}
+                        {/* Quiz */}
+                        {hasQuiz && (
+                          <span className="inline-flex items-center gap-1 text-[11px] font-medium bg-muted/60 text-muted-foreground rounded-full px-2 py-0.5">
+                            ✦ {lesson.quiz!.length} quiz
+                          </span>
+                        )}
+                        {/* Free preview badge */}
+                        {isFreePreview && !isAccessible && (
+                          <span className="inline-flex items-center text-[11px] font-bold uppercase tracking-wide text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-2 py-0.5">
+                            Free
+                          </span>
+                        )}
+                        {/* Completed badge */}
+                        {isCompleted && (
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-green-400 bg-green-500/10 border border-green-500/20 rounded-full px-2 py-0.5">
+                            <CheckCircle className="w-2.5 h-2.5" /> Done
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Upgrade prompt if locked */}
       {!isAccessible && (
