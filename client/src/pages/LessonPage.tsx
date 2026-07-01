@@ -1742,20 +1742,20 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               const companies = [
                 {
                   label: 'Small Business', sublabel: 'Under 500 employees', icon: '🏪',
-                  fringe: '28–35%', overhead: '40–70%', ga: '8–15%',
-                  wrap: '2.5×–3.0×', color: 'border-blue-400/40 bg-blue-500/5',
+                  fringe: '28–35%', overhead: '25–50%', ga: '10–20%',
+                  wrap: '1.6×–2.2×', color: 'border-blue-400/40 bg-blue-500/5',
                   badge: 'bg-blue-500/10 text-blue-600 dark:text-blue-400',
                 },
                 {
                   label: 'Mid-Size', sublabel: 'SAIC, Leidos, CACI', icon: '🏬',
-                  fringe: '30–38%', overhead: '50–80%', ga: '10–18%',
-                  wrap: '2.8×–3.5×', color: 'border-violet-400/40 bg-violet-500/5',
+                  fringe: '30–38%', overhead: '40–65%', ga: '10–18%',
+                  wrap: '2.0×–2.6×', color: 'border-violet-400/40 bg-violet-500/5',
                   badge: 'bg-violet-500/10 text-violet-600 dark:text-violet-400',
                 },
                 {
                   label: 'Large Prime', sublabel: 'Lockheed, Raytheon, Boeing', icon: '🏭',
-                  fringe: '32–42%', overhead: '60–100%', ga: '12–22%',
-                  wrap: '3.0×–4.0×', color: 'border-amber-400/40 bg-amber-500/5',
+                  fringe: '32–42%', overhead: '50–80%', ga: '8–15%',
+                  wrap: '1.6×–2.8× per BU*', color: 'border-amber-400/40 bg-amber-500/5',
                   badge: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
                 },
               ];
@@ -1791,7 +1791,10 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                       </div>
                     ))}
                   </div>
-                  <p className="text-xs text-muted-foreground">Large primes have higher rates because of larger corporate overhead structures — not necessarily because they're less efficient. DCAA monitors all of these.</p>
+                  <div className="space-y-2">
+                    <p className="text-xs text-muted-foreground">* Large prime wrap rates vary significantly by business unit. Two divisions inside the same company commonly run 1.6x and 2.7x simultaneously — each BU maintains its own overhead pool. The corporate G&A layer sits on top of all of them. DCAA audits each pool separately.</p>
+                    <p className="text-xs text-muted-foreground">Sources: <a href="https://cabrilloclub.com/insights/federal-contract-wrap-rate-calculator" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Cabrillo Club Federal Contract Benchmarks (2026)</a> · <a href="https://www.govdash.com/blog/wrap-rate-government-contracting-guide" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">GovDash Wrap Rate Guide (2026)</a> · <a href="https://www.blackflag-advisors.com/wrap-rates/wrap-rate-201-wrap-rate-types-and-calculation" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">BlackFlag Advisors — Multiple Wrap Rates</a> · <a href="https://www.dcaa.mil/Small-Business/Presentations/Overview-of-Indirect-Cost-and-Rates/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">DCAA Overview of Indirect Cost and Rates</a></p>
+                  </div>
                 </div>
               );
             }
