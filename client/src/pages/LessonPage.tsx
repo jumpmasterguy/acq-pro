@@ -545,7 +545,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
   // A block is visible if: no level tag (universal), OR level <= viewLevel
   // A block is "locked preview" if: level exists AND level > unlockedLevel (user hasn't unlocked it yet)
-  const hasLeveledContent = lesson.content.some(b => b.level !== undefined);
+  const hasLeveledContent = (lesson.content ?? []).some(b => b.level !== undefined);
 
   // ── Answer handlers ──
   const handleAnswerSelect = (questionId: string, optionIndex: number) => {
@@ -655,7 +655,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
     setAiError(null);
     setAiLoading(true);
     // Build a brief context from the first text/callout block
-    const contextBlock = lesson.content.find(b => b.type === 'text' || b.type === 'callout');
+    const contextBlock = (lesson.content ?? []).find(b => b.type === 'text' || b.type === 'callout');
     const lessonContext = contextBlock?.body ?? lesson.description;
     // 20-second timeout — Gemini can be slow on first call
     const controller = new AbortController();
@@ -796,7 +796,33 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
       {/* TAB: LESSON CONTENT */}
       {activeTab === 'lesson' && (
         <div className="space-y-5">
-          {lesson.content.map((block, i) => {
+          {/* Levels-based lessons (sections format) */}
+          {!(lesson.content?.length) && (lesson as any).levels && (() => {
+            const lvl = (lesson as any).levels[viewLevel] ?? (lesson as any).levels['novice'];
+            if (!lvl?.sections) return null;
+            return lvl.sections.map((section: any, si: number) => (
+              <div key={si} className="space-y-3">
+                {section.heading && <h3 className="font-bold text-sm text-foreground">{section.heading}</h3>}
+                {section.content && <p className="text-sm text-muted-foreground leading-relaxed">{section.content}</p>}
+                {section.items && (
+                  <ul className="space-y-2">
+                    {section.items.map((item: string, ii: number) => {
+                      const [label, desc] = item.split('|||');
+                      return (
+                        <li key={ii} className="bg-card border border-border rounded-xl p-4">
+                          <p className="font-semibold text-sm text-foreground">{label}</p>
+                          {desc && <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{desc}</p>}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
+            ));
+          })()}
+
+          {/* Standard content-array lessons */}
+          {(lesson.content ?? []).map((block, i) => {
             // Skill level filtering
             if (block.level) {
               const blockOrder = levelOrder[block.level];
