@@ -505,6 +505,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
   const [viewLevel, setViewLevel] = useState<SkillLevel>(unlockedLevel);
   // AI Explain panel
   const [aiMode, setAiMode] = useState<'eli5' | 'apply' | 'lost' | null>(null);
+  const [expandedProcessStep, setExpandedProcessStep] = useState<number | null>(null);
   const [aiResult, setAiResult] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
@@ -1243,6 +1244,78 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     ))}
                   </div>
                   {(block as any).explanation && <p className="text-xs text-muted-foreground">{(block as any).explanation}</p>}
+                </div>
+              );
+            }
+
+            // ── idiq_process_visual ───────────────────────────────────────────
+            if ((block as any).type === 'idiq_process_visual') {
+              const steps = ((block as any).items ?? []).map((item: string, idx: number) => {
+                const [label, detail] = item.split('|||');
+                // Extract just the step label text after the dash
+                const dashIdx = label.indexOf(' — ');
+                const stepNum = idx + 1;
+                const stepTitle = dashIdx > -1 ? label.slice(dashIdx + 3) : label;
+                return { stepNum, stepTitle, detail };
+              });
+
+              // Color sequence cycling through accent colors
+              const stepColors = [
+                { bg: 'bg-blue-500',   light: 'bg-blue-500/10',   border: 'border-blue-500/30',   text: 'text-blue-400',   num: '#3b82f6' },
+                { bg: 'bg-indigo-500', light: 'bg-indigo-500/10', border: 'border-indigo-500/30', text: 'text-indigo-400', num: '#6366f1' },
+                { bg: 'bg-violet-500', light: 'bg-violet-500/10', border: 'border-violet-500/30', text: 'text-violet-400', num: '#8b5cf6' },
+                { bg: 'bg-teal-500',   light: 'bg-teal-500/10',   border: 'border-teal-500/30',   text: 'text-teal-400',   num: '#14b8a6' },
+                { bg: 'bg-cyan-500',   light: 'bg-cyan-500/10',   border: 'border-cyan-500/30',   text: 'text-cyan-400',   num: '#06b6d4' },
+                { bg: 'bg-amber-500',  light: 'bg-amber-500/10',  border: 'border-amber-500/30',  text: 'text-amber-400',  num: '#f59e0b' },
+                { bg: 'bg-orange-500', light: 'bg-orange-500/10', border: 'border-orange-500/30', text: 'text-orange-400', num: '#f97316' },
+                { bg: 'bg-green-500',  light: 'bg-green-500/10',  border: 'border-green-500/30',  text: 'text-green-400',  num: '#22c55e' },
+              ];
+
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && (
+                    <h3 className="font-bold text-base text-foreground">{(block as any).heading}</h3>
+                  )}
+                  <div className="space-y-0">
+                    {steps.map((step: any, si: number) => {
+                      const sc = stepColors[si % stepColors.length];
+                      const isOpen = expandedProcessStep === si;
+                      const isLast = si === steps.length - 1;
+                      return (
+                        <div key={si} className="flex gap-0">
+                          {/* Left timeline column */}
+                          <div className="flex flex-col items-center w-10 flex-shrink-0">
+                            <div
+                              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-white flex-shrink-0 z-10 shadow-md"
+                              style={{ background: sc.num }}
+                            >
+                              {step.stepNum}
+                            </div>
+                            {!isLast && (
+                              <div className="w-0.5 flex-1 bg-border my-1" />
+                            )}
+                          </div>
+
+                          {/* Right content card */}
+                          <div className={`flex-1 mb-2 ml-3 rounded-xl border ${sc.border} ${sc.light} overflow-hidden transition-all duration-200`}>
+                            <button
+                              className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left"
+                              onClick={() => setExpandedProcessStep(isOpen ? null : si)}
+                            >
+                              <span className={`text-sm font-semibold ${sc.text}`}>{step.stepTitle}</span>
+                              <span className={`text-xs transition-transform duration-200 ${isOpen ? 'rotate-180' : ''} ${sc.text} flex-shrink-0`}>▾</span>
+                            </button>
+                            {isOpen && step.detail && (
+                              <div className="px-4 pb-4 border-t border-white/10">
+                                <p className="text-xs text-muted-foreground leading-relaxed pt-3">{step.detail}</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">Tap any step to expand the detail.</p>
                 </div>
               );
             }

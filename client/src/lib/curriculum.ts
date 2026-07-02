@@ -3890,7 +3890,7 @@ export const modules: Module[] = [
             body: `A **Single Award IDIQ** gives one contractor exclusive rights — no competition at the task order level. The government uses this when one firm has truly unique capabilities. It's the exception, not the rule.\n\nA **Multiple Award Contract IDIQ (MAC-IDIQ)** awards the base vehicle to several contractors. When the government has work, they run a mini-competition among those awardees. The winner gets the task order. FAR 16.504 prefers multiple awards because it keeps price competition alive after award — and gives the government a bench of qualified vendors to draw from.\n\nAs a contractor PM, most of the vehicles you'll work on are MAC-IDIQs. **Winning the vehicle** gets you in the door. **Winning task orders** is how you actually make money.`
           },
           {
-            type: 'list',
+            type: 'idiq_process_visual' as any,
             heading: "The IDIQ Ordering Process (Step by Step)",
             items: [
               'Step 1 — Requirement identified: program office describes the work|||This is the most underinvested step in task order contracting — and it shows. A vague SOW produces vague proposals, scope disputes, and a contract that\'s hard to manage. A good task order SOW describes outcomes (what does "done" look like?), includes measurable acceptance criteria, and lists deliverables with format and timing. As a contractor PM, if the SOW is unclear before award, it will be a headache every single month of performance.',
