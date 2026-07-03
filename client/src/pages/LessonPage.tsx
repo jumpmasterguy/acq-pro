@@ -568,7 +568,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
   const calcScore = () => {
     let correct = 0;
     let total = 0;
-    for (const q of lesson!.quiz) {
+    for (const q of (lesson!.quiz ?? [])) {
       const qType = q.type ?? 'multiple_choice';
       total++;
       if (qType === 'multiple_choice') {
@@ -615,7 +615,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
   // ── All-answered check ──
   const isAllAnswered = () => {
-    for (const q of lesson!.quiz) {
+    for (const q of (lesson!.quiz ?? [])) {
       const qType = q.type ?? 'multiple_choice';
       if (qType === 'multiple_choice') {
         if (quizAnswers[q.id] === undefined) return false;
@@ -633,7 +633,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
   const answeredCount = (() => {
     let count = 0;
-    for (const q of lesson.quiz) {
+    for (const q of (lesson.quiz ?? [])) {
       const qType = q.type ?? 'multiple_choice';
       if (qType === 'multiple_choice' && quizAnswers[q.id] !== undefined) count++;
       else if (qType === 'drag_order') count++; // always countable (has default)
@@ -710,8 +710,8 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                 <BookOpen className="w-3 h-3" />
                 {lesson.keyTerms.length} key terms
               </span>
-              {lesson.quiz.length > 0 && (
-                <span>{lesson.quiz.length} quiz questions</span>
+              {(lesson.quiz ?? []).length > 0 && (
+                <span>{(lesson.quiz ?? []).length} quiz questions</span>
               )}
             </div>
           </div>
@@ -775,7 +775,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
       {/* Tab Navigation — sticky so it stays visible while scrolling */}
       <div className="sticky top-0 z-20 flex border-b border-border bg-background/95 backdrop-blur-sm -mx-4 px-4 lg:-mx-6 lg:px-6">
         {(['lesson', 'terms', 'quiz'] as Tab[]).map((tab) => {
-          const labels: Record<Tab, string> = { lesson: 'Lesson', terms: `Key Terms (${lesson!.keyTerms.length})`, quiz: `Quiz (${lesson!.quiz.length}Q)` };
+          const labels: Record<Tab, string> = { lesson: 'Lesson', terms: `Key Terms (${lesson!.keyTerms.length})`, quiz: `Quiz (${(lesson!.quiz ?? []).length}Q)` };
           return (
             <button
               key={tab}
@@ -2434,7 +2434,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
           )}
 
           {/* Questions */}
-          {lesson.quiz.map((question, qi) => {
+          {( lesson.quiz ?? [] ).map((question, qi) => {
             const qType = question.type ?? 'multiple_choice';
 
             // ── Multiple Choice ──
@@ -2600,7 +2600,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               className="w-full"
               data-testid="submit-quiz"
             >
-              Submit Quiz ({answeredCount}/{lesson.quiz.length} answered)
+              Submit Quiz ({answeredCount}/{(lesson.quiz ?? []).length} answered)
             </Button>
           )}
 
