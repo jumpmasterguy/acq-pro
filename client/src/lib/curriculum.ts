@@ -2943,6 +2943,41 @@ export const modules: Module[] = [
             definition: 'Defense Contract Audit Agency. Audits contractor indirect rates (fringe, overhead, G&A) and cost pools to ensure compliance with FAR Part 31. Unallowable costs (entertainment, alcohol, image advertising) must be excluded from all pools.',
           },
         ],
+        content: [
+          {
+            type: 'text',
+            heading: 'Your technical decisions are financial decisions.',
+            body: 'On a CPAF contract, every staffing call, every deliverable, every cost approval shows up on the company income statement. You are not just managing a project. You are running a business unit where your performance score is the profit lever.',
+          },
+          {
+            type: 'callout',
+            style: 'insight',
+            heading: 'The Number That Matters',
+            body: 'Booz Allen Hamilton earns ~98% of its revenue from government contracts. Lockheed Martin ~99%. When your contract wins a high award fee, that flows directly to operating income, earnings per share, and analyst confidence. Your program review is a Wall Street event.',
+          },
+          {
+            type: 'cpaf_formula_visual' as any,
+            heading: 'How a CPAF Contract Pays You',
+          },
+          {
+            type: 'award_fee_factors_visual' as any,
+            heading: 'The Four Factors That Score Your Profit',
+          },
+          {
+            type: 'burn_rate_visual' as any,
+            heading: 'Burn Rate: The Speed Limit Nobody Posts',
+          },
+          {
+            type: 'award_fee_pitfalls_visual' as any,
+            heading: 'Six Ways PMs Leave Money on the Table',
+          },
+          {
+            type: 'callout',
+            style: 'warning',
+            heading: 'CPARS Scores Determine Future Work',
+            body: 'Your Contractor Performance Assessment Reporting System ratings are the number one factor government agencies use when deciding who wins re-compete awards. Strong CPARS = backlog growth. Weak CPARS = your company loses the follow-on. This is not abstract.',
+          },
+        ],
         levels: {
           novice: {
             sections: [

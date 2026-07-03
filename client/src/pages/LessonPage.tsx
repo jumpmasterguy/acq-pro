@@ -1385,6 +1385,177 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                 </div>
               );
             }
+            // ── cpaf_formula_visual ───────────────────────────────────────────
+            if ((block as any).type === 'cpaf_formula_visual') {
+              return (
+                <div key={i} className="space-y-4">
+                  {(block as any).heading && <h3 className="font-bold text-base text-foreground">{(block as any).heading}</h3>}
+                  <p className="text-sm text-muted-foreground">Three components. Two are automatic. One you have to earn.</p>
+                  <div className="space-y-3">
+                    {[
+                      { emoji: '✅', label: 'Allowable Costs', sublabel: 'Always paid back', desc: 'Labor, subcontractors, materials, ODCs, indirect rates. As long as costs are allowable, allocable, and reasonable under FAR Part 31, the government reimburses 100%. You never eat these.', color: '#3b82f6', auto: true },
+                      { emoji: '🔒', label: 'Base Fee', sublabel: 'Guaranteed, capped at 3%', desc: 'Fixed in dollars at award. You earn it no matter what. Think of it as the floor — enough to keep the lights on, not enough to satisfy shareholders. DFARS 216.405-2 caps it at 3% of estimated cost.', color: '#6366f1', auto: true },
+                      { emoji: '⭐', label: 'Award Fee', sublabel: 'Earned through performance', desc: 'This is where real profit lives. The government scores you on Technical, Cost Control, Schedule, and Management. Your score determines what percentage of the award fee pool you collect. Earn Excellent = collect almost all of it. Earn Poor = collect nothing.', color: '#f59e0b', auto: false },
+                    ].map((row, ri) => (
+                      <div key={ri} className="flex gap-3 items-stretch">
+                        <div className="flex flex-col items-center gap-1 flex-shrink-0">
+                          <div className="w-10 h-10 rounded-full flex items-center justify-center text-xl" style={{ background: row.color + '22' }}>{row.emoji}</div>
+                          {ri < 2 && <div className="w-0.5 flex-1 bg-border" />}
+                        </div>
+                        <div className="flex-1 bg-card border border-border rounded-xl p-4 mb-3">
+                          <div className="flex items-start justify-between gap-2 mb-1">
+                            <div>
+                              <p className="text-sm font-bold text-foreground">{row.label}</p>
+                              <p className="text-xs font-medium" style={{ color: row.color }}>{row.sublabel}</p>
+                            </div>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${row.auto ? 'bg-emerald-500/15 text-emerald-400' : 'bg-amber-500/15 text-amber-400'}`}>
+                              {row.auto ? 'AUTOMATIC' : 'EARNED'}
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{row.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="bg-primary/10 border border-primary/30 rounded-xl p-4 text-center">
+                    <p className="text-xs text-muted-foreground mb-1">Total Payment Formula</p>
+                    <p className="text-sm font-black text-foreground">Allowable Costs + Base Fee + <span className="text-amber-400">Award Fee Earned</span></p>
+                    <p className="text-xs text-muted-foreground mt-1">Maximize the third element. That is where your decisions convert to profit.</p>
+                  </div>
+                </div>
+              );
+            }
+
+            // ── award_fee_factors_visual ──────────────────────────────────────
+            if ((block as any).type === 'award_fee_factors_visual') {
+              const factors = [
+                { label: 'Technical Performance', pct: 35, color: '#3b82f6', emoji: '🎯', desc: 'Quality of deliverables, solutions, and technical results. The largest single factor. A Fair score here still only earns 25-47% of available fee.' },
+                { label: 'Cost Control', pct: 25, color: '#10b981', emoji: '💰', desc: 'Required by regulation to be at least 25% of total weight. Are you tracking to budget? Weekly burn rate reviews directly protect this score.' },
+                { label: 'Schedule / Timeliness', pct: 25, color: '#f59e0b', emoji: '📅', desc: 'On-time delivery is worth one quarter of your fee. A perfect deliverable two weeks late is still a financial loss.' },
+                { label: 'Management / COR Trust', pct: 15, color: '#8b5cf6', emoji: '🤝', desc: 'Proactive communication, no surprises, subcontractor oversight. The customer cannot score what they cannot see.' },
+              ];
+              const ratings = [
+                { label: 'Excellent', range: '95-100', earn: '97.5-100%', color: '#10b981' },
+                { label: 'Good', range: '76-85', earn: '50-72.5%', color: '#3b82f6' },
+                { label: 'Fair', range: '66-75', earn: '25-47.5%', color: '#f59e0b' },
+                { label: 'Poor / Unsat', range: '<60', earn: '$0', color: '#ef4444' },
+              ];
+              return (
+                <div key={i} className="space-y-4">
+                  {(block as any).heading && <h3 className="font-bold text-base text-foreground">{(block as any).heading}</h3>}
+                  <p className="text-xs text-muted-foreground">At the end of each period, a Fee Determining Official scores you on four weighted factors. That score converts directly to dollars.</p>
+                  <div className="space-y-2">
+                    {factors.map((f, fi) => (
+                      <div key={fi} className="bg-card border border-border rounded-xl p-4 flex gap-3 items-start">
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0" style={{ background: f.color + '22' }}>{f.emoji}</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-2 mb-1.5">
+                            <p className="text-sm font-bold text-foreground">{f.label}</p>
+                            <span className="text-sm font-black flex-shrink-0" style={{ color: f.color }}>{f.pct}%</span>
+                          </div>
+                          <div className="w-full h-2 bg-muted rounded-full mb-2 overflow-hidden">
+                            <div className="h-full rounded-full" style={{ width: `${f.pct}%`, background: f.color }} />
+                          </div>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="bg-card border border-border rounded-xl overflow-hidden">
+                    <div className="px-4 py-2 bg-muted/40 border-b border-border">
+                      <p className="text-xs font-bold text-foreground">Rating → Fee Earned</p>
+                    </div>
+                    <div className="divide-y divide-border">
+                      {ratings.map((r, ri) => (
+                        <div key={ri} className="flex items-center justify-between px-4 py-2.5">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: r.color }} />
+                            <span className="text-sm font-semibold text-foreground">{r.label}</span>
+                            <span className="text-xs text-muted-foreground">score {r.range}</span>
+                          </div>
+                          <span className="text-sm font-black" style={{ color: r.color }}>{r.earn}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="px-4 py-2 bg-red-500/10 border-t border-red-500/20">
+                      <p className="text-xs text-red-400 font-semibold">One Unsatisfactory rating = $0 for the entire period regardless of other scores.</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
+            // ── burn_rate_visual ──────────────────────────────────────────────
+            if ((block as any).type === 'burn_rate_visual') {
+              return (
+                <div key={i} className="space-y-4">
+                  {(block as any).heading && <h3 className="font-bold text-base text-foreground">{(block as any).heading}</h3>}
+                  <p className="text-sm text-muted-foreground">The government obligates a specific dollar amount. That is the ceiling. Burn rate tells you how fast you are approaching it.</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {[
+                      { emoji: '🔴', label: 'Too Fast', sublabel: 'Overburn', desc: 'You will hit the funded ceiling before the next modification. Work stops. Schedule scores drop. The government scrutinizes your planning.', alert: 'Alert finance immediately', color: '#ef4444', bg: 'bg-red-500/10', border: 'border-red-500/30' },
+                      { emoji: '✅', label: 'On Track', sublabel: '±5% of plan', desc: 'Burn is tracking to the monthly spend plan. EAC is stable. Finance and the government PM are both comfortable. Keep going.', alert: 'Weekly check-in', color: '#10b981', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30' },
+                      { emoji: '🟡', label: 'Too Slow', sublabel: 'Underburn', desc: 'Signals staffing gaps or delivery delays. Unused funds get swept at fiscal year end. Schedule scores suffer because work is not progressing.', alert: 'Explain variance to PM', color: '#f59e0b', bg: 'bg-amber-500/10', border: 'border-amber-500/30' },
+                    ].map((s, si) => (
+                      <div key={si} className={`rounded-xl border ${s.border} ${s.bg} p-4 space-y-2`}>
+                        <div className="text-2xl">{s.emoji}</div>
+                        <p className="text-sm font-bold text-foreground">{s.label}</p>
+                        <p className="text-xs font-medium" style={{ color: s.color }}>{s.sublabel}</p>
+                        <p className="text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
+                        <div className="pt-1 border-t border-white/10">
+                          <p className="text-[11px] font-bold" style={{ color: s.color }}>{s.alert}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="bg-card border border-border rounded-xl p-4 flex gap-3 items-start">
+                    <span className="text-xl flex-shrink-0">📋</span>
+                    <div>
+                      <p className="text-sm font-bold text-foreground mb-1">Track weekly. Not monthly.</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">By the time a funding gap is visible to leadership, it is already a crisis. Finance calculates burn weekly. A 5% variance from planned monthly spend is a yellow flag. Sync with your Finance PM every single week.</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
+            // ── award_fee_pitfalls_visual ─────────────────────────────────────
+            if ((block as any).type === 'award_fee_pitfalls_visual') {
+              const pitfalls = [
+                { n: '01', emoji: '👥', label: 'Overstaffing just in case', factor: 'Cost Control', impact: 'Idle labor burns funding and spikes overhead rates across every other contract in the company. Staff to the work you have.' },
+                { n: '02', emoji: '📊', label: 'Ignoring burn rate until it is urgent', factor: 'Cost + Schedule', impact: 'Weekly reviews catch problems while they are still manageable. Monthly reviews catch them when they are emergencies.' },
+                { n: '03', emoji: '📝', label: 'Loose subcontractor scope', factor: 'Cost Control', impact: 'Every undocumented task outside the subcontractor SOW is a potential unallowable cost. Define scope tightly and enforce it.' },
+                { n: '04', emoji: '⏰', label: 'Chasing perfection over schedule', factor: 'Schedule (25%)', impact: 'A technically perfect deliverable delivered three weeks late is worth less than a very good one delivered on time.' },
+                { n: '05', emoji: '📂', label: 'Poor documentation', factor: 'Technical', impact: 'Award fee evaluations run on evidence. If it is not written down, the FDO cannot credit it. Document achievements throughout the period, not the week before review.' },
+                { n: '06', emoji: '😬', label: 'Surprising the customer', factor: 'Management (15%)', impact: 'Bad news delivered early with a recovery plan preserves trust. Bad news discovered by the customer destroys it. COR trust is a scored factor with dollar value attached.' },
+              ];
+              const factorColors: Record<string, string> = { 'Cost Control': '#10b981', 'Cost + Schedule': '#f59e0b', 'Schedule (25%)': '#f59e0b', 'Technical': '#3b82f6', 'Management (15%)': '#8b5cf6' };
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-base text-foreground">{(block as any).heading}</h3>}
+                  <p className="text-xs text-muted-foreground">Each one maps directly to a fee factor and a dollar impact.</p>
+                  <div className="space-y-2">
+                    {pitfalls.map((p, pi) => (
+                      <div key={pi} className="bg-card border border-border rounded-xl p-4 flex gap-3 items-start group hover:border-red-500/30 transition-colors">
+                        <div className="flex-shrink-0 text-center">
+                          <div className="text-xl mb-1">{p.emoji}</div>
+                          <div className="text-[10px] font-black text-muted-foreground/50">{p.n}</div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2 mb-1">
+                            <p className="text-sm font-bold text-foreground">{p.label}</p>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 whitespace-nowrap" style={{ background: (factorColors[p.factor] ?? '#6366f1') + '22', color: factorColors[p.factor] ?? '#6366f1' }}>
+                              {p.factor}
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{p.impact}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
             // ── dcaa_audits_visual ────────────────────────────────────────────
             if ((block as any).type === 'dcaa_audits_visual') {
               const phases = [
