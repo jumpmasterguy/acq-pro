@@ -1179,6 +1179,212 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               );
             }
 
+            // ── contractor_finance_waterfall_visual ───────────────────────────
+            if ((block as any).type === 'contractor_finance_waterfall_visual') {
+              const bars = [
+                { label: 'Contract Price', sub: 'What gov pays', value: 100, pct: 100, color: '#3b82f6', textColor: 'text-blue-400' },
+                { label: 'Direct Labor', sub: 'Salaries on the contract', value: -45, pct: 45, color: '#ef4444', textColor: 'text-red-400' },
+                { label: 'Subcontractors', sub: 'Work you pass through', value: -15, pct: 15, color: '#f97316', textColor: 'text-orange-400' },
+                { label: 'Materials/ODCs', sub: 'Equipment, travel, supplies', value: -10, pct: 10, color: '#f59e0b', textColor: 'text-amber-400' },
+                { label: 'Gross Profit', sub: '30 cents left before overhead', value: 30, pct: 30, color: '#10b981', textColor: 'text-emerald-400', divider: true },
+                { label: 'Overhead', sub: 'Facilities, IT, division mgmt', value: -12, pct: 12, color: '#8b5cf6', textColor: 'text-violet-400' },
+                { label: 'G&A', sub: 'CEO, HR, legal, corporate', value: -8, pct: 8, color: '#6366f1', textColor: 'text-indigo-400' },
+                { label: 'Operating Profit', sub: 'What the business actually earns', value: 10, pct: 10, color: '#14b8a6', textColor: 'text-teal-400', divider: true },
+              ];
+              return (
+                <div key={i} className="space-y-4">
+                  {(block as any).heading && <h3 className="font-bold text-base text-foreground">{(block as any).heading}</h3>}
+                  <p className="text-xs text-muted-foreground">For every $100 the government pays, here is where it goes. These are typical defense services numbers.</p>
+                  <div className="bg-card border border-border rounded-2xl p-5 space-y-2">
+                    {bars.map((bar, bi) => (
+                      <div key={bi}>
+                        {bar.divider && bi > 0 && <div className="border-t border-border/60 my-3" />}
+                        <div className="flex items-center gap-3">
+                          <div className="w-32 flex-shrink-0">
+                            <p className="text-xs font-semibold text-foreground truncate">{bar.label}</p>
+                            <p className="text-[10px] text-muted-foreground leading-tight">{bar.sub}</p>
+                          </div>
+                          <div className="flex-1 flex items-center gap-2">
+                            <div className="flex-1 bg-muted/40 rounded-full h-6 overflow-hidden">
+                              <div
+                                className="h-full rounded-full flex items-center justify-end pr-2 transition-all"
+                                style={{ width: `${bar.pct}%`, background: bar.color + (bar.value < 0 ? '99' : 'dd') }}
+                              >
+                                <span className="text-[10px] font-black text-white">{bar.value > 0 ? `$${bar.value}` : `-$${bar.pct}`}</span>
+                              </div>
+                            </div>
+                            <span className={`text-xs font-bold w-10 text-right flex-shrink-0 ${bar.textColor}`}>
+                              {bar.value > 0 ? `+${bar.pct}%` : `-${bar.pct}%`}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">Numbers vary by company size and contract type. Large primes often see operating margin of 6-9%. Small businesses can hit 12-18% on FFP work.</p>
+                </div>
+              );
+            }
+
+            // ── fee_type_comparison_visual ────────────────────────────────────
+            if ((block as any).type === 'fee_type_comparison_visual') {
+              const feeTypes = [
+                {
+                  label: 'CPFF',
+                  name: 'Cost-Plus Fixed Fee',
+                  emoji: '🔒',
+                  tagline: 'Guaranteed paycheck. No upside.',
+                  analogy: 'Like a salary. You get paid the same no matter how efficient you are.',
+                  fee: '7-10%',
+                  risk: 'Zero',
+                  upside: 'None',
+                  when: 'R&D, new development, high uncertainty',
+                  color: '#3b82f6',
+                  bg: 'bg-blue-500/10',
+                  border: 'border-blue-500/30',
+                  riskDots: 1,
+                  rewardDots: 1,
+                },
+                {
+                  label: 'CPAF',
+                  name: 'Cost-Plus Award Fee',
+                  emoji: '⭐',
+                  tagline: 'You earn it. Or you don\'t.',
+                  analogy: 'Like a performance bonus. Strong reviews mean more money. Bad reviews mean you leave money on the table.',
+                  fee: '0-3% base + up to 10% award',
+                  risk: 'Low',
+                  upside: 'Medium',
+                  when: 'Large service programs, operations support',
+                  color: '#f59e0b',
+                  bg: 'bg-amber-500/10',
+                  border: 'border-amber-500/30',
+                  riskDots: 2,
+                  rewardDots: 3,
+                },
+                {
+                  label: 'CPIF',
+                  name: 'Cost-Plus Incentive Fee',
+                  emoji: '🎯',
+                  tagline: 'Save money. Share the savings.',
+                  analogy: 'Like a piece rate. The more efficient you run, the more you earn. You split savings with the government by a formula set at award.',
+                  fee: 'Adjusts with cost performance',
+                  risk: 'Low-Medium',
+                  upside: 'Medium-High',
+                  when: 'Production, well-defined service work',
+                  color: '#10b981',
+                  bg: 'bg-emerald-500/10',
+                  border: 'border-emerald-500/30',
+                  riskDots: 2,
+                  rewardDots: 4,
+                },
+                {
+                  label: 'FFP',
+                  name: 'Firm Fixed Price',
+                  emoji: '🎲',
+                  tagline: 'All the risk. All the upside.',
+                  analogy: 'Like running your own business. If you come in under cost you keep the difference. If you blow the budget you eat the loss. Nobody bails you out.',
+                  fee: 'Whatever is left after costs',
+                  risk: 'Full',
+                  upside: 'Unlimited',
+                  when: 'Mature, well-defined requirements',
+                  color: '#8b5cf6',
+                  bg: 'bg-violet-500/10',
+                  border: 'border-violet-500/30',
+                  riskDots: 5,
+                  rewardDots: 5,
+                },
+              ];
+              return (
+                <div key={i} className="space-y-4">
+                  {(block as any).heading && <h3 className="font-bold text-base text-foreground">{(block as any).heading}</h3>}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {feeTypes.map((ft, fi) => (
+                      <div key={fi} className={`rounded-2xl border ${ft.border} ${ft.bg} p-4 space-y-3`}>
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-xl">{ft.emoji}</span>
+                              <span className="text-xs font-black tracking-wider text-foreground">{ft.label}</span>
+                            </div>
+                            <p className="text-xs font-medium text-muted-foreground">{ft.name}</p>
+                          </div>
+                          <span className="text-xs font-bold px-2 py-1 rounded-full" style={{ background: ft.color + '22', color: ft.color }}>{ft.fee}</span>
+                        </div>
+                        <p className="text-sm font-bold text-foreground">{ft.tagline}</p>
+                        <p className="text-xs text-muted-foreground leading-relaxed italic">"{ft.analogy}"</p>
+                        <div className="space-y-1.5 pt-1 border-t border-white/10">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[11px] text-muted-foreground">Cost risk</span>
+                            <div className="flex gap-1">{[1,2,3,4,5].map(d => <div key={d} className="w-3 h-3 rounded-full" style={{ background: d <= ft.riskDots ? ft.color : ft.color + '33' }} />)}</div>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[11px] text-muted-foreground">Profit upside</span>
+                            <div className="flex gap-1">{[1,2,3,4,5].map(d => <div key={d} className="w-3 h-3 rounded-full" style={{ background: d <= ft.rewardDots ? ft.color : ft.color + '33' }} />)}</div>
+                          </div>
+                          <p className="text-[10px] text-muted-foreground pt-1">Common on: {ft.when}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // ── dso_cash_gap_visual ───────────────────────────────────────────
+            if ((block as any).type === 'dso_cash_gap_visual') {
+              return (
+                <div key={i} className="space-y-4">
+                  {(block as any).heading && <h3 className="font-bold text-base text-foreground">{(block as any).heading}</h3>}
+                  <p className="text-sm text-muted-foreground">Your company pays expenses <strong className="text-foreground">every two weeks</strong>. But billing the government and getting paid are two different events.</p>
+
+                  <div className="bg-card border border-border rounded-2xl p-5 space-y-4">
+                    {/* Timeline */}
+                    <div className="relative">
+                      <div className="absolute top-5 left-6 right-6 h-0.5 bg-border" />
+                      <div className="flex justify-between relative z-10">
+                        {[
+                          { day: 'Day 0', label: 'Work delivered', emoji: '✅', color: '#3b82f6' },
+                          { day: 'Day 7', label: 'Invoice submitted', emoji: '📄', color: '#f59e0b' },
+                          { day: 'Day 30', label: 'Gov processes invoice', emoji: '🏛️', color: '#8b5cf6' },
+                          { day: 'Day 45-60', label: 'Cash arrives', emoji: '💰', color: '#10b981' },
+                        ].map((evt, ei) => (
+                          <div key={ei} className="flex flex-col items-center gap-2 w-20">
+                            <div className="w-10 h-10 rounded-full bg-card border-2 flex items-center justify-center text-lg" style={{ borderColor: evt.color }}>
+                              {evt.emoji}
+                            </div>
+                            <div className="text-center">
+                              <p className="text-[10px] font-bold" style={{ color: evt.color }}>{evt.day}</p>
+                              <p className="text-[10px] text-muted-foreground leading-tight text-center">{evt.label}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* The gap */}
+                    <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
+                      <p className="text-sm font-bold text-red-400 mb-1">The Gap: 45 to 60 days of expenses with no cash in</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">During that window your company is still paying salaries, benefits, rent, and overhead. Every day of DSO above 45 costs real money. Large contractors track this weekly.</p>
+                    </div>
+
+                    {/* DSO benchmarks */}
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { range: 'Under 35', label: 'Excellent', color: '#10b981', bg: 'bg-emerald-500/10' },
+                        { range: '35 to 45', label: 'Healthy', color: '#3b82f6', bg: 'bg-blue-500/10' },
+                        { range: '45 to 60', label: 'Watch it', color: '#f59e0b', bg: 'bg-amber-500/10' },
+                      ].map((bench, bi) => (
+                        <div key={bi} className={`${bench.bg} rounded-xl p-3 text-center border`} style={{ borderColor: bench.color + '44' }}>
+                          <p className="text-xs font-black" style={{ color: bench.color }}>{bench.range}</p>
+                          <p className="text-[10px] text-muted-foreground">{bench.label}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">DSO above 60 days usually means the government is slow-paying or there are invoice disputes. Above 90 days is a serious cash flow problem.</p>
+                  </div>
+                </div>
+              );
+            }
             // ── dcaa_audits_visual ────────────────────────────────────────────
             if ((block as any).type === 'dcaa_audits_visual') {
               const phases = [
