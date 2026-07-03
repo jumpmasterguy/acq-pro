@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { modules, getTotalLessons, getModuleTotalMinutes, formatDuration, parseDuration } from "@/lib/curriculum";
 import { getModuleProgress, getLevel, calculateXP, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
 import type { UserProgress } from "@/lib/progress";
@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 interface DashboardProps {
   progress: UserProgress;
   onSelectModule: (moduleId: string) => void;
+  onSelectLesson: (lessonId: string) => void;
   onUpgrade: () => void;
   userProfile?: UserProfile | null;
   username?: string;
@@ -381,7 +382,7 @@ function FilterTab({ active, onClick, children }: { active: boolean; onClick: ()
 }
 
 // ── Main Dashboard ───────────────────────────────────────────────────────────
-export default function Dashboard({ progress, onSelectModule, onUpgrade, username, isAdmin }: DashboardProps) {
+export default function Dashboard({ progress, onSelectModule, onSelectLesson, onUpgrade, username, isAdmin }: DashboardProps) {
   const totalLessons = getTotalLessons();
   const completedCount = progress.completedLessons.size;
   const xp = calculateXP(progress.completedLessons, progress.quizScores);
@@ -391,6 +392,9 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
   const [streak, setStreak] = useState({ currentStreak: 0, longestStreak: 0, alreadyCompleted: false, date: '' });
   const [adminStats, setAdminStats] = useState<{ totalUsers: number; proUsers: number; freeUsers: number } | null>(null);
   const [referral, setReferral] = useState<{ referralCode: string; referralCount: number; rewardsEarned: number; referralLink: string; nextRewardAt: number } | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
   const [referralCopied, setReferralCopied] = useState(false);
   const [challenge, setChallenge] = useState<{ questions: any[], date: string } | null>(null);
   const [challengeActive, setChallengeActive] = useState(false);
@@ -404,6 +408,47 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
       .then(data => { if (data.referralCode) setReferral(data); })
       .catch(() => {});
   }, []);
+
+  // Close search on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setSearchFocused(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // Search index — flat list of all lessons with module context
+  const searchIndex = useMemo(() => {
+    const results: { lessonId: string; lessonTitle: string; moduleId: string; moduleTitle: string; moduleIcon: string; description: string; keyTerms: string[] }[] = [];
+    modules.forEach(mod => {
+      mod.lessons.forEach(lesson => {
+        results.push({
+          lessonId: lesson.id,
+          lessonTitle: lesson.title,
+          moduleId: mod.id,
+          moduleTitle: mod.title,
+          moduleIcon: mod.icon,
+          description: lesson.description ?? '',
+          keyTerms: (lesson.keyTerms ?? []).map((t: any) => typeof t === 'string' ? t : t.term ?? ''),
+        });
+      });
+    });
+    return results;
+  }, []);
+
+  const searchResults = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (q.length < 2) return [];
+    return searchIndex.filter(item =>
+      item.lessonTitle.toLowerCase().includes(q) ||
+      item.description.toLowerCase().includes(q) ||
+      item.keyTerms.some(t => t.toLowerCase().includes(q)) ||
+      item.moduleTitle.toLowerCase().includes(q)
+    ).slice(0, 8);
+  }, [searchQuery, searchIndex]);
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -538,6 +583,99 @@ export default function Dashboard({ progress, onSelectModule, onUpgrade, usernam
             <div className="text-sm font-bold text-primary">{xp}</div>
           </div>
         </div>
+      </div>
+
+      {/* Search bar */}
+      <div ref={searchRef} className="relative">
+        <div className={`flex items-center gap-3 bg-card border rounded-2xl px-4 py-3 shadow-sm transition-all duration-200 ${
+          searchFocused ? 'border-primary/60 shadow-md' : 'border-border'
+        }`}>
+          <svg className="w-4 h-4 text-muted-foreground flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+          </svg>
+          <input
+            type="text"
+            placeholder="Search lessons, terms, topics... e.g. wrap rate, EVM, IDIQ"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            onFocus={() => setSearchFocused(true)}
+            className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground/60 min-w-0"
+          />
+          {searchQuery && (
+            <button onClick={() => { setSearchQuery(''); setSearchFocused(false); }} className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+          )}
+        </div>
+
+        {/* Results dropdown */}
+        {searchFocused && searchQuery.length >= 2 && (
+          <div className="absolute top-full left-0 right-0 mt-2 bg-popover border border-border rounded-2xl shadow-xl overflow-hidden z-50">
+            {searchResults.length === 0 ? (
+              <div className="px-4 py-6 text-center">
+                <p className="text-sm text-muted-foreground">No lessons found for "{searchQuery}"</p>
+                <p className="text-xs text-muted-foreground/60 mt-1">Try a different term or topic</p>
+              </div>
+            ) : (
+              <div className="divide-y divide-border">
+                {searchResults.map((result, ri) => {
+                  const isAccessible = FREE_MODULES.includes(result.moduleId) || progress.isPremium;
+                  const isPreview = FREE_PREVIEW_LESSONS.includes(result.lessonId);
+                  const canAccess = isAccessible || isPreview;
+                  const moduleColors: Record<string, string> = {
+                    foundations: '#3b82f6', finance: '#f59e0b', contracts: '#6366f1',
+                    data: '#14b8a6', capture: '#f97316', operations: '#8b5cf6',
+                  };
+                  const accentColor = moduleColors[result.moduleId] ?? '#01696f';
+                  // Highlight matching terms
+                  const matchedTerms = result.keyTerms.filter(t =>
+                    t.toLowerCase().includes(searchQuery.toLowerCase())
+                  ).slice(0, 3);
+
+                  return (
+                    <button
+                      key={result.lessonId}
+                      className="w-full flex items-center gap-3 px-4 py-3.5 text-left hover:bg-muted/50 transition-colors group"
+                      onClick={() => {
+                        if (!canAccess) { onUpgrade(); return; }
+                        onSelectLesson(result.lessonId);
+                        setSearchQuery('');
+                        setSearchFocused(false);
+                      }}
+                    >
+                      {/* Module icon dot */}
+                      <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-base" style={{ background: accentColor + '22' }}>
+                        {result.moduleIcon}
+                      </div>
+
+                      {/* Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-semibold text-foreground truncate">{result.lessonTitle}</p>
+                          {!canAccess && <span className="text-[10px] text-muted-foreground flex-shrink-0">🔒</span>}
+                        </div>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span className="text-[11px] font-medium" style={{ color: accentColor }}>{result.moduleTitle}</span>
+                          {matchedTerms.length > 0 && (
+                            <>
+                              <span className="text-muted-foreground/40 text-[10px]">·</span>
+                              <span className="text-[11px] text-muted-foreground truncate">{matchedTerms.join(', ')}</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      <svg className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-primary transition-colors flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            <div className="px-4 py-2 bg-muted/30 border-t border-border">
+              <p className="text-[11px] text-muted-foreground">{searchResults.length > 0 ? `${searchResults.length} lesson${searchResults.length !== 1 ? 's' : ''} found` : 'No results'} · Searches titles, descriptions, and key terms</p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Stats strip */}

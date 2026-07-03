@@ -735,6 +735,7 @@ function AppContent() {
             <Dashboard
               progress={progress}
               onSelectModule={handleSelectModule}
+              onSelectLesson={handleSelectLesson}
               onUpgrade={handleUpgrade}
               userProfile={authState.status === 'authenticated' ? (authState.user.userProfile as UserProfile | null) : null}
               username={authState.status === 'authenticated' ? authState.user.username : undefined}
