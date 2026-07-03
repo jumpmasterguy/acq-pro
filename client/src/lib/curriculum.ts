@@ -9600,3 +9600,4 @@ export const formatDuration = (mins: number): string => {
   const m = mins % 60;
   return m > 0 ? `${h}h ${m}m` : `${h}h`;
 };
+
