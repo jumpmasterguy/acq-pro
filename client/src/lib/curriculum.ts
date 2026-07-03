@@ -3591,11 +3591,7 @@ export const modules: Module[] = [
             {
               type: 'text',
               heading: 'You know the mission. Do you know the money?',
-              body: 'Most contractor PMs can tell you exactly how many deliverables are due this month, where the schedule stands, and what the government customer thinks of the program. But ask them what the gross margin is and you get a blank stare.
-
-That gap costs people promotions.
-
-Business unit leaders, executives, and proposal teams all speak the language of margin and fee. If you can cross that line, you stop being the person who executes the work and start being the person leadership brings into the room when decisions are made.',
+              body: 'Most contractor PMs can tell you exactly how many deliverables are due this month, where the schedule stands, and what the government customer thinks of the program. But ask them what the gross margin is and you get a blank stare. That gap costs people promotions. Business unit leaders, executives, and proposal teams all speak the language of margin and fee. If you can cross that line, you stop being the person who executes the work and start being the person leadership brings into the room when decisions are made.',
             },
             {
               type: 'callout',
@@ -3618,11 +3614,7 @@ Business unit leaders, executives, and proposal teams all speak the language of 
             },
             {
               type: 'lucas_note',
-              body: 'I was in a quarterly business review early in my career and the CFO asked about our DSO and gross margin variance against plan. I had no idea what he was talking about.
-
-The program was performing. Deliverables on time, government happy, no issues. But I could not speak to the financial health of the business unit. That was the moment I realized there was a whole other game being played above my head.
-
-The PMs who move up are the ones who can say: our gross margin is running two points ahead of plan because we right-sized the subcontractor team in Phase 2, and if we earn 85% of our award fee this quarter, we will finish the year at 9% operating margin. That is the language of leadership.',
+              body: 'I was in a quarterly business review early in my career and the CFO asked about our DSO and gross margin variance against plan. I had no idea what he was talking about. The program was performing. Deliverables on time, government happy, no issues. But I could not speak to the financial health of the business unit. That was the moment I realized there was a whole other game being played above my head. The PMs who move up are the ones who can say: our gross margin is running two points ahead of plan because we right-sized the subcontractor team in Phase 2, and if we earn 85% of our award fee this quarter, we will finish the year at 9% operating margin. That is the language of leadership.',
             },
             {
               type: 'dso_cash_gap_visual' as any,
@@ -3684,9 +3676,7 @@ The PMs who move up are the ones who can say: our gross margin is running two po
             {
               type: 'text',
               heading: 'Award Fee Is Not Just a Rating. It Is a Dollar Amount.',
-              body: 'On a $50M CPAF contract with a 10% award fee pool, the difference between earning 85% of the pool and earning 60% is $1.25M in profit for the year.
-
-Scale that across 5 to 10 programs in a business unit and the difference between average and excellent award fee performance is the difference between making the annual plan and missing it. Every rating your government PM gives you has a dollar figure attached to it. That is not abstract. That is real money.',
+              body: 'On a $50M CPAF contract with a 10% award fee pool, the difference between earning 85% of the pool and earning 60% is $1.25M in profit for the year. Scale that across 5 to 10 programs in a business unit and the difference between average and excellent award fee performance is the difference between making the annual plan and missing it. Every rating your government PM gives you has a dollar figure attached to it. That is not abstract. That is real money.',
             },
             {
               type: 'callout',
