@@ -5808,67 +5808,6 @@ export const modules: Module[] = [
       }
         ]
       },
-    ],
-    assessment: [
-      {
-        id: 'ca1',
-        question: 'Under a Firm-Fixed-Price (FFP) contract, who bears 100% of the cost risk?',
-        options: ['The Government', 'The Contractor', 'Cost risk is split 50/50', 'A third-party surety'],
-        correct: 1,
-        explanation: 'Under FFP, the contractor\'s price is fixed at award and does not change regardless of actual costs incurred. The contractor bears all cost risk — if costs exceed the price, the contractor absorbs the loss. If costs are lower, the contractor keeps the savings. This is why FFP is preferred for well-defined, stable requirements.'
-      },
-      {
-        id: 'ca2',
-        question: 'Which FAR part governs the general principles of contract types?',
-        options: ['FAR Part 12', 'FAR Part 13', 'FAR Part 15', 'FAR Part 16'],
-        correct: 3,
-        explanation: 'FAR Part 16 covers contract types — from Fixed-Price (16.2) through Cost-Reimbursement (16.3) to Indefinite Delivery (16.5) and Time-and-Materials (16.6). FAR Part 15 covers negotiated acquisitions; Part 12 covers commercial items; Part 13 covers simplified acquisition.'
-      },
-      {
-        id: 'ca3',
-        question: 'In source selection, Section L and Section M of a solicitation serve which purposes respectively?',
-        options: ['Section L = Contract terms; Section M = Statement of Work', 'Section L = Instructions to offerors; Section M = Evaluation criteria and factors', 'Section L = Pricing instructions; Section M = Technical requirements', 'Section L = Past performance forms; Section M = Price/cost instructions'],
-        correct: 1,
-        explanation: 'Section L (Instructions, Conditions, and Notices to Offerors) tells contractors HOW to prepare and submit their proposal. Section M (Evaluation Factors) tells them HOW the government will evaluate and award. Section M must be aligned with Section L — you cannot evaluate something you didn\'t ask for.'
-      },
-      {
-        id: 'ca4',
-        question: 'A "constructive change" to a contract occurs when:',
-        options: ['The contractor proactively improves the system beyond what was required', 'A government action effectively changes contract scope without a formal modification', 'The CO issues a bilateral modification agreed to by both parties', 'The contractor submits a value engineering change proposal'],
-        correct: 1,
-        explanation: 'A constructive change arises when a government action — such as a COR directing extra work, an overly strict inspection standard, or government-caused delays — effectively changes what the contract requires, even without a formal modification. These can result in large, retroactive contractor claims.'
-      },
-      {
-        id: 'ca5',
-        question: 'Under the FAR, "best value" source selection most accurately means:',
-        options: ['Always selecting the lowest price technically acceptable offer', 'The government can only consider technical factors, not price', 'A tradeoff process where technical merit and price are both considered to select the offer providing the greatest overall benefit to the government', 'Selecting the offeror with the highest past performance rating regardless of price'],
-        correct: 2,
-        explanation: 'Best value allows the government to pay a price premium for superior technical capability when the additional benefit justifies the higher cost. The tradeoff rationale must be documented. The alternative is Lowest Price Technically Acceptable (LPTA), where only technical acceptability is evaluated and price wins.'
-      },
-      {
-        id: 'ca6',
-        question: 'Which contract type is generally PROHIBITED for use when acquiring services that are closely related to inherently governmental functions?',
-        options: ['Firm-Fixed-Price (FFP)', 'Time-and-Materials (T&M)', 'Cost-Plus-Incentive-Fee (CPIF)', 'Indefinite Delivery / Indefinite Quantity (IDIQ)'],
-        correct: 1,
-        explanation: 'Time-and-Materials contracts provide no incentive for the contractor to control costs — the government pays for labor hours regardless of efficiency. FAR 16.601 requires a determination that no other contract type is suitable before using T&M, and requires government surveillance of labor hours. T&M is particularly problematic for services near inherently governmental functions.'
-      },
-      {
-        id: 'ca7',
-        question: 'The "Point of Total Assumption" (PTA) in an FPIF contract is the cost point at which:',
-        options: ['The government assumes 100% of cost risk above that amount', 'The contractor assumes 100% of cost risk above that amount (equivalent to FFP above PTA)', 'Both parties renegotiate the contract target cost', 'The ceiling price is triggered and the contract converts to FFP'],
-        correct: 1,
-        explanation: 'Above the PTA, the contractor\'s share ratio effectively becomes 100/0 — the contractor absorbs every dollar of cost overrun because the ceiling price caps government payments. The PTA is calculated as: PTA = (Ceiling Price - Target Price) / Government Share Ratio + Target Cost.'
-      },
-      {
-        id: 'ca8',
-        question: 'DCMA\'s primary mission in contract administration is to:',
-        options: ['Audit contractor accounting systems and cost claims', 'Administer contracts on behalf of the PCO — monitoring performance, accepting deliverables, and managing GFP', 'Evaluate contractor proposals during source selection', 'Provide legal representation to the government in contract disputes'],
-        correct: 1,
-        explanation: 'DCMA is the operational contract administration arm of DoD. DCMA\'s Administrative Contracting Officers (ACOs) are assigned to contractor facilities to monitor schedule, quality, property, and compliance daily. DCAA handles accounting audits; DCMA handles performance administration.'
-      },
-    ],
-  },
-
         {
           id: 'contracts-10',
           title: 'CDRLs and DIDs: The Deliverable System Nobody Explains',
@@ -6150,6 +6089,67 @@ export const modules: Module[] = [
             },
           ],
         },
+    ],
+    assessment: [
+      {
+        id: 'ca1',
+        question: 'Under a Firm-Fixed-Price (FFP) contract, who bears 100% of the cost risk?',
+        options: ['The Government', 'The Contractor', 'Cost risk is split 50/50', 'A third-party surety'],
+        correct: 1,
+        explanation: 'Under FFP, the contractor\'s price is fixed at award and does not change regardless of actual costs incurred. The contractor bears all cost risk — if costs exceed the price, the contractor absorbs the loss. If costs are lower, the contractor keeps the savings. This is why FFP is preferred for well-defined, stable requirements.'
+      },
+      {
+        id: 'ca2',
+        question: 'Which FAR part governs the general principles of contract types?',
+        options: ['FAR Part 12', 'FAR Part 13', 'FAR Part 15', 'FAR Part 16'],
+        correct: 3,
+        explanation: 'FAR Part 16 covers contract types — from Fixed-Price (16.2) through Cost-Reimbursement (16.3) to Indefinite Delivery (16.5) and Time-and-Materials (16.6). FAR Part 15 covers negotiated acquisitions; Part 12 covers commercial items; Part 13 covers simplified acquisition.'
+      },
+      {
+        id: 'ca3',
+        question: 'In source selection, Section L and Section M of a solicitation serve which purposes respectively?',
+        options: ['Section L = Contract terms; Section M = Statement of Work', 'Section L = Instructions to offerors; Section M = Evaluation criteria and factors', 'Section L = Pricing instructions; Section M = Technical requirements', 'Section L = Past performance forms; Section M = Price/cost instructions'],
+        correct: 1,
+        explanation: 'Section L (Instructions, Conditions, and Notices to Offerors) tells contractors HOW to prepare and submit their proposal. Section M (Evaluation Factors) tells them HOW the government will evaluate and award. Section M must be aligned with Section L — you cannot evaluate something you didn\'t ask for.'
+      },
+      {
+        id: 'ca4',
+        question: 'A "constructive change" to a contract occurs when:',
+        options: ['The contractor proactively improves the system beyond what was required', 'A government action effectively changes contract scope without a formal modification', 'The CO issues a bilateral modification agreed to by both parties', 'The contractor submits a value engineering change proposal'],
+        correct: 1,
+        explanation: 'A constructive change arises when a government action — such as a COR directing extra work, an overly strict inspection standard, or government-caused delays — effectively changes what the contract requires, even without a formal modification. These can result in large, retroactive contractor claims.'
+      },
+      {
+        id: 'ca5',
+        question: 'Under the FAR, "best value" source selection most accurately means:',
+        options: ['Always selecting the lowest price technically acceptable offer', 'The government can only consider technical factors, not price', 'A tradeoff process where technical merit and price are both considered to select the offer providing the greatest overall benefit to the government', 'Selecting the offeror with the highest past performance rating regardless of price'],
+        correct: 2,
+        explanation: 'Best value allows the government to pay a price premium for superior technical capability when the additional benefit justifies the higher cost. The tradeoff rationale must be documented. The alternative is Lowest Price Technically Acceptable (LPTA), where only technical acceptability is evaluated and price wins.'
+      },
+      {
+        id: 'ca6',
+        question: 'Which contract type is generally PROHIBITED for use when acquiring services that are closely related to inherently governmental functions?',
+        options: ['Firm-Fixed-Price (FFP)', 'Time-and-Materials (T&M)', 'Cost-Plus-Incentive-Fee (CPIF)', 'Indefinite Delivery / Indefinite Quantity (IDIQ)'],
+        correct: 1,
+        explanation: 'Time-and-Materials contracts provide no incentive for the contractor to control costs — the government pays for labor hours regardless of efficiency. FAR 16.601 requires a determination that no other contract type is suitable before using T&M, and requires government surveillance of labor hours. T&M is particularly problematic for services near inherently governmental functions.'
+      },
+      {
+        id: 'ca7',
+        question: 'The "Point of Total Assumption" (PTA) in an FPIF contract is the cost point at which:',
+        options: ['The government assumes 100% of cost risk above that amount', 'The contractor assumes 100% of cost risk above that amount (equivalent to FFP above PTA)', 'Both parties renegotiate the contract target cost', 'The ceiling price is triggered and the contract converts to FFP'],
+        correct: 1,
+        explanation: 'Above the PTA, the contractor\'s share ratio effectively becomes 100/0 — the contractor absorbs every dollar of cost overrun because the ceiling price caps government payments. The PTA is calculated as: PTA = (Ceiling Price - Target Price) / Government Share Ratio + Target Cost.'
+      },
+      {
+        id: 'ca8',
+        question: 'DCMA\'s primary mission in contract administration is to:',
+        options: ['Audit contractor accounting systems and cost claims', 'Administer contracts on behalf of the PCO — monitoring performance, accepting deliverables, and managing GFP', 'Evaluate contractor proposals during source selection', 'Provide legal representation to the government in contract disputes'],
+        correct: 1,
+        explanation: 'DCMA is the operational contract administration arm of DoD. DCMA\'s Administrative Contracting Officers (ACOs) are assigned to contractor facilities to monitor schedule, quality, property, and compliance daily. DCAA handles accounting audits; DCMA handles performance administration.'
+      },
+    ],
+  },
+
 
   // ─────────────────────────────────────────────────────────────
   // MODULE 4 — DATA
