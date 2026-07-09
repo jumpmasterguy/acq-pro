@@ -44,6 +44,17 @@ for (const mod of moduleIds) {
 const lessonsArrays = (content.match(/lessons:\s*\[/g)||[]).length;
 if (lessonsArrays < 6) errors.push(`Only ${lessonsArrays} lessons arrays found — expected at least 6`);
 
+// 5. No lesson ID at top-level indentation (2-space) — the insertion bug pattern
+// A lesson at 2-space means it's at module level, not inside lessons: []
+// Pattern: line is '  {' (exactly 2 spaces) followed by line with '    id: \'xxx-'
+const contentLines = content.split('\n');
+for (let li = 0; li < contentLines.length - 1; li++) {
+  if (contentLines[li] === '  {' && /^    id: '(finance|contracts|foundations|data|capture|ops|operations)-/.test(contentLines[li+1])) {
+    const lessonId = contentLines[li+1].match(/id: '([^']+)'/)?.[1];
+    errors.push(`Lesson '${lessonId}' appears at module-level indentation (outside lessons array) at line ${li+1}`);
+  }
+}
+
 // 5. No lesson IDs appearing at module-level indentation (the awk insertion bug)
 // A lesson like finance-10 should be deeply nested, not at the top level of the file
 const moduleLevel = /^    \{\s*\n\s+id: '(finance|contracts|foundations|data|capture|ops|operations)-/m;
