@@ -78,7 +78,7 @@ type View =
   | { type: 'auth' }
   | { type: 'onboarding' }
   | { type: 'dashboard' }
-  | { type: 'module'; moduleId: string }
+  | { type: 'module'; moduleId: string; activeCareer?: string }
   | { type: 'lesson'; lessonId: string }
   | { type: 'upgrade' }
   | { type: 'admin' }
@@ -306,7 +306,7 @@ function AppContent() {
     }
   };
 
-  const handleSelectModule = (moduleId: string) => setView({ type: 'module', moduleId });
+  const handleSelectModule = (moduleId: string, activeCareer?: string) => setView({ type: 'module', moduleId, activeCareer });
   const handleSelectLesson = (lessonId: string) => setView({ type: 'lesson', lessonId });
   const handleUpgrade = () => setView({ type: 'upgrade' });
 
@@ -760,6 +760,7 @@ function AppContent() {
                 onUpgrade={handleUpgrade}
                 unlockedLevel={(skillLevels[modId] as SkillLevel) ?? 'novice'}
                 onOpenAssessment={() => setAssessmentModuleId(modId)}
+                activeCareer={(view as any).activeCareer ?? null}
               />
             );
           })()}

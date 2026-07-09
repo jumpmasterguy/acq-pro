@@ -1,5 +1,7 @@
+import React from "react";
 import { modules, type SkillLevel } from "@/lib/curriculum";
 import { getModuleProgress, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
+import { getTrackData, sortLessonsByTrack, type CareerTrackId } from "@/lib/careerTracks";
 import type { UserProgress } from "@/lib/progress";
 import { ArrowLeft, Clock, CheckCircle, Lock, ChevronRight, BookOpen, Trophy, Target, Award, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -26,14 +28,24 @@ interface ModulePageProps {
   onUpgrade: () => void;
   unlockedLevel?: SkillLevel;
   onOpenAssessment?: () => void;
+  activeCareer?: string | null;
 }
 
-export default function ModulePage({ moduleId, progress, onBack, onSelectLesson, onUpgrade, unlockedLevel = 'novice', onOpenAssessment }: ModulePageProps) {
+export default function ModulePage({ moduleId, progress, onBack, onSelectLesson, onUpgrade, unlockedLevel = 'novice', onOpenAssessment, activeCareer }: ModulePageProps) {
   const mod = modules.find(m => m.id === moduleId);
   if (!mod) return null;
 
-  const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
+  const trackData = getTrackData((activeCareer as CareerTrackId) ?? null);
   const lessonIds = mod.lessons.map(l => l.id);
+  const { primary, bonus, unclassified } = sortLessonsByTrack(lessonIds, trackData);
+  // Build sorted lesson list: primary first, then bonus, then unclassified
+  const sortedLessonIds = trackData ? [...primary, ...bonus, ...unclassified] : lessonIds;
+  // Map back to lesson objects in sorted order
+  const lessonMap = Object.fromEntries(mod.lessons.map(l => [l.id, l]));
+  const sortedLessons = sortedLessonIds.map(id => lessonMap[id]).filter(Boolean);
+  const primarySet = new Set(primary);
+
+  const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
   const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
 
   return (
@@ -142,12 +154,22 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
           <div>
             {/* Header row */}
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-widest">Lessons</h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-widest">Lessons</h2>
+                {trackData && (
+                  <span className="text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                    {trackData.shortLabel} path
+                  </span>
+                )}
+              </div>
               <span className="text-xs text-muted-foreground">{completedInModule} / {mod.lessons.length} done</span>
             </div>
 
             <div className="space-y-2">
-              {mod.lessons.map((lesson, index) => {
+              {sortedLessons.map((lesson, index) => {
+                const isPrimary = primarySet.has(lesson.id);
+                const isFirstBonus = trackData && !isPrimary && index > 0 && primarySet.has(sortedLessons[index - 1]?.id);
+                const isFirstUnclassified = !trackData && index > 0;
                 const isCompleted = progress.completedLessons.has(lesson.id);
                 const isFreePreview = FREE_PREVIEW_LESSONS.includes(lesson.id);
                 const isLocked = !isAccessible && !isFreePreview;
@@ -155,6 +177,17 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                 const termCount = lesson.keyTerms?.length ?? 0;
 
                 return (
+                  <React.Fragment key={lesson.id}>
+                  {/* Bonus section divider */}
+                  {isFirstBonus && (
+                    <div className="flex items-center gap-3 py-2">
+                      <div className="flex-1 h-px bg-border" />
+                      <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider whitespace-nowrap">
+                        Good to know · outside your core path
+                      </span>
+                      <div className="flex-1 h-px bg-border" />
+                    </div>
+                  )}
                   <div
                     key={lesson.id}
                     onClick={() => isLocked ? onUpgrade() : onSelectLesson(lesson.id)}
@@ -163,7 +196,9 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                       'group relative flex items-stretch gap-0 rounded-2xl border bg-card overflow-hidden transition-all duration-200',
                       isLocked
                         ? 'opacity-50 cursor-not-allowed border-border'
-                        : cn('cursor-pointer border-border shadow-sm hover:shadow-md', ac.border)
+                        : cn('cursor-pointer border-border shadow-sm hover:shadow-md', ac.border),
+                      // Dim bonus/unclassified lessons slightly when a track is active
+                      trackData && !isPrimary ? 'opacity-60 hover:opacity-100' : ''
                     )}
                   >
                     {/* Left accent strip + number */}
@@ -253,6 +288,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                       </div>
                     </div>
                   </div>
+                  </React.Fragment>
                 );
               })}
             </div>

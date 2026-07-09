@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 
 interface DashboardProps {
   progress: UserProgress;
-  onSelectModule: (moduleId: string) => void;
+  onSelectModule: (moduleId: string, activeCareer?: string) => void;
   onSelectLesson: (lessonId: string) => void;
   onUpgrade: () => void;
   userProfile?: UserProfile | null;
@@ -726,7 +726,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
                   {nextLesson.module.title} · {nextLesson.lesson.duration}
                 </div>
               </div>
-              <Button onClick={() => onSelectModule(nextLesson.module.id)} data-testid="continue-lesson-btn">
+              <Button onClick={() => onSelectModule(nextLesson.module.id, filterMode === 'career' ? activeCareer : undefined)} data-testid="continue-lesson-btn">
                 Continue <ChevronRight className="w-3.5 h-3.5 ml-1" />
               </Button>
             </div>
@@ -990,7 +990,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
               seqNum={i + 1}
               isFirst={i === 0}
               progress={progress}
-              onSelect={() => onSelectModule(mod.id)}
+              onSelect={() => onSelectModule(mod.id, filterMode === 'career' ? activeCareer : undefined)}
               onUpgrade={onUpgrade}
               primaryLessons={primaryLessonSetForModule[mod.id] ?? []}
               isCareerMode={filterMode === 'career'}
@@ -1030,7 +1030,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
                   mod={mod}
                   seqNum={primaryModuleOrder.length + i + 1}
                   progress={progress}
-                  onSelect={() => onSelectModule(mod.id)}
+                  onSelect={() => onSelectModule(mod.id, filterMode === 'career' ? activeCareer : undefined)}
                   onUpgrade={onUpgrade}
                   primaryLessons={primaryLessonSetForModule[mod.id] ?? mod.lessons.map(l => l.id)}
                   isCareerMode={filterMode === 'career'}
