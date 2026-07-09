@@ -391,6 +391,9 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
   // Streak + daily challenge state
   const [streak, setStreak] = useState({ currentStreak: 0, longestStreak: 0, alreadyCompleted: false, date: '' });
   const [adminStats, setAdminStats] = useState<{ totalUsers: number; proUsers: number; freeUsers: number } | null>(null);
+  const [startHereDismissed, setStartHereDismissed] = useState(() => {
+    try { return localStorage.getItem('acq_start_here_dismissed') === '1'; } catch { return false; }
+  });
   const [referral, setReferral] = useState<{ referralCode: string; referralCount: number; rewardsEarned: number; referralLink: string; nextRewardAt: number } | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
@@ -851,6 +854,60 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* ── Start Here Banner (new users only) ─────────────────────────────── */}
+      {completedCount === 0 && !startHereDismissed && (
+        <div className="relative overflow-hidden rounded-2xl border-2 border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-5">
+          {/* Animated pulse ring */}
+          <div className="absolute top-5 right-5 flex items-center justify-center">
+            <span className="absolute inline-flex h-10 w-10 rounded-full bg-primary/20 animate-ping" />
+            <span className="relative inline-flex h-6 w-6 rounded-full bg-primary items-center justify-center">
+              <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 3l14 9-14 9V3z" /></svg>
+            </span>
+          </div>
+
+          <div className="pr-12">
+            <p className="text-[11px] font-bold tracking-widest uppercase text-primary mb-1">Start Here</p>
+            <h3 className="text-lg font-bold text-foreground leading-snug mb-1">
+              Pick your career path below.
+            </h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Are you on the <strong className="text-foreground">contractor side</strong> or the <strong className="text-foreground">government side</strong>? Moving into <strong className="text-foreground">Capture &amp; BD</strong>? Select your path and we'll show you exactly which lessons matter most for your role.
+            </p>
+          </div>
+
+          {/* Career track quick-pick buttons */}
+          <div className="flex flex-wrap gap-2 mt-4">
+            {CAREER_TRACKS.map(track => (
+              <button
+                key={track.id}
+                onClick={() => {
+                  setFilterMode('career');
+                  setActiveCareer(track.id as CareerTrackId);
+                  setStartHereDismissed(true);
+                  try { localStorage.setItem('acq_start_here_dismissed', '1'); } catch {}
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all duration-150 group"
+              >
+                <span className="text-sm">{track.icon}</span>
+                <span className="text-foreground/80 group-hover:text-foreground">{track.label}</span>
+                <svg className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-colors" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" /></svg>
+              </button>
+            ))}
+          </div>
+
+          {/* Dismiss */}
+          <button
+            onClick={() => {
+              setStartHereDismissed(true);
+              try { localStorage.setItem('acq_start_here_dismissed', '1'); } catch {}
+            }}
+            className="absolute top-2 right-14 text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+          >
+            dismiss
+          </button>
         </div>
       )}
 
