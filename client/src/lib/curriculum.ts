@@ -5578,20 +5578,7 @@ export const modules: Module[] = [
           { left: 'Traditional FAR/DFARS Contract', right: 'Complex defense system requiring cost reimbursable R&D and CAS compliance' },
           { left: 'FAR Part 12 Commercial', right: 'Cloud services or COTS software sold commercially without modification' },
           { left: 'Other Transaction Authority (OTA)', right: 'AI prototype with Silicon Valley startup that refuses FAR compliance' },
-          {
-          type: 'roles_grid_visual' as any,
-          heading: 'The Key Players — Who Does What',
-          sub: 'Defense acquisition has more job titles than the Army has acronyms. Here are the ones you will actually work with.',
-          roles: [
-            { label: 'Program Manager (PM)', emoji: '🎯', color: '#01696f', desc: 'Owns cost, schedule, and performance. Not the technical expert — the integrator.', badge: 'Govt or Industry', plain: 'The person on the hook for everything.' },
-            { label: 'Contracting Officer (KO/CO)', emoji: '✍️', color: '#6366f1', desc: 'The only person legally authorized to sign contracts and obligate government funds.', badge: 'Govt', plain: 'No KO signature = no contract. Period.' },
-            { label: 'COR / TPOC', emoji: '👁️', color: '#0284c7', desc: "Contracting Officer's Representative. Monitors contractor performance day-to-day. Writes CPARS.", badge: 'Govt', plain: "The government's eyes and ears on your contract." },
-            { label: 'Program Executive Officer (PEO)', emoji: '🏛️', color: '#8b5cf6', desc: "Manages a portfolio of programs. PM reports to PEO. Fights for resources at the senior level.", badge: 'Govt', plain: "Your PM's boss. Knows every program in the portfolio." },
-            { label: 'Capture Manager', emoji: '🎯', color: '#dc2626', desc: "Industry. Leads the pursuit of a specific opportunity from BD through proposal award.", badge: 'Industry', plain: 'The person obsessing over winning the next contract.' },
-            { label: 'Subcontract Manager', emoji: '🔗', color: '#ca8a04', desc: 'Manages relationships and deliverables with subcontractors under the prime contract.', badge: 'Industry', plain: "Runs the subs so the PM doesn't have to micromanage them." },
-          ],
-        },
-                { left: 'Simplified Acquisition Procedures', right: 'Routine supplies purchase of $180K for program support' },
+          { left: 'Simplified Acquisition Procedures', right: 'Routine supplies purchase of $180K for program support' },
         ],
       },
       {
@@ -5625,6 +5612,19 @@ export const modules: Module[] = [
       { term: 'COR', definition: 'Contracting Officer\'s Representative — the government\'s technical eyes and ears on a contract.' },
         ],
         content: [
+      {
+        type: 'roles_grid_visual' as any,
+        heading: 'The Key Players — Who Does What',
+        sub: 'Defense acquisition has more roles than the Army has acronyms. Here are the ones you will actually work with.',
+        roles: [
+          { label: 'Program Manager (PM)', emoji: '🎯', color: '#01696f', desc: 'Owns cost, schedule, and performance. Not the technical expert — the integrator.', badge: 'Govt or Industry', plain: 'The person on the hook for everything.' },
+          { label: 'Contracting Officer (KO)', emoji: '✍️', color: '#6366f1', desc: 'The only person legally authorized to sign contracts and obligate government funds.', badge: 'Govt', plain: 'No KO signature = no contract. Period.' },
+          { label: 'COR / TPOC', emoji: '👁️', color: '#0284c7', desc: "Contracting Officer's Representative. Monitors performance day-to-day. Writes CPARS.", badge: 'Govt', plain: "The government's eyes and ears on your contract." },
+          { label: 'PEO', emoji: '🏛️', color: '#8b5cf6', desc: "Program Executive Officer. Manages a portfolio of programs. Your PM's boss on the govt side.", badge: 'Govt', plain: 'Fights for resources at the senior level.' },
+          { label: 'Capture Manager', emoji: '🎯', color: '#dc2626', desc: 'Industry role. Leads pursuit of a specific opportunity from BD through proposal award.', badge: 'Industry', plain: 'The person obsessing over winning the next contract.' },
+          { label: 'Subcontract Manager', emoji: '🔗', color: '#ca8a04', desc: 'Manages relationships and deliverables with subcontractors under the prime.', badge: 'Industry', plain: "Runs the subs so the PM doesn't have to micromanage them." },
+        ],
+      },
       {
         type: 'text',
         heading: "The Acquisition Workforce",
@@ -6414,25 +6414,6 @@ export const modules: Module[] = [
       heading: 'Presenting Data to Non-Technical Decision Makers',
       body: 'Mid-career PMs spend a significant portion of their time briefing flag officers, SES officials, and congressional staff who have limited technical background. The most effective briefings for this audience: one chart per major message, direct headline titles that state the conclusion (not "CPI Trend" but "Cost Performance Is Recovering — CPI Up 0.08 in 90 Days"), and explicit "so what" statements. Avoid EVM jargon in flag-level briefings — translate: "negative SV" becomes "we are behind schedule"; "VAC" becomes "projected overrun at completion." Spend 80% of your preparation on the narrative, 20% on the charts. Decision makers who can\'t understand your data can\'t support your program.',
         },
-        {
-          type: 'evm_glossary_visual' as any,
-          heading: 'The EVM Acronym Cheat Sheet',
-          sub: 'Every one of these shows up on program reviews. Know them cold.',
-          terms: [
-            { abbr: 'BAC', full: 'Budget At Completion', plain: 'The total budget for the entire job. The number everyone is trying not to exceed.', color: '#01696f' },
-            { abbr: 'BCWS / PV', full: 'Planned Value', plain: 'How much work was supposed to be done by now, in dollars.', color: '#6366f1' },
-            { abbr: 'BCWP / EV', full: 'Earned Value', plain: 'How much work was actually completed, measured in budget dollars.', color: '#0284c7' },
-            { abbr: 'ACWP / AC', full: 'Actual Cost', plain: 'What you actually spent. Compare to EV to find cost variance.', color: '#dc2626' },
-            { abbr: 'CV', full: 'Cost Variance', plain: 'EV minus AC. Negative = over budget. EV - AC < 0 = uh oh.', color: '#ca8a04' },
-            { abbr: 'SV', full: 'Schedule Variance', plain: "EV minus PV. Negative = behind schedule. Behind even if you're spending on target.", color: '#8b5cf6' },
-            { abbr: 'CPI', full: 'Cost Performance Index', plain: "EV / AC. If CPI < 1.0, you're getting less than a dollar of work per dollar spent.", color: '#dc2626' },
-            { abbr: 'SPI', full: 'Schedule Performance Index', plain: "EV / PV. If SPI < 1.0, you're behind schedule. 0.8 SPI = 80% efficient.", color: '#8b5cf6' },
-            { abbr: 'EAC', full: 'Estimate At Completion', plain: 'Your best guess of what the whole thing will cost when done.', color: '#ca8a04' },
-            { abbr: 'ETC', full: 'Estimate To Complete', plain: 'How much more money you need from today to finish.', color: '#0284c7' },
-            { abbr: 'VAC', full: 'Variance At Completion', plain: 'BAC minus EAC. Negative = projected overrun. This is the number that keeps PMs up at night.', color: '#dc2626' },
-            { abbr: 'TCPI', full: 'To-Complete Performance Index', plain: "The CPI you'd need from here to finish on budget. If > 1.1, you're probably not making it.", color: '#16a34a' },
-          ],
-        },
                 {
       type: 'callout' as const,
       level: 'advanced' as const,
@@ -6531,6 +6512,25 @@ export const modules: Module[] = [
       { term: 'TCPI', definition: 'To-Complete Performance Index — efficiency needed on remaining work to hit BAC or EAC.' },
         ],
         content: [
+      {
+        type: 'evm_glossary_visual' as any,
+        heading: 'The EVM Acronym Cheat Sheet',
+        sub: 'Every one of these shows up on program reviews. Know them cold.',
+        terms: [
+          { abbr: 'BAC', full: 'Budget At Completion', plain: 'The total budget for the job. The number everyone is trying not to exceed.', color: '#01696f' },
+          { abbr: 'BCWS / PV', full: 'Planned Value', plain: 'How much work was supposed to be done by now, measured in dollars.', color: '#6366f1' },
+          { abbr: 'BCWP / EV', full: 'Earned Value', plain: 'How much work was actually completed, measured in budget dollars.', color: '#0284c7' },
+          { abbr: 'ACWP / AC', full: 'Actual Cost', plain: 'What you actually spent. Compare to EV to find cost variance.', color: '#dc2626' },
+          { abbr: 'CV', full: 'Cost Variance', plain: 'EV minus AC. Negative = over budget.', color: '#ca8a04' },
+          { abbr: 'SV', full: 'Schedule Variance', plain: "EV minus PV. Negative = behind schedule. You can be behind even if you're spending on target.", color: '#8b5cf6' },
+          { abbr: 'CPI', full: 'Cost Performance Index', plain: "EV divided by AC. Below 1.0 means you're getting less than a dollar of work per dollar spent.", color: '#dc2626' },
+          { abbr: 'SPI', full: 'Schedule Performance Index', plain: "EV divided by PV. Below 1.0 means you're behind schedule.", color: '#8b5cf6' },
+          { abbr: 'EAC', full: 'Estimate At Completion', plain: 'Your best guess of what the whole program will cost when done.', color: '#ca8a04' },
+          { abbr: 'ETC', full: 'Estimate To Complete', plain: 'How much more money you need from today to finish.', color: '#0284c7' },
+          { abbr: 'VAC', full: 'Variance At Completion', plain: 'BAC minus EAC. Negative = projected overrun at completion.', color: '#dc2626' },
+          { abbr: 'TCPI', full: 'To-Complete Performance Index', plain: "The CPI you need from here to finish on budget. Above 1.1 means finishing on budget is unlikely.", color: '#16a34a' },
+        ],
+      },
       {
         type: 'text',
         heading: 'Why EVM Has So Many Acronyms',
