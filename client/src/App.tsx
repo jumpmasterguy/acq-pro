@@ -136,7 +136,7 @@ function clearSavedView() {
 function AppContent() {
   // Check if we arrived via a landing page CTA (/app#/auth)
   const arrivedAtAuth = typeof window !== 'undefined' &&
-    (window.location.hash.startsWith('#/auth') || window.location.pathname === '/app');
+    window.location.hash.startsWith('#/auth');
   const [view, setView] = useState<View>(arrivedAtAuth ? { type: 'auth' } : { type: 'landing' });
   // Dark mode — persisted in cookie (works on Railway, not a sandboxed iframe)
   const [darkMode, setDarkMode] = useState(() => {
@@ -380,8 +380,8 @@ function AppContent() {
     );
   }
 
-  // Auth page (no sidebar) — only show if NOT already authenticated
-  if ((view.type === 'auth' || authState.status === 'unauthenticated') && authState.status !== 'authenticated') {
+  // Auth page — only render when session check is DONE and user is NOT authenticated
+  if (authState.status === 'unauthenticated') {
     return (
       <AuthPage
         onAuthenticated={handleAuthenticated}
