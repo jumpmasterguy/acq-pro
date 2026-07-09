@@ -222,9 +222,13 @@ function AppContent() {
         if (res.ok) {
           const user: AuthUser = await res.json();
           setAuthState({ status: 'authenticated', user });
+          // Clear #/auth hash so it doesn't re-trigger auth view on reload
+          if (window.location.hash.startsWith('#/auth')) {
+            window.history.replaceState(null, '', window.location.pathname);
+          }
           // Restore where the user was before the reload
           const saved = loadSavedView();
-          if (saved) {
+          if (saved && saved.type !== 'auth') {
             // If saved view was admin but user lost admin, fall back to dashboard
             if (saved.type === 'admin' && !user.isAdmin) {
               setView({ type: 'dashboard' });
@@ -376,8 +380,8 @@ function AppContent() {
     );
   }
 
-  // Auth page (no sidebar)
-  if (view.type === 'auth' || authState.status === 'unauthenticated') {
+  // Auth page (no sidebar) — only show if NOT already authenticated
+  if ((view.type === 'auth' || authState.status === 'unauthenticated') && authState.status !== 'authenticated') {
     return (
       <AuthPage
         onAuthenticated={handleAuthenticated}
