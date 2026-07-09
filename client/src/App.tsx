@@ -787,6 +787,7 @@ function AppContent() {
                 unlockedLevel={unlockedLevel}
                 onOpenAssessment={parentMod ? () => setAssessmentModuleId(parentMod.id) : undefined}
                 isLifetime={authState.status === 'authenticated' && authState.user.subscriptionStatus === 'lifetime'}
+                activeCareer={(view as any).activeCareer ?? null}
               />
             );
           })()}

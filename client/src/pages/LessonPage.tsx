@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { getTrackData, type CareerTrackId } from "@/lib/careerTracks";
 import { modules, type Lesson, type Module, type QuizQuestion, type SkillLevel, type ExpandableItem } from "@/lib/curriculum";
 import type { UserProgress } from "@/lib/progress";
 import {
@@ -144,12 +145,10 @@ interface LessonPageProps {
   onBack: () => void;
   onComplete: (lessonId: string, quizScore: number) => void;
   onNextLesson: (lessonId: string) => void;
-  // Highest unlocked skill level for this lesson's module
   unlockedLevel?: SkillLevel;
-  // Callback to open the module assessment from within a lesson
   onOpenAssessment?: () => void;
-  // True only for lifetime subscribers — unlocks "How Do I Apply This?" AI button
   isLifetime?: boolean;
+  activeCareer?: string | null;
 }
 
 type Tab = 'lesson' | 'quiz' | 'terms';
@@ -488,7 +487,8 @@ function DragMatchQuestion({ question, submitted, onMatchChange, currentMatches 
 
 // ─── Main LessonPage ───────────────────────────────────────────────────────
 
-export default function LessonPage({ lessonId, progress, onBack, onComplete, onNextLesson, unlockedLevel = 'novice', onOpenAssessment, isLifetime = false }: LessonPageProps) {
+export default function LessonPage({ lessonId, progress, onBack, onComplete, onNextLesson, unlockedLevel = 'novice', onOpenAssessment, isLifetime = false, activeCareer }: LessonPageProps) {
+  const trackData = getTrackData((activeCareer as CareerTrackId) ?? null);
   const [activeTab, setActiveTab] = useState<Tab>('lesson');
   // MC answers: questionId → optionIndex
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({});
@@ -699,7 +699,15 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
       <div className="bg-card border border-border rounded-xl p-5">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <div className="text-xs text-muted-foreground mb-1">{mod.title}</div>
+            <div className="flex items-center gap-2 flex-wrap mb-1">
+              <span className="text-xs text-muted-foreground">{mod.title}</span>
+              {trackData && (
+                <span className="inline-flex items-center gap-1.5 bg-primary/10 border border-primary/25 text-primary rounded-full px-2.5 py-0.5 text-[11px] font-bold">
+                  <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
+                  Your path: {trackData.shortLabel}
+                </span>
+              )}
+            </div>
             <h1 className="text-lg font-bold leading-tight mb-2">{lesson.title}</h1>
             <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
               <span className="flex items-center gap-1">
