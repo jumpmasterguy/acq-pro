@@ -783,14 +783,17 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
       {/* Daily challenge modal */}
       {challengeActive && challenge && !challengeSubmitted && (
         <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setChallengeActive(false)}>
-          <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
+          <div className="bg-card border border-border rounded-2xl w-full max-w-lg shadow-2xl flex flex-col max-h-[90vh]" onClick={e => e.stopPropagation()}>
+            {/* Fixed header */}
+            <div className="flex items-center justify-between p-6 pb-4 border-b border-border flex-shrink-0">
               <div>
                 <h2 className="font-bold text-lg">⚡ Daily Challenge</h2>
                 <p className="text-xs text-muted-foreground">{challenge.date} · 5 questions</p>
               </div>
               <button onClick={() => setChallengeActive(false)} className="text-muted-foreground hover:text-foreground text-xl">✕</button>
             </div>
+            {/* Scrollable body */}
+            <div className="overflow-y-auto flex-1 px-6 py-4">
             <div className="space-y-5">
               {challenge.questions.map((q: any, qi: number) => (
                 <div key={q.id} className="space-y-2">
@@ -819,7 +822,8 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
             >
               Submit Answers
             </Button>
-          </div>
+            </div>{/* end scrollable body */}
+            </div>{/* end scrollable wrapper */}
         </div>
       )}
 
