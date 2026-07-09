@@ -2783,7 +2783,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
             // ─── VISUAL: Source Selection Flow (capture-4) ────────────────────
             if ((block as any).type === 'source_selection_visual') {
-              const steps = [
+              const ssSteps = [
                 { step: '1', label: 'RFP Released', desc: 'Solicitation posted on SAM.gov', color: '#6366f1' },
                 { step: '2', label: 'Proposals Due', desc: 'Offerors submit all volumes', color: '#8b5cf6' },
                 { step: '3', label: 'SSEB Evaluation', desc: 'Technical & mgmt scored against Section M', color: '#0284c7' },
@@ -2796,11 +2796,11 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                 <div key={i} className="bg-card border border-border rounded-xl p-5">
                   {block.heading && <h3 className="font-semibold text-sm mb-4">{block.heading}</h3>}
                   <div className="relative">
-                    {steps.map((s, si) => (
+                    {ssSteps.map((s, si) => (
                       <div key={si} className="flex items-start gap-3 mb-3">
                         <div className="flex flex-col items-center flex-shrink-0">
                           <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: s.color }}>{s.step}</div>
-                          {si < steps.length - 1 && <div className="w-0.5 h-4 bg-border mt-1" />}
+                          {si < ssSteps.length - 1 && <div className="w-0.5 h-4 bg-border mt-1" />}
                         </div>
                         <div className="flex-1 pb-2">
                           <div className="text-xs font-bold text-foreground">{s.label}</div>
@@ -2818,7 +2818,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
             // ─── VISUAL: CMMI Maturity Ladder (ops-6) ─────────────────────────
             if ((block as any).type === 'cmmi_ladder_visual') {
-              const levels = [
+              const cmmiLevels = [
                 { level: 5, name: 'Optimizing', desc: 'Continuous improvement. Data drives process change.', color: '#16a34a', dod: 'Rare, highest assurance work' },
                 { level: 4, name: 'Quantitatively Managed', desc: 'Statistical process control. Defect rates measured.', color: '#0284c7', dod: 'High-assurance / safety-critical' },
                 { level: 3, name: 'Defined', desc: 'Standard processes documented, followed org-wide.', color: '#01696f', dod: 'DoD standard threshold' },
@@ -2829,7 +2829,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                 <div key={i} className="bg-card border border-border rounded-xl p-5">
                   {block.heading && <h3 className="font-semibold text-sm mb-4">{block.heading}</h3>}
                   <div className="space-y-2">
-                    {levels.map((l, li) => (
+                    {cmmiLevels.map((l, li) => (
                       <div key={li} className="flex items-stretch gap-3 rounded-lg border border-border overflow-hidden">
                         <div className="w-12 flex-shrink-0 flex items-center justify-center text-white font-black text-lg" style={{ backgroundColor: l.color }}>
                           {l.level}
