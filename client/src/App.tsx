@@ -79,7 +79,7 @@ type View =
   | { type: 'onboarding' }
   | { type: 'dashboard' }
   | { type: 'module'; moduleId: string; activeCareer?: string }
-  | { type: 'lesson'; lessonId: string }
+  | { type: 'lesson'; lessonId: string; activeCareer?: string }
   | { type: 'upgrade' }
   | { type: 'admin' }
   | { type: 'analytics' }
@@ -307,7 +307,10 @@ function AppContent() {
   };
 
   const handleSelectModule = (moduleId: string, activeCareer?: string) => setView({ type: 'module', moduleId, activeCareer });
-  const handleSelectLesson = (lessonId: string) => setView({ type: 'lesson', lessonId });
+  const handleSelectLesson = (lessonId: string) => {
+    const career = (view as any).activeCareer;
+    setView({ type: 'lesson', lessonId, ...(career ? { activeCareer: career } : {}) });
+  };
   const handleUpgrade = () => setView({ type: 'upgrade' });
 
   const handleSignOut = useCallback(async () => {
@@ -341,15 +344,17 @@ function AppContent() {
   }, [authState]);
 
   const handleNextLesson = (lessonId: string) => {
-    setView({ type: 'lesson', lessonId });
+    const career = (view as any).activeCareer;
+    setView({ type: 'lesson', lessonId, ...(career ? { activeCareer: career } : {}) });
   };
 
   const handleBackFromLesson = () => {
     if (view.type === 'lesson') {
-      const lessonId = view.lessonId;
+      const lessonId = (view as any).lessonId;
+      const career = (view as any).activeCareer;
       const parentMod = modules.find(m => m.lessons.some(l => l.id === lessonId));
       if (parentMod) {
-        setView({ type: 'module', moduleId: parentMod.id });
+        setView({ type: 'module', moduleId: parentMod.id, ...(career ? { activeCareer: career } : {}) });
         return;
       }
     }
@@ -755,7 +760,7 @@ function AppContent() {
               <ModulePage
                 moduleId={modId}
                 progress={progress}
-                onBack={() => setView({ type: 'dashboard' })}
+                onBack={() => setView({ type: 'dashboard', activeCareer: (view as any).activeCareer } as any)}
                 onSelectLesson={handleSelectLesson}
                 onUpgrade={handleUpgrade}
                 unlockedLevel={(skillLevels[modId] as SkillLevel) ?? 'novice'}

@@ -412,6 +412,15 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
       .catch(() => {});
   }, []);
 
+  // Persist filter choices to localStorage
+  useEffect(() => {
+    try { localStorage.setItem('acq_filter_mode', filterMode); } catch {}
+  }, [filterMode]);
+
+  useEffect(() => {
+    try { localStorage.setItem('acq_active_career', activeCareer); } catch {}
+  }, [activeCareer]);
+
   // Close search on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -484,8 +493,12 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
     } catch {}
   }
 
-  const [filterMode, setFilterMode] = useState<FilterMode>('career');
-  const [activeCareer, setActiveCareer] = useState<CareerTrackId>('usg_pm');
+  const [filterMode, setFilterMode] = useState<FilterMode>(() => {
+    try { return (localStorage.getItem('acq_filter_mode') as FilterMode) || 'career'; } catch { return 'career'; }
+  });
+  const [activeCareer, setActiveCareer] = useState<CareerTrackId>(() => {
+    try { return (localStorage.getItem('acq_active_career') as CareerTrackId) || 'contractor_pm'; } catch { return 'contractor_pm'; }
+  });
   const [activeSubject, setActiveSubject] = useState<SubjectGroupId>('acquisition_foundations');
   const [bonusExpanded, setBonusExpanded] = useState(false);
 
