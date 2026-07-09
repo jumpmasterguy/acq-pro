@@ -46,9 +46,10 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
     primaryLessons: [
       // Foundations — what you need to operate, skip ACAT/congressional deep dives
       'foundations-intro', 'foundations-players', 'foundations-contracts', 'foundations-money',
-      // Contracts — this is your day job: vehicles, admin, mods, COR, who's buying
+      // Contracts — this is your day job: vehicles, admin, mods, COR, CDRLs, Section H, MSRs
       'contracts-8', 'contracts-1', 'contracts-4', 'contracts-9',
       'contracts-3', 'contracts-6', 'contracts-7', 'contracts-5',
+      'contracts-10', 'contracts-11', 'contracts-12',
       // Finance — wrap rates, burn rate, CPAF, DCAA, revenue recognition
       'finance-2', 'finance-5', 'finance-6', 'finance-7', 'finance-8', 'finance-9', 'finance-10',
       // Data — metrics, EVM, IPMR
