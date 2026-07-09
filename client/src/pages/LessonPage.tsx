@@ -1123,7 +1123,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
             // ── eac_methods_visual ────────────────────────────────────────────
             if ((block as any).type === 'eac_methods_visual') {
-              const methods = [
+              const methods_b = [
                 { num: '1', formula: 'BAC ÷ CPI', title: 'Trend Continuation', when: 'Future work will mirror past efficiency', best: 'Stable programs', color: 'border-primary/40 bg-primary/5 text-primary' },
                 { num: '2', formula: 'AC + (BAC − EV)', title: 'Optimistic Reset', when: 'Remaining work at original planned rate', best: 'One-time anomaly caused the overrun', color: 'border-blue-400/40 bg-blue-500/5 text-blue-600 dark:text-blue-400' },
                 { num: '3', formula: 'AC + Re-estimate', title: 'Bottom-Up', when: 'You re-estimated remaining work from scratch', best: 'Major scope change or re-baseline', color: 'border-violet-400/40 bg-violet-500/5 text-violet-600 dark:text-violet-400' },
@@ -1133,7 +1133,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                 <div key={i} className="space-y-3">
                   {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
                   <div className="grid sm:grid-cols-2 gap-3">
-                    {methods.map((m, mi) => (
+                    {methods_b.map((m, mi) => (
                       <div key={mi} className={`rounded-xl border-2 p-4 space-y-2 ${m.color.split(' ').slice(0,2).join(' ')}`}>
                         <div className="flex items-center gap-2">
                           <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black text-white ${m.color.split(' ')[0].replace('border-','bg-').replace('/40','')}`}>{m.num}</span>
@@ -1728,7 +1728,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
             // ── rea_process_visual ────────────────────────────────────────────
             if ((block as any).type === 'rea_process_visual') {
-              const steps = [
+              const stepsRea = [
                 { num: '1', label: 'Government Directs Change', desc: 'Formal or constructive direction outside contract scope', icon: '📢', color: 'bg-blue-500' },
                 { num: '2', label: 'Contractor Submits REA', desc: 'Must include: factual basis, legal entitlement, quantified cost impact', icon: '📝', color: 'bg-violet-500' },
                 { num: '3', label: 'Contracting Officer Reviews', desc: 'CO has 60 days to issue final decision (FAR 33.211)', icon: '🔍', color: 'bg-amber-500' },
@@ -1739,7 +1739,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                 <div key={i} className="space-y-3">
                   {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
                   <div className="space-y-2">
-                    {steps.map((s, si) => (
+                    {stepsRea.map((s, si) => (
                       <div key={si} className="flex items-center gap-3">
                         <div className={`w-8 h-8 rounded-full ${s.color} text-white text-xs font-black flex items-center justify-center flex-shrink-0`}>{s.num}</div>
                         <span className="text-xl flex-shrink-0">{s.icon}</span>
@@ -1747,7 +1747,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                           <p className="text-sm font-semibold">{s.label}</p>
                           <p className="text-xs text-muted-foreground">{s.desc}</p>
                         </div>
-                        {si < steps.length - 1 && <div className="absolute ml-4 mt-8 w-0.5 h-4 bg-border" />}
+                        {si < stepsRea.length - 1 && <div className="absolute ml-4 mt-8 w-0.5 h-4 bg-border" />}
                       </div>
                     ))}
                   </div>
@@ -1988,7 +1988,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
             // ── five_step_revenue_visual ──────────────────────────────────────
             if ((block as any).type === 'five_step_revenue_visual') {
-              const steps = [
+              const steps_c = [
                 { num: '1', label: 'Identify the Contract', desc: 'Is the scope airtight? A vague SOW cannot support a performance obligation.', question: 'Is this scope clearly defined?', icon: '📋' },
                 { num: '2', label: 'Define Obligations', desc: 'What specifically are you building, integrating, or engineering? Each deliverable must be distinct.', question: 'What exactly are we delivering?', icon: '🎯' },
                 { num: '3', label: 'Determine the Price', desc: 'Is the value clearly attached to each obligation? Vague pricing = vague revenue.', question: 'Is the price tied to the work?', icon: '💵' },
@@ -1999,7 +1999,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                 <div key={i} className="space-y-3">
                   {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
                   <div className="space-y-2">
-                    {steps.map((s, si) => (
+                    {steps_c.map((s, si) => (
                       <div key={si} className="flex items-start gap-3 p-3 rounded-xl border border-border bg-card">
                         <div className="w-8 h-8 rounded-full bg-primary/10 text-primary text-xs font-black flex items-center justify-center flex-shrink-0 mt-0.5">{s.num}</div>
                         <span className="text-xl flex-shrink-0 mt-0.5">{s.icon}</span>
@@ -2013,7 +2013,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                       </div>
                     ))}
                   </div>
-                  <p className="text-xs text-muted-foreground">All five steps must be satisfied. Weakness in any one step can trigger an Agent reclassification during an audit.</p>
+                  <p className="text-xs text-muted-foreground">All five steps_c must be satisfied. Weakness in any one step can trigger an Agent reclassification during an audit.</p>
                 </div>
               );
             }
@@ -2131,7 +2131,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
             // ── weighted_guidelines_visual: 5-factor scoring breakdown ───────────
             if ((block as any).type === 'weighted_guidelines_visual') {
-              const factors = [
+              const factors_b = [
                 { num: '01', label: 'Performance Risk', desc: 'How technically difficult and risky is the work?', icon: '⚠️', weight: 'High impact' },
                 { num: '02', label: 'Contract Type Risk', desc: 'How much cost risk is the contractor bearing?', icon: '📄', weight: 'High impact' },
                 { num: '03', label: 'Facilities Capital', desc: 'How much has the contractor invested in equipment?', icon: '🏭', weight: 'Medium impact' },
@@ -2141,9 +2141,9 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               return (
                 <div key={i} className="space-y-3">
                   {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
-                  <p className="text-xs text-muted-foreground">The government scores 5 factors to set a target profit rate. Higher risk = higher fee earned. This is why contractors can't just claim "this work is risky" — the method already accounts for it.</p>
+                  <p className="text-xs text-muted-foreground">The government scores 5 factors_b to set a target profit rate. Higher risk = higher fee earned. This is why contractors can't just claim "this work is risky" — the method already accounts for it.</p>
                   <div className="space-y-2">
-                    {factors.map((f, fi) => (
+                    {factors_b.map((f, fi) => (
                       <div key={fi} className="flex items-center gap-3 p-3 rounded-lg bg-muted/40 border border-border/50">
                         <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-xs font-black text-primary flex-shrink-0">{f.num}</div>
                         <span className="text-lg flex-shrink-0">{f.icon}</span>
@@ -2308,7 +2308,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             if (block.type === 'risk_chart') {
-              const contracts = [
+              const contracts_b = [
                 { name: 'FFP',  full: 'Firm Fixed Price',          contractorRisk: 100, profitDots: 5, plain: 'You own every dollar of cost risk. You also keep every dollar of savings.', who: '🏭' },
                 { name: 'FPIF', full: 'Fixed-Price Incentive Fee', contractorRisk: 70,  profitDots: 4, plain: 'Mostly on you, but savings are shared with the government by a formula.', who: '🤝' },
                 { name: 'CPIF', full: 'Cost-Plus Incentive Fee',   contractorRisk: 25,  profitDots: 3, plain: 'Government pays costs. You earn more fee if you come in under target cost.', who: '🏛️' },
@@ -2327,7 +2327,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     <span className="text-[11px] font-semibold text-muted-foreground">Government risk →</span>
                   </div>
                   <div className="space-y-2">
-                    {contracts.map((c) => {
+                    {contracts_b.map((c) => {
                       const govRisk = 100 - c.contractorRisk;
                       return (
                         <div key={c.name} className="bg-card border border-border rounded-2xl overflow-hidden">
@@ -2839,13 +2839,13 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
           {/* Questions */}
           {( lesson.quiz ?? [] ).map((question, qi) => {
-            const qType = question.type ?? 'multiple_choice';
+            const qzType = question.type ?? 'multiple_choice';
 
             // ── Multiple Choice ──
-            if (qType === 'multiple_choice') {
+            if (qzType === 'multiple_choice') {
               const answered = quizAnswers[question.id] !== undefined;
-              const isCorrect = quizSubmitted && quizAnswers[question.id] === question.correct;
-              const isWrong = quizSubmitted && answered && !isCorrect;
+              const qzIsCorrect = quizSubmitted && quizAnswers[question.id] === question.correct;
+              const isWrong = quizSubmitted && answered && !qzIsCorrect;
 
               return (
                 <div key={question.id} className="bg-card border border-border rounded-xl p-5 space-y-3" data-testid={`question-${qi}`}>
@@ -2897,11 +2897,11 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                   {quizSubmitted && (
                     <div className={cn(
                       "ml-8 rounded-lg p-3 text-xs leading-relaxed border",
-                      isCorrect
+                      qzIsCorrect
                         ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-900 text-green-800 dark:text-green-300"
                         : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300"
                     )} data-testid={`explanation-${qi}`}>
-                      <strong className="font-semibold">{isCorrect ? "✓ Correct!" : "✗ Incorrect."}</strong>{" "}
+                      <strong className="font-semibold">{qzIsCorrect ? "✓ Correct!" : "✗ Incorrect."}</strong>{" "}
                       {question.explanation || question.options[question.correct]?.split('|||')[1] || ""}
                     </div>
                   )}
@@ -2910,10 +2910,10 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── Drag Order ──
-            if (qType === 'drag_order') {
-              const userOrder = dragOrders[question.id] ?? question.orderedItems ?? [];
-              const correctOrder = question.orderedItems ?? [];
-              const isCorrect = quizSubmitted && JSON.stringify(userOrder) === JSON.stringify(correctOrder);
+            if (qzType === 'drag_order') {
+              const qzUserOrder = dragOrders[question.id] ?? question.orderedItems ?? [];
+              const qzCorrectOrder = question.orderedItems ?? [];
+              const qzIsCorrectOrder = quizSubmitted && JSON.stringify(qzUserOrder) === JSON.stringify(qzCorrectOrder);
 
               return (
                 <div key={question.id} className="bg-card border border-border rounded-xl p-5 space-y-3" data-testid={`question-${qi}`}>
@@ -2933,17 +2933,17 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     question={question}
                     submitted={quizSubmitted}
                     onOrderChange={handleOrderChange}
-                    currentOrder={userOrder}
+                    currentOrder={qzUserOrder}
                   />
 
                   {quizSubmitted && (
                     <div className={cn(
                       "ml-8 rounded-lg p-3 text-xs leading-relaxed border",
-                      isCorrect
+                      qzIsCorrectOrder
                         ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-900 text-green-800 dark:text-green-300"
                         : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300"
                     )} data-testid={`explanation-${qi}`}>
-                      <strong className="font-semibold">{isCorrect ? "✓ Correct!" : "✗ Incorrect."}</strong>{" "}
+                      <strong className="font-semibold">{qzIsCorrectOrder ? "✓ Correct!" : "✗ Incorrect."}</strong>{" "}
                       {question.explanation}
                     </div>
                   )}
@@ -2952,10 +2952,10 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── Drag Match ──
-            if (qType === 'drag_match') {
-              const pairs = question.pairs ?? [];
-              const userMatches = dragMatches[question.id] ?? {};
-              const allCorrect = quizSubmitted && pairs.every(p => userMatches[p.left] === p.right);
+            if (qzType === 'drag_match') {
+              const qzPairs = question.qzPairs ?? [];
+              const qzUserMatches = dragMatches[question.id] ?? {};
+              const qzAllCorrect = quizSubmitted && qzPairs.every(p => qzUserMatches[p.left] === p.right);
 
               return (
                 <div key={question.id} className="bg-card border border-border rounded-xl p-5 space-y-3" data-testid={`question-${qi}`}>
@@ -2975,17 +2975,17 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     question={question}
                     submitted={quizSubmitted}
                     onMatchChange={handleMatchChange}
-                    currentMatches={userMatches}
+                    currentMatches={qzUserMatches}
                   />
 
                   {quizSubmitted && (
                     <div className={cn(
                       "ml-8 rounded-lg p-3 text-xs leading-relaxed border",
-                      allCorrect
+                      qzAllCorrect
                         ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-900 text-green-800 dark:text-green-300"
                         : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300"
                     )} data-testid={`explanation-${qi}`}>
-                      <strong className="font-semibold">{allCorrect ? "✓ All Correct!" : "✗ Some incorrect."}</strong>{" "}
+                      <strong className="font-semibold">{qzAllCorrect ? "✓ All Correct!" : "✗ Some incorrect."}</strong>{" "}
                       {question.explanation}
                     </div>
                   )}
