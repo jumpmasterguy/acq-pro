@@ -2308,53 +2308,80 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             if (block.type === 'risk_chart') {
-              // contractorColor: how risky is it FOR THE CONTRACTOR (high % = red)
-              // govColor: how risky is it FOR THE GOVERNMENT (high % = amber/red)
               const contracts = [
-                { name: 'FFP',  full: 'Firm-Fixed-Price',             contractorRisk: 100, govRisk: 0,  costRisk: 'Contractor', perfRisk: 'Contractor' },
-                { name: 'FPIF', full: 'Fixed-Price Incentive (Firm)', contractorRisk: 70,  govRisk: 30, costRisk: 'Shared',     perfRisk: 'Contractor' },
-                { name: 'CPIF', full: 'Cost-Plus-Incentive-Fee',      contractorRisk: 25,  govRisk: 75, costRisk: 'Government', perfRisk: 'Shared'     },
-                { name: 'CPAF', full: 'Cost-Plus-Award-Fee',          contractorRisk: 15,  govRisk: 85, costRisk: 'Government', perfRisk: 'Gov (FDO)'  },
-                { name: 'CPFF', full: 'Cost-Plus-Fixed-Fee',          contractorRisk: 10,  govRisk: 90, costRisk: 'Government', perfRisk: 'Shared'     },
-                { name: 'T&M',  full: 'Time & Materials',             contractorRisk: 5,   govRisk: 95, costRisk: 'Government', perfRisk: 'Government' },
+                { name: 'FFP',  full: 'Firm Fixed Price',          contractorRisk: 100, profitDots: 5, plain: 'You own every dollar of cost risk. You also keep every dollar of savings.', who: '🏭' },
+                { name: 'FPIF', full: 'Fixed-Price Incentive Fee', contractorRisk: 70,  profitDots: 4, plain: 'Mostly on you, but savings are shared with the government by a formula.', who: '🤝' },
+                { name: 'CPIF', full: 'Cost-Plus Incentive Fee',   contractorRisk: 25,  profitDots: 3, plain: 'Government pays costs. You earn more fee if you come in under target cost.', who: '🏛️' },
+                { name: 'CPAF', full: 'Cost-Plus Award Fee',       contractorRisk: 15,  profitDots: 3, plain: 'Government pays costs. Your profit depends on performance ratings from their board.', who: '🏛️' },
+                { name: 'CPFF', full: 'Cost-Plus Fixed Fee',       contractorRisk: 10,  profitDots: 2, plain: 'Government pays costs. You earn a fixed fee no matter how efficient you are.', who: '🏛️' },
+                { name: 'T&M',  full: 'Time & Materials',          contractorRisk: 5,   profitDots: 1, plain: 'Government pays labor rates + materials. Almost no cost risk on you.', who: '🏛️' },
               ];
-              // Contractor risk: high = red (bad for contractor), low = green (safe for contractor)
-              const contractorColor = (pct: number) => pct >= 70 ? '#dc2626' : pct >= 40 ? '#ea580c' : pct >= 15 ? '#d97706' : '#16a34a';
-              // Gov risk: high = amber/red (bad for gov), low = slate (safe for gov)
-              const govColor = (pct: number) => pct >= 80 ? '#b45309' : pct >= 50 ? '#d97706' : pct >= 20 ? '#ca8a04' : '#64748b';
               return (
-                <div key={i} className="bg-card border border-border rounded-xl overflow-hidden">
-                  <div className="px-5 py-3.5 border-b border-border bg-muted/30">
-                    <h3 className="font-semibold text-sm">Risk Allocation by Contract Type</h3>
-                    <p className="text-xs text-muted-foreground mt-0.5">Who absorbs cost overruns — red means that side bears more risk</p>
+                <div key={i} className="space-y-3">
+                  <div>
+                    <h3 className="font-bold text-base text-foreground">Who Bears the Cost Risk?</h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">The further right the bar, the more cost risk falls on the government. The further left, the more on you.</p>
                   </div>
-                  <div className="p-5 space-y-4">
-                    <div className="flex items-center gap-5 text-xs">
-                      <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-red-600 inline-block" />Contractor bears risk</div>
-                      <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-amber-600 inline-block" />Government bears risk</div>
+                  <div className="flex items-center justify-between px-1">
+                    <span className="text-[11px] font-semibold text-muted-foreground">← Contractor risk</span>
+                    <span className="text-[11px] font-semibold text-muted-foreground">Government risk →</span>
+                  </div>
+                  <div className="space-y-2">
+                    {contracts.map((c) => {
+                      const govRisk = 100 - c.contractorRisk;
+                      return (
+                        <div key={c.name} className="bg-card border border-border rounded-2xl overflow-hidden">
+                          <div className="flex items-center justify-between px-4 pt-3 pb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg">{c.who}</span>
+                              <div>
+                                <span className="text-sm font-black text-foreground">{c.name}</span>
+                                <span className="text-xs text-muted-foreground ml-2 hidden sm:inline">{c.full}</span>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <span className="text-[10px] text-muted-foreground mr-1">profit upside</span>
+                              {[1,2,3,4,5].map((d: number) => (
+                                <div key={d} className={cn('w-2.5 h-2.5 rounded-full', d <= c.profitDots ? 'bg-primary' : 'bg-muted')} />
+                              ))}
+                            </div>
+                          </div>
+                          <div className="px-4 pb-2">
+                            <div className="flex h-7 rounded-xl overflow-hidden w-full">
+                              {c.contractorRisk > 0 && (
+                                <div
+                                  className="flex items-center justify-center text-[11px] font-bold text-white"
+                                  style={{ width: `${c.contractorRisk}%`, background: 'linear-gradient(90deg, #0D1B2A 0%, #1B3A4A 100%)' }}
+                                >
+                                  {c.contractorRisk >= 25 ? `${c.contractorRisk}%` : ''}
+                                </div>
+                              )}
+                              {govRisk > 0 && (
+                                <div
+                                  className="flex items-center justify-center text-[11px] font-bold text-white"
+                                  style={{ width: `${govRisk}%`, background: 'linear-gradient(90deg, #01696F 0%, #4F98A3 100%)' }}
+                                >
+                                  {govRisk >= 25 ? `${govRisk}%` : ''}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <div className="px-4 pb-3">
+                            <p className="text-[11px] text-muted-foreground leading-relaxed">{c.plain}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-3 rounded-sm" style={{ background: 'linear-gradient(90deg, #0D1B2A, #1B3A4A)' }} />
+                      <span className="text-xs text-muted-foreground">Contractor bears cost risk</span>
                     </div>
-                    {contracts.map((c) => (
-                      <div key={c.name} className="space-y-1.5">
-                        <div className="flex items-center justify-between text-xs">
-                          <div className="flex items-center gap-2">
-                            <span className="font-bold w-10 text-foreground">{c.name}</span>
-                            <span className="text-muted-foreground text-[10px] hidden sm:inline">{c.full}</span>
-                          </div>
-                          <span className="text-muted-foreground text-[10px]">Cost: <span className="font-medium text-foreground">{c.costRisk}</span> · Perf: <span className="font-medium text-foreground">{c.perfRisk}</span></span>
-                        </div>
-                        <div className="flex h-6 rounded-lg overflow-hidden w-full gap-0.5">
-                          <div className="flex items-center justify-center text-[10px] font-bold text-white transition-all"
-                            style={{ width: `${c.contractorRisk}%`, backgroundColor: contractorColor(c.contractorRisk), minWidth: c.contractorRisk > 0 ? '2px' : '0' }}>
-                            {c.contractorRisk >= 20 ? `${c.contractorRisk}%` : ''}
-                          </div>
-                          <div className="flex items-center justify-center text-[10px] font-bold text-white transition-all"
-                            style={{ width: `${c.govRisk}%`, backgroundColor: govColor(c.govRisk), minWidth: c.govRisk > 0 ? '2px' : '0' }}>
-                            {c.govRisk >= 20 ? `${c.govRisk}%` : ''}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                    <p className="text-[11px] text-muted-foreground italic pt-2 border-t border-border">The higher the contractor risk, the more they’re on the hook for cost overruns. The higher the government risk, the more taxpayers absorb when things go wrong.</p>
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-3 rounded-sm" style={{ background: 'linear-gradient(90deg, #01696F, #4F98A3)' }} />
+                      <span className="text-xs text-muted-foreground">Government bears cost risk</span>
+                    </div>
                   </div>
                 </div>
               );
