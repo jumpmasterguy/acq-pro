@@ -390,6 +390,14 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
 
   // Streak + daily challenge state
   const [streak, setStreak] = useState({ currentStreak: 0, longestStreak: 0, alreadyCompleted: false, date: '' });
+  const [filterMode, setFilterMode] = useState<FilterMode>(() => {
+    try { return (localStorage.getItem('acq_filter_mode') as FilterMode) || 'career'; } catch { return 'career'; }
+  });
+  const [activeCareer, setActiveCareer] = useState<CareerTrackId>(() => {
+    try { return (localStorage.getItem('acq_active_career') as CareerTrackId) || 'contractor_pm'; } catch { return 'contractor_pm'; }
+  });
+  const [activeSubject, setActiveSubject] = useState<SubjectGroupId>('acquisition_foundations');
+  const [bonusExpanded, setBonusExpanded] = useState(false);
   const [adminStats, setAdminStats] = useState<{ totalUsers: number; proUsers: number; freeUsers: number } | null>(null);
   const [startHereDismissed, setStartHereDismissed] = useState(() => {
     try { return localStorage.getItem('acq_start_here_dismissed') === '1'; } catch { return false; }
@@ -493,14 +501,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
     } catch {}
   }
 
-  const [filterMode, setFilterMode] = useState<FilterMode>(() => {
-    try { return (localStorage.getItem('acq_filter_mode') as FilterMode) || 'career'; } catch { return 'career'; }
-  });
-  const [activeCareer, setActiveCareer] = useState<CareerTrackId>(() => {
-    try { return (localStorage.getItem('acq_active_career') as CareerTrackId) || 'contractor_pm'; } catch { return 'contractor_pm'; }
-  });
-  const [activeSubject, setActiveSubject] = useState<SubjectGroupId>('acquisition_foundations');
-  const [bonusExpanded, setBonusExpanded] = useState(false);
+
 
   // ── Resolve which modules + lessons to show ──────────────────────────────
   const resolvedModuleLayout = useMemo(() => {
