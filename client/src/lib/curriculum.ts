@@ -1254,18 +1254,6 @@ export const modules: Module[] = [
             ]
           },
           {
-            type: 'aaf_pathways_visual' as any,
-            heading: 'The 6 AAF Pathways — Pick the Right Lane',
-            pathways: [
-              { name: 'Major Capability Acquisition', desc: 'Big, complex systems. Full milestone structure.', timeline: '10-20+ years', color: '#6366f1', bestFor: 'ACAT I/II' },
-              { name: 'MTA — Rapid Prototyping', desc: 'Field a prototype in under 5 years. OTA-friendly.', timeline: '2-5 years', color: '#8b5cf6', bestFor: 'Emerging tech' },
-              { name: 'MTA — Rapid Fielding', desc: 'Proven tech. Limited production. Fast.', timeline: '6mo-5yr', color: '#0284c7', bestFor: 'COTS-ish' },
-              { name: 'Software Acquisition', desc: 'Agile/DevSecOps. No traditional milestones.', timeline: 'Ongoing sprints', color: '#01696f', bestFor: 'Software programs' },
-              { name: 'Urgent Capability Acquisition', desc: 'Validated operational need. Under 2 years.', timeline: '< 2 years', color: '#dc2626', bestFor: 'Combat needs' },
-              { name: 'Defense Business Systems', desc: 'Financial/HR/ERP IT. Business case required.', timeline: 'Varies', color: '#ca8a04', bestFor: 'Enterprise IT' },
-            ],
-          },
-          {
             type: 'text',
             heading: "The Adaptive Acquisition Framework (AAF)",
             body: "The 2020 introduction of the Adaptive Acquisition Framework (AAF) replaced the rigid \"5000.02\" single path model with six acquisition pathways: Urgent Capability Acquisition, Middle Tier of Acquisition, Major Capability Acquisition, Software Acquisition, Defense Business Systems, and Acquisition of Services. This flexibility allows programs to choose the pathway that best fits the nature of their acquisition."
@@ -4241,11 +4229,6 @@ export const modules: Module[] = [
         body: 'Here\'s the problem the government was trying to solve: every federal agency independently running its own competitions for the same categories of work. The Air Force needs IT consulting. The Army needs IT consulting. The Navy needs IT consulting. Each one writes its own solicitation, evaluates its own proposals, awards its own contract — and pays its own acquisition workforce to manage all of it. That\'s expensive, slow, and duplicative.\n\nInteragency contracts — vehicles set up by one agency that other agencies can order from — solve this. One agency does the heavy lifting of competition and award. Everyone else benefits.',
       },
       {
-        type: 'iac_hierarchy_visual' as any,
-        heading: 'IAC > MAC > GWAC: How They Nest (and TDL Rules)',
-        sub: 'Think of it as concentric circles. Every GWAC is a MAC. Every MAC (used cross-agency) is an IAC. And TDLs only operate inside the task order scope.',
-      },
-      {
         type: 'text',
         level: 'intermediate' as const,
         title: 'IAC vs. MAC vs. GWAC: Sorting Out the Alphabet',
@@ -5613,19 +5596,6 @@ export const modules: Module[] = [
         ],
         content: [
       {
-        type: 'roles_grid_visual' as any,
-        heading: 'The Key Players — Who Does What',
-        sub: 'Defense acquisition has more roles than the Army has acronyms. Here are the ones you will actually work with.',
-        roles: [
-          { label: 'Program Manager (PM)', emoji: '🎯', color: '#01696f', desc: 'Owns cost, schedule, and performance. Not the technical expert — the integrator.', badge: 'Govt or Industry', plain: 'The person on the hook for everything.' },
-          { label: 'Contracting Officer (KO)', emoji: '✍️', color: '#6366f1', desc: 'The only person legally authorized to sign contracts and obligate government funds.', badge: 'Govt', plain: 'No KO signature = no contract. Period.' },
-          { label: 'COR / TPOC', emoji: '👁️', color: '#0284c7', desc: "Contracting Officer's Representative. Monitors performance day-to-day. Writes CPARS.", badge: 'Govt', plain: "The government's eyes and ears on your contract." },
-          { label: 'PEO', emoji: '🏛️', color: '#8b5cf6', desc: "Program Executive Officer. Manages a portfolio of programs. Your PM's boss on the govt side.", badge: 'Govt', plain: 'Fights for resources at the senior level.' },
-          { label: 'Capture Manager', emoji: '🎯', color: '#dc2626', desc: 'Industry role. Leads pursuit of a specific opportunity from BD through proposal award.', badge: 'Industry', plain: 'The person obsessing over winning the next contract.' },
-          { label: 'Subcontract Manager', emoji: '🔗', color: '#ca8a04', desc: 'Manages relationships and deliverables with subcontractors under the prime.', badge: 'Industry', plain: "Runs the subs so the PM doesn't have to micromanage them." },
-        ],
-      },
-      {
         type: 'text',
         heading: "The Acquisition Workforce",
         body: "The DoD acquisition workforce comprises over 150,000 professionals across 14+ career fields. These individuals are responsible for planning, managing, and overseeing the acquisition of goods and services from the private sector. The workforce is governed by DAWIA (Defense Acquisition Workforce Improvement Act), which establishes education, training, and experience requirements for each career field."
@@ -6386,10 +6356,6 @@ export const modules: Module[] = [
         body: "An S-Curve plots BCWS (planned), BCWP (earned), and ACWP (actual) on the same axis over time. The gap between BCWP and ACWP is cost variance. The gap between BCWP and BCWS is schedule variance. Any experienced acquisition professional can read a program's entire cost/schedule health from a properly formatted S-Curve in 30 seconds."
       },
       {
-        type: 'scurve_visual' as any,
-        heading: "Reading an S-Curve: Your Program's EKG",
-      },
-      {
         type: 'tip',
         heading: "Data Presentation for Executives",
         body: "Executive briefings demand different data presentation than program team reviews. For executives: lead with the conclusion (not the data), use traffic light color coding (red/yellow/green), limit to 3 charts maximum, and have backup data ready for questions. For program teams: show all the detail — waterfall variances, WBS-level trends, and root cause analysis."
@@ -6414,7 +6380,7 @@ export const modules: Module[] = [
       heading: 'Presenting Data to Non-Technical Decision Makers',
       body: 'Mid-career PMs spend a significant portion of their time briefing flag officers, SES officials, and congressional staff who have limited technical background. The most effective briefings for this audience: one chart per major message, direct headline titles that state the conclusion (not "CPI Trend" but "Cost Performance Is Recovering — CPI Up 0.08 in 90 Days"), and explicit "so what" statements. Avoid EVM jargon in flag-level briefings — translate: "negative SV" becomes "we are behind schedule"; "VAC" becomes "projected overrun at completion." Spend 80% of your preparation on the narrative, 20% on the charts. Decision makers who can\'t understand your data can\'t support your program.',
         },
-                {
+        {
       type: 'callout' as const,
       level: 'advanced' as const,
       heading: 'Building a Program Data Architecture — From Contract to Dashboard',
@@ -6512,25 +6478,6 @@ export const modules: Module[] = [
       { term: 'TCPI', definition: 'To-Complete Performance Index — efficiency needed on remaining work to hit BAC or EAC.' },
         ],
         content: [
-      {
-        type: 'evm_glossary_visual' as any,
-        heading: 'The EVM Acronym Cheat Sheet',
-        sub: 'Every one of these shows up on program reviews. Know them cold.',
-        terms: [
-          { abbr: 'BAC', full: 'Budget At Completion', plain: 'The total budget for the job. The number everyone is trying not to exceed.', color: '#01696f' },
-          { abbr: 'BCWS / PV', full: 'Planned Value', plain: 'How much work was supposed to be done by now, measured in dollars.', color: '#6366f1' },
-          { abbr: 'BCWP / EV', full: 'Earned Value', plain: 'How much work was actually completed, measured in budget dollars.', color: '#0284c7' },
-          { abbr: 'ACWP / AC', full: 'Actual Cost', plain: 'What you actually spent. Compare to EV to find cost variance.', color: '#dc2626' },
-          { abbr: 'CV', full: 'Cost Variance', plain: 'EV minus AC. Negative = over budget.', color: '#ca8a04' },
-          { abbr: 'SV', full: 'Schedule Variance', plain: "EV minus PV. Negative = behind schedule. You can be behind even if you're spending on target.", color: '#8b5cf6' },
-          { abbr: 'CPI', full: 'Cost Performance Index', plain: "EV divided by AC. Below 1.0 means you're getting less than a dollar of work per dollar spent.", color: '#dc2626' },
-          { abbr: 'SPI', full: 'Schedule Performance Index', plain: "EV divided by PV. Below 1.0 means you're behind schedule.", color: '#8b5cf6' },
-          { abbr: 'EAC', full: 'Estimate At Completion', plain: 'Your best guess of what the whole program will cost when done.', color: '#ca8a04' },
-          { abbr: 'ETC', full: 'Estimate To Complete', plain: 'How much more money you need from today to finish.', color: '#0284c7' },
-          { abbr: 'VAC', full: 'Variance At Completion', plain: 'BAC minus EAC. Negative = projected overrun at completion.', color: '#dc2626' },
-          { abbr: 'TCPI', full: 'To-Complete Performance Index', plain: "The CPI you need from here to finish on budget. Above 1.1 means finishing on budget is unlikely.", color: '#16a34a' },
-        ],
-      },
       {
         type: 'text',
         heading: 'Why EVM Has So Many Acronyms',
@@ -6788,20 +6735,6 @@ export const modules: Module[] = [
       description: 'Learn to read and analyze the six IPMR formats that contractors submit monthly on DoD programs, and understand what every government PM should look for in each one.',
       content: [
         {
-          type: 'ipmr_format_visual' as any,
-          heading: 'IPMR: The 7 Formats — What Each One Tells You',
-          sub: 'Integrated Program Management Report. Seven formats, each with a different lens on your program.',
-          formats: [
-            { id: 'F1', name: 'Work Breakdown Structure', desc: 'Cost and schedule data organized by WBS element. The foundation of EVM reporting.', color: '#01696f', tip: 'Where is the variance? Start here.' },
-            { id: 'F2', name: 'Organizational Categories', desc: 'Same data as F1, but organized by who is doing the work (contractor, subcontractor, etc.).', color: '#0284c7', tip: 'Is a specific org driving the overrun?' },
-            { id: 'F3', name: 'Baseline', desc: 'The Performance Measurement Baseline (PMB). Time-phased budget by period.', color: '#6366f1', tip: 'Has the baseline been stable? Changes here tell the real story.' },
-            { id: 'F4', name: 'Staffing', desc: 'Planned vs. actual staffing levels. Understaffing predicts future schedule slip.', color: '#8b5cf6', tip: "If they're understaffed now, the schedule is already at risk." },
-            { id: 'F5', name: 'Explanations', desc: 'Variance analysis narrative. Contractor explains significant cost and schedule variances.', color: '#ca8a04', tip: 'Read this first. Does the story match the numbers?' },
-            { id: 'F6', name: 'Integrated Master Schedule', desc: 'Schedule data in IMS format. Shows critical path status.', color: '#dc2626', tip: 'Is the critical path slipping?' },
-            { id: 'F7', name: 'Contract Performance Index', desc: 'CPI and SPI trends over time. The health trend chart.', color: '#16a34a', tip: 'Trend matters more than current CPI. Direction is the warning sign.' },
-          ],
-        },
-                {
       type: 'text' as const,
       heading: 'What Is the IPMR and Why Does It Matter?',
       body: 'The Integrated Program Management Report (IPMR) is the primary contractually required data deliverable for EVM reporting on DoD contracts. It replaced the older Contract Performance Report (CPR) and Contract Funds Status Report (CFSR) through DI-MGMT-81861 (2012). If your contract exceeds $20M cost-type or $50M fixed-price, you will receive IPMR data from your contractor every month. This lesson teaches what each IPMR format contains and what government PMs look for.',
@@ -7215,12 +7148,6 @@ export const modules: Module[] = [
         body: "Winning government contracts is not an accident — it\'s a disciplined process that begins years before the RFP is released. The best capture managers are already executing their win strategy while competitors are just becoming aware of the opportunity. Understanding this lifecycle helps both government PMs (who interact with BD teams) and industry professionals who want to build winning capture programs."
       },
       {
-        type: 'bd_funnel_visual' as any,
-        heading: 'The BD-to-Award Funnel',
-        sub: 'Each stage filters the pipeline. Most contractors enter at "Propose" and wonder why they lose.',
-        note: 'Winning contractors are in the conversation 18-24 months before the RFP drops. By the time it hits SAM.gov, the real competition is already over.',
-      },
-      {
         type: 'visual_spectrum',
         heading: 'The BD-to-Award Pipeline',
         sub: 'Where your opportunity sits determines what you should be doing right now.',
@@ -7632,10 +7559,6 @@ export const modules: Module[] = [
         ],
         content: [
       {
-        type: 'section_lm_visual' as any,
-        heading: 'Section L vs Section M — Know the Difference',
-      },
-      {
         type: 'text',
         heading: 'Why L and M Are the Two Most Important Pages in Any RFP',
         body: "Every federal solicitation is organized by the Uniform Contract Format (UCF) from FAR Part 15. Most sections describe requirements — Sections L and M are different. They describe HOW the government will evaluate and select the winner. Winning proposals are built from M backward through L. Losing proposals are built from the SOW forward and hope M matches."
@@ -7815,17 +7738,6 @@ export const modules: Module[] = [
         ],
         content: [
       {
-        type: 'proposal_volumes_visual' as any,
-        heading: 'Typical Proposal Volume Structure',
-        sub: 'Every RFP is different — Section L defines your actual volumes. This is the common pattern for best-value technical acquisitions.',
-        volumes: [
-          { num: 'I', name: 'Technical Approach', weight: 'Highest weight', color: '#6366f1', desc: 'Your solution. Directly mapped to Section M sub-factors. Most evaluated volume.', tip: 'Mirror Section M sub-factor headers exactly. This is where Strengths are earned.' },
-          { num: 'II', name: 'Management Approach', weight: 'High weight', color: '#0284c7', desc: 'Org chart, key personnel, PM methodology, risk management, QA plan.', tip: 'Key personnel resumes are evaluated. Match your proposed team to requirements.' },
-          { num: 'III', name: 'Past Performance', weight: 'Equal to Mgmt', color: '#01696f', desc: 'Up to 3 references. Recent (3-5 yrs), relevant (similar scope), excellent CPARS.', tip: 'Government pulls CPARS independently. Your references confirm relevance, not ratings.' },
-          { num: 'IV', name: 'Price / Cost', weight: 'Not scored', color: '#ca8a04', desc: 'Labor hours by WBS, indirect rates, basis of estimate, ODCs, required forms.', tip: 'Must be consistent with your Technical Volume. Inconsistencies are red flags.' },
-        ],
-      },
-            {
         type: 'text',
         heading: "Proposals Are Evaluated, Not Read",
         body: "SSEB evaluators often have 50+ proposals to review in 3-4 weeks. They are looking for specific evidence that requirements are met — they are NOT reading your proposal like a book. This means every proposal must be compliance-first (answer everything Section L asks), discriminator-forward (lead with your strengths), and evaluator-friendly (headers that mirror Section M factors, clear evidence, no fluff)."
@@ -8177,11 +8089,6 @@ export const modules: Module[] = [
       description: 'Understand the government source selection process from the inside — roles, evaluation phases, discussions, and the award decision — essential knowledge for both government PMs and industry capture teams.',
       content: [
         {
-        type: 'source_selection_visual' as any,
-        heading: 'From RFP Release to Contract Award',
-        note: "The SSA makes the final call based on the SSEB's evaluation. Price matters, but on best-value acquisitions, outstanding technical ratings can justify a higher-priced offer.",
-      },
-            {
       type: 'text' as const,
       heading: 'How the Government Picks a Winner: The Source Selection Process',
       body: 'Source selection is the formal government process for evaluating competitive proposals and making a contract award decision. It is governed by FAR Part 15 and, for DoD, supplemented by the DoD Source Selection Procedures (2016). Understanding this process from the GOVERNMENT side is essential for both government PMs (who participate in it) and industry professionals (who must build proposals that work within it).',
@@ -8438,18 +8345,6 @@ export const modules: Module[] = [
         ],
         content: [
       {
-        type: 'mistakes_visual' as any,
-        heading: '5 Mistakes That Sink Proposals — At a Glance',
-        sub: 'Every one of these is avoidable. Most proposals that lose do so for at least two of these reasons.',
-        mistakes: [
-          { mistake: 'Proposing to Section L instead of Section M', fix: "Section M is the scoring rubric. Write to M. Use L as a compliance checklist. Not the other way around." },
-          { mistake: 'Vanilla past performance references', fix: 'Pick references that are recent (3-5 yrs), relevant (same scope/complexity), and had documented Outstanding CPARS. Generic references look like you have nothing to brag about.' },
-          { mistake: 'Key personnel bait-and-switch', fix: 'Government evaluates the humans on your proposal, not the org chart. Swapping key personnel post-award without approval is a contract violation and kills your CPARS.' },
-          { mistake: 'Not answering "so what" for the government', fix: "Features don't win proposals. Benefits do. Don't just describe your approach — explain exactly why it benefits this customer, reduces their risk, and makes their life easier." },
-          { mistake: 'Ignoring the incumbent advantage', fix: "If you're the challenger, you need discriminators. 'We are just as good' is not a winning strategy. Find where the incumbent is weak and build your narrative there."  },
-        ],
-      },
-            {
         type: 'text',
         heading: 'Why Experienced Contractors Keep Making These Mistakes',
         body: 'The five mistakes in this lesson are not beginner errors — they are systematic gaps in pipeline strategy, relationship management, and compliance posture that show up across defense contractors of all sizes, from small businesses to large primes. They persist because they are organizational failures, not individual ones. Fixing them requires process changes, not just awareness.',
@@ -9125,10 +9020,6 @@ export const modules: Module[] = [
         body: "The most technically sound acquisition strategy will fail if the PM cannot build coalitions, manage upward expectations, and communicate clearly to decision-makers who have 10 minutes to understand your program. The ability to distill complex program status into a crisp, data-backed narrative is one of the most valuable skills in defense acquisitions."
       },
       {
-        type: 'stakeholder_map_visual' as any,
-        heading: "Your Stakeholder Map — Know Every Player",
-      },
-      {
         type: 'list',
         heading: "The PM\'s Stakeholder Map",
         items: [
@@ -9736,10 +9627,6 @@ You have more leverage before a missed milestone than after it. Use it early.`,
             type: 'text',
             heading: 'What CMMI Actually Measures',
             body: 'CMMI rates how mature and disciplined a company\'s processes are — does the organization have repeatable, predictable methods, or is every project starting from scratch? DoD cares because when spending hundreds of millions on a system, you need a contractor who can consistently deliver quality work. CMMI rates organizations on a 1–5 scale. Level 1 is chaotic and unpredictable. Level 5 is data-driven continuous improvement. ML3 is the common DoD threshold — processes are defined, documented, and followed consistently across the organization.',
-          },
-          {
-            type: 'cmmi_ladder_visual' as any,
-            heading: 'CMMI Maturity Levels — The Ladder',
           },
           {
             type: 'table_visual' as any,
