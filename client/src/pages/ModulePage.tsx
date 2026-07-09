@@ -63,11 +63,19 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
         <div className="flex items-start gap-4">
           <div className="text-4xl">{mod.icon}</div>
           <div className="flex-1">
-            {mod.subtitle && (
-              <div className="text-xs font-semibold text-primary/70 uppercase tracking-widest mb-1">
-                {mod.subtitle}
-              </div>
-            )}
+            <div className="flex items-center flex-wrap gap-2 mb-1">
+              {mod.subtitle && (
+                <span className="text-xs font-semibold text-primary/70 uppercase tracking-widest">
+                  {mod.subtitle}
+                </span>
+              )}
+              {trackData && (
+                <span className="inline-flex items-center gap-1.5 bg-primary/10 border border-primary/25 text-primary rounded-full px-2.5 py-0.5 text-[11px] font-bold">
+                  <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
+                  Your path: {trackData.shortLabel}
+                </span>
+              )}
+            </div>
             <div className="flex items-center gap-2 flex-wrap mb-1">
               <h1 className="text-xl font-bold">{mod.title}</h1>
               {mod.free && (
