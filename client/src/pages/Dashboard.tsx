@@ -503,46 +503,37 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
   const [bonusExpanded, setBonusExpanded] = useState(false);
 
   // ── Resolve which modules + lessons to show ──────────────────────────────
-  const { primaryModuleOrder, bonusModuleOrder, primaryLessonSetForModule } = (() => {
+  const resolvedModuleLayout = useMemo(() => {
     if (filterMode === 'career') {
-      const track = CAREER_TRACKS.find(t => t.id === activeCareer)!;
-      const primarySet = new Set(track.primaryLessons);
-      const bonusSet = new Set(track.bonusLessons);
-
-      // Order modules by which has primary lessons, preserving natural module order
-      const moduleOrder = ['foundations', 'finance', 'contracts', 'data', 'capture', 'operations'];
-
-      // A module is "primary" if it has at least 1 primary lesson
-      const primary = moduleOrder
-        .map(id => modules.find(m => m.id === id))
+      const careerTrack = CAREER_TRACKS.find(careerT => careerT.id === activeCareer)!;
+      const careerPrimarySet = new Set(careerTrack.primaryLessons);
+      new Set(careerTrack.bonusLessons);
+      const careerModuleOrder = ['foundations', 'finance', 'contracts', 'data', 'capture', 'operations'];
+      const careerPrimary = careerModuleOrder
+        .map(careerModId => modules.find(careerMod => careerMod.id === careerModId))
         .filter(Boolean)
-        .filter(m => m!.lessons.some(l => primarySet.has(l.id))) as typeof modules;
-
-      // A module is "bonus" if it has bonus lessons but NO primary lessons in this track
-      const bonus = moduleOrder
-        .map(id => modules.find(m => m.id === id))
+        .filter(careerMod => careerMod!.lessons.some(careerL => careerPrimarySet.has(careerL.id))) as typeof modules;
+      const careerBonus = careerModuleOrder
+        .map(careerModId => modules.find(careerMod => careerMod.id === careerModId))
         .filter(Boolean)
-        .filter(m => !m!.lessons.some(l => primarySet.has(l.id))) as typeof modules;
-
-      // For each module, which lessons are in the primary set
-      const lessonMap: Record<string, string[]> = {};
-      for (const mod of [...primary, ...bonus]) {
-        lessonMap[mod.id] = mod.lessons.filter(l => primarySet.has(l.id)).map(l => l.id);
+        .filter(careerMod => !careerMod!.lessons.some(careerL => careerPrimarySet.has(careerL.id))) as typeof modules;
+      const careerLessonMap: Record<string, string[]> = {};
+      for (const careerMapMod of [...careerPrimary, ...careerBonus]) {
+        careerLessonMap[careerMapMod.id] = careerMapMod.lessons.filter(careerMapL => careerPrimarySet.has(careerMapL.id)).map(careerMapL => careerMapL.id);
       }
-
-      return { primaryModuleOrder: primary, bonusModuleOrder: bonus, primaryLessonSetForModule: lessonMap };
+      return { primaryModuleOrder: careerPrimary, bonusModuleOrder: careerBonus, primaryLessonSetForModule: careerLessonMap };
     } else {
-      // Subject mode: show group's modules, rest as bonus
-      const group = SUBJECT_GROUPS.find(g => g.id === activeSubject)!;
-      const primary = group.moduleIds.map(id => modules.find(m => m.id === id)).filter(Boolean) as typeof modules;
-      const bonus = modules.filter(m => !group.moduleIds.includes(m.id));
-      const lessonMap: Record<string, string[]> = {};
-      for (const mod of modules) {
-        lessonMap[mod.id] = mod.lessons.map(l => l.id); // show all
+      const subjectGroup = SUBJECT_GROUPS.find(subjectG => subjectG.id === activeSubject)!;
+      const subjectPrimary = subjectGroup.moduleIds.map(subjectModId => modules.find(subjectMod => subjectMod.id === subjectModId)).filter(Boolean) as typeof modules;
+      const subjectBonus = modules.filter(subjectMod => !subjectGroup.moduleIds.includes(subjectMod.id));
+      const subjectLessonMap: Record<string, string[]> = {};
+      for (const subjectMapMod of modules) {
+        subjectLessonMap[subjectMapMod.id] = subjectMapMod.lessons.map(subjectMapL => subjectMapL.id);
       }
-      return { primaryModuleOrder: primary, bonusModuleOrder: bonus, primaryLessonSetForModule: lessonMap };
+      return { primaryModuleOrder: subjectPrimary, bonusModuleOrder: subjectBonus, primaryLessonSetForModule: subjectLessonMap };
     }
-  })();
+  }, [filterMode, activeCareer, activeSubject]);
+  const { primaryModuleOrder, bonusModuleOrder, primaryLessonSetForModule } = resolvedModuleLayout;
 
   // Next incomplete lesson (primary modules first)
   const nextLesson = (() => {
