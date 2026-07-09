@@ -2652,6 +2652,436 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               );
             }
 
+
+            // ─── VISUAL: IAC Hierarchy (contracts-9) ───────────────────────────
+            if ((block as any).type === 'iac_hierarchy_visual') {
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-semibold text-sm mb-4">{block.heading}</h3>}
+                  {(block as any).sub && <p className="text-xs text-muted-foreground mb-4">{(block as any).sub}</p>}
+                  {/* Nested boxes */}
+                  <div className="rounded-xl border-2 border-blue-300 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-800 p-4 mb-3">
+                    <div className="text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wide mb-1">IAC — Interagency Acquisition Contract</div>
+                    <div className="text-xs text-blue-600 dark:text-blue-400">Any contract set up by one agency that others can order from</div>
+                    <div className="rounded-xl border-2 border-violet-300 bg-violet-50 dark:bg-violet-950/30 dark:border-violet-800 p-3 mt-3">
+                      <div className="text-xs font-bold text-violet-700 dark:text-violet-300 uppercase tracking-wide mb-1">MAC — Multiple Award Contract</div>
+                      <div className="text-xs text-violet-600 dark:text-violet-400">Multiple vendors hold a "seat." Work comes via task order competition</div>
+                      <div className="rounded-xl border-2 border-primary bg-primary/5 p-3 mt-3">
+                        <div className="text-xs font-bold text-primary uppercase tracking-wide mb-1">GWAC — Government-Wide Acquisition Contract</div>
+                        <div className="text-xs text-muted-foreground">Any federal agency can order. GSA runs the big ones: OASIS+, Alliant 2, STARS III</div>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {['OASIS+', 'Alliant 2', 'STARS III', 'CIO-SP4'].map((v, vi) => (
+                            <span key={vi} className="bg-primary text-primary-foreground text-[11px] font-bold px-2 py-0.5 rounded-full">{v}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* TDL Flow */}
+                  <div className="mt-4">
+                    <div className="text-xs font-semibold text-foreground mb-2">Technical Direction Letter (TDL) — What It Can and Cannot Do</div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-3">
+                        <div className="text-xs font-bold text-green-700 dark:text-green-400 mb-1.5">TDL CAN</div>
+                        {['Direct HOW work is done', 'Clarify technical approach', 'Prioritize tasks within scope', 'Redirect effort within budget'].map((item, ii) => (
+                          <div key={ii} className="flex items-start gap-1.5 mb-1">
+                            <span className="text-green-500 font-bold text-xs mt-0.5">✓</span>
+                            <span className="text-xs text-muted-foreground">{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                        <div className="text-xs font-bold text-red-700 dark:text-red-400 mb-1.5">TDL CANNOT</div>
+                        {['Add new scope or work', 'Add funding', 'Extend the period of performance', 'Change contract terms'].map((item, ii) => (
+                          <div key={ii} className="flex items-start gap-1.5 mb-1">
+                            <span className="text-red-500 font-bold text-xs mt-0.5">✗</span>
+                            <span className="text-xs text-muted-foreground">{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="mt-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+                      <div className="text-xs font-semibold text-amber-700 dark:text-amber-400">If a TDL tries to do any of those things on the right, it's not a TDL — it's an <em>unauthorized commitment</em>. The contractor may perform and never get paid.</div>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
+            // ─── VISUAL: BD Funnel (capture) ──────────────────────────────────
+            if ((block as any).type === 'bd_funnel_visual') {
+              const stages = (block as any).stages || [
+                { label: 'Identify', pwin: '< 20%', color: '#64748b', width: 'w-full', desc: 'Market research. No RFP yet.' },
+                { label: 'Qualify', pwin: '20–40%', color: '#6366f1', width: 'w-11/12', desc: 'Go/no-go gate. Customer access.' },
+                { label: 'Shape', pwin: '40–60%', color: '#8b5cf6', width: 'w-10/12', desc: 'Influence requirements. Build discriminators.' },
+                { label: 'Capture', pwin: '60–75%', color: '#0284c7', width: 'w-9/12', desc: 'Black hat. Teaming. Win strategy locked.' },
+                { label: 'Propose', pwin: '75%+', color: '#01696f', width: 'w-7/12', desc: 'Write and submit. Compliance first.' },
+                { label: 'Award', pwin: '100%', color: '#16a34a', width: 'w-5/12', desc: 'Contract awarded. Execution begins.' },
+              ];
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-semibold text-sm mb-1">{block.heading}</h3>}
+                  {(block as any).sub && <p className="text-xs text-muted-foreground mb-4">{(block as any).sub}</p>}
+                  <div className="flex flex-col items-center gap-1.5">
+                    {stages.map((s: any, si: number) => (
+                      <div key={si} className={`${s.width} flex items-center gap-3 rounded-lg px-4 py-2.5 text-white`} style={{ backgroundColor: s.color }}>
+                        <div className="flex-1">
+                          <div className="text-xs font-bold">{s.label}</div>
+                          <div className="text-[11px] opacity-80">{s.desc}</div>
+                        </div>
+                        <div className="text-xs font-bold bg-white/20 rounded px-2 py-0.5 flex-shrink-0">{s.pwin}</div>
+                      </div>
+                    ))}
+                  </div>
+                  {(block as any).note && (
+                    <div className="mt-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3 text-xs text-amber-700 dark:text-amber-400">{(block as any).note}</div>
+                  )}
+                </div>
+              );
+            }
+
+            // ─── VISUAL: Section L vs M (capture-3) ───────────────────────────
+            if ((block as any).type === 'section_lm_visual') {
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-semibold text-sm mb-4">{block.heading}</h3>}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="rounded-xl border-2 border-blue-300 dark:border-blue-700 bg-blue-50 dark:bg-blue-950/30 p-4">
+                      <div className="text-base font-black text-blue-700 dark:text-blue-300 mb-1">Section L</div>
+                      <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-3">"How to turn in your homework"</div>
+                      {['Format & page limits', 'Font requirements', 'Volume structure', 'Submission deadline', 'Required forms'].map((item, ii) => (
+                        <div key={ii} className="flex items-center gap-2 mb-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />
+                          <span className="text-xs text-muted-foreground">{item}</span>
+                        </div>
+                      ))}
+                      <div className="mt-3 bg-blue-100 dark:bg-blue-900/40 rounded-lg px-3 py-2">
+                        <div className="text-[11px] font-bold text-blue-700 dark:text-blue-300">Use as: COMPLIANCE CHECKLIST</div>
+                      </div>
+                    </div>
+                    <div className="rounded-xl border-2 border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-950/30 p-4">
+                      <div className="text-base font-black text-red-700 dark:text-red-300 mb-1">Section M</div>
+                      <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-3">"How you get scored"</div>
+                      {['Evaluation factors', 'Relative importance', 'Adjectival ratings', 'Sub-factor weights', 'What earns Strengths'].map((item, ii) => (
+                        <div key={ii} className="flex items-center gap-2 mb-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
+                          <span className="text-xs text-muted-foreground">{item}</span>
+                        </div>
+                      ))}
+                      <div className="mt-3 bg-red-100 dark:bg-red-900/40 rounded-lg px-3 py-2">
+                        <div className="text-[11px] font-bold text-red-700 dark:text-red-300">Use as: YOUR WRITING GUIDE</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-4 bg-primary/5 border border-primary/20 rounded-xl p-4 text-center">
+                    <div className="text-sm font-bold text-foreground">The Rule: Write to M. Check against L.</div>
+                    <div className="text-xs text-muted-foreground mt-1">Most proposals fail because they write to the Statement of Work and hope M matches. Winning proposals start at M and work backward.</div>
+                  </div>
+                </div>
+              );
+            }
+
+            // ─── VISUAL: Source Selection Flow (capture-4) ────────────────────
+            if ((block as any).type === 'source_selection_visual') {
+              const steps = [
+                { step: '1', label: 'RFP Released', desc: 'Solicitation posted on SAM.gov', color: '#6366f1' },
+                { step: '2', label: 'Proposals Due', desc: 'Offerors submit all volumes', color: '#8b5cf6' },
+                { step: '3', label: 'SSEB Evaluation', desc: 'Technical & mgmt scored against Section M', color: '#0284c7' },
+                { step: '4', label: 'Past Performance', desc: 'CPARS pulled + references checked', color: '#0891b2' },
+                { step: '5', label: 'Price Analysis', desc: 'Cost realism / price reasonableness', color: '#01696f' },
+                { step: '6', label: 'SSA Decision', desc: 'Source Selection Authority makes award', color: '#16a34a' },
+                { step: '7', label: 'Award & Debrief', desc: 'Winner notified; losers get debrief', color: '#ca8a04' },
+              ];
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-semibold text-sm mb-4">{block.heading}</h3>}
+                  <div className="relative">
+                    {steps.map((s, si) => (
+                      <div key={si} className="flex items-start gap-3 mb-3">
+                        <div className="flex flex-col items-center flex-shrink-0">
+                          <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: s.color }}>{s.step}</div>
+                          {si < steps.length - 1 && <div className="w-0.5 h-4 bg-border mt-1" />}
+                        </div>
+                        <div className="flex-1 pb-2">
+                          <div className="text-xs font-bold text-foreground">{s.label}</div>
+                          <div className="text-xs text-muted-foreground">{s.desc}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {(block as any).note && (
+                    <div className="mt-3 bg-primary/5 border border-primary/20 rounded-lg p-3 text-xs text-primary font-medium">{(block as any).note}</div>
+                  )}
+                </div>
+              );
+            }
+
+            // ─── VISUAL: CMMI Maturity Ladder (ops-6) ─────────────────────────
+            if ((block as any).type === 'cmmi_ladder_visual') {
+              const levels = [
+                { level: 5, name: 'Optimizing', desc: 'Continuous improvement. Data drives process change.', color: '#16a34a', dod: 'Rare, highest assurance work' },
+                { level: 4, name: 'Quantitatively Managed', desc: 'Statistical process control. Defect rates measured.', color: '#0284c7', dod: 'High-assurance / safety-critical' },
+                { level: 3, name: 'Defined', desc: 'Standard processes documented, followed org-wide.', color: '#01696f', dod: 'DoD standard threshold' },
+                { level: 2, name: 'Managed', desc: 'Projects planned & tracked, but varies by team.', color: '#ca8a04', dod: 'Low-risk efforts only' },
+                { level: 1, name: 'Initial', desc: 'Chaotic. Success = individual heroics.', color: '#dc2626', dod: 'Avoid for complex programs' },
+              ];
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-semibold text-sm mb-4">{block.heading}</h3>}
+                  <div className="space-y-2">
+                    {levels.map((l, li) => (
+                      <div key={li} className="flex items-stretch gap-3 rounded-lg border border-border overflow-hidden">
+                        <div className="w-12 flex-shrink-0 flex items-center justify-center text-white font-black text-lg" style={{ backgroundColor: l.color }}>
+                          {l.level}
+                        </div>
+                        <div className="flex-1 py-2.5 pr-3">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="text-xs font-bold text-foreground">{l.name}</div>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold" style={{ backgroundColor: l.color + '20', color: l.color }}>{l.dod}</span>
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-0.5">{l.desc}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3 text-xs text-amber-700 dark:text-amber-400">
+                    <span className="font-bold">Key fact:</span> An appraisal is NOT a certification. It expires after 3 years. Always verify on the PAL database at cmmiinstitute.com/pars.
+                  </div>
+                </div>
+              );
+            }
+
+            // ─── VISUAL: Stakeholder Map (ops-2) ──────────────────────────────
+            if ((block as any).type === 'stakeholder_map_visual') {
+              const stakeholders = [
+                { label: 'PEO', desc: 'Your direct boss. Fights for your resources. Never surprise them.', position: 'top', color: '#01696f' },
+                { label: 'SAE', desc: 'Senate-confirmed civilian. Chairs ACAT I milestones.', position: 'top-right', color: '#0284c7' },
+                { label: 'USD(A&S)', desc: 'Ultimate DoD acquisition authority. ACAT ID milestone decision maker.', position: 'right', color: '#6366f1' },
+                { label: 'Congress', desc: 'HASC/SASC staff can restrict funding. Underestimate at your peril.', position: 'bottom-right', color: '#8b5cf6' },
+                { label: 'Contractor', desc: 'Managed partnership, not adversary. CPARS reflects this relationship.', position: 'bottom', color: '#ca8a04' },
+                { label: 'CAPE', desc: 'Independent cost analysis. Usually higher than your estimate.', position: 'bottom-left', color: '#dc2626' },
+                { label: 'Warfighter', desc: 'The actual customer. Easy to lose sight of inside the bureaucracy.', position: 'left', color: '#16a34a' },
+                { label: 'COR/Team', desc: 'Your daily execution engine. Invest in them or pay the price.', position: 'top-left', color: '#0891b2' },
+              ];
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-semibold text-sm mb-4">{block.heading}</h3>}
+                  <div className="grid grid-cols-2 gap-2">
+                    {stakeholders.map((s, si) => (
+                      <div key={si} className="flex items-start gap-2.5 p-2.5 rounded-lg border border-border bg-muted/20">
+                        <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-white text-[10px] font-black text-center leading-tight" style={{ backgroundColor: s.color }}>
+                          {s.label}
+                        </div>
+                        <div>
+                          <div className="text-xs font-semibold text-foreground">{s.label}</div>
+                          <div className="text-[11px] text-muted-foreground leading-snug">{s.desc}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-3 bg-primary/5 border border-primary/20 rounded-lg p-3 text-xs text-primary font-medium text-center">
+                    Rule: Never let any of these be surprised. Brief them early. Brief them often.
+                  </div>
+                </div>
+              );
+            }
+
+            // ─── VISUAL: S-Curve (data-2) ─────────────────────────────────────
+            if ((block as any).type === 'scurve_visual') {
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-semibold text-sm mb-4">{block.heading}</h3>}
+                  {/* ASCII-style S-Curve */}
+                  <div className="bg-muted/30 rounded-xl p-4 font-mono">
+                    <div className="text-xs text-muted-foreground mb-3 text-center font-sans font-semibold">Cumulative Cost Over Time</div>
+                    <div className="relative h-36 border-l-2 border-b-2 border-border mx-4">
+                      <svg viewBox="0 0 300 120" className="absolute inset-0 w-full h-full overflow-visible">
+                        {/* BCWS - planned */}
+                        <path d="M 0,120 C 30,120 60,110 90,90 C 120,70 150,40 200,15 C 230,5 260,2 300,2" fill="none" stroke="#6366f1" strokeWidth="2" strokeDasharray="5,3" />
+                        {/* BCWP - earned (below BCWS = schedule slip) */}
+                        <path d="M 0,120 C 30,120 60,115 90,100 C 120,80 150,55 200,30 C 230,18 260,12 300,10" fill="none" stroke="#01696f" strokeWidth="2" />
+                        {/* ACWP - actual (above BCWP = cost overrun) */}
+                        <path d="M 0,120 C 30,120 60,112 90,95 C 120,75 150,48 200,25 C 230,13 260,7 300,5" fill="none" stroke="#dc2626" strokeWidth="2" />
+                        {/* Labels */}
+                        <text x="305" y="4" fontSize="9" fill="#6366f1" fontFamily="sans-serif">BCWS (Plan)</text>
+                        <text x="305" y="12" fontSize="9" fill="#01696f" fontFamily="sans-serif">BCWP (Earned)</text>
+                        <text x="305" y="20" fontSize="9" fill="#dc2626" fontFamily="sans-serif">ACWP (Actual)</text>
+                        {/* Schedule variance annotation */}
+                        <line x1="150" y1="40" x2="150" y2="55" stroke="#6366f1" strokeWidth="1" strokeDasharray="2,2" />
+                        <text x="112" y="38" fontSize="8" fill="#6366f1" fontFamily="sans-serif">SV (behind)</text>
+                        {/* Cost variance annotation */}
+                        <line x1="200" y1="25" x2="200" y2="15" stroke="#dc2626" strokeWidth="1" strokeDasharray="2,2" />
+                        <text x="165" y="14" fontSize="8" fill="#dc2626" fontFamily="sans-serif">CV (overrun)</text>
+                      </svg>
+                    </div>
+                    <div className="flex justify-between mt-2 px-4 text-[10px] text-muted-foreground font-sans">
+                      <span>Contract Start</span>
+                      <span>Time</span>
+                      <span>Contract End</span>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 mt-4">
+                    {[
+                      { label: 'BCWP below BCWS', meaning: 'Schedule slip — less work done than planned', color: '#6366f1' },
+                      { label: 'ACWP above BCWP', meaning: 'Cost overrun — spending more than earned', color: '#dc2626' },
+                      { label: 'BCWP = BCWS, ACWP low', meaning: 'On track, under budget — ideal', color: '#16a34a' },
+                    ].map((item, ii) => (
+                      <div key={ii} className="rounded-lg p-2.5 bg-muted/30 border border-border">
+                        <div className="text-[11px] font-bold mb-1" style={{ color: item.color }}>{item.label}</div>
+                        <div className="text-[11px] text-muted-foreground">{item.meaning}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // ─── VISUAL: EVM Glossary Cards (data-3) ──────────────────────────
+            if ((block as any).type === 'evm_glossary_visual') {
+              const terms = (block as any).terms || [];
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-semibold text-sm mb-4">{block.heading}</h3>}
+                  {(block as any).sub && <p className="text-xs text-muted-foreground mb-4">{(block as any).sub}</p>}
+                  <div className="grid grid-cols-2 gap-2">
+                    {terms.map((t: any, ti: number) => (
+                      <div key={ti} className="rounded-lg border border-border p-3" style={{ borderLeftWidth: '3px', borderLeftColor: t.color || '#01696f' }}>
+                        <div className="text-xs font-black text-foreground mb-0.5">{t.abbr}</div>
+                        <div className="text-[11px] font-semibold text-muted-foreground mb-1">{t.full}</div>
+                        <div className="text-[11px] text-muted-foreground leading-snug">{t.plain}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // ─── VISUAL: IPMR Format Overview (data-4) ────────────────────────
+            if ((block as any).type === 'ipmr_format_visual') {
+              const formats = (block as any).formats || [];
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-semibold text-sm mb-4">{block.heading}</h3>}
+                  {(block as any).sub && <p className="text-xs text-muted-foreground mb-3">{(block as any).sub}</p>}
+                  <div className="space-y-2">
+                    {formats.map((f: any, fi: number) => (
+                      <div key={fi} className="flex items-start gap-3 p-3 rounded-lg bg-muted/20 border border-border">
+                        <div className="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center text-white text-xs font-black" style={{ backgroundColor: f.color || '#01696f' }}>
+                          {f.id}
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-xs font-bold text-foreground">{f.name}</div>
+                          <div className="text-[11px] text-muted-foreground mt-0.5">{f.desc}</div>
+                          {f.tip && <div className="text-[11px] text-primary font-semibold mt-1">{f.tip}</div>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // ─── VISUAL: Mistakes (capture-5 / ops-5 style) ───────────────────
+            if ((block as any).type === 'mistakes_visual') {
+              const mistakes = (block as any).mistakes || [];
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-semibold text-sm mb-4">{block.heading}</h3>}
+                  {(block as any).sub && <p className="text-xs text-muted-foreground mb-4">{(block as any).sub}</p>}
+                  <div className="space-y-3">
+                    {mistakes.map((m: any, mi: number) => (
+                      <div key={mi} className="flex items-start gap-3 p-3 rounded-xl bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800">
+                        <div className="w-7 h-7 rounded-full bg-red-500 text-white flex-shrink-0 flex items-center justify-center text-xs font-black">{mi + 1}</div>
+                        <div className="flex-1">
+                          <div className="text-xs font-bold text-red-700 dark:text-red-400 mb-0.5">{m.mistake}</div>
+                          <div className="text-xs text-muted-foreground">{m.fix}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // ─── VISUAL: Proposal Volume Structure (capture-2) ────────────────
+            if ((block as any).type === 'proposal_volumes_visual') {
+              const volumes = (block as any).volumes || [];
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-semibold text-sm mb-4">{block.heading}</h3>}
+                  {(block as any).sub && <p className="text-xs text-muted-foreground mb-4">{(block as any).sub}</p>}
+                  <div className="space-y-2">
+                    {volumes.map((v: any, vi: number) => (
+                      <div key={vi} className="rounded-xl overflow-hidden border border-border">
+                        <div className="px-4 py-2.5 flex items-center gap-3" style={{ backgroundColor: v.color + '20' }}>
+                          <div className="text-sm font-black" style={{ color: v.color }}>Vol {v.num}</div>
+                          <div className="flex-1">
+                            <div className="text-xs font-bold text-foreground">{v.name}</div>
+                          </div>
+                          <div className="text-[11px] font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: v.color + '30', color: v.color }}>{v.weight}</div>
+                        </div>
+                        <div className="px-4 py-2 text-xs text-muted-foreground border-t border-border/50">{v.desc}</div>
+                        {v.tip && (
+                          <div className="px-4 py-2 text-[11px] font-semibold text-primary bg-primary/5 border-t border-primary/10">{v.tip}</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // ─── VISUAL: AAF Pathways (foundations-1) ─────────────────────────
+            if ((block as any).type === 'aaf_pathways_visual') {
+              const pathways = (block as any).pathways || [];
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-semibold text-sm mb-4">{block.heading}</h3>}
+                  <div className="grid grid-cols-2 gap-2">
+                    {pathways.map((p: any, pi: number) => (
+                      <div key={pi} className="rounded-xl border border-border p-3" style={{ borderTopWidth: '3px', borderTopColor: p.color || '#01696f' }}>
+                        <div className="text-xs font-black text-foreground mb-0.5">{p.name}</div>
+                        <div className="text-[11px] text-muted-foreground mb-1.5">{p.desc}</div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold" style={{ backgroundColor: p.color + '20', color: p.color }}>{p.timeline}</span>
+                          {p.bestFor && <span className="text-[10px] text-muted-foreground">{p.bestFor}</span>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // ─── VISUAL: Roles Grid (foundations-2) ───────────────────────────
+            if ((block as any).type === 'roles_grid_visual') {
+              const roles = (block as any).roles || [];
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-semibold text-sm mb-4">{block.heading}</h3>}
+                  {(block as any).sub && <p className="text-xs text-muted-foreground mb-4">{(block as any).sub}</p>}
+                  <div className="space-y-2">
+                    {roles.map((r: any, ri: number) => (
+                      <div key={ri} className="flex items-start gap-3 p-3 rounded-xl border border-border hover:border-primary/30 transition-colors">
+                        <div className="w-9 h-9 rounded-xl flex-shrink-0 flex items-center justify-center text-white text-sm font-black" style={{ backgroundColor: r.color || '#01696f' }}>
+                          {r.emoji || r.label?.charAt(0)}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-xs font-bold text-foreground">{r.label}</span>
+                            {r.badge && <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold bg-muted text-muted-foreground">{r.badge}</span>}
+                          </div>
+                          <div className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{r.desc}</div>
+                          {r.plain && <div className="text-[11px] text-primary font-medium mt-1">{r.plain}</div>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+
             return null;
           })}
 
