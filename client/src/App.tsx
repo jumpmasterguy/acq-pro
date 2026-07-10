@@ -9,7 +9,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel } from "@/lib/progress";
 import { isNativeApp } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
-import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock } from "lucide-react";
+import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen } from "lucide-react";
+import { SIDEBAR_RESOURCES } from "@/lib/resources";
 import { AcqlerateLogo } from "@/components/AcqlerateLogo";
 import InstallPrompt from "@/components/InstallPrompt";
 
@@ -148,6 +149,7 @@ function AppContent() {
   });
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
+  const [resourcesExpanded, setResourcesExpanded] = useState(false);
   const [authState, setAuthState] = useState<AuthState>({ status: 'loading' });
   // Module assessment modal state
   const [assessmentModuleId, setAssessmentModuleId] = useState<string | null>(null);
@@ -661,6 +663,42 @@ function AppContent() {
               </div>
             );
           })}
+
+          {/* Downloadable Resources */}
+          {SIDEBAR_RESOURCES.length > 0 && (
+            <div className="pt-3">
+              <button
+                onClick={() => setResourcesExpanded(v => !v)}
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors select-none"
+                data-testid="sidebar-resources-toggle"
+              >
+                <FolderOpen className="w-4 h-4 flex-shrink-0" />
+                <span className="flex-1 text-left text-xs font-medium">Resources</span>
+                <span className="text-[10px] text-sidebar-foreground/40">{SIDEBAR_RESOURCES.length}</span>
+                <ChevronDown className={cn("w-3.5 h-3.5 flex-shrink-0 transition-transform", resourcesExpanded && "rotate-180")} />
+              </button>
+              {resourcesExpanded && (
+                <div className="pl-2 pr-1 pt-1 space-y-1">
+                  {SIDEBAR_RESOURCES.map((res, ri) => (
+                    <a
+                      key={ri}
+                      href={res.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-start gap-2 px-3 py-2 rounded-lg text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors group"
+                      data-testid={`sidebar-resource-${ri}`}
+                    >
+                      <Download className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 opacity-60 group-hover:opacity-100" />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[11px] font-medium leading-tight">{res.title}</div>
+                        <div className="text-[10px] text-sidebar-foreground/40 leading-tight mt-0.5">{res.description}</div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </nav>
 
         {/* Bottom */}

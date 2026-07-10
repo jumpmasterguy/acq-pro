@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { getTrackData, type CareerTrackId } from "@/lib/careerTracks";
 import { modules, type Lesson, type Module, type QuizQuestion, type SkillLevel, type ExpandableItem } from "@/lib/curriculum";
 import type { UserProgress } from "@/lib/progress";
 import {
@@ -151,6 +152,7 @@ interface LessonPageProps {
   onOpenAssessment?: () => void;
   // True only for lifetime subscribers — unlocks "How Do I Apply This?" AI button
   isLifetime?: boolean;
+  activeCareer?: string | null;
 }
 
 type Tab = 'lesson' | 'quiz' | 'terms';
@@ -489,7 +491,8 @@ function DragMatchQuestion({ question, submitted, onMatchChange, currentMatches 
 
 // ─── Main LessonPage ───────────────────────────────────────────────────────
 
-export default function LessonPage({ lessonId, progress, onBack, onComplete, onNextLesson, unlockedLevel = 'novice', onOpenAssessment, isLifetime = false }: LessonPageProps) {
+export default function LessonPage({ lessonId, progress, onBack, onComplete, onNextLesson, unlockedLevel = 'novice', onOpenAssessment, isLifetime = false, activeCareer }: LessonPageProps) {
+  const trackData = getTrackData((activeCareer as CareerTrackId) ?? null);
   const [activeTab, setActiveTab] = useState<Tab>('lesson');
   // MC answers: questionId → optionIndex
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({});
@@ -700,7 +703,15 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
       <div className="bg-card border border-border rounded-xl p-5">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <div className="text-xs text-muted-foreground mb-1">{mod.title}</div>
+            <div className="flex items-center gap-2 flex-wrap mb-1">
+              <span className="text-xs text-muted-foreground">{mod.title}</span>
+              {trackData && (
+                <span className="inline-flex items-center gap-1.5 bg-primary/10 border border-primary/25 text-primary rounded-full px-2.5 py-0.5 text-[11px] font-bold">
+                  <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
+                  Your path: {trackData.shortLabel}
+                </span>
+              )}
+            </div>
             <h1 className="text-lg font-bold leading-tight mb-2">{lesson.title}</h1>
             <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
               <span className="flex items-center gap-1">
@@ -724,6 +735,38 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
           )}
         </div>
       </div>
+
+      {/* Prominent Download Banner — real-world example document(s) for this lesson */}
+      {lesson.attachments && lesson.attachments.length > 0 && (
+        <div className="rounded-xl bg-primary text-primary-foreground p-4 sm:p-5 flex items-center gap-4 flex-wrap shadow-sm">
+          <div className="w-11 h-11 rounded-lg bg-white/15 flex items-center justify-center flex-shrink-0">
+            <FileText className="w-5 h-5" />
+          </div>
+          <div className="flex-1 min-w-[200px]">
+            <div className="text-sm font-bold">
+              {lesson.attachments.length === 1 ? 'Real-world example document included' : `${lesson.attachments.length} real-world example documents included`}
+            </div>
+            <div className="text-xs text-primary-foreground/80 mt-0.5">
+              {lesson.attachments.map(a => a.title.replace('Example: ', '')).join(' · ')}
+            </div>
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            {lesson.attachments.map((att, ai) => (
+              <a
+                key={ai}
+                href={att.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 bg-white text-primary font-bold text-xs px-3.5 py-2 rounded-lg hover:bg-white/90 transition-colors flex-shrink-0"
+                data-testid={`banner-download-${ai}`}
+              >
+                <Download className="w-3.5 h-3.5" />
+                {lesson.attachments!.length === 1 ? 'Download PDF' : `Download ${ai + 1}`}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Skill Level Selector — only shown if this lesson has leveled content */}
       {hasLeveledContent && (
@@ -2813,33 +2856,39 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             )}
           </div>
 
-          {/* Downloadable Resources */}
+          {/* Example document image gallery, if this lesson has one */}
           {lesson.attachments && lesson.attachments.length > 0 && (
-            <div className="rounded-xl border border-border bg-muted/20 p-4">
-              <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                <FileText className="w-4 h-4 text-primary" />
-                Downloadable Resources
-              </h3>
-              <div className="space-y-2">
-                {lesson.attachments.map((att, ai) => (
-                  <a
-                    key={ai}
-                    href={att.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-start gap-3 p-3 rounded-lg border border-border bg-card hover:border-primary/40 hover:bg-primary/5 transition-colors group"
-                    data-testid={`attachment-${ai}`}
-                  >
-                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
-                      <Download className="w-4 h-4 text-primary" />
+            <div className="space-y-6">
+              {lesson.attachments.map((att, ai) => (
+                att.images && att.images.length > 0 && (
+                  <div key={ai} className="rounded-xl border border-border bg-muted/10 p-4">
+                    <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
+                      <h3 className="text-sm font-semibold text-foreground">{att.title}</h3>
+                      <a
+                        href={att.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        View full PDF
+                      </a>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-semibold text-foreground">{att.title}</div>
-                      <div className="text-xs text-muted-foreground mt-0.5">{att.description}</div>
+                    <div className="space-y-4">
+                      {att.images.map((img, imgI) => (
+                        <figure key={imgI}>
+                          <img
+                            src={img.src}
+                            alt={att.title}
+                            className="w-full rounded-lg border border-border"
+                          />
+                          <figcaption className="text-xs text-muted-foreground mt-2 leading-relaxed px-1">{img.caption}</figcaption>
+                        </figure>
+                      ))}
                     </div>
-                  </a>
-                ))}
-              </div>
+                  </div>
+                )
+              ))}
             </div>
           )}
 
