@@ -1293,11 +1293,16 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       const emailModule = await import('./email.js') as any;
       const sendNewsletterIssue = emailModule.sendNewsletterIssue;
       const allUsers = await storage.getAllUsers();
+      const excludedEmails = new Set([
+        'lucas@acqlerate.com',
+        'lucas.l.cruz.es@gmail.com',
+        'lucas.l.cruz.pr@gmail.com',
+        'jumpmasterguy@gmail.com',
+      ]);
       const recipients = allUsers
         .filter((u: any) => {
           if (!u.email) return false;
-          if (u.email.includes('.pr@gmail')) return false; // lucas test account
-          if (u.email === 'jumpmasterguy@gmail.com') return false; // throwaway
+          if (excludedEmails.has(u.email.toLowerCase())) return false;
           return true;
         })
         .map((u: any) => u.email);
