@@ -1,3 +1,9 @@
+export interface LessonAttachment {
+  title: string;
+  description: string;
+  url: string;
+}
+
 export interface Lesson {
   id: string;
   title: string;
@@ -6,6 +12,7 @@ export interface Lesson {
   content: LessonContent[];
   quiz: QuizQuestion[];
   keyTerms: KeyTerm[];
+  attachments?: LessonAttachment[];
 }
 
 export type SkillLevel = 'novice' | 'intermediate' | 'advanced';
@@ -2943,6 +2950,9 @@ export const modules: Module[] = [
             definition: 'Defense Contract Audit Agency. Audits contractor indirect rates (fringe, overhead, G&A) and cost pools to ensure compliance with FAR Part 31. Unallowable costs (entertainment, alcohol, image advertising) must be excluded from all pools.',
           },
         ],
+        attachments: [
+          { title: 'Example: CPAF Award Fee Determination Plan', description: 'A sanitized AFDP excerpt showing evaluation periods, allocation methods, the adjectival rating scale, and who actually decides your award fee.', url: '/examples/example-cpaf-award-fee.pdf' },
+        ],
         content: [
           {
             type: 'text',
@@ -4220,6 +4230,9 @@ export const modules: Module[] = [
         term: 'Fair Opportunity',
         definition: 'The requirement under FAR 16.505 that all awardees on a MAC-IDIQ vehicle must be given a fair opportunity to compete for each task order above the simplified acquisition threshold. There are limited exceptions (unusual urgency, one awardee is uniquely qualified, etc.), but as a rule, being on the vehicle doesn\'t mean you automatically get the work — you have to compete for it.',
       },
+        ],
+        attachments: [
+          { title: 'Example: Technical Direction Letter', description: 'A sanitized, real-world TDL showing the exact structure, revision table, performance metrics, and capability estimate a TDL contains.', url: '/examples/example-tdl.pdf' },
         ],
         content: [
       {
@@ -5823,6 +5836,9 @@ export const modules: Module[] = [
             { term: 'Distribution Statement', definition: 'A marking on technical data that controls who can receive and use it. Ranges from Statement A (unlimited) to Statement F (export controlled). Mis-marking data is a serious compliance failure.' },
             { term: 'Tailoring', definition: 'The process of modifying a DID to fit the specific needs of a program. Contracting officers can tailor DIDs to reduce reporting burden or add requirements. Always check if a DID has been tailored before preparing the deliverable.' },
           ],
+          attachments: [
+            { title: 'Example: CDRL Deliverables Table', description: 'A sanitized Section F excerpt showing how CDRLs trace back to SOW tasks, plus the acceptance/rejection timeline every deliverable runs on.', url: '/examples/example-cdrl-deliverables.pdf' },
+          ],
           quiz: [
             {
               id: 'c10-q1',
@@ -5916,6 +5932,9 @@ export const modules: Module[] = [
             { term: 'Place of Performance', definition: 'Section H often specifies where work must be performed — government site, contractor facility, or both. Changes to place of performance typically require a modification.' },
             { term: 'Option Periods', definition: 'Section H details the government\'s rights to exercise options for additional periods of performance or quantities. The government is not required to exercise options. Understanding option mechanics is critical for program continuity planning.' },
           ],
+          attachments: [
+            { title: 'Example: Section H Special Requirements', description: 'A sanitized Section H excerpt covering Key Personnel qualifications, substitution rules, deployment requirements, and OCONUS work profiles.', url: '/examples/example-section-h.pdf' },
+          ],
           quiz: [
             {
               id: 'c11-q1',
@@ -6008,6 +6027,9 @@ export const modules: Module[] = [
             { term: 'Period of Performance', definition: 'The dates during which the contractor is authorized to perform work and incur costs. Each MSR reports on performance within the current PoP. Performance outside the PoP is unallowable.' },
             { term: 'Integrated Master Schedule', definition: 'IMS. The comprehensive, resource-loaded program schedule. The MSR references the IMS to show schedule status. Any slippage shown in the MSR should be traceable to the IMS.' },
             { term: 'Risk Reporting', definition: 'The section of the MSR that identifies current and emerging risks, their probability and impact, and the mitigation status. This becomes the government\'s early warning system. Omitting a known risk from the MSR is a transparency problem.' },
+          ],
+          attachments: [
+            { title: 'Example: Monthly Status Report (MSR)', description: 'A fully filled-in sanitized MSR showing every required section: activities, operational summary, personnel, schedule, and financial status.', url: '/examples/example-msr.pdf' },
           ],
           quiz: [
             {

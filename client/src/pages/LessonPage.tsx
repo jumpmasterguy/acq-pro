@@ -5,7 +5,8 @@ import {
   ArrowLeft, ChevronRight, CheckCircle, BookOpen, AlertTriangle,
   Lightbulb, Table, Clock, Award, RotateCcw, ChevronDown, ChevronUp,
   GripVertical, ArrowRight, Lock, ChevronUp as LevelUp,
-  Sparkles, BrainCircuit, HelpCircle, Briefcase, Loader2, X
+  Sparkles, BrainCircuit, HelpCircle, Briefcase, Loader2, X,
+  Download, FileText
 } from "lucide-react";
 import { apiRequest, API_BASE } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
@@ -2754,6 +2755,36 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               </div>
             )}
           </div>
+
+          {/* Downloadable Resources */}
+          {lesson.attachments && lesson.attachments.length > 0 && (
+            <div className="rounded-xl border border-border bg-muted/20 p-4">
+              <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-primary" />
+                Downloadable Resources
+              </h3>
+              <div className="space-y-2">
+                {lesson.attachments.map((att, ai) => (
+                  <a
+                    key={ai}
+                    href={att.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-3 p-3 rounded-lg border border-border bg-card hover:border-primary/40 hover:bg-primary/5 transition-colors group"
+                    data-testid={`attachment-${ai}`}
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                      <Download className="w-4 h-4 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold text-foreground">{att.title}</div>
+                      <div className="text-xs text-muted-foreground mt-0.5">{att.description}</div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Next Actions */}
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
