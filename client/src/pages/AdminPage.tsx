@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Shield, Users, Crown, UserX, RefreshCw, ChevronDown,
   BarChart2, Clock, Zap, TrendingUp, Activity, Star,
-  BookOpen, Target, LogIn, Trash2, Share2,
+  BookOpen, Target, LogIn, Trash2, Share2, Mail, Send, Eye,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -101,7 +101,7 @@ function formatMinutes(mins: number): string {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-type AdminTab = "users" | "analytics" | "referrals";
+type AdminTab = "users" | "analytics" | "referrals" | "newsletter";
 
 export default function AdminPage() {
   const { toast } = useToast();
@@ -111,6 +111,10 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<AdminTab>("users");
   const [sortField, setSortField] = useState<keyof AnalyticsUser>("xp");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [nlSubject, setNlSubject] = useState("");
+  const [nlPreview, setNlPreview] = useState("");
+  const [nlHtml, setNlHtml] = useState("");
+  const [nlResult, setNlResult] = useState<string | null>(null);
 
   // ── Queries ─────────────────────────────────────────────────────────────
 
@@ -191,6 +195,35 @@ export default function AdminPage() {
     },
     onError: (err: Error) => {
       toast({ title: "Delete failed", description: err.message, variant: "destructive" });
+    },
+  });
+
+  const sendNewsletter = useMutation({
+    mutationFn: async (testOnly: boolean) => {
+      const res = await apiRequest("POST", "/api/admin/newsletter", {
+        subject: nlSubject,
+        previewText: nlPreview,
+        html: nlHtml,
+        testOnly,
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ message: "Send failed" }));
+        throw new Error(err.message);
+      }
+      return res.json();
+    },
+    onSuccess: (data, testOnly) => {
+      if (testOnly) {
+        setNlResult("Test email sent to lucas.l.cruz.es@gmail.com. Check your inbox.");
+        toast({ title: "Test sent", description: "Check your inbox for the preview." });
+      } else {
+        setNlResult(`Sent to ${data.sent} of ${data.total} users.`);
+        toast({ title: "Newsletter sent", description: `Sent to ${data.sent} of ${data.total} users.` });
+      }
+    },
+    onError: (err: Error) => {
+      setNlResult(null);
+      toast({ title: "Send failed", description: err.message, variant: "destructive" });
     },
   });
 
@@ -298,6 +331,20 @@ export default function AdminPage() {
           <span className="flex items-center gap-1.5">
             <Share2 className="w-4 h-4" />
             Referrals
+          </span>
+        </button>
+        <button
+          onClick={() => setActiveTab("newsletter")}
+          className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+            activeTab === "newsletter"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+          data-testid="admin-tab-newsletter"
+        >
+          <span className="flex items-center gap-1.5">
+            <Mail className="w-4 h-4" />
+            Newsletter
           </span>
         </button>
       </div>
@@ -867,6 +914,69 @@ export default function AdminPage() {
             )}
           </div>
 
+        </div>
+      )}
+
+      {/* ── NEWSLETTER TAB ───────────────────────────────────────────────────── */}
+      {activeTab === "newsletter" && (
+        <div className="space-y-5">
+          <div className="bg-card border border-border rounded-xl p-5 space-y-4">
+            <div>
+              <label className="text-sm font-medium block mb-1.5">Subject line</label>
+              <input
+                type="text"
+                value={nlSubject}
+                onChange={(e) => setNlSubject(e.target.value)}
+                placeholder="New: real example documents inside your lessons"
+                className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-background"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium block mb-1.5">Preview text</label>
+              <input
+                type="text"
+                value={nlPreview}
+                onChange={(e) => setNlPreview(e.target.value)}
+                placeholder="Shown as the email preview snippet in the inbox"
+                className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-background"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium block mb-1.5">HTML body</label>
+              <textarea
+                value={nlHtml}
+                onChange={(e) => setNlHtml(e.target.value)}
+                rows={12}
+                placeholder="Paste the email HTML body here"
+                className="w-full px-3 py-2 text-xs font-mono border border-border rounded-lg bg-background"
+              />
+              <p className="text-xs text-muted-foreground mt-1">Sends individually to each user (no BCC exposure). Wrapped automatically in the Acqlerate email shell. Reply-to is hello@acqlerate.com.</p>
+            </div>
+            <div className="flex items-center gap-3 pt-1">
+              <Button
+                variant="outline"
+                disabled={!nlSubject || !nlHtml || sendNewsletter.isPending}
+                onClick={() => sendNewsletter.mutate(true)}
+              >
+                <Eye className="w-4 h-4 mr-1.5" />
+                {sendNewsletter.isPending ? "Sending test..." : "Send test to me"}
+              </Button>
+              <Button
+                disabled={!nlSubject || !nlHtml || sendNewsletter.isPending}
+                onClick={() => {
+                  if (confirm("Send this to every Acqlerate user? This cannot be undone.")) {
+                    sendNewsletter.mutate(false);
+                  }
+                }}
+              >
+                <Send className="w-4 h-4 mr-1.5" />
+                {sendNewsletter.isPending ? "Sending..." : "Send to all users"}
+              </Button>
+            </div>
+            {nlResult && (
+              <div className="text-sm bg-muted rounded-lg px-3 py-2">{nlResult}</div>
+            )}
+          </div>
         </div>
       )}
     </div>
