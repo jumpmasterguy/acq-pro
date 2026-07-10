@@ -1590,6 +1590,63 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── cpif_share_visual ─────────────────────────────────────────────
+            // ── category_cards_visual ── generic color-coded category cards, driven by items[] ──
+            if ((block as any).type === 'category_cards_visual') {
+              const catColorMap: Record<string, string> = {
+                blue: 'bg-blue-500', teal: 'bg-teal-500', violet: 'bg-violet-500',
+                amber: 'bg-amber-500', orange: 'bg-orange-500', red: 'bg-red-500',
+                green: 'bg-green-500', purple: 'bg-purple-500', gray: 'bg-gray-500',
+              };
+              const catItems = (block as any).items ?? [];
+              return (
+                <div key={i} className="space-y-3">
+                  {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
+                  <div className="space-y-2.5">
+                    {catItems.map((cat: any, ci: number) => (
+                      <div key={ci} className="rounded-xl border border-border overflow-hidden">
+                        <div className={`${catColorMap[cat.color] || 'bg-primary'} px-4 py-2.5 flex items-baseline gap-2 flex-wrap`}>
+                          <span className="text-white text-xs font-bold uppercase tracking-wide">{cat.label}</span>
+                          {cat.sublabel && <span className="text-white/80 text-[11px]">{cat.sublabel}</span>}
+                        </div>
+                        {cat.desc && (
+                          <div className="p-3.5 text-xs text-muted-foreground leading-relaxed">{cat.desc}</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  {(block as any).explanation && <p className="text-xs text-muted-foreground">{(block as any).explanation}</p>}
+                </div>
+              );
+            }
+
+            // ── related_lesson ── clickable cross-reference to another lesson that explains a term in depth ──
+            if ((block as any).type === 'related_lesson') {
+              const refs = (block as any).refs ?? [];
+              return (
+                <div key={i} className="rounded-xl border border-primary/25 bg-primary/5 p-4">
+                  {(block as any).heading && (
+                    <h3 className="text-xs font-bold text-primary uppercase tracking-wide mb-2.5">{(block as any).heading}</h3>
+                  )}
+                  <div className="space-y-2">
+                    {refs.map((ref: any, ri: number) => (
+                      <button
+                        key={ri}
+                        onClick={() => onNextLesson(ref.lessonId)}
+                        className="w-full flex items-center justify-between gap-3 text-left p-2.5 rounded-lg bg-card border border-border hover:border-primary/40 hover:bg-primary/5 transition-colors group"
+                        data-testid={`related-lesson-${ri}`}
+                      >
+                        <div>
+                          <div className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors">{ref.label}</div>
+                          {ref.sub && <div className="text-[11px] text-muted-foreground mt-0.5">{ref.sub}</div>}
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
             if ((block as any).type === 'cpif_share_visual') {
               return (
                 <div key={i} className="rounded-xl border border-border bg-card p-5 space-y-4">

@@ -1,7 +1,13 @@
+export interface LessonAttachmentImage {
+  src: string;
+  caption: string;
+}
+
 export interface LessonAttachment {
   title: string;
   description: string;
   url: string;
+  images?: LessonAttachmentImage[];
 }
 
 export interface Lesson {
@@ -2951,7 +2957,15 @@ export const modules: Module[] = [
           },
         ],
         attachments: [
-          { title: 'Example: CPAF Award Fee Determination Plan', description: 'A sanitized AFDP excerpt showing evaluation periods, allocation methods, the adjectival rating scale, and who actually decides your award fee.', url: '/examples/example-cpaf-award-fee.pdf' },
+          {
+            title: 'Example: CPAF Award Fee Determination Plan',
+            description: 'A sanitized AFDP excerpt showing evaluation periods, allocation methods, the adjectival rating scale, and who actually decides your award fee.',
+            url: '/examples/example-cpaf-award-fee.pdf',
+            images: [
+              { src: '/examples/img/cpaf-1.png', caption: 'Evaluation periods run every 6 months. Notice "Incurred Cost" is the default method — "Estimated Cost" and "Equal Distribution" are explicitly banned because they inflate fee above what was negotiated at award.' },
+              { src: '/examples/img/cpaf-2.png', caption: 'This adjectival scale is the real engine of CPAF. Every evaluator scores against the same word-picture standard — 91%+ requires exceeding ALMOST ALL criteria, not just meeting them.' },
+            ],
+          },
         ],
         content: [
           {
@@ -4232,7 +4246,16 @@ export const modules: Module[] = [
       },
         ],
         attachments: [
-          { title: 'Example: Technical Direction Letter', description: 'A sanitized, real-world TDL showing the exact structure, revision table, performance metrics, and capability estimate a TDL contains.', url: '/examples/example-tdl.pdf' },
+          {
+            title: 'Example: Technical Direction Letter',
+            description: 'A sanitized, real-world TDL showing the exact structure, revision table, performance metrics, and capability estimate a TDL contains.',
+            url: '/examples/example-tdl.pdf',
+            images: [
+              { src: '/examples/img/tdl-1.png', caption: 'Every TDL opens with a revision table and a POC block. Notice the TDL cites the Task Order and Contract number it flows from — a TDL never stands alone.' },
+              { src: '/examples/img/tdl-2.png', caption: 'Real TDLs only number the tasks that actually apply — skipped numbers (5.2, 5.7) are normal, not an error. The TDL clarifies HOW to execute work that already exists in the Task Order.' },
+              { src: '/examples/img/tdl-3.png', caption: 'The Capability Estimate (ROM) at the bottom is a rough order of magnitude, not a binding price. It gives the Government a sense of what the TDL will cost before formal negotiation.' },
+            ],
+          },
         ],
         content: [
       {
@@ -4565,6 +4588,13 @@ export const modules: Module[] = [
 
           'A&AS-D (Digital) — emerging Air Force/Space Force category covering digital engineering, DevSecOps support, software factory integration, and digital transformation advisory. Contractors without demonstrated digital credentials will find these task orders increasingly difficult to compete.|||A&AS-D reflects the DAF\'s push toward digital-first acquisition. Contractors must demonstrate Platform One familiarity, IL4/IL5 cloud delivery experience, and DevSecOps credentials. This category is growing rapidly — contractors without demonstrated digital engineering credentials are increasingly finding traditional A&AS work difficult to retain on recompete.',
 
+        ],
+      },
+      {
+        type: 'related_lesson',
+        heading: 'A&AS Work and OCI Go Hand in Hand',
+        refs: [
+          { lessonId: 'contracts-11', label: 'Section H: The Special Requirements That Run Your Program', sub: 'Full breakdown of Organizational Conflict of Interest — the 3 types and why A&AS/SETA contractors hit this constantly' },
         ],
       },
       {
@@ -5837,7 +5867,15 @@ export const modules: Module[] = [
             { term: 'Tailoring', definition: 'The process of modifying a DID to fit the specific needs of a program. Contracting officers can tailor DIDs to reduce reporting burden or add requirements. Always check if a DID has been tailored before preparing the deliverable.' },
           ],
           attachments: [
-            { title: 'Example: CDRL Deliverables Table', description: 'A sanitized Section F excerpt showing how CDRLs trace back to SOW tasks, plus the acceptance/rejection timeline every deliverable runs on.', url: '/examples/example-cdrl-deliverables.pdf' },
+            {
+              title: 'Example: CDRL Deliverables Table',
+              description: 'A sanitized Section F excerpt showing how CDRLs trace back to SOW tasks, plus the acceptance/rejection timeline every deliverable runs on.',
+              url: '/examples/example-cdrl-deliverables.pdf',
+              images: [
+                { src: '/examples/img/cdrl-1.png', caption: 'Every CDRL traces to a specific SOW subtask. If you can\'t point to which Task/Subtask a deliverable maps to, that\'s a sign the work may be unscoped.' },
+                { src: '/examples/img/cdrl-2.png', caption: 'The acceptance/rejection clock repeats on nearly every federal services contract: 15 workdays to review, 10 workdays to resubmit. Unresolved non-conformance shows up in your award fee score.' },
+              ],
+            },
           ],
           quiz: [
             {
@@ -5927,13 +5965,21 @@ export const modules: Module[] = [
             { term: 'Uniform Contract Format', definition: 'The standard structure for DoD contracts, organized into Sections A through M. Sections A-H cover the contract specifics; Sections I-J cover standard clauses and attachments; K-M cover representations and certifications.' },
             { term: 'Key Personnel Clause', definition: 'A Section H requirement identifying specific individuals by name and role whose substitution requires prior government approval. Losing a key person without approval is a contract compliance issue.' },
             { term: 'GFE / GFP', definition: 'Government Furnished Equipment or Property. Section H specifies what the government will provide to the contractor, when it will be provided, and who is responsible for tracking and maintaining it. Lost or damaged GFP is a contractor liability.' },
-            { term: 'Organizational Conflict of Interest', definition: 'OCI. Section H often contains OCI restrictions limiting what other work a contractor can pursue while on the program — particularly on advisory and assistance service contracts.' },
+            { term: 'Organizational Conflict of Interest', definition: 'OCI. A situation where a contractor has (or appears to have) an unfair advantage on a competition because of something learned or done on a different contract. The 3 types: Unequal Access to Information (you saw insider data), Biased Ground Rules (you helped write the requirements you are now bidding on), and Impaired Objectivity (you can\'t be neutral about evaluating your own company\'s product). Section H restricts what other work you can pursue specifically to prevent these situations.' },
             { term: 'TINA', definition: 'Truth in Negotiations Act. Requires contractors on negotiated contracts over the SAT to disclose cost or pricing data and certify its accuracy. Violations can lead to price reduction and fraud exposure.' },
             { term: 'Place of Performance', definition: 'Section H often specifies where work must be performed — government site, contractor facility, or both. Changes to place of performance typically require a modification.' },
             { term: 'Option Periods', definition: 'Section H details the government\'s rights to exercise options for additional periods of performance or quantities. The government is not required to exercise options. Understanding option mechanics is critical for program continuity planning.' },
           ],
           attachments: [
-            { title: 'Example: Section H Special Requirements', description: 'A sanitized Section H excerpt covering Key Personnel qualifications, substitution rules, deployment requirements, and OCONUS work profiles.', url: '/examples/example-section-h.pdf' },
+            {
+              title: 'Example: Section H Special Requirements',
+              description: 'A sanitized Section H excerpt covering Key Personnel qualifications, substitution rules, deployment requirements, and OCONUS work profiles.',
+              url: '/examples/example-section-h.pdf',
+              images: [
+                { src: '/examples/img/sectionh-1.png', caption: 'Key Personnel clauses aren\'t bureaucratic filler. If your TOPM leaves and you miss the notification window, you\'re technically in breach of contract.' },
+                { src: '/examples/img/sectionh-2.png', caption: 'The OCONUS work profile table defines what "normal hours" even means overseas — it can flex to 24x7 during exercises without needing pre-approval.' },
+              ],
+            },
           ],
           quiz: [
             {
@@ -5975,6 +6021,11 @@ export const modules: Module[] = [
           content: [
             {
               type: 'text',
+              heading: 'Wait, what is Section H? (The 30-second version)',
+              body: 'Think of a Federal contract like a lease. Sections I and J are the standard lease boilerplate every renter signs — the stuff that is basically the same no matter which apartment you rent. Section H is the landlord walking up separately and saying "quiet hours are 10pm, do not sublet the guest room, and you are responsible for the shared grill." It is the program-specific house rules that only apply to YOUR contract. Every Section H is different because every program is different — which is exactly why you cannot skim it like the rest of the contract.',
+            },
+            {
+              type: 'text',
               heading: 'Every program\'s personality is written in Section H.',
               body: 'Sections A through G establish the basics. Sections I and J contain hundreds of standard clauses that apply to most contracts. But Section H is where the government tells you exactly how this specific program works. Security requirements, property accountability, key person rules, subcontracting obligations, organizational conflict restrictions — it is all in Section H. Most contractor PMs read their SOW carefully and barely glance at Section H. That is how surprises happen.',
             },
@@ -5985,16 +6036,36 @@ export const modules: Module[] = [
               body: 'The first read gives you the high-level picture. The second read — after you have been working the program for a month and understand what is actually happening — is where you catch the requirements that will bite you. Key personnel, GFP accountability, reporting obligations, OCI restrictions, and option mechanics all need to be in your program tracking system, not just in your contract binder.',
             },
             {
-              type: 'dcaa_audits_visual',
-              heading: 'What Lives in Section H',
+              type: 'category_cards_visual',
+              heading: 'What Actually Lives in Section H',
               items: [
                 { label: 'Key Personnel', sublabel: 'Names, roles, substitution rules', desc: 'If a name is in Section H, that person cannot be replaced without CO approval. Build a succession plan from day one. The government approved your team at award — any change is a risk to them and a compliance obligation for you.', color: 'blue' },
                 { label: 'GFE / GFP', sublabel: 'What the government will provide and when', desc: 'Government-furnished equipment, facilities, data, or software. You are responsible for it while it is in your possession. Inventory it when you receive it, track it throughout the program, and report any issues immediately.', color: 'teal' },
                 { label: 'Security Requirements', sublabel: 'Clearances, DD Form 254, facility access', desc: 'The DD Form 254 (Contract Security Classification Specification) is usually attached to Section H or Section J. It defines the classification levels, facility requirements, and personnel clearances needed. Missing a security requirement is a program stopper.', color: 'violet' },
-                { label: 'OCI Restrictions', sublabel: 'What other work you cannot pursue', desc: 'Organizational Conflict of Interest clauses limit your ability to compete on related work while on this program. BD needs to know these restrictions. Legal needs to review them before any bid decision.', color: 'amber' },
+                { label: 'OCI Restrictions', sublabel: 'What other work you cannot pursue', desc: 'Organizational Conflict of Interest clauses limit your ability to compete on related work while on this program. See the plain-English breakdown of OCI right below this — it is one of the most misunderstood terms in the industry.', color: 'amber' },
                 { label: 'Subcontracting Plan', sublabel: 'Small business commitments', desc: 'If required, your approved small business subcontracting plan is part of Section H. You are contractually obligated to meet the goals in that plan. Miss them and face a negative CPARS notation and potential liquidated damages.', color: 'orange' },
                 { label: 'Option Terms', sublabel: 'How and when options can be exercised', desc: 'The mechanics of option exercise — notification requirements, pricing, period lengths, and government rights. The government typically must notify you 60 to 90 days before option exercise. Know the notice period. Plan your staffing around it.', color: 'red' },
               ],
+            },
+            {
+              type: 'text',
+              heading: 'OCI, actually explained: why can\'t you just bid on whatever you want?',
+              body: 'Organizational Conflict of Interest sounds like legal jargon, but the idea is simple: the government does not want you to have an unfair edge — or even the appearance of one — because of something you learned or did on a different contract. There are three classic flavors, and every one of them shows up constantly in real programs.',
+            },
+            {
+              type: 'category_cards_visual',
+              heading: 'The 3 Types of OCI (In Plain English)',
+              items: [
+                { label: 'Unequal Access to Information', sublabel: 'You know things your competitors don\'t', desc: 'Example: While supporting a program office, you see the Government\'s internal budget estimate for an upcoming competition. If you then bid on that competition, you would know something no other bidder knows. That insider knowledge is the conflict — even if you never intended to misuse it.', color: 'blue' },
+                { label: 'Biased Ground Rules', sublabel: 'You can\'t grade your own homework', desc: 'Example: You help the government write the requirements or the Statement of Work for a program. Then your company turns around and bids on performing that same work. You had a hand in shaping the rules of a competition you are now entering — that is the conflict, regardless of how good your bid is.', color: 'violet' },
+                { label: 'Impaired Objectivity', sublabel: 'You can\'t be neutral about your own product', desc: 'Example: You are hired to independently evaluate a system, but a sister division of your own company built that system. Your employer has a financial stake in what verdict you reach. Even a completely honest evaluation looks compromised — and looking compromised is often treated the same as being compromised.', color: 'amber' },
+              ],
+            },
+            {
+              type: 'callout',
+              style: 'insight',
+              heading: 'Why the government cares this much',
+              body: 'It is not about assuming contractors are dishonest. It is about protecting the competition itself. If bidders believe the process can be gamed by whoever has insider access, fewer companies bid, prices go up, and the government gets worse value. OCI clauses exist to keep the playing field level enough that companies without an inside track still want to compete.',
             },
             {
               type: 'callout',
@@ -6029,7 +6100,15 @@ export const modules: Module[] = [
             { term: 'Risk Reporting', definition: 'The section of the MSR that identifies current and emerging risks, their probability and impact, and the mitigation status. This becomes the government\'s early warning system. Omitting a known risk from the MSR is a transparency problem.' },
           ],
           attachments: [
-            { title: 'Example: Monthly Status Report (MSR)', description: 'A fully filled-in sanitized MSR showing every required section: activities, operational summary, personnel, schedule, and financial status.', url: '/examples/example-msr.pdf' },
+            {
+              title: 'Example: Monthly Status Report (MSR)',
+              description: 'A fully filled-in sanitized MSR showing every required section: activities, operational summary, personnel, schedule, and financial status.',
+              url: '/examples/example-msr.pdf',
+              images: [
+                { src: '/examples/img/msr-1.png', caption: 'The MSR isn\'t a status update — it\'s a legal deliverable with a due date tied to Section F. Notice every problem gets paired with a corrective action, not just a complaint.' },
+                { src: '/examples/img/msr-2.png', caption: 'The financial section (ETC/EAC) is what your Government customer reads first, every time. Keep these numbers consistent with your invoice — they should tell the same story.' },
+              ],
+            },
           ],
           quiz: [
             {
