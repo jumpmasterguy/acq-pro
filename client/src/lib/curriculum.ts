@@ -235,7 +235,7 @@ export const modules: Module[] = [
             question: 'Who is the only government official with legal authority to obligate the government to pay on a contract?',
             options: [
               'The Program Manager|||The PM executes the program but does not make milestone decisions for their own program — that would be a conflict of interest. The MDA is always above the PM in the chain: typically the PEO\'s chain for smaller programs and the SAE or USD(A&S) for ACAT I.',
-              'The Contracting Officer\'s Representative (COR)|||Correct. The COR is a government employee appointed in writing by the Contracting Officer to monitor contractor performance and serve as the technical interface between the program office and the contractor. CORs do not have contracting authority â only the CO can sign binding agreements.',
+              'The Contracting Officer\'s Representative (COR)|||Correct. The COR is a government employee appointed in writing by the Contracting Officer to monitor contractor performance and serve as the technical interface between the program office and the contractor. CORs do not have contracting authority — only the CO can sign binding agreements.',
               'The Contracting Officer (CO)|||The CO awards and administers contracts but does not make acquisition milestone decisions. The CO is the legal agent for contracting actions; the MDA is the senior official who approves program advancement through the acquisition lifecycle phases.',
               'The Program Executive Officer (PEO)|||The PEO oversees the PM\'s program but is typically the MDA only for lower-tier programs (ACAT III or below). For ACAT I programs, the MDA is elevated to the SAE or USD(A&S). For ACAT II, the CAE (Component Acquisition Executive) is typically the MDA.',
             ],
@@ -249,7 +249,7 @@ export const modules: Module[] = [
               'To slow down the process and create government jobs|||Incorrect. Competition in federal acquisition exists to protect taxpayer dollars and promote fair dealing. FAR Part 6 requires full and open competition unless a specific exception applies. Competition drives down price, improves quality, and prevents corruption.',
               'Because private companies demanded it|||Incorrect. Federal acquisition rules were created by Congress to protect public funds and ensure impartiality. Foundational laws include the Competition in Contracting Act (CICA) of 1984, the Federal Property and Administrative Services Act, and the Armed Services Procurement Act.',
               'To ensure public money is spent fairly, wisely, and with accountability to taxpayers and Congress|||Correct. The entire federal acquisition system exists to achieve best value while maintaining integrity and transparency. The FAR, DFARS, and the Competition in Contracting Act reflect Congress\'s mandate to spend public money responsibly and maintain a competitive marketplace.',
-              'Because the military prefers not to deal with industry directly|||Incorrect. The military works extensively with industry â that\'s how most defense capabilities are acquired. Competition requirements exist for financial accountability and fairness, not because of any preference to avoid industry contact.',
+              'Because the military prefers not to deal with industry directly|||Incorrect. The military works extensively with industry — that\'s how most defense capabilities are acquired. Competition requirements exist for financial accountability and fairness, not because of any preference to avoid industry contact.',
             ],
             correct: 2,
             explanation: 'Government acquisition rules exist because public money demands public accountability. The FAR/DFARS framework ensures competition (fair pricing), transparency (defensible decisions), and accountability (Congress and oversight agencies can verify money was spent as intended). Without these rules, the system would be vulnerable to corruption and waste at enormous scale.',
@@ -258,9 +258,9 @@ export const modules: Module[] = [
             id: 'q5',
             question: 'Which of the following is the LARGEST category of DoD spending by contract volume?',
             options: [
-              'Products (systems and equipment like aircraft and ships)|||Correct. Products are the most visible defense acquisition category â F-35 fighters, Virginia-class submarines, M1A2 tanks, GPS satellites, and body armor. These are often acquired through Major Defense Acquisition Programs (MDAPs) with ACAT I designation.',
+              'Products (systems and equipment like aircraft and ships)|||Correct. Products are the most visible defense acquisition category — F-35 fighters, Virginia-class submarines, M1A2 tanks, GPS satellites, and body armor. These are often acquired through Major Defense Acquisition Programs (MDAPs) with ACAT I designation.',
               'Research & Development|||Correct. R&D (funded under RDT&E appropriations) is foundational to DoD acquisition. Budget activities run from basic research (6.1) through operational systems development (6.7). Understanding which RDT&E budget activity applies to a program phase is critical for acquisition planners.',
-              'Services (people doing work: IT, maintenance, program support, etc.)|||Correct. Services represent the largest and fastest-growing segment of DoD spending â over $200B annually. This includes base operations, cybersecurity, and program management support. Services are acquired through IDIQs, GWACs, and agency-specific vehicles.',
+              'Services (people doing work: IT, maintenance, program support, etc.)|||Correct. Services represent the largest and fastest-growing segment of DoD spending — over $200B annually. This includes base operations, cybersecurity, and program management support. Services are acquired through IDIQs, GWACs, and agency-specific vehicles.',
               'Construction and real estate|||Correct. DoD is one of the world\'s largest real property owners, managing hundreds of installations worldwide. Military construction (MILCON) is funded through a separate appropriation and includes barracks, runways, maintenance facilities, and family housing.',
             ],
             correct: 2,
@@ -633,9 +633,9 @@ export const modules: Module[] = [
             id: 'q1',
             question: 'Who has the legal authority to obligate the U.S. government to pay on a defense contract?',
             options: [
-              'The Program Manager|||Incorrect for the COR question. The Program Manager (PM) oversees overall program execution â cost, schedule, performance, and risk â but does not perform day-to-day contract surveillance. The COR specifically monitors contractor performance and acts as the technical interface, reporting observations to the CO.',
-              'The Program Executive Officer (PEO)|||Incorrect. The PEO is a senior acquisition official who oversees a portfolio of related programs. The PEO provides strategic oversight and reviews major milestones â but does not conduct day-to-day contract monitoring. That operational-level role belongs to the COR.',
-              'The Contracting Officer (CO)|||Incorrect for surveillance duties specifically. The CO has legal authority to enter into contracts but cannot personally monitor all contracts. The CO delegates surveillance duties to the COR in writing via a COR appointment letter. The CO remains the decision-making authority â the COR is the CO\'s eyes and ears.',
+              'The Program Manager|||Incorrect for the COR question. The Program Manager (PM) oversees overall program execution — cost, schedule, performance, and risk — but does not perform day-to-day contract surveillance. The COR specifically monitors contractor performance and acts as the technical interface, reporting observations to the CO.',
+              'The Program Executive Officer (PEO)|||Incorrect. The PEO is a senior acquisition official who oversees a portfolio of related programs. The PEO provides strategic oversight and reviews major milestones — but does not conduct day-to-day contract monitoring. That operational-level role belongs to the COR.',
+              'The Contracting Officer (CO)|||Incorrect for surveillance duties specifically. The CO has legal authority to enter into contracts but cannot personally monitor all contracts. The CO delegates surveillance duties to the COR in writing via a COR appointment letter. The CO remains the decision-making authority — the COR is the CO\'s eyes and ears.',
               'The COR',
             ],
             correct: 2,
@@ -646,7 +646,7 @@ export const modules: Module[] = [
             question: 'What does a COR (Contracting Officer\'s Representative) primarily do?',
             options: [
               'Negotiates contract prices with contractors|||Incorrect for the COR role. Price negotiation is exclusively the Contracting Officer\'s authority. The COR has no authority to commit the government financially or change contract terms. Informal COR negotiation (a \'constructive change\') creates unauthorized obligations.',
-              'Monitors contractor performance day-to-day and serves as the technical interface between the program office and the contractor|||Correct. This is the COR\'s core function. The COR reviews deliverables, validates contractor invoices by confirming work was performed, documents performance in CPARS, and maintains a COR file. The COR cannot commit the government to additional work â that requires a contract modification signed by the CO.',
+              'Monitors contractor performance day-to-day and serves as the technical interface between the program office and the contractor|||Correct. This is the COR\'s core function. The COR reviews deliverables, validates contractor invoices by confirming work was performed, documents performance in CPARS, and maintains a COR file. The COR cannot commit the government to additional work — that requires a contract modification signed by the CO.',
               'Approves contractor invoices and processes payments|||Incorrect as stated. The COR certifies that goods or services were received before the CO approves payment. The finance office processes the actual disbursement. The COR\'s role is technical verification, not final financial approval.',
               'Writes the Independent Government Cost Estimate (IGCE)|||Incorrect for COR. Writing the IGCE is primarily the responsibility of the Requirements Owner or program office technical staff. The COR focuses on performance monitoring after award. The IGCE is typically written by the government cost estimator or senior technical lead.',
             ],
@@ -657,9 +657,9 @@ export const modules: Module[] = [
             id: 'q3',
             question: 'What is the role of DCAA in defense acquisition?',
             options: [
-              'DCAA writes requirements documents for major programs|||Incorrect. DCAA (Defense Contract Audit Agency) audits contractor costs â it does not write requirements documents. Requirements documents (ICD, CDD, CPD) are written by military requirements personnel through the JCIDS process.',
+              'DCAA writes requirements documents for major programs|||Incorrect. DCAA (Defense Contract Audit Agency) audits contractor costs — it does not write requirements documents. Requirements documents (ICD, CDD, CPD) are written by military requirements personnel through the JCIDS process.',
               'DCAA audits contractor costs and approves accounting systems on cost-reimbursable contracts|||Correct. DCAA is the DoD\'s dedicated contract audit organization. On cost-type contracts, DCAA audits forward pricing proposals, reviews contractor accounting system adequacy, audits incurred cost submissions, and provides the CO with an audit opinion. An inadequate DCAA finding on an accounting system can disqualify a contractor from receiving cost-type contracts.',
-              'DCAA manages IDIQ vehicles on behalf of the government|||Incorrect. DCAA does not manage contracts or vehicles â that is DCMA\'s role. DCMA (Defense Contract Management Agency) is the DoD\'s contract management and administration arm. The two often work together: DCAA audits, DCMA administers.',
+              'DCAA manages IDIQ vehicles on behalf of the government|||Incorrect. DCAA does not manage contracts or vehicles — that is DCMA\'s role. DCMA (Defense Contract Management Agency) is the DoD\'s contract management and administration arm. The two often work together: DCAA audits, DCMA administers.',
               'DCAA provides independent cost estimates for Congressional reporting|||Incorrect. Independent cost estimates for Congressional reporting are provided by OSD CAPE (Cost Assessment and Program Evaluation), not DCAA. CAPE conducts independent cost estimates (ICEs) for major programs at milestone reviews. DCAA\'s estimates are contract-specific audit opinions.',
             ],
             correct: 1,
@@ -671,8 +671,8 @@ export const modules: Module[] = [
             options: [
               'The Program Manager\'s office|||Incorrect for final contract decisions. The PM\'s office drives requirements and manages technical execution, but the CO is the legal signatory with binding authority. The PM cannot unilaterally make binding contract decisions.',
               'The Service Acquisition Executive|||Incorrect for day-to-day contract decisions. The SAE is a senior political/career appointee who provides oversight of the acquisition enterprise for an entire military service. The SAE delegates authority downward to PEOs and PMs.',
-              'The GAO (Government Accountability Office)|||Incorrect for contract decisions. GAO is a Congressional watchdog â it does not make contract decisions. GAO adjudicates bid protests but its role is oversight, not contract execution.',
-              'The Department of Justice|||Incorrect. DOJ handles legal enforcement and litigation â it does not make contract award decisions. The contracting officer, acting under delegated authority, is the only government official who can legally bind the government to a contract.',
+              'The GAO (Government Accountability Office)|||Incorrect for contract decisions. GAO is a Congressional watchdog — it does not make contract decisions. GAO adjudicates bid protests but its role is oversight, not contract execution.',
+              'The Department of Justice|||Incorrect. DOJ handles legal enforcement and litigation — it does not make contract award decisions. The contracting officer, acting under delegated authority, is the only government official who can legally bind the government to a contract.',
             ],
             correct: 2,
             explanation: 'Contractors can file bid protests at the GAO for award-related disputes, or file claims with the CO and appeal to the Armed Services Board of Contract Appeals (ASBCA) or Court of Federal Claims for post-award disputes. The GAO is the most common protest venue for award disputes and has a 100-day resolution requirement.',
@@ -790,9 +790,9 @@ export const modules: Module[] = [
             id: 'q1',
             question: 'What is an IDIQ contract?',
             options: [
-              'A contract for a single, fully defined delivery at a fixed price|||Incorrect. This describes a Firm Fixed Price (FFP) contract for a definite quantity â not an IDIQ. IDIQs (Indefinite Delivery/Indefinite Quantity) are used when the government cannot define the exact quantity or timing of future orders at award time.',
+              'A contract for a single, fully defined delivery at a fixed price|||Incorrect. This describes a Firm Fixed Price (FFP) contract for a definite quantity — not an IDIQ. IDIQs (Indefinite Delivery/Indefinite Quantity) are used when the government cannot define the exact quantity or timing of future orders at award time.',
               'An umbrella contract that pre-qualifies contractors to do a category of work, with actual orders placed as task orders up to a ceiling value|||Correct. An IDIQ contract is an umbrella vehicle awarded to one (Single Award) or multiple (Multiple Award) contractors. The government commits only to a minimum guarantee and cannot exceed the ceiling. Real work is placed through individual task orders as requirements emerge.',
-              'A contract type only used for construction projects|||Incorrect. IDIQs are used across all acquisition categories â services, products, IT, professional support, and some construction. They are not limited to construction. Construction has its own specialized vehicles (JOC, MATOC), but IDIQ is a general acquisition tool.',
+              'A contract type only used for construction projects|||Incorrect. IDIQs are used across all acquisition categories — services, products, IT, professional support, and some construction. They are not limited to construction. Construction has its own specialized vehicles (JOC, MATOC), but IDIQ is a general acquisition tool.',
               'A government-to-government agreement for shared services|||Incorrect. This describes an Interagency Agreement (IAA) or Economy Act agreement, not an IDIQ. IDIQs are competed contracts between the government and private industry.',
             ],
             correct: 1,
@@ -804,7 +804,7 @@ export const modules: Module[] = [
             options: [
               '$200M — the full ceiling value|||Incorrect. The ceiling is the maximum total value of all task orders that can be placed over the contract life — it does not guarantee any particular contractor that amount. Each contractor is guaranteed only the minimum and must compete for every task order.',
               '$40M — their proportional share among 5 awardees|||Incorrect. IDIQ contracts do not split the ceiling equally. The $200M ceiling is a government-side limit on total spending. Each awardee competes for individual task orders. One contractor could win 90% of orders; another could win nothing beyond the minimum guarantee.',
-              'Only the minimum guarantee (often nominal, sometimes as little as $1)|||Correct. At IDIQ award, a contractor is legally guaranteed only the minimum â which by law must be at least $1 but in practice is often a few thousand dollars for large GWACs. Everything beyond that minimum requires winning individual task order competitions.',
+              'Only the minimum guarantee (often nominal, sometimes as little as $1)|||Correct. At IDIQ award, a contractor is legally guaranteed only the minimum — which by law must be at least $1 but in practice is often a few thousand dollars for large GWACs. Everything beyond that minimum requires winning individual task order competitions.',
               'Nothing until the IDIQ is exercised by the ordering agency|||Incorrect, but partially right conceptually. The government commits to a minimum guarantee at IDIQ award. Beyond that minimum, the contractor receives nothing until they win a task order competition. The minimum guarantee is the only legally committed obligation.',
             ],
             correct: 2,
@@ -829,7 +829,7 @@ export const modules: Module[] = [
               'IDIQ contracts are cheaper for the government to administer than standalone contracts|||Incorrect as a general statement. IDIQs reduce per-order procurement lead time but add administrative burden through task order competitions, performance monitoring across multiple awardees, and ceiling tracking. The efficiency gain is in speed and flexibility, not necessarily lower administrative cost.',
               'IDIQ vehicles allow the government to issue task orders quickly without running a full competition each time, saving months of acquisition lead time|||Correct. This is the primary strategic value of IDIQ vehicles. Instead of a 12-18 month standalone acquisition for each requirement, an agency can issue a task order competition under an existing IDIQ in 30-90 days. The base competition vets contractors once; task orders leverage that investment.',
               'Standalone contracts are illegal for service requirements|||Incorrect. Standalone contracts are fully legal for services and used frequently for large, well-defined requirements. There is no prohibition on standalone contracts for services.',
-              'IDIQ vehicles give contractors more profit margin|||Incorrect. Contract type (not vehicle type) drives profit margin. IDIQs can be structured with FFP, cost-plus, T&M, or hybrid task order contract types. The underlying economics of each task order â not the IDIQ vehicle itself â determine contractor margin.',
+              'IDIQ vehicles give contractors more profit margin|||Incorrect. Contract type (not vehicle type) drives profit margin. IDIQs can be structured with FFP, cost-plus, T&M, or hybrid task order contract types. The underlying economics of each task order — not the IDIQ vehicle itself — determine contractor margin.',
             ],
             correct: 1,
             explanation: 'IDIQs allow the government to issue task orders for specific needs in weeks rather than the 6–18 months a full standalone competition takes. The upfront competition to qualify for the vehicle is rigorous, but subsequent task orders are much faster — which is why IDIQ vehicles dominate defense service spending.',
@@ -841,7 +841,7 @@ export const modules: Module[] = [
               'Single Award IDIQs have higher ceilings than Multiple Award IDIQs|||Incorrect. There is no rule linking award type to ceiling value. Some of the largest IDIQ vehicles (OASIS+, ALLIANT 3, SEWP V) are multiple-award with multi-billion-dollar ceilings.',
               'Single Award IDIQs are only available to small businesses|||Incorrect. Single Award IDIQs are available to any contractor that wins the competition. A SAIDIQ gives one contractor all task orders without further competition. They require more government justification, particularly for awards over $112M in DoD.',
               'Single Award IDIQs give one contractor all task orders without further competition; Multiple Award IDIQs require competing for each task order among all awardees|||Correct. This is the fundamental structural difference. A Single Award IDIQ gives the winning contractor a monopoly on all work under that vehicle. A Multiple Award IDIQ (MAIDIQ) pools multiple qualified contractors and requires fair opportunity competition for each task order.',
-              'Single Award IDIQs are administered by GSA; Multiple Award IDIQs are administered by the ordering agency|||Incorrect. Both types are administered by whichever contracting office runs the underlying vehicle â GSA, DoD, NASA, or any other agency. The administering office is not determined by award type.',
+              'Single Award IDIQs are administered by GSA; Multiple Award IDIQs are administered by the ordering agency|||Incorrect. Both types are administered by whichever contracting office runs the underlying vehicle — GSA, DoD, NASA, or any other agency. The administering office is not determined by award type.',
             ],
             correct: 2,
             explanation: 'A Single Award IDIQ winner gets all task orders — no further competition required, but only one firm wins the vehicle. A Multiple Award IDIQ puts several firms on the contract, then each task order is competed among them under fair opportunity rules. More firms can participate in MA-IDIQs, but no firm is guaranteed any specific task order.',
@@ -937,10 +937,10 @@ export const modules: Module[] = [
             id: 'q1',
             question: 'What is the Adaptive Acquisition Framework (AAF)?',
             options: [
-              'A single, mandatory lifecycle all DoD programs must follow|||Incorrect. The current AAF (Adaptive Acquisition Framework), established by DoDI 5000.02 (2020), provides six distinct pathways. Different program types follow different paths â a software product follows the Software Acquisition Pathway, not the Major Capability Acquisition path.',
-              'A DoD policy framework with six distinct acquisition pathways tailored to different types of programs|||Correct. The AAF provides six pathways: (1) Major Capability Acquisition, (2) Middle Tier â Rapid Prototyping, (3) Middle Tier â Rapid Fielding, (4) Software Acquisition, (5) Defense Business Systems, and (6) Acquisition of Services. Each pathway has different oversight, documentation, and speed requirements.',
+              'A single, mandatory lifecycle all DoD programs must follow|||Incorrect. The current AAF (Adaptive Acquisition Framework), established by DoDI 5000.02 (2020), provides six distinct pathways. Different program types follow different paths — a software product follows the Software Acquisition Pathway, not the Major Capability Acquisition path.',
+              'A DoD policy framework with six distinct acquisition pathways tailored to different types of programs|||Correct. The AAF provides six pathways: (1) Major Capability Acquisition, (2) Middle Tier — Rapid Prototyping, (3) Middle Tier — Rapid Fielding, (4) Software Acquisition, (5) Defense Business Systems, and (6) Acquisition of Services. Each pathway has different oversight, documentation, and speed requirements.',
               'A Congressional mandate requiring DoD to reduce acquisition timelines by 50%|||Incorrect. The AAF is a DoD policy framework, not a specific Congressional mandate. It was established through DoD\'s own policy issuances under the authority of the Under Secretary of Defense for Acquisition and Sustainment.',
-              'A GSA-managed contract vehicle for adaptive IT services|||Incorrect. The AAF is a DoD acquisition policy framework â it is not a contract vehicle, not GSA-managed, and not specific to IT.',
+              'A GSA-managed contract vehicle for adaptive IT services|||Incorrect. The AAF is a DoD acquisition policy framework — it is not a contract vehicle, not GSA-managed, and not specific to IT.',
             ],
             correct: 1,
             explanation: 'The AAF (Adaptive Acquisition Framework, DoDI 5000.02) replaced the old one-size-fits-all process with six distinct pathways: Major Capability Acquisition, Middle Tier (Rapid Prototyping and Rapid Fielding), Software Acquisition, Defense Business Systems, and Acquisition of Services. Each pathway is tailored to the type and complexity of the capability being acquired.',
@@ -949,10 +949,10 @@ export const modules: Module[] = [
             id: 'q2',
             question: 'What happens at Milestone B in a Major Capability Acquisition program?',
             options: [
-              'The program receives its initial funding and begins studying alternatives|||Incorrect. Receiving initial funding and studying alternatives happens during the Materiel Solution Analysis (MSA) phase â before Milestone A. At Milestone B, the program enters Engineering & Manufacturing Development (EMD).',
-              'The program completes operational testing and begins Full Rate Production|||Incorrect. Completing operational testing (IOT&E) and entering Full Rate Production occurs at the FRP Decision Review â after Milestone C. Milestone B is earlier in the lifecycle.',
+              'The program receives its initial funding and begins studying alternatives|||Incorrect. Receiving initial funding and studying alternatives happens during the Materiel Solution Analysis (MSA) phase — before Milestone A. At Milestone B, the program enters Engineering & Manufacturing Development (EMD).',
+              'The program completes operational testing and begins Full Rate Production|||Incorrect. Completing operational testing (IOT&E) and entering Full Rate Production occurs at the FRP Decision Review — after Milestone C. Milestone B is earlier in the lifecycle.',
               'The MDA approves entry into Engineering & Manufacturing Development — the system is built and tested|||Correct. Milestone B is the most significant acquisition decision for most programs. The MDA reviews the program\'s readiness to begin detailed design, fabrication, and developmental testing. An Acquisition Program Baseline (APB) is established at this point.',
-              'The government issues the first task order under the program\'s IDIQ contract|||Incorrect. Milestone B is an internal government decision gate â it approves the program\'s entry into the EMD phase. Contract actions may follow from Milestone B, but the milestone itself is the MDA\'s approval of program readiness.',
+              'The government issues the first task order under the program\'s IDIQ contract|||Incorrect. Milestone B is an internal government decision gate — it approves the program\'s entry into the EMD phase. Contract actions may follow from Milestone B, but the milestone itself is the MDA\'s approval of program readiness.',
             ],
             correct: 2,
             explanation: 'Milestone B is the entry into Engineering & Manufacturing Development (EMD) — the phase where the actual system is designed, built, integrated, and tested. It is the largest commitment point in most programs: large development contracts are awarded here, and a program\'s cost and schedule are formally baselined in the Acquisition Program Baseline (APB).',
@@ -976,7 +976,7 @@ export const modules: Module[] = [
               'Major Capability Acquisition (MCA)|||Correct. The MCA pathway is used for complex, long-term programs developing new military capabilities. It involves Milestones A, B, and C, with full JCIDS documentation and ACAT designation. USD(A&S) has MDA for ACAT I programs. Examples: F-35, CVN-21, GBSD.',
               'Middle Tier — Rapid Fielding|||Correct. The Middle Tier Rapid Fielding pathway (Section 804 of FY2016 NDAA) is used to field proven capabilities with minimal development risk within 5 years of start. It bypasses some traditional milestone reviews for speed. Appropriate for commercial technology and productionized items with low technical risk.',
               'Software Acquisition Pathway|||Correct. The Software Acquisition Pathway (DoDI 5000.87) is designed for software-intensive programs using Agile, DevSecOps, and continuous delivery practices. It replaces the traditional hardware-centric lifecycle with iterative cycles and uses a Life Cycle Cost Estimate (LCCE) instead of an APB.',
-              'Acquisition of Services|||Correct. The Acquisition of Services pathway governs acquisition of professional and technical services â program support, IT services, logistics. It emphasizes performance-based service contracts, pre-competed IDIQ vehicles, and the 7-step services acquisition process. Services account for over 50% of DoD contract spending.',
+              'Acquisition of Services|||Correct. The Acquisition of Services pathway governs acquisition of professional and technical services — program support, IT services, logistics. It emphasizes performance-based service contracts, pre-competed IDIQ vehicles, and the 7-step services acquisition process. Services account for over 50% of DoD contract spending.',
             ],
             correct: 2,
             explanation: 'The Software Acquisition Pathway (DoDI 5000.87) is designed specifically for software-intensive programs using Agile and DevSecOps delivery models, with capability drops every six months. It does not use traditional milestones and instead uses a Capability Needs Statement rather than a CDD.',
@@ -1088,9 +1088,9 @@ export const modules: Module[] = [
             id: 'q2',
             question: 'A program wants to fund a services contract for IT support running from October 2025 through September 2027 using O&M funds. What is the key issue?',
             options: [
-              'IT support is not an authorized use of O&M funds|||Incorrect. O&M funds are routinely used for IT support â help desk services, software licenses, network maintenance, and contractor labor supporting day-to-day operations. The issue with multi-year IT contracts is fund availability, not authorization.',
-              'O&M funds have a 1-year obligation period, so a multi-year contract must be structured carefully to avoid obligating funds before they are available|||Correct. O&M appropriations expire for obligation at the end of the fiscal year (1-year money). A multi-year service contract must be structured to obligate only the funds available in each fiscal year â typically as base year plus option years. Obligating future-year funds before they are appropriated violates the Anti-Deficiency Act.',
-              'O&M funds cannot be used for contractor services|||Incorrect. O&M funds are the primary funding mechanism for contracted services â program management support, IT services, facilities maintenance, and most service contracts are funded with O&M. The correct restriction is that O&M cannot fund capital acquisitions that should use Procurement funds.',
+              'IT support is not an authorized use of O&M funds|||Incorrect. O&M funds are routinely used for IT support — help desk services, software licenses, network maintenance, and contractor labor supporting day-to-day operations. The issue with multi-year IT contracts is fund availability, not authorization.',
+              'O&M funds have a 1-year obligation period, so a multi-year contract must be structured carefully to avoid obligating funds before they are available|||Correct. O&M appropriations expire for obligation at the end of the fiscal year (1-year money). A multi-year service contract must be structured to obligate only the funds available in each fiscal year — typically as base year plus option years. Obligating future-year funds before they are appropriated violates the Anti-Deficiency Act.',
+              'O&M funds cannot be used for contractor services|||Incorrect. O&M funds are the primary funding mechanism for contracted services — program management support, IT services, facilities maintenance, and most service contracts are funded with O&M. The correct restriction is that O&M cannot fund capital acquisitions that should use Procurement funds.',
               'There is no issue — O&M funds are available indefinitely|||Incorrect. O&M funds are 1-year money — they must be obligated within the fiscal year in which they are appropriated. New obligations cannot be made after the end of the fiscal year. Failure to observe these rules violates the Anti-Deficiency Act.',
             ],
             correct: 1,
@@ -1100,7 +1100,7 @@ export const modules: Module[] = [
             id: 'q3',
             question: 'What federal law prohibits spending more money than Congress appropriated, spending on unauthorized purposes, or spending money before it is available?',
             options: [
-              'The Federal Acquisition Regulation (FAR)|||Incorrect for the specific O&M multi-year issue. The FAR governs acquisition procedures â it doesn\'t directly restrict what funds can be used for what purpose. The binding authority on appropriations restrictions is the Anti-Deficiency Act (31 U.S.C. 1341) and the Purpose Statute.',
+              'The Federal Acquisition Regulation (FAR)|||Incorrect for the specific O&M multi-year issue. The FAR governs acquisition procedures — it doesn\'t directly restrict what funds can be used for what purpose. The binding authority on appropriations restrictions is the Anti-Deficiency Act (31 U.S.C. 1341) and the Purpose Statute.',
               'The Nunn-McCurdy Act|||Incorrect for appropriations purposes. Nunn-McCurdy (10 U.S.C. 2433) governs cost growth notification requirements for Major Defense Acquisition Programs. It requires Congressional notification when a program breaches cost thresholds. It does not govern appropriations timing.',
               'The Anti-Deficiency Act|||Correct. The Anti-Deficiency Act (31 U.S.C. 1341) prohibits federal officials from obligating funds in excess of or in advance of appropriations. Obligating next year\'s O&M funds before they are appropriated violates the ADA. Violations can result in administrative disciplinary action and criminal penalties.',
               'The Economy Act|||Incorrect. The Economy Act (31 U.S.C. 1535) authorizes interagency acquisitions. It does not govern appropriations timing or the obligation of funds.',
@@ -1112,10 +1112,10 @@ export const modules: Module[] = [
             id: 'q4',
             question: 'Which appropriation would be used to fund a study to evaluate alternatives for a new weapons system?',
             options: [
-              'Procurement|||Correct. Procurement (P) funds are used to buy end items â complete weapon systems, vehicles, aircraft, ships, and major equipment. They have a 3-year obligation period. If you\'re buying something that will last more than 2 years and costs above the investment threshold (~$250K), it should be Procurement funds.',
-              'Operations & Maintenance (O&M)|||Correct. O&M funds cover the day-to-day costs of running the military â contractor services, supplies, base operations, training, and maintenance. They are 1-year money. O&M is the largest DoD appropriation category by dollar volume and the most commonly used for service contracts.',
+              'Procurement|||Correct. Procurement (P) funds are used to buy end items — complete weapon systems, vehicles, aircraft, ships, and major equipment. They have a 3-year obligation period. If you\'re buying something that will last more than 2 years and costs above the investment threshold (~$250K), it should be Procurement funds.',
+              'Operations & Maintenance (O&M)|||Correct. O&M funds cover the day-to-day costs of running the military — contractor services, supplies, base operations, training, and maintenance. They are 1-year money. O&M is the largest DoD appropriation category by dollar volume and the most commonly used for service contracts.',
               'Research, Development, Test & Evaluation (RDT&E)|||Correct. RDT&E funds support the full spectrum of defense research and development, from basic science (6.1) through system development and demonstration (6.5). They have a 2-year obligation period.',
-              'Military Personnel (MILPERS)|||Correct. MILPERS funds pay for military salaries, housing allowances, and personnel entitlements. They are strictly for military members â civilian pay comes from O&M. MILPERS are 1-year funds.',
+              'Military Personnel (MILPERS)|||Correct. MILPERS funds pay for military salaries, housing allowances, and personnel entitlements. They are strictly for military members — civilian pay comes from O&M. MILPERS are 1-year funds.',
             ],
             correct: 2,
             explanation: 'Studies, analyses, and development work — including alternatives analyses, engineering, and testing — are funded by RDT&E appropriations. O&M funds operational costs. Procurement funds production quantities of systems. Buying a system that is already developed and ready for production would require Procurement funds.',
@@ -1124,9 +1124,9 @@ export const modules: Module[] = [
             id: 'q5',
             question: 'What happens to unobligated O&M funds at the end of the fiscal year (September 30)?',
             options: [
-              'They roll over automatically to next fiscal year|||Incorrect. Annual appropriations (O&M, MILPERS) do not roll over. At the end of the fiscal year, unobligated annual funds expire â the government loses the ability to commit them to new contracts. \'Use it or lose it\' pressure at fiscal year end is a real phenomenon in DoD acquisition.',
+              'They roll over automatically to next fiscal year|||Incorrect. Annual appropriations (O&M, MILPERS) do not roll over. At the end of the fiscal year, unobligated annual funds expire — the government loses the ability to commit them to new contracts. \'Use it or lose it\' pressure at fiscal year end is a real phenomenon in DoD acquisition.',
               'They can be carried over for up to 3 years|||Incorrect as stated for O&M. O&M funds must be OBLIGATED within 1 year. They can be EXPENDED (paid out) for 5 years total. After 5 years, the funds are cancelled. Procurement funds have a 3-year obligation period.',
-              'They expire and can no longer be obligated for new work|||Correct. When an annual appropriation expires (end of fiscal year for O&M/MILPERS; after 3 years for Procurement), it moves into \'expired\' status â during which it can still pay existing obligations but cannot fund new work. After 5 years total, the account is cancelled.',
+              'They expire and can no longer be obligated for new work|||Correct. When an annual appropriation expires (end of fiscal year for O&M/MILPERS; after 3 years for Procurement), it moves into \'expired\' status — during which it can still pay existing obligations but cannot fund new work. After 5 years total, the account is cancelled.',
               'They are returned to Congress for reallocation|||Incorrect. Expired funds remain in Treasury accounts in expired status. Congress does not reallocate individual expired appropriations to agencies mid-cycle.',
             ],
             correct: 2,
@@ -2144,9 +2144,9 @@ export const modules: Module[] = [
             id: 'q11',
             question: "On a pre-priced IDIQ contract, a contractor submits a task order proposal with labor rates 15% above the IDIQ contract ceiling rates. What is the correct course of action?",
             options: [
-              'Accept the proposal since ceiling rates are guidelines, not hard limits|||Incorrect. IDIQ ceiling rates are contractually binding â they represent the maximum billable rate for each labor category. A contractor proposing rates above the established ceiling is non-compliant.',
+              'Accept the proposal since ceiling rates are guidelines, not hard limits|||Incorrect. IDIQ ceiling rates are contractually binding — they represent the maximum billable rate for each labor category. A contractor proposing rates above the established ceiling is non-compliant.',
               'The proposal is non-compliant — ceiling rates are contractually binding and the contractor cannot exceed them without a contract modification|||Correct. IDIQ labor category ceiling rates establish the maximum rate the contractor may bill. Proposing above the ceiling rate for a task order is a material non-compliance. The contractor must either reduce rates to the ceiling or request a formal contract modification.',
-              'Request a waiver from DCAA before accepting|||Incorrect. DCAA does not grant waivers for non-compliant proposals. DCAA audits cost proposals and provides opinions to the CO. Waivers for non-compliance would be a CO decision â not a DCAA function.',
+              'Request a waiver from DCAA before accepting|||Incorrect. DCAA does not grant waivers for non-compliant proposals. DCAA audits cost proposals and provides opinions to the CO. Waivers for non-compliance would be a CO decision — not a DCAA function.',
               'The contracting officer may accept if the work is highly specialized|||Incorrect. Specialization does not override contractual ceiling rates. If work requires skills beyond established LCATs, the solution is to add a new LCAT via contract modification, not to waive the ceiling rate.',
             ],
             correct: 1,
@@ -2172,8 +2172,8 @@ export const modules: Module[] = [
             options: [
               'The contractor is using an incorrect estimating methodology|||Incorrect for LCAT over-leveling. Over-leveling is a pricing integrity concern where the contractor assigns work to higher-level labor categories than the work requires, driving up cost without improving performance.',
               'The contractor is proposing an inflated labor mix — over-leveling LCATs to drive up cost without improving performance|||Correct. Over-leveling (or \'labor-loading\') involves proposing Senior Engineer-level hours for work that could be performed by Mid-level or Junior staff. On a T&M or cost-plus contract, this directly inflates billable cost. The CO and DCAA scrutinize the labor mix during cost or price analysis.',
-              'The direct labor rates are too low for Level III engineers|||Incorrect for over-leveling. Low rates would benefit the government â that would be under-pricing, not over-leveling. The over-leveling problem is the opposite: rates are appropriate for the category, but the wrong (too senior) category is being proposed for the work.',
-              'The proposal violates TINA because it uses parametric estimating|||Incorrect. TINA violations involve submitting defective cost or pricing data â not using parametric methods. Parametric estimating is a legitimate and commonly used technique.',
+              'The direct labor rates are too low for Level III engineers|||Incorrect for over-leveling. Low rates would benefit the government — that would be under-pricing, not over-leveling. The over-leveling problem is the opposite: rates are appropriate for the category, but the wrong (too senior) category is being proposed for the work.',
+              'The proposal violates TINA because it uses parametric estimating|||Incorrect. TINA violations involve submitting defective cost or pricing data — not using parametric methods. Parametric estimating is a legitimate and commonly used technique.',
             ],
             correct: 1,
             explanation: "'Over-leveling' — proposing too many senior LCAT hours on work that could be done by more junior (and less expensive) personnel — is one of the most common ways cost proposals are inflated in defense contracting. As a PM, comparing the proposed labor mix against similar tasks or industry benchmarks is a critical cost realism check. You can challenge this during negotiations by requesting a staffing rationale or comparison to the contractor's actual workforce supporting similar work."
@@ -2904,8 +2904,8 @@ export const modules: Module[] = [
             orderedItems: [
               'Pre-Award Accounting System Survey (before cost-type contract award)|||Correct. Before a contractor can receive a cost-type contract, DCAA reviews whether their accounting system can adequately track and segregate costs by contract. An inadequate accounting system is a disqualifying condition. DFARS 252.242-7006 defines the 18 criteria for an adequate accounting system.',
               'Forward Pricing Rate Audit (supporting FPRA before/at award)|||Correct. DCAA audits proposed indirect rates (fringe, overhead, G&A) and direct labor rates to support Forward Pricing Rate Agreements (FPRAs). These rates are then used as the basis for pricing all subsequent proposals under that contractor.',
-              'Provisional Billing Rate Review (during contract performance)|||Correct. During performance, contractors bill at Provisional Billing Rates (PBRs) â estimated indirect rates â until actual rates are determined at year end. DCAA reviews these rates periodically to ensure they are reasonable and consistent with actual cost trends.',
-              'Incurred Cost Submission (ICS) Audit (after each fiscal year end)|||Correct. After each fiscal year, contractors submit an Incurred Cost Submission (ICS) â an accounting of all actual costs incurred on government contracts. DCAA audits the ICS to determine final actual indirect rates, which may result in adjustments to prior billings.',
+              'Provisional Billing Rate Review (during contract performance)|||Correct. During performance, contractors bill at Provisional Billing Rates (PBRs) — estimated indirect rates — until actual rates are determined at year end. DCAA reviews these rates periodically to ensure they are reasonable and consistent with actual cost trends.',
+              'Incurred Cost Submission (ICS) Audit (after each fiscal year end)|||Correct. After each fiscal year, contractors submit an Incurred Cost Submission (ICS) — an accounting of all actual costs incurred on government contracts. DCAA audits the ICS to determine final actual indirect rates, which may result in adjustments to prior billings.',
             ],
           },
         ],
@@ -4632,7 +4632,7 @@ export const modules: Module[] = [
         options: [
           'The government may award to any awardee at its sole discretion|||Incorrect for MAIDIQ. Under FAR 16.505, Multiple Award IDIQ contracts require a \'fair opportunity\' process for task orders over the threshold. Every awardee must be given a fair opportunity to compete. Sole discretion applies only to Single Award IDIQs.',
           'All awardees must receive a fair opportunity to be considered|||Correct. FAR 16.505(b)(1) requires fair opportunity procedures for task orders over the threshold. Each MAIDIQ awardee must be notified, given the opportunity to submit a proposal, and evaluated using the criteria established in the base IDIQ.',
-          'Task orders under $150,000 require full and open competition|||Incorrect. Task orders under $150,000 are often exempt from fair opportunity requirements â the CO may award at their discretion. It\'s orders OVER $3,500 (and especially over $150,000 for civilian agencies, $6M for DoD) that trigger increasing fair opportunity formality.',
+          'Task orders under $150,000 require full and open competition|||Incorrect. Task orders under $150,000 are often exempt from fair opportunity requirements — the CO may award at their discretion. It\'s orders OVER $3,500 (and especially over $150,000 for civilian agencies, $6M for DoD) that trigger increasing fair opportunity formality.',
           'The incumbent contractor receives right of first refusal|||Incorrect. There is no statutory right of first refusal for incumbent contractors on MAIDIQ task orders. All awardees must receive fair opportunity. While past performance is a legitimate evaluation factor, it does not give the incumbent a contractual preference.',
         ],
         correct: 1,
@@ -4643,9 +4643,9 @@ export const modules: Module[] = [
         question: 'Which A&AS subcategory covers digital engineering support, DevSecOps, and software factory integration?',
         options: [
           'Management and Professional Support Services|||Correct. This is one of the four A&AS (Advisory and Assistance Services) categories defined in FAR 37.2. It covers management analysis, organizational studies, training, and professional support. Defense agencies use this category for program management support and strategic planning assistance.',
-          'Studies, Analyses, and Evaluations|||Correct. This A&AS category covers independent research, operational analysis, technical evaluations, and studies. It includes policy analysis, program assessments, and alternatives analysis â work that informs government decisions without directly executing them.',
-          'Engineering and Technical Services|||Correct. This A&AS category covers technical expertise supporting government programs â systems engineering, technical review, test support, and engineering advisory services. It is the most commonly used A&AS category in DoD acquisition programs.',
-          'A&AS-D (Digital)|||Incorrect. The correct expansion is A&AS-D = Advisory and Assistance Services â Defense (or specifically, GSA\'s AAS-D = Assisted Acquisition Services - Defense). There is no \'Digital\' designation in the standard A&AS taxonomy.',
+          'Studies, Analyses, and Evaluations|||Correct. This A&AS category covers independent research, operational analysis, technical evaluations, and studies. It includes policy analysis, program assessments, and alternatives analysis — work that informs government decisions without directly executing them.',
+          'Engineering and Technical Services|||Correct. This A&AS category covers technical expertise supporting government programs — systems engineering, technical review, test support, and engineering advisory services. It is the most commonly used A&AS category in DoD acquisition programs.',
+          'A&AS-D (Digital)|||Incorrect. The correct expansion is A&AS-D = Advisory and Assistance Services — Defense (or specifically, GSA\'s AAS-D = Assisted Acquisition Services - Defense). There is no \'Digital\' designation in the standard A&AS taxonomy.',
         ],
         correct: 3,
         explanation: 'A&AS-D (Digital) is the emerging subcategory gaining traction across the Air Force and Space Force that specifically covers digital engineering, DevSecOps support, software factory integration, and digital transformation advisory.',
@@ -4654,8 +4654,8 @@ export const modules: Module[] = [
         id: 'q3',
         question: 'What is the key distinction between a GWAC and an agency-specific IDIQ?',
         options: [
-          'GWACs have higher minimum guarantees than agency IDIQs|||Incorrect. GWAC minimum guarantees are often very low â sometimes $1 per awardee â to minimize the government\'s financial commitment while maintaining a large awardee pool. The minimum guarantee comparison between GWACs and agency IDIQs varies by vehicle.',
-          'GWACs are available to all federal agencies; agency IDIQs are limited to named awardees|||Partially correct but conflated. GWACs are available to all federal agencies as ordering agencies. Agency IDIQs are typically limited to the establishing agency or named ordering activities. The key difference is who can ORDER â not who can hold the contract.',
+          'GWACs have higher minimum guarantees than agency IDIQs|||Incorrect. GWAC minimum guarantees are often very low — sometimes $1 per awardee — to minimize the government\'s financial commitment while maintaining a large awardee pool. The minimum guarantee comparison between GWACs and agency IDIQs varies by vehicle.',
+          'GWACs are available to all federal agencies; agency IDIQs are limited to named awardees|||Partially correct but conflated. GWACs are available to all federal agencies as ordering agencies. Agency IDIQs are typically limited to the establishing agency or named ordering activities. The key difference is who can ORDER — not who can hold the contract.',
           'Agency IDIQs require Congressional notification; GWACs do not|||Incorrect. There is no general rule requiring Congressional notification for agency IDIQs vs. GWACs. Large contracts may trigger Congressional notification under specific statutes (e.g., Nunn-McCurdy for cost growth on MDAPs), but that is program-specific, not vehicle-type-specific.',
           'GWACs are only for small businesses; agency IDIQs are unrestricted|||Incorrect. GWACs are available to all businesses — large and small. Some GWACs have small business pools alongside large business pools (e.g., OASIS+, ALLIANT 2). Agency IDIQs can also be set-aside for small businesses. The restriction to small businesses is a set-aside decision, not inherent to GWACs.',
         ],
@@ -4666,7 +4666,7 @@ export const modules: Module[] = [
         id: 'q4',
         question: 'An OTA (Other Transaction Agreement) differs from a traditional FAR contract primarily because:',
         options: [
-          'OTAs have lower dollar thresholds|||Incorrect. OTAs do not have lower thresholds than FAR contracts â in fact, they are often used for larger, more complex prototype and production programs. The value of OTAs is regulatory flexibility, not cost threshold reduction.',
+          'OTAs have lower dollar thresholds|||Incorrect. OTAs do not have lower thresholds than FAR contracts — in fact, they are often used for larger, more complex prototype and production programs. The value of OTAs is regulatory flexibility, not cost threshold reduction.',
           'OTAs bypass standard FAR procurement regulations|||Correct. OTAs are authorized under 10 U.S.C. 4021-4022. They are explicitly not subject to the FAR, DFARS, or most standard procurement regulations. This allows DoD to negotiate customized agreements and attract non-traditional defense contractors. However, OTAs require a prototype purpose.',
           'OTAs require Congressional approval|||Incorrect. OTA authority is already granted by Congress through statute (10 U.S.C. 4021). Individual OTA agreements do not require separate Congressional approval.',
           'OTAs are only available to small businesses|||Incorrect. OTAs are available to any contractor. One requirement is that at least one \'non-traditional defense contractor\' participates. Large defense contractors can and do use OTAs when working with non-traditional partners.',
@@ -4679,9 +4679,9 @@ export const modules: Module[] = [
         question: 'Which of the following best describes the GSA Multiple Award Schedule (MAS)?',
         options: [
           'A guaranteed revenue source for qualified contractors|||Incorrect. Being on the Federal Supply Schedule does not guarantee revenue. Schedule contractors must still market their offerings and compete for individual orders. Many schedule holders receive little or no government business.',
-          'A pre-competed vehicle available only to defense agencies|||Incorrect. The GSA Multiple Award Schedule (MAS/FSS) is available to all federal agencies â civilian and defense. It is managed by GSA and is government-wide.',
+          'A pre-competed vehicle available only to defense agencies|||Incorrect. The GSA Multiple Award Schedule (MAS/FSS) is available to all federal agencies — civilian and defense. It is managed by GSA and is government-wide.',
           'A marketing platform with pre-negotiated commercial terms available to all federal agencies|||Correct. The GSA Multiple Award Schedule (MAS) is a long-term contract vehicle with pre-established pricing that any federal agency can use. Contractors list their products and services at pre-negotiated prices, and agencies can order directly.',
-          'An IDIQ requiring annual task order competitions|||Incorrect. MAS orders are simplified â for orders below $15K, the ordering agency can select any MAS contractor; for orders over $15K, the agency must provide fair opportunity to three or more MAS awardees. There is no annual re-competition requirement.',
+          'An IDIQ requiring annual task order competitions|||Incorrect. MAS orders are simplified — for orders below $15K, the ordering agency can select any MAS contractor; for orders over $15K, the agency must provide fair opportunity to three or more MAS awardees. There is no annual re-competition requirement.',
         ],
         correct: 2,
         explanation: 'The GSA MAS allows contractors to sell pre-negotiated commercial products and services to federal agencies — but it is a marketing platform, not a revenue guarantee. Contractors must actively pursue orders; simply holding a schedule generates no revenue.',
@@ -4690,9 +4690,9 @@ export const modules: Module[] = [
         id: 'q6',
         question: 'OASIS+ is best described as:',
         options: [
-          'An Army-specific IDIQ for base operations services|||Incorrect. AFICC (Air Force Installation Contracting Center) is an Air Force contracting organization â not Army. AFICC manages Air Force installation contracting across all CONUS Air Force installations.',
+          'An Army-specific IDIQ for base operations services|||Incorrect. AFICC (Air Force Installation Contracting Center) is an Air Force contracting organization — not Army. AFICC manages Air Force installation contracting across all CONUS Air Force installations.',
           'GSA\'s flagship GWAC for complex professional services including program management and engineering|||Correct for OASIS+. OASIS+ is GSA\'s largest and most comprehensive professional services GWAC. Recompeted in 2023-2024, it provides access to a large pool of qualified contractors for complex, integrated professional services across all disciplines.',
-          'A NASA GWAC for IT products and services|||Correct. SEWP (Solutions for Enterprise-Wide Procurement) is a NASA-managed GWAC for IT products and services â hardware, software, and related services. SEWP V is the current generation, with very fast ordering timelines (24-48 hours for simple orders).',
+          'A NASA GWAC for IT products and services|||Correct. SEWP (Solutions for Enterprise-Wide Procurement) is a NASA-managed GWAC for IT products and services — hardware, software, and related services. SEWP V is the current generation, with very fast ordering timelines (24-48 hours for simple orders).',
           'A DoD-only vehicle for classified program support|||Incorrect. Major GWACs (OASIS+, SEWP, ALLIANT) are unclassified and available to all agencies. Classified program acquisitions typically use separate, program-specific vehicles.',
         ],
         correct: 1,
@@ -4703,14 +4703,13 @@ export const modules: Module[] = [
 
       {
         id: 'contracts-5',
-        title: 'GSA Vehicles: OASIS+, FEDSIM, and AAS-D',
+        title: 'GSA Vehicles: OASIS+ and AAS-D (formerly FEDSIM)',
         duration: '18 min',
         description: 'Master the most important government-wide acquisition contracts for professional services — how they work, when to use them, and what the differences are.',
         keyTerms: [
       { term: 'GWAC', definition: 'Government-Wide Acquisition Contract — a task order contract established by one agency for use by any federal agency.' },
       { term: 'OASIS+', definition: 'One Acquisition Solution for Integrated Services Plus — GSA\'s flagship GWAC for professional and technical services across all disciplines.' },
-      { term: 'FEDSIM', definition: 'Federal Systems Integration and Management Center — GSA\'s assisted acquisition service that manages the contracting process on behalf of customer agencies.' },
-      { term: 'AAS-D', definition: 'Assisted Acquisition Services — Defense — GSA\'s defense-focused assisted acquisition service supporting DoD agencies.' },
+      { term: 'FEDSIM / AAS-D', definition: 'Same office, two names. FEDSIM (Federal Systems Integration and Management Center) was the original name. GSA has since rebranded it as AAS-D (Assisted Acquisition Services — Defense). If you hear either name, people are talking about the same GSA team that runs the entire acquisition on a DoD agency\'s behalf.' },
       { term: 'Assisted Acquisition', definition: 'When one agency (the servicing agency) conducts an acquisition on behalf of another agency (the requesting agency) using an Economy Act or similar authority.' },
       { term: 'Ordering Agency', definition: 'The agency that places task orders against a GWAC for its own requirements (distinct from the agency that holds the contract).' },
       { term: 'Interagency Agreement (IAA)', definition: 'The agreement between the requesting agency and servicing agency (e.g., GSA/FEDSIM) that authorizes the assisted acquisition.' },
@@ -4742,41 +4741,50 @@ export const modules: Module[] = [
         body: "OASIS+ (One Acquisition Solution for Integrated Services Plus) is GSA's marquee professional services GWAC, replacing the original OASIS contract. It covers essentially all professional and technical service categories: management consulting, engineering, research & development, program management support, IT services, logistics, financial management, and more. OASIS+ is structured in two primary tracks — Unrestricted (large businesses and small businesses competing full-and-open) and Small Business — each with multiple functional area pools. A DoD agency can access OASIS+ by establishing an Interagency Agreement with GSA, then placing task orders directly against the appropriate pool using fair opportunity competition."
       },
       {
-        type: 'list',
-        heading: "How to Use OASIS+ as an Ordering Agency",
-        items: [
-          'Step 1: Determine the requirement fits OASIS+ scope (professional/technical services)|||OASIS+ covers complex professional services: program management, management consulting, logistics, engineering, scientific, and financial management services. It does NOT cover IT products, construction, or commercial off-the-shelf items. Before using OASIS+, the ordering CO must verify scope fit and document it. Misaligned orders are a protest risk. GSA\'s OASIS+ Program Office can assist with scope determinations.',
-          'Step 2: Identify the correct OASIS+ pool (unrestricted vs. small business, functional area)|||OASIS+ has separate pools for unrestricted (large business), small business, 8(a), HUBZone, SDVOSB, and WOSB. Within each pool, there are functional areas (domains) — the requirement must align to a pool where the work fits. Ordering from the wrong pool is a compliance error. The government must also decide whether to use a set-aside pool (if the requirement can be satisfied by SB pool holders) before going unrestricted.',
-          'Step 3: Establish an Interagency Acquisition Agreement (IAA) with GSA (if not already in place)|||An IAA (usually an Economy Act determination or assisted acquisition agreement) authorizes the ordering agency to use GSA\'s contract vehicle. The ordering agency CO must document the authority basis, confirm it\'s cost-effective vs. running an independent procurement, and comply with their own agency\'s ordering procedures. GSA charges an Industrial Funding Fee (IFF) of 0.75% on all OASIS+ orders — this must be included in the price analysis.',
-          'Step 4: Issue a Task Order Request for Proposal (TORFP) to the applicable pool|||The TORFP must provide fair opportunity to all pool holders — typically issued through eBuy (GSA\'s e-procurement system). The TORFP defines evaluation factors, proposal instructions, submission format, and the period of performance. The ordering CO issues the TORFP under their own agency\'s procurement authority, not GSA\'s. Exception: if using GSA as the contracting agent (assisted acquisition via FEDSIM/AAS), GSA runs the source selection.',
-          'Step 5: Provide fair opportunity to all eligible pool holders per FAR 16.505|||Fair opportunity is the default rule for all MA-IDIQ task orders. The CO must document how fair opportunity was provided. Exceptions are narrow: unusual urgency (documented and time-limited), only one awardee is capable (rare and risky to claim), public interest determination, logical follow-on to an existing order, or the order is below the simplified acquisition threshold. Using an improper exception is a top protest ground.',
-          'Step 6: Evaluate proposals and make best-value task order award|||Best Value Tradeoff (BVTO) is the standard evaluation approach. The technical approach and past performance typically carry more weight than price on complex services task orders. The Source Selection Authority (SSA) documents the tradeoff decision. Unlike formal FAR Part 15 source selections, task order source selections have lighter documentation requirements — but the decision must still be defensible to a protest.',
-          'Step 7: Administer the task order — the ordering agency\'s CO retains oversight|||The ordering CO and COR manage performance after award. CPARS ratings at task order completion are some of the most valuable past performance evidence in future competitions. Good contract administration — consistent documentation, timely deliverable acceptance, proactive issue resolution — is what protects the government\'s recompete position.',
-          'Note: GSA charges an Industrial Funding Fee (IFF) or similar fee on OASIS+ orders|||The IFF is currently 0.75% of the total task order value on OASIS+. Contractors remit the IFF to GSA; in practice, most build it into their pricing. Ordering agencies should factor this into their price analysis. The IFF funds GSA\'s contracting support infrastructure. Failing to account for IFF in price reasonableness determinations is a common oversight.',
-        ]
+        type: 'numbered_steps_visual' as any,
+        heading: 'How to Use OASIS+ as an Ordering Agency',
+        sub: '7 steps, start to finish. This is the actual order of operations.',
+        steps: [
+          { title: 'Confirm the requirement fits OASIS+', desc: 'OASIS+ covers professional and technical services — consulting, engineering, program management, logistics, and more. It does NOT cover IT products, construction, or off-the-shelf items.', detail: 'Ordering outside this scope is a protest risk. GSA\'s OASIS+ Program Office can help confirm fit.' },
+          { title: 'Pick the right pool', desc: 'OASIS+ has separate pools: unrestricted, small business, 8(a), HUBZone, SDVOSB, and WOSB, each broken down further by functional area.', detail: 'Ordering from the wrong pool is a compliance error, not just a paperwork issue.' },
+          { title: 'Set up an Interagency Agreement (IAA) with GSA', desc: 'This is the paperwork that gives your agency permission to use GSA\'s vehicle.', detail: 'GSA charges a 0.75% Industrial Funding Fee (IFF) on every OASIS+ order — factor that into your price analysis.' },
+          { title: 'Issue a Task Order RFP (TORFP)', desc: 'Sent to every eligible pool holder through eBuy, GSA\'s e-procurement system.', detail: 'Exception: if GSA is running the acquisition for you (see below), GSA handles this step, not you.' },
+          { title: 'Give every pool holder fair opportunity', desc: 'This is the law under FAR 16.505 — every eligible company gets a real shot at the order.', detail: 'The narrow exceptions (urgency, sole capability, etc.) are the most common ground companies use to protest an award.' },
+          { title: 'Evaluate and award best value', desc: 'Technical approach and past performance usually outweigh price on complex services orders.', detail: 'Lighter documentation than a full FAR Part 15 source selection, but it still has to hold up if challenged.' },
+          { title: 'Administer the order after award', desc: 'Your own CO and COR manage performance from here — accepting deliverables, tracking issues, writing CPARS.', detail: 'A clean CPARS record at close-out is some of the most valuable evidence you\'ll have in the next competition.' },
+        ],
       },
       {
         type: 'text',
-        heading: "FEDSIM: Assisted Acquisition Services",
-        body: "FEDSIM (Federal Systems Integration and Management Center) is GSA's assisted acquisition service. Rather than just providing a contract vehicle for agencies to use, FEDSIM acts as the contracting office on behalf of the customer agency. The customer agency defines its requirements and provides funding, and FEDSIM manages the entire acquisition process — drafting the solicitation, conducting source selection, awarding the contract, and administering it. FEDSIM commonly uses vehicles like Alliant 2, STARS III, and OASIS+ for IT and professional services acquisitions."
+        heading: "FEDSIM Is Just the Old Name for AAS-D (Same Office, Same Job)",
+        body: "Here's where most people get confused, and it's an easy fix: FEDSIM and AAS-D are not two different services. FEDSIM (Federal Systems Integration and Management Center) was the original name for GSA's assisted acquisition team. GSA has since rebranded that same office as AAS-D (Assisted Acquisition Services — Defense) for its DoD-facing work. Same people, same process, new name. If a colleague, a solicitation, or an older training course says “FEDSIM,” they mean AAS-D.",
+      },
+      {
+        type: 'name_change_visual' as any,
+        heading: 'One Office, One Rename',
+        oldTerm: 'FEDSIM',
+        oldLabel: 'Old Name (you\'ll still hear this a lot)',
+        newTerm: 'AAS-D',
+        newLabel: 'Current Official Name',
+        note: 'Federal Systems Integration and Management Center → Assisted Acquisition Services – Defense. Same GSA office. Same job: they act as the contracting office on your behalf.',
+      },
+      {
+        type: 'text',
+        heading: "What AAS-D (FEDSIM) Actually Does",
+        body: "Rather than just handing an agency a contract vehicle to use on its own, AAS-D acts AS the contracting office on behalf of the customer. The customer agency defines the requirement and provides the funding; AAS-D drafts the solicitation, runs the source selection, awards the contract, and administers it — the whole lifecycle. AAS-D commonly places that work on vehicles like Alliant 2, STARS III, and OASIS+. DoD program offices turn to AAS-D when their own contracting office doesn't have the bandwidth or specialized expertise to run a full competitive acquisition — particularly for complex IT and professional services work.",
       },
       {
         type: 'table_visual' as any,
-        heading: "OASIS+ Self-Service vs. FEDSIM Assisted Acquisition",
-        headers: ['Aspect', 'OASIS+ (Self-Service)', 'FEDSIM (Assisted)'],
+        heading: "OASIS+ Self-Service vs. GSA-Assisted (AAS-D / FEDSIM)",
+        headers: ['Aspect', 'Self-Service', 'GSA-Assisted (AAS-D)'],
         rows: [
-          ['Who runs the acquisition?', 'Ordering agency\'s own CO', 'GSA/FEDSIM CO on behalf of customer'],
-          ['CO authority', 'Ordering agency retains CO authority', 'FEDSIM CO holds contracting authority'],
-          ['Best for', 'Agencies with strong in-house contracting capacity', 'Agencies without sufficient CO capacity or expertise'],
-          ['Timeline', 'Faster if agency has resources', 'May be slower due to coordination; adds FEDSIM process'],
-          ['Cost', 'IFF/fee to GSA for vehicle use', 'Acquisition management fee to FEDSIM (varies by contract value)'],
-          ['Vehicles used', 'OASIS+ pool directly', 'FEDSIM may use Alliant 2, STARS III, OASIS+, or others'],
+          ['Who runs the acquisition?', 'Your own agency\'s CO', 'AAS-D\'s CO, acting on your behalf'],
+          ['Who holds contracting authority?', 'Your agency', 'AAS-D'],
+          ['Best for', 'Agencies with strong in-house contracting capacity', 'Agencies without enough CO capacity or expertise'],
+          ['Timeline', 'Faster if your agency has the resources', 'Can be slower — adds a coordination layer'],
+          ['Cost', 'GSA\'s standard IFF/vehicle fee', 'IFF plus an acquisition management fee to AAS-D'],
+          ['Vehicles used', 'Whichever pool you choose directly', 'AAS-D may use Alliant 2, STARS III, OASIS+, or others'],
         ]
-      },
-      {
-        type: 'text',
-        heading: "AAS-D: GSA Defense Assisted Acquisition",
-        body: "AAS-D (Assisted Acquisition Services — Defense) is GSA's defense-specific assisted acquisition capability, designed for DoD agencies. Like FEDSIM, AAS-D can manage the entire acquisition process on behalf of a DoD program office. AAS-D has strong experience with DoD-specific requirements — DFARS compliance, classified acquisitions, and defense-unique contract clauses. DoD program offices use AAS-D when they need acquisition support but lack sufficient contracting office capacity, particularly for complex IT and professional services requirements that can be served by existing GWACs."
       },
       {
         type: 'callout',
@@ -4790,14 +4798,14 @@ export const modules: Module[] = [
       },
       {
         type: 'tip',
-        heading: "FEDSIM vs. In-House — The Practical Decision",
-        body: "Many DoD program offices consider FEDSIM when their own contracting office is understaffed or lacks experience with a particular acquisition type. FEDSIM brings deep expertise and established processes, but adds coordination overhead and fees. The practical question is: does your contracting office have the bandwidth and skills to run a full competitive acquisition on this vehicle? If not, FEDSIM or AAS-D is a legitimate and efficient alternative — used by major DoD agencies including Army, Air Force, and numerous defense agencies."
+        heading: "AAS-D vs. In-House — The Practical Decision",
+        body: "Many DoD program offices consider AAS-D (FEDSIM) when their own contracting office is understaffed or lacks experience with a particular acquisition type. AAS-D brings deep expertise and established processes, but adds coordination overhead and fees. The practical question is: does your contracting office have the bandwidth and skills to run a full competitive acquisition on this vehicle? If not, AAS-D is a legitimate and efficient alternative — used by major DoD agencies including Army, Air Force, and numerous defense agencies."
       },
       {
       type: 'text' as const,
       level: 'intermediate' as const,
-      heading: 'GSA OASIS+ and FEDSIM: Navigating the Competitive Order Process',
-      body: 'Mid-career PMs using OASIS+ must understand that the task order competition is where outcomes are determined — not at the MAC vehicle level. For orders above $10M, FEDSIM (the GSA competition office) conducts the competition on your behalf. The government PM\'s role: write a well-scoped PWS, establish meaningful evaluation criteria, and review the price analysis. Common pitfalls: (1) PWS written so broadly that every OASIS+ contractor can qualify, leading to a lowest-price competition; (2) past performance evaluation relying on contractor-provided references that are selectively positive; (3) underestimating transition risk when switching from an incumbent. Build transition requirements directly into the PWS — require a 60-day joint transition with the incumbent, with knowledge transfer milestones and penalties for transition failures.',
+      heading: 'GSA OASIS+ and AAS-D: Navigating the Competitive Order Process',
+      body: 'Mid-career PMs using OASIS+ must understand that the task order competition is where outcomes are determined — not at the MAC vehicle level. For orders above $10M, AAS-D (the GSA office formerly known as FEDSIM) conducts the competition on your behalf. The government PM\'s role: write a well-scoped PWS, establish meaningful evaluation criteria, and review the price analysis. Common pitfalls: (1) PWS written so broadly that every OASIS+ contractor can qualify, leading to a lowest-price competition; (2) past performance evaluation relying on contractor-provided references that are selectively positive; (3) underestimating transition risk when switching from an incumbent. Build transition requirements directly into the PWS — require a 60-day joint transition with the incumbent, with knowledge transfer milestones and penalties for transition failures.',
         },
         {
       type: 'callout' as const,
@@ -4821,21 +4829,21 @@ export const modules: Module[] = [
       },
       {
         id: 'q2',
-        question: "FEDSIM (Federal Systems Integration and Management Center) differs from a self-service GWAC in that FEDSIM:",
+        question: "AAS-D (formerly known as FEDSIM) differs from a self-service GWAC in that AAS-D:",
         options: [
-          'Provides a contract vehicle that agencies use independently|||Incorrect as a description of AAS-D. AAS-D\'s defining characteristic is that GSA manages the entire acquisition on behalf of the customer â acting as the contracting office. This is \'assisted acquisition\' â fundamentally different from simply providing a vehicle.',
-          'Manages the entire acquisition process on behalf of the customer agency, serving as the contracting office|||Correct. GSA\'s Assisted Acquisition Services - Defense (AAS-D) is an assisted acquisition service where GSA acts as the buying agency â managing the full acquisition lifecycle from requirements to award to contract administration â on behalf of DoD and other federal customers.',
-          'Only supports civilian agencies, not DoD|||Incorrect. AAS-D is specifically designed for DoD customers. The \'Defense\' designation in AAS-D indicates the primary customer base.',
+          "Provides a contract vehicle that agencies use independently|||Incorrect. That describes self-service (using OASIS+ directly). AAS-D's defining characteristic is that GSA manages the entire acquisition on behalf of the customer, acting as the contracting office. That is what 'assisted acquisition' means — fundamentally different from simply providing a vehicle.",
+          "Manages the entire acquisition process on behalf of the customer agency, serving as the contracting office|||Correct. AAS-D (Assisted Acquisition Services — Defense, formerly called FEDSIM) is an assisted acquisition service where GSA acts as the buying agency, managing the full acquisition lifecycle from requirements to award to contract administration on behalf of DoD and other federal customers.",
+          "Only supports civilian agencies, not DoD|||Incorrect. AAS-D is specifically designed for DoD customers. The 'Defense' designation in AAS-D indicates the primary customer base.",
           'Is restricted to purchases under the simplified acquisition threshold'
         ],
         correct: 1,
-        explanation: "FEDSIM is an assisted acquisition service — it acts as the contracting office for customer agencies, managing solicitation, source selection, award, and administration on the customer's behalf. A self-service GWAC (like using OASIS+ directly) puts the ordering agency's own CO in charge of the process."
+        explanation: "AAS-D (the current name for what used to be called FEDSIM) is an assisted acquisition service — it acts as the contracting office for customer agencies, managing solicitation, source selection, award, and administration on the customer's behalf. A self-service GWAC (like using OASIS+ directly) puts the ordering agency's own CO in charge of the process."
       },
       {
         id: 'q3',
         question: "A Government-Wide Acquisition Contract (GWAC) is distinct from an agency-specific IDIQ in that a GWAC:",
         options: [
-          'Can only be used by the agency that established it|||Incorrect for GWACs. Government-Wide Acquisition Contracts â by definition â are available to all federal agencies. That government-wide accessibility is their defining feature.',
+          'Can only be used by the agency that established it|||Incorrect for GWACs. Government-Wide Acquisition Contracts — by definition — are available to all federal agencies. That government-wide accessibility is their defining feature.',
           'Is available for use by any federal agency as an ordering agency|||Correct. GWACs are authorized under 40 U.S.C. 11314 and are open to all federal agencies. This cross-agency accessibility allows smaller agencies without acquisition expertise to leverage GWACs managed by agencies like GSA or NIH.',
           'Does not require competition at the task order level|||Incorrect. Most GWACs require fair opportunity competition at the task order level under FAR 16.505. Awardees must be given a fair opportunity to submit offers for each task order. Exceptions are narrow.',
           'Has no ceiling on total contract value'
@@ -4854,9 +4862,9 @@ export const modules: Module[] = [
         id: 'q5',
         question: "The Economy Act (31 U.S.C. § 1535) is relevant to assisted acquisitions because it:",
         options: [
-          'Limits the total value of task orders under any GWAC|||Incorrect. There is no universal statutory cap on GWAC total value â individual GWACs have their own ceiling values set at award.',
-          'Provides statutory authority for one agency to procure services or supplies from another federal agency|||Correct. The Economy Act (31 U.S.C. 1535) authorizes interagency acquisitions â one agency using another agency\'s contracting resources or purchasing on their behalf.',
-          'Requires competition for all orders over $350K|||Incorrect for the Economy Act specifically. The Economy Act governs the relationship between federal agencies in interagency acquisitions â it does not set competition thresholds. Competition requirements at the ordering level are governed by the individual GWAC\'s terms and FAR 16.505.',
+          'Limits the total value of task orders under any GWAC|||Incorrect. There is no universal statutory cap on GWAC total value — individual GWACs have their own ceiling values set at award.',
+          'Provides statutory authority for one agency to procure services or supplies from another federal agency|||Correct. The Economy Act (31 U.S.C. 1535) authorizes interagency acquisitions — one agency using another agency\'s contracting resources or purchasing on their behalf.',
+          'Requires competition for all orders over $350K|||Incorrect for the Economy Act specifically. The Economy Act governs the relationship between federal agencies in interagency acquisitions — it does not set competition thresholds. Competition requirements at the ordering level are governed by the individual GWAC\'s terms and FAR 16.505.',
           'Prohibits the use of GWACs for classified requirements'
         ],
         correct: 1,
@@ -4867,8 +4875,8 @@ export const modules: Module[] = [
         question: "AAS-D (Assisted Acquisition Services — Defense) is specifically designed to serve:",
         options: [
           'Civilian agencies only|||Incorrect for AAS-D. AAS-D is specifically a defense-focused assisted acquisition service. DoD components regularly use AAS-D to leverage GSA\'s contracting expertise.',
-          'DoD agencies requiring assisted acquisition support, particularly for IT and professional services|||Correct. AAS-D serves DoD customers who need a skilled contracting office to manage acquisitions on their behalf â particularly valuable for program offices that lack acquisition expertise or contracting capacity.',
-          'Small businesses seeking to enter the defense market|||Incorrect. AAS-D is a customer-facing service for government agencies â not a vehicle for small businesses to enter the market. Small businesses participate as contractors; AAS-D is used by government agencies as the buyer-side mechanism.',
+          'DoD agencies requiring assisted acquisition support, particularly for IT and professional services|||Correct. AAS-D serves DoD customers who need a skilled contracting office to manage acquisitions on their behalf — particularly valuable for program offices that lack acquisition expertise or contracting capacity.',
+          'Small businesses seeking to enter the defense market|||Incorrect. AAS-D is a customer-facing service for government agencies — not a vehicle for small businesses to enter the market. Small businesses participate as contractors; AAS-D is used by government agencies as the buyer-side mechanism.',
           'Foreign military sales programs only'
         ],
         correct: 1,
@@ -4879,7 +4887,7 @@ export const modules: Module[] = [
         question: "What is the primary compliance risk when using a GWAC like OASIS+?",
         options: [
           'Paying too high a price due to lack of competition|||Incorrect as primary GWAC risk. GWACs are pre-competed vehicles. The primary ordering-level risks are: scope creep (ordering work outside the GWAC\'s scope), improper use of the vehicle, and bypassing fair opportunity requirements.',
-          'Placing task orders for work outside the scope of the GWAC base contract|||Correct. This is the most legally significant risk when using GWACs. A task order placed for work outside the scope of the base IDIQ constitutes an unauthorized procurement â potentially triggering a protest or legal challenge.',
+          'Placing task orders for work outside the scope of the GWAC base contract|||Correct. This is the most legally significant risk when using GWACs. A task order placed for work outside the scope of the base IDIQ constitutes an unauthorized procurement — potentially triggering a protest or legal challenge.',
           'Failing to meet small business goals|||Correct. Many GWACs have small business set-aside pools. Ordering agencies that consistently bypass small business pools may face scrutiny from the SBA and their agency\'s Office of Small Business Programs.',
           'Exceeding the ordering period without an extension'
         ],
@@ -4892,7 +4900,7 @@ export const modules: Module[] = [
         options: [
           'A large-business IT GWAC for complex solutions|||Correct for ALLIANT 2. ALLIANT 2 is a GSA GWAC for complex IT solutions, limited to large businesses. ALLIANT 3 is in procurement as of 2024. ALLIANT 2 Small Business is the companion vehicle. These vehicles cover IT services, systems integration, cybersecurity, and cloud solutions.',
           'A small business IT GWAC with 8(a), WOSB, SDVOSB, and HUBZone pools|||Correct for ALLIANT 2 Small Business or SEWP V small business. These GWACs organize small business participation into socioeconomic pools: 8(a) (SBA-certified disadvantaged businesses), WOSB (women-owned), SDVOSB (service-disabled veteran-owned), and HUBZone.',
-          'A professional services GWAC for all service disciplines|||Correct for OASIS+. OASIS+ is GSA\'s flagship professional services GWAC covering management consulting, program management, engineering, logistics, data analytics, and more â for both large and small businesses across multiple pools.',
+          'A professional services GWAC for all service disciplines|||Correct for OASIS+. OASIS+ is GSA\'s flagship professional services GWAC covering management consulting, program management, engineering, logistics, data analytics, and more — for both large and small businesses across multiple pools.',
           'A GSA Schedule for commercial IT products'
         ],
         correct: 1,
@@ -4900,23 +4908,23 @@ export const modules: Module[] = [
       },
       {
         id: 'q9',
-        question: "When should a DoD PM recommend using FEDSIM rather than using a GWAC directly?",
+        question: "When should a DoD PM recommend using AAS-D (FEDSIM) rather than using a GWAC directly?",
         options: [
-          'When the acquisition is under $350K and competition is not required|||Incorrect. AAS-D is used for significant acquisitions â particularly complex services benefiting from GSA\'s contracting expertise. Small purchases under the SAT would typically be handled through simplified acquisition or purchase card.',
+          'When the acquisition is under $350K and competition is not required|||Incorrect. AAS-D is used for significant acquisitions — particularly complex services benefiting from GSA\'s contracting expertise. Small purchases under the SAT would typically be handled through simplified acquisition or purchase card.',
           'When the program office\'s contracting office lacks capacity, expertise, or bandwidth to run the full acquisition|||Correct. This is the primary driver for using AAS-D. Program offices with technical expertise but limited acquisition personnel benefit from GSA\'s experienced acquisition teams managing the process.',
           'When competition is not desired to protect the incumbent contractor|||Incorrect. AAS-D does not facilitate non-competitive awards as a matter of policy. Any acquisition through AAS-D must still comply with competition requirements.',
           'When the requirement exceeds the GWAC ceiling'
         ],
         correct: 1,
-        explanation: "FEDSIM is the right choice when the program office contracting office doesn't have the resources or specialized expertise to run the acquisition effectively. FEDSIM brings experienced contracting professionals who manage the process end-to-end. The tradeoff is coordination overhead and fees — for programs with strong in-house contracting capacity, self-service GWAC use is typically faster and cheaper."
+        explanation: "AAS-D (formerly known as FEDSIM) is the right choice when the program office's contracting office doesn't have the resources or specialized expertise to run the acquisition effectively. AAS-D brings experienced contracting professionals who manage the process end-to-end. The tradeoff is coordination overhead and fees — for programs with strong in-house contracting capacity, self-service GWAC use is typically faster and cheaper."
       },
       {
         id: 'q10',
         question: "An Interagency Acquisition Agreement (IAA) between a DoD program office and GSA for OASIS+ use primarily documents:",
         options: [
-          'The technical requirements for the specific task order|||Correct. The Task Order SOW/PWS/SOO describes what the contractor will actually do â the scope, deliverables, performance standards, and period of performance for that specific task order.',
-          'The mutual terms under which the ordering agency will use the GWAC, including funding transfer and responsibilities|||Correct. An Interagency Agreement (IAA) â including a MIPR or Economy Act Order â establishes the terms of the relationship between the ordering agency and the contracting agency, covering funding transfer and responsibilities.',
-          'The competition strategy for individual task orders|||Correct. The Acquisition Plan or Task Order Acquisition Strategy defines how the agency will conduct fair opportunity for a specific task order â factors, evaluation methodology, oral presentation requirements, past performance approach, and price reasonableness determination.',
+          'The technical requirements for the specific task order|||Correct. The Task Order SOW/PWS/SOO describes what the contractor will actually do — the scope, deliverables, performance standards, and period of performance for that specific task order.',
+          'The mutual terms under which the ordering agency will use the GWAC, including funding transfer and responsibilities|||Correct. An Interagency Agreement (IAA) — including a MIPR or Economy Act Order — establishes the terms of the relationship between the ordering agency and the contracting agency, covering funding transfer and responsibilities.',
+          'The competition strategy for individual task orders|||Correct. The Acquisition Plan or Task Order Acquisition Strategy defines how the agency will conduct fair opportunity for a specific task order — factors, evaluation methodology, oral presentation requirements, past performance approach, and price reasonableness determination.',
           'The contractor team members who will perform the work'
         ],
         correct: 1,
@@ -5436,11 +5444,11 @@ export const modules: Module[] = [
         correct: 0,
         explanation: 'The process flows: triggering change → contractor submits REA → government review/DCAA audit of cost proposal → negotiation → bilateral mod (ideal resolution). If negotiation fails, the REA becomes a certified claim → CO issues Final Decision → contractor may appeal to ASBCA or Court of Federal Claims. Each step that advances past bilateral mod resolution increases cost and time for both parties.',
         orderedItems: [
-          'Government directs change (formal or constructive)|||Correct. The changes clause process begins when the government directs a change â either through a formal written order under the Changes clause (FAR 52.243-1 through -4) or through constructive change (government actions that effectively change the contract without formal direction).',
-          'Contractor submits REA with entitlement and cost proposal|||Correct. The contractor submits a Request for Equitable Adjustment (REA) that establishes: (1) entitlement â the legal basis for why a change occurred, and (2) the cost/schedule impact. The REA is not a certified claim â it is a negotiation opener.',
+          'Government directs change (formal or constructive)|||Correct. The changes clause process begins when the government directs a change — either through a formal written order under the Changes clause (FAR 52.243-1 through -4) or through constructive change (government actions that effectively change the contract without formal direction).',
+          'Contractor submits REA with entitlement and cost proposal|||Correct. The contractor submits a Request for Equitable Adjustment (REA) that establishes: (1) entitlement — the legal basis for why a change occurred, and (2) the cost/schedule impact. The REA is not a certified claim — it is a negotiation opener.',
           'DCAA audits REA cost proposal (if >$2M)|||Correct. For cost proposals over $2M, DCAA typically audits the REA cost proposal to assess cost reasonableness, allocability, and allowability. The audit opinion gives the CO a basis for evaluating the contractor\'s claimed costs before negotiation.',
-          'CO and contractor negotiate equitable adjustment|||Correct. After DCAA audit (if applicable), the CO and contractor negotiate the amount and terms of the equitable adjustment â the change in contract price and/or schedule to account for the directed change.',
-          'Bilateral modification definitizes the change (ideal outcome)|||Correct. A bilateral modification (signed by both the CO and contractor) is the preferred outcome â it definitizes the change and prevents future disputes. Once signed, the contractor cannot re-open the REA for additional compensation.',
+          'CO and contractor negotiate equitable adjustment|||Correct. After DCAA audit (if applicable), the CO and contractor negotiate the amount and terms of the equitable adjustment — the change in contract price and/or schedule to account for the directed change.',
+          'Bilateral modification definitizes the change (ideal outcome)|||Correct. A bilateral modification (signed by both the CO and contractor) is the preferred outcome — it definitizes the change and prevents future disputes. Once signed, the contractor cannot re-open the REA for additional compensation.',
           'If failed: REA converts to certified Claim; CO issues Final Decision|||Correct. If REA negotiation fails, the contractor may convert the REA to a certified Claim under the Contract Disputes Act (CDA). The CO issues a Contracting Officer\'s Final Decision (COFD), which can be appealed to the Armed Services Board of Contract Appeals (ASBCA) or the Court of Federal Claims.',
         ],
       },
@@ -5646,11 +5654,11 @@ export const modules: Module[] = [
         correct: 0,
         explanation: 'Traditional FAR/DFARS contracts carry the full regulatory burden — CAS, DFARS business systems, certified cost data, competition requirements. FAR Part 12 is faster with reduced clause requirements. OTA eliminates FAR/DFARS entirely. SAP is streamlined for sub-SAT buys. Micro-purchases are immediate with no competition required. The trade-off: less regulation means less accountability — use the appropriate level for the risk.',
         orderedItems: [
-          'Traditional FAR/DFARS Contract (full CAS, DFARS, TINA, competition)|||Correct. Traditional FAR/DFARS contracts carry the full weight of government procurement law â CAS for cost-type, DFARS clauses, TINA certified cost or pricing data requirements over $2M, and mandatory competition under FAR Part 6. These provide maximum oversight but maximum administrative burden.',
+          'Traditional FAR/DFARS Contract (full CAS, DFARS, TINA, competition)|||Correct. Traditional FAR/DFARS contracts carry the full weight of government procurement law — CAS for cost-type, DFARS clauses, TINA certified cost or pricing data requirements over $2M, and mandatory competition under FAR Part 6. These provide maximum oversight but maximum administrative burden.',
           'FAR Part 12 Commercial Item (reduced clauses; no CAS; no certified cost data)|||Correct. FAR Part 12 commercial item acquisitions use a streamlined clause set. Contractors are not required to submit certified cost or pricing data, CAS does not apply, and standard commercial terms are accepted. Preferred for COTS and commercial services but requires a determination of commerciality.',
           'Other Transaction Authority (no FAR/DFARS/CAS; negotiated terms only)|||Correct. OTAs are authorized under 10 U.S.C. 4021-4022 and allow DoD to negotiate agreements without FAR/DFARS constraints. They are designed to attract non-traditional defense contractors and accelerate prototyping and fielding. OTAs cannot be used for traditional services or routine supplies.',
-          'Simplified Acquisition Procedures (below $350K; three quotes; minimal docs)|||Correct. SAP applies to purchases below the Simplified Acquisition Threshold ($350K effective October 1, 2025). The CO can use simplified competition â typically three competitive quotes â with minimal documentation. This allows rapid procurement for routine, lower-dollar requirements.',
-          'Micro-Purchase / Government Purchase Card (below $15K; no competition required)|||Correct. Micro-purchases (below $15K generally) can be made by government purchase card without competition under FAR 13.2. No contract is required â the purchase is made directly on a government credit card. This is the fastest acquisition method.',
+          'Simplified Acquisition Procedures (below $350K; three quotes; minimal docs)|||Correct. SAP applies to purchases below the Simplified Acquisition Threshold ($350K effective October 1, 2025). The CO can use simplified competition — typically three competitive quotes — with minimal documentation. This allows rapid procurement for routine, lower-dollar requirements.',
+          'Micro-Purchase / Government Purchase Card (below $15K; no competition required)|||Correct. Micro-purchases (below $15K generally) can be made by government purchase card without competition under FAR 13.2. No contract is required — the purchase is made directly on a government credit card. This is the fastest acquisition method.',
         ],
       },
         ],
@@ -7039,10 +7047,10 @@ export const modules: Module[] = [
             type: 'bullets' as const,
             heading: 'What to look for',
             items: [
-            'Sort CV column: the largest negative CV numbers are your biggest overruns in dollars|||Correct. Sorting by CV magnitude identifies the WBS elements consuming the most excess cost. Cross-reference against element size (BAC) â a -$5M CV on a $10M element (50% overrun) is more alarming than a -$5M CV on a $100M element.',
+            'Sort CV column: the largest negative CV numbers are your biggest overruns in dollars|||Correct. Sorting by CV magnitude identifies the WBS elements consuming the most excess cost. Cross-reference against element size (BAC) — a -$5M CV on a $10M element (50% overrun) is more alarming than a -$5M CV on a $100M element.',
             'Sort SV column: the largest negative SV numbers are your most schedule-critical slips|||Correct. After CV, sort SV to identify which WBS elements are furthest behind schedule. Cross-reference against the IMS to determine whether these elements are on the critical path.',
             'Note if the same WBS element appears in both CV and SV worst lists — that is a compounding problem|||Correct. A WBS element appearing in both the worst CV and worst SV lists is a compounding problem: spending more than planned AND achieving less than planned simultaneously. These dual-variance elements pose the highest program risk and require immediate management attention.',
-            'Compare to last month: are the same elements getting worse, or are new ones appearing?|||Correct. Trend analysis is more informative than single-period snapshots. The same elements getting progressively worse indicates an uncorrected systemic problem. New elements appearing suggests scope growth or new technical challenges â a broader problem.',
+            'Compare to last month: are the same elements getting worse, or are new ones appearing?|||Correct. Trend analysis is more informative than single-period snapshots. The same elements getting progressively worse indicates an uncorrected systemic problem. New elements appearing suggests scope growth or new technical challenges — a broader problem.',
             'Cross-check against Format 5: do these elements have variance narratives? If not, ask why.|||Correct. Every WBS element exceeding variance thresholds must have a Format 5 narrative. If high-variance elements lack narratives, it indicates either inadequate EVM reporting compliance or the contractor does not understand the significance of the variance.',
             ]
             }
@@ -7059,8 +7067,8 @@ export const modules: Module[] = [
             type: 'bullets' as const,
             heading: 'Quality checks for every narrative',
             items: [
-            'Does the root cause actually explain the CV/SV? Vague causes ("resource constraints") are a red flag.|||Correct. \'Resource constraints\' is the most commonly used vague root cause in Format 5 â it explains nothing specific. What resources? What constraint? Why was it not anticipated? Government reviewers should push back on vague narratives.',
-            'Is there a specific, measurable corrective action with a named owner and due date?|||Correct. Corrective actions must be SMART: Specific, Measurable, Assigned (who is responsible), Realistic, and Time-bound (by when). Corrective actions without owners and due dates are aspirational â not commitments.',
+            'Does the root cause actually explain the CV/SV? Vague causes ("resource constraints") are a red flag.|||Correct. \'Resource constraints\' is the most commonly used vague root cause in Format 5 — it explains nothing specific. What resources? What constraint? Why was it not anticipated? Government reviewers should push back on vague narratives.',
+            'Is there a specific, measurable corrective action with a named owner and due date?|||Correct. Corrective actions must be SMART: Specific, Measurable, Assigned (who is responsible), Realistic, and Time-bound (by when). Corrective actions without owners and due dates are aspirational — not commitments.',
             'Does the corrective action realistically address the root cause?|||Correct. A common trap is well-written corrective actions that do not address the identified root cause. If the root cause is \'test failures due to software integration problems,\' a corrective action of \'increase staffing\' may not solve the underlying software issue.',
             'Mismatch check: does the narrative address the same WBS elements with the biggest variances in Format 1? Inconsistency = narratives written independently of the data.|||Correct. A frequent quality issue: Format 5 narratives addressing WBS elements with minor variance while high-variance elements go unexplained. This indicates the narratives were written independently without cross-referencing Format 1 data.',
             'Track last month\'s corrective actions: did they produce improvement? If CPI did not move, the action was ineffective.|||Correct. Corrective action effectiveness tracking is the most important longitudinal review skill. If the PM committed to a specific corrective action last month, did CPI/SPI improve for that WBS element this month? Repeated commitments with no measurable improvement indicate the actions are ineffective.',
@@ -7079,7 +7087,7 @@ export const modules: Module[] = [
             type: 'bullets' as const,
             heading: 'What to look for',
             items: [
-            'Any new entries since last month? All changes require CO approval via formal contract modification.|||Correct. Format 3 documents all changes to the PMB. Any significant change requires government approval. Reviewing Format 3 for unauthorized changes â new entries without corresponding contract modifications â is an important compliance check.',
+            'Any new entries since last month? All changes require CO approval via formal contract modification.|||Correct. Format 3 documents all changes to the PMB. Any significant change requires government approval. Reviewing Format 3 for unauthorized changes — new entries without corresponding contract modifications — is an important compliance check.',
             'Budget transfers between WBS elements: legitimate re-planning or hiding overruns in other accounts?|||Correct. Internal replanning can be used legitimately to reflect refined work planning. However, it can also be used to spread overruns across multiple elements to keep individual elements below reporting thresholds. Large unexplained budget transfers should trigger questions.',
             'Management Reserve (MR) draws: how much MR remains? MR burn rate is a key program health indicator.|||Correct. Calculate the MR burn rate: (Original MR - Current MR Balance) / Months elapsed = Average MR burn per month. If MR will be exhausted significantly before contract completion, the program faces difficult choices.',
             'Undistributed Budget (UB): large UB that\'s been sitting means work is not yet planned in detail — schedule risk.|||Correct. UB represents authorized work not yet planned at the Control Account level. Large, persistent UB late in a program indicates work is not being planned in detail — which means schedule cannot be tracked, and the PMB understates the full scope of planned activity.',
@@ -7101,7 +7109,7 @@ export const modules: Module[] = [
             'Cross-reference: which WBS elements have negative SV in Format 1? Are those same elements fully staffed in Format 4?|||Correct. This cross-format analysis confirms staffing causality. If Format 1 shows negative SV on Element X, and Format 4 shows Element X is staffed at 60% of plan, the causal relationship is clear.',
             'Understaffed + negative SV = schedule slip will continue regardless of recovery commitments|||Correct. If a WBS element is significantly understaffed AND showing negative SV, no amount of \'working the issue\' will recover the schedule until staffing reaches plan levels. Recovery is mathematically impossible without additional resources.',
             'Check key personnel: are the named experts from the proposal actually on the program?|||Correct. Key personnel commitments made in the winning proposal are often contractually binding. If the proposal named a specific PM or Deputy PM, and that person is not on the program, the contractor may be in breach of contract.',
-            'Headcount trending down while schedule is behind = problem getting worse, not better|||Correct. A declining headcount trend combined with negative SV is a strongly negative leading indicator. It means the contractor is not just behind â they are further reducing the resources needed to recover.',
+            'Headcount trending down while schedule is behind = problem getting worse, not better|||Correct. A declining headcount trend combined with negative SV is a strongly negative leading indicator. It means the contractor is not just behind — they are further reducing the resources needed to recover.',
             ]
             }
             ]
@@ -7118,8 +7126,8 @@ export const modules: Module[] = [
             heading: 'What to look for',
             items: [
             'Has the critical path changed since last month? New tasks appearing on the critical path = scope risk emerging|||Correct. Critical path stability is a key schedule health indicator. New tasks appearing on the critical path indicate either previously float-rich tasks have consumed their float, or the contractor is manipulating the schedule.',
-            'Total float on near-critical tasks: anything under 10 days of float is effectively critical|||Correct. Tasks with very low total float (10 days or fewer) are operationally critical â any minor disruption will push them onto the critical path. Monitoring near-critical float consumption is an early warning system for emerging critical path issues.',
-            'Are key milestones (CDR, PDR, IOT&E) still tracking to the APB schedule?|||Correct. Key program milestones â CDR, PDR, IOT&E â are anchored in the APB and are the primary schedule commitments to oversight stakeholders. Slipping these milestones triggers APB reporting and potential Nunn-McCurdy concerns.',
+            'Total float on near-critical tasks: anything under 10 days of float is effectively critical|||Correct. Tasks with very low total float (10 days or fewer) are operationally critical — any minor disruption will push them onto the critical path. Monitoring near-critical float consumption is an early warning system for emerging critical path issues.',
+            'Are key milestones (CDR, PDR, IOT&E) still tracking to the APB schedule?|||Correct. Key program milestones — CDR, PDR, IOT&E — are anchored in the APB and are the primary schedule commitments to oversight stakeholders. Slipping these milestones triggers APB reporting and potential Nunn-McCurdy concerns.',
             'Negative total float (tasks already late): how many, and are they on the path to a contract milestone?|||Correct. Negative total float is an unambiguous indicator of existing schedule problems embedded in the baseline. If negatively-floated tasks feed into a contract milestone, that milestone is de facto late.',
             'Compare to Format 5: are schedule slips on the critical path explained in the variance narratives?|||Correct. Critical path schedule slippage must be addressed in Format 5 narratives. If the IMS shows critical path tasks with negative SV and Format 5 narratives for those WBS elements are missing or vague, this is a significant compliance gap.',
             ]
@@ -7712,7 +7720,7 @@ export const modules: Module[] = [
             '"Volume II — Management Approach, not to exceed 25 pages"|||Correct. The Management Volume demonstrates the contractor\'s ability to organize, staff, and execute. Key elements: organizational chart, key personnel resumes, program management methodology, risk management approach, quality assurance plan, and subcontractor management strategy.',
             '"Volume III — Past Performance, provide up to 3 references using the government-provided form"|||Correct. Past performance is evaluated using CPARS data and submitted references. Select references that are: (1) recent (within 3-5 years), (2) relevant (similar scope, complexity, contract type), and (3) had excellent CPARS ratings.',
             '"Volume IV — Price/Cost, no page limit, must include completed DD Form 1423 (CDRLs)"|||Correct. The Price/Cost Volume must be complete, consistent with the technical approach, and independently auditable. Key elements: labor category hours by WBS, basis of estimate, direct labor rates, indirect rates, other direct costs, and required government forms.',
-            '"All volumes must be submitted via SAM.gov by 4:00 PM EST on [date]"|||Correct. Proposal submission requirements are strictly enforced. Late proposals are typically rejected. SAM.gov submission requires advance registration and testing â submit a day early to allow for technical issues. Time zone matters â EST vs. EDT can cause a missed deadline.',
+            '"All volumes must be submitted via SAM.gov by 4:00 PM EST on [date]"|||Correct. Proposal submission requirements are strictly enforced. Late proposals are typically rejected. SAM.gov submission requires advance registration and testing — submit a day early to allow for technical issues. Time zone matters — EST vs. EDT can cause a missed deadline.',
             ]},
             { type: 'warning', body: 'Section L compliance is binary. A proposal violating page limits, font requirements, or missing required forms can be rejected as non-responsive WITHOUT evaluation. The CO generally has no discretion to waive administrative non-compliance.' },
             { type: 'grid', grid: [
@@ -7731,8 +7739,8 @@ export const modules: Module[] = [
             summary: 'Section L only controls proposal format. Section M controls what is scored. If you write to L without reading M, you are guessing.',
             content: [
             { type: 'bullets', items: [
-            'Section L says: "Describe your staffing plan." Section M says staffing is NOT an evaluation factor. Your staffing section will be read for compliance only, not scored. Keep it short.|||Correct. Section M defines what wins points; Section L defines what is required for compliance. When Section M does not list staffing as a factor, the staffing section is a pass-fail compliance element â not scored. Extensive page count on non-scored sections wastes limited page count.',
-            'Section L says: "Describe your technical approach." Section M has three sub-factors: Innovation (15%), Risk Mitigation (25%), Schedule Realism (20%). Your technical approach must address each sub-factor with sub-headers that mirror M language.|||Correct. Structure the technical volume around Section M\'s evaluation sub-factors. Use the exact M language as sub-headers â evaluators are scored against Section M, so they need to find information quickly. Innovation, Risk Mitigation, and Schedule Realism each need dedicated sections with evidence and discriminators.',
+            'Section L says: "Describe your staffing plan." Section M says staffing is NOT an evaluation factor. Your staffing section will be read for compliance only, not scored. Keep it short.|||Correct. Section M defines what wins points; Section L defines what is required for compliance. When Section M does not list staffing as a factor, the staffing section is a pass-fail compliance element — not scored. Extensive page count on non-scored sections wastes limited page count.',
+            'Section L says: "Describe your technical approach." Section M has three sub-factors: Innovation (15%), Risk Mitigation (25%), Schedule Realism (20%). Your technical approach must address each sub-factor with sub-headers that mirror M language.|||Correct. Structure the technical volume around Section M\'s evaluation sub-factors. Use the exact M language as sub-headers — evaluators are scored against Section M, so they need to find information quickly. Innovation, Risk Mitigation, and Schedule Realism each need dedicated sections with evidence and discriminators.',
             'Winning proposals use M as the writing guide and L as the compliance checklist.|||Correct. This is the master principle of proposal writing. Section M defines what evaluators score. Section L defines what must be included for compliance. Write to Section M. Check against Section L. Never reverse this.',
             ]}
             ]
@@ -7775,10 +7783,10 @@ export const modules: Module[] = [
             ]},
             { type: 'warning', body: '"Acceptable" is a losing rating in a competitive field. When all offerors are Acceptable, price wins. You must write to earn Strengths — aspects that EXCEED requirements with documented, quantifiable benefit to the government.' },
             { type: 'bullets', items: [
-            'A Strength must EXCEED the requirement. "We will provide monthly status reports" meets a requirement. "We will provide a real-time dashboard with threshold alerts 48 hours before a schedule variance becomes actionable" earns a Strength.|||Correct. SSEB members are looking for strengths â features that exceed requirements and provide measurable benefit. Meeting requirements earns \'Acceptable\' â not a strength. Every discriminating element should clearly exceed the stated requirement in a specific, verifiable way.',
+            'A Strength must EXCEED the requirement. "We will provide monthly status reports" meets a requirement. "We will provide a real-time dashboard with threshold alerts 48 hours before a schedule variance becomes actionable" earns a Strength.|||Correct. SSEB members are looking for strengths — features that exceed requirements and provide measurable benefit. Meeting requirements earns \'Acceptable\' — not a strength. Every discriminating element should clearly exceed the stated requirement in a specific, verifiable way.',
             'Strengths must be documented — evaluators can only credit what they can see and quote.|||Correct. Source selection decisions are legally defensible only when based on documented evaluation. If an SSEB member believes a proposal feature is a strength but cannot quote specific text, the strength cannot be formally recorded. Every strength must be explicitly stated in the proposal.',
-            'Use the Government exact M language as section headers.|||Correct. Using Section M language as proposal headers makes evaluators\' jobs easier â they can immediately locate information relevant to their scored sub-factor. It also reduces the risk that evaluators miss a strength because they could not find the relevant section.',
-            'Each sub-factor needs at least one discriminating element your competitors cannot match.|||Correct. Discriminators are the strategic heart of proposal writing â a feature or capability only your team can credibly offer. Proposals without discriminators earn \'Acceptable\' across the board, which loses to a proposal with even one genuine strength.',
+            'Use the Government exact M language as section headers.|||Correct. Using Section M language as proposal headers makes evaluators\' jobs easier — they can immediately locate information relevant to their scored sub-factor. It also reduces the risk that evaluators miss a strength because they could not find the relevant section.',
+            'Each sub-factor needs at least one discriminating element your competitors cannot match.|||Correct. Discriminators are the strategic heart of proposal writing — a feature or capability only your team can credibly offer. Proposals without discriminators earn \'Acceptable\' across the board, which loses to a proposal with even one genuine strength.',
             ]}
             ]
           },
@@ -8242,9 +8250,9 @@ export const modules: Module[] = [
             title: 'SSA Responsibilities',
             items: [
             'Appoint the SSEB Chair and SSAC Chair|||Correct. The Source Selection Authority (SSA) appoints the SSEB and SSAC Chairs before the solicitation is released. This ensures the evaluation structure is in place and all members understand their roles before proposals arrive.',
-            'Approve the Source Selection Plan before solicitation release|||Correct. The Source Selection Plan (SSP) defines how proposals will be evaluated â rating scales, factor weights, evaluation methodologies. The SSA must approve the SSP before the RFP is released to ensure Section M is aligned with the SSP.',
-            'Review the SSAC recommendation (may accept, reject, or modify)|||Correct. The SSAC provides the SSA with a written best-value tradeoff recommendation. The SSA reviews but is not bound by it â the SSA may accept, reject, or modify the recommendation based on independent judgment. Rationale for any deviation must be documented.',
-            'Sign the Source Selection Decision Document (SSDD)|||Correct. The SSDD is the SSA\'s written, legally defensible decision document explaining the best-value determination. It must be sufficiently detailed to withstand a GAO protest â explaining how the technical advantages of the selected offeror justified any price premium.',
+            'Approve the Source Selection Plan before solicitation release|||Correct. The Source Selection Plan (SSP) defines how proposals will be evaluated — rating scales, factor weights, evaluation methodologies. The SSA must approve the SSP before the RFP is released to ensure Section M is aligned with the SSP.',
+            'Review the SSAC recommendation (may accept, reject, or modify)|||Correct. The SSAC provides the SSA with a written best-value tradeoff recommendation. The SSA reviews but is not bound by it — the SSA may accept, reject, or modify the recommendation based on independent judgment. Rationale for any deviation must be documented.',
+            'Sign the Source Selection Decision Document (SSDD)|||Correct. The SSDD is the SSA\'s written, legally defensible decision document explaining the best-value determination. It must be sufficiently detailed to withstand a GAO protest — explaining how the technical advantages of the selected offeror justified any price premium.',
             'The SSDD is the legal basis for the award — it must be defensible in a protest|||Correct. The SSDD is the most legally significant acquisition document. In a GAO protest, the GAO reviews the SSDD to determine whether the source selection was reasonable, consistent with stated criteria, and documented. SSDD deficiencies are the most common grounds for sustained protests.',
             ],
             },
@@ -8328,10 +8336,10 @@ export const modules: Module[] = [
             title: 'Solicitation Phase Actions',
             items: [
             'RFP Release: Full solicitation posted to SAM.gov. Sections L, M, C, H, I, J all released simultaneously|||Correct. The final RFP is posted to SAM.gov with all attachments. Section C (SOW), Section H (special requirements), Section I (contract clauses), Section J (attachments), Section L (instructions), and Section M (evaluation factors) are all released at the same time.',
-            'Pre-Proposal Conference: Government may hold a conference to answer questions (not always conducted)|||Correct. A pre-proposal conference is optional but common for complex acquisitions. Questions and answers from the conference must be formally documented and issued to ALL offerors via amendment â no proprietary answers.',
+            'Pre-Proposal Conference: Government may hold a conference to answer questions (not always conducted)|||Correct. A pre-proposal conference is optional but common for complex acquisitions. Questions and answers from the conference must be formally documented and issued to ALL offerors via amendment — no proprietary answers.',
             'Q&A Period: Written questions answered via amendment distributed to ALL offerors — no private answers|||Correct. Procurement integrity requirements (FAR 3.1) prohibit private communications that give any offeror an advantage. All questions submitted in writing are answered via an amendment distributed simultaneously to all offerors. Answers received privately create protest risk.',
             'Amendments: Any change to the RFP requires a formal amendment. Significant amendments may extend the due date|||Correct. Any change to the RFP requires a formal amendment posted to SAM.gov. Major changes affecting the technical approach or giving offerors insufficient time to respond must be accompanied by a due date extension. Failure to extend for significant amendments is protest grounds.',
-            'Industry is prohibited from contacting SSEB members during this period (procurement integrity)|||Correct. After the solicitation closes, the source selection is in \'blackout\' â industry contact with SSEB members is prohibited under procurement integrity rules (FAR 3.1 and the Procurement Integrity Act). Marketing calls or informal conversations that could influence the evaluation may constitute a procurement integrity violation.',
+            'Industry is prohibited from contacting SSEB members during this period (procurement integrity)|||Correct. After the solicitation closes, the source selection is in \'blackout\' — industry contact with SSEB members is prohibited under procurement integrity rules (FAR 3.1 and the Procurement Integrity Act). Marketing calls or informal conversations that could influence the evaluation may constitute a procurement integrity violation.',
             ],
             },
             ],
@@ -8348,9 +8356,9 @@ export const modules: Module[] = [
             title: 'Evaluation Phase Actions',
             items: [
             'Initial Proposal Evaluation: SSEB teams evaluate each volume, document Strengths/Weaknesses/Deficiencies|||Correct. SSEB panels (typically separate panels for Technical, Management, and Past Performance) evaluate proposals against Section M criteria. Each evaluator documents Strengths (exceeds requirements), Weaknesses (needs attention), Significant Weaknesses (performance risk), and Deficiencies (fails a mandatory requirement).',
-            'Competitive Range Determination: CO may exclude proposals with no realistic chance of award (FAR 15.306)|||Correct. After initial evaluation, the CO may establish a competitive range â excluding proposals that are technically unacceptable or so weak they have no realistic chance of award after discussions. Excluded offerors must be notified and may request a pre-award debrief.',
-            'Notice to Excluded Offerors: Eliminated offerors notified and may request a pre-award debrief|||Correct. FAR 15.505 requires notification to offerors excluded from the competitive range. Excluded offerors may request a pre-award debrief within 3 days â the government must provide specific information about strengths, weaknesses, and deficiencies within 5 days.',
-            'Price/Cost Analysis: Price reasonableness and cost realism review (for cost-type contracts)|||Correct. For fixed-price contracts, the CO performs price reasonableness analysis. For cost-type contracts, the CO also performs cost realism analysis â an unrealistically low cost proposal on a cost-type contract may indicate technical misunderstanding.',
+            'Competitive Range Determination: CO may exclude proposals with no realistic chance of award (FAR 15.306)|||Correct. After initial evaluation, the CO may establish a competitive range — excluding proposals that are technically unacceptable or so weak they have no realistic chance of award after discussions. Excluded offerors must be notified and may request a pre-award debrief.',
+            'Notice to Excluded Offerors: Eliminated offerors notified and may request a pre-award debrief|||Correct. FAR 15.505 requires notification to offerors excluded from the competitive range. Excluded offerors may request a pre-award debrief within 3 days — the government must provide specific information about strengths, weaknesses, and deficiencies within 5 days.',
+            'Price/Cost Analysis: Price reasonableness and cost realism review (for cost-type contracts)|||Correct. For fixed-price contracts, the CO performs price reasonableness analysis. For cost-type contracts, the CO also performs cost realism analysis — an unrealistically low cost proposal on a cost-type contract may indicate technical misunderstanding.',
             ],
             },
             ],
@@ -8386,7 +8394,7 @@ export const modules: Module[] = [
             type: 'bullets' as const,
             title: 'Award and Post-Award Actions',
             items: [
-            'SSAC Recommendation: SSAC provides written best-value tradeoff recommendation to SSA|||Correct. The SSAC â typically a panel of senior government officials â reviews the SSEB\'s individual ratings and conducts a tradeoff analysis: is the higher-rated offeror\'s technical advantage worth the price premium? The SSAC documents its reasoning in a recommendation to the SSA.',
+            'SSAC Recommendation: SSAC provides written best-value tradeoff recommendation to SSA|||Correct. The SSAC — typically a panel of senior government officials — reviews the SSEB\'s individual ratings and conducts a tradeoff analysis: is the higher-rated offeror\'s technical advantage worth the price premium? The SSAC documents its reasoning in a recommendation to the SSA.',
             'Source Selection Decision Document (SSDD): SSA signs, documenting independent best-value rationale|||Correct. The SSDD is the SSA\'s independent best-value determination. It must articulate: (1) comparative strengths, weaknesses, and deficiencies of competing offerors; (2) the price/technical tradeoff rationale; and (3) the basis for selecting the awardee as best value.',
             'Contract Execution: CO executes — award notice posted to SAM.gov|||Correct. The CO executes the contract (signs the award document) and the award notice is posted to SAM.gov per FAR 5.301. The contract is legally binding upon the CO\'s signature on behalf of the government and the contractor\'s signature.',
             'Unsuccessful Offeror Notifications: Required within 3 days of award (FAR 15.503)|||Correct. FAR 15.503 requires postaward notifications to unsuccessful offerors within 3 days of award. This triggers the 3-day window for requesting a debrief and the 10-day window for filing a GAO protest.',
@@ -8563,7 +8571,7 @@ export const modules: Module[] = [
         options: [
           'Strong BD performance — a large pipeline maximizes win probability|||Incorrect. A large pipeline without qualification exhausts proposal resources on low-probability pursuits. A $500M pipeline with 15% average pWin is less productive than a $200M pipeline with 40% average pWin. Quality beats volume in BD pipeline management.',
           'An undisciplined pipeline strategy that is likely wasting proposal resources on low-probability pursuits|||Correct. A large pipeline with low average pWin indicates poor opportunity qualification. Every proposal costs money (people, time, B&P budget). Low-pWin proposals are expensive distractions from high-probability pursuits.',
-          'The contractor should increase proposal volume to improve win totals|||Incorrect. Increasing proposal volume without improving win rate just increases B&P spending. The solution is better pipeline discipline â improving the quality of pursuits (higher pWin) rather than increasing quantity.',
+          'The contractor should increase proposal volume to improve win totals|||Incorrect. Increasing proposal volume without improving win rate just increases B&P spending. The solution is better pipeline discipline — improving the quality of pursuits (higher pWin) rather than increasing quantity.',
           'Normal BD operations — most opportunities in any pipeline have low pWin|||Correct. Most early-stage opportunities have inherently low pWin because they are being tracked before the company has built a discriminating solution. As opportunities mature through the BD lifecycle (identify → qualify → shape → pursue), pWin should increase.',
         ],
         correct: 1,
@@ -8573,10 +8581,10 @@ export const modules: Module[] = [
         id: 'q2',
         question: 'Why is the COR more strategically important than most contractors realize?',
         options: [
-          'The COR has authority to award contract modifications over $150,000|||Incorrect. CORs have NO contracting authority â they cannot award, modify, or terminate contracts under any circumstances. Only the Contracting Officer (with a warrant) can award modifications. A COR who attempts to commit the government creates an unauthorized commitment.',
-          'The COR is the primary author of CPARS ratings and the most influential voice in recompete positioning|||Correct. CPARS ratings are the government\'s official record of contractor past performance. The COR typically drafts the CPARS assessment â making the COR the most influential person in determining a contractor\'s past performance record, a primary evaluation factor in future competitions.',
+          'The COR has authority to award contract modifications over $150,000|||Incorrect. CORs have NO contracting authority — they cannot award, modify, or terminate contracts under any circumstances. Only the Contracting Officer (with a warrant) can award modifications. A COR who attempts to commit the government creates an unauthorized commitment.',
+          'The COR is the primary author of CPARS ratings and the most influential voice in recompete positioning|||Correct. CPARS ratings are the government\'s official record of contractor past performance. The COR typically drafts the CPARS assessment — making the COR the most influential person in determining a contractor\'s past performance record, a primary evaluation factor in future competitions.',
           'The COR controls the government\'s budget allocation for the contract|||Incorrect. The COR does not control budgets. Budget allocation is the responsibility of the program Resource Manager (or Comptroller), the PM, and the financial management chain.',
-          'The COR approves all invoices before the CO processes payment|||Partially correct. The COR certifies that work was performed (technical verification) before the CO approves payment. The chain is: COR certifies â CO approves â Finance pays. The COR\'s role is technical certification, not the final financial approval.',
+          'The COR approves all invoices before the CO processes payment|||Partially correct. The COR certifies that work was performed (technical verification) before the CO approves payment. The chain is: COR certifies — CO approves — Finance pays. The COR\'s role is technical certification, not the final financial approval.',
         ],
         correct: 1,
         explanation: 'The COR is the government\'s day-to-day technical interface and one of the most influential voices in CPARS ratings. A strong COR relationship directly impacts past performance ratings, recompete intelligence, and requirement shaping. Contractors who treat CORs as administrative checkpoints consistently underperform on recompetes.',
@@ -8585,10 +8593,10 @@ export const modules: Module[] = [
         id: 'q3',
         question: 'A solicitation uses a Performance Work Statement. How should a contractor\'s technical proposal respond?',
         options: [
-          'Provide a detailed task-by-task breakdown with labor hours per activity|||Correct. A strong technical approach responds directly to each PWS task with a detailed execution narrative â including labor hours by task, specific tools and methodologies, and measurable outcomes.',
+          'Provide a detailed task-by-task breakdown with labor hours per activity|||Correct. A strong technical approach responds directly to each PWS task with a detailed execution narrative — including labor hours by task, specific tools and methodologies, and measurable outcomes.',
           'Describe the management framework, quality metrics, and how outcomes will be measured and achieved|||Correct. The management approach section should explain the governance structure, performance metrics, quality control processes, and how the contractor will demonstrate value throughout performance.',
-          'Mirror the PWS structure with a direct response to each performance standard|||Correct. Using the PWS structure as the proposal organization framework â with section headers mirroring PWS section numbers â allows evaluators to quickly verify compliance with every performance standard.',
-          'Propose a fixed schedule of deliverables aligned to the government\'s task list|||Correct. A clear deliverables matrix â showing each PWS-required deliverable, the delivery date, the responsible person, and the acceptance criteria â demonstrates planning rigor and gives the government a ready-made performance baseline.',
+          'Mirror the PWS structure with a direct response to each performance standard|||Correct. Using the PWS structure as the proposal organization framework — with section headers mirroring PWS section numbers — allows evaluators to quickly verify compliance with every performance standard.',
+          'Propose a fixed schedule of deliverables aligned to the government\'s task list|||Correct. A clear deliverables matrix — showing each PWS-required deliverable, the delivery date, the responsible person, and the acceptance criteria — demonstrates planning rigor and gives the government a ready-made performance baseline.',
         ],
         correct: 1,
         explanation: 'PWS-based proposals should focus on management approach, quality management framework, and how the contractor will measure and demonstrate achievement of outcomes. Responding with a task-by-task activity list (SOW-style) signals a fundamental misunderstanding of performance-based contracting and is a red flag to evaluators.',
@@ -8597,10 +8605,10 @@ export const modules: Module[] = [
         id: 'q4',
         question: 'Which DCAA compliance requirement is described as "non-negotiable" for contractors on cost-reimbursable work?',
         options: [
-          'Monthly financial reporting to the contracting officer|||Correct. Cost-type contracts require regular financial reporting â typically monthly invoices with actual cost detail. The CO and COR monitor these reports to ensure costs are being allocated correctly and performance is tracking to plan.',
+          'Monthly financial reporting to the contracting officer|||Correct. Cost-type contracts require regular financial reporting — typically monthly invoices with actual cost detail. The CO and COR monitor these reports to ensure costs are being allocated correctly and performance is tracking to plan.',
           'Contemporaneous timekeeping — capturing time by contract daily, not retroactively|||Correct. DCAA requires employees on cost-type contracts to capture time contemporaneously — at the time of performance, not reconstructed after the fact. Retroactive timesheet entries are a serious accounting system deficiency. Each employee must record hours by specific contract number daily.',
           'Written compensation policies approved by the CO before award|||Incorrect as described. Compensation policies are part of the contractor\'s business system, not individually CO-approved per contract. Compensation must be \'reasonable\' under FAR 31.205-6, but individual CO pre-approval of compensation policies is not a standard requirement.',
-          'Independent audit of indirect rates by a certified public accountant|||Incorrect for most cost-type contracts. DCAA â a government audit organization â not a commercial CPA firm, performs the required audits on cost-type government contracts. However, companies without government audit history may use commercial auditors for incurred cost submissions until DCAA establishes audit jurisdiction.',
+          'Independent audit of indirect rates by a certified public accountant|||Incorrect for most cost-type contracts. DCAA — a government audit organization — not a commercial CPA firm, performs the required audits on cost-type government contracts. However, companies without government audit history may use commercial auditors for incurred cost submissions until DCAA establishes audit jurisdiction.',
         ],
         correct: 1,
         explanation: 'Contemporaneous timekeeping — capturing employee time by contract or project daily — is DCAA\'s most fundamental requirement and is non-negotiable. Retroactive time estimates or after-the-fact adjustments are a primary finding in DCAA audits and can result in cost disallowances, system rejection, and contract termination.',
@@ -8609,7 +8617,7 @@ export const modules: Module[] = [
         id: 'q5',
         question: 'When should a contractor formally activate its recompete plan?',
         options: [
-          '12 months before contract expiration, when the RFP timeline becomes clear|||Correct. This is typically when the incumbent begins intensive recompete positioning â the window when the government\'s acquisition timeline becomes visible through pre-solicitation notices and RFI releases. At 12 months, the contractor should have a preliminary proposal team and an active intelligence-gathering operation.',
+          '12 months before contract expiration, when the RFP timeline becomes clear|||Correct. This is typically when the incumbent begins intensive recompete positioning — the window when the government\'s acquisition timeline becomes visible through pre-solicitation notices and RFI releases. At 12 months, the contractor should have a preliminary proposal team and an active intelligence-gathering operation.',
           '6 months before expiration, when the government issues a pre-solicitation notice|||Correct. The pre-solicitation notice typically drops 6-12 months before the RFP. At this point, all potential competitors know the timeline, teaming conversations intensify, and the incumbent\'s positioning should be fully formed.',
           'At contract award — the moment the current period of performance begins|||Correct. Sophisticated contractors begin recompete strategy at contract award — sometimes called \'Day 1 positioning.\' The first day of performance sets the trajectory for CPARS ratings, customer relationships, and technical differentiation that will ultimately determine the recompete outcome.',
           '30 days before proposal submission deadline|||Incorrect. Beginning recompete work 30 days before proposal submission is far too late. By this point, the proposal team should be in full production on a completed draft. 30 days out is proposal writing time, not strategy time.',
@@ -9025,8 +9033,8 @@ export const modules: Module[] = [
         id: 'q1',
         question: "Management Reserve (MR) in a defense program is intended to:",
         options: [
-          'Cover known, well-defined work that is already planned|||Incorrect. This describes the Performance Measurement Baseline (PMB). Management Reserve (MR) is budget held outside the PMB for unplanned in-scope work â specifically for risks and unforeseen events, not for planned work.',
-          'Fund identified risks and unforeseen events that affect the Performance Measurement Baseline|||Correct. MR is held by the PM above the PMB for unplanned, in-scope events. When an identified risk materializes, the PM can draw from MR to fund the additional work â after the MR draw is formally documented and approved.',
+          'Cover known, well-defined work that is already planned|||Incorrect. This describes the Performance Measurement Baseline (PMB). Management Reserve (MR) is budget held outside the PMB for unplanned in-scope work — specifically for risks and unforeseen events, not for planned work.',
+          'Fund identified risks and unforeseen events that affect the Performance Measurement Baseline|||Correct. MR is held by the PM above the PMB for unplanned, in-scope events. When an identified risk materializes, the PM can draw from MR to fund the additional work — after the MR draw is formally documented and approved.',
           'Pay for program management overhead costs|||Incorrect. Program management overhead is included within the PMB. MR is specifically for unplanned events, not for covering routine management costs.',
           "Supplement the contractor\'s profit on cost-plus contracts"
         ],
@@ -9046,7 +9054,7 @@ export const modules: Module[] = [
         options: [
           'Tracking the number of risks added per month|||Incorrect. Tracking the raw number of risks added per month is a process metric, not an indicator of risk management effectiveness. Meaningful risk tracking focuses on risk probability, impact, and mitigation progress.',
           'Showing how risk probability and impact decrease over time as mitigation actions are executed|||Correct. Effective risk tracking demonstrates that the risk management process is actually reducing risk. The risk burn-down chart (number and severity of open risks over time) is the most powerful visualization of risk management effectiveness.',
-          'Charting contractor cost overruns by risk category|||Incorrect. Charting actual cost overruns by risk category is a post-mortem activity. Proactive risk management tracks risks before they materialize â monitoring leading indicators and verifying that mitigation actions are being executed on schedule.',
+          'Charting contractor cost overruns by risk category|||Incorrect. Charting actual cost overruns by risk category is a post-mortem activity. Proactive risk management tracks risks before they materialize — monitoring leading indicators and verifying that mitigation actions are being executed on schedule.',
           'Displaying the Management Reserve balance over time'
         ],
         correct: 1,
@@ -9068,7 +9076,7 @@ export const modules: Module[] = [
         id: 'q5',
         question: "Undistributed Budget (UB) in a defense program refers to:",
         options: [
-          'Budget that has been allocated but not yet spent|||Incorrect. \'Budget allocated but not spent\' describes BCWS vs. ACWP â an EVM concept. Neither BCWS nor the difference between BCWS and ACWP is the definition of a risk.',
+          'Budget that has been allocated but not yet spent|||Incorrect. \'Budget allocated but not spent\' describes BCWS vs. ACWP — an EVM concept. Neither BCWS nor the difference between BCWS and ACWP is the definition of a risk.',
           'Budget that has not yet been assigned to specific control accounts or work packages|||Correct for Undistributed Budget (UB). UB represents authorized program budget not yet distributed to specific WBS elements. In EVM, UB appears in Format 3 (Baseline) and should decrease as the program matures.',
           "The contractor\'s fee on a cost-plus contract",
           'Reserve funding held by the contracting officer'
@@ -9080,9 +9088,9 @@ export const modules: Module[] = [
         id: 'q6',
         question: "Which of the following is an example of \"Opportunity Management\" in defense programs?",
         options: [
-          'Identifying a new contract vehicle that reduces administrative costs|||Incorrect for risk response context. Identifying a new contract vehicle is an opportunity response â exploiting an opportunity. Vehicle selection is a pre-award acquisition strategy decision.',
-          'Exploiting early technology maturation to reduce schedule by accelerating testing|||Correct. This is a classic opportunity response â when technology matures faster than expected, the PM can exploit that maturation to accelerate the test program and potentially reduce schedule. Opportunity management proactively exploits favorable program conditions.',
-          'Hiring additional staff to address a schedule delay|||Incorrect for risk response. Hiring additional staff to address an existing schedule delay is an issue response (corrective action) â not a risk response. Risk responses are planned before the event occurs.',
+          'Identifying a new contract vehicle that reduces administrative costs|||Incorrect for risk response context. Identifying a new contract vehicle is an opportunity response — exploiting an opportunity. Vehicle selection is a pre-award acquisition strategy decision.',
+          'Exploiting early technology maturation to reduce schedule by accelerating testing|||Correct. This is a classic opportunity response — when technology matures faster than expected, the PM can exploit that maturation to accelerate the test program and potentially reduce schedule. Opportunity management proactively exploits favorable program conditions.',
+          'Hiring additional staff to address a schedule delay|||Incorrect for risk response. Hiring additional staff to address an existing schedule delay is an issue response (corrective action) — not a risk response. Risk responses are planned before the event occurs.',
           'Requesting supplemental funding from Congress'
         ],
         correct: 1,
@@ -9104,9 +9112,9 @@ export const modules: Module[] = [
         id: 'q8',
         question: "What does the DoD's \"5-step\" risk management process include in order?",
         options: [
-          'Plan, Identify, Analyze, Track, Control|||Correct. The DoD Risk Management process follows this five-step cycle: (1) Plan â establish the risk management approach; (2) Identify â systematically find potential risks; (3) Analyze â assess probability and impact; (4) Track â monitor risk indicators and mitigation progress; (5) Control â implement mitigation actions and update the risk register.',
-          'Identify, Analyze, Plan, Track, Control|||Incorrect. The DoD framework begins with Plan (establishing the approach before identifying risks). The correct sequence is Plan â Identify â Analyze â Track â Control. Starting with Identify before establishing a risk management plan leads to inconsistent, unstructured risk identification.',
-          'Analyze, Identify, Mitigate, Retire, Report|||Incorrect. This is not the standard DoD Risk Management framework. \'Retire\' is not a distinct phase in the DoD 5-step process. The correct sequence is Plan â Identify â Analyze â Track â Control.',
+          'Plan, Identify, Analyze, Track, Control|||Correct. The DoD Risk Management process follows this five-step cycle: (1) Plan — establish the risk management approach; (2) Identify — systematically find potential risks; (3) Analyze — assess probability and impact; (4) Track — monitor risk indicators and mitigation progress; (5) Control — implement mitigation actions and update the risk register.',
+          'Identify, Analyze, Plan, Track, Control|||Incorrect. The DoD framework begins with Plan (establishing the approach before identifying risks). The correct sequence is Plan — Identify — Analyze — Track — Control. Starting with Identify before establishing a risk management plan leads to inconsistent, unstructured risk identification.',
+          'Analyze, Identify, Mitigate, Retire, Report|||Incorrect. This is not the standard DoD Risk Management framework. \'Retire\' is not a distinct phase in the DoD 5-step process. The correct sequence is Plan — Identify — Analyze — Track — Control.',
           'Identify, Plan, Execute, Assess, Close'
         ],
         correct: 1,
@@ -9117,8 +9125,8 @@ export const modules: Module[] = [
         question: "When should Management Reserve (MR) typically be included in a program\'s budget?",
         options: [
           'MR is never included — it violates the Anti-Deficiency Act|||Incorrect. Management Reserve is a standard and required element of EVM-based program management. MR is held above the PMB but within the total program budget — it does not violate the Anti-Deficiency Act. MR is pre-authorized by the government within the program\'s total budget authority.',
-          'MR is included above the Performance Measurement Baseline to cover risk events|||Correct. MR sits above the PMB in the total program budget hierarchy: MR + PMB = Contract Budget Base (CBB). MR is available to the PM for unplanned, in-scope work â drawn down via formal MR authorization and documented in CPR Format 3.',
-          'MR is held by the contracting officer and cannot be accessed by the PM|||Incorrect. MR is held by the PM (or program office) â not the contracting officer. The PM controls MR usage within the bounds of the contract\'s EVM provisions.',
+          'MR is included above the Performance Measurement Baseline to cover risk events|||Correct. MR sits above the PMB in the total program budget hierarchy: MR + PMB = Contract Budget Base (CBB). MR is available to the PM for unplanned, in-scope work — drawn down via formal MR authorization and documented in CPR Format 3.',
+          'MR is held by the contracting officer and cannot be accessed by the PM|||Incorrect. MR is held by the PM (or program office) — not the contracting officer. The PM controls MR usage within the bounds of the contract\'s EVM provisions.',
           'MR is only available on fixed-price contracts'
         ],
         correct: 1,
@@ -9220,9 +9228,9 @@ export const modules: Module[] = [
         id: 'q2',
         question: "The Program Executive Officer (PEO) in the defense acquisition hierarchy primarily:",
         options: [
-          'Signs all contracts on behalf of the government|||Incorrect as a description of the PEO. The PEO is a senior acquisition official providing oversight of a portfolio of programs â not a contracting authority. Contract signing authority rests with the Contracting Officer.',
+          'Signs all contracts on behalf of the government|||Incorrect as a description of the PEO. The PEO is a senior acquisition official providing oversight of a portfolio of programs — not a contracting authority. Contract signing authority rests with the Contracting Officer.',
           'Manages a portfolio of programs and is the direct superior of individual Program Managers|||Correct. The PEO manages a portfolio of related acquisition programs, with individual PMs reporting to the PEO. Examples: PEO Aviation (Army), PEO Ships (Navy), PEO C2 (Air Force). The PEO is accountable to the SAE for portfolio health.',
-          'Reports directly to the Secretary of Defense|||Incorrect for PEO. PEOs report to the Service Acquisition Executive (SAE) â who reports to the Service Secretary, not directly to SECDEF.',
+          'Reports directly to the Secretary of Defense|||Incorrect for PEO. PEOs report to the Service Acquisition Executive (SAE) — who reports to the Service Secretary, not directly to SECDEF.',
           "Represents Congress's oversight interest in acquisition programs"
         ],
         correct: 1,
@@ -9256,7 +9264,7 @@ export const modules: Module[] = [
         id: 'q5',
         question: "The \"1-3-5\" executive communication rule is designed to:",
         options: [
-          'Limit briefings to 1 slide, 3 bullets, and 5 minutes of Q&A|||Incorrect for executive acquisition communications. This is an extreme oversimplification. Executive acquisition briefings have specific content requirements â APB status, CPI/SPI trends, major risks, and upcoming decisions.',
+          'Limit briefings to 1 slide, 3 bullets, and 5 minutes of Q&A|||Incorrect for executive acquisition communications. This is an extreme oversimplification. Executive acquisition briefings have specific content requirements — APB status, CPI/SPI trends, major risks, and upcoming decisions.',
           'Structure communications as 1 core message, 3 supporting data points, and 5-minute verbal summary|||Correct. This is a practical executive communication framework for program office briefings. Lead with the single most important message, support it with three data points, and be prepared to deliver the summary in 5 minutes or less.',
           'Set 1-year, 3-year, and 5-year program objectives for executives|||Incorrect for briefing structure. Setting long-range objectives is a program planning function, not an executive briefing communication structure.',
           'Require 1 weekly, 3 monthly, and 5 quarterly reviews for ACAT I programs'
@@ -9268,9 +9276,9 @@ export const modules: Module[] = [
         id: 'q6',
         question: "A System Requirements Review (SRR) is conducted at which point in the acquisition lifecycle?",
         options: [
-          'After Milestone C, before production begins|||Incorrect. Milestone B occurs before Milestone C. Milestone B authorizes entry into EMD â long before Milestone C (which authorizes production).',
+          'After Milestone C, before production begins|||Incorrect. Milestone B occurs before Milestone C. Milestone B authorizes entry into EMD — long before Milestone C (which authorizes production).',
           'Before Milestone A, during the Materiel Solution Analysis phase|||Correct for the ICD. The Initial Capabilities Document is validated before Milestone A as an input to the MSA phase. The ICD establishes the capability gap and potential approaches, informing the AoA and Milestone A decision.',
-          'During the Technology Maturation and Risk Reduction phase (Phase A)|||Correct for the CDD. The CDD is typically drafted and validated during the TMRR phase â after Milestone A and before Milestone B. The CDD defines the detailed system requirements (KPPs, KSAs, APAs).',
+          'During the Technology Maturation and Risk Reduction phase (Phase A)|||Correct for the CDD. The CDD is typically drafted and validated during the TMRR phase — after Milestone A and before Milestone B. The CDD defines the detailed system requirements (KPPs, KSAs, APAs).',
           'After Critical Design Review, before testing begins'
         ],
         correct: 2,
@@ -9280,8 +9288,8 @@ export const modules: Module[] = [
         id: 'q7',
         question: "Congressional staff members who monitor defense acquisition programs are significant stakeholders because:",
         options: [
-          'They can directly cancel programs through committee votes at any time|||Incorrect. Congress cannot cancel individual programs through simple committee votes â it must act through legislation (authorization or appropriations). Program termination requires legal action, not informal committee action.',
-          'They influence authorization and appropriations legislation, and their concerns can affect program funding and direction|||Correct. Congress exercises acquisition oversight through: (1) the NDAA (authorization) â establishing program authorities and setting acquisition policy; and (2) appropriations acts â actually funding programs. Congressional concerns can lead PEOs and PMs to restructure programs proactively.',
+          'They can directly cancel programs through committee votes at any time|||Incorrect. Congress cannot cancel individual programs through simple committee votes — it must act through legislation (authorization or appropriations). Program termination requires legal action, not informal committee action.',
+          'They influence authorization and appropriations legislation, and their concerns can affect program funding and direction|||Correct. Congress exercises acquisition oversight through: (1) the NDAA (authorization) — establishing program authorities and setting acquisition policy; and (2) appropriations acts — actually funding programs. Congressional concerns can lead PEOs and PMs to restructure programs proactively.',
           'They must approve all contracts over $100M|||Incorrect. Congress does not approve individual contracts. Contracts are executed by executive branch contracting officers under delegated authority. Congress sets overall funding levels but does not approve individual contract awards.',
           'They conduct independent technical reviews of all ACAT I programs'
         ],
@@ -9293,7 +9301,7 @@ export const modules: Module[] = [
         question: "The Defense Acquisition Board (DAB) primarily serves which function?",
         options: [
           'Managing day-to-day program execution for all ACAT programs|||Incorrect for USD(A&S). The USD(A&S) is the senior executive responsible for defense acquisition policy, not day-to-day program management. Day-to-day execution is the PM\'s job. USD(A&S) serves as MDA for ACAT I programs.',
-          'Providing milestone decision authority for ACAT I programs to USD(A&S)|||Correct. USD(A&S) serves as the Milestone Decision Authority (MDA) for ACAT I programs â the most significant acquisition decisions in the DoD portfolio. For ACAT II and III, MDA is delegated to Component Acquisition Executives (CAEs) and PEOs.',
+          'Providing milestone decision authority for ACAT I programs to USD(A&S)|||Correct. USD(A&S) serves as the Milestone Decision Authority (MDA) for ACAT I programs — the most significant acquisition decisions in the DoD portfolio. For ACAT II and III, MDA is delegated to Component Acquisition Executives (CAEs) and PEOs.',
           'Conducting annual budget reviews for the FYDP|||Correct for OSD/CAPE\'s role. The FYDP (Future Years Defense Program) is the five-year investment plan for DoD programs. Annual reviews are conducted through the PPBE process, with CAPE providing analytical support.',
           'Certifying contracting officers for major acquisitions'
         ],
@@ -9304,9 +9312,9 @@ export const modules: Module[] = [
         id: 'q9',
         question: "When preparing a Monthly Status Review (MSR) for the PEO, what information should the PM always be ready to present?",
         options: [
-          'Contractor profit margins and fee structures|||Incorrect for DAES reporting. The Defense Acquisition Executive Summary (DAES) is a quarterly report on major programs covering cost, schedule, and performance. It does not detail contractor profit margins â that information is proprietary.',
+          'Contractor profit margins and fee structures|||Incorrect for DAES reporting. The Defense Acquisition Executive Summary (DAES) is a quarterly report on major programs covering cost, schedule, and performance. It does not detail contractor profit margins — that information is proprietary.',
           'Cost and schedule performance (CPI/SPI), technical progress, risk status, and upcoming decision points|||Correct. The DAES reports key program health indicators to OSD and Congress: EVM data (CPI/SPI for ACAT I programs), APB compliance, risk status, upcoming milestones, and program office assessment.',
-          'Individual employee performance ratings|||Incorrect. Government program employee performance ratings are a personnel matter â not reported in program oversight documents. DAES focuses on program-level cost, schedule, and technical performance.',
+          'Individual employee performance ratings|||Incorrect. Government program employee performance ratings are a personnel matter — not reported in program oversight documents. DAES focuses on program-level cost, schedule, and technical performance.',
           'Market research data for future acquisitions'
         ],
         correct: 1,
@@ -9316,9 +9324,9 @@ export const modules: Module[] = [
         id: 'q10',
         question: "OSD's Cost Assessment and Program Evaluation (CAPE) office is frequently perceived as adversarial by program offices because:",
         options: [
-          'CAPE has authority to cancel programs unilaterally|||Incorrect. CAPE is an analytical office â it does not have independent authority to cancel programs. CAPE provides analysis and recommendations to USD(A&S) and SECDEF, who have the authority to restructure or terminate programs.',
+          'CAPE has authority to cancel programs unilaterally|||Incorrect. CAPE is an analytical office — it does not have independent authority to cancel programs. CAPE provides analysis and recommendations to USD(A&S) and SECDEF, who have the authority to restructure or terminate programs.',
           "CAPE's independent cost estimates are typically higher than program office estimates, and they are often statistically more accurate",
-          'CAPE controls the release of all program funding|||Incorrect. Funding release is controlled through the financial management chain â OMB, OSD(Comptroller), Service comptrollers. CAPE influences program funding through its analytical role in the PPBE process but does not control funding release.',
+          'CAPE controls the release of all program funding|||Incorrect. Funding release is controlled through the financial management chain — OMB, OSD(Comptroller), Service comptrollers. CAPE influences program funding through its analytical role in the PPBE process but does not control funding release.',
           'CAPE approves all contract modifications over $10M'
         ],
         correct: 1,
@@ -9491,8 +9499,8 @@ You have more leverage before a missed milestone than after it. Use it early.`,
             question: "A Contractor Purchasing System Review (CPSR) is conducted by which organization?",
             options: [
               'The Government Accountability Office (GAO)|||Correct. GAO is the Congressional watchdog that investigates government programs and spending. In defense acquisition, GAO: (1) conducts program assessments, (2) adjudicates bid protests, and (3) investigates acquisition irregularities at Congressional request.',
-              'The Defense Contract Audit Agency (DCAA)|||Correct. DCAA audits contractor costs on behalf of all DoD contracting activities. Its mission: ensure the government pays only allowable, allocable, and reasonable costs on cost-type contracts. DCAA provides audit opinions â the CO makes final determinations.',
-              'The Defense Contract Management Agency (DCMA)|||Correct. DCMA is DoD\'s contract administration arm â managing contract performance after award. DCMA COs administer contracts, DCMA quality assurance representatives conduct surveillance, and DCMA is the primary EVM oversight organization for programs reporting IPMR/CPR.',
+              'The Defense Contract Audit Agency (DCAA)|||Correct. DCAA audits contractor costs on behalf of all DoD contracting activities. Its mission: ensure the government pays only allowable, allocable, and reasonable costs on cost-type contracts. DCAA provides audit opinions — the CO makes final determinations.',
+              'The Defense Contract Management Agency (DCMA)|||Correct. DCMA is DoD\'s contract administration arm — managing contract performance after award. DCMA COs administer contracts, DCMA quality assurance representatives conduct surveillance, and DCMA is the primary EVM oversight organization for programs reporting IPMR/CPR.',
               'The program office Contracting Officer'
             ],
             correct: 2,
@@ -9502,7 +9510,7 @@ You have more leverage before a missed milestone than after it. Use it early.`,
             id: 'q5',
             question: "Under FAR 52.219-9, large prime contractors with contracts exceeding $750K must:",
             options: [
-              'Reserve 25% of the contract value for small business subcontractors|||Incorrect. There is no mandatory reservation of contract value for small business subcontractors. The small business subcontracting plan (FAR 52.219-9) establishes goals â aspirational targets â not contractual quotas.',
+              'Reserve 25% of the contract value for small business subcontractors|||Incorrect. There is no mandatory reservation of contract value for small business subcontractors. The small business subcontracting plan (FAR 52.219-9) establishes goals — aspirational targets — not contractual quotas.',
               'Submit a Small Business Subcontracting Plan with goals for various small business categories|||Correct. Large business prime contractors on contracts over $750K must submit a formal Small Business Subcontracting Plan with specific dollar and percentage goals for: small business (SB), SDB, WOSB, HUBZone SB, VOSB, and SDVOSB.',
               'Exclusively use small businesses for all subcontracts|||Incorrect. Large businesses are not required to use small businesses exclusively. The requirement is to establish realistic goals and make good-faith efforts to meet them. Many subcontracts involve specialized capabilities only available from large businesses.',
               'Certify as a small business to qualify for the contract'
@@ -9533,7 +9541,7 @@ You have more leverage before a missed milestone than after it. Use it early.`,
             id: 'q8',
             question: "When a prime contractor receives a \"Cure Notice\" from the Contracting Officer, it indicates:",
             options: [
-              'The government has found a billing error that needs to be corrected|||Incorrect. Billing errors are addressed through invoice dispute processes (FAR 32.9) or audit findings â not Cure Notices. A Cure Notice is specifically for performance deficiencies that endanger the contractor\'s ability to complete the contract.',
+              'The government has found a billing error that needs to be corrected|||Incorrect. Billing errors are addressed through invoice dispute processes (FAR 32.9) or audit findings — not Cure Notices. A Cure Notice is specifically for performance deficiencies that endanger the contractor\'s ability to complete the contract.',
               'The contractor has a specified time (typically 10 days) to cure conditions endangering contract performance or face termination|||Correct. A Cure Notice (FAR 49.607) is issued by the CO when the contractor is in danger of defaulting. The notice specifies the failure and gives the contractor typically 10 days to cure the deficiency. Failure to cure may result in termination for default.',
               'The government intends to exercise a contract option|||Incorrect. Contract option exercise notices are separate actions under FAR 17.207. This is unrelated to a Cure Notice.',
               'The DCMA has completed a CPSR with findings requiring resolution'
@@ -9547,7 +9555,7 @@ You have more leverage before a missed milestone than after it. Use it early.`,
             options: [
               'Whether the government should produce the item organically or purchase it from industry|||Correct. Make vs. Buy analysis evaluates whether it is more advantageous for the government to perform work organically (government facilities, employees, or depot maintenance) versus contracting with industry. Factors include cost, national security, industrial base health, and core competency considerations.',
               "Which components the prime will manufacture internally versus subcontract to other companies",
-              'The comparison of fixed-price vs. cost-type contracts for major subcontracts|||Incorrect. This describes contract type selection analysis â which is related to but distinct from Make vs. Buy. Make vs. Buy is a sourcing decision (government vs. contractor performance), not a contract type decision.',
+              'The comparison of fixed-price vs. cost-type contracts for major subcontracts|||Incorrect. This describes contract type selection analysis — which is related to but distinct from Make vs. Buy. Make vs. Buy is a sourcing decision (government vs. contractor performance), not a contract type decision.',
               'Whether to buy commercial off-the-shelf items or develop custom solutions'
             ],
             correct: 1,
@@ -9679,10 +9687,10 @@ You have more leverage before a missed milestone than after it. Use it early.`,
             id: 'q1',
             question: 'A program\'s IMS shows all tasks on schedule during a mid-point program review, but the PM privately knows several work packages are behind. What is the most significant risk of this situation?',
             options: [
-              'The program will receive a negative DAES assessment|||Incorrect. A DAES assessment is a trailing indicator â it reflects problems already visible in data. The primary risk of disconnect between EVM data and program briefings is far more immediate: when the disconnect surfaces at milestone reviews or independent assessments, the program\'s credibility is severely damaged.',
+              'The program will receive a negative DAES assessment|||Incorrect. A DAES assessment is a trailing indicator — it reflects problems already visible in data. The primary risk of disconnect between EVM data and program briefings is far more immediate: when the disconnect surfaces at milestone reviews or independent assessments, the program\'s credibility is severely damaged.',
               'The disconnect will surface at a major milestone review, causing far greater damage than honest early reporting would have|||Correct. The cardinal rule of program management communication: never brief \'green\' when the data says \'red.\' Disconnects always surface eventually. Early honest disclosure, while uncomfortable, is far less damaging than discovered misrepresentation.',
               'DCMA will issue a surveillance finding for inaccurate EVM reporting|||Correct. DCMA conducts Integrated Baseline Reviews (IBRs) and ongoing EVM surveillance. If DCMA identifies that EVM data is not accurately reflecting actual performance, it will issue a surveillance finding. Repeated findings can result in DCMA recommending the program\'s EVM system be decertified.',
-              'Congressional staffers will request an independent assessment|||Correct. If Congress becomes aware of a significant disconnect between official program reporting and actual performance, Congressional staffers may request an independent assessment â triggering a CAPE review, a GAO investigation, or Section 809 Panel-type review. Congressional involvement dramatically escalates consequences.',
+              'Congressional staffers will request an independent assessment|||Correct. If Congress becomes aware of a significant disconnect between official program reporting and actual performance, Congressional staffers may request an independent assessment — triggering a CAPE review, a GAO investigation, or Section 809 Panel-type review. Congressional involvement dramatically escalates consequences.',
             ],
             correct: 1,
             explanation: 'A schedule that shows green when the program is actually amber or red doesn\'t protect the PM — it exposes them to far greater risk when the truth surfaces at a major milestone review. PEOs and oversight bodies are far more forgiving of honest early warnings than of surprises at milestone decision points.',
@@ -9692,7 +9700,7 @@ You have more leverage before a missed milestone than after it. Use it early.`,
             question: 'An ACAT I program\'s original APB unit cost was $100M. After restructuring, the current APB unit cost is $115M. At what unit cost would a critical Nunn-McCurdy breach occur?',
             options: [
               '$132.25M (25% above current APB of $115M)|||Correct threshold calculation. The Nunn-McCurdy \'significant\' breach threshold is 15% above the current APB. The \'critical\' breach threshold is 25% above the current APB. For current APB of $115M: significant = $115M × 1.15 = $132.25M; critical = $115M × 1.25 = $143.75M. Breaching these thresholds triggers Congressional notification requirements.',
-              '$125M (25% above original APB of $100M)|||Correct for \'significant\' Nunn-McCurdy relative to the original APB. 25% above the original APB of $100M = $125M. This represents the \'significant cost growth\' threshold above the original baseline. Above this level, USD(A&S) must notify Congress. The \'critical\' threshold above original APB is 50% (â $150M).',
+              '$125M (25% above original APB of $100M)|||Correct for \'significant\' Nunn-McCurdy relative to the original APB. 25% above the original APB of $100M = $125M. This represents the \'significant cost growth\' threshold above the original baseline. Above this level, USD(A&S) must notify Congress. The \'critical\' threshold above original APB is 50% (— $150M).',
               '$127.5M (15% above current APB)|||Calculation note: 15% above $115M = $132.25M, not $127.5M. Verify specific APB values against 10 U.S.C. 2433 for the program. Use the Nunn-McCurdy worksheet rather than mental math to avoid calculation errors. The exact threshold depends on the specific current APB value for each program.',
               '$140M (25% above restructured baseline)|||Correct for the specific restructured baseline scenario. If the program was restructured with a new APB of $112M, then 25% above restructured = $112M × 1.25 = $140M. Nunn-McCurdy calculations must always reference the specific APB version. Restructured programs reset certain thresholds but retain comparison to the original APB.',
             ],
@@ -9706,7 +9714,7 @@ You have more leverage before a missed milestone than after it. Use it early.`,
               'Normal performance variation — single-period CPI fluctuations are expected|||Incorrect for a program with three consecutive declining months. Single-period CPI fluctuations are normal. But three consecutive months of declining CPI — especially past the 20% completion point — is statistically significant. Sustained CPI decline after 20% completion rarely reverses.',
               'A systemic cost problem that will not self-correct and requires formal PM action|||Correct. Three or more consecutive months of declining CPI indicates a systemic cost problem. The PM must: (1) validate the EAC, (2) identify root causes, (3) implement documented corrective actions, and (4) brief the PEO on the revised completion estimate.',
               'The contractor\'s EVMS is not DCMA-accepted and the data is unreliable|||Incorrect as a conclusion from CPI trend alone. DCMA acceptance of an EVMS is a separate determination. CPI trend can be analyzed from reported data regardless of EVMS acceptance status. If the EVMS has not been accepted, the data quality concern should be addressed separately.',
-              'The program is approaching a significant Nunn-McCurdy breach|||Possibly correct depending on the EAC. A declining CPI trend may or may not be approaching a Nunn-McCurdy breach â that depends on the magnitude of the CPI, the EAC, and the APB. Nunn-McCurdy breaches require specific cost growth calculations, not just CPI trend analysis.',
+              'The program is approaching a significant Nunn-McCurdy breach|||Possibly correct depending on the EAC. A declining CPI trend may or may not be approaching a Nunn-McCurdy breach — that depends on the magnitude of the CPI, the EAC, and the APB. Nunn-McCurdy breaches require specific cost growth calculations, not just CPI trend analysis.',
             ],
             correct: 1,
             explanation: 'A CPI trending downward over three consecutive periods (0.91 → 0.89 → 0.87) signals a systemic cost problem that will not self-correct. Statistical research shows that CPI rarely improves by more than 10% after the program is 20% complete. This requires formal root cause analysis, PEO briefing, and likely an EAC reestimate.',
@@ -9715,10 +9723,10 @@ You have more leverage before a missed milestone than after it. Use it early.`,
             id: 'q4',
             question: 'Why is a KPP that "cannot have a test procedure written for it" a problem?',
             options: [
-              'It violates JCIDS documentation requirements for CDD submission|||Incorrect. A non-testable requirement violates systems engineering best practices, but the primary regulatory framework for testability is the systems engineering process â not JCIDS documentation requirements per se.',
+              'It violates JCIDS documentation requirements for CDD submission|||Incorrect. A non-testable requirement violates systems engineering best practices, but the primary regulatory framework for testability is the systems engineering process — not JCIDS documentation requirements per se.',
               'It is untestable — meaning there is no way to confirm compliance or non-compliance, creating contract disputes and requirements creep|||Correct. A non-testable requirement (e.g., \'the system shall be user-friendly\') is a systems engineering deficiency. If there is no defined test method or acceptance criterion, the government and contractor will disagree on whether the requirement has been met — creating disputes and requirements creep.',
-              'It requires CAPE review before it can be included in the system specification|||Incorrect. CAPE review is for cost estimates and program assessments â not for individual requirements testability. If a requirement is non-testable, the systems engineer and test community flag it during requirements review.',
-              'It cannot be incorporated into the contract SOW under FAR guidelines|||Incorrect. Non-testable requirements can appear in contracts â FAR does not specifically prohibit them. The problem is practical: non-testable requirements create performance disputes, cost overruns, and litigation risk.',
+              'It requires CAPE review before it can be included in the system specification|||Incorrect. CAPE review is for cost estimates and program assessments — not for individual requirements testability. If a requirement is non-testable, the systems engineer and test community flag it during requirements review.',
+              'It cannot be incorporated into the contract SOW under FAR guidelines|||Incorrect. Non-testable requirements can appear in contracts — FAR does not specifically prohibit them. The problem is practical: non-testable requirements create performance disputes, cost overruns, and litigation risk.',
             ],
             correct: 1,
             explanation: 'A requirement that cannot be tested cannot be definitively confirmed as met — creating one of the most expensive failure modes in defense acquisition: requirements creep and contract disputes. The contractor builds to the minimum interpretation; the government expected something more capable. Every KPP must have a verification method, threshold, and objective value.',
@@ -9727,9 +9735,9 @@ You have more leverage before a missed milestone than after it. Use it early.`,
             id: 'q5',
             question: 'According to the stakeholder management framework, what do PMs most commonly do wrong when problems emerge?',
             options: [
-              'They engage CAPE too early, before internal cost analyses are complete|||Incorrect as a primary PM communication failure. Engaging CAPE early (proactively) is generally good practice â CAPE can provide methodology guidance before its ICE becomes adversarial. The more common failure is waiting too long.',
+              'They engage CAPE too early, before internal cost analyses are complete|||Incorrect as a primary PM communication failure. Engaging CAPE early (proactively) is generally good practice — CAPE can provide methodology guidance before its ICE becomes adversarial. The more common failure is waiting too long.',
               'They wait until a problem is visible before engaging upward — losing the political capital built through proactive communication|||Correct. The most common PM communication failure is reactive rather than proactive stakeholder management. PMs who brief problems only after they become visible lose credibility. PMs who proactively brief emerging risks build the trust that allows them to navigate bad news without program-threatening consequences.',
-              'They brief the prime contractor before informing the PEO|||Incorrect. While briefing the prime contractor is appropriate for performance management discussions, the PM\'s primary reporting obligation is upward â to the PEO and oversight chain.',
+              'They brief the prime contractor before informing the PEO|||Incorrect. While briefing the prime contractor is appropriate for performance management discussions, the PM\'s primary reporting obligation is upward — to the PEO and oversight chain.',
               'They over-communicate minor issues, creating unnecessary alarm in the oversight community|||Incorrect as a primary PM failure. Over-communication of minor issues is far less common than under-communication of major ones. Senior acquisition leaders consistently prefer more frequent, candid communication over surprised discovery of major problems.',
             ],
             correct: 1,

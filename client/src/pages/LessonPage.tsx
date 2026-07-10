@@ -1662,6 +1662,55 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               );
             }
 
+            // ── name_change_visual ── clarifies an old term is the same thing as a new term ──
+            if ((block as any).type === 'name_change_visual') {
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-bold text-sm mb-3">{block.heading}</h3>}
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <div className="flex-1 min-w-[140px] rounded-xl border-2 border-dashed border-muted-foreground/30 bg-muted/20 p-4 text-center">
+                      <div className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">{(block as any).oldLabel || 'Old Name'}</div>
+                      <div className="text-base font-black text-muted-foreground">{(block as any).oldTerm}</div>
+                    </div>
+                    <ArrowRight className="w-6 h-6 text-primary flex-shrink-0" />
+                    <div className="flex-1 min-w-[140px] rounded-xl border-2 border-primary bg-primary/10 p-4 text-center">
+                      <div className="text-[10px] font-bold uppercase tracking-wide text-primary mb-1">{(block as any).newLabel || 'Current Name'}</div>
+                      <div className="text-base font-black text-primary">{(block as any).newTerm}</div>
+                    </div>
+                  </div>
+                  {(block as any).note && (
+                    <p className="text-xs text-muted-foreground mt-3 text-center">{(block as any).note}</p>
+                  )}
+                </div>
+              );
+            }
+
+            // ── numbered_steps_visual ── flat numbered step-by-step flow (no phase grouping) ──
+            if ((block as any).type === 'numbered_steps_visual') {
+              const nsSteps = (block as any).steps ?? [];
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-bold text-sm mb-1">{block.heading}</h3>}
+                  {(block as any).sub && <p className="text-xs text-muted-foreground mb-4">{(block as any).sub}</p>}
+                  <div className="space-y-0">
+                    {nsSteps.map((step: any, si: number) => (
+                      <div key={si} className="flex items-start gap-3">
+                        <div className="flex flex-col items-center flex-shrink-0">
+                          <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">{si + 1}</div>
+                          {si < nsSteps.length - 1 && <div className="w-0.5 flex-1 bg-border my-1" style={{ minHeight: '20px' }} />}
+                        </div>
+                        <div className="flex-1 pb-4">
+                          <div className="text-xs font-bold text-foreground">{step.title}</div>
+                          <div className="text-xs text-muted-foreground mt-0.5">{step.desc}</div>
+                          {step.detail && <div className="text-[11px] text-muted-foreground/80 mt-1 italic leading-snug">{step.detail}</div>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
             // ── source_selection_phases_visual ── grouped multi-step process timeline ──
             if ((block as any).type === 'source_selection_phases_visual') {
               const phases = (block as any).phases ?? [];
