@@ -1662,6 +1662,48 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               );
             }
 
+            // ── source_selection_phases_visual ── grouped multi-step process timeline ──
+            if ((block as any).type === 'source_selection_phases_visual') {
+              const phases = (block as any).phases ?? [];
+              return (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  {block.heading && <h3 className="font-bold text-sm mb-1">{block.heading}</h3>}
+                  {(block as any).sub && <p className="text-xs text-muted-foreground mb-4">{(block as any).sub}</p>}
+                  <div className="space-y-4 mt-3">
+                    {phases.map((phase: any, pi: number) => (
+                      <div key={pi} className="rounded-xl border border-border overflow-hidden">
+                        <div
+                          className="px-4 py-2 text-xs font-bold uppercase tracking-wide text-white"
+                          style={{ backgroundColor: phase.color || '#01696f' }}
+                        >
+                          Phase {pi + 1}: {phase.phase}
+                        </div>
+                        <div className="p-3 space-y-2.5 bg-muted/10">
+                          {phase.steps.map((step: any, si: number) => (
+                            <div key={si} className="flex items-start gap-3">
+                              <div
+                                className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[11px] font-bold flex-shrink-0 mt-0.5"
+                                style={{ backgroundColor: phase.color || '#01696f' }}
+                              >
+                                {step.num}
+                              </div>
+                              <div className="flex-1">
+                                <div className="text-xs font-bold text-foreground">{step.title}</div>
+                                <div className="text-xs text-muted-foreground mt-0.5">{step.desc}</div>
+                                {step.detail && (
+                                  <div className="text-[11px] text-muted-foreground/80 mt-1 italic leading-snug">{step.detail}</div>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
             // ── related_lesson ── clickable cross-reference to another lesson that explains a term in depth ──
             if ((block as any).type === 'related_lesson') {
               const refs = (block as any).refs ?? [];

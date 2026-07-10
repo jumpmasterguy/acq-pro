@@ -4941,24 +4941,55 @@ export const modules: Module[] = [
         content: [
       {
         type: 'text',
-        heading: "How the Government Picks a Winner",
-        body: "Think of source selection like a structured hiring process — except instead of interviewing candidates for a job, the government is evaluating companies for a contract. The big difference: the rules are published in advance in the RFP (Request for Proposal), every decision must be documented, and a losing company can challenge the result in court. That structure exists for two reasons: (1) to get the best value for taxpayers, and (2) to protect the government from accusations of favoritism. Understanding this process is the difference between writing a proposal that actually responds to what evaluators are scoring and writing one that looks impressive but misses the point."
+        heading: "How the Government Picks a Winner (in Plain English)",
+        body: "Think of source selection like a structured hiring process, except instead of interviewing candidates for a job, the government is scoring companies for a contract. The rules are published in advance, every decision gets written down, and a company that loses can challenge the result in court. That structure exists for two reasons: get the best value for taxpayers, and protect the government from accusations of playing favorites. Below is the 10-step process, grouped into 5 phases so it is easier to hold in your head."
       },
       {
-        type: 'list',
-        heading: "Source Selection Steps",
-        items: [
-          'Step 1: Develop Acquisition Strategy — contract type, competition, evaluation approach|||The Acquisition Strategy is approved by the MDA/CO supervisor before the solicitation is drafted. It documents contract type rationale, competition approach (full and open, set-aside, or sole source), evaluation methodology (LPTA vs. BVTO), and estimated schedule. For large acquisitions, an RFI or industry day often precedes the strategy.',
-          'Step 2: Draft RFP — Sections L (instructions) and M (evaluation factors) are most critical|||Inconsistency between Section L (how to prepare proposals) and Section M (how they\'ll be evaluated) is the most common protest ground. Every evaluation factor in Section M must have corresponding instructions in Section L. The Source Selection Plan (SSP), written before RFP release, defines criteria, weights, rating scales, and procedures.',
-          'Step 3: Issue Draft RFP — industry review and comment period (30-45 days typical)|||Draft RFP releases are best practice for complex acquisitions. Industry comments improve clarity, identify unrealistic requirements, and reduce protest risk. The government reviews all comments and provides a written responses or incorporates changes. Programs that skip draft RFP release often face more protests and more scope ambiguity post-award.',
-          'Step 4: Issue Final RFP — proposals due date typically 45-60 days out|||Proposal preparation time must be adequate for the complexity of the requirement. FAR 5.203 recommends minimum 30 days for large/complex acquisitions. Tight timelines disadvantage smaller firms without large proposal teams and increase the risk of non-compliant proposals from otherwise qualified contractors.',
-          'Step 5: SSEB Evaluation — each proposal scored against stated evaluation factors|||The Source Selection Evaluation Board (SSEB) applies the stated evaluation criteria consistently across all proposals. Each evaluator documents their findings with specific references to proposal content. Undocumented findings, subjective assessments without proposal citations, and inconsistent application of criteria are the most common protest-sustaining evaluation errors.',
-          'Step 6: Competitive Range Determination — eliminate clearly unacceptable proposals|||The competitive range includes all proposals that have a reasonable chance of award. Excluding a proposal from the competitive range is a significant decision — it ends that offeror\'s participation. The CO documents the rationale. Offerors excluded from competitive range are entitled to a post-exclusion debriefing.',
-          'Step 7: Discussions (if applicable) — exchanges with offerors in competitive range|||Discussions (different from clarifications) allow the government to identify deficiencies and weaknesses and give offerors a chance to revise. If discussions are opened with any offeror, they must be opened with all offerors in the competitive range. The CO must not engage in auction-style negotiations or reveal competitor pricing.',
-          'Step 8: Final Proposal Revisions — offerors submit best and final offers (BAFOs)|||After discussions, the CO issues a Final Proposal Revision (FPR) request establishing a common deadline for all offerors to submit their best revised proposals. Offerors can only improve proposals — they cannot worsen terms or retract revisions already submitted. This is typically the highest-pressure phase of the source selection.',
-          'Step 9: SSAC Review — advisory recommendation to the SSA|||The Source Selection Advisory Council (SSAC) reviews the SSEB findings and prepares an independent comparative assessment with a recommended award decision. The SSAC is advisory only — the SSA is not bound by the recommendation. For large acquisitions, the SSAC provides a valuable independent check on evaluation consistency.',
-          'Step 10: SSA Award Decision — documented source selection decision statement|||The Source Selection Decision Document (SSDD) is the legal foundation for the award. It must document the rationale for each significant tradeoff — why the technical advantages of the selected offeror justify any price premium over a lower-priced alternative. A weak SSDD is the government\'s most common vulnerability in bid protests.',
-        ]
+        type: 'source_selection_phases_visual' as any,
+        heading: 'The 10-Step Source Selection Process',
+        sub: 'Five phases. Ten steps. This is the exact order every competitive award moves through.',
+        phases: [
+          {
+            phase: 'Planning',
+            color: '#6366f1',
+            steps: [
+              { num: 1, title: 'Develop Acquisition Strategy', desc: 'Contract type, competition approach, and evaluation method get locked in before anything is drafted.', detail: "Approved by the CO's supervisor before the solicitation is drafted. Large buys often start with an RFI or industry day." },
+              { num: 2, title: 'Draft the RFP', desc: 'Section L (how to write your proposal) and Section M (how it gets scored) are the two sections that matter most.', detail: 'A mismatch between L and M is the single most common reason companies successfully protest an award.' },
+            ],
+          },
+          {
+            phase: 'Solicitation',
+            color: '#0284c7',
+            steps: [
+              { num: 3, title: 'Issue Draft RFP', desc: 'Industry gets 30-45 days to read it and flag anything confusing or unrealistic before it becomes final.', detail: 'Skipping this step usually means more protests and more confusion after award.' },
+              { num: 4, title: 'Issue Final RFP', desc: 'The clock starts. Companies typically get 45-60 days to prepare and submit a full proposal.', detail: 'Rushed timelines quietly favor big companies with large proposal teams over smaller, qualified ones.' },
+            ],
+          },
+          {
+            phase: 'Evaluation',
+            color: '#01696f',
+            steps: [
+              { num: 5, title: 'SSEB Evaluation', desc: 'A board of evaluators scores every proposal against the exact factors published in Section M — nothing else.', detail: 'Every finding must be written down and tied to something specific in the proposal, not a gut feeling.' },
+              { num: 6, title: 'Competitive Range Determination', desc: 'Proposals with no real shot at winning get cut here. Everyone else moves forward.', detail: "Getting cut here ends your chance at that award — you are entitled to a debrief on why." },
+            ],
+          },
+          {
+            phase: 'Negotiation',
+            color: '#ca8a04',
+            steps: [
+              { num: 7, title: 'Discussions', desc: 'If the government talks to one company still in the running about weaknesses in their proposal, it has to talk to all of them.', detail: "The CO cannot run an auction or leak one company's price to another. That is an automatic protest." },
+              { num: 8, title: 'Final Proposal Revisions (BAFOs)', desc: 'Every company gets one shot to submit their best and final offer by the same deadline.', detail: 'You can only improve your offer here, never make it worse or take something back.' },
+            ],
+          },
+          {
+            phase: 'Decision',
+            color: '#16a34a',
+            steps: [
+              { num: 9, title: 'SSAC Review', desc: "An advisory panel double-checks the evaluators' work and gives the final decision-maker a recommendation.", detail: 'Advisory only — the person who actually decides is not required to follow it.' },
+              { num: 10, title: 'SSA Award Decision', desc: 'The Source Selection Authority signs a written decision explaining exactly why the winner won.', detail: "A weak, vague award decision document is the government's single biggest protest vulnerability." },
+            ],
+          },
+        ],
       },
       {
         type: 'table_visual' as any,
