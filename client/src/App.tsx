@@ -9,8 +9,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel } from "@/lib/progress";
 import { isNativeApp } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
-import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen } from "lucide-react";
+import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink } from "lucide-react";
 import { SIDEBAR_RESOURCES } from "@/lib/resources";
+import { FAR_TRANSLATOR, TOOLS_DIRECTORY } from "@/lib/toolsDirectory";
 import { AcqlerateLogo } from "@/components/AcqlerateLogo";
 import InstallPrompt from "@/components/InstallPrompt";
 
@@ -150,6 +151,7 @@ function AppContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
   const [resourcesExpanded, setResourcesExpanded] = useState(false);
+  const [toolsExpanded, setToolsExpanded] = useState(false);
   const [authState, setAuthState] = useState<AuthState>({ status: 'loading' });
   // Module assessment modal state
   const [assessmentModuleId, setAssessmentModuleId] = useState<string | null>(null);
@@ -699,6 +701,67 @@ function AppContent() {
               )}
             </div>
           )}
+
+          {/* Tools Directory */}
+          <div className="pt-1">
+            <button
+              onClick={() => setToolsExpanded(v => !v)}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors select-none"
+              data-testid="sidebar-tools-toggle"
+            >
+              <Wrench className="w-4 h-4 flex-shrink-0" />
+              <span className="flex-1 text-left text-xs font-medium">Tools</span>
+              <ChevronDown className={cn("w-3.5 h-3.5 flex-shrink-0 transition-transform", toolsExpanded && "rotate-180")} />
+            </button>
+            {toolsExpanded && (
+              <div className="pl-2 pr-1 pt-1 space-y-2 max-h-80 overflow-y-auto">
+                {/* FAR Translator — pinned, distinctly styled */}
+                <a
+                  href={FAR_TRANSLATOR.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-2 px-3 py-2.5 rounded-lg bg-primary/10 border border-primary/25 hover:bg-primary/15 transition-colors group"
+                  data-testid="sidebar-far-translator"
+                >
+                  <Sparkles className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-primary" />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[11px] font-bold text-primary leading-tight">{FAR_TRANSLATOR.name}</div>
+                    <div className="text-[10px] text-sidebar-foreground/50 leading-tight mt-0.5">{FAR_TRANSLATOR.description}</div>
+                  </div>
+                </a>
+
+                {TOOLS_DIRECTORY.map((cat, ci) => (
+                  <div key={ci}>
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/35 px-3 pt-1.5 pb-1">
+                      {cat.title}
+                    </div>
+                    {cat.tools.map((tool, ti) => (
+                      <a
+                        key={ti}
+                        href={tool.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors group"
+                        data-testid={`sidebar-tool-${ci}-${ti}`}
+                      >
+                        <span className="text-[11px] font-medium leading-tight truncate">{tool.name}</span>
+                        <ExternalLink className="w-3 h-3 flex-shrink-0 opacity-0 group-hover:opacity-60" />
+                      </a>
+                    ))}
+                  </div>
+                ))}
+                <a
+                  href="/tools"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-1.5 px-3 py-2 mt-1 rounded-lg text-[11px] font-semibold text-primary hover:bg-primary/10 transition-colors"
+                >
+                  View full Tools page
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+            )}
+          </div>
         </nav>
 
         {/* Bottom */}

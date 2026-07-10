@@ -437,7 +437,7 @@
 </section>
 
 <!-- FAR CLAUSE TRANSLATOR -->
-<section style="background:#0a1628;border-bottom:1px solid rgba(255,255,255,0.07);padding:40px 1.25rem;">
+<section id="far-translator" style="background:#0a1628;border-bottom:1px solid rgba(255,255,255,0.07);padding:40px 1.25rem;">
   <div style="max-width:700px;margin:0 auto;">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
       <span style="font-size:1.5rem;">⚡</span>
@@ -507,6 +507,11 @@ async function translateFAR() {
   
   btn.textContent = 'Translate';
   btn.disabled = false;
+}
+
+if (window.location.hash === '#far-translator') {
+  const farInput = document.getElementById('far-input');
+  if (farInput) setTimeout(() => farInput.focus(), 300);
 }
 </script>
 
