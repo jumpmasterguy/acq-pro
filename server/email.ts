@@ -821,6 +821,23 @@ export async function sendEmail7New(to: string, username: string): Promise<void>
 
 // ─── Newsletter broadcast ────────────────────────────────────────────────────
 
+const NEWSLETTER_SIGNATURE = `
+<table cellpadding="0" cellspacing="0" style="margin-top:32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
+<tr>
+<td style="border-left:3px solid #01696f;padding-left:16px">
+<p style="margin:0 0 2px;font-size:15px;font-weight:800;color:#0d2137">Lucas Cruz</p>
+<p style="margin:0 0 10px;font-size:13px;color:#5a6a7a">Founder, Acqlerate</p>
+<p style="margin:0;font-size:13px">
+<a href="https://acqlerate.com" style="color:#01696f;text-decoration:none;font-weight:600">acqlerate.com</a>
+<span style="color:#c4ccd4"> &nbsp;|&nbsp; </span>
+<a href="https://www.linkedin.com/company/acqlerate/" style="color:#01696f;text-decoration:none;font-weight:600">LinkedIn</a>
+<span style="color:#c4ccd4"> &nbsp;|&nbsp; </span>
+<a href="https://www.facebook.com/share/1D7GysBxX2/" style="color:#01696f;text-decoration:none;font-weight:600">Facebook</a>
+</p>
+</td>
+</tr>
+</table>`;
+
 export async function sendNewsletterIssue(
   to: string,
   subject: string,
@@ -829,8 +846,8 @@ export async function sendNewsletterIssue(
 ): Promise<void> {
   if (!resend) { console.warn('[newsletter] Resend not configured'); return; }
 
-  // Wrap the html in the email shell if it's a partial
-  const fullHtml = html.includes('<!DOCTYPE') ? html : emailShell(previewText, html);
+  // Wrap the html in the email shell if it's a partial, appending the signature to the body
+  const fullHtml = html.includes('<!DOCTYPE') ? html : emailShell(previewText, html + NEWSLETTER_SIGNATURE);
 
   await resend.emails.send({
     from: FROM,
