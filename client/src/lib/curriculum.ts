@@ -8670,7 +8670,7 @@ export const modules: Module[] = [
         type: 'highlight',
         body: 'Many experienced professionals move **between both sides** over a career. That\'s not just normal — it\'s strategic.',
         subtext: 'A former government PM who understands oversight is worth a lot to a contractor. A former contractor PM who understands technical execution is worth a lot to a program office.',
-      },,
+      },
       {
         type: 'callout',
         heading: 'A PM Is Not a Promotion',
@@ -9843,7 +9843,7 @@ You have more leverage before a missed milestone than after it. Use it early.`,
             explanation: 'DFARS 252.234-7002 links EVM and CMMI for software-intensive programs, requiring ML3+ or an approved plan to achieve it. This reflects DoD\'s recognition that EVM reliability depends on underlying process maturity.',
           },
         ],
-      },,
+      },
     ],
     assessment: [
       {
