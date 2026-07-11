@@ -702,7 +702,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
       {/* Lesson Header Card */}
       <div className="bg-card border border-border rounded-xl p-5">
         <div className="flex items-start justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap mb-1">
               <span className="text-xs text-muted-foreground">{mod.title}</span>
               {trackData && (
@@ -1171,7 +1171,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                   {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
                   <div className="space-y-2">
                     {methods.map((m, mi) => (
-                      <div key={mi} className={`flex items-center gap-4 p-3 rounded-xl border-2 ${m.color}`}>
+                      <div key={mi} className={`flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 p-3 rounded-xl border-2 overflow-x-auto ${m.color}`}>
                         <code className="text-sm font-mono font-bold whitespace-nowrap">{m.formula}</code>
                         <span className="text-xs text-muted-foreground">{m.when}</span>
                       </div>
