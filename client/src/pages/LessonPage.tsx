@@ -2940,7 +2940,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                         {aiMode === 'eli5' ? 'Simple Explanation' : aiMode === 'apply' ? 'How to Apply as a PM' : 'Re-Explained'}
                       </span>
                     </div>
-                    <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{aiResult}</p>
+                    <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{aiResult.replace(/\*\*(.+?)\*\*/g, '$1').replace(/(?<!\w)\*(?!\*)(.+?)\*(?!\w)/g, '$1').replace(/^#{1,4}\s*/gm, '')}</p>
                   </div>
                 )}
               </div>

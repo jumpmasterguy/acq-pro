@@ -1005,10 +1005,18 @@ export async function registerRoutes(
     if (!apiKey) {
       return res.status(503).json({ message: "AI explanations are not configured yet. Add GEMINI_API_KEY in Railway." });
     }
+    const PLAIN_ENGLISH_RULES = `PLAIN ENGLISH RULES (non-negotiable):
+- Write like you are talking to a colleague, not writing a memo. No stiff openers like "Excellent question" or "Let's ground ourselves" — just start explaining.
+- Never use markdown formatting. No asterisks, no **bold**, no bullet symbols, no headers. Plain sentences and plain numbered lists only (e.g. "1. ", "2. "), written as complete sentences.
+- The first time you use any acronym, spell it out in plain words right there in the sentence — do not assume the reader already knows FAR, RFP, CPIF, IDIQ, T&M, O&M, OEM, GPC, COTS, or any other acronym. If an acronym is not essential to the point you are making, skip it entirely and just describe the thing in plain words.
+- Do not stack multiple acronyms or citations back to back. One new term at a time, explained in the same breath you introduce it.
+- Use short sentences. Prefer concrete, everyday language over formal or academic phrasing.
+- Skip citing specific FAR/DFARS part numbers unless the student would actually need to go look something up — a plain description of the rule is almost always more useful than the citation.`;
+
     const prompts: Record<string, string> = {
-      eli5: `You are a friendly teacher explaining DoD acquisitions to someone who just started learning. Explain the following lesson topic in simple, plain English as if the student is completely new to this — use a real-world analogy they can relate to, keep it under 150 words, and avoid jargon.\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
-      apply: `You are a seasoned DoD acquisition professional coaching a new Program Manager. For the following lesson topic, give 3-4 concrete, practical examples of how a real PM would apply this knowledge on an active defense program. Be specific — mention contract types, dollar thresholds, regulatory references, or realistic scenarios. Keep it under 200 words.\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
-      lost: `You are a patient acquisition mentor. A student is confused about the following topic. First, identify what is typically confusing about it. Then re-explain it from scratch using a different approach — try a step-by-step breakdown, a comparison, or a concrete example. Keep it clear and under 200 words.\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
+      eli5: `You are a friendly teacher explaining DoD acquisitions to someone who just started learning, like they are a total beginner with zero background. Explain the following lesson topic in simple, plain English — use one real-world analogy a regular person would recognize (not a military or contracting analogy), keep it under 150 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
+      apply: `You are a seasoned DoD acquisition professional coaching a new Program Manager who is still learning the basics. For the following lesson topic, walk through 2-3 concrete, realistic moments where this knowledge would actually come up on the job — described as short stories or scenarios a new PM could picture themselves in, not a checklist of contract types and citations. Only mention a contract type, dollar figure, or regulation by name if it is essential to the scenario, and explain what it means in the same sentence. Keep it under 200 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
+      lost: `You are a patient acquisition mentor. A student is confused about the following topic. First, name in one plain sentence what usually trips people up about it. Then re-explain the whole idea from scratch using a different, simpler approach than a textbook would — a step-by-step walkthrough, a side-by-side comparison, or a concrete everyday example. Keep it under 200 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
     };
     // Use raw REST to avoid SDK model-name lock; try models in order of preference
     const modelNames = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-flash-latest'];
@@ -1050,7 +1058,7 @@ export async function registerRoutes(
       return res.status(503).json({ message: "GEMINI_API_KEY not configured" });
     }
     const context = heading ? `Section: ${heading}\nItem: ${item}` : `Item: ${item}`;
-    const prompt = `You are a concise DoD acquisitions instructor. Expand on the following bullet point from a lesson titled "${lessonTitle}". Provide 2-4 sentences of practical, specific detail that a defense professional would find genuinely useful — include regulatory citations, dollar thresholds, real examples, or common pitfalls where relevant. Do not repeat the bullet text. Be direct and professional.\n\n${context}`;
+    const prompt = `You are a concise DoD acquisitions instructor. Expand on the following bullet point from a lesson titled "${lessonTitle}". Give 2-4 plain-English sentences of practical detail a defense professional would find genuinely useful — a real example or a common mistake beats a regulatory citation. Only include a dollar threshold or a FAR/DFARS citation if it's essential, and if you do, explain what it means in the same sentence rather than stating it bare. Do not repeat the bullet text.\n\nPLAIN ENGLISH RULES: no markdown formatting (no asterisks or bold), no stacking multiple acronyms back to back, spell out any acronym the first time you use it, short sentences, talk like a colleague explaining this over coffee, not a policy memo.\n\n${context}`;
     const modelNames = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-flash-latest'];
     let lastErr = '';
     for (const modelName of modelNames) {
