@@ -771,14 +771,14 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
       {/* Skill Level Selector — only shown if this lesson has leveled content */}
       {hasLeveledContent && (
         <div className="bg-card border border-border rounded-xl p-4">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between gap-2 flex-wrap mb-3">
             <div className="text-xs font-semibold text-foreground">Skill Level</div>
             {unlockedLevel !== 'advanced' && (
               <button
                 onClick={onOpenAssessment}
-                className="text-xs text-primary hover:underline flex items-center gap-1"
+                className="text-xs text-primary hover:underline flex items-center gap-1 text-left"
               >
-                <Lock className="w-3 h-3" />
+                <Lock className="w-3 h-3 flex-shrink-0" />
                 Take module assessment to unlock more
               </button>
             )}
@@ -817,7 +817,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
       )}
 
       {/* Tab Navigation — sticky so it stays visible while scrolling */}
-      <div className="sticky top-0 z-20 flex border-b border-border bg-background/95 backdrop-blur-sm -mx-4 px-4 lg:-mx-6 lg:px-6">
+      <div className="sticky top-0 z-20 flex border-b border-border bg-background/95 backdrop-blur-sm w-full max-w-full overflow-x-auto">
         {(['lesson', 'terms', 'quiz'] as Tab[]).map((tab) => {
           const labels: Record<Tab, string> = { lesson: 'Lesson', terms: `Key Terms (${lesson!.keyTerms.length})`, quiz: `Quiz (${(lesson!.quiz ?? []).length}Q)` };
           return (
@@ -2404,7 +2404,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     ))}
                   </div>
                   {/* Total callout */}
-                  <div className="bg-primary/10 border border-primary/30 rounded-lg px-4 py-3 flex items-center justify-between">
+                  <div className="bg-primary/10 border border-primary/30 rounded-lg px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
                     <div>
                       <p className="text-sm font-bold text-primary">Government pays: $139.17/hr</p>
                       <p className="text-xs text-muted-foreground">for an engineer earning $65/hr</p>
