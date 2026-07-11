@@ -1,7 +1,7 @@
-// Acqlerate Service Worker v2 — PWA with offline lesson support
+// Acqlerate Service Worker v3 — PWA with offline lesson support
 // Cache version bumped on every deploy to bust stale content
-const CACHE_VERSION = 'acqlerate-v2';
-const LESSON_CACHE = 'acqlerate-lessons-v2';
+const CACHE_VERSION = 'acqlerate-v3';
+const LESSON_CACHE = 'acqlerate-lessons-v3';
 
 // Core app shell — cached on install for offline access
 const APP_SHELL = [

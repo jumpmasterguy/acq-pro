@@ -545,7 +545,7 @@ function AppContent() {
             </button>
           )}
 
-          <div className="text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/40 px-3 pt-3 pb-1.5">
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/55 px-3 pt-3 pb-1.5">
             Modules
           </div>
 
@@ -589,7 +589,7 @@ function AppContent() {
                     "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-colors cursor-pointer select-none",
                     (isModActive || isLessonInMod)
                       ? "bg-sidebar-accent text-sidebar-foreground"
-                      : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                      : "text-sidebar-foreground/85 hover:bg-sidebar-accent hover:text-sidebar-foreground"
                   )}
                   onClick={(e) => {
                     setView({ type: 'module', moduleId: mod.id });
@@ -605,7 +605,7 @@ function AppContent() {
                   {!isAccessible && hasPreview ? (
                     <span className="text-[10px] text-emerald-400 flex-shrink-0">Free</span>
                   ) : !isAccessible ? (
-                    <span className="text-[10px] text-sidebar-foreground/40 flex-shrink-0">🔒</span>
+                    <span className="text-[10px] text-sidebar-foreground/55 flex-shrink-0">🔒</span>
                   ) : progressPct === 100 ? (
                     <span className="text-[10px] text-green-400 flex-shrink-0">✓</span>
                   ) : progressPct > 0 ? (
@@ -614,7 +614,7 @@ function AppContent() {
                   {/* Chevron toggle */}
                   <button
                     onClick={toggleExpand}
-                    className="flex-shrink-0 text-sidebar-foreground/40 hover:text-sidebar-foreground transition-colors p-0.5 rounded"
+                    className="flex-shrink-0 text-sidebar-foreground/55 hover:text-sidebar-foreground transition-colors p-0.5 rounded"
                     aria-label={isExpanded ? 'Collapse' : 'Expand'}
                   >
                     <ChevronDown className={cn("w-3 h-3 transition-transform duration-200", isExpanded && "rotate-180")} />
@@ -643,8 +643,8 @@ function AppContent() {
                             isActive
                               ? mc.activeLesson + ' ' + mc.activeLessonText + ' font-semibold'
                               : canAccess
-                                ? 'text-sidebar-foreground/60 ' + mc.lessonHover + ' hover:text-sidebar-foreground'
-                                : 'text-sidebar-foreground/30 cursor-default'
+                                ? 'text-sidebar-foreground/85 ' + mc.lessonHover + ' hover:text-sidebar-foreground'
+                                : 'text-sidebar-foreground/45 cursor-default'
                           )}
                         >
                           {/* Status dot */}
@@ -652,7 +652,7 @@ function AppContent() {
                             "w-1.5 h-1.5 rounded-full flex-shrink-0 transition-colors",
                             isActive ? mc.dot
                               : isDone ? 'bg-green-500'
-                              : 'bg-sidebar-foreground/20'
+                              : 'bg-sidebar-foreground/40'
                           )} />
                           <span className="flex-1 truncate">{lesson.title}</span>
                           {!canAccess && <span className="text-[9px] flex-shrink-0">🔒</span>}
