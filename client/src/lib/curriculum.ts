@@ -305,8 +305,8 @@ export const modules: Module[] = [
           },
           {
             type: 'callout',
-            heading: "Real Talk Before You Panic",
-            body: "Look, the table below is dense, and if you are a Contractor PM working a services contract or a smaller procurement, most of it will never touch your daily life. Nobody is going to corner you at the coffee machine and demand you recite ACAT I dollar thresholds from memory. This stuff matters a lot if you are anywhere near a multi-billion dollar weapons program, and it matters basically zero if you are running a help desk support contract or a small IT services task order. Skim it, get the general shape of it, and move on with your life. We promise not to tell anyone if you forget the exact number for ACAT II.",
+            heading: "Real Talk",
+            body: "Look, I get it, this table is boring. It matters if you are anywhere near a multi-billion dollar weapons program, where the dollar thresholds decide who signs off on your milestones and whether Congress gets a briefing. It matters a lot less if you are running a services contract or a small IT task order. Skim it for the general shape, and do not lose sleep over the exact number for ACAT II.",
           },
           {
             type: 'table_visual' as any,
@@ -1085,7 +1085,7 @@ export const modules: Module[] = [
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: "This phase-by-phase breakdown describes the journey of a fighter jet or a warship, not a help desk contract or a routine IT services task order. If your program was never going to sit through a Milestone A, B, or C review in the first place, you can skim this table and move on with a clear conscience. It's still worth knowing this exists, mostly so you understand what a coworker means when they casually say a program is 'pre-Milestone B.'",
+            body: "Look, I get it, milestone phases sound like something only a fighter jet program manager needs. They matter because they set the pace and the paperwork for every major weapons system in the department, and if you ever move onto one of those programs, this is the map you'll be working from. If your program was never going to sit through a Milestone A, B, or C review, you can skim this table, but it's still worth knowing what a coworker means when they casually say a program is 'pre-Milestone B.'",
           },
           {
             type: 'table_visual' as any,
@@ -1204,7 +1204,7 @@ export const modules: Module[] = [
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: "If you support a services contract or a smaller procurement, you are almost certainly living in ACAT III or ACAT IV, and honestly, that's the good news. Nobody at your level is getting hauled in front of Congress because a report was late. You will probably never sit through a CAPE independent cost estimate briefing. Read this lesson so you know what ACAT I and II mean when someone bigger mentions them in a meeting, then spend your actual energy on ACAT III and IV, which is where you likely live.",
+            body: "Look, I get it, ACAT levels sound like pure bureaucracy. They matter because the level assigned to your program decides who can approve your milestones, whether you need an independent cost estimate, and whether Congress gets a status report on your program. If you support a services contract or a smaller procurement, you are almost certainly ACAT III or IV, where the oversight is lighter and nobody is hauling you in front of Congress. Learn what ACAT I and II mean so you follow the conversation when someone bigger brings it up, then spend your real energy on III and IV, which is where you likely live.",
           },
           {
             type: 'table_visual' as any,
@@ -2261,7 +2261,7 @@ export const modules: Module[] = [
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: "The table below is a list of accounting codes. Nobody outside a comptroller shop has these memorized, and nobody ever will. Your finance team lives in this stuff so you don't have to. The one thing actually worth remembering: every service has its own version of these codes, so if you switch from an Army program to a Navy one, don't assume the numbers carry over. Otherwise, feel free to skim this table like you're scrolling past the terms and conditions on a software update.",
+            body: "Look, I get it, a table of accounting codes is about as exciting as it sounds. It matters because your finance team uses these exact codes every single time they book a dollar to your program, and if you ever need to explain a funding question to a customer, knowing that these codes exist and vary by service will save you an embarrassing moment. The one thing worth actually remembering: every service has its own version, so don't assume an Army code carries over to a Navy program. Otherwise, skim it and move on.",
           },
           {
             type: 'table_visual' as any,
@@ -3010,7 +3010,7 @@ export const modules: Module[] = [
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: "Cost Accounting Standards only kick in on contracts around $35 million and up. If you are running a services contract or a smaller procurement well under that number, CAS is not your problem, it is your company's accounting department's problem, and they were dealing with it long before you showed up. Read this table once so you know what CAS is when someone mentions it, then go back to your actual job.",
+            body: "Look, I get it, Cost Accounting Standards sound like something only an accountant should care about. They matter on big contracts because they force a contractor to account for costs the exact same way on every job, which is how the government catches someone gaming their numbers. Cost Accounting Standards only kick in around $35 million and up under current law, so if you're on a services contract or a smaller procurement, this is your company's accounting department's problem, not yours. Read this table once so you recognize the term, then get back to your actual job.",
           },
           {
             type: 'table_visual' as any,
@@ -5773,7 +5773,7 @@ export const modules: Module[] = [
       {
         type: 'callout',
         heading: 'Real Talk',
-        body: "This next table is legal doctrine that shows up in actual courtrooms and board-of-contract-appeals hearings. Most PMs will go an entire career without ever citing it out loud. It's worth knowing it exists so you recognize the warning signs when a government customer keeps piling on new asks without a modification, but you do not need to memorize the legal test. That's what your contracts team and, eventually, a lawyer are for.",
+        body: "Look, I get it, legal doctrine is not why anyone signs up to be a PM. It matters because it's the line the government cannot legally cross without paying you more or running a new competition, and knowing that line exists is how you protect your program when a customer keeps piling on new asks without a modification. You don't need to memorize the legal test word for word. That's what your contracts team and, eventually, a lawyer are for.",
       },
       {
         type: 'table_visual' as any,
@@ -9807,7 +9807,7 @@ You have more leverage before a missed milestone than after it. Use it early.`,
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: "CMMI mostly comes up on software-heavy or systems-engineering-heavy programs above a certain size, not on your average services or small procurement contract. If nobody has ever asked you for a CMMI appraisal, that's not a knowledge gap, that's just the reality of the contract you're on. Know what it is so you're not lost if it comes up, and don't lose sleep over the maturity level table below if it never applies to you.",
+            body: "Look, I get it, a five-level maturity scale for how a company runs its projects sounds dry. It matters on software-heavy or systems-engineering-heavy programs above a certain size, where the government genuinely needs proof a contractor won't fall apart under pressure. If nobody has ever asked you for a CMMI appraisal, that's not a gap in your knowledge, that's just the contract you're on. Know what it is so you're not lost if it comes up, and don't lose sleep over the table below if it never applies to you.",
           },
           {
             type: 'table_visual' as any,

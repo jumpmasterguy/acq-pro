@@ -920,19 +920,18 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               );
             }
 
-            if (block.type === 'callout' && block.heading === 'Real Talk') {
+            if (block.type === 'callout' && block.heading?.startsWith('Real Talk')) {
               return (
-                <div key={i} className="relative bg-zinc-900 border-2 border-fuchsia-500 rounded-xl px-6 py-5 overflow-hidden shadow-[0_0_0_4px_rgba(217,70,239,0.12)]">
-                  <div className="absolute -right-4 -top-6 text-7xl opacity-[0.06] pointer-events-none select-none" aria-hidden="true">🔥</div>
-                  <h3
-                    className="text-3xl text-fuchsia-400 mb-2 -rotate-2 inline-block"
-                    style={{ fontFamily: "'Permanent Marker', cursive", textShadow: '2px 2px 0 rgba(217,70,239,0.25)' }}
-                  >
-                    Real Talk
-                  </h3>
-                  {block.body && block.body.split('\n\n').filter(Boolean).map((para, pi) => (
-                    <p key={pi} className={`text-sm text-zinc-100 leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>{para.trim()}</p>
-                  ))}
+                <div key={i} className="bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-900/50 rounded-xl p-5">
+                  <div className="flex items-start gap-3.5">
+                    <img src="/real-talk-badge.png" alt="" className="w-9 h-9 flex-shrink-0" />
+                    <div>
+                      <h3 className="font-bold text-sm mb-1.5 text-orange-700 dark:text-orange-400 tracking-wide uppercase">Real Talk</h3>
+                      {block.body && block.body.split('\n\n').filter(Boolean).map((para, pi) => (
+                        <p key={pi} className={`text-sm text-foreground/80 leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>{para.trim()}</p>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               );
             }
