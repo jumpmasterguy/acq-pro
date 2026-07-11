@@ -304,6 +304,11 @@ export const modules: Module[] = [
             ]
           },
           {
+            type: 'callout',
+            heading: "Real Talk Before You Panic",
+            body: "Look, the table below is dense, and if you are a Contractor PM working a services contract or a smaller procurement, most of it will never touch your daily life. Nobody is going to corner you at the coffee machine and demand you recite ACAT I dollar thresholds from memory. This stuff matters a lot if you are anywhere near a multi-billion dollar weapons program, and it matters basically zero if you are running a help desk support contract or a small IT services task order. Skim it, get the general shape of it, and move on with your life. We promise not to tell anyone if you forget the exact number for ACAT II.",
+          },
+          {
             type: 'table_visual' as any,
             heading: "Acquisition Program Categories",
             headers: ['Category', 'Threshold', 'Oversight Level'],
