@@ -793,7 +793,7 @@ function AppContent() {
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 lg:ml-64 flex flex-col min-h-screen relative">
+      <div className="flex-1 lg:ml-64 flex flex-col min-h-screen min-w-0 relative">
         {/* Background: hex grid + radial glow */}
         <div aria-hidden="true" className="pointer-events-none fixed lg:left-64 inset-y-0 right-0 z-0 overflow-hidden">
           {/* Radial teal glow top-right */}
@@ -839,7 +839,7 @@ function AppContent() {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-4 lg:p-6 max-w-4xl mx-auto w-full relative z-10">
+        <main className="flex-1 min-w-0 p-4 lg:p-6 max-w-4xl mx-auto w-full relative z-10">
         <ErrorBoundary>
           {view.type === 'dashboard' && (
             <Dashboard

@@ -143,20 +143,30 @@
   * {
     @apply border-border;
   }
-  html, body {
-    /* Safety net: no matter what a lesson block renders, the page itself never
-       grows wider than the viewport and forces pinch-zoom-out on mobile.
-       Scrollable elements (tables, formula rows) still scroll fine within
-       their own overflow-x-auto containers -- this only stops the outer page. */
-    max-width: 100vw;
+  html {
+    /* max-width: 100vw is unreliable across mobile browser chrome/toolbars --
+       use 100% instead, which is anchored to the actual layout viewport. */
+    max-width: 100%;
     overflow-x: hidden;
   }
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    max-width: 100%;
+    overflow-x: hidden;
     /* Left/right/bottom safe area — but NOT top (handled per sticky header) */
     padding-bottom: env(safe-area-inset-bottom);
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
+  }
+  #root {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  /* Belt-and-suspenders: guarantee no text content can force horizontal
+     overflow, regardless of any container width miscalculation upstream. */
+  h1, h2, h3, h4, h5, h6, p, span, a, li, td, th, button, label {
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   /* Sticky headers must sit BELOW the notch/Dynamic Island */
