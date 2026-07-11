@@ -1490,7 +1490,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             if ((block as any).type === 'award_fee_factors_visual') {
               const factors = [
                 { label: 'Technical Performance', pct: 35, color: '#3b82f6', emoji: '🎯', desc: 'Quality of deliverables, solutions, and technical results. The largest single factor. A Fair score here still only earns 25-47% of available fee.' },
-                { label: 'Cost Control', pct: 25, color: '#10b981', emoji: '💰', desc: 'Required by regulation to be at least 25% of total weight. Are you tracking to budget? Weekly burn rate reviews directly protect this score.' },
+                { label: 'Cost Control (example weighting)', pct: 25, color: '#10b981', emoji: '💰', desc: 'This weighting is set per contract in that program\'s own Award Fee Determination Plan, not a fixed government-wide number. A DoD audit of real CPAF contracts found cost weightings ranging from 13% to 40%. Are you tracking to budget? Weekly burn rate reviews directly protect whatever this number is on your contract.' },
                 { label: 'Schedule / Timeliness', pct: 25, color: '#f59e0b', emoji: '📅', desc: 'On-time delivery is worth one quarter of your fee. A perfect deliverable two weeks late is still a financial loss.' },
                 { label: 'Management / COR Trust', pct: 15, color: '#8b5cf6', emoji: '🤝', desc: 'Proactive communication, no surprises, subcontractor oversight. The customer cannot score what they cannot see.' },
               ];
@@ -1537,8 +1537,8 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                         </div>
                       ))}
                     </div>
-                    <div className="px-4 py-2 bg-red-500/10 border-t border-red-500/20">
-                      <p className="text-xs text-red-400 font-semibold">One Unsatisfactory rating = $0 for the entire period regardless of other scores.</p>
+                    <div className="px-4 py-2 bg-amber-500/10 border-t border-amber-500/20">
+                      <p className="text-xs text-amber-500 font-semibold">FAR 16.401(e) actually requires the government to score cost, schedule, and technical performance in the aggregate, specifically so one weak factor cannot automatically zero out an otherwise strong period. Some individual Award Fee Determination Plans write in a harder gate anyway. Read your own contract's AFDP, don't assume.</p>
                     </div>
                   </div>
                 </div>
@@ -1546,7 +1546,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── burn_rate_visual ──────────────────────────────────────────────
-            if ((block as any).type === 'burn_rate_visual') {
+            if ((block as any).type === 'burn_rate_status_visual') {
               return (
                 <div key={i} className="space-y-4">
                   {(block as any).heading && <h3 className="font-bold text-base text-foreground">{(block as any).heading}</h3>}

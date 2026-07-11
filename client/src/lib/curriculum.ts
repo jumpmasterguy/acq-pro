@@ -3437,18 +3437,33 @@ export const modules: Module[] = [
             heading: 'The Four Factors That Score Your Profit',
           },
           {
-            type: 'burn_rate_visual' as any,
+            type: 'text',
+            heading: 'So How Do You Actually Protect That Cost Control Score?',
+            body: "You now know Cost Control is one of the four factors the government scores you on, and that the exact weighting depends on your specific contract's Award Fee Determination Plan. Knowing the score exists is one thing. Protecting it day to day, before the evaluation period even closes, is another. That is what burn rate tracking is for.",
+          },
+          {
+            type: 'burn_rate_status_visual' as any,
             heading: 'Burn Rate: The Speed Limit Nobody Posts',
           },
           {
-            type: 'award_fee_pitfalls_visual' as any,
-            heading: 'Six Ways PMs Leave Money on the Table',
+            type: 'text',
+            heading: 'Award Fee Ends Each Period. CPARS Outlives the Contract.',
+            body: "Everything so far, the four factors, the rating table, burn rate, resets every evaluation period. There is a second scoreboard running underneath all of it that never resets: CPARS. Every period you just learned to protect becomes a permanent performance record that follows your company into the next recompete, and into every other contract your company bids on afterward.",
           },
           {
             type: 'callout',
             style: 'warning',
             heading: 'CPARS Scores Determine Future Work',
             body: 'Your Contractor Performance Assessment Reporting System ratings are the number one factor government agencies use when deciding who wins re-compete awards. Strong CPARS = backlog growth. Weak CPARS = your company loses the follow-on. This is not abstract.',
+          },
+          {
+            type: 'text',
+            heading: 'Now, the Ways PMs Actually Lose This Money',
+            body: "You know how the score works, how to protect the cost number day to day, and what is riding on it beyond this one contract. These are not hypotheticals. They are the most common ways PMs leave money on the table anyway, and each one maps directly back to a factor or a scoreboard you just learned.",
+          },
+          {
+            type: 'award_fee_pitfalls_visual' as any,
+            heading: 'Six Ways PMs Leave Money on the Table',
           },
         ],
         levels: {
@@ -3460,7 +3475,7 @@ export const modules: Module[] = [
                   'On a CPAF contract, every staffing call you make, every deliverable you schedule, and every cost you approve shows up directly on the company\'s income statement. You\'re not just managing a project — you\'re running a business unit where your performance score is the profit lever. Defense contractors like Booz Allen Hamilton (~98% government revenue) and Lockheed Martin (~99% government revenue) depend almost entirely on contract performance for every financial metric Wall Street tracks.',
                 items: [
                   'Mission Performance drives award fee|||The government scores your technical results at the end of each evaluation period. That score determines whether the company earns profit beyond base costs. A poor score isn\'t just a report card — it\'s a direct reduction in operating income.',
-                  'Cost overruns hurt everyone, not just your contract|||When you overspend, it reduces your award fee score (cost control is worth at least 25% of the evaluation). It also inflates overhead rates that every other contract in the company pays. Your inefficiency has ripple effects.',
+                  'Cost overruns hurt everyone, not just your contract|||When you overspend, it reduces your award fee score (Cost Control is a substantial share of the evaluation on most CPAF contracts, though the exact weighting is set by your specific Award Fee Determination Plan). It also inflates overhead rates that every other contract in the company pays. Your inefficiency has ripple effects.',
                   'Defense contracts are Wall Street events|||BAH derives ~98% of its revenue from government contracts. When your contract wins a high award fee, that flows to operating income, earnings per share, and analyst confidence. When it underperforms, the stock feels it.',
                   'CPARS scores determine future work|||Your Contractor Performance Assessment Reporting System (CPARS) ratings are the #1 factor government agencies use when deciding who wins re-compete awards. Strong CPARS = backlog growth = company survival.',
                 ],
@@ -3483,16 +3498,16 @@ export const modules: Module[] = [
                   'At the end of each evaluation period (typically 6 months), a government Fee Determining Official (FDO) reviews your performance across four weighted categories and assigns a rating. That rating translates directly into a dollar amount the company receives.',
                 items: [
                   'Technical Performance (35%)|||The largest single factor. Did your deliverables meet requirements? Were solutions innovative and high quality? Technical problems that aren\'t flagged early tend to grow into expensive fixes — and a "Fair" technical score still only earns you 25–47.5% of available fee.',
-                  'Cost Control (25% minimum)|||Federal regulations require cost control to represent at least 25% of the total evaluation weight. Are you executing at or below the spend plan? Is your burn rate tracking correctly? This is the factor you control most directly through staffing and oversight decisions.',
-                  'Schedule / Timeliness (25%)|||On-time delivery is worth a quarter of your award fee. A technically excellent deliverable that arrives late is still a financial loss. Know your next 30/60/90-day milestones and treat schedule slippage as a profit emergency.',
-                  'Management / Customer Satisfaction (15%)|||COR trust is a scored factor. Surprising the customer with bad news, failing to communicate proactively, or letting subcontractors miss milestones without escalation all erode this score.',
-                  'Rating-to-dollar translation|||Excellent (95–100 score): earn 97.5–100% of available fee. Good (76–85): earn 50–72.5%. Fair (66–75): earn 25–47.5%. Poor/Unsatisfactory (below 60): earn $0. One unsatisfactory rating wipes out the entire award fee for that period regardless of other factor scores.',
+                  'Cost Control (this contract\'s weighting, often 20 to 30%)|||How much weight cost control gets is set contract by contract in that program\'s own Award Fee Determination Plan, not a fixed government-wide number. A DoD audit of real CPAF contracts found cost weightings ranging from 13% to 40% depending on the program. NASA specifically writes a 25% floor into its own supplement, but that\'s a NASA rule, not a DoD-wide one. Check your own contract\'s AFDP instead of assuming a percentage.',
+                  'Schedule / Timeliness (this contract\'s weighting, often around 25%)|||On-time delivery matters a lot in every AFDP, though the exact weight still depends on your specific contract. A technically excellent deliverable that arrives late is still a financial loss. Know your next 30/60/90-day milestones and treat schedule slippage as a profit emergency.',
+                  'Management / Customer Satisfaction (this contract\'s weighting, often around 15%)|||COR trust is a scored factor. Surprising the customer with bad news, failing to communicate proactively, or letting subcontractors miss milestones without escalation all erode this score.',
+                  'Rating-to-dollar translation|||Excellent (95–100 score): earn 97.5–100% of available fee. Good (76–85): earn 50–72.5%. Fair (66–75): earn 25–47.5%. Poor/Unsatisfactory (below 60): earn little to nothing. FAR 16.401(e) actually requires the government to score cost, schedule, and technical performance in the aggregate, specifically so one weak factor cannot automatically zero out an otherwise strong period. Some individual AFDPs write in a harder gate anyway, where one unsatisfactory factor caps the whole fee. That\'s a contract-specific policy choice, not a universal rule, so read your own AFDP rather than assuming.',
                 ],
               },
               {
-                heading: 'Burn Rate and Funding: The Rules You Cannot Break',
+                heading: 'So How Do You Protect That Cost Control Number Day to Day?',
                 content:
-                  'The government doesn\'t write a blank check — it obligates specific dollar amounts via contract modifications. That obligated amount is the hard ceiling. Spending beyond it violates federal law. Understanding burn rate is how you stay safe and stay in the customer\'s good graces.',
+                  'You just saw that Cost Control is one of the four factors that decides your award fee, and that the exact weighting varies contract to contract. Burn rate is the tool you actually use to protect whatever that number is on your program, before the evaluation period ever closes. The government doesn\'t write a blank check — it obligates specific dollar amounts via contract modifications. That obligated amount is the hard ceiling. Spending beyond it violates federal law. Understanding burn rate is how you stay safe and stay in the customer\'s good graces.',
                 items: [
                   'Funded Value is the ceiling|||The funded value is what the government has officially obligated (set by contract modification and ACRN). You cannot spend beyond this without violating the Anti-Deficiency Act — which is a federal criminal offense, not just a contract issue.',
                   'Burn Rate Too High = funding gap risk|||If you\'re spending faster than planned, you\'ll hit the funded ceiling before the next modification arrives. When that happens, work stops. A work stoppage damages schedule scores, triggers government scrutiny, and signals poor planning — all of which hurt award fee. Alert finance immediately if burn is running hot.',
@@ -3501,9 +3516,20 @@ export const modules: Module[] = [
                 ],
               },
               {
-                heading: 'The Six Pitfalls That Cost PMs Award Fee',
+                heading: 'CPARS: The Scoreboard That Outlives This Contract',
                 content:
-                  'These aren\'t hypotheticals — they\'re the most common ways PMs leave money on the table. Each one maps directly to a specific award fee factor and a specific dollar impact.',
+                  'Everything you just read about the four factors, the rating table, and burn rate resets every evaluation period. There is a second scoreboard running underneath all of it that never resets: the Contractor Performance Assessment Reporting System, or CPARS. Award fee decides what your company gets paid this period. CPARS decides whether your company gets asked back for the next one, on this contract and on every other contract your company ever bids.',
+                items: [
+                  'CPARS is a permanent record|||Every CPARS rating your COR writes becomes part of a government-wide database that future source selection teams can pull up and read. A weak rating from a completely different contract years ago can still cost you today.',
+                  'It is the number one factor in recompetes|||When your contract comes up for recompete, or your company bids something brand new, past performance pulled straight from CPARS is almost always a formally scored evaluation factor. Strong CPARS ratings directly translate into winning more work. Weak ones directly translate into losing it.',
+                  'It flows from the same relationship that scores your award fee|||Your COR is usually the same person writing your day to day performance observations and, eventually, your CPARS narrative. The trust you build or lose chasing a good award fee score is the same trust that shapes your CPARS record.',
+                  'You cannot fix a bad rating after the fact|||CPARS ratings are locked in per evaluation period and hard to challenge once submitted. The only real strategy is preventing a bad rating in the first place, through the same documentation discipline and early escalation habits that protect your award fee score.',
+                ],
+              },
+              {
+                heading: 'The Six Pitfalls That Cost PMs Award Fee (and CPARS)',
+                content:
+                  'You now know how the score works, how burn rate protects your cost number day to day, and how CPARS turns every period into a permanent record. These aren\'t hypotheticals — they\'re the most common ways PMs leave money on the table anyway. Each one maps directly to a specific award fee factor, and several follow you straight into your next CPARS rating.',
                 items: [
                   'Overstaffing "just in case"|||Idle labor burns funding, spikes overhead rates across all company contracts, and signals poor planning to the Contracting Officer\'s Representative (COR). Staff to the work you have, not the work you fear.',
                   'Ignoring burn rate until it\'s urgent|||Weekly reviews catch problems when they\'re still manageable. Quarterly reviews catch them when they\'re emergencies.',
@@ -3532,16 +3558,16 @@ export const modules: Module[] = [
               {
                 id: 'q2',
                 type: 'mc',
-                question: 'The government scores your award fee across four factors. Cost Control must represent at least what percentage of the total evaluation weight?',
+                question: 'Who actually decides how much weight Cost Control gets in an award fee evaluation, relative to Technical, Schedule, and Management?',
                 options: [
-                  '10%|||Incorrect. 10% would make cost control nearly irrelevant to the evaluation. The regulation sets a higher minimum to ensure contractors are incentivized to manage costs.',
-                  '15%|||Incorrect. 15% is the weight assigned to Management/Customer Satisfaction in many standard CPAF structures, not the regulatory minimum for cost control.',
-                  '25%|||Correct. Federal acquisition regulations require cost control to represent at least 25% of the total award fee evaluation weight. This ensures every CPAF contractor is financially incentivized to control spending, not just deliver technical results.',
-                  '35%|||Incorrect. 35% is the typical weight for Technical Performance, not Cost Control. The cost control minimum is 25%.',
+                  'A single government-wide percentage set in the FAR that applies to every CPAF contract|||Incorrect. There is no single DoD-wide minimum percentage for cost control. A DoD audit of real CPAF contracts found cost weightings ranging from 13% to 40% depending on the program.',
+                  'The Contracting Officer, based on that specific contract\'s Award Fee Determination Plan|||Correct. DFARS/PGI 216.401 has the Contracting Officer develop evaluation factor weightings based on the characteristics of the individual procurement. Weightings are written into that contract\'s own AFDP, which is why they vary contract to contract instead of following one fixed number.',
+                  'The contractor, during proposal negotiations|||Incorrect. The contractor can negotiate and comment, but the government, through the Contracting Officer and Fee Determining Official, sets the evaluation factors and weightings in the Award Fee Determination Plan.',
+                  'NASA sets the standard weighting that DoD and all other agencies must follow|||Incorrect. NASA\'s own FAR supplement does set a 25% cost control floor, but that\'s a NASA-specific rule. DoD is not bound by NASA\'s supplement and sets its own weightings per contract.',
                 ],
-                correct: 2,
+                correct: 1,
                 explanation:
-                  'Cost Control must represent at least 25% of the evaluation weight per federal acquisition regulations. In a typical CPAF structure: Technical 35%, Cost Control 25%, Schedule/Timeliness 25%, Management/Customer 15%. Every PM decision that affects cost is directly affecting at least one quarter of the total award fee.',
+                  'There is no fixed, government-wide percentage that Cost Control must hit. DFARS/PGI 216.401 has the Contracting Officer set evaluation factor weightings based on that specific procurement, written into the contract\'s own Award Fee Determination Plan. A DoD audit of real CPAF contracts found cost weightings ranging anywhere from 13% to 40%. NASA is the one agency with a written 25% floor in its own FAR supplement, but that does not apply to DoD contracts. Always check your own contract\'s AFDP rather than assuming a standard split.',
               },
               {
                 id: 'q3',
@@ -3632,7 +3658,7 @@ export const modules: Module[] = [
                 items: [
                   'Typical cost composition: understand where money flows|||Direct Labor including fringe: ~50%. Overhead Applied: ~25%. Subcontracts: ~15%. ODCs (travel, equipment, training): ~10%. The last two categories are where PMs most frequently lose cost control — not because they\'re large, but because oversight is inconsistent.',
                   'Subcontractor scope discipline prevents financial leakage|||Define scope in the Statement of Work with precision. Changes cost money — a subcontractor performing out-of-scope work is either billing you for unauthorized cost or doing unpaid work that will eventually create disputes. Enforce deliverable timelines to prevent schedule slippage cascading into your schedule score.',
-                  'Small business subcontracting goals are worth 10% of award fee|||FAR 1816.405-274 ties subcontracting plan execution — including small business participation goals — to award fee. This is not a compliance checkbox; it\'s a profit driver worth up to 10% of available fee. Track your small business utilization monthly.',
+                  'Small business subcontracting plan execution is a real factor, not a fixed percentage|||There is no universal FAR clause that assigns subcontracting plan execution a fixed award fee percentage. It typically shows up inside the Management/Customer Satisfaction factor at whatever weighting your specific Award Fee Determination Plan sets, and separately, failing to make a good faith effort can trigger liquidated damages under FAR 52.219-16. This is not a compliance checkbox either way. Track your small business utilization monthly.',
                   'ODC discipline: three questions before approving any expenditure|||Is it in the budget (approved in the contract or task order)? Is it truly required for contract performance? Is it contract-related and documented? Non-mission travel is waste. Equipment purchases outside the budget are overruns. Training that isn\'t contract-related is unallowable. Each unapproved ODC is a potential disallowed cost.',
                   'Monitor subcontractor invoices against delivered value monthly|||An invoice without a corresponding deliverable is a red flag. Subcontractors who invoice on schedule but deliver late are burning your budget without advancing your award fee position. Review monthly and hold subs to their SOW milestones.',
                 ],
@@ -3710,16 +3736,16 @@ export const modules: Module[] = [
               {
                 id: 'q5',
                 type: 'mc',
-                question: 'Small business subcontracting plan execution is worth approximately what percentage of available award fee under FAR 1816.405-274?',
+                question: 'How does small business subcontracting plan performance typically factor into your award fee?',
                 options: [
-                  '2%|||Incorrect. A 2% weight would make small business compliance financially negligible. The actual weight is significantly higher and reflects the government\'s policy priority on small business utilization.',
-                  '5%|||Incorrect. While some contracts vary, the standard award fee weight for subcontracting plan execution including small business goals is higher than 5%.',
-                  '10%|||Correct. FAR 1816.405-274 ties subcontracting plan execution — including small business participation goals — to award fee, typically worth approximately 10% of available fee. On a $2M award fee pool, that\'s $200,000 directly tied to your small business subcontracting performance.',
-                  '25%|||Incorrect. 25% is the minimum weight for cost control evaluation. Small business subcontracting plan performance is a component of the broader management/customer evaluation, worth approximately 10%.',
+                  'It has its own fixed 10% weighting under a specific FAR clause on every CPAF contract|||Incorrect. There is no FAR clause that assigns subcontracting plan performance a fixed award fee percentage across all contracts. Whether and how it counts depends on that specific contract\'s Award Fee Determination Plan.',
+                  'It is usually folded into the Management/Customer Satisfaction factor, with the exact weight set by that contract\'s AFDP|||Correct. Subcontracting plan compliance is a real, scored consideration, but it does not carry a universal fixed percentage. It typically lives inside the Management factor (or gets its own weighting) at whatever level that contract\'s Award Fee Determination Plan assigns it.',
+                  'It only matters at contract closeout and has no effect on interim award fee periods|||Incorrect. Subcontracting plan execution is tracked throughout performance (via the required subcontracting reports) and can affect interim evaluation periods, not just closeout.',
+                  'It has no effect on award fee, only on liquidated damages under FAR 52.219-16|||Incorrect. Liquidated damages under FAR 52.219-16 are a separate, additional remedy for failing to make a good faith effort on your subcontracting plan. That does not mean the government ignores subcontracting performance in your award fee evaluation too — many AFDPs score it.',
                 ],
-                correct: 2,
+                correct: 1,
                 explanation:
-                  'Small business subcontracting compliance is a profit driver, not a compliance checkbox. At approximately 10% of available award fee under FAR 1816.405-274, it represents real dollars — $200,000 on a $2M award fee pool. Track your small business utilization against goals monthly and treat shortfalls as urgently as a cost overrun.',
+                  'Small business subcontracting plan performance is a real, trackable factor that can affect your award fee, but there is no single fixed percentage that applies across every contract. It typically shows up inside the Management/Customer Satisfaction factor, weighted however that specific contract\'s Award Fee Determination Plan sets it. Separately, FAR 52.219-16 allows the government to assess liquidated damages if you fail to make a good faith effort on your subcontracting plan, which is its own consequence independent of award fee. Track your small business utilization against goals monthly regardless of exactly how your specific AFDP weights it.',
               },
             ],
           },
@@ -3780,7 +3806,7 @@ export const modules: Module[] = [
                 items: [
                   'The FDO perspective: they evaluate documentation, not effort|||The Fee Determining Official reviews the Contracting Officer\'s Representative (COR) assessment and the Self-Assessment submitted by the contractor. Undocumented achievements do not exist in the evaluation process. An excellent quarter with no written record of accomplishments produces the same FDO input as a mediocre quarter. Documentation is not bureaucracy — it is the mechanism through which excellent work converts to dollars.',
                   'Self-Assessment strategy: quantify everything|||The contractor Self-Assessment is your opportunity to present your performance narrative before the COR writes their assessment. Effective self-assessments quantify: cost control in dollar terms (e.g., "reduced burn rate by $240K in Q3 through labor reallocation"), schedule performance in days (e.g., "delivered 4 of 4 milestones on or ahead of schedule"), and technical quality (e.g., "zero defect rework hours logged against this deliverable"). Percentages and dollar figures are more convincing than narrative prose.',
-                  'COR relationship as a financial asset|||The COR is the government\'s primary performance observer and their assessment drives the FDO\'s rating. PMs who maintain weekly touchpoints with the COR, communicate problems early with recovery plans, and provide unsolicited positive performance updates are building a scored financial asset. COR trust is literally worth money — it shows up in the Management/Customer Satisfaction factor, which is 15% of award fee.',
+                  'COR relationship as a financial asset|||The COR is the government\'s primary performance observer and their assessment drives the FDO\'s rating. PMs who maintain weekly touchpoints with the COR, communicate problems early with recovery plans, and provide unsolicited positive performance updates are building a scored financial asset. COR trust is literally worth money — it shows up in the Management/Customer Satisfaction factor, whatever weighting your specific AFDP assigns it.',
                   'Evaluation period planning: front-load the evidence|||The strongest award fee outcomes come from PMs who plan the performance narrative from day one of the evaluation period. Identify which achievements will resonate most with the specific COR (technical innovation? cost savings? ahead-of-schedule deliveries?), then ensure those achievements are both executed and documented. Don\'t wait to discover what the COR values — ask at the start of the period.',
                   'Risk disclosure as award fee protection|||Counterintuitively, disclosing risks and problems early — with documented mitigation plans — protects award fee better than concealing them. CORs who learn about problems from the contractor (with a recovery plan) consistently rate management higher than CORs who discover problems independently. Transparency converts from a soft communication virtue into a hard financial advantage in the Management/Customer factor.',
                 ],
