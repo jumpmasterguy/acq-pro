@@ -1083,6 +1083,11 @@ export const modules: Module[] = [
             body: 'The MCA pathway is organized into phases separated by milestone review decisions. Each phase has a specific purpose, and a program can only advance to the next phase after a Milestone Decision Authority (MDA) reviews the program\'s progress and approves the next step.',
           },
           {
+            type: 'callout',
+            heading: 'Real Talk',
+            body: "This phase-by-phase breakdown describes the journey of a fighter jet or a warship, not a help desk contract or a routine IT services task order. If your program was never going to sit through a Milestone A, B, or C review in the first place, you can skim this table and move on with a clear conscience. It's still worth knowing this exists, mostly so you understand what a coworker means when they casually say a program is 'pre-Milestone B.'",
+          },
+          {
             type: 'table_visual' as any,
             heading: 'The MCA Lifecycle Phases',
             headers: ['Phase', 'Gate In / Gate Out', 'What Happens Here'],
@@ -1195,6 +1200,11 @@ export const modules: Module[] = [
             type: 'text',
             heading: 'Why ACAT Level Determines Your Entire Program Experience',
             body: 'The first question asked about any new DoD acquisition is: what ACAT is this program? The answer determines who approves your milestones, how many oversight reviews you will conduct, whether you need an independent cost estimate, whether you must report to Congress, and how much staff support you will have. An ACAT I program like the F-35 involves USD(A&S) as the MDA, mandatory SAR reports to Congress, CAPE independent cost estimates, and DoD-level reviews at every milestone. An ACAT III program may be approved by a PEO with minimal external oversight. Understanding ACAT levels is the starting point for understanding any DoD program\'s regulatory environment.',
+          },
+          {
+            type: 'callout',
+            heading: 'Real Talk',
+            body: "If you support a services contract or a smaller procurement, you are almost certainly living in ACAT III or ACAT IV, and honestly, that's the good news. Nobody at your level is getting hauled in front of Congress because a report was late. You will probably never sit through a CAPE independent cost estimate briefing. Read this lesson so you know what ACAT I and II mean when someone bigger mentions them in a meeting, then spend your actual energy on ACAT III and IV, which is where you likely live.",
           },
           {
             type: 'table_visual' as any,
@@ -2249,6 +2259,11 @@ export const modules: Module[] = [
             body: "Three statutory principles govern every spending decision in DoD: (1) The Purpose Statute (31 U.S.C. § 1301) — funds may only be used for what Congress intended. (2) The Time Statute (31 U.S.C. § 1502) — funds may only obligate for needs arising within their period of availability. (3) The Amount Statute / Antideficiency Act (31 U.S.C. §§ 1341, 1342) — cannot obligate more than was appropriated. Violating any of these three is a federal offense."
           },
           {
+            type: 'callout',
+            heading: 'Real Talk',
+            body: "The table below is a list of accounting codes. Nobody outside a comptroller shop has these memorized, and nobody ever will. Your finance team lives in this stuff so you don't have to. The one thing actually worth remembering: every service has its own version of these codes, so if you switch from an Army program to a Navy one, don't assume the numbers carry over. Otherwise, feel free to skim this table like you're scrolling past the terms and conditions on a software update.",
+          },
+          {
             type: 'table_visual' as any,
             heading: "Per-Service Treasury Account Symbols (TAS) — Key Accounts",
             headers: ['Service', 'Appropriation', 'TAS', 'What It Funds'],
@@ -2991,6 +3006,11 @@ export const modules: Module[] = [
           {
             type: 'weighted_guidelines_visual' as any,
             heading: 'The Weighted Guidelines Method — How Profit is Determined',
+          },
+          {
+            type: 'callout',
+            heading: 'Real Talk',
+            body: "Cost Accounting Standards only kick in on contracts around $35 million and up. If you are running a services contract or a smaller procurement well under that number, CAS is not your problem, it is your company's accounting department's problem, and they were dealing with it long before you showed up. Read this table once so you know what CAS is when someone mentions it, then go back to your actual job.",
           },
           {
             type: 'table_visual' as any,
@@ -5322,7 +5342,7 @@ export const modules: Module[] = [
       {
         type: 'table_visual' as any,
         level: 'intermediate' as const,
-        title: 'Acquisition Instrument Comparison',
+        heading: 'Acquisition Instrument Comparison',
         headers: ['Instrument', 'What It Is', 'Where the Money Lives', 'Who Uses It Daily'],
         rows: [
           ['Standalone Contract', 'A single contract for one specific, defined requirement. Full FAR Part 15 competition. When the work ends, the relationship ends.', 'In the contract itself — fully funded at award (or by option).', 'PM and CO manage it directly.'],
@@ -5749,6 +5769,11 @@ export const modules: Module[] = [
         type: 'text',
         heading: 'Undefinitized Contract Actions (UCAs) — The Highest-Risk Modification',
         body: 'A UCA (also called a letter contract or undefinitized change order) authorizes a contractor to begin work before the price is agreed. UCAs are necessary for urgent national security situations — but they create serious cost risk. A contractor performing under a UCA has no price ceiling and a weak incentive to control costs: they bill actual costs and know the government will pay them regardless of final negotiated price. DFARS 217.7404 requires definitization within 180 days of initial performance. In practice, many UCAs run for years undefinitized. For PMs, every open UCA is a financial exposure that should be tracked and closed as quickly as possible.',
+      },
+      {
+        type: 'callout',
+        heading: 'Real Talk',
+        body: "This next table is legal doctrine that shows up in actual courtrooms and board-of-contract-appeals hearings. Most PMs will go an entire career without ever citing it out loud. It's worth knowing it exists so you recognize the warning signs when a government customer keeps piling on new asks without a modification, but you do not need to memorize the legal test. That's what your contracts team and, eventually, a lawyer are for.",
       },
       {
         type: 'table_visual' as any,
@@ -9778,6 +9803,11 @@ You have more leverage before a missed milestone than after it. Use it early.`,
             type: 'callout',
             heading: 'CMMI in Plain English',
             body: "Think of a CMMI appraisal like a restaurant health inspection grade posted in the window. A grade tells you the kitchen follows the same clean process every single day, not just on the days the health inspector happens to show up. Two things trip people up, and they both matter for your program. First, the grade expires. A CMMI appraisal is only good for 3 years, same as that inspection sticker. An old grade tells you nothing about today. Second, the grade only covers the location it was issued for. A restaurant chain with an A grade downtown doesn't mean the location across town is clean too. That's exactly what a CMMI scope mismatch is: a contractor waving around a company-wide ML3 appraisal when the specific team on your contract was never actually inspected.",
+          },
+          {
+            type: 'callout',
+            heading: 'Real Talk',
+            body: "CMMI mostly comes up on software-heavy or systems-engineering-heavy programs above a certain size, not on your average services or small procurement contract. If nobody has ever asked you for a CMMI appraisal, that's not a knowledge gap, that's just the reality of the contract you're on. Know what it is so you're not lost if it comes up, and don't lose sleep over the maturity level table below if it never applies to you.",
           },
           {
             type: 'table_visual' as any,
