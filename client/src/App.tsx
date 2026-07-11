@@ -690,10 +690,10 @@ function AppContent() {
                       className="flex items-start gap-2 px-3 py-2 rounded-lg text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors group"
                       data-testid={`sidebar-resource-${ri}`}
                     >
-                      <Download className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 opacity-60 group-hover:opacity-100" />
+                      <Download className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-primary opacity-80 group-hover:opacity-100" />
                       <div className="flex-1 min-w-0">
-                        <div className="text-[11px] font-medium leading-tight">{res.title}</div>
-                        <div className="text-[10px] text-sidebar-foreground/40 leading-tight mt-0.5">{res.description}</div>
+                        <div className="text-[11px] font-semibold leading-tight text-sidebar-foreground/90">{res.title}</div>
+                        <div className="text-[10.5px] text-sidebar-foreground/65 leading-snug mt-0.5">{res.description}</div>
                       </div>
                     </a>
                   ))}
