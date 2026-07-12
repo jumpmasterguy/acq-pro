@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { createHmac, timingSafeEqual } from "crypto";
 
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
@@ -7,9 +8,33 @@ const resend = process.env.RESEND_API_KEY
 const APP_URL = process.env.APP_URL || "https://acqlerate.com";
 const FROM = process.env.EMAIL_FROM || "Lucas at Acqlerate <lucas@acqlerate.com>";
 
-// ─── Shared HTML shell ──────────────────────────────────────────────────────
+// ─── Unsubscribe tokens ──────────────────────────────────────────
+// Stateless HMAC token — no per-user DB column needed. Anyone with the exact
+// email + the server secret can produce a valid token, which lets the
+// recipient of THAT specific email unsubscribe with one click.
+const UNSUB_SECRET = process.env.SESSION_SECRET || "acqpro-dev-secret-not-for-production";
 
-function emailShell(preheader: string, body: string): string {
+export function unsubscribeToken(email: string): string {
+  return createHmac("sha256", UNSUB_SECRET).update(email.trim().toLowerCase()).digest("hex").slice(0, 32);
+}
+
+export function verifyUnsubscribeToken(email: string, token: string): boolean {
+  const expected = unsubscribeToken(email);
+  if (!token || token.length !== expected.length) return false;
+  try { return timingSafeEqual(Buffer.from(expected), Buffer.from(token)); } catch { return false; }
+}
+
+export function unsubscribeUrl(email: string): string {
+  const clean = email.trim().toLowerCase();
+  return `${APP_URL}/api/unsubscribe?email=${encodeURIComponent(clean)}&token=${unsubscribeToken(clean)}`;
+}
+
+// ─── Shared HTML shell ────────────────────────────────────
+
+function emailShell(preheader: string, body: string, recipientEmail?: string): string {
+  const unsubLink = recipientEmail
+    ? ` &nbsp;·&nbsp; <a href="${unsubscribeUrl(recipientEmail)}" style="color:#94a3b8;text-decoration:underline">Unsubscribe</a>`
+    : "";
   return `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>Acqlerate</title></head>
 <body style="margin:0;padding:0;background:#f0f2f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
@@ -23,7 +48,7 @@ function emailShell(preheader: string, body: string): string {
 </div>
 <div style="padding:36px 48px">${body}</div>
 <div style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:22px 48px;text-align:center">
-<p style="font-size:12px;color:#94a3b8;margin:0;line-height:1.7">You're receiving this because you created an account at Acqlerate.<br/><a href="${APP_URL}" style="color:#01696f;text-decoration:none">acqlerate.com</a> &nbsp;·&nbsp; Defense Acquisitions Academy</p>
+<p style="font-size:12px;color:#94a3b8;margin:0;line-height:1.7">You're receiving this because you created an account at Acqlerate.<br/><a href="${APP_URL}" style="color:#01696f;text-decoration:none">acqlerate.com</a> &nbsp;·&nbsp; Defense Acquisitions Academy${unsubLink}</p>
 </div>
 </div>
 </body></html>`;
@@ -67,7 +92,7 @@ export async function sendWelcomeEmail(to: string, username: string): Promise<vo
     from: FROM, to,
       replyTo: "hello@acqlerate.com",
     subject: "Welcome to Acqlerate — your first module is ready",
-    html: emailShell("Start Module 01 right now — it's free and takes 20 minutes.", body),
+    html: emailShell("Start Module 01 right now — it's free and takes 20 minutes.", body, to),
   });
   console.log(`[email] Email 1 (welcome) sent to ${to}`);
 }
@@ -191,7 +216,7 @@ export async function sendStarterKitEmail(to: string, username: string, role: Us
       replyTo: "hello@acqlerate.com",
     to,
     subject: `Your Acqlerate Starter Kit is ready to download`,
-    html: emailShell('Your free acquisition reference guide — tailored to your role.', body),
+    html: emailShell('Your free acquisition reference guide — tailored to your role.', body, to),
   });
   console.log(`[email] Starter kit email sent to ${to} (role: ${role})`);
 }
@@ -238,7 +263,7 @@ export async function sendEmail2(to: string, username: string): Promise<void> {
     from: FROM, to,
       replyTo: "hello@acqlerate.com",
     subject: "Why acquisition literacy actually matters (and a quick win from Foundations)",
-    html: emailShell("The DoD spends $400B/year. Here's why understanding it gives you a career edge.", body),
+    html: emailShell("The DoD spends $400B/year. Here's why understanding it gives you a career edge.", body, to),
   });
   console.log(`[email] Email 2 (day 2) sent to ${to}`);
 }
@@ -286,7 +311,7 @@ export async function sendEmail3(to: string, username: string): Promise<void> {
     from: FROM, to,
       replyTo: "hello@acqlerate.com",
     subject: "The feature inside Acqlerate most people underuse",
-    html: emailShell("Your AI Study Assistant can answer any acquisition question in real time.", body),
+    html: emailShell("Your AI Study Assistant can answer any acquisition question in real time.", body, to),
   });
   console.log(`[email] Email 3 (day 4) sent to ${to}`);
 }
@@ -341,7 +366,7 @@ export async function sendEmail4(to: string, username: string): Promise<void> {
     from: FROM, to,
       replyTo: "hello@acqlerate.com",
     subject: "What's waiting after Module 01 (and what users are saying)",
-    html: emailShell("Real feedback from defense professionals — and what Pro unlocks.", body),
+    html: emailShell("Real feedback from defense professionals — and what Pro unlocks.", body, to),
   });
   console.log(`[email] Email 4 (day 7) sent to ${to}`);
 }
@@ -389,7 +414,7 @@ export async function sendEmail5(to: string, username: string): Promise<void> {
     from: FROM, to,
       replyTo: "hello@acqlerate.com",
     subject: "A preview of what's inside Defense Finance & Contracting",
-    html: emailShell("Color of money, Nunn-McCurdy, and the real difference between FFP and Cost-Plus.", body),
+    html: emailShell("Color of money, Nunn-McCurdy, and the real difference between FFP and Cost-Plus.", body, to),
   });
   console.log(`[email] Email 5 (day 10) sent to ${to}`);
 }
@@ -446,7 +471,7 @@ export async function sendEmail6(to: string, username: string): Promise<void> {
     from: FROM, to,
       replyTo: "hello@acqlerate.com",
     subject: "Your personalized path through Acqlerate (based on your role)",
-    html: emailShell("USG personnel vs. contractor side — here's the sequence that fits your situation.", body),
+    html: emailShell("USG personnel vs. contractor side — here's the sequence that fits your situation.", body, to),
   });
   console.log(`[email] Email 6 (day 14) sent to ${to}`);
 }
@@ -500,7 +525,7 @@ export async function sendEmail7(to: string, username: string): Promise<void> {
     from: FROM, to,
       replyTo: "hello@acqlerate.com",
     subject: "One last note (and why I think Acqlerate is worth it)",
-    html: emailShell("Module 01 stays free forever. But here's what's on the other side.", body),
+    html: emailShell("Module 01 stays free forever. But here's what's on the other side.", body, to),
   });
   console.log(`[email] Email 7 (day 21) sent to ${to}`);
 }
@@ -537,14 +562,14 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
           Start Free →
         </a>
       </div>
-      <p style="font-size:12px;color:#9ca3af;line-height:1.7;margin:0">You’re receiving this because you requested the GovCon Onboarding Playbook from acqlerate.com. No spam — unsubscribe anytime.</p>
+      <p style="font-size:12px;color:#9ca3af;line-height:1.7;margin:0">You’re receiving this because you requested the GovCon Onboarding Playbook from acqlerate.com. <a href="${unsubscribeUrl(to)}" style="color:#9ca3af;text-decoration:underline">Unsubscribe</a></p>
     `;
     await resend.emails.send({
       from: FROM,
       replyTo: "hello@acqlerate.com",
       to,
       subject: 'Your GovCon Onboarding Playbook is ready to download',
-      html: emailShell('GovCon Onboarding Playbook — download inside', body),
+      html: emailShell('GovCon Onboarding Playbook — download inside', body, to),
     });
     console.log(`[email] Playbook delivery email sent to ${to}`);
     return;
@@ -572,14 +597,14 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
           Start Module 01 — Free →
         </a>
       </div>
-      <p style="font-size:12px;color:#9ca3af;line-height:1.7;margin:0">You're receiving this because you requested the pay guide from acqlerate.com. No spam — unsubscribe anytime.</p>
+      <p style="font-size:12px;color:#9ca3af;line-height:1.7;margin:0">You're receiving this because you requested the pay guide from acqlerate.com. <a href="${unsubscribeUrl(to)}" style="color:#9ca3af;text-decoration:underline">Unsubscribe</a></p>
     `;
     await resend.emails.send({
       from: FROM,
       replyTo: "hello@acqlerate.com",
       to,
       subject: 'Your pay guide is ready — How Your Pay Works on a Government Contract',
-      html: emailShell('How Your Pay Works on a Government Contract — download inside', body),
+      html: emailShell('How Your Pay Works on a Government Contract — download inside', body, to),
     });
     console.log(`[email] Pay guide delivery email sent to ${to}`);
     return;
@@ -639,7 +664,7 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
       replyTo: "hello@acqlerate.com",
     to,
     subject: 'Your Acquisition Starter Kit — which side of the table are you on?',
-    html: emailShell('USG or Contractor? Pick your path and get the right kit.', body),
+    html: emailShell('USG or Contractor? Pick your path and get the right kit.', body, to),
   });
   console.log(`[email] Lead nurture email sent to ${to}`);
 }
@@ -729,7 +754,7 @@ export async function sendEmail2New(to: string, username: string): Promise<void>
   await resend.emails.send({
     from: FROM, to, replyTo: "hello@acqlerate.com",
     subject: "The question I get most from people like you",
-    html: emailShell("It's not the regulations. It's the language — and here's how to fix that fast.", body),
+    html: emailShell("It's not the regulations. It's the language — and here's how to fix that fast.", body, to),
   });
   console.log(`[email] Email 2 new (day 3) sent to ${to}`);
 }
@@ -759,7 +784,7 @@ export async function sendEmail3New(to: string, username: string): Promise<void>
   await resend.emails.send({
     from: FROM, to, replyTo: "hello@acqlerate.com",
     subject: "You've had a week. Here's what most people miss.",
-    html: emailShell("Five free preview lessons are in your account — these are the modules where careers get made.", body),
+    html: emailShell("Five free preview lessons are in your account — these are the modules where careers get made.", body, to),
   });
   console.log(`[email] Email 3 new (day 7) sent to ${to}`);
 }
@@ -774,7 +799,7 @@ export async function sendEmail4New(to: string, username: string): Promise<void>
     <p>A DAU resident course runs <strong>$1,500 or more</strong> once you factor in travel and time off. Management Concepts charges <strong>$2,000+ per course.</strong> Graduate School USA is in the same range.</p>
     <p>Acqlerate is <strong>$5.99/month.</strong></p>
     <div class="highlight-box">
-      <p>For that, you unlock all 6 modules (42 lessons), the AI Study Assistant, CLP certificates for every module, and PDU credit for PMP holders.</p>
+      <p>For that, you unlock all 6 modules (45 lessons), the AI Study Assistant, CLP certificates for every module, and PDU credit for PMP holders.</p>
       <p style="margin-top:10px">If you'd rather not pay monthly, the <strong>lifetime option is $99</strong> — less than a single day of government-sponsored classroom training.</p>
     </div>
     <p>You've already seen what Foundations looks like. The other five modules are built the same way.</p>
@@ -787,7 +812,7 @@ export async function sendEmail4New(to: string, username: string): Promise<void>
   await resend.emails.send({
     from: FROM, to, replyTo: "hello@acqlerate.com",
     subject: "What $5.99 actually buys you in this field",
-    html: emailShell("DAU courses run $1,500+. Management Concepts charges $2,000. Here's the math instead.", body),
+    html: emailShell("DAU courses run $1,500+. Management Concepts charges $2,000. Here's the math instead.", body, to),
   });
   console.log(`[email] Email 4 new (day 12) sent to ${to}`);
 }
@@ -813,7 +838,7 @@ export async function sendEmail7New(to: string, username: string): Promise<void>
   await resend.emails.send({
     from: FROM, to, replyTo: "hello@acqlerate.com",
     subject: "Last thing I'll say about this",
-    html: emailShell("No pressure. But one thing I've noticed about the people who do well in this field...", body),
+    html: emailShell("No pressure. But one thing I've noticed about the people who do well in this field...", body, to),
   });
   console.log(`[email] Email 7 new (day 21) sent to ${to}`);
 }
@@ -847,7 +872,7 @@ export async function sendNewsletterIssue(
   if (!resend) { console.warn('[newsletter] Resend not configured'); return; }
 
   // Wrap the html in the email shell if it's a partial, appending the signature to the body
-  const fullHtml = html.includes('<!DOCTYPE') ? html : emailShell(previewText, html + NEWSLETTER_SIGNATURE);
+  const fullHtml = html.includes('<!DOCTYPE') ? html : emailShell(previewText, html + NEWSLETTER_SIGNATURE, to);
 
   await resend.emails.send({
     from: FROM,
@@ -925,13 +950,13 @@ export async function sendReferralRewardEmail(to: string, username: string): Pro
       </div>
       <h1 style="color:#fff;font-size:1.5rem;font-weight:800;margin:0 0 16px;text-align:center;">You just earned 1 year of Pro.</h1>
       <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.8;margin:0 0 16px;">Hey ${name} — two people signed up through your referral link. That means you've earned a full year of Acqlerate Pro, on us.</p>
-      <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.8;margin:0 0 24px;">Your account has already been upgraded. Full access to all 6 modules, 44 lessons, unlimited AI study assistant, and everything we add going forward — for a year.</p>
+      <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.8;margin:0 0 24px;">Your account has already been upgraded. Full access to all 6 modules, 45 lessons, unlimited AI study assistant, and everything we add going forward — for a year.</p>
       <div style="background:#01696f22;border:1px solid #01696f44;border-radius:12px;padding:16px 20px;margin-bottom:24px;">
         <p style="color:#4FC3CB;font-size:0.85rem;margin:0;font-weight:600;">Keep sharing your link — every 2 new signups earns another year of Pro.</p>
       </div>
       <a href="https://acqlerate.com/app" style="display:inline-block;background:#01696f;color:#fff;text-decoration:none;padding:14px 28px;border-radius:10px;font-weight:700;font-size:0.95rem;">Go to Acqlerate →</a>
     </div>
-    <p style="color:#4a6274;font-size:0.75rem;text-align:center;">Acqlerate · acqlerate.com</p>
+    <p style="color:#4a6274;font-size:0.75rem;text-align:center;">Acqlerate · acqlerate.com · <a href="${unsubscribeUrl(to)}" style="color:#4a6274;text-decoration:underline">Unsubscribe</a></p>
   </div>
 </body></html>`,
   });

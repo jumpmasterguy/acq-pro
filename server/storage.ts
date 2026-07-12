@@ -58,6 +58,10 @@ export interface IStorage {
   incrementDownloadCount(purchaseId: string): Promise<void>;
   getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[] }>>;
   updateSentEmailDays(userId: string, days: number[]): Promise<void>;
+  // Email unsubscribes (marketing/newsletter/drip opt-out)
+  isUnsubscribed(email: string): Promise<boolean>;
+  setUnsubscribed(email: string): Promise<void>;
+  getUnsubscribedSet(): Promise<Set<string>>;
 }
 
 // ─── Postgres Storage (production) ─────────────────────────────────────────
@@ -423,6 +427,44 @@ export class DrizzleStorage implements IStorage {
   async updateSentEmailDays(userId: string, days: number[]): Promise<void> {
     await this.db.update(users).set({ sentEmailDays: days }).where(eq(users.id, userId));
   }
+
+  // ── Email unsubscribes ─────────────────────────────────────────────────
+  // Self-provisioning table — no drizzle-kit push required. Created lazily
+  // on first use with CREATE TABLE IF NOT EXISTS, same pattern as `purchases` above.
+  private async ensureUnsubscribesTable(pool: any): Promise<void> {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS unsubscribes (
+        email TEXT PRIMARY KEY,
+        unsubscribed_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `);
+  }
+
+  async isUnsubscribed(email: string): Promise<boolean> {
+    const { Pool } = require('pg');
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
+    await this.ensureUnsubscribesTable(pool);
+    const res = await pool.query('SELECT 1 FROM unsubscribes WHERE email = $1 LIMIT 1', [email.trim().toLowerCase()]);
+    await pool.end();
+    return res.rows.length > 0;
+  }
+
+  async setUnsubscribed(email: string): Promise<void> {
+    const { Pool } = require('pg');
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
+    await this.ensureUnsubscribesTable(pool);
+    await pool.query('INSERT INTO unsubscribes (email) VALUES ($1) ON CONFLICT (email) DO NOTHING', [email.trim().toLowerCase()]);
+    await pool.end();
+  }
+
+  async getUnsubscribedSet(): Promise<Set<string>> {
+    const { Pool } = require('pg');
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
+    await this.ensureUnsubscribesTable(pool);
+    const res = await pool.query('SELECT email FROM unsubscribes');
+    await pool.end();
+    return new Set(res.rows.map((r: any) => r.email));
+  }
 }
 
 // ─── In-Memory Storage (fallback when no DATABASE_URL) ─────────────────────
@@ -613,6 +655,11 @@ export class MemStorage implements IStorage {
     const user = this.users.get(userId);
     if (user) this.users.set(userId, { ...user, sentEmailDays: days });
   }
+
+  private unsubscribed = new Set<string>();
+  async isUnsubscribed(email: string): Promise<boolean> { return this.unsubscribed.has(email.trim().toLowerCase()); }
+  async setUnsubscribed(email: string): Promise<void> { this.unsubscribed.add(email.trim().toLowerCase()); }
+  async getUnsubscribedSet(): Promise<Set<string>> { return new Set(this.unsubscribed); }
 }
 
 // ─── Export — auto-select based on DATABASE_URL ─────────────────────────────

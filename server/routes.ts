@@ -8,7 +8,7 @@ import fs from "fs";
 import { storage } from "./storage";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema, userProfileSchema } from "@shared/schema";
-import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail } from "./email";
+import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, verifyUnsubscribeToken } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 
 // Initialize Stripe — will be undefined if key not set
@@ -1192,14 +1192,61 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       return res.status(400).json({ message: 'Valid email required' });
     }
     try {
-      const lead = await storage.saveLead(email.toLowerCase().trim(), source || 'landing_page');
-      // Send lead nurture email (non-blocking — never delay the response)
-      sendLeadNurtureEmail(email.toLowerCase().trim(), source || 'landing_page').catch((err) =>
-        console.error('[email] Lead nurture send failed:', err)
-      );
+      const cleanEmail = email.toLowerCase().trim();
+      const lead = await storage.saveLead(cleanEmail, source || 'landing_page');
+      // Send lead nurture email (non-blocking — never delay the response), unless they've unsubscribed before
+      storage.isUnsubscribed(cleanEmail).then((unsubscribed) => {
+        if (unsubscribed) { console.log(`[email] Skipping lead nurture — ${cleanEmail} is unsubscribed`); return; }
+        return sendLeadNurtureEmail(cleanEmail, source || 'landing_page');
+      }).catch((err) => console.error('[email] Lead nurture send failed:', err));
       return res.json({ ok: true, id: lead.id });
     } catch (err: any) {
       return res.status(500).json({ message: 'Failed to save email' });
+    }
+  });
+
+  // ── Unsubscribe (one-click, no login required) ────────────────────────────
+  // Every marketing/drip/newsletter email links here with an HMAC-signed token
+  // scoped to that recipient's email — no account or session needed to opt out.
+  function unsubscribePageHtml(opts: { ok: boolean; email?: string }): string {
+    const { ok, email } = opts;
+    return `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>${ok ? "Unsubscribed" : "Unsubscribe link invalid"} — Acqlerate</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F7F6F2;color:#1A1A1A;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{max-width:440px;background:#fff;border:1px solid #E5E7EB;border-radius:16px;padding:40px 36px;text-align:center}
+  .icon{font-size:2.2rem;margin-bottom:16px}
+  h1{font-size:1.4rem;font-weight:800;color:#0C2340;margin-bottom:10px}
+  p{font-size:0.95rem;color:#374151;line-height:1.6;margin-bottom:8px}
+  a{color:#01696F;font-weight:600;text-decoration:none}
+</style></head>
+<body>
+  <div class="card">
+    <div class="icon">${ok ? "✓" : "⚠"}</div>
+    <h1>${ok ? "You're unsubscribed" : "That link isn't valid"}</h1>
+    ${ok
+      ? `<p>${email ? email + " " : "You "}will no longer receive marketing, drip, or newsletter emails from Acqlerate.</p><p>Account and billing emails (if you have an account) aren't affected.</p>`
+      : `<p>This unsubscribe link is missing or doesn't match our records. Email <a href="mailto:hello@acqlerate.com">hello@acqlerate.com</a> and we'll remove you by hand.</p>`}
+    <p style="margin-top:20px"><a href="/">Back to Acqlerate</a></p>
+  </div>
+</body></html>`;
+  }
+
+  app.get("/api/unsubscribe", async (req: Request, res: Response) => {
+    const email = String(req.query.email || "").trim().toLowerCase();
+    const token = String(req.query.token || "");
+    if (!email || !email.includes("@") || !verifyUnsubscribeToken(email, token)) {
+      return res.status(400).send(unsubscribePageHtml({ ok: false }));
+    }
+    try {
+      await storage.setUnsubscribed(email);
+      console.log(`[unsubscribe] ${email} opted out of marketing emails`);
+      return res.send(unsubscribePageHtml({ ok: true, email }));
+    } catch (err: any) {
+      console.error("[unsubscribe] error:", err);
+      return res.status(500).send(unsubscribePageHtml({ ok: false }));
     }
   });
 
@@ -1307,10 +1354,13 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
         'lucas.l.cruz.pr@gmail.com',
         'jumpmasterguy@gmail.com',
       ]);
+      const unsubscribed = await storage.getUnsubscribedSet();
       const recipients = allUsers
         .filter((u: any) => {
           if (!u.email) return false;
-          if (excludedEmails.has(u.email.toLowerCase())) return false;
+          const lower = u.email.toLowerCase();
+          if (excludedEmails.has(lower)) return false;
+          if (unsubscribed.has(lower)) return false;
           return true;
         })
         .map((u: any) => u.email);
@@ -1343,9 +1393,12 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
     }
     try {
       const users = await storage.getUsersForDrip();
+      const unsubscribed = await storage.getUnsubscribedSet();
       let processed = 0;
       let sent = 0;
+      let skipped = 0;
       for (const user of users) {
+        if (unsubscribed.has(user.email.toLowerCase())) { skipped++; continue; }
         const updated = await processDripEmails(
           user.email,
           user.username,
@@ -1358,8 +1411,8 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
         }
         processed++;
       }
-      console.log(`[drip] Processed ${processed} users, sent ${sent} emails`);
-      return res.json({ processed, sent });
+      console.log(`[drip] Processed ${processed} users, sent ${sent} emails, skipped ${skipped} unsubscribed`);
+      return res.json({ processed, sent, skipped });
     } catch (err: any) {
       console.error('[drip] Error running drip cron:', err);
       return res.status(500).json({ message: err.message });
