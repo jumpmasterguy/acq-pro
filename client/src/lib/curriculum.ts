@@ -9404,46 +9404,21 @@ export const modules: Module[] = [
       { term: 'DFARS 252.244-7001', definition: 'The DFARS clause requiring contractor compliance with approved purchasing system requirements.' },
       { term: 'DCMA', definition: 'Defense Contract Management Agency — provides contract administration and oversight services for DoD.' },
       { term: 'Small Business Subcontracting Plan', definition: 'Required plan (FAR 52.219-9) for large contractors to maximize subcontracting to small businesses.' },
+      { term: 'Termination for Cause (T for C)', definition: "A prime\'s termination of a subcontract due to the sub\'s material failure to perform. Only works if it was properly negotiated into the subcontract at signing." },
+      { term: 'Termination for Convenience', definition: "The right to end a contract when the work is no longer needed, without a breach. Smart prime PMs make sure their right to terminate a sub for convenience mirrors the government\'s right to terminate them." },
         ],
         content: [
       {
         type: 'text',
         heading: "You Don't Manage the Sub. You Manage the Prime Who Manages the Sub.",
-        body: "Here's the part that trips people up: as the government PM, you have zero legal relationship with the subcontractor. None. You can't call them, can't direct them, can't even really complain to them directly. Your contract is with the prime, full stop. But don't get too comfortable with that boundary, because subcontractor screwups are the number one reason programs slip. So while you legally can't touch the sub, you'd better be watching the prime like a hawk to make sure the prime is watching the sub like a hawk. When the sub drops the ball, guess who's holding the bag with you? The prime. Every single time."
+        body: "Here's the part that trips people up: as the government PM, you have zero legal relationship with the subcontractor. None. You can't call them, can't direct them, can't even really complain to them directly. Your contract is with the prime, full stop. But don't get too comfortable with that boundary, because subcontractor screwups are the number one reason programs slip. So while you legally can't touch the sub, you'd better be watching the prime like a hawk to make sure the prime is watching the sub like a hawk. When the sub drops the ball, guess who's holding the bag with you? The prime. Every single time. (One heads up: everything below assumes you're the government PM working through the prime, until we flag the contractor PM side separately later on, because that side plays by completely different rules.)"
       },
       {
         type: 'lucas_note',
         heading: 'What Does "Manage the Sub" Actually Mean?',
-        body: `Everyone says "manage the subcontractor" like it's obvious what that means. It's not. Here's what it actually looks like in practice.
+        body: `Don't write checks you can't cash. The government gave you $1M. Don't turn around and sign your sub up for $1.4M because they seemed capable and you got excited. Your subcontract value can't exceed your own funding without a mod, and I've watched this exact math error sink otherwise-fine programs.
 
-First: don't write checks you can't cash. The government gave you $1M in funding. Don't turn around and sign your sub up for a $1.4M subcontract because they seemed capable and you got excited. Your subcontract value can't exceed your own funding without a mod. I've watched this exact math error sink programs that were otherwise fine.
-
-Second: never fully fund a sub upfront. That's like paying for the entire kitchen remodel before the contractor has torn out a single cabinet. If they're T&M, release money in tranches tied to milestones. If they're FFP, tie payment to deliverable acceptance. A sub who still needs your signature to get paid returns your calls a lot faster than one who's already been paid in full.
-
-Third: their schedule is your schedule, whether you like it or not. Their missed milestone becomes your missed deliverable. Don't wait for a status report to find that out. Get monthly reviews, get a direct line to their PM, and never accept "we're working on it" without an actual date attached.`,
-          },
-          {
-            type: 'lucas_note',
-            heading: 'Before You Sign: The Stuff Nobody Tells You to Negotiate',
-            body: `The subcontract agreement is where you either set yourself up to run this smoothly, or set yourself up to chase paperwork for the next two years. Here's what actually gets negotiated, and why it matters more than people think.
-
-Will they run timecards in YOUR accounting system, or theirs? This sounds like a boring back-office detail. It is not. If your sub logs hours directly into your Cost Accounting System (CAS), you can recognize that revenue and bill the government the same month, before their invoice even hits your inbox. If they invoice you separately on their own schedule, you're stuck waiting on their paperwork before you can bill the government on a T&M contract. That lag is real cash sitting on the sidelines, every single month, for the life of the contract. Get them in your system if you possibly can.
-
-Payment terms. Don't fund them 100% upfront, but don't make your terms so slow that only desperate subs bid your work either. Net 30 tied to invoice approval is normal. Net 90 is a great way to make sure the good subs go work for someone else.
-
-Rate escalation and rate caps. If this runs multiple option years, lock in how their labor rates can grow year over year now. An uncapped escalation clause turns into a nasty surprise in option year three that nobody budgeted for.
-
-Audit and records access. Make sure your subcontract gives you the right to see their cost data if DCAA ever comes knocking on your purchasing system. You don't want to be scrambling for records from a sub who suddenly stops returning your emails.
-
-Flow-down clause ownership. Somebody has to actually read FAR 52.244-6 and figure out which clauses apply to this specific sub. It does not "just happen" on its own. Assign it to a specific person on your contracts team, in writing, before signature.
-
-Termination rights that mirror your prime contract. If the government terminates you for convenience, you need the same right to cleanly terminate your sub, without it turning into a breach-of-contract fight. Mismatched termination language is one of the more expensive mistakes a contracts team can make, and you only find out about it at the worst possible time.`,
-          },
-          {
-            type: 'lesson_image',
-            src: '/img-subcontract-negotiation.jpg',
-            alt: 'Whiteboard diagram of four things to negotiate before signing a subcontractor: timecards in your system, funding in tranches, audit rights, and matching termination terms',
-            caption: "Four negotiation points that separate a subcontract you control from one that controls you.",
+And never fully fund a sub upfront. Release money in tranches tied to milestones for T&M work, or tie it to deliverable acceptance for FFP. A sub who still needs your signature to get paid returns your calls a lot faster than one who's already been paid in full.`,
           },
           {
             type: 'callout',
@@ -9452,16 +9427,31 @@ Termination rights that mirror your prime contract. If the government terminates
           },
           {
             type: 'list',
-            heading: "What a Subcontract Management Plan (SMP) Must Cover",
+            heading: "What You Should Confirm Your Prime Has in Place",
             items: [
-              'Identification of critical subcontractors and the make/buy strategy|||Critical subcontractor identification should include: tier 1 subs responsible for major deliverables, single-source suppliers of critical components (especially electronic parts), and any sub whose failure would trigger a Nunn-McCurdy breach. The make/buy strategy documents what the prime builds internally vs. what gets purchased — government insight rights differ depending on which side of the line the work falls.',
-              'Subcontract surveillance approach: how the prime monitors each major sub|||Surveillance methodology should be risk-based — more intensive oversight for newer relationships, lower-performing subs, or higher-risk technical work. Government insight into subcontractor surveillance (via DCMA oversight of the prime\'s purchasing system under DFARS 252.244-7001) provides an additional check. Program offices should request surveillance reports and CPSR results as part of their prime contractor management.',
-              'Frequency and format of subcontractor performance reviews|||Monthly is the standard for major subcontracts. Reviews should include: EVM data at the sub level (if applicable), technical progress against milestones, staffing levels, risk status, and open action items. Program offices should attend or receive read-outs of prime-to-sub reviews for critical subcontractors — passively waiting for the prime to escalate problems is a recipe for late discovery.',
-              'Flow-down clause requirements applicable to each subcontract tier|||FAR 52.244-6 lists the clauses that must flow to commercial item subs. Many DFARS clauses also require flow-down — DFARS 252.204-7012 (cybersecurity) must flow to subs that handle covered defense information. Primes sometimes fail to flow required clauses, creating compliance gaps that DCMA and DCAA discover during audits. The SMP should specifically address which clauses flow to which sub tiers.',
-              'Corrective action process when a subcontractor misses performance milestones|||Corrective action should be escalating: informal notification → formal Corrective Action Request (CAR) → cure notice → show cause → termination for default. Each step requires documentation. The government\'s leverage comes through the prime — the government cannot direct subcontractors directly, but can pressure the prime through its contract administration tools to enforce the prime\'s contractual rights against its subs.',
-              'Government insight mechanisms: data rights, audit access, review participation|||Standard government insight into subcontractors flows through the prime: DCMA surveillance of the prime\'s purchasing system, prime-submitted IPMR/CPR data that includes sub EVM, and audit access through the prime\'s cost reporting. For critical subs, program offices sometimes negotiate direct insight rights in the prime contract — particularly for major development subcontracts where subcontractor performance is the dominant technical risk.',
-              'Small business subcontracting plan goals and tracking methodology|||Large primes on federal contracts above $750K must submit a Small Business Subcontracting Plan (FAR 52.219-9) with specific percentage goals for SB, SDB, WOSB, HUBZone, SDVOSB, and VOSB categories. Failure to make good faith efforts to meet plan goals can result in liquidated damages. Individual Subcontracting Reports (ISRs) and Summary Subcontracting Reports (SSRs) are filed semi-annually and annually in eSRS.',
+              'A clear list of who the critical subs actually are, and why|||If a sub failing would blow up your schedule, trigger a Nunn-McCurdy breach, or leave you with zero backup source for a part, that sub is critical. Ask the prime to name them by name. Don\'t assume they\'ve already done this.',
+              'A monthly review rhythm you actually see, not just hear about|||Not a report that just says "green." Real status, staffing levels, and open risks on each critical sub, every month, without you having to chase it down.',
+              'A one-sentence answer for "what happens when a sub misses a milestone?"|||If the prime can\'t answer that in one sentence, they don\'t have a real process. That\'s your red flag to push harder before the next review, not after.',
+              'Proof the required flow-down clauses actually made it into the subcontract|||Cybersecurity requirements especially (DFARS 252.204-7012). This is exactly where compliance gaps hide, and where DCMA and DCAA audits find them, always at the worst possible time.',
             ]
+          },
+          {
+            type: 'list',
+            heading: "Before You Sign: What to Negotiate Into the Subcontract",
+            items: [
+              'Timecards in YOUR system, not theirs|||If your sub logs hours directly into your Cost Accounting System (CAS), you can recognize revenue and bill the government the same month, before their invoice even hits your inbox. If they invoice separately on their own schedule instead, you\'re stuck waiting on their paperwork before you can bill the government on a T&M contract. That lag is real cash sitting on the sidelines every month, for the life of the contract. Get them into your system if you possibly can.',
+              'Payment terms that protect you without scaring off good subs|||Don\'t fund 100% upfront. But Net 90 is also a great way to make sure only the desperate subs bid your work. Net 30 tied to invoice approval is the normal, sane middle ground.',
+              'Rate caps across every option year|||Lock in how their labor rates are allowed to grow, now, before signature. An uncapped escalation clause turns into a nasty surprise in option year three that nobody budgeted for.',
+              'Audit and records access|||Make sure you can actually see their cost data if DCAA ever comes knocking on your purchasing system. You don\'t want to be scrambling for records from a sub who suddenly stops returning your emails.',
+              'A named owner for flow-down compliance|||Somebody has to actually read FAR 52.244-6 and figure out which clauses apply to this sub. It does not "just happen" on its own. Assign it to a specific person, in writing, before signature.',
+              'Termination rights that match your own contract, both ways|||If the government can terminate you for convenience, you need that same right over your sub. And you need a real Termination for Cause clause for when they simply fail to perform. Mismatched termination language is one of the more expensive mistakes a contracts team makes, and you find out at the worst possible time.',
+            ]
+          },
+          {
+            type: 'lesson_image',
+            src: '/img-subcontract-negotiation.jpg',
+            alt: 'Whiteboard diagram of four things to negotiate before signing a subcontractor: timecards in your system, funding in tranches, audit rights, and matching termination terms',
+            caption: "Four negotiation points that separate a subcontract you control from one that controls you.",
           },
           {
             type: 'lucas_note',
@@ -9512,16 +9502,32 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             body: "PMs who ignore the sub tier until something breaks always, always get blindsided at the worst possible milestone. Build the rhythm early instead: make the prime brief subcontractor status at every monthly review, demand an updated SMP whenever a critical sub changes, and push back hard the moment the prime's own sub oversight looks thin. Here's the ugly math: by the time a subcontractor failure shows up in the prime's IPMR data, you're already 3 to 6 months behind on fixing it."
           },
           {
+            type: 'text',
+            heading: "Two Playbooks, Because You're Not Always the Same Person",
+            body: "Everything up to now has been written for the government PM working through the prime. But this app has plenty of contractor PMs reading too, and your playbook looks nothing like the government's. You have an actual contract with your subcontractor. You can call them directly. And you negotiated (or should have negotiated) your own Termination for Cause clause. Here are both playbooks, side by side."
+          },
+          {
             type: 'list',
-            heading: "How to Escalate Subcontractor Issues",
+            heading: "If You're the Government PM: You Go Through the Prime",
             items: [
-              'Step 1: Identify the issue through prime reporting or DCMA surveillance — document in writing|||Never address subcontractor performance issues verbally only. The first step is written documentation: a letter or email to the prime PM identifying the specific performance deficiency, the contract requirement it violates, and the date it was first observed. This creates the paper trail that supports subsequent escalation steps and protects the government in any future claims proceeding.',
-              'Step 2: Direct the prime PM (not the subcontractor directly) to develop a corrective action plan (CAP)|||The government contract is with the prime — not the subcontractor. All direction must flow through the prime. Contacting the subcontractor directly, even informally, creates unauthorized commitment risk and undermines the prime\'s contractual authority over its sub. The prime PM is responsible for the CAP content and for holding the sub accountable for executing it.',
-
-              'Step 3: Set a hard CAP review deadline — 30 days maximum for critical issues|||A CAP without a deadline is not a CAP — it\'s a promise. The 30-day deadline for critical issues creates management pressure on both the prime and sub. The review should assess: are the root causes correctly identified? Are the mitigation actions specific and executable? Is the recovery schedule credible? A vague CAP that says "we\'re working on it" should be rejected and a specific plan demanded.',
-              "Step 4: Evaluate the CAP's adequacy; if insufficient, escalate to the prime\'s senior management via the CO",
-              'Step 5: If the prime fails to correct: formal cure notice or show cause letter issued by the Contracting Officer|||A cure notice (FAR 49.607) gives the prime 10 days to cure a material breach before the government terminates for default. A show cause letter asks the prime to explain why the contract shouldn\'t be terminated. These are serious contractual actions that must be coordinated with legal counsel and the CO. Once issued, they cannot be easily walked back — they should be used deliberately, not as threats.',
-              'Step 6: Consult with legal and CO on contract remedies if pattern of non-performance continues|||Contract remedies range from partial termination (of the non-performing work package) to full termination for default, with potential liability for reprocurement costs. These decisions should never be made without legal and CO involvement. Termination for default can be converted to termination for convenience by a court or board — so the documented record of non-performance and government response must be airtight.',
+              'Document the issue in writing the moment you see it|||Never handle this verbally only. Email or letter to the prime PM: what\'s wrong, what contract requirement it violates, the date you first saw it. That\'s the paper trail that protects the government later.',
+              'Direct the prime PM. Never the subcontractor directly|||Your contract is with the prime, not the sub. Contacting the sub directly, even informally, creates unauthorized commitment risk and undermines the prime\'s own authority over its sub.',
+              'Set a hard deadline on their corrective action plan (CAP)|||30 days max for anything critical. A CAP with no deadline is just a promise. Reject anything that says "we\'re working on it" without a specific plan and date attached.',
+              "If the CAP isn't good enough, escalate to the prime's senior leadership through the CO",
+              'If the prime still won\'t fix it: Cure Notice or Show Cause letter from the CO|||A Cure Notice (FAR 49.607) gives the prime 10 days to fix a material breach before the government terminates for default. Coordinate with legal and the CO before either one goes out. Once issued, you can\'t easily walk it back.',
+              'Bring in legal before you talk termination remedies|||Ranges from partial termination of one work package to full termination for default, with potential reprocurement cost liability. Never go here without legal and the CO in the room.',
+            ]
+          },
+          {
+            type: 'list',
+            heading: "If You're the Contractor (Prime) PM: You Have Direct Authority. Use It.",
+            items: [
+              'Go straight to the sub\'s PM. No middleman required|||Unlike the government, you have privity of contract with your subcontractor. You can call them directly, demand answers, and issue direction under the terms of your own subcontract.',
+              'Use the cure clause written into YOUR subcontract, not FAR 49.607|||FAR 49.607 governs the government-to-prime relationship. Your subcontract has its own cure period, negotiated by your contracts team at signing. That\'s the clock that actually applies to you.',
+              'Termination for Cause (T for C) is your biggest lever|||If the sub materially fails to perform, T for C lets you terminate them for default, potentially recover reprocurement costs, and walk away without paying for undelivered work. This only works if you actually negotiated a real T for C clause when you signed. Go check it now, not after they\'ve already missed a milestone.',
+              'Termination for Convenience protects you too|||If the government terminates YOUR prime contract for convenience, you need the matching right to cleanly terminate your sub for convenience, without owing them for work you no longer need.',
+              'Withhold payment before you reach for termination|||Termination is the nuclear option. Holding the next funding tranche, rejecting a deliverable, or pausing an option year all get attention fast without burning the relationship down.',
+              'Loop in your own contracts and legal team early, same as the government does|||You don\'t have a CO to lean on. Your signature and your company\'s exposure are on the line, so get contracts and legal involved the moment a sub issue starts trending toward termination.',
             ]
           },
           {
