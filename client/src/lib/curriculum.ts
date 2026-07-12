@@ -465,7 +465,7 @@ export const modules: Module[] = [
       },
       {
         id: 'foundations-players',
-        title: 'Who\'s Who: The Key Players in Defense Acquisition',
+        title: 'Who\'s Who in Defense Acquisition',
         duration: '13 min',
         description: 'Meet the people and organizations on both sides of every defense acquisition — from Congress and OSD down to the program office, and from the prime contractor to the COR.',
         keyTerms: [
@@ -640,7 +640,7 @@ export const modules: Module[] = [
       },
       {
         id: 'foundations-2',
-        title: 'Roles & Career Paths in DoD Acquisitions',
+        title: 'Roles & Career Paths',
         duration: '10 min',
         description: 'Understand the major acquisition workforce career fields, certifications, and how they interact.',
         keyTerms: [
@@ -866,7 +866,7 @@ export const modules: Module[] = [
       },
       {
         id: 'foundations-contracts',
-        title: 'Contracts vs. Task Orders: How the Government Actually Buys',
+        title: 'How the Government Actually Buys',
         duration: '14 min',
         description: 'Understand the difference between a standalone contract and a task order, what an IDIQ vehicle is, and why most DoD service spending flows through vehicles rather than one-off contracts.',
         keyTerms: [
@@ -1023,7 +1023,7 @@ export const modules: Module[] = [
       },
       {
         id: 'foundations-lifecycle',
-        title: 'The Acquisition Lifecycle: From Need to Fielded Capability',
+        title: 'The Acquisition Lifecycle',
         duration: '18 min',
         description: 'Walk through how a defense capability goes from "someone identified a need" to "the warfighter has the system in the field" — understanding the phases, key decision points, and why the process is structured the way it is.',
         keyTerms: [
@@ -1180,7 +1180,7 @@ export const modules: Module[] = [
       },
       {
         id: 'foundations-3',
-        title: 'ACAT Levels: How the DoD Categorizes Your Program',
+        title: 'ACAT Levels',
         duration: '18 min',
         description: 'Master ACAT levels, milestone decision authority, tailoring, and how program categorization drives oversight, reporting, and your day-to-day responsibilities as a PM.',
         keyTerms: [
@@ -1372,7 +1372,7 @@ export const modules: Module[] = [
       },
       {
         id: 'foundations-4',
-        title: 'OTAs, FAR Part 12 & Streamlined Acquisition Authorities',
+        title: 'OTAs & Streamlined Acquisition',
         duration: '18 min',
         description: 'Understand OTAs, FAR Part 12, and streamlined acquisition paths — and why these vehicles represent some of the biggest BD opportunities for defense contractors today.',
         contractorNote: 'This lesson is especially relevant for contractors: OTAs are a major growth vehicle for non-traditional and tech companies, and FAR Part 12 commercial item status reduces your compliance burden significantly. Understanding these paths from the buyer\'s perspective is a BD and competitive advantage.',
@@ -1566,7 +1566,7 @@ export const modules: Module[] = [
       },
       {
         id: 'foundations-money',
-        title: 'How Money Works in DoD: Budgets, Appropriations & Color of Money',
+        title: 'How DoD Money Works',
         duration: '14 min',
         description: 'Understand where DoD money comes from, why you can\'t just spend it on anything you want, and what "color of money" means — one of the most practically important concepts in defense acquisition.',
         keyTerms: [
@@ -1705,7 +1705,7 @@ export const modules: Module[] = [
       },
       {
         id: 'ops-7',
-        title: "What PMs Actually Do: It's Not a Promotion",
+        title: "What Program Managers Actually Do",
         duration: '20 min',
         description: 'You were told you\'re ready to be a Program Manager. Maybe you\'re the best engineer on the team. Maybe you\'ve run circles around everyone else as a contract specialist or analyst. That\'s exactly why someone tapped you — and exactly why this lesson matters. Being a PM is not a step up from what you were doing. It\'s a step sideways into a completely different job. This lesson is the honest conversation nobody has with you before you start.',
         keyTerms: [
@@ -2039,7 +2039,7 @@ export const modules: Module[] = [
     lessons: [
       {
         id: 'finance-1',
-        title: 'The PPBE Cycle: Planning Your Program\'s Money',
+        title: 'The PPBE Cycle',
         duration: '15 min',
         description: 'Understand how DoD programs are funded through the Planning, Programming, Budgeting, and Execution process.',
         keyTerms: [
@@ -2220,7 +2220,7 @@ export const modules: Module[] = [
       },
       {
         id: 'finance-4',
-        title: 'DoD Appropriations by Service: Color of Money',
+        title: 'Color of Money by Service',
         duration: '20 min',
         description: 'Master the specific appropriation accounts used across the Army, Navy, Air Force, and Marine Corps — and why using the wrong "color of money" is a federal violation.',
         keyTerms: [
@@ -2397,7 +2397,7 @@ export const modules: Module[] = [
       },
       {
         id: 'finance-3',
-        title: 'Cost Estimating & Independent Cost Estimates',
+        title: 'Cost Estimating',
         duration: '24 min',
         description: 'Master cost estimating methodologies, the CAPE independent cost estimate process, and — critically — how contractors price labor through LCATs, pre-priced labor, job codes, and compensation ratios that directly drive your program cost.',
         keyTerms: [
@@ -2759,7 +2759,7 @@ export const modules: Module[] = [
       },
       {
         id: 'finance-5',
-        title: 'EAC Deep Dive: Forecasting Final Program Cost',
+        title: 'Estimate at Completion (EAC)',
         duration: '22 min',
         description: 'Master all four EAC methods, understand when to use each, and learn how senior leaders use EAC to make go/no-go program decisions.',
         keyTerms: [
@@ -2946,7 +2946,7 @@ export const modules: Module[] = [
       },
       {
         id: 'finance-6',
-        title: 'Contractor Cost Structure: Wrap Rates, Overhead & G&A',
+        title: 'Wrap Rates & Cost Structure',
         duration: '25 min',
         description: 'Understand how defense contractors build their prices — wrap rates, fringe, overhead, G&A, fee/profit, and how PMs use this knowledge to evaluate proposals and control costs.',
         keyTerms: [
@@ -3152,7 +3152,7 @@ export const modules: Module[] = [
       },
       {
         id: 'finance-7',
-        title: 'DCAA & DCMA: Your Two Most Important Oversight Partners — And Why They\'re Not Your Enemy',
+        title: 'DCAA & DCMA Oversight',
         duration: '20 min',
         description: 'Understand the roles, authorities, and tools of DCAA and DCMA — and how to work with them effectively to protect your program and the taxpayer.',
         keyTerms: [
@@ -3361,7 +3361,7 @@ export const modules: Module[] = [
       },
       {
         id: 'finance-8',
-        title: 'Contract Finance Intelligence: CPAF, Burn Rate & Award Fee',
+        title: 'CPAF, Burn Rate & Award Fee',
         duration: '55 min',
         keyTerms: [
           {
@@ -3885,7 +3885,7 @@ export const modules: Module[] = [
               },
                 {
           id: 'finance-9',
-          title: 'Revenue Recognition & The Value-Add',
+          title: 'Revenue Recognition',
           duration: '14 min',
           description: 'Why how you describe your work determines how much your company is worth — and how shifting from logistics to engineering changes your financial picture.',
           keyTerms: [
@@ -3963,7 +3963,7 @@ export const modules: Module[] = [
         },
         {
           id: 'finance-10',
-          title: 'The Money Side of Contracting: What Your CFO Sees That You Don\'t',
+          title: 'What Your CFO Sees',
           duration: '40 min',
           description: 'Plain English breakdown of gross margin, operating margin, contract profit, fee types, and DSO. The financial language that gets you into the room with leadership.',
           keyTerms: [
@@ -4150,7 +4150,7 @@ export const modules: Module[] = [
     lessons: [
       {
           id: 'contracts-8',
-          title: 'Who\'s Buying: Navigating the DoD Contracting Enterprise',
+          title: 'The DoD Contracting Enterprise',
           duration: '16 min',
           description: 'Map the organizations that actually issue defense contracts — from enterprise-level offices to base contracting squadrons and command-level teams — and build a BD strategy aligned to the right customer tier.',
           keyTerms: [
@@ -4315,7 +4315,7 @@ export const modules: Module[] = [
         },
       {
         id: 'contracts-1',
-        title: 'Contract Types: Choosing the Right Vehicle',
+        title: 'Contract Types',
         duration: '16 min',
         description: 'Every contract you work on has a type — and that type determines who absorbs cost risk, how your fee is calculated, and what the government will scrutinize. Know FFP, FPIF, CPIF, CPAF, CPFF, and T&M cold. They shape your entire financial life on a program.',
         keyTerms: [
@@ -4503,7 +4503,7 @@ export const modules: Module[] = [
       },
       {
         id: 'contracts-2',
-        title: 'Source Selection: How the Government Chooses',
+        title: 'Source Selection',
         duration: '15 min',
         description: 'Walk through the source selection process from RFP to award decision.',
         keyTerms: [
@@ -4680,7 +4680,7 @@ export const modules: Module[] = [
       },
       {
         id: 'contracts-4',
-        title: 'Contracts vs. Task Orders: Know the Difference',
+        title: 'Contracts vs. Task Orders',
         duration: '14 min',
         description: 'Understand the fundamental distinction between base contracts and task orders — and why it matters for how work gets authorized, modified, and paid.',
         keyTerms: [
@@ -4842,7 +4842,7 @@ export const modules: Module[] = [
       },
       {
         id: 'contracts-7',
-        title: 'A&AS, IDIQs, and GWACs: The Defense Vehicle Landscape',
+        title: 'IDIQs, GWACs & A&AS',
         duration: '18 min',
         description: 'Master the full spectrum of defense contract vehicles — from IDIQ structures and fair opportunity rules to A&AS categories and GWACs that define how defense contractors win recurring work.',
         keyTerms: [
@@ -5031,7 +5031,7 @@ export const modules: Module[] = [
       },
       {
         id: 'contracts-5',
-        title: 'GSA Vehicles: OASIS+ and AAS-D (formerly FEDSIM)',
+        title: 'GSA Vehicles: OASIS+ & AAS-D',
         duration: '18 min',
         description: 'Master the most important government-wide acquisition contracts for professional services — how they work, when to use them, and what the differences are.',
         keyTerms: [
@@ -5262,7 +5262,7 @@ export const modules: Module[] = [
       },
       {
         id: 'contracts-9',
-        title: 'IAC MACs, Instrument Hierarchy & Technical Direction Letters',
+        title: 'MACs & Technical Direction Letters',
         duration: '22 min',
         description: 'Understand IAC MACs and GWACs, the full contract instrument hierarchy (IDIQ base → task order → CLIN), and how TDLs work on GSA vehicles day-to-day. Includes a deep dive on DTIC and STI deliverables that surprise most contractor PMs on MAC vehicles.',
         keyTerms: [
@@ -5581,7 +5581,7 @@ export const modules: Module[] = [
       },
       {
         id: 'contracts-3',
-        title: 'Contract Administration & COR Fundamentals',
+        title: 'Contract Administration & COR',
         duration: '14 min',
         description: 'Learn how contracts are administered after award and the critical role of the COR.',
         keyTerms: [
@@ -5744,7 +5744,7 @@ export const modules: Module[] = [
       },
       {
         id: 'contracts-6',
-        title: 'Modifications, REAs & Claims: When Contracts Change',
+        title: 'Modifications, REAs & Claims',
         duration: '22 min',
         description: 'Master contract modifications, constructive changes, Requests for Equitable Adjustment, and the claims process — the most contentious and costly aspects of contract administration.',
         keyTerms: [
@@ -5943,7 +5943,7 @@ export const modules: Module[] = [
       },
       {
           id: 'contracts-11',
-          title: 'Section H: The Special Requirements That Run Your Program',
+          title: 'Section H: Special Requirements',
           duration: '24 min',
           description: 'Section H is where the government puts everything that does not fit in the standard contract structure. Security requirements, GFE, key personnel clauses, small business subcontracting plans — this section runs your day-to-day program life.',
           keyTerms: [
@@ -6072,7 +6072,7 @@ export const modules: Module[] = [
         },
       {
           id: 'contracts-10',
-          title: 'CDRLs and DIDs: The Deliverable System Nobody Explains',
+          title: 'CDRLs & DIDs',
           duration: '28 min',
           description: 'Contract Data Requirements Lists and Data Item Descriptions are how the government controls every document, report, and artifact you produce. Master this system and you stop drowning in surprise deliverables.',
           keyTerms: [
@@ -6176,7 +6176,7 @@ export const modules: Module[] = [
         },
       {
           id: 'contracts-12',
-          title: 'Monthly Status Reports: The Document That Defines Your Program',
+          title: 'Monthly Status Reports',
           duration: '22 min',
           description: 'The Monthly Status Report is the most read document on your program. It is your performance record, your communication tool, and your evidence file all in one. Learn to write it like it matters — because it does.',
           keyTerms: [
@@ -6355,7 +6355,7 @@ export const modules: Module[] = [
     lessons: [
       {
         id: 'data-1',
-        title: 'Program Metrics & KPIs for Defense PMs',
+        title: 'Program Metrics & KPIs',
         duration: '13 min',
         description: 'Identify and track the key performance indicators that matter most in defense program management.',
         keyTerms: [
@@ -6653,7 +6653,7 @@ export const modules: Module[] = [
       },
       {
         id: 'data-3',
-        title: 'EVM Acronym Deep Dive — Every Term Defined and Explained',
+        title: 'EVM Acronym Deep Dive',
         duration: '30 min',
         description: 'Master every EVM acronym — BCWS, BCWP, ACWP, CPI, SPI, EAC, ETC, VAC, TCPI — with clear definitions, formulas, and PM-level context.',
         keyTerms: [
@@ -6920,7 +6920,7 @@ export const modules: Module[] = [
       },
     {
       id: 'data-4',
-      title: 'Reading IPMR Reports — What Every PM Looks for in Each Format',
+      title: 'Reading IPMR Reports',
       duration: '22 min',
       type: 'lesson' as const,
       description: 'Learn to read and analyze the six IPMR formats that contractors submit monthly on DoD programs, and understand what every government PM should look for in each one.',
@@ -7735,7 +7735,7 @@ export const modules: Module[] = [
       },
       {
         id: 'capture-3',
-        title: 'Section L vs Section M — The RFP Anatomy Every Competitor Must Master',
+        title: 'Section L vs. Section M',
         duration: '28 min',
         description: 'Understand the difference between Section L (instructions) and Section M (evaluation criteria), how to structure a winning proposal around Section M, and the difference between LPTA and best-value acquisitions.',
         keyTerms: [
@@ -8274,7 +8274,7 @@ export const modules: Module[] = [
       },
       {
       id: 'capture-4',
-      title: 'Source Selection — From Solicitation to Award Decision',
+      title: 'Competing in Source Selection',
       duration: '25 min',
       type: 'lesson' as const,
       description: 'Understand the government source selection process from the inside — roles, evaluation phases, discussions, and the award decision — essential knowledge for both government PMs and industry capture teams.',
@@ -8520,7 +8520,7 @@ export const modules: Module[] = [
     },
       {
         id: 'capture-5',
-        title: '5 Most Common Mistakes Contractors Make (And How to Avoid Them)',
+        title: 'Common Mistakes Contractors Make',
         duration: '14 min',
         description: 'The five systematic errors that cost defense contractors contracts, relationships, and revenue — drawn from real patterns across BD, capture, proposal, and performance operations.',
         keyTerms: [
@@ -8694,7 +8694,7 @@ export const modules: Module[] = [
     lessons: [
       {
         id: 'ops-3',
-        title: 'Career Roadmap: Breaking Into DoD Acquisitions',
+        title: 'Career Roadmap',
         duration: '12 min',
         description: 'Whether you\'re coming from a technical background, a business degree, or a military transition, defense acquisitions offers two very different career paths — government and contractor — with distinct entry points, credentials, and cultures. This lesson maps both tracks honestly: what each side actually does, how to get in the door, what gets you hired, what to expect in compensation, and how the career develops from entry level to the senior executive ranks.',
         keyTerms: [
@@ -8985,7 +8985,7 @@ export const modules: Module[] = [
       },
       {
         id: 'ops-1',
-        title: 'Risk Management in Defense Programs',
+        title: 'Risk Management',
         duration: '14 min',
         description: 'Build and execute a rigorous risk management program that prevents problems before they become crises.',
         keyTerms: [
@@ -9194,7 +9194,7 @@ export const modules: Module[] = [
       },
       {
         id: 'ops-2',
-        title: 'Stakeholder Management & Executive Communication',
+        title: 'Stakeholder Management & Communication',
         duration: '13 min',
         description: 'Build the relationships and communication skills that separate effective PMs from mere managers.',
         keyTerms: [
@@ -9393,7 +9393,7 @@ export const modules: Module[] = [
       },
       {
         id: 'ops-4',
-        title: 'Subcontractor Management in Defense Programs',
+        title: 'Subcontractor Management',
         duration: '16 min',
         description: "Master the government PM\'s role in overseeing subcontractor performance, flow-down requirements, and managing the prime-sub relationship.",
         keyTerms: [
@@ -9634,7 +9634,7 @@ You have more leverage before a missed milestone than after it. Use it early.`,
       },
       {
         id: 'ops-5',
-        title: '5 Most Common Mistakes New Program Managers Make',
+        title: 'Common Mistakes New PMs Make',
         duration: '16 min',
         description: 'The five failure patterns that define struggling defense program managers — drawn from real acquisition programs. Recognizing them before you make them can save your program months and protect your career.',
         keyTerms: [
@@ -9804,7 +9804,7 @@ You have more leverage before a missed milestone than after it. Use it early.`,
       },
       {
         id: 'ops-6',
-        title: 'CMMI: Process Maturity in Defense Contracting',
+        title: 'CMMI: Process Maturity',
         duration: '18 min',
         description: 'Understand CMMI maturity levels, how DoD uses them in source selections and contract management, and how to verify contractor compliance — from both the government and contractor perspective.',
         keyTerms: [
