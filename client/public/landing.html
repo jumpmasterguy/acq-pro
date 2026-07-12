@@ -319,6 +319,10 @@
     .module-info { flex: 1; }
     .module-name { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
     .module-topics { font-size: 0.82rem; color: var(--text-muted); line-height: 1.55; }
+    .module-topics-list { list-style: none; margin: 0; padding: 0; font-size: 0.82rem; color: var(--text-muted); }
+    .module-topics-list li { position: relative; padding-left: 15px; line-height: 1.55; margin-bottom: 3px; }
+    .module-topics-list li::before { content: "\2022"; position: absolute; left: 0; top: 0; color: var(--teal-mid); font-weight: 700; }
+    .module-topics-list li:last-child { margin-bottom: 0; }
     .free-badge {
       display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
       padding: 2px 8px; border-radius: 100px;
@@ -976,42 +980,42 @@
         <div class="module-num free-num">01</div>
         <div class="module-info">
           <div class="module-name">DoD Acquisitions Foundations <span class="free-badge">FREE</span></div>
-          <div class="module-topics">Acquisition lifecycle · ACAT levels · Roles & career paths · OTAs & FAR Part 12</div>
+          <ul class="module-topics-list"><li>Acquisition lifecycle</li><li>ACAT levels</li><li>Roles &amp; career paths</li><li>OTAs &amp; FAR Part 12</li></ul>
         </div>
       </div>
       <div class="module-card">
         <div class="module-num">02</div>
         <div class="module-info">
           <div class="module-name">Defense Finance & Budgeting</div>
-          <div class="module-topics">PPBE cycle · Color of money · EVM · Cost estimating · DCAA & DCMA</div>
+          <ul class="module-topics-list"><li>PPBE cycle</li><li>Color of money</li><li>EVM</li><li>Cost estimating</li><li>DCAA &amp; DCMA</li></ul>
         </div>
       </div>
       <div class="module-card">
         <div class="module-num">03</div>
         <div class="module-info">
           <div class="module-name">Defense Contracting Fundamentals</div>
-          <div class="module-topics">Contract types · GSA vehicles · Source selection · COR fundamentals · Modifications & REAs</div>
+          <ul class="module-topics-list"><li>Contract types</li><li>GSA vehicles</li><li>Source selection</li><li>COR fundamentals</li><li>Modifications &amp; REAs</li></ul>
         </div>
       </div>
       <div class="module-card">
         <div class="module-num">04</div>
         <div class="module-info">
           <div class="module-name">Data Analytics for PMs</div>
-          <div class="module-topics">Program KPIs · Data-driven decisions · EVM acronyms deep dive · Reading IPMR reports</div>
+          <ul class="module-topics-list"><li>Program KPIs</li><li>Data driven decisions</li><li>EVM acronyms deep dive</li><li>Reading IPMR reports</li></ul>
         </div>
       </div>
       <div class="module-card">
         <div class="module-num">05</div>
         <div class="module-info">
           <div class="module-name">Capture Management & BD</div>
-          <div class="module-topics">BD-to-capture lifecycle · Section L vs M · Proposal development · Source selection strategy</div>
+          <ul class="module-topics-list"><li>BD to capture lifecycle</li><li>Section L vs M</li><li>Proposal development</li><li>Source selection strategy</li></ul>
         </div>
       </div>
       <div class="module-card">
         <div class="module-num">06</div>
         <div class="module-info">
           <div class="module-name">PM Operations & Leadership</div>
-          <div class="module-topics">Career roadmap · Risk management · Stakeholder management · Subcontractor management</div>
+          <ul class="module-topics-list"><li>Career roadmap</li><li>Risk management</li><li>Stakeholder management</li><li>Subcontractor management</li></ul>
         </div>
       </div>
     </div>
