@@ -9395,7 +9395,7 @@ export const modules: Module[] = [
         id: 'ops-4',
         title: 'Subcontractor Management',
         duration: '16 min',
-        description: "Master the government PM\'s role in overseeing subcontractor performance, flow-down requirements, and managing the prime-sub relationship.",
+        description: "What you can and can't do with a subcontractor, what to lock in before you sign them, and how to catch a problem before it wrecks your schedule.",
         keyTerms: [
       { term: 'SMP', definition: 'Subcontract Management Plan — a document detailing how the prime contractor will manage and oversee its subcontractors.' },
       { term: 'CPSR', definition: "Contractor Purchasing System Review — a DCMA audit of the prime contractor\'s purchasing/subcontracting system." },
@@ -9408,24 +9408,47 @@ export const modules: Module[] = [
         content: [
       {
         type: 'text',
-        heading: "The Prime Owns the Entire Supply Chain",
-        body: "As a government Program Manager, you have a legal relationship only with the prime contractor — not with its subcontractors. But that does not mean you ignore what happens below the prime. Subcontractor failures are the leading cause of program schedule slips and technical shortfalls. The PM\'s job is to ensure the prime has robust subcontract management processes, adequate oversight, and effective escalation paths when subcontractor issues arise. When a subcontractor misses a delivery, the prime is accountable to the government — period."
+        heading: "You Don't Manage the Sub. You Manage the Prime Who Manages the Sub.",
+        body: "Here's the part that trips people up: as the government PM, you have zero legal relationship with the subcontractor. None. You can't call them, can't direct them, can't even really complain to them directly. Your contract is with the prime, full stop. But don't get too comfortable with that boundary, because subcontractor screwups are the number one reason programs slip. So while you legally can't touch the sub, you'd better be watching the prime like a hawk to make sure the prime is watching the sub like a hawk. When the sub drops the ball, guess who's holding the bag with you? The prime. Every single time."
       },
       {
         type: 'lucas_note',
-        heading: 'What Does "Manage" a Subcontractor Actually Mean?',
-        body: `When people say you need to "manage" the subcontractor, what does that actually look like in practice?
+        heading: 'What Does "Manage the Sub" Actually Mean?',
+        body: `Everyone says "manage the subcontractor" like it's obvious what that means. It's not. Here's what it actually looks like in practice.
 
-First — don't overobligate funding. The government gave you $1M in funding on your contract. That doesn't mean you write your sub a $1.4M subcontract. Your subcontract value cannot exceed your prime contract funding without a mod. I've seen this mistake tank programs.
+First: don't write checks you can't cash. The government gave you $1M in funding. Don't turn around and sign your sub up for a $1.4M subcontract because they seemed capable and you got excited. Your subcontract value can't exceed your own funding without a mod. I've watched this exact math error sink programs that were otherwise fine.
 
-Second — keep teeth in the subcontract. Don't fund the sub in full upfront. For T&Ms, fund them incrementally — release the next tranche when they hit the previous milestone. For FFPs, structure payments around deliverable acceptance. This is your leverage. A fully-funded sub with nothing left to lose is harder to motivate than one that still needs your signature to get paid.
+Second: never fully fund a sub upfront. That's like paying for the entire kitchen remodel before the contractor has torn out a single cabinet. If they're T&M, release money in tranches tied to milestones. If they're FFP, tie payment to deliverable acceptance. A sub who still needs your signature to get paid returns your calls a lot faster than one who's already been paid in full.
 
-Third — the sub's schedule is your schedule. Their milestone is your deliverable. Don't wait for them to tell you there's a problem. Build your own visibility into their status — monthly reviews at minimum, direct access to their PM, and don't accept "we're working on it" without a date.`,
+Third: their schedule is your schedule, whether you like it or not. Their missed milestone becomes your missed deliverable. Don't wait for a status report to find that out. Get monthly reviews, get a direct line to their PM, and never accept "we're working on it" without an actual date attached.`,
+          },
+          {
+            type: 'lucas_note',
+            heading: 'Before You Sign: The Stuff Nobody Tells You to Negotiate',
+            body: `The subcontract agreement is where you either set yourself up to run this smoothly, or set yourself up to chase paperwork for the next two years. Here's what actually gets negotiated, and why it matters more than people think.
+
+Will they run timecards in YOUR accounting system, or theirs? This sounds like a boring back-office detail. It is not. If your sub logs hours directly into your Cost Accounting System (CAS), you can recognize that revenue and bill the government the same month, before their invoice even hits your inbox. If they invoice you separately on their own schedule, you're stuck waiting on their paperwork before you can bill the government on a T&M contract. That lag is real cash sitting on the sidelines, every single month, for the life of the contract. Get them in your system if you possibly can.
+
+Payment terms. Don't fund them 100% upfront, but don't make your terms so slow that only desperate subs bid your work either. Net 30 tied to invoice approval is normal. Net 90 is a great way to make sure the good subs go work for someone else.
+
+Rate escalation and rate caps. If this runs multiple option years, lock in how their labor rates can grow year over year now. An uncapped escalation clause turns into a nasty surprise in option year three that nobody budgeted for.
+
+Audit and records access. Make sure your subcontract gives you the right to see their cost data if DCAA ever comes knocking on your purchasing system. You don't want to be scrambling for records from a sub who suddenly stops returning your emails.
+
+Flow-down clause ownership. Somebody has to actually read FAR 52.244-6 and figure out which clauses apply to this specific sub. It does not "just happen" on its own. Assign it to a specific person on your contracts team, in writing, before signature.
+
+Termination rights that mirror your prime contract. If the government terminates you for convenience, you need the same right to cleanly terminate your sub, without it turning into a breach-of-contract fight. Mismatched termination language is one of the more expensive mistakes a contracts team can make, and you only find out about it at the worst possible time.`,
+          },
+          {
+            type: 'lesson_image',
+            src: '/img-subcontract-negotiation.jpg',
+            alt: 'Whiteboard diagram of four things to negotiate before signing a subcontractor: timecards in your system, funding in tranches, audit rights, and matching termination terms',
+            caption: "Four negotiation points that separate a subcontract you control from one that controls you.",
           },
           {
             type: 'callout',
-            heading: "Government Insight vs. Oversight",
-            body: "The government has 'insight' (the right to receive information and review data) into subcontractor performance but does not have direct 'oversight' authority over subcontractors — that belongs to the prime. You can ask the prime to provide subcontractor performance data, attend sub reviews, and explain their mitigation plans. You cannot direct subcontractors independently. Violating this boundary creates unauthorized contractual commitments."
+            heading: "Insight vs. Oversight: The Line You Cannot Cross",
+            body: "Think of it like being a landlord who can inspect the property but can't tell the tenant's plumber how to fix the sink. You get 'insight': the right to see performance data, sit in on reviews, and ask hard questions. You don't get 'oversight': the right to actually direct the subcontractor's work. That belongs to the prime, and only the prime. Cross that line and you've created an unauthorized commitment, which is the kind of paperwork nobody wants their name attached to."
           },
           {
             type: 'list',
@@ -9443,15 +9466,15 @@ Third — the sub's schedule is your schedule. Their milestone is your deliverab
           {
             type: 'lucas_note',
             heading: 'The Sub Goes Silent. Now What?',
-            body: `The most dangerous sub isn't the one who tells you they're behind. It's the one who stops communicating.
+            body: `The most dangerous sub isn't the one who tells you they're behind. It's the one who goes quiet.
 
-When a sub starts missing status calls, submitting vague updates, or their PM suddenly "isn't available" — that's the signal. Not the official notification. The silence.
+When a sub starts skipping status calls, sending vague one-line updates, or their PM "isn't available" three weeks running, that's the signal. Not some official notification letter. The silence itself.
 
-At that point, stop waiting for the prime to escalate. They may be trying to solve it internally to avoid embarrassing themselves with you. Call the prime PM directly: "Walk me through where your sub stands on [deliverable] right now."
+At that point, stop waiting for the prime to bring it to you. They might be trying to fix it quietly so they don't have to look bad in front of you. Call the prime PM directly and ask a specific question: "Walk me through exactly where your sub stands on [deliverable], today."
 
-If the prime can't give you specifics, that's your answer. Pull your next incremental funding tranche. Formalize a Corrective Action Request in writing. Put a 30-day cure notice on the table if it's critical path.
+If they can't give you specifics, that's your answer right there. Hold your next funding tranche. Put the Corrective Action Request in writing. If it's on the critical path, put a 30-day cure notice on the table.
 
-You have more leverage before a missed milestone than after it. Use it early.`,
+You have far more leverage before a missed milestone than after one. Spend it early, not late.`,
           },
           {
             type: 'table_visual' as any,
@@ -9468,8 +9491,8 @@ You have more leverage before a missed milestone than after it. Use it early.`,
           },
           {
             type: 'text',
-            heading: "Consent to Subcontract",
-            body: "On cost-reimbursable contracts, the government\'s Contracting Officer must \"consent to subcontract\" before the prime can award subcontracts above certain thresholds (typically $1.5M for cost-type; higher for FFP). This consent process reviews the proposed subcontractor\'s cost or price reasonableness, qualifications, and competition. As PM, you should be aware of upcoming consent requests and ensure the CO has the technical information needed to make a sound decision quickly."
+            heading: "Consent to Subcontract: The Government Gets a Vote Too",
+            body: "On cost-reimbursable contracts, the prime can't just pick a subcontractor and go. Above certain dollar thresholds (roughly $1.5M for cost-type, higher for FFP), the Contracting Officer has to formally 'consent to subcontract' first. That means the CO reviews the sub's price, qualifications, and how competitively they were selected before signing off. As the PM, don't let this become a surprise bottleneck. Know when a consent request is coming and hand the CO the technical justification early, so it doesn't sit on a desk for three weeks while your schedule burns."
           },
           {
             type: 'table_visual' as any,
@@ -9485,8 +9508,8 @@ You have more leverage before a missed milestone than after it. Use it early.`,
           },
           {
             type: 'warning',
-            heading: "The Most Common PM Mistake",
-            body: "PMs who ignore the subcontractor tier until problems surface are consistently blindsided at critical program milestones. Establish a rhythm early: require the prime to brief subcontractor status at every monthly program review, demand SMP updates when critical subs change, and escalate immediately if the prime\'s sub oversight is inadequate. By the time a subcontractor failure becomes visible in the prime\'s IPMR, you\'re already 3-6 months behind on corrective action."
+            heading: "The Mistake Everyone Makes",
+            body: "PMs who ignore the sub tier until something breaks always, always get blindsided at the worst possible milestone. Build the rhythm early instead: make the prime brief subcontractor status at every monthly review, demand an updated SMP whenever a critical sub changes, and push back hard the moment the prime's own sub oversight looks thin. Here's the ugly math: by the time a subcontractor failure shows up in the prime's IPMR data, you're already 3 to 6 months behind on fixing it."
           },
           {
             type: 'list',
@@ -9504,14 +9527,14 @@ You have more leverage before a missed milestone than after it. Use it early.`,
           {
           type: 'text' as const,
           level: 'intermediate' as const,
-          heading: 'Managing Subcontractor Risk on Complex Defense Programs',
-          body: 'Mid-career PMs on programs with significant subcontractor content must build government visibility into the subcontract tier — not just rely on the prime\'s reporting. Best practices: (1) require the prime\'s EVM system to include subcontractor EVM data for subcontracts over $20M (this is contractually required on programs with EVMS requirements); (2) attend quarterly subcontractor program reviews with the prime — as an observer, not a participant, to avoid a privity-of-contract issue; (3) include a subcontractor management section in the prime\'s Format 2 IPMR submissions so you can identify which organizational elements are driving variance. When a prime says "we have a subcontractor problem but we\'re managing it," your question should be: "show me the corrective action plan and the sub\'s EVM data."',
+          heading: 'Don\'t Just Trust the Prime\'s Reporting. Build Your Own Eyes.',
+          body: 'If your program has serious subcontractor content, relying only on what the prime chooses to tell you is asking to get surprised. Three habits fix that: (1) require sub-level EVM data in the prime\'s system for any subcontract over $20M, which is already a contractual requirement on EVMS programs, so just enforce it; (2) show up to quarterly sub program reviews as a quiet observer, not a participant, so you\'re not accidentally creating a privity-of-contract problem; (3) make sure the prime\'s Format 2 IPMR breaks out which org (and by extension, which sub) is actually driving the variance. Next time a prime tells you "we have a sub issue but we\'re handling it," don\'t nod along. Ask to see the corrective action plan and the sub\'s EVM data. If they can\'t produce both on the spot, they\'re not handling it.',
         },
         {
           type: 'callout' as const,
           level: 'advanced' as const,
-          heading: 'Privity of Contract, Novation, and Corporate Transactions: When Your Contractor Changes',
-          body: 'Senior PMs must understand what happens when their contractor is acquired, merges, or undergoes a corporate restructuring. The government has no contractual relationship with subcontractors (privity of contract); all rights run through the prime. When a prime is acquired: FAR 42.1200 requires a novation agreement — the government must consent to transfer of the contract to the successor entity. Without government consent, contract performance by the new entity is a contract violation. The novation process takes 60-180 days; during that window, the contractor is technically in breach. Manage this proactively: when you learn of a pending M&A transaction affecting your contractor, initiate the novation process immediately and get legal counsel involved. Corporate transactions also frequently trigger key personnel departures — require the prime to brief you on retention plans for key personnel before the acquisition closes.',
+          heading: 'Your Contractor Just Got Acquired. Now What?',
+          body: 'Mergers happen, and when your prime gets bought, you can\'t just quietly keep working with the new parent company like nothing changed. Legally, nothing runs through the sub, and now nothing automatically runs through the new owner either, until the paperwork catches up. FAR 42.1200 requires a novation agreement: the government has to formally consent to hand the contract over to the successor company. Skip that step, and technically the new entity performing your contract is a violation, not just an awkward Monday. The process takes 60 to 180 days, and during that whole window the contractor is technically in breach even though everyone is showing up to work like normal. The fix is simple: the second you hear rumors of an acquisition, start the novation process and get legal involved immediately, don\'t wait for it to become official news. Also ask directly about retention plans for key personnel before the deal closes, because acquisitions are exactly when your best people start updating their resumes.',
         },
         ],
       quiz: [
