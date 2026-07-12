@@ -80,14 +80,15 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack }: AuthPage
   const [tab, setTab] = useState<"login" | "register">("register");
   const [referralCode, setReferralCode] = useState<string>("");
 
-  // Pick up ?ref=CODE from URL hash params
+  // Pick up ?ref=CODE and ?mode=login from URL hash params
   useEffect(() => {
-    const hash = window.location.hash; // e.g. #/auth?ref=LUCAS123
+    const hash = window.location.hash; // e.g. #/auth?ref=LUCAS123 or #/auth?mode=login
     const queryStart = hash.indexOf('?');
     if (queryStart >= 0) {
       const params = new URLSearchParams(hash.slice(queryStart + 1));
       const ref = params.get('ref');
       if (ref) { setReferralCode(ref); setTab('register'); }
+      if (params.get('mode') === 'login') { setTab('login'); }
     }
   }, []);
   const [showPassword, setShowPassword] = useState(false);

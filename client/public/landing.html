@@ -463,16 +463,21 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 640px) {
-      nav { padding: 0 1rem; }
-      .nav-actions .btn-ghost { display: none; }
-      .nav-actions .nav-blog { display: inline-flex; }
+      nav { padding: 0 0.75rem; }
+      .nav-actions .btn-ghost:not(.nav-signin) { display: none; }
+      .nav-actions .nav-blog { display: inline-flex; padding: 5px 7px; font-size: 0.72rem; gap: 3px; }
+      .nav-actions .nav-blog .nav-blog-badge { padding: 1px 4px; font-size: 0.58rem; }
+      .nav-actions .nav-signin { display: inline-flex; font-size: 0.7rem; padding: 5px 2px; white-space: nowrap; }
+      .nav-actions { gap: 3px; }
+      .nav-logo { gap: 6px; }
 
       /* Nav CTA — prevent overflow, keep it compact */
       .btn-primary {
-        padding: 9px 14px;
-        font-size: 0.82rem;
+        padding: 8px 10px;
+        font-size: 0.75rem;
         white-space: nowrap;
       }
+      .btn-primary .nav-arrow { display: none; }
 
       section { padding: 56px 1.25rem; }
       .hero { padding: 64px 1.25rem 56px; }
@@ -671,8 +676,8 @@
         <span>Blog</span>
         <span class="nav-blog-badge">Free</span>
       </a>
-      <a href="/app#/auth" class="btn-ghost">Sign In</a>
-      <a href="/app#/auth" class="btn-primary">Start Free →</a>
+      <a href="/app#/auth?mode=login" class="btn-ghost nav-signin">Sign In</a>
+      <a href="/app#/auth" class="btn-primary">Start Free <span class="nav-arrow">→</span></a>
     </div>
   </div>
 </nav>
@@ -1598,7 +1603,7 @@
   <div class="footer-inner">
     <div class="footer-brand">Acq<span>lerate</span></div>
     <div class="footer-links">
-      <a href="/app#/auth">Sign In</a>
+      <a href="/app#/auth?mode=login">Sign In</a>
       <a href="#modules">Curriculum</a>
       <a href="#pricing">Pricing</a>
       <a href="/blog">Blog</a>
