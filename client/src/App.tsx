@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, Component } from "react";
+import { useState, useEffect, useCallback, useRef, Component } from "react";
 import type { ReactNode } from "react";
 import { Router } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
@@ -218,6 +218,35 @@ function AppContent() {
       saveView(view);
     }
   }, [view, authState.status]);
+
+  // ── Browser back/forward support ──────────────────────────────────────────
+  // The app doesn't use real URL routes for dashboard/module/lesson — it's all
+  // in-memory view state. Without this, the browser history stack never grows
+  // as the user navigates deeper into the app, so pressing Back from a lesson
+  // jumps straight out of the whole app to whatever page was open before it
+  // (usually the marketing landing page), skipping module/dashboard entirely.
+  // Fix: push a real history entry on every authenticated view change, and
+  // restore the view from history state when the user presses Back/Forward.
+  const isRestoringFromHistory = useRef(false);
+
+  useEffect(() => {
+    if (authState.status !== 'authenticated') return;
+    if (isRestoringFromHistory.current) {
+      isRestoringFromHistory.current = false;
+      return;
+    }
+    try { window.history.pushState({ appView: view }, ''); } catch {}
+  }, [view, authState.status]);
+
+  useEffect(() => {
+    const onPopState = (e: PopStateEvent) => {
+      const restored = (e.state as { appView?: View } | null)?.appView;
+      isRestoringFromHistory.current = true;
+      setView(restored ?? { type: 'dashboard' });
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
 
   // Check session on mount — restore last view if session is still valid
   useEffect(() => {
