@@ -132,58 +132,35 @@
       overflow: hidden;
     }
     .hero::before { display: none; }
+    /* Text FIRST, illustration BELOW — at every screen size. The hero graphic is a
+       labeled diagram (BD / Capture / Proposal / Execution), not a mood photo, so it
+       needs its own space instead of a dark overlay with text on top of it. */
     .hero-image-wrap {
-      position: relative;
+      display: flex;
+      flex-direction: column-reverse;
       width: 100%;
-      height: clamp(260px, 52vw, 620px);
-      overflow: hidden;
+      height: auto;
     }
-    .hero-image-wrap img {
-      width: 100%; height: 100%;
-      object-fit: cover; object-position: center 25%;
+    .hero-image-wrap > img {
+      position: static;
+      width: 100%;
+      height: clamp(200px, 39vw, 600px);
+      object-fit: cover; object-position: center center;
       display: block;
+      flex-shrink: 0;
     }
-    .hero-image-wrap::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(to bottom,
-        rgba(13,27,42,0.45) 0%,
-        rgba(13,27,42,0.72) 45%,
-        rgba(13,27,42,0.97) 100%);
-    }
-    /* On desktop: text overlaid on image bottom */
+    .hero-image-wrap::after { display: none; }
     .hero-text-layer {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 32px 2rem 44px;
-      z-index: 2;
+      position: static;
+      background: #0D1B2A;
+      padding: 48px 2rem 40px;
+      flex: 1;
     }
-    /* On mobile: flip layout — text FIRST, image BELOW */
     @media (max-width: 640px) {
-      .hero-image-wrap {
-        /* On mobile, reverse the flex order so text comes first */
-        display: flex;
-        flex-direction: column-reverse;
-        height: auto;
-      }
-      .hero-image-wrap > img {
-        position: static;
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        object-position: center 30%;
-        display: block;
-        flex-shrink: 0;
-      }
-      .hero-image-wrap::after {
-        display: none; /* gradient baked into text-layer bg instead */
-      }
+      .hero-image-wrap > img { height: 200px; }
       .hero-text-layer {
-        position: static;
-        background: #0D1B2A;
         padding: 32px 1.25rem 24px;
         text-align: center;
-        flex: 1;
       }
       .hero h1 { font-size: 1.75rem; line-height: 1.15; }
       .hero-sub { font-size: 0.95rem; margin-bottom: 28px; }
@@ -685,7 +662,7 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-image-wrap">
-    <img src="/img-hero-pm.jpg" alt="Defense program manager reviewing acquisition documents" loading="eager" />
+    <img src="/img-hero-whiteboard.jpg" alt="Whiteboard diagram of the four phases of a defense program: BD, Capture, Proposal, and Execution" loading="eager" />
     <div class="hero-text-layer">
       <div class="hero-badge">
         For defense contractor PMs, BD leads, and capture managers
