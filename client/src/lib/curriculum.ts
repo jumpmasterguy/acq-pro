@@ -1088,6 +1088,12 @@ export const modules: Module[] = [
             body: "Look, I get it, milestone phases sound like something only a fighter jet program manager needs. They matter because they set the pace and the paperwork for every major weapons system in the department, and if you ever move onto one of those programs, this is the map you'll be working from. If your program was never going to sit through a Milestone A, B, or C review, you can skim this table, but it's still worth knowing what a coworker means when they casually say a program is 'pre-Milestone B.'",
           },
           {
+            type: 'lesson_image',
+            src: '/img-mca-lifecycle.jpg',
+            alt: 'Whiteboard diagram of the five MCA lifecycle phases: MSA, TMRR, EMD, P&D, and O&S, connected by arrows labeled with Milestone A, B, C, and the FRP decision',
+            caption: "Five phases, four milestone gates. This is the map every MCA program follows.",
+          },
+          {
             type: 'table_visual' as any,
             heading: 'The MCA Lifecycle Phases',
             headers: ['Phase', 'Gate In / Gate Out', 'What Happens Here'],
@@ -1205,6 +1211,12 @@ export const modules: Module[] = [
             type: 'callout',
             heading: 'Real Talk',
             body: "Look, I get it, ACAT levels sound like pure bureaucracy. They matter because the level assigned to your program decides who can approve your milestones, whether you need an independent cost estimate, and whether Congress gets a status report on your program. If you support a services contract or a smaller procurement, you are almost certainly ACAT III or IV, where the oversight is lighter and nobody is hauling you in front of Congress. Learn what ACAT I and II mean so you follow the conversation when someone bigger brings it up, then spend your real energy on III and IV, which is where you likely live.",
+          },
+          {
+            type: 'lesson_image',
+            src: '/img-acat-levels.jpg',
+            alt: 'Whiteboard diagram showing ACAT I through ACAT IV as descending boxes, with oversight decreasing from ACAT I (highest, $2.79B+, USD(A&S)) down to ACAT IV (lowest, services, local approval)',
+            caption: "Same idea as a staircase: the higher the ACAT level, the more oversight comes with it.",
           },
           {
             type: 'table_visual' as any,
