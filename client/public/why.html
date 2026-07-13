@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why Acqlerate Exists — Our Story</title>
+  <meta name="description" content="Why Acqlerate exists: the DoD acquisition workforce gap, the data behind it, and the founder's story." />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F7F6F2; color: #1A1A1A; line-height: 1.7; }
+    nav { background: #0C2340; padding: 16px 2rem; display: flex; align-items: center; justify-content: space-between; }
+    nav a.logo { font-size: 1.1rem; font-weight: 800; color: white; text-decoration: none; letter-spacing: -0.02em; }
+    nav a.logo span { color: #4FC3CB; }
+    nav a.back { font-size: 0.85rem; color: rgba(255,255,255,0.6); text-decoration: none; }
+    nav a.back:hover { color: white; }
+    .container { max-width: 760px; margin: 0 auto; padding: 0 2rem; }
+
+    /* Hero */
+    .hero { background: #0D1B2A; padding: 64px 0 56px; text-align: center; }
+    .eyebrow { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #4F98A3; margin-bottom: 16px; }
+    .hero h1 { font-size: clamp(1.9rem, 4vw, 2.7rem); font-weight: 800; color: white; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .hero h1 span { color: #4F98A3; }
+    .hero p { font-size: 1.05rem; color: rgba(255,255,255,0.7); max-width: 560px; margin: 0 auto; }
+
+    section { padding: 56px 0; }
+    h2 { font-size: 1.5rem; font-weight: 800; color: #0C2340; margin-bottom: 20px; letter-spacing: -0.01em; }
+    p { font-size: 1rem; color: #374151; margin-bottom: 16px; }
+    a { color: #01696F; text-decoration: underline; }
+
+    /* Story card */
+    .story-card { background: #0D1B2A; border-radius: 16px; padding: 40px 44px; position: relative; overflow: hidden; }
+    .story-card::before { content:''; position:absolute; top:-40px; right:-40px; width:220px; height:220px; background:rgba(1,105,111,0.08); border-radius:50%; }
+    .story-card p { color: rgba(255,255,255,0.88); font-size: 1.05rem; position: relative; z-index: 1; }
+    .story-card p:last-child { margin-bottom: 0; }
+
+    /* Stats grid */
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
+    .stat-card { background: white; border: 1px solid #E5E7EB; border-radius: 12px; padding: 24px 20px; }
+    .stat-num { font-size: 1.9rem; font-weight: 800; color: #01696F; line-height: 1; margin-bottom: 8px; }
+    .stat-desc { font-size: 0.88rem; color: #6B7280; line-height: 1.45; margin-bottom: 8px; }
+    .stat-source { font-size: 0.75rem; color: #9CA3AF; }
+    .stat-source a { color: #9CA3AF; text-decoration: underline; }
+
+    /* Bio section */
+    .bio-section { background: white; border-radius: 16px; border: 1px solid #E5E7EB; padding: 40px 44px; }
+    .bio-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .bio-avatar { width: 56px; height: 56px; background: #01696F; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; color: white; flex-shrink: 0; }
+    .bio-name { font-size: 1.2rem; font-weight: 800; color: #0C2340; }
+    .bio-title { font-size: 0.9rem; color: #6B7280; }
+    .bio-facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 24px; margin: 24px 0; padding: 20px 0; border-top: 1px solid #E5E7EB; border-bottom: 1px solid #E5E7EB; }
+    .bio-fact { font-size: 0.92rem; color: #374151; }
+    .bio-fact strong { color: #0C2340; }
+
+    .cta-box { background: #E6F2F3; border-radius: 16px; padding: 36px 40px; text-align: center; margin-top: 8px; }
+    .cta-box h3 { font-size: 1.25rem; font-weight: 800; color: #0C2340; margin-bottom: 10px; }
+    .cta-box p { color: #4B5563; margin-bottom: 20px; }
+    .btn { display: inline-block; background: #01696F; color: white; font-weight: 700; font-size: 0.95rem; padding: 12px 28px; border-radius: 8px; text-decoration: none; }
+    .btn:hover { background: #0C4E54; }
+
+    footer-note { display: block; font-size: 0.8rem; color: #9CA3AF; margin-top: 24px; padding-top: 24px; border-top: 1px solid #E5E7EB; }
+
+    @media (max-width: 640px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .bio-facts { grid-template-columns: 1fr; }
+      .story-card, .bio-section { padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">Acq<span>lerate</span></a>
+  <a href="/" class="back">← Back to home</a>
+</nav>
+
+<div class="hero">
+  <div class="container">
+    <div class="eyebrow">Why We Built This</div>
+    <h1>I couldn't answer a question about my own program.<br><span>That's why Acqlerate exists.</span></h1>
+    <p>The data behind the gap, and the story behind the fix.</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <section style="padding-top: 56px;">
+    <div class="story-card">
+      <p>I was sitting in a meeting with people who'd been in the defense industry for years. Someone turned to me and asked about DSO, cashflow, and the variance of revenue for the financial period.</p>
+      <p>I had no idea what to say. Not because I wasn't capable. Because nobody had ever explained it to me in plain English. I was a veteran who'd worked on programs worth hundreds of millions of dollars, and I still didn't have the vocabulary to talk about my own work.</p>
+      <p>I don't want that to happen to you. That's why I built Acqlerate. Not to add more jargon to the pile. To give the people doing this job the plain English foundation they need to do it with confidence.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>This gap isn't just me. It's the whole industry.</h2>
+    <p>Once I started looking into it, the data backed up exactly what I'd felt in that meeting. This isn't a personal knowledge gap. It's a structural one, and it's expensive.</p>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num">10+ years</div>
+        <div class="stat-desc">The time acquisition professionals report it takes to reach full proficiency in federal acquisition. Most programs can't wait that long for their people to catch up.</div>
+        <div class="stat-source">Source: <a href="https://aida.mitre.org/digital-vision/" target="_blank" rel="noopener">MITRE, AiDA Digital Vision</a></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">40 of 48</div>
+        <div class="stat-desc">Major DoD weapon system programs that reported workforce problems in 2026: staffing cuts, or trouble hiring and retaining the people who run them.</div>
+        <div class="stat-source">Source: <a href="https://www.meritalk.com/articles/gao-dod-weapons-acquisition-continues-to-face-delays/" target="_blank" rel="noopener">GAO-26-108457, Weapon Systems Annual Assessment</a>, July 2026</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">12+ years</div>
+        <div class="stat-desc">The average time it now takes DoD to deliver a major weapon system capability, a number GAO ties directly to thinning program office staff and workforce gaps.</div>
+        <div class="stat-source">Source: <a href="https://www.meritalk.com/articles/gao-dod-weapons-acquisition-continues-to-face-delays/" target="_blank" rel="noopener">GAO-26-108457, Weapon Systems Annual Assessment</a>, July 2026</div>
+      </div>
+    </div>
+    <p style="margin-top: 24px; font-size: 0.92rem; color: #6B7280;">These numbers describe a shortage of qualified, experienced acquisition professionals, not simply open headcount. DoD can post a position. It can't manufacture ten years of learned judgment overnight. That's the actual gap Acqlerate is built to close.</p>
+  </section>
+
+  <section>
+    <h2>About the founder</h2>
+    <div class="bio-section">
+      <div class="bio-header">
+        <div class="bio-avatar">L</div>
+        <div>
+          <div class="bio-name">Lucas Cruz</div>
+          <div class="bio-title">Founder, Acqlerate</div>
+        </div>
+      </div>
+      <p>I'm a U.S. Army veteran who spent my early career on the networking side, supporting special operations forces communications, before moving into defense acquisition. I hold a CCIE (Cisco's top-level networking certification) and a PMP, and I made the jump from network engineer to program manager on a large DoD contract in about three years, with no acquisition background walking in.</p>
+      <p>I went on to lead a defense program with a $950 million contract ceiling supporting U.S. Air Forces in Europe, first as PMRO and later as Consolidated Mission Support (CMS). I've sat on both sides of the table: as a Contracting Officer's Representative for the government, and as a program manager on the contractor side.</p>
+      <div class="bio-facts">
+        <div class="bio-fact"><strong>Background:</strong> Network engineer → DoD Program Manager in ~3 years</div>
+        <div class="bio-fact"><strong>Certifications:</strong> CCIE, PMP</div>
+        <div class="bio-fact"><strong>Notable program:</strong> Led a $950M ceiling program (PMRO / CMS) supporting USAFE</div>
+        <div class="bio-fact"><strong>Military:</strong> U.S. Army veteran, SOF communications support</div>
+      </div>
+      <p>If I could learn this system starting from zero, so can you. That's the whole premise of Acqlerate: no textbook fluff, no assuming you already speak the language. Just plain English, real examples, and the stuff people usually only learn by getting burned on the job.</p>
+    </div>
+  </section>
+
+  <section style="padding-top: 0;">
+    <div class="cta-box">
+      <h3>Start with Module 01, free.</h3>
+      <p>No CAC, no scheduler, no waiting on a class date. Start the day you decide to.</p>
+      <a href="/app#/auth" class="btn">Start Free →</a>
+    </div>
+  </section>
+
+  <footer-note>© 2026 Acqlerate. All rights reserved. · <a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Service</a></footer-note>
+</div>
+</body>
+</html>
