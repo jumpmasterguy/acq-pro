@@ -1408,8 +1408,8 @@ export const modules: Module[] = [
       },
       {
         type: 'text',
-        heading: 'Why This Matters for Contractors — Not Just the Government',
-        body: 'Most people think OTAs and FAR Part 12 are just government tools. They are — but understanding them as a contractor is a competitive advantage. OTAs let the government bypass FAR entirely, which means they can award directly to non-traditional contractors (tech firms, startups, commercial companies) who refuse to comply with the full FAR/DFARS/CAS burden. If your company has commercial capabilities, an OTA is often the fastest path to a DoD contract. FAR Part 12 commercial item determinations reduce your regulatory compliance burden — no certified cost or pricing data, no CAS, no separate accounting system requirements. Knowing how the buyer sees these tools helps you position your offer, price competitively, and win work that never even reaches traditional procurement channels.\n\nFor government-side PMs: these paths exist because the full FAR/DFARS compliance burden was pricing out commercial technology firms. Google, Amazon, and many AI companies refuse to bid traditional DoD work. OTAs and FAR Part 12 were the answer.',
+        heading: 'This Is a Real Business Advantage, Not Just Government Trivia',
+        body: "If your company builds commercial technology, an OTA is often the fastest way in the door at DoD. You skip the whole FAR rulebook and cut a straight deal instead. FAR Part 12 works the same way for a slightly different reason: if your product already sells commercially, you don't have to hand over certified cost data, follow Cost Accounting Standards, or build a separate government accounting system just to sell it to DoD.\n\nHere is why that actually matters to you: knowing this changes how you price your offer and where you spend your time chasing opportunities. A lot of winnable work never even reaches the normal bidding process, because it went through one of these faster paths instead.\n\nAnd if you are on the government side, here is the short version of why these paths exist at all: the normal rulebook was scaring off exactly the companies DoD wanted, cloud providers, AI firms, and other commercial tech companies who simply would not deal with it. OTAs and FAR Part 12 were built to fix that.",
       },
       {
         type: 'table_visual' as any,
@@ -1426,18 +1426,18 @@ export const modules: Module[] = [
       },
       {
         type: 'text',
-        heading: 'Other Transaction Authority — The Most Powerful Tool You\'re Not Using Enough',
-        body: 'OTA was originally authorized in 1958 for NASA (10 USC 4001) and expanded dramatically for DoD prototyping in the 2010s. Under 10 USC 4022, DoD can enter prototype OTAs and — critically — non-competitively award follow-on production contracts to the OTA performer if the prototype is successfully demonstrated. This is a major advantage: a company can win prototype work through OTA, demonstrate success, and then convert directly to production without re-competing. For DoD, OTA allows engagement with commercial tech firms, startups, and nontraditional contractors who refuse FAR-regulated contracts. OTA agreements can include flexible payment terms, IP arrangements, and milestone-based payments that are impossible under FAR.',
+        heading: 'The Best Part of OTA: You Can Skip Straight to Production',
+        body: "Here's the part that makes OTA such a big deal. If a company wins prototype work through an OTA and actually proves the tech works, DoD can hand that same company the production contract next, with no new competition required. Build it, prove it, get paid to build more of it. That almost never happens under normal FAR rules.\n\nThis is exactly why OTAs get used for AI, software, and other fast-moving tech work with startups and commercial firms who would otherwise never bid on a DoD contract. OTA agreements can also include things a normal FAR contract can't: flexible payment terms, custom IP arrangements, payments tied to milestones instead of paperwork. (If you want the legal citation: this authority comes from 10 U.S.C. 4022, expanded out of an older law that originally covered NASA.)",
       },
       {
         type: 'callout',
-        heading: 'OTA Safeguards — What You Can\'t Do',
-        body: 'OTA is powerful but not unlimited. Key restrictions: (1) Prototype OTAs must include at least one "nontraditional defense contractor" (a company that has not received DoD contracts over $1M in the past year subject to full CAS compliance) OR significant government cost-share (one-third of total project cost). (2) The prototype must be for a "prototype project" — not production of a fielded system. (3) Follow-on production OTAs require a successful demonstration of the prototype. (4) Congress must be notified of OTAs over $500M. (5) OTAs over $250M generally require competitive processes. There is significant congressional scrutiny of OTA misuse — using OTA to avoid competition for production work that should be competitively bid.',
+        heading: "OTA Has Real Guardrails. Here's What You Can't Do",
+        body: "OTA is powerful, but Congress built in real limits so it doesn't become a way to just dodge competition. Here's what those limits actually mean in practice.\n\nFirst, a prototype OTA has to genuinely involve a company that's new to DoD work, or the government has to be putting in real money of its own, at least a third of the total cost. You can't just hand an OTA to the same old defense primes and call it innovation.\n\nSecond, it has to be an actual prototype, not a finished system you're quietly calling a prototype so you can skip the rules.\n\nThird, moving from prototype to production only works if the prototype actually worked. No demonstrated success, no shortcut to production.\n\nFourth, big OTAs get watched closely: Congress has to be told about anything over $500 million, and anything over $250 million generally still needs some form of competition. Congress is actively looking for people who try to use OTA as a backdoor around competing production work, so don't be the example they use in a hearing.",
       },
       {
         type: 'commercial_item_visual' as any,
-        heading: 'FAR Part 12 Commercial Item Determination — The Test',
-        explanation: 'The commercial item determination is made by the contracting officer, but the PM drives the market research that supports it. Document your market research thoroughly — a challenged commercial item determination can unravel an entire acquisition strategy post-award.',
+        heading: 'Is It Actually "Commercial"? Here\'s the Test',
+        explanation: "The Contracting Officer makes the official call on whether something counts as commercial, but you're the one who has to hand them the market research that backs it up. Do that homework carefully. If someone successfully challenges your commercial item determination later, your whole acquisition strategy can unravel after the fact, which is a much worse time to find out you got it wrong.",
       },
       {
         type: 'list',
@@ -1453,18 +1453,18 @@ export const modules: Module[] = [
       },
       {
         type: 'text',
-        heading: 'Simplified Acquisition Procedures — Speed and Flexibility for Small Buys',
-        body: 'For purchases below $350K, FAR Part 13 allows significantly streamlined procedures. Competition is still encouraged — generally three quotes are sufficient — but the complex evaluation, documentation, and review requirements of FAR Part 15 do not apply. Below $15K (micro-purchase threshold), Government Purchase Card (GPC) holders can buy without any competition requirement. For PMs managing programs with many small supporting contracts, understanding SAP allows faster decisions without compromising legal compliance. However, SAP cannot be used to intentionally break up larger requirements to stay below the threshold (a practice called "split purchasing" — a federal violation).',
+        heading: 'For Small Buys, There Is a Much Faster Lane',
+        body: "Anything under $350,000 gets to skip most of the paperwork entirely. Usually three quotes is enough to call it competed, and none of the heavy evaluation and documentation rules that apply to bigger buys kick in. Below $15,000, it gets even simpler: someone with a government purchase card can just buy it, no competition needed at all.\n\nOne warning worth remembering: you can't chop a $500,000 need into three $150,000 purchases just to stay under the limit. That's called split purchasing, and it's illegal, not a clever workaround.",
       },
       {
         type: 'warning',
-        heading: 'OTA Abuse — A Growing Congressional Concern',
-        body: 'OTA use has grown dramatically — from $3.4B in FY2017 to over $23B in recent years. Congress has flagged concerns about OTA being used to circumvent competition requirements for production work that should be competitively bid, and about follow-on production OTAs being used well beyond the demonstrated prototype scope. PMs must ensure OTAs are used appropriately: for genuine prototypes, with nontraditional contractor participation, and for production only when the prototype was successfully demonstrated. An OTA that looks like a production contract without competition will face Congressional scrutiny and potential investigation.',
+        heading: 'Congress Is Watching OTA Money Closely, and the Number Is Growing Fast',
+        body: "OTA spending went from about $3.4 billion in 2017 to over $23 billion recently. That kind of growth gets attention. Congress is specifically worried about people using OTA to dodge competition on production work that should have been openly bid, or stretching a follow-on production award way past what the prototype actually proved. If your OTA quietly starts looking like a normal production contract that skipped competition, expect questions, and possibly an investigation.",
       },
       {
         type: 'tip',
-        heading: 'Practical OTA Uses for Today\'s PM',
-        body: 'Modern defense PMs use OTAs for: AI/ML capability demonstrations with Silicon Valley firms; cybersecurity prototype testing with startups; rapid software prototyping with nontraditional vendors; cloud platform demonstrations. The key is ensuring your OTA is genuinely a prototype — a learning/demonstration activity — not production by another name. Work closely with your legal and contracting teams. The most common OTA mistake is treating it as a shortcut to sole-source production rather than a genuine innovation tool.',
+        heading: 'Where PMs Actually Use OTA Today',
+        body: "In practice, PMs reach for OTA for things like AI demos with Silicon Valley companies, cybersecurity prototypes with startups, fast software builds with vendors who'd never touch a normal contract, and cloud platform tests. The one rule to hold onto: it has to genuinely be a prototype or demonstration, not production wearing a disguise. Keep your legal and contracting team close. The single most common mistake is treating OTA as a clever way to skip straight to sole-source production instead of what it's actually meant for.",
       },
       {
       type: 'text' as const,
