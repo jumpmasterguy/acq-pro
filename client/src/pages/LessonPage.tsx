@@ -219,7 +219,7 @@ function ExpandableBulletItem({
       <button
         onClick={handleToggle}
         className={cn(
-          "w-full flex items-start gap-2.5 text-sm text-left py-1.5 px-1 rounded-lg transition-colors group",
+          "w-full flex items-start gap-2.5 text-[15px] text-left py-1.5 px-1 rounded-lg transition-colors group",
           open ? "text-foreground" : "text-muted-foreground hover:text-foreground"
         )}
       >
@@ -264,7 +264,7 @@ function ExpandableBulletItem({
             <p className="text-xs text-destructive">Couldn’t load detail — try again.</p>
           )}
           {detail && (
-            <p className="text-xs text-foreground/85 leading-relaxed">{detail}</p>
+            <p className="text-sm text-foreground/85 leading-relaxed">{detail}</p>
           )}
         </div>
       )}
@@ -908,9 +908,9 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             if (block.type === 'text') {
               return (
                 <div key={i} className="bg-card border border-border rounded-xl p-5">
-                  {block.heading && <h2 className="font-semibold text-base mb-3">{block.heading}</h2>}
+                  {block.heading && <h2 className="font-semibold text-lg mb-3">{block.heading}</h2>}
                   {block.body && block.body.split('\n\n').filter(Boolean).map((para, pi) => (
-                    <p key={pi} className={`text-sm text-muted-foreground leading-relaxed${pi > 0 ? ' mt-3' : ''}`}>
+                    <p key={pi} className={`text-[15px] text-muted-foreground leading-relaxed${pi > 0 ? ' mt-3' : ''}`}>
                       {para.trim().split(/\*\*([^*]+)\*\*/).map((seg, si) =>
                         si % 2 === 1 ? <strong key={si} className="font-semibold text-foreground">{seg}</strong> : seg
                       )}
@@ -926,9 +926,9 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                   <div className="flex items-start gap-3.5">
                     <img src="/real-talk-badge.png" alt="" className="w-9 h-9 flex-shrink-0" />
                     <div>
-                      <h3 className="font-bold text-sm mb-1.5 text-orange-700 dark:text-orange-400 tracking-wide uppercase">Real Talk</h3>
+                      <h3 className="font-bold text-base mb-1.5 text-orange-700 dark:text-orange-400 tracking-wide uppercase">Real Talk</h3>
                       {block.body && block.body.split('\n\n').filter(Boolean).map((para, pi) => (
-                        <p key={pi} className={`text-sm text-foreground/80 leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>{para.trim()}</p>
+                        <p key={pi} className={`text-[15px] text-foreground/80 leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>{para.trim()}</p>
                       ))}
                     </div>
                   </div>
@@ -942,9 +942,9 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                   <div className="flex items-start gap-3">
                     <Lightbulb className="w-4.5 h-4.5 text-primary flex-shrink-0 mt-0.5" />
                     <div>
-                      {block.heading && <h3 className="font-semibold text-sm mb-2 text-primary">{block.heading}</h3>}
+                      {block.heading && <h3 className="font-semibold text-base mb-2 text-primary">{block.heading}</h3>}
                       {block.body && block.body.split('\n\n').filter(Boolean).map((para, pi) => (
-                        <p key={pi} className={`text-sm text-muted-foreground leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>{para.trim()}</p>
+                        <p key={pi} className={`text-[15px] text-muted-foreground leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>{para.trim()}</p>
                       ))}
                     </div>
                   </div>
@@ -958,8 +958,8 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                   <div className="flex items-start gap-3">
                     <AlertTriangle className="w-4.5 h-4.5 text-red-500 flex-shrink-0 mt-0.5" />
                     <div>
-                      {block.heading && <h3 className="font-semibold text-sm mb-2 text-red-700 dark:text-red-400">{block.heading}</h3>}
-                      {block.body && <p className="text-sm text-muted-foreground leading-relaxed">{block.body}</p>}
+                      {block.heading && <h3 className="font-semibold text-base mb-2 text-red-700 dark:text-red-400">{block.heading}</h3>}
+                      {block.body && <p className="text-[15px] text-muted-foreground leading-relaxed">{block.body}</p>}
                     </div>
                   </div>
                 </div>
@@ -972,9 +972,9 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                   <div className="flex items-start gap-3">
                     <Award className="w-4.5 h-4.5 text-amber-500 flex-shrink-0 mt-0.5" />
                     <div>
-                      {block.heading && <h3 className="font-semibold text-sm mb-2 text-amber-700 dark:text-amber-400">{block.heading}</h3>}
+                      {block.heading && <h3 className="font-semibold text-base mb-2 text-amber-700 dark:text-amber-400">{block.heading}</h3>}
                       {block.body && block.body.split('\n\n').filter(Boolean).map((para, pi) => (
-                        <p key={pi} className={`text-sm text-muted-foreground leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>{para.trim()}</p>
+                        <p key={pi} className={`text-[15px] text-muted-foreground leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>{para.trim()}</p>
                       ))}
                     </div>
                   </div>
@@ -985,7 +985,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             if (block.type === 'list') {
               return (
                 <div key={i} className="bg-card border border-border rounded-xl p-5">
-                  {block.heading && <h3 className="font-semibold text-sm mb-3">{block.heading}</h3>}
+                  {block.heading && <h3 className="font-semibold text-base mb-3">{block.heading}</h3>}
                   <ul className="space-y-0.5">
                     {block.items?.map((item, ii) => (
                       <ExpandableBulletItem

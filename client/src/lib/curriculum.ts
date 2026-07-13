@@ -1085,7 +1085,7 @@ export const modules: Module[] = [
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: "Look, I get it, milestone phases sound like something only a fighter jet program manager needs. They matter because they set the pace and the paperwork for every major weapons system in the department, and if you ever move onto one of those programs, this is the map you'll be working from. If your program was never going to sit through a Milestone A, B, or C review, you can skim this table, but it's still worth knowing what a coworker means when they casually say a program is 'pre-Milestone B.'",
+            body: "Milestone phases sound like something reserved for fighter jet program managers, and honestly, that's not far off. But every major weapons system in the department runs on this exact map, so if you ever land on one of those programs, this is the terrain you're standing on. Even if you never sit through a Milestone A review in your life, it's worth knowing what a coworker means when they say a program is 'pre-Milestone B,' so you don't nod along pretending you understood.",
           },
           {
             type: 'lesson_image',
@@ -1210,7 +1210,7 @@ export const modules: Module[] = [
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: "Look, I get it, ACAT levels sound like pure bureaucracy. They matter because the level assigned to your program decides who can approve your milestones, whether you need an independent cost estimate, and whether Congress gets a status report on your program. If you support a services contract or a smaller procurement, you are almost certainly ACAT III or IV, where the oversight is lighter and nobody is hauling you in front of Congress. Learn what ACAT I and II mean so you follow the conversation when someone bigger brings it up, then spend your real energy on III and IV, which is where you likely live.",
+            body: "ACAT levels have the personality of a filing cabinet, I know. But the level slapped on your program decides who signs off on your milestones and whether Congress gets a memo about your existence. Good news for most of you: you're almost certainly living at ACAT III or IV, where nobody in a suit on Capitol Hill has ever heard of your program. Learn ACAT I and II well enough to nod along when someone brings it up, then spend your actual energy on III and IV.",
           },
           {
             type: 'lesson_image',
@@ -2278,7 +2278,7 @@ export const modules: Module[] = [
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: "Look, I get it, a table of accounting codes is about as exciting as it sounds. It matters because your finance team uses these exact codes every single time they book a dollar to your program, and if you ever need to explain a funding question to a customer, knowing that these codes exist and vary by service will save you an embarrassing moment. The one thing worth actually remembering: every service has its own version, so don't assume an Army code carries over to a Navy program. Otherwise, skim it and move on.",
+            body: "A table of accounting codes is exactly as thrilling as it sounds, and I won't pretend otherwise. Here's why you should still glance at it: your finance team books every dollar on your program against one of these codes, and if a customer ever asks you a funding question, knowing these codes exist and differ by service keeps you from an awkward silence. One thing actually worth remembering: an Army code will not carry over to a Navy program. Otherwise, skim it and move on with your life.",
           },
           {
             type: 'table_visual' as any,
@@ -3027,7 +3027,7 @@ export const modules: Module[] = [
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: "Look, I get it, Cost Accounting Standards sound like something only an accountant should care about. They matter on big contracts because they force a contractor to account for costs the exact same way on every job, which is how the government catches someone gaming their numbers. Cost Accounting Standards only kick in around $35 million and up under current law, so if you're on a services contract or a smaller procurement, this is your company's accounting department's problem, not yours. Read this table once so you recognize the term, then get back to your actual job.",
+            body: "Nobody grows up dreaming of learning Cost Accounting Standards, and on most programs you genuinely don't need to. CAS exists so a contractor has to count costs the same way on every job, which is how the government catches someone quietly gaming the numbers. It only kicks in around $35 million and up, so if that's not your program, this is your company's accounting department's problem, not yours. Read the table once so the term rings a bell, then go back to running your actual job.",
           },
           {
             type: 'table_visual' as any,
@@ -5816,7 +5816,7 @@ export const modules: Module[] = [
       {
         type: 'callout',
         heading: 'Real Talk',
-        body: "Look, I get it, legal doctrine is not why anyone signs up to be a PM. It matters because it's the line the government cannot legally cross without paying you more or running a new competition, and knowing that line exists is how you protect your program when a customer keeps piling on new asks without a modification. You don't need to memorize the legal test word for word. That's what your contracts team and, eventually, a lawyer are for.",
+        body: "Legal doctrine is not why anyone raises their hand to become a PM, myself included. But this particular line matters, because it's the point past which the government legally cannot keep piling on new work without either paying you more or running a new competition. You don't need to recite the legal test word for word at a dinner party. That's what your contracts team, and eventually a lawyer, gets paid to do. You just need to know the line exists so you can point at it.",
       },
       {
         type: 'table_visual' as any,
@@ -9879,7 +9879,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: "Look, I get it, a five-level maturity scale for how a company runs its projects sounds dry. It matters on software-heavy or systems-engineering-heavy programs above a certain size, where the government genuinely needs proof a contractor won't fall apart under pressure. If nobody has ever asked you for a CMMI appraisal, that's not a gap in your knowledge, that's just the contract you're on. Know what it is so you're not lost if it comes up, and don't lose sleep over the table below if it never applies to you.",
+            body: "A five-level maturity scale for how a company runs its projects is about as dry as acquisition topics get, and we've covered some dry ones. It shows up on software-heavy or systems-engineering-heavy programs above a certain size, where the government genuinely needs proof a contractor won't collapse the moment things get hard. If nobody has ever asked you for a CMMI appraisal, that's not a hole in your knowledge, that's just the contract you happen to be on. Know what it is so you're not lost if it comes up, and don't lose a minute of sleep over the table below if it never does.",
           },
           {
             type: 'table_visual' as any,

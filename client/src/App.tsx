@@ -868,7 +868,7 @@ function AppContent() {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 min-w-0 p-4 lg:p-6 max-w-4xl mx-auto w-full relative z-10">
+        <main className="flex-1 min-w-0 p-4 lg:p-6 max-w-6xl mx-auto w-full relative z-10">
         <ErrorBoundary>
           {view.type === 'dashboard' && (
             <Dashboard
