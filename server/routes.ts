@@ -657,14 +657,18 @@ export async function registerRoutes(
 
   // ─── Admin Routes ──────────────────────────────────────────────────
 
-  // Helper: check if the requesting session user is an admin
+  // Helper: check if the requesting session user is an admin.
+  // Two ways to become admin: (1) email listed in the ADMIN_EMAILS env var (deploy-time,
+  // can't be revoked from the UI), or (2) the isAdmin flag on the user record (toggleable
+  // from the admin panel via the Make Admin / Remove Admin button).
   function isAdmin(req: Request): boolean {
     if (!req.isAuthenticated() || !req.user) return false;
     const adminEmails = (process.env.ADMIN_EMAILS || "")
       .split(",")
       .map(e => e.trim().toLowerCase())
       .filter(Boolean);
-    return adminEmails.includes(req.user.email.toLowerCase());
+    if (adminEmails.includes(req.user.email.toLowerCase())) return true;
+    return Boolean(req.user.isAdmin);
   }
 
   // List all users — admin only
@@ -681,6 +685,8 @@ export async function registerRoutes(
       referredBy: u.referredBy ?? null,
       referralCount: u.referralCount ?? 0,
       referralRewardGranted: u.referralRewardGranted ?? 0,
+      isAdmin: Boolean(u.isAdmin),
+      moduleSkillLevels: (u.moduleSkillLevels as Record<string, string>) ?? {},
     })));
   });
 
@@ -723,6 +729,34 @@ export async function registerRoutes(
     const updated = await storage.grantYearlyPro(userId);
     if (!updated) return res.status(404).json({ message: "User not found" });
     return res.json({ message: `${updated.email} granted 1 year of Pro access`, userId });
+  });
+
+  // POST /api/admin/users/:userId/toggle-admin — grant or revoke admin access
+  app.post("/api/admin/users/:userId/toggle-admin", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
+    const { userId } = req.params;
+    const { makeAdmin } = req.body as { makeAdmin: boolean };
+    const target = await storage.getUser(userId);
+    if (!target) return res.status(404).json({ message: "User not found" });
+    const updated = await storage.setUserAdmin(userId, Boolean(makeAdmin));
+    if (!updated) return res.status(500).json({ message: "Failed to update admin status" });
+    return res.json({ message: `${updated.email} is ${makeAdmin ? "now" : "no longer"} an admin`, userId, isAdmin: updated.isAdmin });
+  });
+
+  // POST /api/admin/users/:userId/unlock-skill-level — bypass the assessment gate and unlock
+  // intermediate or advanced content across every module for this user
+  app.post("/api/admin/users/:userId/unlock-skill-level", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
+    const { userId } = req.params;
+    const { level } = req.body as { level: "intermediate" | "advanced" };
+    if (level !== "intermediate" && level !== "advanced") {
+      return res.status(400).json({ message: "level must be 'intermediate' or 'advanced'" });
+    }
+    const target = await storage.getUser(userId);
+    if (!target) return res.status(404).json({ message: "User not found" });
+    const updated = await storage.unlockAllSkillLevels(userId, level);
+    if (!updated) return res.status(500).json({ message: "Failed to unlock skill level" });
+    return res.json({ message: `${updated.email} unlocked at ${level} across all modules`, userId, moduleSkillLevels: updated.moduleSkillLevels });
   });
 
   // GET /api/admin/growth — lightweight signup counts for dashboard stat card

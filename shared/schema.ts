@@ -13,6 +13,7 @@ export const users = pgTable("users", {
   stripeCustomerId: text("stripe_customer_id"),
   subscriptionStatus: text("subscription_status").notNull().default("free"), // 'free' | 'active' | 'lifetime'
   subscriptionId: text("subscription_id"),
+  isAdmin: boolean("is_admin").notNull().default(false),
   // Progress
   completedLessons: text("completed_lessons").array().notNull().default(sql`ARRAY[]::text[]`),
   quizScores: jsonb("quiz_scores").notNull().default(sql`'{}'::jsonb`),

@@ -6,6 +6,9 @@ import { Pool } from "pg";
 
 export type SkillLevel = 'novice' | 'intermediate' | 'advanced';
 
+// Every module id in the curriculum — used by the admin "unlock all" action
+const ALL_MODULE_IDS = ['foundations', 'finance', 'contracts', 'data', 'capture', 'operations'];
+
 // ─── Interface ─────────────────────────────────────────────────────────────
 
 export interface IStorage {
@@ -39,6 +42,8 @@ export interface IStorage {
     level: SkillLevel,
     assessmentScore: number
   ): Promise<User | undefined>;
+  setUserAdmin(userId: string, isAdmin: boolean): Promise<User | undefined>;
+  unlockAllSkillLevels(userId: string, level: SkillLevel): Promise<User | undefined>;
   updateUserAnalytics(
     userId: string,
     data: {
@@ -289,6 +294,36 @@ export class DrizzleStorage implements IStorage {
     return updated[0];
   }
 
+  async setUserAdmin(userId: string, isAdmin: boolean): Promise<User | undefined> {
+    const updated = await this.db
+      .update(users)
+      .set({ isAdmin })
+      .where(eq(users.id, userId))
+      .returning();
+    return updated[0];
+  }
+
+  async unlockAllSkillLevels(userId: string, level: SkillLevel): Promise<User | undefined> {
+    const current = await this.getUser(userId);
+    if (!current) return undefined;
+    const currentScores = (current.moduleAssessmentScores as Record<string, number>) ?? {};
+    const newLevels: Record<string, SkillLevel> = {};
+    const newScores: Record<string, number> = { ...currentScores };
+    for (const moduleId of ALL_MODULE_IDS) {
+      newLevels[moduleId] = level;
+      newScores[moduleId] = 100;
+    }
+    const updated = await this.db
+      .update(users)
+      .set({
+        moduleSkillLevels: newLevels,
+        moduleAssessmentScores: newScores,
+      })
+      .where(eq(users.id, userId))
+      .returning();
+    return updated[0];
+  }
+
   async updateUserAnalytics(
     userId: string,
     data: {
@@ -480,6 +515,7 @@ export class MemStorage implements IStorage {
     return this.users.get(id);
   }
 
+
   async getUserByUsername(username: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find((u) => u.username === username);
   }
@@ -599,6 +635,33 @@ export class MemStorage implements IStorage {
       ...user,
       moduleSkillLevels: { ...currentLevels, [moduleId]: level },
       moduleAssessmentScores: { ...currentScores, [moduleId]: assessmentScore },
+    };
+    this.users.set(userId, updated);
+    return updated;
+  }
+
+  async setUserAdmin(userId: string, isAdmin: boolean): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const updated = { ...user, isAdmin };
+    this.users.set(userId, updated);
+    return updated;
+  }
+
+  async unlockAllSkillLevels(userId: string, level: SkillLevel): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const currentScores = (user.moduleAssessmentScores as Record<string, number>) ?? {};
+    const newLevels: Record<string, SkillLevel> = {};
+    const newScores: Record<string, number> = { ...currentScores };
+    for (const moduleId of ALL_MODULE_IDS) {
+      newLevels[moduleId] = level;
+      newScores[moduleId] = 100;
+    }
+    const updated = {
+      ...user,
+      moduleSkillLevels: newLevels,
+      moduleAssessmentScores: newScores,
     };
     this.users.set(userId, updated);
     return updated;

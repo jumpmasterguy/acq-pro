@@ -4,6 +4,7 @@ import {
   Shield, Users, Crown, UserX, RefreshCw, ChevronDown,
   BarChart2, Clock, Zap, TrendingUp, Activity, Star,
   BookOpen, Target, LogIn, Trash2, Share2, Mail, Send, Eye,
+  ShieldCheck, ShieldOff, Unlock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +29,8 @@ interface AdminUser {
   referredBy: string | null;
   referralCount: number;
   referralRewardGranted: number;
+  isAdmin: boolean;
+  moduleSkillLevels: Record<string, string>;
 }
 
 interface AnalyticsUser {
@@ -159,6 +162,47 @@ export default function AdminPage() {
     },
     onError: (err: Error) => {
       toast({ title: "Update failed", description: err.message, variant: "destructive" });
+    },
+  });
+
+  const toggleAdmin = useMutation({
+    mutationFn: async ({ userId, makeAdmin }: { userId: string; makeAdmin: boolean }) => {
+      const res = await apiRequest("POST", `/api/admin/users/${userId}/toggle-admin`, { makeAdmin });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ message: "Request failed" }));
+        throw new Error(err.message);
+      }
+      return res.json();
+    },
+    onMutate: ({ userId }) => setPendingId(userId),
+    onSettled: () => setPendingId(null),
+    onSuccess: (data) => {
+      toast({ title: "Admin status updated", description: data.message });
+      qc.invalidateQueries({ queryKey: ["/api/admin/users"] });
+    },
+    onError: (err: Error) => {
+      toast({ title: "Update failed", description: err.message, variant: "destructive" });
+    },
+  });
+
+  const unlockSkillLevel = useMutation({
+    mutationFn: async ({ userId, level }: { userId: string; level: "intermediate" | "advanced" }) => {
+      const res = await apiRequest("POST", `/api/admin/users/${userId}/unlock-skill-level`, { level });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ message: "Request failed" }));
+        throw new Error(err.message);
+      }
+      return res.json();
+    },
+    onMutate: ({ userId }) => setPendingId(userId),
+    onSettled: () => setPendingId(null),
+    onSuccess: (data) => {
+      toast({ title: "Skill level unlocked", description: data.message });
+      qc.invalidateQueries({ queryKey: ["/api/admin/users"] });
+      qc.invalidateQueries({ queryKey: ["/api/admin/analytics"] });
+    },
+    onError: (err: Error) => {
+      toast({ title: "Unlock failed", description: err.message, variant: "destructive" });
     },
   });
 
@@ -435,9 +479,16 @@ export default function AdminPage() {
                           {user.email}
                         </td>
                         <td className="px-4 py-3.5">
-                          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[user.subscriptionStatus] ?? statusColors.free}`}>
-                            {statusLabel[user.subscriptionStatus] ?? user.subscriptionStatus}
-                          </span>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[user.subscriptionStatus] ?? statusColors.free}`}>
+                              {statusLabel[user.subscriptionStatus] ?? user.subscriptionStatus}
+                            </span>
+                            {user.isAdmin && (
+                              <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-500/10 text-emerald-600">
+                                <ShieldCheck className="w-3 h-3" /> Admin
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td className="px-4 py-3.5 text-right text-muted-foreground hidden md:table-cell">
                           {user.completedLessons}
@@ -500,6 +551,41 @@ export default function AdminPage() {
                                 <UserX className="w-3.5 h-3.5" />
                                 Revoke Pro (→ Free)
                               </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => unlockSkillLevel.mutate({ userId: user.id, level: "intermediate" })}
+                                className="gap-2 cursor-pointer"
+                                data-testid={`admin-unlock-intermediate-${user.id}`}
+                              >
+                                <Unlock className="w-3.5 h-3.5 text-blue-500" />
+                                Unlock Intermediate (All Modules)
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => unlockSkillLevel.mutate({ userId: user.id, level: "advanced" })}
+                                className="gap-2 cursor-pointer"
+                                data-testid={`admin-unlock-advanced-${user.id}`}
+                              >
+                                <Unlock className="w-3.5 h-3.5 text-violet-500" />
+                                Unlock Advanced (All Modules)
+                              </DropdownMenuItem>
+                              {user.isAdmin ? (
+                                <DropdownMenuItem
+                                  onClick={() => toggleAdmin.mutate({ userId: user.id, makeAdmin: false })}
+                                  className="gap-2 cursor-pointer"
+                                  data-testid={`admin-remove-admin-${user.id}`}
+                                >
+                                  <ShieldOff className="w-3.5 h-3.5 text-muted-foreground" />
+                                  Remove Admin
+                                </DropdownMenuItem>
+                              ) : (
+                                <DropdownMenuItem
+                                  onClick={() => toggleAdmin.mutate({ userId: user.id, makeAdmin: true })}
+                                  className="gap-2 cursor-pointer"
+                                  data-testid={`admin-make-admin-${user.id}`}
+                                >
+                                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                                  Make Admin
+                                </DropdownMenuItem>
+                              )}
                               <DropdownMenuItem
                                 onClick={() => setConfirmDeleteId(user.id)}
                                 className="gap-2 cursor-pointer text-destructive focus:text-destructive font-semibold"

@@ -26,6 +26,7 @@ declare global {
       moduleSkillLevels: Record<string, string>;
       moduleAssessmentScores: Record<string, number>;
       userProfile: Record<string, any> | null;
+      isAdmin: boolean;
     }
   }
 }
@@ -199,6 +200,7 @@ export function toPassportUser(user: User): Express.User {
     moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
     moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
     userProfile: (user.userProfile as Record<string, any>) ?? null,
+    isAdmin: Boolean(user.isAdmin),
   };
 }
 
