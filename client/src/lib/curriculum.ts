@@ -1710,7 +1710,7 @@ export const modules: Module[] = [
             id: 'q4',
             question: 'Which appropriation would be used to fund a study to evaluate alternatives for a new weapons system?',
             options: [
-              'Procurement|||Correct. Procurement (P) funds are used to buy end items — complete weapon systems, vehicles, aircraft, ships, and major equipment. They have a 3-year obligation period. If you\'re buying something that will last more than 2 years and costs above the investment threshold (~$250K), it should be Procurement funds.',
+              'Procurement|||Correct. Procurement (P) funds are used to buy end items — complete weapon systems, vehicles, aircraft, ships, and major equipment. They have a 3-year obligation period. If you\'re buying something that will last more than 2 years and costs above the investment threshold ($350K, raised from $250K under Section 8039 of the DoD Appropriations Act — the DoD Financial Management Regulation itself still lags with the old $250K figure in places), it should be Procurement funds.',
               'Operations & Maintenance (O&M)|||Correct. O&M funds cover the day-to-day costs of running the military — contractor services, supplies, base operations, training, and maintenance. They are 1-year money. O&M is the largest DoD appropriation category by dollar volume and the most commonly used for service contracts.',
               'Research, Development, Test & Evaluation (RDT&E)|||Correct. RDT&E funds support the full spectrum of defense research and development, from basic science (6.1) through system development and demonstration (6.5). They have a 2-year obligation period.',
               'Military Personnel (MILPERS)|||Correct. MILPERS funds pay for military salaries, housing allowances, and personnel entitlements. They are strictly for military members — civilian pay comes from O&M. MILPERS are 1-year funds.',
@@ -2119,7 +2119,7 @@ export const modules: Module[] = [
             items: [
               'RDT&E (Research, Development, Test & Evaluation) — 3-year availability; used to develop and test new systems|||RDT&E has six budget activities: 6.1 (Basic Research), 6.2 (Applied Research), 6.3 (Advanced Technology Development), 6.4 (Advanced Component Development), 6.5 (System Development & Demonstration), 6.6 (Management Support). The budget activity number appears in all program budget exhibits and determines what specific development work is authorized.',
               'Procurement — 3-year availability; used to buy production-ready systems|||Procurement funds buy end items in production quantities — aircraft, vehicles, ships, weapons. They cannot be used for development work (that\'s RDT&E) or for sustaining fielded systems (that\'s O&M). The 3-year availability means FY25 Procurement funds can obligate new contracts through September 2027, then enter a 5-year expired period for payment of existing obligations only.',
-              'O&M (Operations & Maintenance) — 1-year availability; day-to-day operating costs and services|||O&M is the workhorse appropriation — it pays for everything from base operations to most services contracts to contractor maintenance. The 1-year obligation period creates intense fiscal year-end pressure. The $250K threshold also matters: O&M cannot be used for construction that exceeds the MILCON threshold (generally $1.5M+).',
+              'O&M (Operations & Maintenance) — 1-year availability; day-to-day operating costs and services|||O&M is the workhorse appropriation — it pays for everything from base operations to most services contracts to contractor maintenance. The 1-year obligation period creates intense fiscal year-end pressure. The $350K expense/investment threshold also matters (raised from $250K — DAU\'s own Acquipedia now cites $350K): O&M cannot be used for construction that exceeds the MILCON threshold (generally $1.5M+).',
               'MILCON (Military Construction) — 5-year availability; construction of facilities|||MILCON funds permanent construction, renovation, and real property acquisition. The 5-year availability reflects long project timelines. Using O&M for construction above MILCON thresholds is a common ADA violation — the line between "maintenance/repair" (O&M) and "construction" (MILCON) is frequently contested and often wrong in practice.',
               'MILPERS (Military Personnel) — 1-year; pay and allowances for uniformed personnel|||MILPERS pays active duty military salaries, housing allowances (BAH), subsistence (BAS), hazardous duty pay, and separation pay. It cannot fund civilian positions (that\'s O&M) or contractor services. MILPERS accounts are among the most tightly controlled in DoD because Congress is extremely sensitive to military compensation issues.',
             ]
@@ -2275,7 +2275,7 @@ export const modules: Module[] = [
             heading: "Major Appropriation Types: Rules & Period of Availability",
             headers: ['Appropriation', 'What It Funds', 'Period of Availability', 'Key Rule'],
             rows: [
-              ['O&M', 'Operations, training, maintenance, most services contracts under $350K threshold', '1 Year', 'Cannot fund capital equipment > $250K (investment threshold) or construction > $750K'],
+              ['O&M', 'Operations, training, maintenance, and services contracts of any size', '1 Year', 'Cannot fund capital equipment > $350K (expense/investment threshold, raised from $250K) or construction > $750K'],
               ['RDT&E', 'Research, development, prototypes, testing — from basic research through system development', '2 Years', 'Cannot fund production quantities; use ends at Milestone C'],
               ['Procurement', 'Production units, end-items: aircraft, ships, missiles, vehicles, major components', '3 Years', 'System must be past Milestone C / production-ready'],
               ['MILCON', 'Permanent construction of buildings, infrastructure, and facilities', '5 Years', 'Threshold $1.5M+; below threshold uses O&M (minor construction)'],
@@ -2669,7 +2669,7 @@ export const modules: Module[] = [
           {
             type: 'text',
             heading: "The Dashboard That Tells You the Whole Truth",
-            body: "Imagine you\'re flying a plane with two gauges: one shows how much fuel you\'ve burned, and one shows how far you\'ve traveled. Separately, each gauge tells you something. Together, they tell you whether you\'re going to make it to your destination. EVM — Earned Value Management — is both gauges for a defense program. It tells you whether you\'re getting the work done you planned to get done, at the cost you planned to spend, at any point in time. Without it, a program can look on budget but be six months behind — or look on schedule while burning through money at twice the expected rate. The DoD requires EVM on most contracts over $20M because \"how much have we spent?\" only answers half the question."
+            body: "Imagine you\'re flying a plane with two gauges: one shows how much fuel you\'ve burned, and one shows how far you\'ve traveled. Separately, each gauge tells you something. Together, they tell you whether you\'re going to make it to your destination. EVM — Earned Value Management — is both gauges for a defense program. It tells you whether you\'re getting the work done you planned to get done, at the cost you planned to spend, at any point in time. Without it, a program can look on budget but be six months behind — or look on schedule while burning through money at twice the expected rate. The DoD requires EVM on most contracts over $50M because \"how much have we spent?\" only answers half the question. (Raised from $20M under DFARS Class Deviation 2026-O0011, part of the 2026 DFARS overhaul — verify current DFARS 234.201 before citing the old figure.)"
           },
           {
             type: 'evm_metrics_visual' as any,
@@ -2710,7 +2710,7 @@ export const modules: Module[] = [
           type: 'callout' as const,
           level: 'advanced' as const,
           heading: 'EVM Compliance Surveillance and EVMS Acceptance — What Senior PMs Must Know',
-          body: 'DoDI 5000.02 requires EVMS on cost-type contracts over $20M and fixed-price over $50M. But having EVMS is not enough — the system must be compliant with ANSI/EIA-748. DCMA conducts EVMS surveillance and can issue non-compliance findings. A Level III finding (systemic noncompliance) can result in a compliance improvement plan, increased surveillance, and in extreme cases, withholding of fee. Senior PMs must understand their contractor\'s EVMS compliance status before accepting performance data. An EVMS system that rubber-baselines (retroactively adjusts PMB to reduce variances) produces data that is technically compliant but strategically meaningless. When CPI is suspiciously stable at 1.00 month after month on a complex development contract, question the system — not just the data.',
+          body: 'DFARS 234.201 requires EVMS on cost or incentive contracts valued at $50M or more (raised from $20M in Feb 2026 under DFARS Class Deviation 2026-O0011, part of the DFARS overhaul); a formally validated, government-accepted EVMS is required at $100M or more (raised from $50M). But having EVMS is not enough — the system must be compliant with ANSI/EIA-748. DCMA conducts EVMS surveillance and can issue non-compliance findings. A Level III finding (systemic noncompliance) can result in a compliance improvement plan, increased surveillance, and in extreme cases, withholding of fee. Senior PMs must understand their contractor\'s EVMS compliance status before accepting performance data. An EVMS system that rubber-baselines (retroactively adjusts PMB to reduce variances) produces data that is technically compliant but strategically meaningless. When CPI is suspiciously stable at 1.00 month after month on a complex development contract, question the system — not just the data.',
         },
         ],
       quiz: [
@@ -2746,8 +2746,8 @@ export const modules: Module[] = [
             id: 'q5',
             question: "EVM is contractually required on DoD contracts above what minimum threshold?",
             options: ['$5M', '$20M', '$50M', '$100M'],
-            correct: 1,
-            explanation: "DFARS 252.234-7002 requires Earned Value Management System (EVMS) compliance on DoD contracts above $20M. Programs above $100M require a formal EVMS that meets ANSI/EIA-748 criteria and is subject to government review and acceptance."
+            correct: 2,
+            explanation: "DFARS 234.201 requires Earned Value Management System (EVMS) compliance on DoD contracts above $50M (raised from $20M in February 2026 under DFARS Class Deviation 2026-O0011, part of the DFARS overhaul). Programs above $100M (raised from $50M) require a formal, government-validated EVMS that meets ANSI/EIA-748 criteria."
           },
           {
             id: 'q6',
@@ -6986,7 +6986,7 @@ export const modules: Module[] = [
         {
       type: 'text' as const,
       heading: 'What Is the IPMR and Why Does It Matter?',
-      body: 'The Integrated Program Management Report (IPMR) is the primary contractually required data deliverable for EVM reporting on DoD contracts. It replaced the older Contract Performance Report (CPR) and Contract Funds Status Report (CFSR) through DI-MGMT-81861 (2012). If your contract exceeds $20M cost-type or $50M fixed-price, you will receive IPMR data from your contractor every month. This lesson teaches what each IPMR format contains and what government PMs look for.',
+      body: 'The Integrated Program Management Report (IPMR) is the primary contractually required data deliverable for EVM reporting on DoD contracts. It replaced the older Contract Performance Report (CPR) and Contract Funds Status Report (CFSR) through DI-MGMT-81861 (2012). If your contract exceeds $50M cost or incentive type (raised from $20M in Feb 2026 under the DFARS overhaul — validated EVMS is now required above $100M, raised from $50M), you will receive IPMR data from your contractor every month. This lesson teaches what each IPMR format contains and what government PMs look for.',
         },
         {
       type: 'expandable_list' as const,
@@ -7312,7 +7312,7 @@ export const modules: Module[] = [
         question: 'In DoD program reporting, what does the acronym "EVM" stand for and what does it measure?',
         options: ['Extended Value Metrics — contractor profitability', 'Earned Value Management — integrates cost, schedule, and technical performance into a single management framework', 'Estimated Variance from Milestone — deviation from program schedule', 'Enterprise Visibility Mechanism — contractor data reporting system'],
         correct: 1,
-        explanation: 'Earned Value Management (EVM) is a project management technique that integrates scope, schedule, and cost. It compares planned work (PV), work accomplished (EV), and actual cost (AC) to provide objective performance indicators like CPI and SPI. Required on contracts over $20M (RDT&E) or $50M (all other) per DoDI 5000.02.'
+        explanation: 'Earned Value Management (EVM) is a project management technique that integrates scope, schedule, and cost. It compares planned work (PV), work accomplished (EV), and actual cost (AC) to provide objective performance indicators like CPI and SPI. Required on contracts over $50M (raised from $20M in Feb 2026 under DFARS Class Deviation 2026-O0011, part of the DFARS overhaul).'
       },
       {
         id: 'da2',
@@ -9598,7 +9598,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           type: 'text' as const,
           level: 'intermediate' as const,
           heading: 'Don\'t Just Trust the Prime\'s Reporting. Build Your Own Eyes.',
-          body: 'If your program has serious subcontractor content, relying only on what the prime chooses to tell you is asking to get surprised. Three habits fix that: (1) require sub-level EVM data in the prime\'s system for any subcontract over $20M, which is already a contractual requirement on EVMS programs, so just enforce it; (2) show up to quarterly sub program reviews as a quiet observer, not a participant, so you\'re not accidentally creating a privity-of-contract problem; (3) make sure the prime\'s Format 2 IPMR breaks out which org (and by extension, which sub) is actually driving the variance. Next time a prime tells you "we have a sub issue but we\'re handling it," don\'t nod along. Ask to see the corrective action plan and the sub\'s EVM data. If they can\'t produce both on the spot, they\'re not handling it.',
+          body: 'If your program has serious subcontractor content, relying only on what the prime chooses to tell you is asking to get surprised. Three habits fix that: (1) require sub-level EVM data in the prime\'s system for any subcontract over $50M (the current DFARS 234.201 EVMS threshold as of the 2026 DFARS overhaul), which is already a contractual requirement on EVMS programs, so just enforce it; (2) show up to quarterly sub program reviews as a quiet observer, not a participant, so you\'re not accidentally creating a privity-of-contract problem; (3) make sure the prime\'s Format 2 IPMR breaks out which org (and by extension, which sub) is actually driving the variance. Next time a prime tells you "we have a sub issue but we\'re handling it," don\'t nod along. Ask to see the corrective action plan and the sub\'s EVM data. If they can\'t produce both on the spot, they\'re not handling it.',
         },
         {
           type: 'callout' as const,
