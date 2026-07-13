@@ -508,9 +508,9 @@ export const modules: Module[] = [
           },
           {
             type: 'lesson_image',
-            src: '/acquisition-chain-comic.png',
-            alt: 'Comical illustration of the Government Acquisition Chain from Congress to the COR',
-            caption: 'The acquisition chain in all its glory. Everyone above the COR is very busy. The COR is the one at the actual construction site.',
+            src: '/img-gov-chain.jpg',
+            alt: 'Whiteboard diagram of the Government Acquisition Chain: Congress, OSD, PEO, PM, CO, and COR, stacked top to bottom',
+            caption: 'Six links, one chain. Every layer above the COR is one step further from the actual work getting done.',
           },
           {
             type: 'callout',
@@ -536,9 +536,9 @@ export const modules: Module[] = [
           },
           {
             type: 'lesson_image',
-            src: '/industry-team-comic.png',
-            alt: 'Comical illustration of the Industry Acquisition Team — BD, Capture Manager, Proposal Manager, PM, Contracts Manager, and Subcontractor',
-            caption: 'Different roles. One mission. Win the work. Deliver the promise. (Note: the Proposal Manager has three mugs of "Proposal Fuel" for a reason.)',
+            src: '/img-industry-team.jpg',
+            alt: 'Whiteboard diagram of the Industry Acquisition Team: BD, Capture Manager, Proposal Manager, Contractor PM, and Contracts Manager, left to right',
+            caption: 'Different roles, one mission: win the work, then deliver the promise.',
           },
           {
             type: 'table_visual' as any,
@@ -1613,6 +1613,12 @@ export const modules: Module[] = [
             type: 'text',
             heading: 'Where DoD Money Comes From: The PPBE Cycle',
             body: 'DoD doesn\'t get a blank check from Congress. It has to earn its budget through an annual process called PPBE — Planning, Programming, Budgeting, and Execution. Here\'s the simplified version:\n\n1. Planning: The DoD identifies its strategic priorities and capability needs.\n2. Programming: Each service and agency proposes how to allocate resources across its programs over the next 5 years (the Future Years Defense Program, or FYDP).\n3. Budgeting: The proposals are reviewed, debated, and refined into a budget request the President submits to Congress.\n4. Execution: Once Congress passes the budget (appropriations bills), the DoD executes — spends the money per the authorized purposes.\n\nThe entire cycle takes about two years from planning to execution, which means the budget you\'re executing today was planned 2+ years ago. This is one reason DoD programs struggle to adapt quickly to changing needs.',
+          },
+          {
+            type: 'lesson_image',
+            src: '/img-ppbe-cycle.jpg',
+            alt: 'Whiteboard diagram of the PPBE cycle as a loop: Planning, Programming, Budgeting, Execution, with a note about the 2 year lag between planning and execution',
+            caption: "A loop, not a line. By the time you're executing, the plan behind it is already two years old.",
           },
           {
             type: 'text',
@@ -3196,6 +3202,12 @@ export const modules: Module[] = [
             body: 'Every major defense PM operates within a three-way oversight structure: the PCO (Procuring Contracting Officer) awarded the contract, DCMA administers it day-to-day, and DCAA audits the financial side. Many new PMs confuse DCAA and DCMA — they have different missions, different authorities, and different relationships with your program. Understanding what each can and cannot do determines whether you use them as effective oversight tools or accidentally create friction that slows your program down.',
           },
           {
+            type: 'lesson_image',
+            src: '/img-dcaa-dcma.jpg',
+            alt: 'Whiteboard diagram showing DCAA and DCMA as two towers, DCAA audits the money and DCMA manages the work, both pointing down to your program',
+            caption: "Two agencies, two jobs, one program caught in the middle.",
+          },
+          {
             type: 'table_visual' as any,
             heading: 'DCAA vs. DCMA: Side-by-Side Comparison',
             headers: ['Attribute', 'DCAA', 'DCMA'],
@@ -4185,6 +4197,12 @@ export const modules: Module[] = [
             type: 'text',
             heading: 'The Buying Isn\'t One Place',
             body: 'Imagine you want to sell office supplies to a large hospital system. There\'s the central procurement office that handles large system-wide contracts, there\'s each individual hospital\'s local purchasing team for day-to-day supplies, and there\'s the specialty surgery centers that have their own specialized procurement.\n\nYou wouldn\'t walk into the surgery center trying to sell them copy paper, and you wouldn\'t cold-call the central office trying to sell them a one-time supply of bandages.\n\nSame thing with DoD. The contracting enterprise isn\'t one office — it\'s hundreds of them, organized by tier and authority. Contractors who understand which tier they\'re dealing with build smarter BD (Business Development) strategies. Contractors who don\'t waste proposals on the wrong doors.',
+            },
+            {
+            type: 'lesson_image',
+            src: '/img-contracting-enterprise.jpg',
+            alt: 'Whiteboard diagram of the three tiers of DoD contracting: enterprise level, base/installation level, and command/MAJCOM level',
+            caption: "Same building, three different doors. Knowing which one you're knocking on changes your whole BD strategy.",
             },
             {
             type: 'two_col',
@@ -5616,6 +5634,12 @@ export const modules: Module[] = [
         body: "Contract award is not the end — it's the beginning of the most critical phase. The vast majority of cost growth, schedule delays, and disputes occur during contract administration, not before award. A program office that does excellent source selection but weak contract administration will still fail. Understanding the roles of the CO, ACO, COR, and DCMA is essential for any PM."
       },
       {
+        type: 'lesson_image',
+        src: '/img-four-people-contract.jpg',
+        alt: 'Whiteboard diagram of the four people running a contract: PCO, ACO, COR, and DCMA',
+        caption: "Four roles, four different jobs. Only one of them can actually change what the contract says.",
+      },
+      {
         type: 'two_col',
         heading: 'The Four People Running Your Contract',
         rows: [
@@ -5684,6 +5708,12 @@ export const modules: Module[] = [
       level: 'advanced' as const,
       heading: 'Cure Notices, Show Cause, and Termination for Default: The Escalation Ladder',
       body: 'Senior PMs have a contract escalation ladder they must understand thoroughly. Cure Notice (FAR 49.607): when a contractor is in danger of default, the CO issues a cure notice giving typically 10 days to cure the condition. Show Cause Notice: when default appears imminent, requires contractor to explain why the contract should not be terminated. Termination for Default (T4D): the nuclear option — the government terminates, the contractor loses all rights to claim for termination costs, and the government can reprocure at the contractor\'s expense. T4D creates its own risks: contractors routinely convert T4D to Termination for Convenience through litigation by arguing the default was government-caused (weather, GFE delays, government-directed changes). Document government actions meticulously throughout performance — the paper trail determines whether T4D survives a challenge.',
+        },
+        {
+        type: 'lesson_image',
+        src: '/img-escalation-ladder.jpg',
+        alt: 'Whiteboard diagram of the escalation ladder: Cure Notice, then Show Cause, then Termination, in increasing severity',
+        caption: "Three rungs. Each one is harder to walk back than the last.",
         },
         ],
       quiz: [
@@ -7354,6 +7384,12 @@ export const modules: Module[] = [
         type: 'text',
         heading: "How Defense Contractors Win Business",
         body: "Winning government contracts is not an accident — it\'s a disciplined process that begins years before the RFP is released. The best capture managers are already executing their win strategy while competitors are just becoming aware of the opportunity. Understanding this lifecycle helps both government PMs (who interact with BD teams) and industry professionals who want to build winning capture programs."
+      },
+      {
+        type: 'lesson_image',
+        src: '/img-bd-pipeline.jpg',
+        alt: 'Whiteboard diagram of the BD-to-Award pipeline: Identify, Qualify, Shape, Capture, Propose, Award, with Pwin percentages increasing at each stage',
+        caption: "Six stages, one number climbing the whole way: your probability of win.",
       },
       {
         type: 'visual_spectrum',
