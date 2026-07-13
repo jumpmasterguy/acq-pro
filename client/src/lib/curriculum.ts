@@ -117,8 +117,8 @@ export const modules: Module[] = [
         keyTerms: [
           { term: 'Defense Acquisition', definition: 'The process the U.S. government uses to buy the products, services, and systems needed for national defense — from aircraft and ships to software and professional services.' },
           { term: 'DoD', definition: 'Department of Defense — the federal department responsible for U.S. military forces and defense policy. Includes the Army, Navy, Air Force, Marine Corps, Space Force, and numerous defense agencies.' },
-          { term: 'FAR', definition: 'Federal Acquisition Regulation — the primary rulebook governing how the U.S. federal government buys goods and services. Every federal contract must comply with the FAR unless an exception applies.' },
-          { term: 'DFARS', definition: 'Defense Federal Acquisition Regulation Supplement — the DoD-specific additions to the FAR. Adds defense-specific rules on top of the base FAR requirements.' },
+          { term: 'FAR', definition: 'Federal Acquisition Regulation — the primary rulebook governing how the U.S. federal government buys goods and services. Every federal contract must comply with the FAR unless an exception applies. As of 2026, the FAR is mid-rewrite under the Revolutionary FAR Overhaul (RFO) — it is still called the FAR, but expect the text of most parts to look different than it did a year ago.' },
+          { term: 'DFARS', definition: 'Defense Federal Acquisition Regulation Supplement — the DoD-specific additions to the FAR. Adds defense-specific rules on top of the base FAR requirements. Also being rewritten in 2026 as part of the same overhaul effort — still called DFARS, not a new acronym.' },
           { term: 'Contracting Officer (CO)', definition: 'The government official with legal authority to enter into, modify, and terminate contracts on behalf of the U.S. government. Only a CO can make the government legally obligated to pay.' },
           { term: 'Requirement', definition: 'A documented need for a product or service. Before any contract can be awarded, a requirement must be defined — what does the government need, how much, and by when.' },
           { term: 'Appropriation', definition: 'Money authorized by Congress for a specific purpose. The government can only spend money that Congress has appropriated — and only for the purpose Congress intended.' },
@@ -139,6 +139,11 @@ export const modules: Module[] = [
             type: 'text',
             heading: 'Why Does the Government Need Special Rules for Buying Things?',
             body: 'You might be wondering: why can\'t the government just buy things the same way a company does — shop around, find the best deal, pay for it? The answer has three parts.\n\nFirst, it\'s public money. The government is spending taxpayer dollars, so Congress and the public have a right to ensure it\'s spent wisely, fairly, and without corruption. Second, the scale is enormous — a single defense contract can be worth billions of dollars and run for decades. Mistakes at that scale cost the public enormously. Third, national security depends on it. If a contractor fails to deliver a critical weapons system or the government buys the wrong thing, people\'s lives are at stake.\n\nThe FAR (Federal Acquisition Regulation) and DFARS (Defense Federal Acquisition Regulation Supplement) are the rulebooks that govern this process. They are dense and detailed, but they exist for good reason.',
+          },
+          {
+            type: 'callout',
+            heading: 'Both Rulebooks Are Being Rewritten Right Now',
+            body: 'Since April 2025, the government has been running the biggest rewrite of the FAR since it was created in 1984 — officially called the Revolutionary FAR Overhaul (RFO). DoD (renamed the Department of War in early 2026) is running a parallel DFARS overhaul on the same timeline. Neither rulebook has been renamed — you will still hear "FAR" and "DFARS" everywhere, including from the government itself (the overhaul\'s own name has "FAR" right in it). What is changing is the text: agencies are adopting rewritten parts immediately through interim "class deviations," then making them permanent later through formal rulemaking. That means two versions of some FAR/DFARS parts can be in effect at the same time depending on which agency you\'re dealing with — always check whether the office you\'re working with has issued a deviation for the part you\'re reading. Track live status at acquisition.gov/far-overhaul.',
           },
           {
             type: 'list',
@@ -274,8 +279,8 @@ export const modules: Module[] = [
         duration: '12 min',
         description: 'Understand the structure, purpose, and key regulations governing DoD acquisitions.',
         keyTerms: [
-          { term: 'FAR', definition: 'Federal Acquisition Regulation — the primary regulation governing federal procurement.' },
-          { term: 'DFARS', definition: 'Defense Federal Acquisition Regulation Supplement — DoD-specific additions to FAR.' },
+          { term: 'FAR', definition: 'Federal Acquisition Regulation — the primary regulation governing federal procurement. Undergoing a full rewrite in 2026 (the Revolutionary FAR Overhaul) — same name, largely new text, rolling out part by part.' },
+          { term: 'DFARS', definition: 'Defense Federal Acquisition Regulation Supplement — DoD-specific additions to FAR. Also being overhauled in 2026 on a parallel track — still called DFARS.' },
           { term: 'DoDI 5000.02', definition: 'The primary DoD instruction governing the acquisition of major defense systems.' },
           { term: 'JCIDS', definition: 'Joint Capabilities Integration and Development System — the requirements generation process.' },
           { term: 'PPBE', definition: 'Planning, Programming, Budgeting, and Execution — DoD\'s resource allocation process.' },
@@ -298,6 +303,7 @@ export const modules: Module[] = [
               'Title 10 U.S.C. — Statutory authority for defense acquisitions and armed forces|||Title 10 provides the statutory foundation for DoD\'s authority to conduct acquisitions, organize the acquisition workforce (DAWIA), and govern major defense programs. Key sections: § 2304 (competition requirements), § 2306a (Truth in Negotiations Act/TINA), § 2433 (Nunn-McCurdy), § 4021-4022 (OTAs). When FAR and statute conflict, statute governs.',
               'FAR (Federal Acquisition Regulation) — Codified in 48 CFR, governs all federal procurement|||The FAR is updated continuously through FAR cases — proposed rules published in the Federal Register, comment periods, and final rules. Subscription to FAC (Federal Acquisition Circular) notifications is how acquisition professionals stay current. The entire FAR is free at acquisition.gov. No one memorizes it — knowing how to navigate it quickly is the actual skill.',
               'DFARS — Defense-specific supplements; adds 200+ pages of DoD-specific rules|||DFARS clauses are numbered 252.XXX vs FAR\'s 52.XXX. Key DFARS areas: 252.204-7012 (cybersecurity/CMMC), 252.225-7001 (Buy American), 252.215-7004 (excessive pass-through charges), 252.244-7001 (purchasing system). Each military service also has its own supplement (AFARS, NMCARS, AFFARS) adding another layer.',
+              'Revolutionary FAR Overhaul (RFO) — the government-wide rewrite of the FAR underway since April 2025, plus a parallel DFARS overhaul run by the Department of War (the renamed DoD)|||Launched by Executive Order 14275, "Restoring Common Sense to Federal Procurement." Phase 1 rolled out interim "class deviations" starting late 2025 — many already adopted agency-wide. Phase 2 is formal notice-and-comment rulemaking: the first batch of proposed rules covering 20 FAR parts published June 23, 2026, with the FAR Council aiming to finalize the whole rewrite by the end of 2026. Legacy FAR/DFARS text still governs any part an agency has not yet deviated — check acquisition.gov/far-overhaul for current status before assuming a part has changed.',
               'DoDI 5000.02 — The "bible" for major system acquisitions, defines program phases|||DoDI 5000.02 was replaced by the Adaptive Acquisition Framework (AAF) policy, which now lives across multiple DoDIs (5000.74, 5000.75, 5000.80, 5000.81, 5000.85, 5000.87). The old 5000.02 single-pathway model is gone — but the term "5000 series" still refers collectively to all these pathway-specific instructions.',
               'DODI 5000.74 — Governs Defense Acquisition of Services|||DoDI 5000.74 applies to all service acquisitions above $10M and requires a Services Acquisition Strategy for those above $250M. It mandates portfolio reviews and senior official accountability. Services represent the largest share of DoD contract spending by volume — more than $200B annually.',
               'DODI 5000.75 — Governs Business Systems acquisitions|||Business systems (financial, HR, logistics, acquisition IT) have unique acquisition considerations because they must comply with functional standards, integrate with existing DoD enterprise systems, and go through Investment Review Board (IRB) oversight. The Business Capability Acquisition Cycle (BCAC) replaces the traditional milestone structure for these programs.',
@@ -4408,6 +4414,11 @@ export const modules: Module[] = [
         body: "FAR 16.103(d) requires the contracting officer to document the contract type selection rationale in the written acquisition plan. The presumption is FFP. Every step away from FFP must be justified. An undocumented contract type decision is a significant finding in a contract audit."
       },
       {
+        type: 'callout',
+        heading: "Heads Up: FAR Part 16 Is Mid-Rewrite",
+        body: "FAR Part 16 (Types of Contracts) is one of the parts already touched by the Revolutionary FAR Overhaul — it was updated again on July 1, 2026 to implement Executive Order 14402, Promoting Efficiency, Accountability, and Performance in Federal Contracting. The core contract types and risk logic on this page haven't changed, but the FAR 16.XXX citations above reflect the pre-overhaul numbering. Where an agency has adopted the RFO Part 16 deviation, verify current clause numbering at acquisition.gov/far-overhaul before citing a FAR reference in a proposal or acquisition plan.",
+      },
+      {
         type: 'cpif_share_visual' as any,
         heading: 'CPIF Share Ratio — How It Works',
       },
@@ -5392,7 +5403,7 @@ export const modules: Module[] = [
         type: 'text',
         level: 'intermediate' as const,
         title: 'Fair Opportunity: The Competition Requirement Within the Vehicle',
-        body: 'Getting on a MAC-IDIQ vehicle is not the same as winning work. Under FAR 16.505, every awardee on the vehicle must be given a "fair opportunity" to be considered for each task order above the simplified acquisition threshold (currently $250K for most agencies).\n\nIn practice, this means the government issues a Task Order Request for Proposals (TORFP or TORP) to some or all of the vehicle awardees, receives proposals, evaluates them, and awards the task order to one (or sometimes multiple) awardees.\n\nThere are exceptions — urgent and compelling need, only one awardee is capable, the order is a logical follow-on — but they\'re the exception, not the rule. Being on the bus doesn\'t guarantee you\'ll play. It guarantees you\'re eligible to compete.',
+        body: 'Getting on a MAC-IDIQ vehicle is not the same as winning work. Under FAR 16.505, every awardee on the vehicle must be given a "fair opportunity" to be considered for each task order above the simplified acquisition threshold (currently $350K, effective October 1, 2025).\n\nIn practice, this means the government issues a Task Order Request for Proposals (TORFP or TORP) to some or all of the vehicle awardees, receives proposals, evaluates them, and awards the task order to one (or sometimes multiple) awardees.\n\nThere are exceptions — urgent and compelling need, only one awardee is capable, the order is a logical follow-on — but they\'re the exception, not the rule. Being on the bus doesn\'t guarantee you\'ll play. It guarantees you\'re eligible to compete.',
       },
       {
         type: 'text',
