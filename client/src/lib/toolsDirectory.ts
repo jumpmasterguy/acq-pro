@@ -53,8 +53,9 @@ export const TOOLS_DIRECTORY: ToolCategory[] = [
     tools: [
       { name: 'eCFR.gov (FAR / DFARS)', sub: 'ecfr.gov', url: 'https://www.ecfr.gov', free: 'Free' },
       { name: 'Acquisition.gov', sub: 'acquisition.gov', url: 'https://www.acquisition.gov', free: 'Free' },
-      { name: 'DAU ACQuipedia', sub: 'dau.edu/acquipedia', url: 'https://www.dau.edu/acquipedia', free: 'Free' },
-      { name: 'Defense Acquisition Guidebook', sub: 'dau.edu/dag', url: 'https://www.dau.edu/dag', free: 'Free' },
+      { name: 'Revolutionary FAR Overhaul (RFO)', sub: 'acquisition.gov/far-overhaul', url: 'https://www.acquisition.gov/far-overhaul', free: 'Free' },
+      { name: 'WarU ACQuipedia', sub: 'waru.edu/acquipedia', url: 'https://www.waru.edu/acquipedia', free: 'Free' },
+      { name: 'Acquisition Guidebooks (AAF)', sub: 'aaf.dau.edu/guidebooks', url: 'https://aaf.dau.edu/guidebooks/', free: 'Free' },
     ],
   },
   {
@@ -68,7 +69,7 @@ export const TOOLS_DIRECTORY: ToolCategory[] = [
   {
     title: 'Training & Certifications',
     tools: [
-      { name: 'Defense Acquisition University (DAU)', sub: 'dau.edu', url: 'https://www.dau.edu', free: 'Free (Gov)' },
+      { name: 'Warfighting Acquisition University (WarU)', sub: 'waru.edu', url: 'https://www.waru.edu', free: 'Free (Gov)' },
       { name: 'Federal Acquisition Institute (FAI)', sub: 'fai.gov', url: 'https://www.fai.gov', free: 'Free (Gov)' },
     ],
   },

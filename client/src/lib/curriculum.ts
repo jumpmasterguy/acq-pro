@@ -6939,9 +6939,10 @@ export const modules: Module[] = [
         ]
       },
       {
-        type: 'tip',
-        heading: 'The Six Formulas You Must Know Cold',
-        body: 'CV = BCWP − ACWP. SV = BCWP − BCWS. CPI = BCWP/ACWP. SPI = BCWP/BCWS. EAC = BAC/CPI (statistical). VAC = BAC − EAC. Everything else in EVM derives from these six.'
+        type: 'lesson_image',
+        src: '/img-six-evm-formulas.jpg',
+        alt: 'Whiteboard diagram of the six core EVM formulas: CV = BCWP minus ACWP, SV = BCWP minus BCWS, CPI = BCWP divided by ACWP, SPI = BCWP divided by BCWS, EAC = BAC divided by CPI, VAC = BAC minus EAC',
+        caption: 'Everything else in EVM derives from these six. Know them cold.',
       },
       {
       type: 'text' as const,
