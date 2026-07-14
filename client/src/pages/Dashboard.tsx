@@ -567,30 +567,15 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
     <div className="space-y-8">
 
       {/* Welcome */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            {username ? `Welcome back, ${username.split(' ')[0]}` : 'Welcome back'}
-          </h1>
-          <p className="text-muted-foreground text-sm mt-0.5">
-            {completedCount === 0
-              ? "Start your DoD acquisitions journey today."
-              : `You've completed ${completedCount} of ${totalLessons} lessons.`}
-          </p>
-        </div>
-        <div className="flex items-center gap-2.5 bg-card border border-border rounded-xl px-4 py-2.5 shadow-sm">
-          <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center">
-            <Zap className="w-4 h-4 text-primary" />
-          </div>
-          <div>
-            <div className="text-xs text-muted-foreground">Level {levelInfo.level}</div>
-            <div className="text-sm font-bold">{levelInfo.title}</div>
-          </div>
-          <div className="ml-3 pl-3 border-l border-border text-right">
-            <div className="text-xs text-muted-foreground">XP</div>
-            <div className="text-sm font-bold text-primary">{xp}</div>
-          </div>
-        </div>
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">
+          {username ? `Welcome back, ${username.split(' ')[0]}` : 'Welcome back'}
+        </h1>
+        <p className="text-muted-foreground text-sm mt-0.5">
+          {completedCount === 0
+            ? "Start your DoD acquisitions journey today."
+            : `You've completed ${completedCount} of ${totalLessons} lessons.`}
+        </p>
       </div>
 
       {/* Search bar */}
@@ -686,20 +671,66 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
         )}
       </div>
 
-      {/* Stats strip */}
+      {/* Progress hero */}
       {(() => {
-        const mainStats = statsStrip.filter(s => s.label !== 'Total signups');
+        const overallPct = Math.round((completedCount / totalLessons) * 100);
+        const ringSize = 76;
+        const strokeWidth = 7;
+        const radius = (ringSize - strokeWidth) / 2;
+        const circumference = 2 * Math.PI * radius;
+        const offset = circumference - (overallPct / 100) * circumference;
         const adminStat = statsStrip.find(s => s.label === 'Total signups');
         return (
           <div className="space-y-3">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {mainStats.map((s, i) => (
-                <div key={i} className="bg-card border border-border rounded-xl p-3.5 flex flex-col gap-1 shadow-sm">
-                  <div className="flex items-center gap-2">{s.icon}<span className="text-xl font-bold tabular-nums">{s.value}</span></div>
-                  <div className="text-xs font-medium text-foreground/80">{s.label}</div>
-                  <div className="text-[10px] text-muted-foreground">{s.sub}</div>
+            <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+              <div className="flex items-center justify-between gap-6 flex-wrap">
+                {/* Hero: overall progress ring */}
+                <div className="flex items-center gap-4">
+                  <div className="relative flex-shrink-0" style={{ width: ringSize, height: ringSize }}>
+                    <svg width={ringSize} height={ringSize} className="-rotate-90">
+                      <circle cx={ringSize / 2} cy={ringSize / 2} r={radius} fill="none" strokeWidth={strokeWidth} className="stroke-muted" />
+                      <circle
+                        cx={ringSize / 2} cy={ringSize / 2} r={radius} fill="none" strokeWidth={strokeWidth}
+                        strokeLinecap="round" className="stroke-primary transition-all duration-700"
+                        strokeDasharray={circumference} strokeDashoffset={offset}
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-xl font-bold tabular-nums">{overallPct}%</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-foreground">Overall progress</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">{totalLessons - completedCount} lessons remaining</div>
+                    <div className="flex items-center gap-1.5 mt-1.5">
+                      <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center">
+                        <Zap className="w-3.5 h-3.5 text-primary" />
+                      </div>
+                      <span className="text-xs font-semibold">Lv {levelInfo.level} · {levelInfo.title}</span>
+                      <span className="text-xs text-muted-foreground">· {xp} XP</span>
+                    </div>
+                  </div>
                 </div>
-              ))}
+
+                {/* Supporting stats */}
+                <div className="flex items-center gap-5 sm:gap-7">
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 className="w-5 h-5 text-primary" />
+                    <div>
+                      <div className="text-lg font-bold tabular-nums leading-none">{completedCount}<span className="text-xs text-muted-foreground font-normal">/{totalLessons}</span></div>
+                      <div className="text-[11px] text-muted-foreground mt-0.5">Lessons done</div>
+                    </div>
+                  </div>
+                  <div className="h-9 w-px bg-border" />
+                  <div className="flex items-center gap-2.5">
+                    <Target className="w-5 h-5 text-primary" />
+                    <div>
+                      <div className="text-lg font-bold tabular-nums leading-none">{progress.isPremium ? modules.length : FREE_MODULES.length}<span className="text-xs text-muted-foreground font-normal">/{modules.length}</span></div>
+                      <div className="text-[11px] text-muted-foreground mt-0.5">Modules unlocked</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             {adminStat && (
               <div>
