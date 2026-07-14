@@ -18,7 +18,25 @@
     nav a.logo span { color: #4FC3CB; }
     nav a.back { font-size: 0.85rem; color: rgba(255,255,255,0.6); text-decoration: none; }
     nav a.back:hover { color: white; }
-    .container { max-width: 760px; margin: 0 auto; padding: 0 2rem; }
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 2rem; }
+    .hero .container { max-width: 800px; }
+
+    /* Two-column layout for main content */
+    .layout-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 32px; align-items: start; }
+    .main-col, .side-col { display: flex; flex-direction: column; gap: 32px; }
+    .main-col > section, .side-col > section { padding: 0; }
+    .side-col { position: sticky; top: 20px; }
+
+    /* Compact stat list (sidebar variant) */
+    .stats-list { display: flex; flex-direction: column; gap: 12px; }
+    .stat-card-sm { background: white; border: 1px solid #E5E7EB; border-radius: 12px; padding: 18px 20px; }
+    .stat-card-sm .stat-num { font-size: 1.5rem; margin-bottom: 4px; }
+    .stat-card-sm .stat-desc { font-size: 0.82rem; margin-bottom: 6px; }
+
+    @media (max-width: 900px) {
+      .layout-grid { grid-template-columns: 1fr; }
+      .side-col { position: static; }
+    }
 
     /* Hero */
     .hero { background: #0D1B2A; padding: 64px 0 56px; text-align: center; }
@@ -115,35 +133,15 @@
 
 <div class="container">
 
-  <section style="padding-top: 56px;">
+  <div class="layout-grid">
+    <div class="main-col">
+
+  <section style="padding-top: 40px;">
     <div class="story-card">
       <p>I was sitting in a meeting with people who'd been in the defense industry for years. Someone turned to me and asked about DSO, cashflow, and the variance of revenue for the financial period.</p>
       <p>I had no idea what to say. Not because I wasn't capable. Because nobody had ever explained it to me in plain English. I was a veteran who'd worked on programs worth hundreds of millions of dollars, and I still didn't have the vocabulary to talk about my own work.</p>
       <p>I don't want that to happen to you. That's why I built Acqlerate. Not to add more jargon to the pile. To give the people doing this job the plain English foundation they need to do it with confidence.</p>
     </div>
-  </section>
-
-  <section>
-    <h2>This gap isn't just me. It's the whole industry.</h2>
-    <p>Once I started looking into it, the data backed up exactly what I'd felt in that meeting. This isn't a personal knowledge gap. It's a structural one, and it's expensive.</p>
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-num">10+ years</div>
-        <div class="stat-desc">The time acquisition professionals report it takes to reach full proficiency in federal acquisition. Most programs can't wait that long for their people to catch up.</div>
-        <div class="stat-source">Source: <a href="https://aida.mitre.org/digital-vision/" target="_blank" rel="noopener">MITRE, AiDA Digital Vision</a></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">40 of 48</div>
-        <div class="stat-desc">Major DoD weapon system programs that reported workforce problems in 2026: staffing cuts, or trouble hiring and retaining the people who run them.</div>
-        <div class="stat-source">Source: <a href="https://www.meritalk.com/articles/gao-dod-weapons-acquisition-continues-to-face-delays/" target="_blank" rel="noopener">GAO-26-108457, Weapon Systems Annual Assessment</a>, July 2026</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">12+ years</div>
-        <div class="stat-desc">The average time it now takes DoD to deliver a major weapon system capability, a number GAO ties directly to thinning program office staff and workforce gaps.</div>
-        <div class="stat-source">Source: <a href="https://www.meritalk.com/articles/gao-dod-weapons-acquisition-continues-to-face-delays/" target="_blank" rel="noopener">GAO-26-108457, Weapon Systems Annual Assessment</a>, July 2026</div>
-      </div>
-    </div>
-    <p style="margin-top: 24px; font-size: 0.92rem; color: #6B7280;">These numbers describe a shortage of qualified, experienced acquisition professionals, not simply open headcount. DoD can post a position. It can't manufacture ten years of learned judgment overnight. That's the actual gap Acqlerate is built to close.</p>
   </section>
 
   <section>
@@ -157,11 +155,11 @@
         </div>
       </div>
       <p>I'm a U.S. Army veteran who spent my early career on the networking side, supporting special operations forces communications, before moving into defense acquisition. I hold a CCIE (Cisco's top-level networking certification) and a PMP, and I made the jump from network engineer to program manager on a large DoD contract in about three years, with no acquisition background walking in.</p>
-      <p>I went on to lead a defense program with a $950 million contract ceiling supporting U.S. Air Forces in Europe, first as PMRO and later as Consolidated Mission Support (CMS).</p>
+      <p>I went on to lead a defense program with a $950 million contract ceiling supporting U.S. Air Forces in Europe.</p>
       <div class="bio-facts">
         <div class="bio-fact"><strong>Background:</strong> Network engineer → DoD Program Manager in ~3 years</div>
         <div class="bio-fact"><strong>Certifications:</strong> CCIE, PMP</div>
-        <div class="bio-fact"><strong>Notable program:</strong> Led a $950M ceiling program (PMRO / CMS) supporting USAFE</div>
+        <div class="bio-fact"><strong>Notable program:</strong> Led a $950M ceiling program supporting USAFE</div>
         <div class="bio-fact"><strong>Military:</strong> U.S. Army veteran, SOF communications support</div>
       </div>
       <p>If I could learn this system starting from zero, so can you. That's the whole premise of Acqlerate: no textbook fluff, no assuming you already speak the language. Just plain English, real examples, and the stuff people usually only learn by getting burned on the job.</p>
@@ -193,13 +191,41 @@
     </div>
   </section>
 
-  <section style="padding-top: 0;">
-    <div class="cta-box">
-      <h3>Start with Module 01, free.</h3>
-      <p>No CAC, no scheduler, no waiting on a class date. Start the day you decide to.</p>
-      <a href="/app#/auth" class="btn">Start Free →</a>
     </div>
-  </section>
+    <!-- SIDEBAR -->
+    <div class="side-col">
+
+      <section style="padding: 0; margin-top: 40px;">
+        <h2 style="font-size: 1.15rem; margin-bottom: 14px;">This gap isn't just me. It's the whole industry.</h2>
+        <p style="font-size: 0.88rem; margin-bottom: 16px;">The data backs up exactly what I felt in that meeting. This is a structural gap, and it's expensive.</p>
+        <div class="stats-list">
+          <div class="stat-card-sm">
+            <div class="stat-num">10+ years</div>
+            <div class="stat-desc">Time acquisition professionals report it takes to reach full proficiency. Most programs can't wait that long for their people to catch up.</div>
+            <div class="stat-source">Source: <a href="https://aida.mitre.org/digital-vision/" target="_blank" rel="noopener">MITRE, AiDA Digital Vision</a></div>
+          </div>
+          <div class="stat-card-sm">
+            <div class="stat-num">40 of 48</div>
+            <div class="stat-desc">Major DoD weapon system programs reporting workforce problems in 2026: staffing cuts, or trouble hiring and retaining the people who run them.</div>
+            <div class="stat-source">Source: <a href="https://www.meritalk.com/articles/gao-dod-weapons-acquisition-continues-to-face-delays/" target="_blank" rel="noopener">GAO-26-108457</a>, Jul 2026</div>
+          </div>
+          <div class="stat-card-sm">
+            <div class="stat-num">12+ years</div>
+            <div class="stat-desc">Average time it now takes DoD to deliver a major weapon system capability — GAO ties this directly to thinning program office staff and workforce gaps.</div>
+            <div class="stat-source">Source: <a href="https://www.meritalk.com/articles/gao-dod-weapons-acquisition-continues-to-face-delays/" target="_blank" rel="noopener">GAO-26-108457</a>, Jul 2026</div>
+          </div>
+        </div>
+        <p style="margin-top: 16px; font-size: 0.82rem; color: #6B7280;">These numbers describe a shortage of qualified, experienced acquisition professionals, not simply open headcount. DoD can post a position. It can't manufacture ten years of learned judgment overnight.</p>
+      </section>
+
+      <div class="cta-box">
+        <h3>Start with Module 01, free.</h3>
+        <p>No CAC, no scheduler, no waiting on a class date. Start the day you decide to.</p>
+        <a href="/app#/auth" class="btn">Start Free →</a>
+      </div>
+
+    </div>
+  </div>
 
   <footer-note>© 2026 Acqlerate. All rights reserved. · <a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Service</a></footer-note>
 </div>
