@@ -242,6 +242,17 @@ function ExpandableBulletItem({
               const rest = bulletText.slice(dashIdx);
               return <><span className="font-semibold text-foreground">{label}</span><span>{rest}</span></>;
             }
+            // "Label: description" split, same idea as the em-dash case above.
+            // Requires a colon followed by a space (excludes time formats like 9:00)
+            // and a reasonably short label so we don't bold a whole sentence that
+            // happens to contain a colon partway through.
+            const colonIdx = bulletText.indexOf(': ');
+            const isTimeFormat = colonIdx > 0 && /\d:\d/.test(bulletText.slice(Math.max(0, colonIdx - 2), colonIdx + 3));
+            if (colonIdx > 0 && colonIdx <= 50 && !isTimeFormat) {
+              const label = bulletText.slice(0, colonIdx);
+              const rest = bulletText.slice(colonIdx);
+              return <><span className="font-semibold text-foreground">{label}</span><span>{rest}</span></>;
+            }
             // Bold short items only if they don't look like numbered steps
             const isNumberedStep = /^Step \d+[:\s]/i.test(bulletText);
             if (!isNumberedStep && bulletText.length < 50) {
