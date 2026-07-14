@@ -702,11 +702,18 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
               ))}
             </div>
             {adminStat && (
-              <div className="bg-card border border-border rounded-xl p-3.5 flex items-center gap-4 shadow-sm">
-                <div className="flex items-center gap-2">{adminStat.icon}<span className="text-xl font-bold tabular-nums">{adminStat.value}</span></div>
-                <div>
-                  <div className="text-xs font-medium text-foreground/80">{adminStat.label}</div>
-                  <div className="text-[10px] text-muted-foreground">{adminStat.sub}</div>
+              <div>
+                <div className="flex items-center gap-2 mb-1.5 px-0.5">
+                  <div className="h-px flex-1 bg-border" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-violet-500/70">Admin view · platform-wide, not your progress</span>
+                  <div className="h-px flex-1 bg-border" />
+                </div>
+                <div className="bg-violet-500/5 border border-violet-500/20 rounded-xl p-3.5 flex items-center gap-4">
+                  <div className="flex items-center gap-2">{adminStat.icon}<span className="text-xl font-bold tabular-nums">{adminStat.value}</span></div>
+                  <div>
+                    <div className="text-xs font-medium text-foreground/80">{adminStat.label}</div>
+                    <div className="text-[10px] text-muted-foreground">{adminStat.sub}</div>
+                  </div>
                 </div>
               </div>
             )}
