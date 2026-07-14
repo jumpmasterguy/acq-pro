@@ -611,8 +611,8 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
   }
 
   const body = `
-    <div style="font-size:18px;font-weight:800;color:#0d2137;margin:0 0 8px">Your Acquisition Starter Kit is ready.</div>
-    <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 20px">We just need to know which side of the table you're on — so we can send you the right version.</p>
+    <div style="font-size:18px;font-weight:800;color:#0d2137;margin:0 0 8px">Your Acquisition Starter Kit is ready — both editions.</div>
+    <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 20px">No extra steps. Here are both PDFs, updated July 2026 — grab whichever side of the table applies to you (or both).</p>
 
     <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px">
       <tr>
@@ -628,6 +628,10 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
               <li>5 Most Common PM Mistakes</li>
               <li>50+ Acronym Glossary</li>
             </ul>
+            <a href="${APP_URL}/starter-kit-usg.pdf"
+               style="display:inline-block;margin-top:14px;background:#01696f;color:#ffffff;font-weight:800;font-size:13px;padding:10px 20px;border-radius:8px;text-decoration:none">
+              Download USG Edition →
+            </a>
           </div>
         </td>
         <td style="padding-left:8px;vertical-align:top;width:50%">
@@ -642,29 +646,33 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
               <li>Who's Buying — AFICC, ESS & MAJCOM</li>
               <li>5 Common Contractor Mistakes + 70+ Acronyms</li>
             </ul>
+            <a href="${APP_URL}/starter-kit-contractor.pdf"
+               style="display:inline-block;margin-top:14px;background:#d4a017;color:#0d2137;font-weight:800;font-size:13px;padding:10px 20px;border-radius:8px;text-decoration:none">
+              Download Contractor Edition →
+            </a>
           </div>
         </td>
       </tr>
     </table>
 
     <div style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:24px;border:1px solid #264d73">
-      <p style="color:#ffffff;font-size:15px;font-weight:700;margin:0 0 6px">Create your free account — takes 60 seconds.</p>
-      <p style="color:rgba(255,255,255,0.7);font-size:13px;margin:0 0 20px;line-height:1.6">You'll pick your path during setup and we'll send the right kit straight to your inbox. Module 01 is free with no credit card required.</p>
+      <p style="color:#ffffff;font-size:15px;font-weight:700;margin:0 0 6px">Want more than a PDF? Module 01 is free.</p>
+      <p style="color:rgba(255,255,255,0.7);font-size:13px;margin:0 0 20px;line-height:1.6">Create a free account (60 seconds, no credit card) and start the full DoD Acquisitions Foundations module today.</p>
       <a href="${APP_URL}/app#/register"
          style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 32px;border-radius:8px;text-decoration:none">
-        Choose Your Path &amp; Get Your Kit →
+        Start Free →
       </a>
     </div>
 
-    <p style="font-size:13px;color:#64748b;line-height:1.7;margin:0">Already have an account? <a href="${APP_URL}/app#/dashboard" style="color:#01696f;text-decoration:none;font-weight:600">Sign in here</a> and complete the quick onboarding if you haven't yet — that's what unlocks the kit delivery.</p>
+    <p style="font-size:13px;color:#64748b;line-height:1.7;margin:0">Already have an account? <a href="${APP_URL}/app#/dashboard" style="color:#01696f;text-decoration:none;font-weight:600">Sign in here</a> to pick up where you left off.</p>
   `;
 
   await resend.emails.send({
     from: FROM,
       replyTo: "hello@acqlerate.com",
     to,
-    subject: 'Your Acquisition Starter Kit — which side of the table are you on?',
-    html: emailShell('USG or Contractor? Pick your path and get the right kit.', body, to),
+    subject: 'Your Acquisition Starter Kit is ready to download',
+    html: emailShell('Both editions, ready to download right now.', body, to),
   });
   console.log(`[email] Lead nurture email sent to ${to}`);
 }
