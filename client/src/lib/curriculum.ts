@@ -2800,12 +2800,18 @@ export const modules: Module[] = [
           { term: 'CPI', definition: 'Cost Performance Index. How efficiently you are spending right now: EV / AC. The single best predictor of your final EAC.' },
           { term: 'SPI', definition: 'Schedule Performance Index. How efficiently you are moving through schedule right now: EV / PV. Used in the combined EAC formulas.' },
           { term: 'IPMR Format 5', definition: 'Problem Analysis Report. The part of the IPMR where contractors explain their EAC variances, what caused them, and what they are doing about it.' },
+          { term: 'IPMR', definition: 'Integrated Program Management Report. The contractor\'s standard monthly report package covering cost, schedule, and risk. It has multiple formats. Format 1 covers the cost and schedule performance data, Format 5 covers problem analysis. When this lesson just says "the IPMR," it means the Format 1 cost and schedule data.' },
         ],
         content: [
           {
             type: 'text',
             heading: 'What EAC Actually Is',
             body: 'EAC stands for Estimate at Completion. In plain terms, it is your best current guess at what the whole program will cost by the time it is done. Not what you planned to spend (that is the BAC). What you now think you will actually spend, based on how the work has really gone so far. If you have spent more than planned for the work you have completed, your EAC climbs above your BAC. If you have somehow come in ahead, it can drop below. Either way, EAC is the forecast that tells everyone above you whether this program is still on track or heading for trouble.',
+          },
+          {
+            type: 'text',
+            heading: 'A Concrete Example: Building One Person\'s Number',
+            body: 'Let\'s make this real with one person instead of a formula. Say John does cybersecurity work on a services contract in Europe. His direct labor rate is $80 an hour, and his wrap rate is 1.7, so his fully burdened labor cost comes out to $80 x 1.7 = $136 an hour. If he is scheduled for around 1,920 hours this year (a standard work year once you account for holidays and leave), his labor alone costs the program $136 x 1,920 = $261,120.\n\nNow add his Other Direct Costs (ODCs). Because he is working overseas, his contract authorizes a Living Quarters Allowance (LQA) of $40,000 a year to help cover housing, and a Cost of Living Allowance (COLA) of $10,000 a year to cover the higher cost of living in that location. That is $50,000 in direct ODCs. Those ODCs still pick up the company\'s G&A rate, say 10% here, which adds another $5,000, bringing his total ODC cost to $55,000.\n\nAdd it up: $261,120 in labor plus $55,000 in ODCs comes to about $316,000 for John alone, for one year. Now picture doing that same math for every person on the contract, plus materials, plus travel, plus every other ODC, and rolling it all up into one number. That rolled-up total, refreshed every month with real hours and real costs instead of the original plan, is what an EAC actually is. It is not some number finance pulls out of thin air. It is this kind of buildup, done at scale, updated with reality.',
           },
           {
             type: 'text',
@@ -2863,12 +2869,12 @@ export const modules: Module[] = [
           {
             type: 'tip',
             heading: 'PM Best Practice: Bring Three EAC Scenarios, Not One',
-            body: 'The most credible PMs I have worked with walk into every senior review with three numbers, not one. Best case assumes your corrective actions actually work. Most likely uses Method 1 or 3 against current data. Worst case uses Method 4 and factors in schedule delays too. Showing the range proves you have actually thought this through, and it hands leadership the full picture instead of a single guess. The worst thing you can ever say to a PEO is "I didn\'t see it coming." Three-scenario reporting takes that excuse off the table before you even walk in the room.',
+            body: 'The most credible PMs I have worked with walk into every senior review with three numbers, not one. Best case assumes your corrective actions actually work and the program gets back on track. Most likely case is a straight read of what your current cost and schedule performance says will happen if nothing changes. Worst case assumes the problems keep going and adds in likely schedule delays too. Showing this range proves you have actually thought it through, and it hands leadership the full picture instead of a single guess. The worst thing you can ever say to a PEO is "I didn\'t see it coming." Three-scenario reporting takes that excuse off the table before you even walk in the room.',
           },
           {
             type: 'warning',
             heading: 'Three Different EACs Can Exist on the Same Program',
-            body: 'Know the difference, because leadership will ask. Contractor EAC is what the contractor reports in the IPMR Format 1. Government EAC is what your own office independently calculates from that same underlying data. AFCAA or Service Cost Center EAC is a fully independent agency estimate. These three numbers often do not match. When they diverge significantly, leadership loses confidence fast. It is on the PM to reconcile the differences and explain them in plain language, not to just report the number they were handed.',
+            body: 'Know the difference, because leadership will ask. Contractor EAC is the number the contractor\'s own accounting system produces and reports to the government every month in a standard report called the IPMR (Integrated Program Management Report, basically the contractor\'s cost and schedule status report). Government EAC is what your own program office calculates independently, using that same underlying data but running the numbers yourselves. On the biggest programs, an outside agency, like the Air Force Cost Analysis Agency, sometimes builds a third, fully independent estimate. These three numbers often do not match, and when they diverge significantly, leadership loses confidence fast. As the PM, you are the one who reconciles the differences and explains them in plain language. You do not just forward the number the contractor handed you.',
           },
           {
           type: 'text' as const,
@@ -3001,6 +3007,9 @@ export const modules: Module[] = [
           { term: 'CAS', definition: 'Cost Accounting Standards, 19 standards (48 CFR 9900) governing how defense contractors accumulate, measure, and allocate costs. Under the FY2026 NDAA, the per-contract CAS trigger is $35M and full CAS coverage kicks in at $100M in annual covered contract awards (both figures replaced the older $2.5M and $50M thresholds).' },
           { term: 'CASB', definition: 'Cost Accounting Standards Board. The federal board that promulgates CAS. Contractors must disclose their accounting practices in a Disclosure Statement (CASB DS-1).' },
           { term: 'Forward Pricing Rate Agreement', definition: 'FPRA. A negotiated agreement between the contractor and the government on indirect cost rates for use in forward pricing of proposals. Eliminates rate negotiation on every proposal.' },
+          { term: 'LQA', definition: 'Living Quarters Allowance. An allowance authorized for employees working overseas to help cover housing costs. Paid as a direct cost tied to that specific person\'s assignment.' },
+          { term: 'COLA', definition: 'Cost of Living Allowance. An allowance authorized for employees working in a higher cost-of-living location overseas, covering the cost differential compared to their home base. Paid as a direct cost tied to that specific person\'s assignment.' },
+          { term: 'M&IE', definition: 'Meals & Incidental Expenses. The meals and incidentals portion of a per diem rate for employees traveling or on short-term assignment away from their home base, set using government per diem tables.' },
         ],
         content: [
           {
@@ -3017,6 +3026,11 @@ export const modules: Module[] = [
             type: 'text',
             heading: 'Direct Costs: What the Contractor Directly Charges Your Contract',
             body: 'Direct costs are the foundation of any cost estimate. Direct Labor is Sarah\'s $65 an hour, the hours your program pays for directly, billed at the contractor\'s direct labor rate for her labor category (e.g., Systems Engineer Level III). Direct Materials. Hardware, software licenses, test equipment, and supplies that can be traced to your contract. Other Direct Costs (ODCs). Travel, subcontractor costs, consultant fees, special test equipment. Direct costs are identifiable, auditable, and must be allocable to your contract under CAS and FAR Part 31.',
+          },
+          {
+            type: 'text',
+            heading: 'ODCs Up Close: LQA, COLA, M&IE, and Why They Are Not All Treated the Same',
+            body: 'Other Direct Costs is a big bucket, so it helps to know what is actually inside it. On a services contract with people working overseas, the three you will run into constantly are LQA (Living Quarters Allowance, a housing allowance), COLA (Cost of Living Allowance, covering a higher cost of living at that location), and M&IE (Meals & Incidental Expenses, the meals portion of per diem for travel or short-term assignments). All three are direct costs tied to a specific person, not overhead the company spreads across everyone.\n\nHow these get treated depends entirely on your contract type. On a cost-reimbursement contract (CPFF, CPIF, CPAF), the government reimburses these ODCs at actual allowable cost, plus the contractor\'s G&A rate, as long as they are authorized in the contract or an approved compensation plan. On a Time & Materials (T&M) contract, the hourly labor rates you negotiated do not include ODCs. Travel, LQA, COLA, and M&IE get billed separately, and per FAR 52.232-7, the contractor generally cannot add fee or profit on top of those ODCs, they get billed at cost. On a Firm-Fixed-Price (FFP) contract, none of this gets separately reimbursed. The contractor built their estimate of these costs into the fixed price at proposal time, and from then on, they eat any difference between what they estimated and what it actually costs. Know which contract type you are on before you assume an ODC is automatically getting paid back.',
           },
           {
             type: 'wrap_rate_visual' as any,
