@@ -8,7 +8,7 @@ import fs from "fs";
 import { storage } from "./storage";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema, userProfileSchema } from "@shared/schema";
-import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, verifyUnsubscribeToken } from "./email";
+import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 
 // Initialize Stripe — will be undefined if key not set
@@ -1233,6 +1233,8 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
         if (unsubscribed) { console.log(`[email] Skipping lead nurture — ${cleanEmail} is unsubscribed`); return; }
         return sendLeadNurtureEmail(cleanEmail, source || 'landing_page');
       }).catch((err) => console.error('[email] Lead nurture send failed:', err));
+      // Notify admin (Lucas) of every new lead, non-blocking
+      sendAdminLeadNotification(cleanEmail, source || 'landing_page').catch((err) => console.error('[email] Admin lead notification failed:', err));
       return res.json({ ok: true, id: lead.id });
     } catch (err: any) {
       return res.status(500).json({ message: 'Failed to save email' });
