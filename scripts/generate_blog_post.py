@@ -607,7 +607,7 @@ def assemble_post(title: str, deck: str, body_html: str, topic: dict,
     <!-- Bottom CTA -->
     <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:16px;padding:32px;margin-top:48px;color:white;">
       <div style="font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;opacity:0.7;margin-bottom:8px">Master Defense Acquisitions</div>
-      <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:10px;color:white">Start Free — Six Modules, 34+ Lessons</h3>
+      <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:10px;color:white">Start Free — Six Modules, 42 Lessons</h3>
       <p style="font-size:0.95rem;opacity:0.9;margin-bottom:20px;line-height:1.6">Built for DoD program managers, contracting officers, and defense contractors. Novice through advanced. The <strong>{mod['title']}</strong> module goes deep on everything covered in this post.</p>
       <a href="/app#/auth" style="display:inline-block;background:white;color:#01696F;font-weight:800;font-size:0.95rem;padding:12px 24px;border-radius:10px;text-decoration:none;margin-right:12px">Start Learning Free →</a>
       <a href="/app#/upgrade" style="display:inline-block;color:rgba(255,255,255,0.85);font-weight:600;font-size:0.9rem;padding:12px 0;text-decoration:none">See all modules →</a>
