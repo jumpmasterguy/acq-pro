@@ -682,51 +682,55 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
         const adminStat = statsStrip.find(s => s.label === 'Total signups');
         return (
           <div className="space-y-3">
-            <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
-              <div className="flex items-center justify-between gap-6 flex-wrap">
+            <div className="relative overflow-hidden rounded-2xl p-5 sm:p-6 shadow-lg" style={{ background: 'linear-gradient(135deg, #0d2137 0%, #123047 55%, #0a1b2d 100%)' }}>
+              {/* Decorative glow */}
+              <div className="absolute -right-10 -top-16 w-56 h-56 rounded-full bg-primary/20 blur-3xl pointer-events-none" />
+              <div className="absolute -left-16 bottom-0 w-40 h-40 rounded-full bg-[#f5c842]/10 blur-3xl pointer-events-none" />
+
+              <div className="relative flex items-center justify-between gap-6 flex-wrap">
                 {/* Hero: overall progress ring */}
                 <div className="flex items-center gap-4">
                   <div className="relative flex-shrink-0" style={{ width: ringSize, height: ringSize }}>
                     <svg width={ringSize} height={ringSize} className="-rotate-90">
-                      <circle cx={ringSize / 2} cy={ringSize / 2} r={radius} fill="none" strokeWidth={strokeWidth} className="stroke-muted" />
+                      <circle cx={ringSize / 2} cy={ringSize / 2} r={radius} fill="none" strokeWidth={strokeWidth} stroke="rgba(255,255,255,0.14)" />
                       <circle
                         cx={ringSize / 2} cy={ringSize / 2} r={radius} fill="none" strokeWidth={strokeWidth}
-                        strokeLinecap="round" className="stroke-primary transition-all duration-700"
+                        strokeLinecap="round" stroke="#f5c842" className="transition-all duration-700"
                         strokeDasharray={circumference} strokeDashoffset={offset}
                       />
                     </svg>
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-xl font-bold tabular-nums">{overallPct}%</span>
+                      <span className="text-xl font-bold tabular-nums text-white">{overallPct}%</span>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm font-bold text-foreground">Overall progress</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{totalLessons - completedCount} lessons remaining</div>
+                    <div className="text-sm font-bold text-white">Overall progress</div>
+                    <div className="text-xs text-white/60 mt-0.5">{totalLessons - completedCount} lessons remaining</div>
                     <div className="flex items-center gap-1.5 mt-1.5">
-                      <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center">
-                        <Zap className="w-3.5 h-3.5 text-primary" />
+                      <div className="w-6 h-6 rounded-full bg-[#f5c842]/20 flex items-center justify-center">
+                        <Zap className="w-3.5 h-3.5 text-[#f5c842]" />
                       </div>
-                      <span className="text-xs font-semibold">Lv {levelInfo.level} · {levelInfo.title}</span>
-                      <span className="text-xs text-muted-foreground">· {xp} XP</span>
+                      <span className="text-xs font-semibold text-white">Lv {levelInfo.level} · {levelInfo.title}</span>
+                      <span className="text-xs text-white/60">· {xp} XP</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Supporting stats */}
-                <div className="flex items-center gap-5 sm:gap-7">
+                <div className="relative flex items-center gap-5 sm:gap-7">
                   <div className="flex items-center gap-2.5">
-                    <CheckCircle2 className="w-5 h-5 text-primary" />
+                    <CheckCircle2 className="w-5 h-5 text-primary" style={{ color: '#4ecdc4' }} />
                     <div>
-                      <div className="text-lg font-bold tabular-nums leading-none">{completedCount}<span className="text-xs text-muted-foreground font-normal">/{totalLessons}</span></div>
-                      <div className="text-[11px] text-muted-foreground mt-0.5">Lessons done</div>
+                      <div className="text-lg font-bold tabular-nums leading-none text-white">{completedCount}<span className="text-xs text-white/50 font-normal">/{totalLessons}</span></div>
+                      <div className="text-[11px] text-white/60 mt-0.5">Lessons done</div>
                     </div>
                   </div>
-                  <div className="h-9 w-px bg-border" />
+                  <div className="h-9 w-px bg-white/15" />
                   <div className="flex items-center gap-2.5">
-                    <Target className="w-5 h-5 text-primary" />
+                    <Target className="w-5 h-5" style={{ color: '#4ecdc4' }} />
                     <div>
-                      <div className="text-lg font-bold tabular-nums leading-none">{progress.isPremium ? modules.length : FREE_MODULES.length}<span className="text-xs text-muted-foreground font-normal">/{modules.length}</span></div>
-                      <div className="text-[11px] text-muted-foreground mt-0.5">Modules unlocked</div>
+                      <div className="text-lg font-bold tabular-nums leading-none text-white">{progress.isPremium ? modules.length : FREE_MODULES.length}<span className="text-xs text-white/50 font-normal">/{modules.length}</span></div>
+                      <div className="text-[11px] text-white/60 mt-0.5">Modules unlocked</div>
                     </div>
                   </div>
                 </div>
