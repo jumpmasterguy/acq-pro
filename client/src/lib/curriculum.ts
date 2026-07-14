@@ -2810,7 +2810,12 @@ export const modules: Module[] = [
           {
             type: 'text',
             heading: 'Why This Number Keeps PMs Up at Night',
-            body: 'I have sat in program reviews where the entire room goes quiet the moment EAC comes up. Here is why. Unlike the BAC, which is just the plan you started with, EAC reflects reality: what you have actually spent and what you have actually gotten done. Senior leaders, PEOs, and Congress use it to decide whether your program keeps going, gets restructured, or gets killed. Cross a 25% overrun against your BAC and you are in Nunn-McCurdy territory, a legal breach threshold that triggers Congressional notification. Cross Available Congressional Budget Authority and termination becomes a real conversation. Reporting your EAC honestly, every single period, is one of the most important things you will do as a PM. It is not paperwork. It is your credibility on the line.',
+            body: 'I have sat in program reviews where the entire room goes quiet the moment EAC comes up. Here is why. Unlike the BAC, which is just the plan you started with, EAC reflects reality: what you have actually spent and what you have actually gotten done. Senior leaders and PEOs use it to decide whether your program keeps going, gets restructured, or needs a hard conversation about scope. On the largest weapon system programs (MDAPs, ACAT I), a big enough EAC overrun against the BAC can trigger a formal Nunn-McCurdy breach and Congressional notification, but that specific law is scoped to major defense acquisition programs. It is not something every PM needs to track. What every PM does need to track is this: reporting your EAC honestly, every single period, is one of the most important things you will do. It is not paperwork. It is your credibility on the line.',
+          },
+          {
+            type: 'callout',
+            heading: 'EAC Matters Far Less on a Firm-Fixed-Price Contract',
+            body: 'Everything in this lesson assumes a cost-reimbursement contract (CPFF, CPIF, CPAF), where the government is paying actual costs and genuinely needs to know where those costs are heading. On a Firm-Fixed-Price (FFP) contract, the price was locked at award and the contractor bears essentially all the cost risk. If the contractor\'s EAC blows past their internal budget, that is the contractor\'s profit margin disappearing, not the government\'s money. The government PM should still care about schedule and technical performance on an FFP contract, but does not need to scrutinize the contractor\'s internal EAC the way you would on a cost-type contract. Know which contract type you are on before you decide how hard to lean on this number.',
           },
           {
             type: 'callout',
@@ -4363,7 +4368,7 @@ export const modules: Module[] = [
         id: 'contracts-1',
         title: 'Contract Types',
         duration: '16 min',
-        description: 'Every contract you work on has a type. And that type determines who absorbs cost risk, how your fee is calculated, and what the government will scrutinize. Know FFP, FPIF, CPIF, CPAF, CPFF, and T&M cold. They shape your entire financial life on a program.',
+        description: 'Every contract you work on has a type. That type determines who absorbs cost risk, how your fee is calculated, and what the government will scrutinize. Also covers the separate question of services vs. procurement contracts, and where personal services contracts cross a legal line.',
         keyTerms: [
       { term: 'FFP', definition: 'Firm-Fixed-Price. Price is set at award and does not change. Contractor bears 100% of cost risk. Most preferred by FAR. Used when requirements are well-defined and market competition exists. (FAR 16.202)' },
       { term: 'FPIF', definition: 'Fixed-Price Incentive (Firm Target). Has a target cost, target fee, ceiling price, and share ratio. Contractor and government share cost savings/overruns up to the ceiling. Above the Point of Total Assumption (PTA), contractor absorbs 100%. (FAR 16.403-1)' },
@@ -4374,6 +4379,10 @@ export const modules: Module[] = [
       { term: 'Share Ratio', definition: 'In incentive contracts, the split of cost savings or overruns between government and contractor (e.g., 80/20 means government absorbs 80¢ and contractor keeps/loses 20¢ of every dollar above/below target cost).' },
       { term: 'PTA', definition: 'Point of Total Assumption. On an FPIF contract, the cost level at which the contractor has lost all its fee and begins absorbing 100% of additional costs. Above the PTA, the contract behaves like FFP.' },
       { term: 'D&F', definition: 'Determination and Findings. A documented government decision required to justify use of certain contract types (e.g., T&M, cost-reimbursable) or acquisition actions that deviate from standard FAR policy.' },
+      { term: 'Services Contract', definition: 'A contract that buys labor and effort toward an outcome, such as program management support or IT staffing, rather than a physical or software deliverable.' },
+      { term: 'Procurement (Supply) Contract', definition: 'A contract that buys a deliverable, such as equipment, systems, or software licenses, which can be inspected and accepted against a spec.' },
+      { term: 'Personal Services Contract', definition: 'A contract where the government effectively supervises contractor employees like its own staff (day-to-day direction, set hours). Prohibited under FAR 37.104 unless specifically authorized by statute.' },
+      { term: 'Non-Personal Services Contract', definition: 'A properly structured services contract where the contractor, not the government, supervises its own employees and manages how the work gets done. The government evaluates the result against the SOW or PWS.' },
         ],
         content: [
       {
@@ -4448,6 +4457,26 @@ export const modules: Module[] = [
       level: 'advanced' as const,
       heading: 'Undefinitized Contract Actions (UCAs): The Most Dangerous Contract Tool',
       body: 'A UCA (Undefinitized Contract Action) is a contract started before price is agreed. They\'re authorized under FAR 16.603 and DFARS 217.74. But they\'re the source of some of the worst cost outcomes in DoD acquisition.\n\nDFARS requires definitization within 180 days or 40% of not-to-exceed value obligated. Whichever comes first. In practice, programs routinely miss these deadlines. Definitization happens after the contractor has already incurred most costs, which completely eliminates your negotiating leverage.\n\nThe contractor who knows you MUST definitize has zero incentive to reduce costs. They\'ve already spent the money. You\'re just arguing over who pays for it.\n\nSenior PMs: minimize UCAs. Use them only when genuine urgency justifies starting before price is agreed. And when you do use one, definitize aggressively. Before the contractor has spent their way into a position of strength.',
+        },
+        {
+      type: 'text' as const,
+      heading: 'A Different Question: Services or Procurement?',
+      body: 'Everything above is about pricing structure, who bears cost risk. There is a completely separate question you have to answer on every acquisition: are you buying a thing, or are you buying effort?\n\nA procurement (or supply) contract buys a deliverable: a radar system, a fleet of vehicles, spare parts, software licenses. You know what you are getting when the contract is signed, and acceptance is usually a matter of testing the thing against a spec.\n\nA services contract buys labor and effort toward an outcome or a set of tasks: program management support, IT help desk staffing, engineering analysis, maintenance labor. There is nothing to physically inspect at delivery. You are buying people\'s time and expertise, which creates a completely different set of risks than a supply contract, and one specific risk that can get both the government and the contractor in real trouble.',
+        },
+        {
+      type: 'callout' as const,
+      heading: 'Personal Services Contracts: The Line You Cannot Cross',
+      body: 'A personal services contract is one where the government effectively supervises contractor employees the same way it would supervise its own federal employees: setting their day-to-day work assignments, dictating hours, controlling how the work gets done rather than just what gets done. FAR 37.104 makes this the default answer: personal services contracts are prohibited unless a specific statute authorizes them. The government is not supposed to create employer-employee relationships with contractor personnel.\n\nA properly structured non-personal services contract buys an outcome or a defined scope of work. The contractor manages their own people: who does the work, how they are supervised, and how the task gets done. The government states the requirement and evaluates the result, not the process.\n\nThe real-world issue: this line gets crossed constantly, almost never on purpose. A COR who assigns a contractor employee\'s daily tasks, sets their exact working hours, includes them in the government\'s own staff meetings and org chart, or directs their work the same way they would a government employee\'s, has started creating what looks like an illegal personal services relationship. This is sometimes called de facto personal services, and it is a genuine finding that auditors, IGs, and GAO look for on services contracts. It also creates real legal exposure for the contractor employee, who could end up viewed as a co-employee of the government for benefits and liability purposes.',
+        },
+        {
+      type: 'list' as const,
+      heading: 'What to Actually Watch For on a Services Contract',
+      items: [
+        'Direction should flow through the SOW or PWS, not day-to-day verbal instructions|||If a COR is telling a contractor employee what to do hour by hour instead of managing to the contract\'s statement of work, that is a personal services red flag. Direction belongs in writing, tied to the contract, not delivered like a supervisor assigning tasks.',
+        'Contractor employees should not appear on government org charts, phone directories, or staff rosters as if they were government staff|||This is one of the most common and most avoidable mistakes. It visually signals an employer-employee relationship even when none was intended.',
+        'The contractor, not the government, sets schedules, assigns specific personnel, and manages performance of its own employees|||If the government is approving contractor employee leave requests or setting their shift schedules, that is government behavior appropriate for a government employee, not a contractor.',
+        'Watch for scope creep that quietly shifts a non-personal services contract into personal services territory|||A contract can start out properly structured and drift over time as the relationship gets comfortable and the COR starts treating a familiar contractor employee like one of the team. This drift is exactly what internal reviews and IG audits are trained to catch.',
+      ],
         },
         ],
       quiz: [
@@ -4549,6 +4578,20 @@ export const modules: Module[] = [
           { left: 'CPFF', right: 'Early R&D; cost cannot be estimated with any confidence' },
           { left: 'T&M', right: 'Undefined hours/effort; last resort; D&F required' }
         ]
+      },
+      {
+        id: 'q13',
+        question: "What is the key distinguishing feature between a services contract and a procurement (supply) contract?",
+        options: ['Services contracts are always cost-reimbursable, supply contracts are always FFP', 'A services contract buys labor and effort toward an outcome; a supply contract buys a deliverable that can be inspected against a spec', 'Services contracts do not require a Statement of Work', 'Supply contracts cannot use incentive fee structures'],
+        correct: 1,
+        explanation: "The distinction is about what is actually being acquired, not the pricing structure. A procurement/supply contract buys a physical or software deliverable you can inspect and accept. A services contract buys labor and effort toward tasks or an outcome, with no physical item to inspect at delivery. Either type can use any pricing structure (FFP, CPFF, etc.)."
+      },
+      {
+        id: 'q14',
+        question: "A COR sets a contractor employee's exact daily work hours, assigns their tasks verbally each morning, and includes them on the government's internal staff roster. What compliance issue does this create?",
+        options: ['None, this is standard COR oversight', 'A potential de facto personal services contract, which is prohibited under FAR 37.104 without specific statutory authority', 'A T&M contract type violation', 'A Nunn-McCurdy reporting requirement'],
+        correct: 1,
+        explanation: "FAR 37.104 prohibits personal services contracts unless specifically authorized by statute, because they create an employer-employee relationship between the government and contractor personnel. Day-to-day supervision, dictating hours, and treating contractor staff like government employees, even unintentionally, is exactly what turns a properly structured non-personal services contract into an illegal de facto personal services arrangement."
       }
         ]
       },
