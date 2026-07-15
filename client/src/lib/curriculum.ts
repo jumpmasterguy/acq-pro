@@ -141,6 +141,11 @@ export const modules: Module[] = [
             body: 'You might be wondering: why can\'t the government just buy things the same way a company does. Shop around, find the best deal, pay for it? The answer has three parts.\n\nFirst, it\'s public money. The government is spending taxpayer dollars, so Congress and the public have a right to ensure it\'s spent wisely, fairly, and without corruption. Second, the scale is enormous. A single defense contract can be worth billions of dollars and run for decades. Mistakes at that scale cost the public enormously. Third, national security depends on it. If a contractor fails to deliver a critical weapons system or the government buys the wrong thing, people\'s lives are at stake.\n\nThe FAR (Federal Acquisition Regulation) and DFARS (Defense Federal Acquisition Regulation Supplement) are the rulebooks that govern this process. They are dense and detailed, but they exist for good reason.',
           },
           {
+            type: 'tip',
+            heading: 'The NFL Rulebook Analogy',
+            body: 'Think of the FAR as the NFL rulebook: it applies to every team in the league, no exceptions. Any federal agency buying anything, from paper clips to aircraft carriers, plays by it. DFARS is the extra rulebook one team, the DoD, has to follow on top of the league rules, because that team\'s games carry higher stakes: national security, classified information, war fighters\' lives. Every other agency just follows the FAR. DoD follows the FAR, then adds DFARS on top.',
+          },
+          {
             type: 'callout',
             heading: 'Both Rulebooks Are Being Rewritten Right Now',
             body: 'Since April 2025, the government has been running the biggest rewrite of the FAR since it was created in 1984. Officially called the Revolutionary FAR Overhaul (RFO). DoD (renamed the Department of War in early 2026) is running a parallel DFARS overhaul on the same timeline. Neither rulebook has been renamed. You will still hear "FAR" and "DFARS" everywhere, including from the government itself (the overhaul\'s own name has "FAR" right in it). What is changing is the text: agencies are adopting rewritten parts immediately through interim "class deviations," then making them permanent later through formal rulemaking. That means two versions of some FAR/DFARS parts can be in effect at the same time depending on which agency you\'re dealing with. Always check whether the office you\'re working with has issued a deviation for the part you\'re reading. Track live status at acquisition.gov/far-overhaul.',
@@ -780,6 +785,10 @@ export const modules: Module[] = [
         ]
       },
       {
+        type: 'highlight',
+        body: "The authority ladder in one line: **CO/KO signs the contract. PM manages execution. MDA approves the big decisions. COR inspects the deliverables.** Four different people, four different jobs, mix them up and you get an unauthorized commitment.",
+      },
+      {
         type: 'tip',
         heading: "Breaking In",
         body: "Many successful acquisition professionals transition from the military (especially as O-3/O-4 officers), from technical engineering fields, or from federal service in adjacent roles. DoD's Pathways program and Defense Acquisition University offer entry-level pathways. Target GS-9 or GS-11 program analyst roles to build your foundation."
@@ -1066,13 +1075,18 @@ export const modules: Module[] = [
             body: 'This is where a lot of people get confused because the old "DoD 5000" process was a single, linear lifecycle that every program had to follow. The new Adaptive Acquisition Framework (AAF) recognizes that a simple services contract doesn\'t need the same oversight structure as a $10 billion aircraft program. There are now six distinct pathways.',
           },
           {
+            type: 'tip',
+            heading: 'Six Lanes, One Highway',
+            body: 'Picture a highway with six lanes, all headed to the same destination: a fielded capability. They are not different roads, they are different lanes on the same road, and each one has its own speed limit and rules. Major Capability Acquisition is the heavy-truck lane: slow, tightly regulated, built for the biggest loads. Software Acquisition is the express lane: fast, frequent check-ins, built for things that change every few months. Middle Tier is the passing lane: quick, but only for things that are already road-ready. Picking the wrong lane for your cargo is how programs end up stuck in traffic they never needed to sit in.',
+          },
+          {
             type: 'table_visual' as any,
             heading: 'The Six AAF Pathways at a Glance',
             headers: ['Pathway', 'Best For', 'Key Timeline', 'Governing Instruction'],
             rows: [
               ['Major Capability Acquisition (MCA)', 'Complex, expensive platforms and systems: ships, aircraft, ground vehicles', 'Milestone-driven; 10–20+ years', 'DoDI 5000.85'],
               ['Middle Tier: Rapid Prototyping', 'Developing and demonstrating a new capability quickly', '≤ 5 years to prototype fielding', 'DoDI 5000.80'],
-              ['Middle Tier: Rapid Fielding|||Correct. The Middle Tier Rapid Fielding pathway (Section 804 of FY2016 NDAA) is used to field proven capabilities with minimal development risk within 5 years of start. It bypasses some traditional milestone reviews for speed. Appropriate for commercial technology and productionized items with low technical risk.', 'Getting mature, available technology to the field fast', '≤ 6 years to full fielding', 'DoDI 5000.80'],
+              ['Middle Tier: Rapid Fielding', 'Getting mature, available technology to the field fast', '≤ 6 years to full fielding', 'DoDI 5000.80'],
               ['Software Acquisition', 'Software-intensive systems using Agile/DevSecOps', '6-month capability drops, continuous', 'DoDI 5000.87'],
               ['Defense Business Systems', 'Enterprise IT: financial, HR, logistics systems', 'Business Capability Acquisition Cycle', 'DoDI 5000.75'],
               ['Acquisition of Services', 'Service contracts above $250M', 'Services acquisition strategy', 'DoDI 5000.74'],
@@ -1609,6 +1623,11 @@ export const modules: Module[] = [
             type: 'text',
             heading: 'What "Color of Money" Actually Means',
             body: 'Color of money is just an informal nickname for what kind of appropriation a dollar came from. Congress does not hand the DoD one lump sum. It hands over several separate buckets, RDT&E for developing new things, Procurement for buying production quantities, O&M for day-to-day operations, and a few others, and each bucket comes with its own rules on what it can be spent on and how long you have to spend it. Mix them up, and you have not made a paperwork mistake. You have broken federal law.\n\nIn a private company, if you have money in the bank, you can generally spend it on what your business needs. The government doesn\'t work that way. Congress controls the government\'s money. Not just how much is spent, but what it can be spent on, when it must be spent by, and what happens if it\'s spent on the wrong thing.\n\nFor anyone working in defense acquisition, understanding government money is not optional. Mistakes involving the wrong type of funding don\'t just cause budget problems. They can be federal law violations that end careers.',
+          },
+          {
+            type: 'tip',
+            heading: 'A Household Budget Analogy',
+            body: 'Think of it like your own monthly budget, except each envelope of cash is legally sealed to one purpose. Your rent envelope cannot cover groceries, even if rent is fully paid and groceries are short. Your home-repair envelope cannot cover a vacation, no matter how good the deal is. RDT&E is your "build something new" envelope. Procurement is your "buy the finished thing" envelope. O&M is your "keep the lights on this month" envelope. You cannot borrow from one to cover another, and unused cash in an envelope does not roll over forever, it expires. That is color of money in one picture.',
           },
           {
             type: 'callout',
@@ -3183,6 +3202,11 @@ export const modules: Module[] = [
             body: 'Most people in defense contracting hear DCAA or DCMA and feel a mild sense of dread. Wrong reaction. DCAA (Defense Contract Audit Agency) looks at the money: are the costs you\'re claiming allowable, allocable, and reasonable? DCMA (Defense Contract Management Agency) looks at the work: are you delivering what the contract says, and is your program data reliable? Think of DCAA as the financial auditor and DCMA as the performance monitor. If you\'re keeping accurate records, spending on legitimate costs, and delivering what you promised, these agencies are your allies, not your adversaries.',
           },
           {
+            type: 'tip',
+            heading: 'The One-Line Version',
+            body: 'DCAA is the accountants who make sure the money math is right. DCMA is the contract cops who make sure contractors deliver what they promised. If your issue is a number, you are dealing with DCAA. If your issue is a delivery, a schedule, or a quality problem, you are dealing with DCMA.',
+          },
+          {
             type: 'text',
             heading: 'Two Agencies, Two Missions: Both Critical to Your Program',
             body: 'Every major defense PM operates within a three-way oversight structure: the PCO (Procuring Contracting Officer) awarded the contract, DCMA administers it day-to-day, and DCAA audits the financial side. Many new PMs confuse DCAA and DCMA. They have different missions, different authorities, and different relationships with your program. Understanding what each can and cannot do determines whether you use them as effective oversight tools or accidentally create friction that slows your program down.',
@@ -4359,6 +4383,11 @@ export const modules: Module[] = [
         type: 'text',
         heading: "Contract Type = Risk Allocation",
         body: "Every contract has a type. That type is the single biggest factor in who bears the financial risk if things go wrong.\n\nThe FAR's overarching principle is simple: use Firm-Fixed-Price whenever possible. When you can define requirements clearly and competition exists, FFP transfers cost risk to the contractor: maximum incentive for efficiency, minimum government oversight.\n\nWhen you can't define requirements precisely: when technology is immature, scope is uncertain, or effort is unknowable: you move toward cost-reimbursable contracts. Each step along that spectrum shifts more risk to the government and increases oversight burden. There's no free lunch: more government protection means more government involvement in your business."
+      },
+      {
+        type: 'tip',
+        heading: 'Three Everyday Analogies for the Big Three',
+        body: "FFP is like getting a fixed-price quote for a kitchen remodel. The contractor quoted $40,000, and that is what you pay whether it takes them three weeks or three months, whether lumber prices spike or not. Their problem, not yours.\n\nCost-type (CPFF, CPIF, CPAF) is like paying a mechanic for time and parts with no final cost cap. You agreed to cover whatever it actually costs to fix the car, plus their fee. If it turns out to be a bigger job than expected, you pay more. Your risk, not theirs.\n\nT&M is like hiring a freelance developer by the hour with no end date in sight. You are paying for their time directly, and nothing stops the clock except you deciding to stop it. That is exactly why the government watches T&M hours so closely, there is no natural brake on the spending.",
       },
       {
         type: 'table_visual' as any,

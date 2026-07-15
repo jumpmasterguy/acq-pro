@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
+import { AcronymText } from "@/components/AcronymText";
 import { getTrackData, type CareerTrackId } from "@/lib/careerTracks";
 import { modules, type Lesson, type Module, type QuizQuestion, type SkillLevel, type ExpandableItem } from "@/lib/curriculum";
 import type { UserProgress } from "@/lib/progress";
@@ -524,6 +525,10 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
   const [aiResult, setAiResult] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
+  // Tracks which key terms have already gotten a tooltip annotation in this
+  // lesson view, so only the first occurrence of each term is highlighted.
+  const seenTermsRef = useRef<Set<string>>(new Set());
+  seenTermsRef.current = useMemo(() => new Set<string>(), [lessonId]);
 
   // Find lesson and module
   let lesson: Lesson | null = null;
@@ -923,7 +928,9 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                   {block.body && block.body.split('\n\n').filter(Boolean).map((para, pi) => (
                     <p key={pi} className={`text-[15px] text-muted-foreground leading-relaxed${pi > 0 ? ' mt-3' : ''}`}>
                       {para.trim().split(/\*\*([^*]+)\*\*/).map((seg, si) =>
-                        si % 2 === 1 ? <strong key={si} className="font-semibold text-foreground">{seg}</strong> : seg
+                        si % 2 === 1
+                          ? <strong key={si} className="font-semibold text-foreground">{seg}</strong>
+                          : <AcronymText key={si} text={seg} keyTerms={lesson!.keyTerms} seenTerms={seenTermsRef.current} />
                       )}
                     </p>
                   ))}
@@ -955,7 +962,9 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     <div>
                       {block.heading && <h3 className="font-semibold text-base mb-2 text-primary">{block.heading}</h3>}
                       {block.body && block.body.split('\n\n').filter(Boolean).map((para, pi) => (
-                        <p key={pi} className={`text-[15px] text-muted-foreground leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>{para.trim()}</p>
+                        <p key={pi} className={`text-[15px] text-muted-foreground leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>
+                          <AcronymText text={para.trim()} keyTerms={lesson!.keyTerms} seenTerms={seenTermsRef.current} />
+                        </p>
                       ))}
                     </div>
                   </div>
