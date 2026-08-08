@@ -739,6 +739,47 @@ export async function sendAdminNotification(
   console.log(`[email] Admin notification sent — new user: ${newUserEmail} (${method})`);
 }
 
+// ── Team Pack purchase — admin alert ────────────────────────────────────────
+// Team seats are provisioned manually for now (this is an MVP, not full
+// self-serve seat management), so the admin needs a clear, actionable email
+// the moment a team purchase comes through.
+export async function sendTeamPurchaseAdminAlert(
+  buyerEmail: string,
+  seats: number,
+  amountPaidCents: number,
+  stripeSessionId: string
+): Promise<void> {
+  const adminEmail = process.env.ADMIN_EMAILS || 'lucas.l.cruz.es@gmail.com';
+  if (!resend) { console.log('[email] RESEND_API_KEY not set — skipping team purchase alert'); return; }
+
+  const body = `
+    <div style="font-size:17px;font-weight:700;color:#0d2137;margin:0 0 16px">💰 New Team Pack purchase</div>
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:20px">
+      <tr><td style="background:#fef9e7;border:1px solid #f5e6a8;border-radius:10px;padding:20px 24px">
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+          <tr><td style="font-size:13px;color:#64748b;padding:4px 0;width:120px">Buyer email</td>
+              <td style="font-size:14px;font-weight:700;color:#0d2137;padding:4px 0">${buyerEmail}</td></tr>
+          <tr><td style="font-size:13px;color:#64748b;padding:4px 0">Seats</td>
+              <td style="font-size:14px;font-weight:700;color:#0d2137;padding:4px 0">${seats}</td></tr>
+          <tr><td style="font-size:13px;color:#64748b;padding:4px 0">Amount paid</td>
+              <td style="font-size:14px;font-weight:700;color:#01696f;padding:4px 0">$${(amountPaidCents / 100).toFixed(2)}</td></tr>
+          <tr><td style="font-size:13px;color:#64748b;padding:4px 0">Stripe session</td>
+              <td style="font-size:12px;color:#64748b;padding:4px 0">${stripeSessionId}</td></tr>
+        </table>
+      </td></tr>
+    </table>
+    <p style="font-size:13px;color:#64748b;margin:0">Action needed: reach out to provision ${seats} Pro seats for this buyer.</p>
+  `;
+
+  await resend.emails.send({
+    from: FROM,
+    to: adminEmail,
+    subject: `💰 Team Pack purchase: ${buyerEmail} (${seats} seats)`,
+    html: emailShell(`New team purchase — action needed.`, body),
+  });
+  console.log(`[email] Team purchase admin alert sent — ${buyerEmail}`);
+}
+
 // ─── Admin Lead Notification ────────────────────────────────────────────────
 
 /**

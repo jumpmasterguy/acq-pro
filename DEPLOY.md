@@ -70,6 +70,15 @@ PORT=5000
 - Price: $29.00 USD/month, recurring
 - Copy the `price_...` ID → set as `STRIPE_PRICE_ID_MONTHLY`
 
+**Product 3: Acqlerate Team Pack**
+- Name: "Acqlerate Team Pack — 10 Seats"
+- Price: $399.00 USD, one-time
+- Copy the `price_...` ID → set as `STRIPE_PRICE_ID_TEAM` in Railway variables
+- Note: seats are currently provisioned by hand — see `sendTeamPurchaseAdminAlert` in
+  `server/email.ts`. The admin (ADMIN_EMAILS) gets an email on every purchase with the
+  buyer's info; there's no self-serve seat invite flow yet. That's the next build once
+  this converts a few real customers.
+
 ### Webhook (Stripe Dashboard → Developers → Webhooks → Add endpoint):
 
 - **Endpoint URL:** `https://YOUR-APP.up.railway.app/api/stripe/webhook`

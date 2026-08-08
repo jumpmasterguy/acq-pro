@@ -54,6 +54,7 @@ export interface IStorage {
       xp?: number;
     }
   ): Promise<User | undefined>;
+  checkAndConsumeAiCall(userId: string): Promise<{ allowed: boolean; remaining: number | null; limit: number | null }>;
   saveLead(email: string, source?: string): Promise<Lead>;
   getAllLeads(): Promise<Lead[]>;
   // Template pack purchases
@@ -342,6 +343,33 @@ export class DrizzleStorage implements IStorage {
     return result[0];
   }
 
+
+  // AI Study Assistant gating — call before every /api/explain, /api/expand-item,
+  // and /api/far-translate request. Enforces the tier limits sold on the pricing page:
+  // free = 5/day, active (Monthly Pro) = 30/day, lifetime = unlimited.
+  async checkAndConsumeAiCall(userId: string): Promise<{ allowed: boolean; remaining: number | null; limit: number | null }> {
+    const user = await this.getUser(userId);
+    if (!user) return { allowed: false, remaining: 0, limit: 0 };
+
+    const status = (user as any).subscriptionStatus ?? 'free';
+    if (status === 'lifetime') return { allowed: true, remaining: null, limit: null }; // unlimited
+
+    const limit = status === 'active' ? 30 : 5; // Monthly Pro vs Free
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const isNewDay = (user as any).aiCallsDate !== todayStr;
+    const callsSoFar = isNewDay ? 0 : ((user as any).aiCallsToday ?? 0);
+
+    if (callsSoFar >= limit) {
+      return { allowed: false, remaining: 0, limit };
+    }
+
+    await this.db
+      .update(users)
+      .set({ aiCallsToday: callsSoFar + 1, aiCallsDate: todayStr })
+      .where(eq(users.id, userId));
+
+    return { allowed: true, remaining: limit - (callsSoFar + 1), limit };
+  }
 
   // Streak update — call whenever a user completes a lesson, quiz, or daily challenge
   async updateUserStreak(userId: string): Promise<User | undefined> {

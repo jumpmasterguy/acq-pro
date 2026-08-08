@@ -5,6 +5,8 @@ import rateLimit from "express-rate-limit";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import { storage } from "./storage";
+import { processDripEmails } from "./email";
 
 const app = express();
 
@@ -376,6 +378,42 @@ app.use((req, res, next) => {
     },
     () => {
       log(`serving on port ${port}`);
+      startDripScheduler();
     },
   );
 })();
+
+// ── Email drip scheduler ─────────────────────────────────────────────────────
+// The /api/cron/drip route existed but nothing was ever calling it, so no
+// onboarding emails were going out. Since this service runs as a single
+// always-on instance, a simple in-process daily timer is enough — no
+// external cron infra required. Runs once shortly after boot, then every 24h.
+function startDripScheduler() {
+  const runDrip = async () => {
+    try {
+      const users = await storage.getUsersForDrip();
+      const unsubscribed = await storage.getUnsubscribedSet();
+      let sent = 0;
+      for (const user of users) {
+        if (unsubscribed.has(user.email.toLowerCase())) continue;
+        const updated = await processDripEmails(
+          user.email,
+          user.username,
+          user.registeredAt,
+          user.sentEmailDays,
+        );
+        if (updated.length !== user.sentEmailDays.length) {
+          await storage.updateSentEmailDays(user.id, updated);
+          sent += updated.length - user.sentEmailDays.length;
+        }
+      }
+      log(`[drip-scheduler] processed ${users.length} users, sent ${sent} emails`);
+    } catch (err: any) {
+      log(`[drip-scheduler] error: ${err?.message ?? err}`);
+    }
+  };
+
+  // First run 2 minutes after boot (let the DB pool warm up), then every 24h.
+  setTimeout(runDrip, 2 * 60 * 1000);
+  setInterval(runDrip, 24 * 60 * 60 * 1000);
+}

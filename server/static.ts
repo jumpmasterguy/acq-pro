@@ -78,6 +78,15 @@ export function serveStatic(app: Express) {
     return res.redirect(`/products/${slug}`);
   });
 
+  // /team/success — Team Pack purchase confirmation
+  app.get(["/team/success", "/team/success/"], (_req: Request, res: Response) => {
+    const filePath = path.resolve(distPath, "team", "success.html");
+    if (fs.existsSync(filePath)) {
+      return res.sendFile(filePath);
+    }
+    return res.redirect("/#pricing");
+  });
+
   // Blog HTML routes — with and without trailing slash
   app.get(["/blog", "/blog/"], (_req: Request, res: Response) => {
     sendNoCache(res, path.resolve(distPath, "blog", "index.html"));

@@ -511,6 +511,24 @@ export async function registerRoutes(
                 });
                 console.log(`[webhook] Pack purchase saved: ${pack} for ${email}`);
               }
+            } else if (purchaseType === "team_purchase") {
+              // Team Pack — save purchase record + alert admin to manually provision seats.
+              // MVP: seats are provisioned by hand, not self-serve, for now.
+              const seats = parseInt(session.metadata?.seats || "10", 10);
+              const email = session.customer_details?.email || session.customer_email || "";
+              const downloadToken = crypto.randomBytes(32).toString("hex");
+              await storage.savePurchase({
+                userId: userId || undefined,
+                email,
+                pack: "team-pack",
+                stripeSessionId: session.id,
+                stripePaymentIntent: (session.payment_intent as string) || "",
+                amountPaid: session.amount_total || 0,
+                downloadToken,
+              });
+              const { sendTeamPurchaseAdminAlert } = await import("./email.js") as any;
+              await sendTeamPurchaseAdminAlert(email, seats, session.amount_total || 0, session.id).catch(() => {});
+              console.log(`[webhook] Team purchase saved: ${email} (${seats} seats)`);
             } else if (userId) {
               // Subscription / lifetime upgrade
               const isSubscription = session.mode === "subscription";
@@ -613,6 +631,41 @@ export async function registerRoutes(
       return res.json({ url: session.url });
     } catch (err: any) {
       console.error("[packs/checkout] error:", err);
+      return res.status(500).json({ message: "Payment error — please try again" });
+    }
+  });
+
+  // POST /api/team/checkout — Team Pack: $399, 10 seats, one-time payment.
+  // MVP: seats are provisioned manually (see sendTeamPurchaseAdminAlert) rather
+  // than self-serve. This gets a real, working B2B purchase path live now;
+  // self-serve seat management is a bigger project for once demand is proven.
+  app.post("/api/team/checkout", async (req: Request, res: Response) => {
+    if (!stripe) return res.status(503).json({ message: "Payment processing not configured" });
+
+    const priceId = process.env.STRIPE_PRICE_ID_TEAM;
+    if (!priceId) {
+      return res.status(503).json({ message: "Team Pack price not configured yet" });
+    }
+
+    const { email } = req.body as { email?: string };
+    const origin = process.env.APP_URL || `${req.protocol}://${req.get("host")}`;
+    const userId = (req as any).isAuthenticated?.() ? (req.user as any)?.id : undefined;
+    const customerEmail = email || (req.user as any)?.email;
+
+    try {
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        payment_method_types: ["card"],
+        line_items: [{ price: priceId, quantity: 1 }],
+        ...(customerEmail ? { customer_email: customerEmail } : {}),
+        success_url: `${origin}/team/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${origin}/#pricing`,
+        metadata: { type: "team_purchase", seats: "10", userId: userId || "" },
+        allow_promotion_codes: true,
+      });
+      return res.json({ url: session.url });
+    } catch (err: any) {
+      console.error("[team/checkout] error:", err);
       return res.status(500).json({ message: "Payment error — please try again" });
     }
   });
@@ -1035,6 +1088,13 @@ export async function registerRoutes(
     if (!lessonTitle || !lessonContext || !mode) {
       return res.status(400).json({ message: "Missing required fields" });
     }
+    const usage = await storage.checkAndConsumeAiCall((req.user as any).id);
+    if (!usage.allowed) {
+      return res.status(429).json({
+        message: `You've used today's AI Study Assistant limit (${usage.limit}/day). Upgrade to Lifetime Pro for unlimited access, or come back tomorrow.`,
+        limitReached: true,
+      });
+    }
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       return res.status(503).json({ message: "AI explanations are not configured yet. Add GEMINI_API_KEY in Railway." });
@@ -1087,6 +1147,13 @@ export async function registerRoutes(
     if (!item || !lessonTitle) {
       return res.status(400).json({ message: "Missing required fields" });
     }
+    const usage = await storage.checkAndConsumeAiCall((req.user as any).id);
+    if (!usage.allowed) {
+      return res.status(429).json({
+        message: `You've used today's AI Study Assistant limit (${usage.limit}/day). Upgrade to Lifetime Pro for unlimited access, or come back tomorrow.`,
+        limitReached: true,
+      });
+    }
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       return res.status(503).json({ message: "GEMINI_API_KEY not configured" });
@@ -1123,6 +1190,13 @@ export async function registerRoutes(
   app.post("/api/far-translate", requireAuth as any, async (req: Request, res: Response) => {
     const { clause } = req.body as { clause: string };
     if (!clause?.trim()) return res.status(400).json({ message: 'Clause number or keyword required' });
+    const usage = await storage.checkAndConsumeAiCall((req.user as any).id);
+    if (!usage.allowed) {
+      return res.status(429).json({
+        message: `You've used today's AI limit (${usage.limit}/day). Upgrade to Lifetime Pro for unlimited access, or come back tomorrow.`,
+        limitReached: true,
+      });
+    }
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) return res.status(503).json({ message: 'AI not configured' });
 

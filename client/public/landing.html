@@ -350,7 +350,7 @@
     .pricing-bg .section-title { color: white; text-align: center; }
     .pricing-bg .section-sub { color: rgba(255,255,255,0.55); text-align: center; margin-left: auto; margin-right: auto; }
     .pricing-bg .section-eyebrow { color: var(--teal-mid); text-align: center; }
-    .pricing-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1040px; margin: 0 auto; }
+    .pricing-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; max-width: 1320px; margin: 0 auto; }
     .price-card {
       background: var(--navy-mid); border: 1.5px solid rgba(255,255,255,0.1);
       border-radius: 20px; padding: 32px 28px;
@@ -1073,6 +1073,32 @@
   </div>
 </section>
 
+<!-- STREAK / RETENTION -->
+<section id="streaks" style="background:var(--navy);padding:72px 2rem;color:#fff">
+  <div style="max-width:1040px;margin:0 auto">
+    <div style="text-align:center;color:var(--teal-mid);font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px">Built to stick, not just to finish</div>
+    <h2 style="text-align:center;font-size:2rem;font-weight:800;margin:0 0 14px;color:#fff">You won't forget you started this one.</h2>
+    <p style="text-align:center;color:rgba(255,255,255,0.62);max-width:620px;margin:0 auto 48px;font-size:1.05rem;line-height:1.6">Most training platforms are built to be finished once. Acqlerate is built to be opened daily — a streak that tracks your progress, a level that goes up as you learn, and a way to earn free Pro access just by sharing it.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:32px 24px;text-align:center">
+        <div style="font-size:2.4rem;margin-bottom:10px">🔥</div>
+        <div style="font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:6px">Daily Streaks</div>
+        <div style="color:rgba(255,255,255,0.6);font-size:0.92rem;line-height:1.55">A short daily challenge keeps your streak alive. Hit 7 days and you've unlocked a habit, not just a badge.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:32px 24px;text-align:center">
+        <div style="font-size:2.4rem;margin-bottom:10px">⚡</div>
+        <div style="font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:6px">XP & Levels</div>
+        <div style="color:rgba(255,255,255,0.6);font-size:0.92rem;line-height:1.55">Every lesson and quiz earns XP. Your level climbs across all 6 modules, so progress is always visible — not buried in a completion percentage.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:32px 24px;text-align:center">
+        <div style="font-size:2.4rem;margin-bottom:10px">🎁</div>
+        <div style="font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:6px">Refer & Earn Pro</div>
+        <div style="color:rgba(255,255,255,0.6);font-size:0.92rem;line-height:1.55">Every account gets a referral link. Get enough colleagues signed up and Acqlerate gives you a year of Pro access, free.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 
 <!-- BLOG TEASER -->
@@ -1441,9 +1467,52 @@
         </ul>
         <a href="/app#/auth?plan=lifetime" class="btn-plan btn-plan-outline" id="lifetimeBtn">Get Lifetime Access →</a>
       </div>
+      <!-- Team -->
+      <div class="price-card" style="border-top:3px solid #4FC3CB;">
+        <div class="plan-name">Team Pack</div>
+        <div class="plan-price">$399 <span>one-time</span></div>
+        <div class="plan-desc">10 seats of Lifetime Pro for your PM team. One invoice, not ten.</div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span> 10 Lifetime Pro seats</li>
+          <li><span class="check">✓</span> All 6 modules — 45 lessons, per seat</li>
+          <li><span class="check">✓</span> Certificates of Completion for CLP self-reporting</li>
+          <li><span class="check">✓</span> One invoice instead of 10 separate purchases</li>
+          <li><span class="check">✓</span> $39.90/seat vs. $1,500+/seat classroom training</li>
+        </ul>
+        <button type="button" class="btn-plan btn-plan-teal" id="teamBtn" onclick="startTeamCheckout()">Get Team Access →</button>
+      </div>
     </div>
   </div>
 </section>
+
+<script>
+  async function startTeamCheckout() {
+    const btn = document.getElementById('teamBtn');
+    const email = prompt("What email should the receipt and seat invites go to?");
+    if (!email) return;
+    btn.textContent = 'Loading…';
+    btn.disabled = true;
+    try {
+      const resp = await fetch('/api/team/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await resp.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.message || 'Something went wrong — please email lucas@acqlerate.com to set up your team.');
+        btn.textContent = 'Get Team Access →';
+        btn.disabled = false;
+      }
+    } catch (err) {
+      alert('Something went wrong — please email lucas@acqlerate.com to set up your team.');
+      btn.textContent = 'Get Team Access →';
+      btn.disabled = false;
+    }
+  }
+</script>
 
 <!-- FAQ -->
 <section id="faq" style="background:#fff">
