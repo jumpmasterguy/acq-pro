@@ -344,31 +344,14 @@ export class DrizzleStorage implements IStorage {
   }
 
 
-  // AI Study Assistant gating — call before every /api/explain, /api/expand-item,
-  // and /api/far-translate request. Enforces the tier limits sold on the pricing page:
-  // free = 5/day, active (Monthly Pro) = 30/day, lifetime = unlimited.
+  // AI Study Assistant gating — TEMPORARILY DISABLED.
+  // The ai_calls_today / ai_calls_date columns this depended on were never
+  // successfully migrated onto the production DB, which broke every request
+  // touching the users table (site-down hotfix, 2026-08-08). Allowing all
+  // calls through unconditionally until the migration is confirmed applied,
+  // then this will be restored to real per-tier enforcement.
   async checkAndConsumeAiCall(userId: string): Promise<{ allowed: boolean; remaining: number | null; limit: number | null }> {
-    const user = await this.getUser(userId);
-    if (!user) return { allowed: false, remaining: 0, limit: 0 };
-
-    const status = (user as any).subscriptionStatus ?? 'free';
-    if (status === 'lifetime') return { allowed: true, remaining: null, limit: null }; // unlimited
-
-    const limit = status === 'active' ? 30 : 5; // Monthly Pro vs Free
-    const todayStr = new Date().toISOString().slice(0, 10);
-    const isNewDay = (user as any).aiCallsDate !== todayStr;
-    const callsSoFar = isNewDay ? 0 : ((user as any).aiCallsToday ?? 0);
-
-    if (callsSoFar >= limit) {
-      return { allowed: false, remaining: 0, limit };
-    }
-
-    await this.db
-      .update(users)
-      .set({ aiCallsToday: callsSoFar + 1, aiCallsDate: todayStr })
-      .where(eq(users.id, userId));
-
-    return { allowed: true, remaining: limit - (callsSoFar + 1), limit };
+    return { allowed: true, remaining: null, limit: null };
   }
 
   // Streak update — call whenever a user completes a lesson, quiz, or daily challenge
@@ -751,6 +734,9 @@ export class MemStorage implements IStorage {
   async isUnsubscribed(email: string): Promise<boolean> { return this.unsubscribed.has(email.trim().toLowerCase()); }
   async setUnsubscribed(email: string): Promise<void> { this.unsubscribed.add(email.trim().toLowerCase()); }
   async getUnsubscribedSet(): Promise<Set<string>> { return new Set(this.unsubscribed); }
+  async checkAndConsumeAiCall(userId: string): Promise<{ allowed: boolean; remaining: number | null; limit: number | null }> {
+    return { allowed: true, remaining: null, limit: null }; // matches DrizzleStorage hotfix state
+  }
 }
 
 // ─── Export — auto-select based on DATABASE_URL ─────────────────────────────
