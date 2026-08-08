@@ -1017,6 +1017,9 @@ export async function processDripEmails(
 
   const updated = [...sentEmailDays];
 
+  // Only send the SINGLE earliest overdue email per call, not the whole backlog.
+  // If a user is behind (e.g. after downtime), they catch up one email per
+  // scheduler run instead of getting every missed email jammed in at once.
   for (const { day, fn } of EMAIL_SEQUENCE) {
     if (daysSinceReg >= day && !updated.includes(day)) {
       try {
@@ -1025,6 +1028,7 @@ export async function processDripEmails(
       } catch (err) {
         console.error(`[email] Failed drip email day=${day} to=${to}:`, err);
       }
+      break; // stop after sending one — the rest wait for the next run
     }
   }
 
