@@ -1,0 +1,70 @@
+<svg viewBox="0 0 1400 640" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="640" fill="#F4F3EF"/>
+
+  <g transform="translate(60,50)">
+    <rect x="0" y="0" width="56" height="56" rx="12" fill="#01696F"/>
+    <circle cx="28" cy="28" r="16" fill="none" stroke="#FFFFFF" stroke-width="3.5"/>
+    <circle cx="28" cy="28" r="5" fill="#FFFFFF"/>
+    <text x="70" y="37" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#0D1B2A">Acq<tspan fill="#01696F">lerate</tspan></text>
+  </g>
+
+  <!-- Three gauges, left to right: PV, EV, AC, each in a rounded box like the reference style -->
+
+  <!-- PV -->
+  <g transform="translate(110,170)">
+    <rect x="0" y="0" width="330" height="230" rx="18" fill="none" stroke="#0D1B2A" stroke-width="6"/>
+    <!-- calendar icon -->
+    <g transform="translate(130,35)">
+      <rect x="0" y="10" width="70" height="60" rx="6" fill="none" stroke="#0D1B2A" stroke-width="5"/>
+      <line x1="0" y1="30" x2="70" y2="30" stroke="#0D1B2A" stroke-width="5"/>
+      <line x1="18" y1="0" x2="18" y2="18" stroke="#0D1B2A" stroke-width="5" stroke-linecap="round"/>
+      <line x1="52" y1="0" x2="52" y2="18" stroke="#0D1B2A" stroke-width="5" stroke-linecap="round"/>
+    </g>
+    <text x="165" y="140" font-family="Arial, sans-serif" font-size="46" font-weight="800" fill="#01696F" text-anchor="middle">PV</text>
+    <text x="165" y="175" font-family="Arial, sans-serif" font-size="18" fill="#0D1B2A" text-anchor="middle">Planned Value</text>
+    <text x="165" y="203" font-family="Arial, sans-serif" font-size="15" fill="#6B7280" text-anchor="middle">"What we meant to spend"</text>
+  </g>
+
+  <!-- EV -->
+  <g transform="translate(535,170)">
+    <rect x="0" y="0" width="330" height="230" rx="18" fill="none" stroke="#0D1B2A" stroke-width="6"/>
+    <!-- checkmark badge icon -->
+    <g transform="translate(130,30)">
+      <circle cx="35" cy="35" r="35" fill="none" stroke="#01696F" stroke-width="5"/>
+      <path d="M18 36 l12 12 l24 -28" fill="none" stroke="#01696F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <text x="165" y="140" font-family="Arial, sans-serif" font-size="46" font-weight="800" fill="#01696F" text-anchor="middle">EV</text>
+    <text x="165" y="175" font-family="Arial, sans-serif" font-size="18" fill="#0D1B2A" text-anchor="middle">Earned Value</text>
+    <text x="165" y="203" font-family="Arial, sans-serif" font-size="15" fill="#6B7280" text-anchor="middle">"What we actually finished"</text>
+  </g>
+
+  <!-- AC -->
+  <g transform="translate(960,170)">
+    <rect x="0" y="0" width="330" height="230" rx="18" fill="none" stroke="#0D1B2A" stroke-width="6"/>
+    <!-- dollar / receipt icon -->
+    <g transform="translate(140,30)">
+      <path d="M10 5 h50 v65 l-8 -6 l-8 6 l-8 -6 l-8 6 l-8 -6 l-8 6 z" fill="none" stroke="#0D1B2A" stroke-width="5" stroke-linejoin="round"/>
+      <line x1="20" y1="22" x2="50" y2="22" stroke="#0D1B2A" stroke-width="4"/>
+      <line x1="20" y1="36" x2="50" y2="36" stroke="#0D1B2A" stroke-width="4"/>
+      <line x1="20" y1="50" x2="40" y2="50" stroke="#0D1B2A" stroke-width="4"/>
+    </g>
+    <text x="165" y="140" font-family="Arial, sans-serif" font-size="46" font-weight="800" fill="#01696F" text-anchor="middle">AC</text>
+    <text x="165" y="175" font-family="Arial, sans-serif" font-size="18" fill="#0D1B2A" text-anchor="middle">Actual Cost</text>
+    <text x="165" y="203" font-family="Arial, sans-serif" font-size="15" fill="#6B7280" text-anchor="middle">"What we actually spent"</text>
+  </g>
+
+  <!-- formulas below, connecting EV to the other two -->
+  <g font-family="Arial, sans-serif" font-size="22" font-weight="700">
+    <text x="422" y="470" fill="#0D1B2A" text-anchor="middle">CPI = EV ÷ AC</text>
+    <text x="422" y="500" fill="#6B7280" font-weight="400" font-size="16" text-anchor="middle">Are we spending efficiently?</text>
+
+    <text x="847" y="470" fill="#0D1B2A" text-anchor="middle">SPI = EV ÷ PV</text>
+    <text x="847" y="500" fill="#6B7280" font-weight="400" font-size="16" text-anchor="middle">Are we on schedule?</text>
+  </g>
+
+  <path d="M275 400 q135 60 270 0" stroke="#D19900" stroke-width="5" fill="none"/>
+  <path d="M700 400 q135 60 270 0" stroke="#D19900" stroke-width="5" fill="none"/>
+
+  <text x="700" y="570" font-family="Georgia, serif" font-style="italic" font-size="24" fill="#0D1B2A" text-anchor="middle">Same three numbers, every program review. EV is always the anchor.</text>
+  <text x="700" y="605" font-family="Arial, sans-serif" font-size="17" fill="#6B7280" text-anchor="middle">Earned Value Management — Module 02</text>
+</svg>

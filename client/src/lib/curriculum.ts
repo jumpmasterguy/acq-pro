@@ -268,10 +268,10 @@ export const modules: Module[] = [
             id: 'q5',
             question: 'Which of the following is the LARGEST category of DoD spending by contract volume?',
             options: [
-              'Products (systems and equipment like aircraft and ships)|||Correct. Products are the most visible defense acquisition category,  F-35 fighters, Virginia-class submarines, M1A2 tanks, GPS satellites, and body armor. These are often acquired through Major Defense Acquisition Programs (MDAPs) with ACAT I designation.',
-              'Research & Development|||Correct. R&D (funded under RDT&E appropriations) is foundational to DoD acquisition. Budget activities run from basic research (6.1) through operational systems development (6.7). Understanding which RDT&E budget activity applies to a program phase is critical for acquisition planners.',
+              'Products (systems and equipment like aircraft and ships)|||Incorrect. Products are the most visible defense acquisition category,  F-35 fighters, Virginia-class submarines, M1A2 tanks, GPS satellites, and body armor. These are often acquired through Major Defense Acquisition Programs (MDAPs) with ACAT I designation.',
+              'Research & Development|||Incorrect. R&D (funded under RDT&E appropriations) is foundational to DoD acquisition. Budget activities run from basic research (6.1) through operational systems development (6.7). Understanding which RDT&E budget activity applies to a program phase is critical for acquisition planners.',
               'Services (people doing work: IT, maintenance, program support, etc.)|||Correct. Services represent the largest and fastest-growing segment of DoD spending,  over $200B annually. This includes base operations, cybersecurity, and program management support. Services are acquired through IDIQs, GWACs, and agency-specific vehicles.',
-              'Construction and real estate|||Correct. DoD is one of the world\'s largest real property owners, managing hundreds of installations worldwide. Military construction (MILCON) is funded through a separate appropriation and includes barracks, runways, maintenance facilities, and family housing.',
+              'Construction and real estate|||Incorrect. DoD is one of the world\'s largest real property owners, managing hundreds of installations worldwide. Military construction (MILCON) is funded through a separate appropriation and includes barracks, runways, maintenance facilities, and family housing.',
             ],
             correct: 2,
             explanation: 'Services. Contractors providing labor and expertise to support government operations, programs, and missions. Represent the largest category of DoD contract spending by volume. This includes everything from IT support and base operations to program management support and professional advisory services.',
@@ -639,7 +639,7 @@ export const modules: Module[] = [
             id: 'q5',
             question: 'In defense acquisition, who is the Program Manager (PM) ultimately accountable to?',
             options: [
-              'The Contracting Officer|||Correct. The CO (Contracting Officer) is the only government official with legal authority to enter into, administer, and terminate contracts on behalf of the government. This authority is delegated in writing via a \'Warrant\' (Certificate of Appointment under FAR 1.603).',
+              'The Contracting Officer|||Incorrect. The CO (Contracting Officer) is the only government official with legal authority to enter into, administer, and terminate contracts on behalf of the government. This authority is delegated in writing via a \'Warrant\' (Certificate of Appointment under FAR 1.603).',
               'The prime contractor|||Incorrect. The prime contractor signs contracts with the government but does not make contract decisions on behalf of the government. The government\'s contracting decisions rest exclusively with the Contracting Officer.',
               'Congress directly|||Incorrect for individual contract decisions. Congress shapes acquisition through legislation (NDAA, appropriations acts) but does not make individual contract award decisions. Congressional intent is implemented through executive agency regulations.',
               'The Program Executive Officer (PEO), who reports to the Service Acquisition Executive (SAE)|||Correct. This is the standard ACAT I chain of authority. The PEO is the MDA for ACAT II and III programs and reports to the SAE. For ACAT I programs, MDA is at the USD(A&S) level. The SAE is the service-level acquisition executive (e.g., ASA(ALT) for Army).',
@@ -1170,10 +1170,10 @@ export const modules: Module[] = [
             id: 'q3',
             question: 'Before a Major Capability Acquisition program can begin, what document must first identify and validate the capability gap?',
             options: [
-              'The Acquisition Program Baseline (APB)|||Correct. The APB is established at Milestone B and documents the program\'s approved cost, schedule, and performance parameters. Breaching APB thresholds triggers Nunn-McCurdy reporting (for MDAPs) and requires MDA approval to restructure.',
-              'The Capability Development Document (CDD)|||Correct. The CDD is the JCIDS requirements document that bridges the capability gap analysis and the detailed system requirements. It is typically validated before Milestone B and defines Key Performance Parameters (KPPs), Key System Attributes (KSAs), and Additional Performance Attributes (APAs).',
+              'The Acquisition Program Baseline (APB)|||Incorrect. The APB is established at Milestone B and documents the program\'s approved cost, schedule, and performance parameters. Breaching APB thresholds triggers Nunn-McCurdy reporting (for MDAPs) and requires MDA approval to restructure.',
+              'The Capability Development Document (CDD)|||Incorrect. The CDD is the JCIDS requirements document that bridges the capability gap analysis and the detailed system requirements. It is typically validated before Milestone B and defines Key Performance Parameters (KPPs), Key System Attributes (KSAs), and Additional Performance Attributes (APAs).',
               'The Initial Capabilities Document (ICD)|||Correct. The ICD is the first formal requirements document in the JCIDS process. It documents the capability gap, the mission context, and potential approaches. Typically validated before Milestone A, it drives the Analysis of Alternatives (AoA).',
-              'The Analysis of Alternatives (AoA)|||Correct. The AoA is an analytical study that evaluates alternative approaches to fill a capability gap. It assesses each alternative\'s operational effectiveness, suitability, cost, schedule, and risk. Typically completed during the MSA phase, it informs the Milestone A decision.',
+              'The Analysis of Alternatives (AoA)|||Incorrect. The AoA is an analytical study that evaluates alternative approaches to fill a capability gap. It assesses each alternative\'s operational effectiveness, suitability, cost, schedule, and risk. Typically completed during the MSA phase, it informs the Milestone A decision.',
             ],
             correct: 2,
             explanation: 'The Initial Capabilities Document (ICD) is the JCIDS document that identifies a validated capability gap in warfighter terms. Once validated by the requirements community, it triggers the Materiel Development Decision (MDD) and starts the acquisition program. The ICD describes the need. Not the solution.',
@@ -1182,10 +1182,10 @@ export const modules: Module[] = [
             id: 'q4',
             question: 'Which AAF pathway would be most appropriate for a software system that needs to deliver new features to users every six months using Agile development methods?',
             options: [
-              'Major Capability Acquisition (MCA)|||Correct. The MCA pathway is used for complex, long-term programs developing new military capabilities. It involves Milestones A, B, and C, with full JCIDS documentation and ACAT designation. USD(A&S) has MDA for ACAT I programs. Examples: F-35, CVN-21, GBSD.',
-              'Middle Tier: Rapid Fielding|||Correct. The Middle Tier Rapid Fielding pathway (Section 804 of FY2016 NDAA) is used to field proven capabilities with minimal development risk within 5 years of start. It bypasses some traditional milestone reviews for speed. Appropriate for commercial technology and productionized items with low technical risk.',
+              'Major Capability Acquisition (MCA)|||Incorrect. The MCA pathway is used for complex, long-term programs developing new military capabilities. It involves Milestones A, B, and C, with full JCIDS documentation and ACAT designation. USD(A&S) has MDA for ACAT I programs. Examples: F-35, CVN-21, GBSD.',
+              'Middle Tier: Rapid Fielding|||Incorrect. The Middle Tier Rapid Fielding pathway (Section 804 of FY2016 NDAA) is used to field proven capabilities with minimal development risk within 5 years of start. It bypasses some traditional milestone reviews for speed. Appropriate for commercial technology and productionized items with low technical risk.',
               'Software Acquisition Pathway|||Correct. The Software Acquisition Pathway (DoDI 5000.87) is designed for software-intensive programs using Agile, DevSecOps, and continuous delivery practices. It replaces the traditional hardware-centric lifecycle with iterative cycles and uses a Life Cycle Cost Estimate (LCCE) instead of an APB.',
-              'Acquisition of Services|||Correct. The Acquisition of Services pathway governs acquisition of professional and technical services,  program support, IT services, logistics. It emphasizes performance-based service contracts, pre-competed IDIQ vehicles, and the 7-step services acquisition process. Services account for over 50% of DoD contract spending.',
+              'Acquisition of Services|||Incorrect. The Acquisition of Services pathway governs acquisition of professional and technical services,  program support, IT services, logistics. It emphasizes performance-based service contracts, pre-competed IDIQ vehicles, and the 7-step services acquisition process. Services account for over 50% of DoD contract spending.',
             ],
             correct: 2,
             explanation: 'The Software Acquisition Pathway (DoDI 5000.87) is designed specifically for software-intensive programs using Agile and DevSecOps delivery models, with capability drops every six months. It does not use traditional milestones and instead uses a Capability Needs Statement rather than a CDD.',
@@ -1729,10 +1729,10 @@ export const modules: Module[] = [
             id: 'q4',
             question: 'Which appropriation would be used to fund a study to evaluate alternatives for a new weapons system?',
             options: [
-              'Procurement|||Correct. Procurement (P) funds are used to buy end items,  complete weapon systems, vehicles, aircraft, ships, and major equipment. They have a 3-year obligation period. If you\'re buying something that will last more than 2 years and costs above the investment threshold ($350K, raised from $250K under Section 8039 of the DoD Appropriations Act: the DoD Financial Management Regulation itself still lags with the old $250K figure in places), it should be Procurement funds.',
-              'Operations & Maintenance (O&M)|||Correct. O&M funds cover the day-to-day costs of running the military,  contractor services, supplies, base operations, training, and maintenance. They are 1-year money. O&M is the largest DoD appropriation category by dollar volume and the most commonly used for service contracts.',
+              'Procurement|||Incorrect. Procurement (P) funds are used to buy end items,  complete weapon systems, vehicles, aircraft, ships, and major equipment. They have a 3-year obligation period. If you\'re buying something that will last more than 2 years and costs above the investment threshold ($350K, raised from $250K under Section 8039 of the DoD Appropriations Act: the DoD Financial Management Regulation itself still lags with the old $250K figure in places), it should be Procurement funds.',
+              'Operations & Maintenance (O&M)|||Incorrect. O&M funds cover the day-to-day costs of running the military,  contractor services, supplies, base operations, training, and maintenance. They are 1-year money. O&M is the largest DoD appropriation category by dollar volume and the most commonly used for service contracts.',
               'Research, Development, Test & Evaluation (RDT&E)|||Correct. RDT&E funds support the full spectrum of defense research and development, from basic science (6.1) through system development and demonstration (6.5). They have a 2-year obligation period.',
-              'Military Personnel (MILPERS)|||Correct. MILPERS funds pay for military salaries, housing allowances, and personnel entitlements. They are strictly for military members,  civilian pay comes from O&M. MILPERS are 1-year funds.',
+              'Military Personnel (MILPERS)|||Incorrect. MILPERS funds pay for military salaries, housing allowances, and personnel entitlements. They are strictly for military members,  civilian pay comes from O&M. MILPERS are 1-year funds.',
             ],
             correct: 2,
             explanation: 'Studies, analyses, and development work. Including alternatives analyses, engineering, and testing. Are funded by RDT&E appropriations. O&M funds operational costs. Procurement funds production quantities of systems. Buying a system that is already developed and ready for production would require Procurement funds.',
@@ -2469,6 +2469,12 @@ export const modules: Module[] = [
             body: "Cost growth is the number one reason programs get cancelled or restructured. The DoD has struggled historically with \"optimism bias\": the tendency to underprice programs to win approval, then face costly breaches later. Understanding estimating methodologies helps PMs challenge unrealistic estimates and build credible baselines from day one."
           },
           {
+            type: 'lesson_image',
+            src: '/img-cost-estimating-spectrum.svg',
+            alt: 'Whiteboard diagram showing three cost estimating methods on a spectrum from fast to accurate: Analogous, Parametric, and Bottoms-Up, each with their accuracy range and best-use phase',
+            caption: "The method you can defend depends entirely on where you are in the lifecycle.",
+          },
+          {
             type: 'list',
             heading: "The Three Primary Estimating Methods",
             items: [
@@ -2689,6 +2695,12 @@ export const modules: Module[] = [
             type: 'text',
             heading: "The Dashboard That Tells You the Whole Truth",
             body: "Imagine you\'re flying a plane with two gauges: one shows how much fuel you\'ve burned, and one shows how far you\'ve traveled. Separately, each gauge tells you something. Together, they tell you whether you\'re going to make it to your destination. EVM: Earned Value Management: is both gauges for a defense program. It tells you whether you\'re getting the work done you planned to get done, at the cost you planned to spend, at any point in time. Without it, a program can look on budget but be six months behind: or look on schedule while burning through money at twice the expected rate. The DoD requires EVM on most contracts over $50M because \"how much have we spent?\" only answers half the question. (Raised from $20M under DFARS Class Deviation 2026-O0011, part of the 2026 DFARS overhaul: verify current DFARS 234.201 before citing the old figure.)"
+          },
+          {
+            type: 'lesson_image',
+            src: '/img-evm-triangle.svg',
+            alt: 'Whiteboard diagram of the three EVM metrics: PV (Planned Value), EV (Earned Value), and AC (Actual Cost), with CPI and SPI formulas connecting them',
+            caption: "Same three numbers, every program review. EV is always the anchor.",
           },
           {
             type: 'evm_metrics_visual' as any,
@@ -4662,6 +4674,12 @@ export const modules: Module[] = [
         ],
       },
       {
+        type: 'lesson_image',
+        src: '/img-lpta-bestvalue.svg',
+        alt: 'Whiteboard diagram comparing LPTA (Lowest Price Technically Acceptable) and Best Value source selection, shown as two balance scales tipping toward price versus toward technical merit',
+        caption: "Same government dollar, two completely different ways to decide who earns it.",
+      },
+      {
         type: 'table_visual' as any,
         heading: "LPTA vs. Best Value Tradeoff",
         headers: ['Approach', 'When to Use', 'Risk', 'Example'],
@@ -5064,10 +5082,10 @@ export const modules: Module[] = [
         id: 'q2',
         question: 'Which A&AS subcategory covers digital engineering support, DevSecOps, and software factory integration?',
         options: [
-          'Management and Professional Support Services|||Correct. This is one of the four A&AS (Advisory and Assistance Services) categories defined in FAR 37.2. It covers management analysis, organizational studies, training, and professional support. Defense agencies use this category for program management support and strategic planning assistance.',
-          'Studies, Analyses, and Evaluations|||Correct. This A&AS category covers independent research, operational analysis, technical evaluations, and studies. It includes policy analysis, program assessments, and alternatives analysis,  work that informs government decisions without directly executing them.',
-          'Engineering and Technical Services|||Correct. This A&AS category covers technical expertise supporting government programs,  systems engineering, technical review, test support, and engineering advisory services. It is the most commonly used A&AS category in DoD acquisition programs.',
-          'A&AS-D (Digital)|||Incorrect. The correct expansion is A&AS-D = Advisory and Assistance Services,  Defense (or specifically, GSA\'s AAS-D = Assisted Acquisition Services - Defense). There is no \'Digital\' designation in the standard A&AS taxonomy.',
+          'Management and Professional Support Services|||Incorrect. This is one of the four A&AS (Advisory and Assistance Services) categories defined in FAR 37.2. It covers management analysis, organizational studies, training, and professional support. Defense agencies use this category for program management support and strategic planning assistance.',
+          'Studies, Analyses, and Evaluations|||Incorrect. This A&AS category covers independent research, operational analysis, technical evaluations, and studies. It includes policy analysis, program assessments, and alternatives analysis,  work that informs government decisions without directly executing them.',
+          'Engineering and Technical Services|||Incorrect. This A&AS category covers technical expertise supporting government programs,  systems engineering, technical review, test support, and engineering advisory services. It is the most commonly used A&AS category in DoD acquisition programs.',
+          'A&AS-D (Digital)|||Correct. The correct expansion is A&AS-D = Advisory and Assistance Services,  Defense (or specifically, GSA\'s AAS-D = Assisted Acquisition Services - Defense). There is no \'Digital\' designation in the standard A&AS taxonomy.',
         ],
         correct: 3,
         explanation: 'A&AS-D (Digital) is the emerging subcategory gaining traction across the Air Force and Space Force that specifically covers digital engineering, DevSecOps support, software factory integration, and digital transformation advisory.',
@@ -5309,7 +5327,7 @@ export const modules: Module[] = [
         options: [
           'Paying too high a price due to lack of competition|||Incorrect as primary GWAC risk. GWACs are pre-competed vehicles. The primary ordering-level risks are: scope creep (ordering work outside the GWAC\'s scope), improper use of the vehicle, and bypassing fair opportunity requirements.',
           'Placing task orders for work outside the scope of the GWAC base contract|||Correct. This is the most legally significant risk when using GWACs. A task order placed for work outside the scope of the base IDIQ constitutes an unauthorized procurement,  potentially triggering a protest or legal challenge.',
-          'Failing to meet small business goals|||Correct. Many GWACs have small business set-aside pools. Ordering agencies that consistently bypass small business pools may face scrutiny from the SBA and their agency\'s Office of Small Business Programs.',
+          'Failing to meet small business goals|||Incorrect. Many GWACs have small business set-aside pools. Ordering agencies that consistently bypass small business pools may face scrutiny from the SBA and their agency\'s Office of Small Business Programs.',
           'Exceeding the ordering period without an extension'
         ],
         correct: 1,
@@ -5343,9 +5361,9 @@ export const modules: Module[] = [
         id: 'q10',
         question: "An Interagency Acquisition Agreement (IAA) between a DoD program office and GSA for OASIS+ use primarily documents:",
         options: [
-          'The technical requirements for the specific task order|||Correct. The Task Order SOW/PWS/SOO describes what the contractor will actually do,  the scope, deliverables, performance standards, and period of performance for that specific task order.',
+          'The technical requirements for the specific task order|||Incorrect. The Task Order SOW/PWS/SOO describes what the contractor will actually do,  the scope, deliverables, performance standards, and period of performance for that specific task order.',
           'The mutual terms under which the ordering agency will use the GWAC, including funding transfer and responsibilities|||Correct. An Interagency Agreement (IAA),  including a MIPR or Economy Act Order,  establishes the terms of the relationship between the ordering agency and the contracting agency, covering funding transfer and responsibilities.',
-          'The competition strategy for individual task orders|||Correct. The Acquisition Plan or Task Order Acquisition Strategy defines how the agency will conduct fair opportunity for a specific task order,  factors, evaluation methodology, oral presentation requirements, past performance approach, and price reasonableness determination.',
+          'The competition strategy for individual task orders|||Incorrect. The Acquisition Plan or Task Order Acquisition Strategy defines how the agency will conduct fair opportunity for a specific task order,  factors, evaluation methodology, oral presentation requirements, past performance approach, and price reasonableness determination.',
           'The contractor team members who will perform the work'
         ],
         correct: 1,
@@ -8735,7 +8753,7 @@ export const modules: Module[] = [
           'Strong BD performance: a large pipeline maximizes win probability|||Incorrect. A large pipeline without qualification exhausts proposal resources on low-probability pursuits. A $500M pipeline with 15% average pWin is less productive than a $200M pipeline with 40% average pWin. Quality beats volume in BD pipeline management.',
           'An undisciplined pipeline strategy that is likely wasting proposal resources on low-probability pursuits|||Correct. A large pipeline with low average pWin indicates poor opportunity qualification. Every proposal costs money (people, time, B&P budget). Low-pWin proposals are expensive distractions from high-probability pursuits.',
           'The contractor should increase proposal volume to improve win totals|||Incorrect. Increasing proposal volume without improving win rate just increases B&P spending. The solution is better pipeline discipline,  improving the quality of pursuits (higher pWin) rather than increasing quantity.',
-          'Normal BD operations: most opportunities in any pipeline have low pWin|||Correct. Most early-stage opportunities have inherently low pWin because they are being tracked before the company has built a discriminating solution. As opportunities mature through the BD lifecycle (identify → qualify → shape → pursue), pWin should increase.',
+          'Normal BD operations: most opportunities in any pipeline have low pWin|||Incorrect. Most early-stage opportunities have inherently low pWin because they are being tracked before the company has built a discriminating solution. As opportunities mature through the BD lifecycle (identify → qualify → shape → pursue), pWin should increase.',
         ],
         correct: 1,
         explanation: 'A pipeline dominated by low-pWin opportunities signals reactive, undisciplined BD. Proposal resources are finite. Investing them in low-probability pursuits reduces the quality of proposals on winnable work. A mature pipeline prioritizes opportunities where the contractor has competitive advantages and validated customer relationships.',
@@ -8756,10 +8774,10 @@ export const modules: Module[] = [
         id: 'q3',
         question: 'A solicitation uses a Performance Work Statement. How should a contractor\'s technical proposal respond?',
         options: [
-          'Provide a detailed task-by-task breakdown with labor hours per activity|||Correct. A strong technical approach responds directly to each PWS task with a detailed execution narrative,  including labor hours by task, specific tools and methodologies, and measurable outcomes.',
+          'Provide a detailed task-by-task breakdown with labor hours per activity|||Incorrect. A strong technical approach responds directly to each PWS task with a detailed execution narrative,  including labor hours by task, specific tools and methodologies, and measurable outcomes.',
           'Describe the management framework, quality metrics, and how outcomes will be measured and achieved|||Correct. The management approach section should explain the governance structure, performance metrics, quality control processes, and how the contractor will demonstrate value throughout performance.',
-          'Mirror the PWS structure with a direct response to each performance standard|||Correct. Using the PWS structure as the proposal organization framework,  with section headers mirroring PWS section numbers,  allows evaluators to quickly verify compliance with every performance standard.',
-          'Propose a fixed schedule of deliverables aligned to the government\'s task list|||Correct. A clear deliverables matrix,  showing each PWS-required deliverable, the delivery date, the responsible person, and the acceptance criteria,  demonstrates planning rigor and gives the government a ready-made performance baseline.',
+          'Mirror the PWS structure with a direct response to each performance standard|||Incorrect. Using the PWS structure as the proposal organization framework,  with section headers mirroring PWS section numbers,  allows evaluators to quickly verify compliance with every performance standard.',
+          'Propose a fixed schedule of deliverables aligned to the government\'s task list|||Incorrect. A clear deliverables matrix,  showing each PWS-required deliverable, the delivery date, the responsible person, and the acceptance criteria,  demonstrates planning rigor and gives the government a ready-made performance baseline.',
         ],
         correct: 1,
         explanation: 'PWS-based proposals should focus on management approach, quality management framework, and how the contractor will measure and demonstrate achievement of outcomes. Responding with a task-by-task activity list (SOW-style) signals a fundamental misunderstanding of performance-based contracting and is a red flag to evaluators.',
@@ -8768,7 +8786,7 @@ export const modules: Module[] = [
         id: 'q4',
         question: 'Which DCAA compliance requirement is described as "non-negotiable" for contractors on cost-reimbursable work?',
         options: [
-          'Monthly financial reporting to the contracting officer|||Correct. Cost-type contracts require regular financial reporting,  typically monthly invoices with actual cost detail. The CO and COR monitor these reports to ensure costs are being allocated correctly and performance is tracking to plan.',
+          'Monthly financial reporting to the contracting officer|||Incorrect. Cost-type contracts require regular financial reporting,  typically monthly invoices with actual cost detail. The CO and COR monitor these reports to ensure costs are being allocated correctly and performance is tracking to plan.',
           'Contemporaneous timekeeping: capturing time by contract daily, not retroactively|||Correct. DCAA requires employees on cost-type contracts to capture time contemporaneously: at the time of performance, not reconstructed after the fact. Retroactive timesheet entries are a serious accounting system deficiency. Each employee must record hours by specific contract number daily.',
           'Written compensation policies approved by the CO before award|||Incorrect as described. Compensation policies are part of the contractor\'s business system, not individually CO-approved per contract. Compensation must be \'reasonable\' under FAR 31.205-6, but individual CO pre-approval of compensation policies is not a standard requirement.',
           'Independent audit of indirect rates by a certified public accountant|||Incorrect for most cost-type contracts. DCAA,  a government audit organization,  not a commercial CPA firm, performs the required audits on cost-type government contracts. However, companies without government audit history may use commercial auditors for incurred cost submissions until DCAA establishes audit jurisdiction.',
@@ -8780,8 +8798,8 @@ export const modules: Module[] = [
         id: 'q5',
         question: 'When should a contractor formally activate its recompete plan?',
         options: [
-          '12 months before contract expiration, when the RFP timeline becomes clear|||Correct. This is typically when the incumbent begins intensive recompete positioning,  the window when the government\'s acquisition timeline becomes visible through pre-solicitation notices and RFI releases. At 12 months, the contractor should have a preliminary proposal team and an active intelligence-gathering operation.',
-          '6 months before expiration, when the government issues a pre-solicitation notice|||Correct. The pre-solicitation notice typically drops 6-12 months before the RFP. At this point, all potential competitors know the timeline, teaming conversations intensify, and the incumbent\'s positioning should be fully formed.',
+          '12 months before contract expiration, when the RFP timeline becomes clear|||Incorrect. This is typically when the incumbent begins intensive recompete positioning,  the window when the government\'s acquisition timeline becomes visible through pre-solicitation notices and RFI releases. At 12 months, the contractor should have a preliminary proposal team and an active intelligence-gathering operation.',
+          '6 months before expiration, when the government issues a pre-solicitation notice|||Incorrect. The pre-solicitation notice typically drops 6-12 months before the RFP. At this point, all potential competitors know the timeline, teaming conversations intensify, and the incumbent\'s positioning should be fully formed.',
           'At contract award: the moment the current period of performance begins|||Correct. Sophisticated contractors begin recompete strategy at contract award: sometimes called \'Day 1 positioning.\' The first day of performance sets the trajectory for CPARS ratings, customer relationships, and technical differentiation that will ultimately determine the recompete outcome.',
           '30 days before proposal submission deadline|||Incorrect. Beginning recompete work 30 days before proposal submission is far too late. By this point, the proposal team should be in full production on a completed draft. 30 days out is proposal writing time, not strategy time.',
         ],
@@ -9115,6 +9133,12 @@ export const modules: Module[] = [
         body: "Think of a risk register like a weather forecast for your program. You can\'t stop the storm: but if you know it\'s coming, you can prepare. A PM who says their program has no risks isn\'t running a risk-free program. They\'re running a program where nobody\'s looking. Every defense program has technical risks (will it actually work?), schedule risks (will it be done in time?), funding risks (will Congress cut the budget mid-program?), and supply chain risks (can you get the parts?). The job isn\'t to eliminate uncertainty: it\'s to track it honestly and have a plan before problems become crises. DoD calls this framework RIO: Risk, Issue, and Opportunity management. Risk = might happen. Issue = already happening. Opportunity = something that could make things better if you act on it."
       },
       {
+        type: 'lesson_image',
+        src: '/img-rio-cycle.svg',
+        alt: 'Whiteboard diagram of the DoD RIO Management Cycle: Identify, Analyze, Plan, Track, and Control, connected by arrows in a loop',
+        caption: "Five steps, one loop. Skip \"Plan\" before \"Identify,\" and you're just reacting.",
+      },
+      {
         type: 'risk_formula_visual' as any,
         heading: 'Risk Scoring Formula',
       },
@@ -9227,7 +9251,7 @@ export const modules: Module[] = [
         id: 'q4',
         question: "Under DoD's RIO Management framework, what is the correct definition of an \"Issue\"?",
         options: [
-          'A potential future adverse event that has not yet occurred|||Correct. This is the definition of a risk. Risk management distinguishes between risks (potential future events that may or may not occur) and issues (events that have already occurred). Risks have probability and impact assessments.',
+          'A potential future adverse event that has not yet occurred|||Incorrect. This is the definition of a risk. Risk management distinguishes between risks (potential future events that may or may not occur) and issues (events that have already occurred). Risks have probability and impact assessments.',
           'A risk that has already materialized and requires a corrective action plan|||Correct. When a risk materializes, it becomes an issue. The risk register entry transitions to the issue log. The response shifts from mitigation (preventing occurrence) to corrective action (managing the impact).',
           'Any unplanned cost or schedule variance|||Incorrect. Not all variances are risks. A variance is a measurement of actual performance against plan. A risk is a potential future adverse event. However, variances can indicate risk materialization or be early warning indicators of emerging risks.',
           'A concern raised by the contractor that has not been resolved'
@@ -9421,8 +9445,8 @@ export const modules: Module[] = [
         id: 'q4',
         question: "Which stakeholder group is most responsible for generating the requirements that drive defense acquisition programs?",
         options: [
-          'OSD Cost Assessment and Program Evaluation (CAPE)|||Correct. CAPE is the OSD office responsible for independent cost estimates, program assessments, and analytical support to USD(A&S) and SECDEF. CAPE produces Independent Cost Estimates (ICEs) for ACAT I programs at milestone reviews.',
-          'Congressional defense committees|||Correct. SASC, HASC, SAC-D, and HAC-D provide legislative oversight. They authorize programs through the NDAA and fund them through appropriations. Congressional concerns can delay milestones, reduce funding, or mandate program restructuring.',
+          'OSD Cost Assessment and Program Evaluation (CAPE)|||Incorrect. CAPE is the OSD office responsible for independent cost estimates, program assessments, and analytical support to USD(A&S) and SECDEF. CAPE produces Independent Cost Estimates (ICEs) for ACAT I programs at milestone reviews.',
+          'Congressional defense committees|||Incorrect. SASC, HASC, SAC-D, and HAC-D provide legislative oversight. They authorize programs through the NDAA and fund them through appropriations. Congressional concerns can delay milestones, reduce funding, or mandate program restructuring.',
           'Combatant Commands and operational users through JCIDS|||Correct. The warfighter need originates with Combatant Commands and operational users. Through the JCIDS process, operational users document capability gaps, which drive requirements documents (ICD, CDD, CPD).',
           'Defense contractors during market research'
         ],
@@ -9684,9 +9708,9 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             id: 'q3',
             question: "DFARS 252.204-7012 is a mandatory flow-down clause that requires subcontractors to:",
             options: [
-              'Submit certified cost or pricing data for subcontracts over $10M|||Correct. Under TINA (41 U.S.C. 3502), prime contractors must submit certified cost or pricing data for subcontracts over the TINA threshold (raised to $10M for contracts awarded after June 30, 2026 under the FY2026 NDAA) when the prime contract also requires certified cost data. This flows down to significant subcontracts to ensure cost transparency.',
+              'Submit certified cost or pricing data for subcontracts over $10M|||Incorrect. Under TINA (41 U.S.C. 3502), prime contractors must submit certified cost or pricing data for subcontracts over the TINA threshold (raised to $10M for contracts awarded after June 30, 2026 under the FY2026 NDAA) when the prime contract also requires certified cost data. This flows down to significant subcontracts to ensure cost transparency.',
               'Safeguard Covered Defense Information (CDI) and report cyber incidents within 72 hours|||Correct. DFARS 252.204-7012 requires DoD contractors handling Covered Defense Information (CDI) to: (1) implement NIST SP 800-171 security controls, (2) report cyber incidents to DoD within 72 hours, and (3) preserve images of compromised systems.',
-              'Provide small business subcontracting plans|||Correct. FAR 52.219-9 requires large businesses on contracts over $750K to submit a small business subcontracting plan with goals for small business, SDB, WOSB, SDVOSB, HUBZone, and VOSB participation.',
+              'Provide small business subcontracting plans|||Incorrect. FAR 52.219-9 requires large businesses on contracts over $750K to submit a small business subcontracting plan with goals for small business, SDB, WOSB, SDVOSB, HUBZone, and VOSB participation.',
               'Use only specialty metals from qualifying countries'
             ],
             correct: 1,
@@ -9696,8 +9720,8 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             id: 'q4',
             question: "A Contractor Purchasing System Review (CPSR) is conducted by which organization?",
             options: [
-              'The Government Accountability Office (GAO)|||Correct. GAO is the Congressional watchdog that investigates government programs and spending. In defense acquisition, GAO: (1) conducts program assessments, (2) adjudicates bid protests, and (3) investigates acquisition irregularities at Congressional request.',
-              'The Defense Contract Audit Agency (DCAA)|||Correct. DCAA audits contractor costs on behalf of all DoD contracting activities. Its mission: ensure the government pays only allowable, allocable, and reasonable costs on cost-type contracts. DCAA provides audit opinions,  the CO makes final determinations.',
+              'The Government Accountability Office (GAO)|||Incorrect. GAO is the Congressional watchdog that investigates government programs and spending. In defense acquisition, GAO: (1) conducts program assessments, (2) adjudicates bid protests, and (3) investigates acquisition irregularities at Congressional request.',
+              'The Defense Contract Audit Agency (DCAA)|||Incorrect. DCAA audits contractor costs on behalf of all DoD contracting activities. Its mission: ensure the government pays only allowable, allocable, and reasonable costs on cost-type contracts. DCAA provides audit opinions,  the CO makes final determinations.',
               'The Defense Contract Management Agency (DCMA)|||Correct. DCMA is DoD\'s contract administration arm,  managing contract performance after award. DCMA COs administer contracts, DCMA quality assurance representatives conduct surveillance, and DCMA is the primary EVM oversight organization for programs reporting IPMR/CPR.',
               'The program office Contracting Officer'
             ],
@@ -9887,8 +9911,8 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             options: [
               'The program will receive a negative DAES assessment|||Incorrect. A DAES assessment is a trailing indicator,  it reflects problems already visible in data. The primary risk of disconnect between EVM data and program briefings is far more immediate: when the disconnect surfaces at milestone reviews or independent assessments, the program\'s credibility is severely damaged.',
               'The disconnect will surface at a major milestone review, causing far greater damage than honest early reporting would have|||Correct. The cardinal rule of program management communication: never brief \'green\' when the data says \'red.\' Disconnects always surface eventually. Early honest disclosure, while uncomfortable, is far less damaging than discovered misrepresentation.',
-              'DCMA will issue a surveillance finding for inaccurate EVM reporting|||Correct. DCMA conducts Integrated Baseline Reviews (IBRs) and ongoing EVM surveillance. If DCMA identifies that EVM data is not accurately reflecting actual performance, it will issue a surveillance finding. Repeated findings can result in DCMA recommending the program\'s EVM system be decertified.',
-              'Congressional staffers will request an independent assessment|||Correct. If Congress becomes aware of a significant disconnect between official program reporting and actual performance, Congressional staffers may request an independent assessment,  triggering a CAPE review, a GAO investigation, or Section 809 Panel-type review. Congressional involvement dramatically escalates consequences.',
+              'DCMA will issue a surveillance finding for inaccurate EVM reporting|||Incorrect. DCMA conducts Integrated Baseline Reviews (IBRs) and ongoing EVM surveillance. If DCMA identifies that EVM data is not accurately reflecting actual performance, it will issue a surveillance finding. Repeated findings can result in DCMA recommending the program\'s EVM system be decertified.',
+              'Congressional staffers will request an independent assessment|||Incorrect. If Congress becomes aware of a significant disconnect between official program reporting and actual performance, Congressional staffers may request an independent assessment,  triggering a CAPE review, a GAO investigation, or Section 809 Panel-type review. Congressional involvement dramatically escalates consequences.',
             ],
             correct: 1,
             explanation: 'A schedule that shows green when the program is actually amber or red doesn\'t protect the PM. It exposes them to far greater risk when the truth surfaces at a major milestone review. PEOs and oversight bodies are far more forgiving of honest early warnings than of surprises at milestone decision points.',

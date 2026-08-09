@@ -1,0 +1,83 @@
+<svg viewBox="0 0 1400 600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="600" fill="#F4F3EF"/>
+
+  <g transform="translate(60,50)">
+    <rect x="0" y="0" width="56" height="56" rx="12" fill="#01696F"/>
+    <circle cx="28" cy="28" r="16" fill="none" stroke="#FFFFFF" stroke-width="3.5"/>
+    <circle cx="28" cy="28" r="5" fill="#FFFFFF"/>
+    <text x="70" y="37" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#0D1B2A">Acq<tspan fill="#01696F">lerate</tspan></text>
+  </g>
+
+  <!-- Spectrum bar -->
+  <line x1="140" y1="290" x2="1260" y2="290" stroke="#0D1B2A" stroke-width="5"/>
+  <polygon points="1260,290 1240,280 1240,300" fill="#0D1B2A"/>
+  <text x="1260" y="330" font-family="Arial, sans-serif" font-size="16" fill="#6B7280" text-anchor="end">More accurate, slower</text>
+  <text x="140" y="330" font-family="Arial, sans-serif" font-size="16" fill="#6B7280" text-anchor="start">Faster, less precise</text>
+
+  <!-- Three points on the spectrum -->
+  <!-- Analogous -->
+  <g transform="translate(280,290)">
+    <circle r="16" fill="#F4F3EF" stroke="#0D1B2A" stroke-width="6"/>
+    <g transform="translate(0,-140)">
+      <rect x="-140" y="0" width="280" height="150" rx="16" fill="none" stroke="#0D1B2A" stroke-width="5"/>
+      <!-- two overlapping documents icon -->
+      <g transform="translate(105,30)">
+        <rect x="0" y="8" width="45" height="55" rx="4" fill="#F4F3EF" stroke="#0D1B2A" stroke-width="4"/>
+        <rect x="10" y="0" width="45" height="55" rx="4" fill="#F4F3EF" stroke="#01696F" stroke-width="4"/>
+      </g>
+      <text x="0" y="35" font-family="Arial, sans-serif" font-size="24" font-weight="800" fill="#01696F" text-anchor="middle">ANALOGOUS</text>
+      <text x="0" y="60" font-family="Arial, sans-serif" font-size="15" fill="#0D1B2A" text-anchor="middle">Compare to a past</text>
+      <text x="0" y="80" font-family="Arial, sans-serif" font-size="15" fill="#0D1B2A" text-anchor="middle">program</text>
+      <text x="0" y="108" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#D19900" text-anchor="middle">±50% accuracy</text>
+      <text x="0" y="130" font-family="Arial, sans-serif" font-size="14" fill="#6B7280" text-anchor="middle">Pre-Milestone A</text>
+    </g>
+    <line x1="0" y1="-16" x2="0" y2="-130" stroke="#0D1B2A" stroke-width="3" stroke-dasharray="4,4"/>
+  </g>
+
+  <!-- Parametric -->
+  <g transform="translate(700,290)">
+    <circle r="16" fill="#F4F3EF" stroke="#0D1B2A" stroke-width="6"/>
+    <g transform="translate(0,-140)">
+      <rect x="-140" y="0" width="280" height="150" rx="16" fill="none" stroke="#0D1B2A" stroke-width="5"/>
+      <!-- scatter/trend icon -->
+      <g transform="translate(75,25)">
+        <line x1="0" y1="55" x2="60" y2="55" stroke="#0D1B2A" stroke-width="3"/>
+        <line x1="0" y1="0" x2="0" y2="55" stroke="#0D1B2A" stroke-width="3"/>
+        <line x1="5" y1="45" x2="55" y2="10" stroke="#01696F" stroke-width="4"/>
+        <circle cx="12" cy="38" r="4" fill="#0D1B2A"/>
+        <circle cx="28" cy="28" r="4" fill="#0D1B2A"/>
+        <circle cx="45" cy="15" r="4" fill="#0D1B2A"/>
+      </g>
+      <text x="0" y="35" font-family="Arial, sans-serif" font-size="24" font-weight="800" fill="#01696F" text-anchor="middle">PARAMETRIC</text>
+      <text x="0" y="60" font-family="Arial, sans-serif" font-size="15" fill="#0D1B2A" text-anchor="middle">Statistical model</text>
+      <text x="0" y="80" font-family="Arial, sans-serif" font-size="15" fill="#0D1B2A" text-anchor="middle">(CERs)</text>
+      <text x="0" y="108" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#D19900" text-anchor="middle">±25% accuracy</text>
+      <text x="0" y="130" font-family="Arial, sans-serif" font-size="14" fill="#6B7280" text-anchor="middle">Early-mid phase</text>
+    </g>
+    <line x1="0" y1="-16" x2="0" y2="-130" stroke="#0D1B2A" stroke-width="3" stroke-dasharray="4,4"/>
+  </g>
+
+  <!-- Bottoms-Up -->
+  <g transform="translate(1120,290)">
+    <circle r="16" fill="#F4F3EF" stroke="#0D1B2A" stroke-width="6"/>
+    <g transform="translate(0,-140)">
+      <rect x="-140" y="0" width="280" height="150" rx="16" fill="none" stroke="#0D1B2A" stroke-width="5"/>
+      <!-- checklist icon -->
+      <g transform="translate(100,25)">
+        <rect x="0" y="0" width="50" height="60" rx="4" fill="none" stroke="#0D1B2A" stroke-width="4"/>
+        <line x1="10" y1="15" x2="40" y2="15" stroke="#01696F" stroke-width="4"/>
+        <line x1="10" y1="30" x2="40" y2="30" stroke="#01696F" stroke-width="4"/>
+        <line x1="10" y1="45" x2="30" y2="45" stroke="#01696F" stroke-width="4"/>
+      </g>
+      <text x="0" y="35" font-family="Arial, sans-serif" font-size="22" font-weight="800" fill="#01696F" text-anchor="middle">BOTTOMS-UP</text>
+      <text x="0" y="60" font-family="Arial, sans-serif" font-size="15" fill="#0D1B2A" text-anchor="middle">Task-by-task</text>
+      <text x="0" y="80" font-family="Arial, sans-serif" font-size="15" fill="#0D1B2A" text-anchor="middle">build</text>
+      <text x="0" y="108" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#D19900" text-anchor="middle">±10-15% accuracy</text>
+      <text x="0" y="130" font-family="Arial, sans-serif" font-size="14" fill="#6B7280" text-anchor="middle">Milestone B+</text>
+    </g>
+    <line x1="0" y1="-16" x2="0" y2="-130" stroke="#0D1B2A" stroke-width="3" stroke-dasharray="4,4"/>
+  </g>
+
+  <text x="700" y="510" font-family="Georgia, serif" font-style="italic" font-size="24" fill="#0D1B2A" text-anchor="middle">The method you can defend depends entirely on where you are in the lifecycle.</text>
+  <text x="700" y="548" font-family="Arial, sans-serif" font-size="17" fill="#6B7280" text-anchor="middle">Cost Estimating Methods — Module 02</text>
+</svg>
