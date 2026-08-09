@@ -37,6 +37,9 @@ export const users = pgTable("users", {
   // Daily challenge tracking
   lastChallengeDate: text("last_challenge_date"), // YYYY-MM-DD of last completed challenge
   challengeHistory: jsonb("challenge_history").notNull().default(sql`'[]'::jsonb`), // [{date, score, xpEarned}]
+  // AI Study Assistant usage tracking — resets daily, limits enforced per subscription tier
+  aiCallsToday: integer("ai_calls_today").notNull().default(0),
+  aiCallsDate: text("ai_calls_date"), // YYYY-MM-DD the counter above applies to
   // Referral tracking
   referralCode: text("referral_code"),          // user's unique share code (e.g. 'LUCAS42')
   referredBy: text("referred_by"),              // referral code used at signup

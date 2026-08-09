@@ -1496,6 +1496,19 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
     }
   });
 
+  // One-off, idempotent migration runner — protected by CRON_SECRET.
+  // Runs the ALTER TABLE directly against this service's live DB connection,
+  // then reads the columns back to confirm they actually exist before
+  // reporting success. Safe to call more than once.
+  app.get("/api/admin/run-migration", async (req: Request, res: Response) => {
+    const secret = process.env.CRON_SECRET;
+    if (secret && req.query.secret !== secret) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+    const result = await storage.runAiUsageMigration();
+    return res.status(result.ok ? 200 : 500).json(result);
+  });
+
   app.get("/api/cron/drip", async (req: Request, res: Response) => {
     const secret = process.env.CRON_SECRET;
     if (secret && req.query.secret !== secret) {

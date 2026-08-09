@@ -1,7 +1,7 @@
 import { type User, type InsertUser, type InsertGoogleUser, users, emailLeads, type Lead } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { Pool } from "pg";
 
 export type SkillLevel = 'novice' | 'intermediate' | 'advanced';
@@ -55,6 +55,7 @@ export interface IStorage {
     }
   ): Promise<User | undefined>;
   checkAndConsumeAiCall(userId: string): Promise<{ allowed: boolean; remaining: number | null; limit: number | null }>;
+  runAiUsageMigration(): Promise<{ ok: boolean; detail: string }>;
   saveLead(email: string, source?: string): Promise<Lead>;
   getAllLeads(): Promise<Lead[]>;
   // Template pack purchases
@@ -344,14 +345,54 @@ export class DrizzleStorage implements IStorage {
   }
 
 
-  // AI Study Assistant gating — TEMPORARILY DISABLED.
-  // The ai_calls_today / ai_calls_date columns this depended on were never
-  // successfully migrated onto the production DB, which broke every request
-  // touching the users table (site-down hotfix, 2026-08-08). Allowing all
-  // calls through unconditionally until the migration is confirmed applied,
-  // then this will be restored to real per-tier enforcement.
+  // AI Study Assistant gating — enforces the tier limits sold on the pricing page:
+  // free = 5/day, active (Monthly Pro) = 30/day, lifetime = unlimited.
+  // NOTE: depends on the ai_calls_today/ai_calls_date columns existing in the DB.
+  // See /api/admin/migrate-status and /api/admin/run-migration — verify those
+  // return success BEFORE trusting this in production again.
   async checkAndConsumeAiCall(userId: string): Promise<{ allowed: boolean; remaining: number | null; limit: number | null }> {
-    return { allowed: true, remaining: null, limit: null };
+    const user = await this.getUser(userId);
+    if (!user) return { allowed: false, remaining: 0, limit: 0 };
+
+    const status = (user as any).subscriptionStatus ?? 'free';
+    if (status === 'lifetime') return { allowed: true, remaining: null, limit: null }; // unlimited
+
+    const limit = status === 'active' ? 30 : 5; // Monthly Pro vs Free
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const isNewDay = (user as any).aiCallsDate !== todayStr;
+    const callsSoFar = isNewDay ? 0 : ((user as any).aiCallsToday ?? 0);
+
+    if (callsSoFar >= limit) {
+      return { allowed: false, remaining: 0, limit };
+    }
+
+    await this.db
+      .update(users)
+      .set({ aiCallsToday: callsSoFar + 1, aiCallsDate: todayStr })
+      .where(eq(users.id, userId));
+
+    return { allowed: true, remaining: limit - (callsSoFar + 1), limit };
+  }
+
+  // Runs the AI-usage-tracking migration directly against the live DB connection
+  // this service already holds — no reliance on Railway's preDeployCommand, which
+  // silently failed to fire last time. Idempotent: safe to call more than once.
+  async runAiUsageMigration(): Promise<{ ok: boolean; detail: string }> {
+    try {
+      await this.db.execute(sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS ai_calls_today INTEGER NOT NULL DEFAULT 0`);
+      await this.db.execute(sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS ai_calls_date TEXT`);
+      // Verify by actually reading the columns back, not just trusting the ALTER succeeded
+      const check = await this.db.execute(
+        sql`SELECT column_name FROM information_schema.columns WHERE table_name = 'users' AND column_name IN ('ai_calls_today', 'ai_calls_date')`
+      );
+      const found = (check as any).rows?.map((r: any) => r.column_name) ?? [];
+      if (found.length === 2) {
+        return { ok: true, detail: `Verified: both columns present (${found.join(', ')})` };
+      }
+      return { ok: false, detail: `ALTER ran but verification found only: ${found.join(', ') || 'none'}` };
+    } catch (err: any) {
+      return { ok: false, detail: `Migration failed: ${err?.message ?? err}` };
+    }
   }
 
   // Streak update — call whenever a user completes a lesson, quiz, or daily challenge
@@ -735,7 +776,10 @@ export class MemStorage implements IStorage {
   async setUnsubscribed(email: string): Promise<void> { this.unsubscribed.add(email.trim().toLowerCase()); }
   async getUnsubscribedSet(): Promise<Set<string>> { return new Set(this.unsubscribed); }
   async checkAndConsumeAiCall(userId: string): Promise<{ allowed: boolean; remaining: number | null; limit: number | null }> {
-    return { allowed: true, remaining: null, limit: null }; // matches DrizzleStorage hotfix state
+    return { allowed: true, remaining: null, limit: null }; // MemStorage has no persistent schema to migrate
+  }
+  async runAiUsageMigration(): Promise<{ ok: boolean; detail: string }> {
+    return { ok: true, detail: "MemStorage — no migration needed" };
   }
 }
 
