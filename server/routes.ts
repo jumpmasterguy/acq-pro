@@ -1501,7 +1501,7 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
   // then reads the columns back to confirm they actually exist before
   // reporting success. Safe to call more than once.
   app.get("/api/admin/run-migration", async (req: Request, res: Response) => {
-    const secret = process.env.CRON_SECRET;
+    const secret = process.env.MIGRATE_SECRET;
     if (secret && req.query.secret !== secret) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
