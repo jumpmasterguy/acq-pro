@@ -1,52 +1,46 @@
-<svg viewBox="0 0 1400 560" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1400" height="560" fill="#F4F3EF"/>
+<svg viewBox="0 0 1300 420" xmlns="http://www.w3.org/2000/svg" width="1300" height="420">
+  <rect width="1300" height="420" fill="#F4F3EF"/>
 
-  <g transform="translate(60,50)">
-    <rect x="0" y="0" width="56" height="56" rx="12" fill="#01696F"/>
-    <circle cx="28" cy="28" r="16" fill="none" stroke="#FFFFFF" stroke-width="3.5"/>
-    <circle cx="28" cy="28" r="5" fill="#FFFFFF"/>
-    <text x="70" y="37" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#0D1B2A">Acq<tspan fill="#01696F">lerate</tspan></text>
+  <g transform="translate(50,40)">
+    <rect x="0" y="0" width="48" height="48" rx="11" fill="#01696F"/>
+    <circle cx="24" cy="24" r="14" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+    <circle cx="24" cy="24" r="4.5" fill="#FFFFFF"/>
+    <text x="62" y="32" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#0D1B2A">Acq<tspan fill="#01696F">lerate</tspan></text>
   </g>
 
-  <!-- Two scales, side by side, showing what tips the decision -->
-
-  <!-- LPTA box -->
-  <g transform="translate(140,170)">
-    <rect x="0" y="0" width="500" height="280" rx="18" fill="none" stroke="#0D1B2A" stroke-width="6"/>
-    <!-- balance scale tipped toward price -->
-    <g transform="translate(220,25)">
-      <line x1="30" y1="0" x2="30" y2="70" stroke="#0D1B2A" stroke-width="5"/>
-      <line x1="0" y1="20" x2="60" y2="20" stroke="#0D1B2A" stroke-width="5"/>
-      <path d="M0 20 l -10 30 h20 z" fill="none" stroke="#01696F" stroke-width="4" stroke-linejoin="round"/>
-      <path d="M60 20 l -8 20 h16 z" fill="none" stroke="#0D1B2A" stroke-width="4" stroke-linejoin="round"/>
+  <!-- LPTA box: x=100-560 -->
+  <g transform="translate(100,120)">
+    <rect x="0" y="0" width="460" height="260" rx="18" fill="#FFFFFF" stroke="#0D1B2A" stroke-width="5"/>
+    <!-- balance scale, tipped toward the price side (left pan lower) -->
+    <g transform="translate(230,40)">
+      <line x1="0" y1="0" x2="0" y2="55" stroke="#0D1B2A" stroke-width="5" stroke-linecap="round"/>
+      <polygon points="0,55 -14,72 14,72" fill="none" stroke="#0D1B2A" stroke-width="4.5" stroke-linejoin="round"/>
+      <line x1="-55" y1="10" x2="55" y2="-4" stroke="#0D1B2A" stroke-width="5" stroke-linecap="round"/>
+      <path d="M-55 10 q0 22 -18 22 q-18 0 -18 -22 z" fill="none" stroke="#01696F" stroke-width="4"/>
+      <path d="M55 -4 q0 14 -12 14 q-12 0 -12 -14 z" fill="none" stroke="#0D1B2A" stroke-width="4"/>
     </g>
-    <text x="250" y="145" font-family="Arial, sans-serif" font-size="30" font-weight="800" fill="#01696F" text-anchor="middle">LPTA</text>
-    <text x="250" y="175" font-family="Arial, sans-serif" font-size="17" fill="#0D1B2A" text-anchor="middle">Lowest Price Technically Acceptable</text>
-    <text x="250" y="215" font-family="Arial, sans-serif" font-size="15" fill="#6B7280" text-anchor="middle">Meet the minimum bar,</text>
-    <text x="250" y="235" font-family="Arial, sans-serif" font-size="15" fill="#6B7280" text-anchor="middle">lowest price wins</text>
-    <text x="250" y="265" font-family="Arial, sans-serif" font-size="14" font-style="italic" fill="#D19900" text-anchor="middle">Best for: janitorial, help desk, commodities</text>
+    <text x="230" y="165" font-family="Arial, sans-serif" font-size="32" font-weight="800" fill="#01696F" text-anchor="middle">LPTA</text>
+    <text x="230" y="192" font-family="Arial, sans-serif" font-size="16" fill="#0D1B2A" text-anchor="middle">Lowest Price Technically Acceptable</text>
+    <text x="230" y="222" font-family="Arial, sans-serif" font-size="15" fill="#6B7280" text-anchor="middle">Meet the minimum bar, lowest price wins</text>
+    <text x="230" y="248" font-family="Arial, sans-serif" font-size="14" font-style="italic" fill="#D19900" text-anchor="middle">Best for: janitorial, help desk, commodities</text>
   </g>
 
-  <!-- vs -->
-  <text x="700" y="320" font-family="Arial, sans-serif" font-size="24" font-weight="800" fill="#0D1B2A" text-anchor="middle">vs.</text>
+  <text x="650" y="260" font-family="Arial, sans-serif" font-size="22" font-weight="800" fill="#0D1B2A" text-anchor="middle">vs.</text>
 
-  <!-- Best Value box -->
-  <g transform="translate(760,170)">
-    <rect x="0" y="0" width="500" height="280" rx="18" fill="none" stroke="#0D1B2A" stroke-width="6"/>
-    <!-- balance scale tipped toward quality/technical -->
-    <g transform="translate(220,25)">
-      <line x1="30" y1="0" x2="30" y2="70" stroke="#0D1B2A" stroke-width="5"/>
-      <line x1="0" y1="20" x2="60" y2="20" stroke="#0D1B2A" stroke-width="5"/>
-      <path d="M0 20 l -8 20 h16 z" fill="none" stroke="#0D1B2A" stroke-width="4" stroke-linejoin="round"/>
-      <path d="M60 20 l -10 30 h20 z" fill="none" stroke="#01696F" stroke-width="4" stroke-linejoin="round"/>
+  <!-- Best Value box: x=740-1200 -->
+  <g transform="translate(740,120)">
+    <rect x="0" y="0" width="460" height="260" rx="18" fill="#FFFFFF" stroke="#0D1B2A" stroke-width="5"/>
+    <!-- balance scale, tipped toward the merit side (right pan lower) -->
+    <g transform="translate(230,40)">
+      <line x1="0" y1="0" x2="0" y2="55" stroke="#0D1B2A" stroke-width="5" stroke-linecap="round"/>
+      <polygon points="0,55 -14,72 14,72" fill="none" stroke="#0D1B2A" stroke-width="4.5" stroke-linejoin="round"/>
+      <line x1="-55" y1="-4" x2="55" y2="10" stroke="#0D1B2A" stroke-width="5" stroke-linecap="round"/>
+      <path d="M-55 -4 q0 14 -12 14 q-12 0 -12 -14 z" fill="none" stroke="#0D1B2A" stroke-width="4"/>
+      <path d="M55 10 q0 22 -18 22 q-18 0 -18 -22 z" fill="none" stroke="#01696F" stroke-width="4"/>
     </g>
-    <text x="250" y="145" font-family="Arial, sans-serif" font-size="30" font-weight="800" fill="#01696F" text-anchor="middle">BEST VALUE</text>
-    <text x="250" y="175" font-family="Arial, sans-serif" font-size="17" fill="#0D1B2A" text-anchor="middle">Best combination of merit + price</text>
-    <text x="250" y="215" font-family="Arial, sans-serif" font-size="15" fill="#6B7280" text-anchor="middle">Willing to pay more</text>
-    <text x="250" y="235" font-family="Arial, sans-serif" font-size="15" fill="#6B7280" text-anchor="middle">for real technical merit</text>
-    <text x="250" y="265" font-family="Arial, sans-serif" font-size="14" font-style="italic" fill="#D19900" text-anchor="middle">Best for: software, systems integration</text>
+    <text x="230" y="165" font-family="Arial, sans-serif" font-size="30" font-weight="800" fill="#01696F" text-anchor="middle">BEST VALUE</text>
+    <text x="230" y="192" font-family="Arial, sans-serif" font-size="16" fill="#0D1B2A" text-anchor="middle">Best combination of merit + price</text>
+    <text x="230" y="222" font-family="Arial, sans-serif" font-size="15" fill="#6B7280" text-anchor="middle">Willing to pay more for real technical merit</text>
+    <text x="230" y="248" font-family="Arial, sans-serif" font-size="14" font-style="italic" fill="#D19900" text-anchor="middle">Best for: software, systems integration</text>
   </g>
-
-  <text x="700" y="490" font-family="Georgia, serif" font-style="italic" font-size="24" fill="#0D1B2A" text-anchor="middle">Same government dollar, two completely different ways to decide who earns it.</text>
-  <text x="700" y="525" font-family="Arial, sans-serif" font-size="17" fill="#6B7280" text-anchor="middle">Source Selection — Module 03</text>
 </svg>
