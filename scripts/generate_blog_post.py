@@ -15,7 +15,9 @@ from pathlib import Path
 import urllib.request
 
 # ── Config ────────────────────────────────────────────────────────────────────
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyCb5cYnJh16swSRh7C1q7nEipBfgKAaW18")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    raise SystemExit("GEMINI_API_KEY environment variable is not set. Set it before running this script.")
 BLOG_DIR       = Path(__file__).parent.parent / "client" / "public" / "blog"
 REPO_ROOT      = Path(__file__).parent.parent
 

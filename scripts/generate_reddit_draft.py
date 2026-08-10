@@ -11,7 +11,9 @@ import json
 import urllib.request
 from datetime import datetime
 
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyCb5cYnJh16swSRh7C1q7nEipBfgKAaW18")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    raise SystemExit("GEMINI_API_KEY environment variable is not set. Set it before running this script.")
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 TO_EMAIL = os.environ.get("ADMIN_EMAILS", "lucas.l.cruz.es@gmail.com").split(",")[0].strip()
 APP_URL = os.environ.get("APP_URL", "https://acqlerate.com")

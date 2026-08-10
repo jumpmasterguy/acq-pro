@@ -14,7 +14,9 @@ import urllib.request
 from datetime import datetime
 from pathlib import Path
 
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyCb5cYnJh16swSRh7C1q7nEipBfgKAaW18")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    raise SystemExit("GEMINI_API_KEY environment variable is not set. Set it before running this script.")
 # Resend key — set via env var or hardcoded fallback
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")  # injected by cron environment or set below
 # If not in environment, the send_email function will print to stdout instead

@@ -145,8 +145,8 @@ const apiLimiter = rateLimit({
 });
 
 app.use("/api", apiLimiter);
-app.use("/api/register", authLimiter);
-app.use("/api/login", authLimiter);
+app.use("/api/auth/register", authLimiter);
+app.use("/api/auth/login", authLimiter);
 app.use("/api/leads", leadsLimiter);
 app.use("/api/expand-item", aiLimiter);
 app.use("/api/explain", aiLimiter);
