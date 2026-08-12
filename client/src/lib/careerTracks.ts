@@ -23,9 +23,9 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
     shortLabel: 'USG PM',
     desc: 'Government-side PM managing programs, budgets, oversight, and the full acquisition lifecycle',
     primaryLessons: [
-      'foundations-intro', 'foundations-players', 'foundations-contracts',
-      'foundations-lifecycle', 'foundations-money', 'foundations-1', 'foundations-3',
-      'foundations-4', 'foundations-2',
+      'foundations-1', 'foundations-3', 'foundations-5',
+      'foundations-6', 'foundations-9', 'foundations-2', 'foundations-7',
+      'foundations-8', 'foundations-4',
       'finance-1', 'finance-4', 'finance-3', 'finance-2', 'finance-5', 'finance-7',
       'contracts-2', 'contracts-3', 'contracts-6',
       'data-1', 'data-2', 'data-3', 'data-4',
@@ -45,7 +45,7 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
     desc: 'Industry-side PM executing contracts, managing costs, task orders, and subcontractors',
     primaryLessons: [
       // Foundations — what you need to operate, skip ACAT/congressional deep dives
-      'foundations-intro', 'foundations-players', 'foundations-contracts', 'foundations-money',
+      'foundations-1', 'foundations-3', 'foundations-5', 'foundations-9',
       // Contracts — this is your day job: vehicles, admin, mods, COR, CDRLs, Section H, MSRs
       'contracts-8', 'contracts-1', 'contracts-4', 'contracts-9',
       'contracts-3', 'contracts-6', 'contracts-7', 'contracts-5',
@@ -59,7 +59,7 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
     ],
     bonusLessons: [
       // Useful context but not your core job
-      'foundations-lifecycle', 'foundations-1', 'foundations-3', 'foundations-4', 'foundations-2',
+      'foundations-6', 'foundations-2', 'foundations-7', 'foundations-8', 'foundations-4',
       'finance-1', 'finance-4', 'finance-3',
       'contracts-2',
       'data-2',
@@ -73,9 +73,9 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
     shortLabel: 'KO / Specialist',
     desc: 'Source selection, contract administration, FAR/DFARS compliance',
     primaryLessons: [
-      'foundations-intro', 'foundations-players', 'foundations-contracts',
-      'foundations-lifecycle', 'foundations-money', 'foundations-1', 'foundations-3',
-      'foundations-4', 'foundations-2',
+      'foundations-1', 'foundations-3', 'foundations-5',
+      'foundations-6', 'foundations-9', 'foundations-2', 'foundations-7',
+      'foundations-8', 'foundations-4',
       'contracts-1', 'contracts-2', 'contracts-3', 'contracts-6',
       'contracts-4', 'contracts-8', 'contracts-7', 'contracts-5', 'contracts-9',
       'finance-4', 'finance-3',
@@ -93,14 +93,14 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
     shortLabel: 'Capture / BD',
     desc: 'Win more business — proposals, pipeline, and source selection strategy',
     primaryLessons: [
-      'foundations-intro', 'foundations-players', 'foundations-contracts',
+      'foundations-1', 'foundations-3', 'foundations-5',
       'contracts-8', 'contracts-1', 'contracts-4', 'contracts-7', 'contracts-5', 'contracts-9', 'contracts-2',
       'capture-1', 'capture-3', 'capture-2', 'capture-4', 'capture-5',
       'ops-2',
     ],
     bonusLessons: [
-      'foundations-lifecycle', 'foundations-money', 'foundations-1', 'foundations-3',
-      'foundations-4', 'foundations-2',
+      'foundations-6', 'foundations-9', 'foundations-2', 'foundations-7',
+      'foundations-8', 'foundations-4',
       'finance-6', 'finance-8', 'finance-9', 'finance-10',
       'contracts-3', 'contracts-6',
       'data-1', 'data-2', 'data-3', 'data-4',

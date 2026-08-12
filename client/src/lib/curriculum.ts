@@ -10,15 +10,35 @@ export interface LessonAttachment {
   images?: LessonAttachmentImage[];
 }
 
+export interface LessonLevelSection {
+  heading?: string;
+  content?: string;
+  items?: string[];
+}
+
 export interface Lesson {
   id: string;
   title: string;
   duration: string;
   description: string;
-  content: LessonContent[];
-  quiz: QuizQuestion[];
+  // Standard lessons use `content`. A handful of lessons (e.g. finance-8) use
+  // the alternate `levels` format instead — a fully separate set of sections
+  // per skill level, swapped wholesale based on the viewer's unlocked level,
+  // rather than the per-block `level` gating used in `content`. When `levels`
+  // is present, `content` is typically empty and LessonPage renders from
+  // `levels` instead. See LessonPage.tsx's 'Levels-based lessons' branch.
+  // Optional because levels-based lessons (see below) carry their content and
+  // quiz per skill level instead of here. Everywhere these are read, the app
+  // already falls back with ?? [] / effectiveQuiz — this just matches that.
+  content?: LessonContent[];
+  levels?: Partial<Record<SkillLevel, { sections: LessonLevelSection[]; quiz?: QuizQuestion[] }>>;
+  quiz?: QuizQuestion[];
   keyTerms: KeyTerm[];
   attachments?: LessonAttachment[];
+  // Shown to contractor-track users as extra context. Currently authored on
+  // at least one lesson but not yet rendered anywhere in LessonPage — dead
+  // data until the UI is wired up (or the field is removed).
+  contractorNote?: string;
 }
 
 export type SkillLevel = 'novice' | 'intermediate' | 'advanced';
@@ -39,8 +59,44 @@ export interface ExpandableItem {
   }>;
 }
 
+// ── Content block types ──────────────────────────────────────────────────
+// The "core" types below have real, hand-checked field shapes (heading,
+// body, items, headers/rows, etc.) and are used across many lessons.
+//
+// The "*_visual" types are one-off, hand-built infographic components — each
+// one is rendered by a dedicated block in LessonPage.tsx and carries its own
+// bespoke data shape (custom fields specific to that single visual). There
+// are ~40 of them, each used in exactly one lesson. Rather than hand-typing
+// 40 unique field shapes (high effort, high risk of drift as visuals change),
+// this interface checks the thing that actually breaks silently in practice:
+// the `type` string itself. A typo'd type (e.g. 'brun_rate_visual') is now a
+// compile error instead of a block that quietly renders nothing.
+//
+// If you add a new one-off visual: add its type string to the union below
+// AND add the matching `block.type === '...'` case in LessonPage.tsx. Do
+// both in the same commit — the validator does not check that these two
+// lists stay in sync.
+export type LessonContentType =
+  | 'text' | 'callout' | 'list' | 'table' | 'formula' | 'tip' | 'warning'
+  | 'risk_chart' | 'expandable_list'
+  | 'table_visual' | 'lesson_image' | 'lucas_note' | 'highlight' | 'stat_row'
+  | 'two_col' | 'instrument_compare' | 'related_lesson' | 'visual_spectrum'
+  | 'funding_flow' | 'evm_visual'
+  | 'burn_rate_visual' | 'burn_rate_status_visual' | 'color_of_money_visual'
+  | 'evm_metrics_visual' | 'eac_quick_visual' | 'eac_methods_visual'
+  | 'vac_tcpi_visual' | 'contractor_finance_waterfall_visual'
+  | 'fee_type_comparison_visual' | 'dso_cash_gap_visual' | 'cpaf_formula_visual'
+  | 'award_fee_factors_visual' | 'award_fee_pitfalls_visual' | 'dcaa_audits_visual'
+  | 'category_cards_visual' | 'name_change_visual' | 'numbered_steps_visual'
+  | 'source_selection_phases_visual' | 'cpif_share_visual' | 'idiq_process_visual'
+  | 'idiq_structure_visual' | 'rea_process_visual' | 'commercial_item_visual'
+  | 'risk_formula_visual' | 'cost_risk_visual' | 'compa_ratio_visual'
+  | 'acat_requirements_visual' | 'nunn_mccurdy_visual' | 'principal_agent_visual'
+  | 'five_step_revenue_visual' | 'value_add_examples_visual' | 'fee_limits_visual'
+  | 'weighted_guidelines_visual' | 'wrap_rate_visual' | 'rate_comparison_visual';
+
 export interface LessonContent {
-  type: 'text' | 'callout' | 'list' | 'table' | 'formula' | 'tip' | 'warning' | 'risk_chart' | 'expandable_list';
+  type: LessonContentType;
   heading?: string;
   body?: string;
   items?: string[];
@@ -53,6 +109,11 @@ export interface LessonContent {
   // Optional: restrict this block to a specific skill level.
   // If absent, the block shows to all levels.
   level?: SkillLevel;
+  // One-off *_visual blocks each carry their own bespoke fields beyond the
+  // common ones above (e.g. burn_rate_visual has its own chart data shape).
+  // This keeps those fields checkable-by-name without forcing every visual
+  // to redeclare the same handful of shared fields.
+  [key: string]: any;
 }
 
 export interface QuizQuestion {
@@ -110,7 +171,7 @@ export const modules: Module[] = [
     free: true,
     lessons: [
       {
-        id: 'foundations-intro',
+        id: 'foundations-1',
         title: 'What Is Defense Acquisition? (Start Here)',
         duration: '12 min',
         description: 'A plain-English introduction to what defense acquisition is, why it exists, and how the government buys the things it needs. From fighter jets to IT services to office supplies.',
@@ -279,7 +340,7 @@ export const modules: Module[] = [
         ],
       },
       {
-        id: 'foundations-1',
+        id: 'foundations-2',
         title: 'The DoD Acquisition System Overview',
         duration: '12 min',
         description: 'Understand the structure, purpose, and key regulations governing DoD acquisitions.',
@@ -475,7 +536,7 @@ export const modules: Module[] = [
         ]
       },
       {
-        id: 'foundations-players',
+        id: 'foundations-3',
         title: 'Who\'s Who in Defense Acquisition',
         duration: '13 min',
         description: 'Meet the people and organizations on both sides of every defense acquisition. From Congress and OSD down to the program office, and from the prime contractor to the COR.',
@@ -650,7 +711,7 @@ export const modules: Module[] = [
         ],
       },
       {
-        id: 'foundations-2',
+        id: 'foundations-4',
         title: 'Roles & Career Paths',
         duration: '10 min',
         description: 'Understand the major acquisition workforce career fields, certifications, and how they interact.',
@@ -880,7 +941,7 @@ export const modules: Module[] = [
         ]
       },
       {
-        id: 'foundations-contracts',
+        id: 'foundations-5',
         title: 'How the Government Actually Buys',
         duration: '14 min',
         description: 'Understand the difference between a standalone contract and a task order, what an IDIQ vehicle is, and why most DoD service spending flows through vehicles rather than one-off contracts.',
@@ -1037,7 +1098,7 @@ export const modules: Module[] = [
         ],
       },
       {
-        id: 'foundations-lifecycle',
+        id: 'foundations-6',
         title: 'The Acquisition Lifecycle',
         duration: '18 min',
         description: 'Walk through how a defense capability goes from "someone identified a need" to "the warfighter has the system in the field". Understanding the phases, key decision points, and why the process is structured the way it is.',
@@ -1205,7 +1266,7 @@ export const modules: Module[] = [
         ],
       },
       {
-        id: 'foundations-3',
+        id: 'foundations-7',
         title: 'ACAT Levels',
         duration: '18 min',
         description: 'Master ACAT levels, milestone decision authority, tailoring, and how program categorization drives oversight, reporting, and your day-to-day responsibilities as a PM.',
@@ -1403,7 +1464,7 @@ export const modules: Module[] = [
         ],
       },
       {
-        id: 'foundations-4',
+        id: 'foundations-8',
         title: 'OTAs & Streamlined Acquisition',
         duration: '18 min',
         description: 'Understand OTAs, FAR Part 12, and streamlined acquisition paths. And why these vehicles represent some of the biggest BD opportunities for defense contractors today.',
@@ -1602,7 +1663,7 @@ export const modules: Module[] = [
         ],
       },
       {
-        id: 'foundations-money',
+        id: 'foundations-9',
         title: 'How DoD Money Works',
         duration: '14 min',
         description: 'Understand where DoD money comes from, why you can\'t just spend it on anything you want, and what "color of money" means. One of the most practically important concepts in defense acquisition.',
@@ -1748,254 +1809,6 @@ export const modules: Module[] = [
             ],
             correct: 2,
             explanation: 'O&M funds have a 1-year obligation period. Unobligated O&M funds expire at the end of the fiscal year (September 30) and cannot be used to obligate new contracts or orders. This is why the end of the fiscal year is an intense period of activity. Programs scramble to obligate funding before it expires.',
-          },
-        ],
-      },
-      {
-        id: 'ops-7',
-        title: "What Program Managers Actually Do",
-        duration: '20 min',
-        description: 'You were told you\'re ready to be a Program Manager. Maybe you\'re the best engineer on the team. Maybe you\'ve run circles around everyone else as a contract specialist or analyst. That\'s exactly why someone tapped you. And exactly why this lesson matters. Being a PM is not a step up from what you were doing. It\'s a step sideways into a completely different job. This lesson is the honest conversation nobody has with you before you start.',
-        keyTerms: [
-          {
-            term: 'Program Manager (PM)',
-            definition: 'The person accountable for a program\'s cost, schedule, and performance. Not the technical expert in the room. The integrator. The PM\'s job is to make sure the right people are solving the right problems, leadership always knows where things stand, and decisions get made before they become crises.',
-          },
-          {
-            term: 'Triple Constraint',
-            definition: 'The three things a PM is always balancing: cost, schedule, and performance. They\'re linked. Change one and the others move. Cut the budget and either the schedule slips or you deliver less. Add time and cost goes up. The PM\'s job is to manage that triangle deliberately, not accidentally.',
-          },
-          {
-            term: 'Stakeholder',
-            definition: 'Anyone who has a stake in the program\'s outcome, and that list is longer than most new PMs expect. The government customer, the contracting officer, your company\'s leadership, Congress (on large programs), and even the end users of whatever you\'re delivering. Knowing what each stakeholder wants, and how those interests align or conflict, is one of the PM\'s most important jobs.',
-          },
-          {
-            term: 'Earned Value Management (EVM)',
-            definition: 'A reporting system that compares how much work you\'ve completed against how much work you planned to complete and how much you planned to spend. All at the same time. It\'s how you know whether a program is actually on track, versus just looking busy.',
-          },
-          {
-            term: 'Program Baseline',
-            definition: 'The agreed-upon plan: what you\'ll deliver, when you\'ll deliver it, and for how much. Every cost and schedule report measures actual performance against the baseline. If the baseline changes, everything gets re-zeroed. Which is why protecting it matters.',
-          },
-          {
-            term: 'Risk Register',
-            definition: 'The living list of things that could go wrong on a program. How likely each one is, how bad it would be if it happened, and what you\'ll do about it. A well-maintained risk register is how a PM sees problems coming. An ignored one is how a PM gets surprised.',
-          },
-          {
-            term: 'Program Review',
-            definition: 'A formal briefing where you tell leadership, whether that is your company\'s, the government\'s, or both, exactly where the program stands: cost, schedule, risks, and what you need from them. This is not a status update. It\'s an accountability moment, and how you run it tells leadership everything about whether you have command of your program.',
-          },
-          {
-            term: 'Integrated Master Schedule (IMS)',
-            definition: 'The master timeline for the program, showing every task, who owns it, when it\'s due, and how tasks depend on each other. The IMS should be updated weekly and should never surprise you. The critical path is the one sequence of tasks that, if delayed, delays everything. You need to know before it slips, not after.',
-          },
-          {
-            term: 'Award Fee',
-            definition: 'On cost-plus contracts, the performance bonus the government can pay the contractor on top of base costs. It is earned, not guaranteed, based on government ratings across technical performance, cost control, schedule, and management. The PM\'s decisions directly affect how much award fee the company earns.',
-          },
-        ],
-        content: [
-          {
-            type: 'callout',
-            heading: 'The Promotion That Isn\'t',
-            body: 'Imagine you\'re the best striker on a soccer team. Thirty goals this season. Undeniable. The coach pulls you aside: "You\'re so good at this, we\'re making you the manager."\n\nCongratulations. You just stopped being a striker.\n\nYour job now is not to score goals. Your job is to build a team that scores goals. You don\'t get on the field. You set the strategy, manage the relationships, handle the budget, make sure the training schedule doesn\'t conflict with match days, and answer to the club owners when results don\'t come. The technical skills that made you a great striker are useful background. But they will get you fired as a manager if you keep using them instead of doing the actual management job.\n\nDefense acquisition program management is identical. The best engineers, analysts, and contract specialists who become PMs and struggle usually have one thing in common: they keep doing the old job. They dive into the technical details. They solve the problems themselves. They attend meetings to show off how smart they are instead of to help the room make a decision. They are, in the language of the field, "in the weeds". And while they\'re down there, nobody is flying the plane.\n\nThis lesson is about flying the plane.',
-          },
-          {
-            type: 'highlight',
-            body: 'Everything you do as a PM serves **three things**: Cost. Schedule. Performance.',
-            subtext: 'If someone asks you to do something that doesn\'t protect one of those three, ask why.',
-          },
-          {
-            type: 'stat_row',
-            heading: 'The Four Things a PM Is Always Managing',
-            stats: [
-              { value: '💰', label: 'Cost', sub: 'Spending at the right rate to finish?' },
-              { value: '📅', label: 'Schedule', sub: 'On track for the next milestone?' },
-              { value: '✅', label: 'Performance', sub: 'Delivering what was actually asked for?' },
-              { value: '⚠️', label: 'Risk', sub: 'Seeing problems before they become crises?' },
-            ],
-          },
-          {
-            type: 'two_col',
-            heading: 'What Each One Actually Means Day-to-Day',
-            rows: [
-              {
-                label: 'Cost',
-                badge: 'EVM',
-                text: 'Not just \"is the contract funded?\" It means: are we burning at the right rate, do we have enough to finish, and will leadership be shocked at the next review? EVM (Earned Value Management) is the tool: it compares how much work you\'ve gotten done against how much you planned to spend. It\'s the difference between knowing you\'re on track and hoping you are.',
-              },
-              {
-                label: 'Schedule',
-                badge: 'IMS',
-                text: 'Not a Gantt chart you file and forget. The IMS (Integrated Master Schedule) is a living document that should tell you whether the next milestone is at risk before it slips, not after. If your IMS is ever surprising you: it\'s not doing its job.',
-              },
-              {
-                label: 'Performance',
-                badge: 'CPARS',
-                text: 'The simplest to describe, the hardest to stay honest about. Are you delivering what the customer asked for? This is where your technical background actually helps: not to do the work, but to know whether the work being done meets the requirement. Busy ≠ delivering.',
-              },
-              {
-                label: 'Risk',
-                badge: 'Risk Register',
-                text: "What could go wrong, how likely is it, and what's the plan when it does? The PM who is surprised by problems isn't managing risk. Risk management isn't a quarterly briefing slide: it's a weekly conversation. If it's not on your risk register, it doesn't officially exist.",
-              },
-            ],
-          },
-          {
-            type: 'lucas_note',
-            body: "Here's the simplest version of this job I can give you:\n\nA good PM always knows three things cold: **their contract** (or task order, delivery order, or TDL: whatever instrument you're working under), **their subcontracts** (who's doing what, what they've delivered, and what they owe you), and **their finances** (burn rate, EAC, and whether there's money to finish).\n\nEverything else: the stakeholder meetings, the risk register, the status reports: is in service of staying on top of those three. If you know your contract, your subs, and your money, you will almost never be surprised in a program review.",
-          },          {
-            type: 'list',
-            heading: 'What Your Day Actually Looks Like',
-            items: [
-              'Weekly finance review with your cost analyst: not to approve it, but to understand it|||"What\'s our burn rate? Are we trending toward overrun? What\'s the estimate to complete?" If you can\'t answer those three questions off the top of your head on any given week, you don\'t have command of your program\'s finances. This meeting is how you stay current.',
-              'Contractor performance review: not to micromanage, but to stay informed|||"What did you deliver this month? What are your risks? What do you need from me?" The PM who surprises contractors with demands gets bad information. The PM who asks the same questions consistently, week after week, gets the real picture.',
-              'Monthly program review preparation|||This is a PM skill unto itself. Assembling data from six different sources, identifying the story that data tells, and deciding what leadership needs to know: and how to frame it: takes practice. "The data looks fine" is not a program review. A clear narrative about where you are, what\'s at risk, and what you need is.',
-              'Risk register update|||Every week, someone should be asking: did anything new go wrong? Did any risks get worse? Do we have the right mitigations in place? This is not administrative overhead. This is how you see problems coming. The PM who maintains a current risk register is rarely surprised. The PM who doesn\'t is routinely ambushed.',
-              'Stakeholder communication: proactive, not reactive|||The PM who only talks to their government customer when something goes wrong is already in trouble. The PM who maintains a relationship during the quiet periods has political capital when things get hard. Call before there\'s a problem. Update them even when there\'s nothing dramatic to report. That\'s how trust is built.',
-              'Schedule maintenance|||The IMS doesn\'t update itself. Someone needs to collect actuals from the team, update the baseline, and look at the critical path: the one task sequence where a slip delays everything. If you don\'t know what your critical path is right now, that\'s the first thing to find out.',
-              'Decision log|||Document every significant decision: why you made it, who approved it, what the alternatives were. When auditors show up (and they will), the paper trail is your protection. When leadership asks why something was done a certain way six months ago, the log is your answer. When you\'re off the program and your replacement needs to understand context, the log is how institutional knowledge survives.',
-            ],
-          },
-          {
-            type: 'list',
-            heading: 'The Things That Will Trip You Up',
-            items: [
-              'Doing the technical work yourself|||Your engineer misses a test milestone. You know exactly what the problem is: you\'ve seen this before, you could fix it in your sleep. You sit down and start solving it. Three weeks later, you\'ve fixed the technical problem. The schedule has slipped two months because nobody was managing the recovery plan. The PM\'s job was to ask: "What do you need to fix this, and what\'s our path back to the IMS baseline?" Not to be the one who fixes it.',
-              'Being the last to know|||New PMs often think surfacing problems early will make them look bad. The opposite is true. A cost overrun that leadership hears about in a program review: three months after you knew: is a trust-destroying event. The same overrun surfaced proactively, with a recovery plan, is evidence that a PM has command of their program. Leaders are not surprised by problems. They\'re surprised by PMs who hid them.',
-              'Confusing activity with progress|||"The team is working really hard" is not a status update. "We are 40% through the development phase, currently 12 days behind the IMS baseline, with a recovery plan that gets us back on track by March" is a status update. PMs who confuse busyness with progress give leadership the feeling that nobody is actually driving. That feeling tends to result in closer scrutiny: which nobody wants.',
-              'Not understanding the money|||Even if you have a dedicated cost analyst, you must understand your budget, your burn rate, and your estimate to complete. Finance is not someone else\'s job with a summary you glance at. If you cannot answer "how much have we spent and how much do we have left?" without looking it up, you are not doing the PM job. Start there.',
-              'Skipping the relationship with your COR|||On the government side, the Contracting Officer\'s Representative (COR): the government employee who monitors contractor performance day to day: is one of the most important relationships a contractor PM has. The COR writes the CPARS ratings: the past performance assessments that follow your company to every future contract evaluation. Ignoring them, or only calling when there\'s a problem, is a mistake that shows up on the next re-compete. Treat the COR relationship as a standing priority, not an afterthought.',
-            ],
-          },
-          {
-            type: 'text',
-            heading: 'What Good Actually Looks Like',
-            body: 'She walks into the monthly program review knowing every number before the first slide goes up. Not because she memorized the deck. Because she\'s been tracking the data all month. The review is not where she learns what\'s happening. It\'s where she tells leadership what she already knows.\n\nWhen a general officer asks a question that isn\'t on the slides, she answers it without hesitation. When a risk materializes that has everyone in the room on edge, she says: "We saw this coming six weeks ago. Here are the three options. Here\'s our recommendation." The room relaxes. The meeting ends with decisions made instead of questions multiplied.\n\nThat\'s what command of a program looks like. It has nothing to do with technical expertise. It\'s about knowing your program. Its cost, its schedule, its risks, and its stakeholders. Cold. The technical team knows the solution. The PM knows the program.',
-          },
-          {
-            type: 'list',
-            level: 'intermediate' as const,
-            heading: 'Making the Transition: Your First 90 Days',
-            items: [
-              'Get a mentor who\'s done it|||Not a peer who\'s also new to PM: someone who has managed a program through a rough patch. Ask them what surprised them. Ask them what they wish they\'d known in month one. The lessons that come from actual experience are different from any training course, and most veterans in this field are genuinely willing to share them.',
-              'Learn the money first|||Before you try to understand the technical approach in depth, understand the budget structure. How is the contract funded? What type of contract is it: cost-plus, fixed-price? What\'s the award fee period, and when is the next evaluation? The financial structure defines the incentives for everyone on the program, including your company.',
-              'Map your stakeholders|||Write a list of every person who has an opinion about this program: the government COR, the customer program office, your company\'s leadership, the business development team. Understand who wants what and how their interests align or conflict. You cannot manage stakeholders you haven\'t identified.',
-              'Read the contract: the whole thing|||Most new PMs never read the contract. The Statement of Work tells you what you\'re contractually obligated to deliver. The CDRLs (Contract Data Requirements Lists: the official deliverables list) tell you what you\'ll be evaluated on. The evaluation criteria tell you what "good" means in the government\'s eyes. These documents define your job. You should know them cold.',
-              'Find the critical path on the IMS|||One task sequence, if it slips, delays everything else. That\'s the critical path. Find it in the first week. Protect it. Make sure everyone on the program knows what it is. The critical path is where schedule risk lives, and it\'s the first thing experienced reviewers will ask about.',
-            ],
-          },
-          {
-            type: 'text',
-            level: 'advanced' as const,
-            heading: 'The Longer Game',
-            body: 'The PM who masters the transition typically does one thing differently from the ones who plateau: they stop thinking exclusively about their program and start thinking about their portfolio of relationships.\n\nEvery program review is a chance to build trust with leadership. Every problem surfaced early, with a recovery plan already in hand, is a deposit in that trust account. Every crisis managed with composure, clarity, and honest information is a career-defining moment, in the right direction.\n\nThe PMs who advance are not the ones with the cleanest programs. Defense programs are messy by nature. The requirements are hard, the timelines are compressed, the budgets are constrained, and the stakes are real. Clean programs are the exception. The PMs who advance are the ones whose leadership always felt informed. Always felt that problems were under control. Always felt that someone was driving.\n\nThat feeling, that the PM has command of the situation, is what you\'re building. It doesn\'t come from expertise. It comes from consistency: consistent reporting, consistent communication, consistent honesty about where the program stands. Over time, it becomes a reputation. And in this field, reputation is the whole game.',
-          },
-        ],
-        quiz: [
-          {
-            id: 'q1',
-            type: 'mc',
-            question: 'A senior engineer is told she\'s being promoted to PM on a large defense program. What is the most important mindset shift she needs to make?',
-            options: [
-              'Continue focusing on technical excellence: that\'s what got her here|||Technical excellence is valuable background, but it\'s not the PM job. PMs who default to solving technical problems themselves often neglect the management work that nobody else will do.',
-              'Shift from being the expert who solves problems to being the integrator who makes sure problems get solved|||Correct. The PM is not the person with all the answers: she\'s the person accountable for making sure the right people find the answers, on time, within budget. That requires a fundamentally different way of working.',
-              'Manage the team by personally tackling the hardest technical challenges|||This is the most common mistake new PMs from technical backgrounds make. Diving into technical problems feels productive but leaves the management work unattended.',
-              'Focus primarily on the program schedule and let the technical team manage everything else|||Schedule is important, but it\'s one side of the triple constraint. A PM who focuses only on schedule while ignoring cost and performance is managing a third of the job.',
-            ],
-            correct: 1,
-            explanation: 'The transition from technical expert to PM is a shift in identity, not just responsibilities. The expert is measured by the quality of their individual work. The PM is measured by the outcomes of everyone else\'s work. That shift, from doing to enabling, is the hardest part of the transition, and the most important.',
-          },
-          {
-            id: 'q2',
-            type: 'mc',
-            question: 'A PM on a cost-plus contract notices the team\'s burn rate is higher than planned. What should they do first?',
-            options: [
-              'Wait a few weeks to see if the rate corrects itself|||Waiting is how a manageable variance becomes a funding crisis. By the time a burn rate problem is obvious, you\'ve already burned time you needed to build a recovery.',
-              'Immediately notify the government customer|||Customer communication matters, but the PM should understand the root cause before that conversation. Calling the customer to report a problem you don\'t yet understand doesn\'t inspire confidence.',
-              'Ask the cost analyst for the current Estimate at Completion (EAC) and understand the root cause before taking action|||Correct. Before escalating, the PM needs to understand what\'s driving the higher burn rate, how significant the variance is, and what the projected impact is at completion. The EAC tells you where you\'re headed, not just where you are today.',
-              'Contact the contracting officer to request additional funding|||Requesting more money is a last resort, not a first response. Most burn rate issues have a root cause that needs to be understood and addressed first.',
-            ],
-            correct: 2,
-            explanation: 'The right first step is diagnosis. Get the current Estimate at Completion from your cost analyst, understand whether this is a timing variance or a trend, and identify what\'s driving it. Then you can have a productive conversation with leadership and, if necessary, the customer. With a recovery plan, not just a problem.',
-          },
-          {
-            id: 'q3',
-            type: 'mc',
-            question: 'The triple constraint in program management refers to:',
-            options: [
-              'Scope, communication, and risk|||These are important program management concepts, but they\'re not the triple constraint. Scope is sometimes substituted for performance in civilian PM frameworks, but the defense acquisition version is cost, schedule, and performance.',
-              'Cost, schedule, and performance|||Correct. These are the three dimensions a PM is accountable for, and they\'re interdependent: change one and the others are affected. Managing that triangle deliberately is the core of the PM job.',
-              'Quality, safety, and regulatory compliance|||These are important considerations but not the defining framework for program accountability in defense acquisition.',
-              'Budget, personnel, and technology|||These are inputs to a program, not the outcome dimensions the PM is accountable for. The PM is accountable for what gets delivered (performance), when (schedule), and for how much (cost).',
-            ],
-            correct: 1,
-            explanation: 'Cost, schedule, and performance. Sometimes called the "iron triangle". Are the three things a PM is always balancing. They\'re linked: change one and the others move. Add time and costs go up. Cut the budget and something has to give. Either schedule or delivered capability. Managing those tradeoffs deliberately, with clear documentation and stakeholder agreement, is what PMs do.',
-          },
-          {
-            id: 'q4',
-            type: 'mc',
-            question: 'What does Earned Value Management (EVM) tell you that a simple budget report doesn\'t?',
-            options: [
-              'Nothing different: it\'s just another way to report spending|||EVM is fundamentally different from a budget report. A budget report tells you how much you\'ve spent. EVM tells you how much work you\'ve gotten for that spending.',
-              'Whether you have enough people on the team|||Staffing levels are an input, not what EVM measures. EVM measures outputs: work accomplished: against both the planned work and the planned cost.',
-              'Whether you\'re getting the planned amount of work done for the money spent, at any point in time|||Correct. EVM compares three things simultaneously: planned work, actual work completed, and actual spend. A budget report can show you\'re on plan financially while you\'re significantly behind on work: or vice versa. EVM catches both.',
-              'The contractor\'s profit margin on the contract|||EVM measures program performance against the baseline plan. It doesn\'t reveal the contractor\'s internal cost structure or profit margin.',
-            ],
-            correct: 2,
-            explanation: 'A budget report tells you how much money has been spent. EVM tells you whether you\'re getting the work you expected for that spend. A program can look fine on a simple budget report. Spending at exactly the planned rate. While actually being significantly behind schedule, because the team is spending more per task than planned. EVM catches that disconnect early.',
-          },
-          {
-            id: 'q5',
-            type: 'mc',
-            question: 'A new PM discovers a technical problem she knows exactly how to solve from her engineering background. What is the right PM response?',
-            options: [
-              'Solve it herself: she\'s the most qualified person to fix it quickly|||This is the most tempting wrong answer in program management. Solving it yourself feels productive, but the schedule impact, stakeholder communication, and recovery plan will go unmanaged while you\'re in the weeds.',
-              'Ask the team to solve it, then manage the recovery plan and schedule impact|||Correct. The PM\'s job is to ask: "What do you need to fix this, and what\'s our path back to the baseline?" The team owns the solution. The PM owns the program-level consequences: the schedule recovery, the customer communication, the risk register update.',
-              'Ignore it and let the engineer figure it out on their own timeline|||Ignoring a known problem is not delegation: it\'s abdication. The PM should be engaged, asking the right questions and managing the impact, without taking over the technical work.',
-              'Escalate immediately to leadership without first understanding the scope|||Escalating before you understand the problem isn\'t leadership: it\'s panic. Understand the scope, assess the schedule impact, and come to leadership with options, not just a problem.',
-            ],
-            correct: 1,
-            explanation: 'The PM\'s job is to manage the impact of the problem. The schedule recovery, the customer communication, the risk register update. Not to solve the problem itself. Stepping in to do the technical work feels helpful but leaves the management work unattended. Three weeks later, you\'ve fixed the technical problem and the schedule has slipped two months because nobody was managing it.',
-          },
-          {
-            id: 'q6',
-            type: 'mc',
-            question: 'What is a CPARS rating and why does it matter to a contractor PM?',
-            options: [
-              'A financial audit result that has no bearing on future contract work|||CPARS has significant bearing on future work: it\'s one of the primary factors source selection boards use when evaluating past performance on re-compete awards.',
-              'A past performance rating written by the government COR that follows the contractor to future contract evaluations|||Correct. The Contractor Performance Assessment Reporting System (CPARS) rating is the government\'s official assessment of how well the contractor performed. It is used in source selection for future contracts and can affect whether the company wins re-competes: making it a direct business development concern for the PM.',
-              'A project management certification the contractor PM should earn|||CPARS is not a certification. It is an assessment written by the government about contractor performance.',
-              'An internal company performance review for contractor employees|||CPARS is written by the government customer: specifically, typically initiated by the COR: not by the contractor. It is an external evaluation of the contractor\'s performance.',
-            ],
-            correct: 1,
-            explanation: 'CPARS ratings are the government\'s official record of contractor past performance, and they follow the contractor to every future source selection. The COR. The government employee you work with daily. Plays a central role in how those ratings are written. A contractor PM who maintains a strong relationship with the COR and performs consistently is building a track record that directly affects future contract wins.',
-          },
-          {
-            id: 'q7',
-            type: 'mc',
-            question: 'On a cost-plus contract, what does the award fee represent?',
-            options: [
-              'The government\'s base payment covering all contract work and standard profit|||The base payment covers costs and a small fixed base fee. The award fee is a separate, variable layer on top: and it is not guaranteed.',
-              'A variable bonus the contractor earns based on performance ratings: the PM\'s decisions directly affect how much is earned|||Correct. On cost-plus award fee contracts, the government reimburses allowable costs and pays a fixed base fee regardless of performance. The award fee is earned based on government ratings across technical performance, cost control, schedule, and management. Every call the PM makes affects those ratings.',
-              'A financial penalty the government applies when the contractor has cost overruns|||Award fee works in reverse: it\'s withheld (not earned) when performance is poor, not assessed as a penalty. The contractor earns less; the government doesn\'t collect more.',
-              'The contractor\'s fixed profit margin established at contract award|||Nothing about the award fee is fixed: that\'s the point. The amount earned varies based on performance. A fixed profit margin is more characteristic of fixed-price contract structures.',
-            ],
-            correct: 1,
-            explanation: 'On a cost-plus award fee (CPAF) contract, the government reimburses allowable costs and pays a small guaranteed base fee. The award fee, which can represent real money, is earned based on performance ratings in areas like technical quality, cost control, schedule adherence, and management. A PM who understands this structure manages differently: the choices made every week directly affect how much fee the company collects at the end of the evaluation period.',
-          },
-          {
-            id: 'q8',
-            type: 'mc',
-            question: 'Which of the following best describes what "command of your program" looks like in practice?',
-            options: [
-              'Knowing the technical solution in depth and being able to explain it to leadership|||Technical depth is useful context, but leadership doesn\'t need you to explain the engineering. They need to know the cost, schedule, and risk picture: and what you\'re doing about it.',
-              'Being able to answer any question about cost, schedule, risk, and stakeholder status without looking it up|||Correct. Command of a program means you know your numbers cold: not because you memorized a briefing, but because you\'ve been tracking the data all month. When a question comes from the room that isn\'t on the slides, you can answer it. When a risk materializes, you have options ready.',
-              'Having more experience than anyone else on the program team|||Experience is valuable, but command of a program is demonstrated through current, accurate knowledge: not tenure. New PMs can demonstrate command. Experienced PMs can lose it.',
-              'Ensuring no problems ever arise on the program|||Problems arise on every defense program. Command of a program doesn\'t mean having no problems: it means knowing about them before leadership does and having a plan when they surface.',
-            ],
-            correct: 1,
-            explanation: 'Command of a program is not about expertise. It\'s about currency and clarity. The PM who walks into a program review knowing every number, who can answer questions that aren\'t on the slides, and who can say "we saw this coming and here are our options" is demonstrating command. That comes from consistent weekly engagement with cost, schedule, risk, and stakeholder data. Not from deep technical knowledge.',
           },
         ],
       },
@@ -3300,7 +3113,7 @@ export const modules: Module[] = [
         },
           {
             type: 'lucas_note',
-            body: `Contractor PMs: DCAA showing up is not an emergency. It's normal. If you have a compliant accounting system, accurate timecards, and you're not billing unallowable costs: a DCAA audit is just a process. The PMs who panic are the ones who haven't been keeping clean books.\n\nThe one thing that actually causes problems: being slow or uncooperative with access. DCAA has the right to your records under FAR 52.215-2. If you stonewall them, it escalates fast and ends badly. Open the door, get your finance team in the room, answer the questions honestly. Clean records, transparent answers, no drama.`,
+            body: `Contractor PMs: DCAA showing up is not an emergency. It's normal. If you've got a compliant accounting system, accurate timecards, and you're not billing unallowable costs, a DCAA audit is just a process. The PMs who panic are usually the ones who haven't been keeping clean books.\n\nThe one thing that actually causes problems is being slow or uncooperative with access. DCAA has the right to your records under FAR 52.215-2. Stonewall them and it escalates fast, and it ends badly. Open the door, get your finance team in the room, and answer the questions honestly. Clean records, transparent answers, no drama.`,
           },
         {
           type: 'callout' as const,
@@ -3414,6 +3227,7 @@ export const modules: Module[] = [
         id: 'finance-8',
         title: 'CPAF, Burn Rate & Award Fee',
         duration: '55 min',
+        description: 'How CPAF contracts actually pay you: the four award-fee factors, how burn rate protects your cost score day to day, and how every period rolls into a CPARS record that follows your company into the next recompete.',
         keyTerms: [
           {
             term: 'CPAF',
@@ -3465,6 +3279,11 @@ export const modules: Module[] = [
               { src: '/examples/img/cpaf-1.png', caption: 'Evaluation periods run every 6 months. Notice "Incurred Cost" is the default method, "Estimated Cost" and "Equal Distribution" are explicitly banned because they inflate fee above what was negotiated at award.' },
               { src: '/examples/img/cpaf-2.png', caption: 'This adjectival scale is the real engine of CPAF. Every evaluator scores against the same word-picture standard, 91%+ requires exceeding ALMOST ALL criteria, not just meeting them.' },
             ],
+          },
+          {
+            title: 'Template: Burn Rate Tracker (Excel)',
+            description: 'A ready-to-use monthly burn rate tracker: enter your TOA and actual spend, and it calculates cumulative variance, a 3-month rolling burn rate, and a projected fund-exhaustion date automatically.',
+            url: '/examples/burn-rate-tracker.xlsx',
           },
         ],
         content: [
@@ -3594,7 +3413,7 @@ export const modules: Module[] = [
             quiz: [
               {
                 id: 'q1',
-                type: 'mc',
+                type: 'multiple_choice',
                 question: 'On a CPAF contract, what happens to the company\'s profit if you save costs by finishing work under budget?',
                 options: [
                   'Profit increases dollar-for-dollar because costs saved become profit|||Incorrect. That\'s how fixed-price contracts work. On CPAF, the government reimburses your actual allowable costs: so costs saved are simply not spent, not converted to profit.',
@@ -3608,7 +3427,7 @@ export const modules: Module[] = [
               },
               {
                 id: 'q2',
-                type: 'mc',
+                type: 'multiple_choice',
                 question: 'Who actually decides how much weight Cost Control gets in an award fee evaluation, relative to Technical, Schedule, and Management?',
                 options: [
                   'A single government-wide percentage set in the FAR that applies to every CPAF contract|||Incorrect. There is no single DoD-wide minimum percentage for cost control. A DoD audit of real CPAF contracts found cost weightings ranging from 13% to 40% depending on the program.',
@@ -3622,7 +3441,7 @@ export const modules: Module[] = [
               },
               {
                 id: 'q3',
-                type: 'mc',
+                type: 'multiple_choice',
                 question: 'Your burn rate is running significantly below plan for the past two months. Which of the following is NOT a likely consequence?',
                 options: [
                   'The government may de-obligate unused funds at fiscal year end|||This IS a likely consequence. Under-execution means money sits unused, and agencies often sweep unspent funds at year end.',
@@ -3636,7 +3455,7 @@ export const modules: Module[] = [
               },
               {
                 id: 'q4',
-                type: 'mc',
+                type: 'multiple_choice',
                 question: 'What is the maximum base fee allowed on a CPAF contract?',
                 options: [
                   '1% of estimated contract cost|||Incorrect. While base fees are often set well below the maximum, the regulatory ceiling under DFARS 216.405-2 is higher than 1%.',
@@ -3650,7 +3469,7 @@ export const modules: Module[] = [
               },
               {
                 id: 'q5',
-                type: 'mc',
+                type: 'multiple_choice',
                 question: 'A subcontractor on your contract has been performing tasks not described in their Statement of Work (SOW) because it was convenient. What is the primary risk?',
                 options: [
                   'The subcontractor may bill for the extra work, creating unallowable or disputed costs|||Correct. Undocumented work outside an approved SOW creates potential unallowable costs or billing disputes. If the government audits and finds costs incurred for work without proper authorization, those costs may be disallowed: meaning the company eats them with no reimbursement.',
@@ -3730,7 +3549,7 @@ export const modules: Module[] = [
             quiz: [
               {
                 id: 'q1',
-                type: 'mc',
+                type: 'multiple_choice',
                 question: 'Using the wrap rate formula. Billed Cost = Base Salary × (1 + Fringe) × (1 + Overhead) × (1 + G&A). What is the approximate billed cost for an employee with an $80,000 base salary, 35% fringe, 80% overhead, and 10% G&A?',
                 options: [
                   '$104,000|||Incorrect. This only applies fringe (80K × 1.30 ≈ $104K). The overhead and G&A multipliers are not applied, significantly understating the true billed cost.',
@@ -3744,7 +3563,7 @@ export const modules: Module[] = [
               },
               {
                 id: 'q2',
-                type: 'mc',
+                type: 'multiple_choice',
                 question: 'Your team\'s labor utilization drops from 82% to 63% over two months due to a delayed task order. What is the most immediate company-wide financial impact?',
                 options: [
                   'Base fee for your contract is reduced|||Incorrect. Base fee is fixed and guaranteed regardless of performance or utilization. Utilization doesn\'t directly reduce base fee.',
@@ -3758,7 +3577,7 @@ export const modules: Module[] = [
               },
               {
                 id: 'q3',
-                type: 'mc',
+                type: 'multiple_choice',
                 question: 'Your contract has $500,000 in remaining funded value but your Finance PM\'s EAC projects you will spend $750,000 before the next modification is received. What is the correct immediate action?',
                 options: [
                   'Continue normal operations and request a modification when funds run out|||Incorrect. By the time funds run out, you\'ve potentially committed to costs you cannot pay: creating ADA violation risk. The modification process takes time and must be initiated before the gap, not after.',
@@ -3772,7 +3591,7 @@ export const modules: Module[] = [
               },
               {
                 id: 'q4',
-                type: 'mc',
+                type: 'multiple_choice',
                 question: 'On the worked contract P&L example ($24M direct labor, 30% fringe, 80% overhead, $8M subcontracts/ODCs, 10% G&A), what is the approximate total contract profit if 85% of the available award fee ($2M pool) is earned?',
                 options: [
                   '$0.96M (base fee only)|||Incorrect. This represents only the base fee. The question specifies that 85% of the award fee pool is also earned, which adds to profit.',
@@ -3786,7 +3605,7 @@ export const modules: Module[] = [
               },
               {
                 id: 'q5',
-                type: 'mc',
+                type: 'multiple_choice',
                 question: 'How does small business subcontracting plan performance typically factor into your award fee?',
                 options: [
                   'It has its own fixed 10% weighting under a specific FAR clause on every CPAF contract|||Incorrect. There is no FAR clause that assigns subcontracting plan performance a fixed award fee percentage across all contracts. Whether and how it counts depends on that specific contract\'s Award Fee Determination Plan.',
@@ -3866,7 +3685,7 @@ export const modules: Module[] = [
             quiz: [
               {
                 id: 'q1',
-                type: 'mc',
+                type: 'multiple_choice',
                 question: 'Your CPAF contract has a $3M award fee pool. Your evaluation period scores are: Technical 90 (Excellent), Cost Control 72 (Fair), Schedule 88 (Excellent), Management 80 (Good). Assuming equal weight at 25% each, what is the approximate award fee earned?',
                 options: [
                   '$3M (100% earned due to Excellent Technical and Schedule scores)|||Incorrect. Award fee is calculated on a weighted blended basis. "Excellent" scores on two factors do not override the lower scores on the others: all four factors contribute proportionally to the blended rating.',
@@ -3880,7 +3699,7 @@ export const modules: Module[] = [
               },
               {
                 id: 'q2',
-                type: 'mc',
+                type: 'multiple_choice',
                 question: 'DCAA is conducting a rate audit and discovers that $45,000 in company entertainment expenses were incorrectly charged to the overhead pool. What is the most severe potential consequence beyond just disallowing the $45,000?',
                 options: [
                   'The contract is immediately terminated for default|||Incorrect. A cost pool error, even a deliberate one, does not typically trigger immediate contract termination. The government has less drastic remedies: cost disallowance, rate adjustment, and referral to the Inspector General for intentional mischarging.',
@@ -3894,7 +3713,7 @@ export const modules: Module[] = [
               },
               {
                 id: 'q3',
-                type: 'mc',
+                type: 'multiple_choice',
                 question: 'Your company has $10B in revenue, 150M diluted shares, and a 35% effective tax rate. A major CPAF contract swings from 95% award fee earned to 45% earned on a $20M award fee pool. What is the approximate per-share EPS impact?',
                 options: [
                   '$0.04 reduction in EPS|||Incorrect. The calculation: $20M pool × 50% swing = $10M operating income loss. After 35% tax: $10M × 0.65 = $6.5M net income loss. $6.5M ÷ 150M shares ≈ $0.043 reduction. This is closer but the answer below is more precisely derived.',
@@ -3908,7 +3727,7 @@ export const modules: Module[] = [
               },
               {
                 id: 'q4',
-                type: 'mc',
+                type: 'multiple_choice',
                 question: 'You are approaching fiscal year end (September 30) with 15% of the contract\'s funded value unspent due to a delayed hiring ramp. The COR has not been informed. What is the correct course of action and primary risk if you stay silent?',
                 options: [
                   'Accelerate spending on any available ODCs to consume the remaining funds before year end|||Incorrect. Accelerating expenditures on non-mission-required ODCs would constitute wasteful spending: a violation of cost stewardship principles and potentially unallowable under FAR Part 31. Award fee evaluators who discover artificial spending acceleration rate both cost control and management lower.',
@@ -3922,7 +3741,7 @@ export const modules: Module[] = [
               },
               {
                 id: 'q5',
-                type: 'mc',
+                type: 'multiple_choice',
                 question: 'A colleague argues that focusing on award fee documentation is a distraction from actual technical work, and that good work speaks for itself in the evaluation. What is the financially precise rebuttal?',
                 options: [
                   'Documentation is a nice-to-have but the FDO generally knows what the contractor has done|||Incorrect. FDOs are not embedded in daily contract operations. They rely on the COR assessment and the contractor Self-Assessment. Undocumented achievements have no input into the evaluation: the FDO literally cannot credit what hasn\'t been reported to them.',
@@ -3934,6 +3753,10 @@ export const modules: Module[] = [
                 explanation:
                   'The financial stakes of documentation are concrete and calculable. On a $3M award fee pool, the difference between Excellent (97.5% earned = $2.925M) and Good (50% earned = $1.5M) performance is $1.425M. If that gap is caused by undocumented achievements. Work that was actually done but not recorded and presented. It is a permanent, unrecoverable operating income loss. Documentation is not bureaucratic overhead; it is the mechanism through which excellent work converts to earnings.',
               },
+            ],
+          },
+        },
+      },
                 {
           id: 'finance-9',
           title: 'Revenue Recognition',
@@ -4123,10 +3946,6 @@ export const modules: Module[] = [
             },
           ],
         },
-    ],
-          },
-        },
-      },
     ],
     assessment: [
       {
@@ -4431,7 +4250,7 @@ export const modules: Module[] = [
       },
       {
         type: 'lucas_note',
-        body: "The contract type you\'re on is not just legal vocabulary. It determines your daily life.\n\nOn **FFP**, you eat every dollar over budget. Budget discipline is survival. On **CPAF**, your fee is someone\'s subjective judgment call: which means your relationship with the COR and program office PM directly determines whether you get paid well for the same work. On **T&M**, the government watches your hours like a hawk and questions everything.\n\n**Know your contract type before your first status meeting.** Understand how your fee is calculated, what the government is evaluating, and what the financial upside and downside look like. If you\'re on a CPAF contract and you don\'t know when the next award fee period ends, you are leaving money on the table.",
+        body: "I've watched two PMs run nearly identical programs under two different contract types and behave like completely different people. The one on FFP tracked every dollar like his job depended on it, because it did. The one on CPAF spent more time in the COR's office than at his desk, because his fee depended on that relationship as much as the work itself. Same job title, same technical scope, completely different instincts. That's what contract type actually does to you.\n\nOn **FFP**, you eat every dollar over budget, so budget discipline is survival. On **CPAF**, your fee is someone's subjective judgment call, so your relationship with the COR and program office PM directly determines whether you get paid well for the same work. On **T&M**, the government watches your hours like a hawk and questions everything.\n\n**Know your contract type before your first status meeting.** Understand how your fee is calculated, what the government is evaluating, and what the upside and downside actually look like. If you're on a CPAF contract and you don't know when the next award fee period ends, you're leaving money on the table.",
       },
       {
         type: 'callout',
@@ -4713,7 +4532,7 @@ export const modules: Module[] = [
         },
       {
         type: 'lucas_note',
-        body: `When I'm writing a proposal, I read Section M before I read anything else. Before the SOW, before Section C, before the instructions. Section M is the scoring rubric. It tells me exactly what the evaluator is going to grade me on.\n\nEverything else in the proposal is in service of Section M. If an evaluation factor says "management approach" is the second-highest weighted factor: my best writer goes on that section, not on the technical approach. If past performance is pass/fail, I don't spend 20 pages on it.\n\nMost proposals I've reviewed spend the most effort on what the team knows best, not on what the government is actually scoring. Read M first. Build your outline from M. Then fill it in.`,
+        body: `When I'm writing a proposal, I read Section M before I read anything else. Before the SOW, before Section C, before the instructions. Section M is the scoring rubric. It tells me exactly what the evaluator is going to grade me on.\n\nEverything else in the proposal is in service of Section M. If an evaluation factor says "management approach" is the second-highest weighted factor, my best writer goes on that section, not on the technical approach. If past performance is pass/fail, I don't spend 20 pages on it.\n\nMost proposals I've reviewed spend the most effort on what the team knows best, not on what the government is actually scoring. Read M first. Build your outline from M. Then fill it in.`,
       },
         ],
       quiz: [
@@ -4845,7 +4664,7 @@ export const modules: Module[] = [
       },
       {
         type: 'lucas_note',
-        body: `Three things a PM on a MAC-IDIQ needs to know cold: their **task order** (what work is authorized), their **SOW/PWS** (what they're obligated to deliver), and their **funding** (how much is actually on contract).\n\nThe IDIQ base contract is the vehicle. The task order is the game. I've seen PMs confused about why their invoices aren't getting paid: and it's because they were billing against a CLIN that doesn't have money on the task order. Know your TO like you know your own name.`
+        body: `Three things a PM on a MAC-IDIQ needs to know cold: their **task order** (what work is authorized), their **SOW/PWS** (what they're obligated to deliver), and their **funding** (how much is actually on contract).\n\nThe IDIQ base contract is the vehicle. The task order is the game. I've seen PMs confused about why their invoices aren't getting paid, and it's because they were billing against a CLIN that doesn't have money on the task order. Know your TO like you know your own name.`
       },
       {
         type: 'table_visual' as any,
@@ -5601,7 +5420,8 @@ export const modules: Module[] = [
         ],
         quiz: [
       {
-        type: 'mc',
+        id: 'q1',
+        type: 'multiple_choice',
         question: 'What is the key difference between a GWAC and a MAC?',
         options: [
           'A GWAC is awarded to a single vendor; a MAC is awarded to multiple vendors|||incorrect',
@@ -5609,10 +5429,12 @@ export const modules: Module[] = [
           'A GWAC can only be used for IT services; a MAC covers all service categories|||incorrect',
           'A MAC requires the Economy Act; a GWAC does not|||incorrect',
         ],
+        correct: 1,
         explanation: 'A MAC (Multiple Award Contract) describes the award structure. Multiple vendors win simultaneously. A GWAC is a specific type of MAC that has been officially designated for government-wide use. Not every MAC is a GWAC. An agency-specific IDIQ with multiple awardees is a MAC but not a GWAC.',
       },
       {
-        type: 'mc',
+        id: 'q2',
+        type: 'multiple_choice',
         question: 'The Economy Act (31 U.S.C. § 1535) authorizes what?',
         options: [
           'GSA to award contracts on behalf of other agencies without competition|||incorrect',
@@ -5620,10 +5442,12 @@ export const modules: Module[] = [
           'Contractors to self-authorize additional work when the COR is unavailable|||incorrect',
           'Agencies to exceed their appropriated budgets when mission requirements demand it|||incorrect',
         ],
+        correct: 1,
         explanation: 'The Economy Act is the legal foundation for interagency acquisitions. It allows one agency (the requesting/using agency) to buy from another agency (the servicing agency that holds the contract). The two agencies formalize the arrangement through an Interagency Agreement (IAA). The using agency must certify the use is in its best interest and the cost is fair and reasonable.',
       },
       {
-        type: 'mc',
+        id: 'q3',
+        type: 'multiple_choice',
         question: 'A task order differs from the base IDIQ contract primarily in what way?',
         options: [
           'The base IDIQ defines the specific work and funds it; the task order just establishes eligibility|||incorrect',
@@ -5631,10 +5455,12 @@ export const modules: Module[] = [
           'The base IDIQ is competed; the task order is awarded without competition|||incorrect',
           'Task orders are signed by the COR; the base IDIQ is signed by the CO|||incorrect',
         ],
+        correct: 1,
         explanation: 'The base IDIQ is the umbrella. It sets the rules, ceiling value, ordering period, and eligible awardees, but obligates little money (often just the minimum guarantee). The task order is where the actual work and funding live. It has its own SOW, CLIN structure, period of performance, and obligated dollars. The task order is what a contractor PM manages day-to-day.',
       },
       {
-        type: 'mc',
+        id: 'q4',
+        type: 'multiple_choice',
         question: 'What is the key difference between a Task Order and a Delivery Order?',
         options: [
           'Task orders are issued by the CO; delivery orders are issued by the COR|||incorrect',
@@ -5642,10 +5468,12 @@ export const modules: Module[] = [
           'Task orders require fair opportunity competition; delivery orders do not|||incorrect',
           'Delivery orders are placed against standalone contracts; task orders are placed against IDIQs|||incorrect',
         ],
+        correct: 1,
         explanation: 'Under FAR 16.501, task orders are orders for services placed against an IDIQ, while delivery orders are orders for supplies or products. In practice, defense professionals often use "task order" informally to cover both, but the legal distinction matters for contract structure and appropriation purposes.',
       },
       {
-        type: 'mc',
+        id: 'q5',
+        type: 'multiple_choice',
         question: 'A TDL from a COR asks the contractor to begin supporting a new project not described anywhere in the task order SOW. What should the contractor PM do?',
         options: [
           'Execute the work immediately: the COR has authority to direct all technical activities|||incorrect',
@@ -5653,10 +5481,12 @@ export const modules: Module[] = [
           'Stop, notify the Contracting Officer in writing of the scope concern, and do not start the work until a contract modification is issued|||correct',
           'Execute the work and add a note to the invoice explaining that the COR verbally authorized it|||incorrect',
         ],
+        correct: 2,
         explanation: 'A TDL cannot add scope. If a TDL directs work that wasn\'t in the task order SOW, the COR has exceeded their authority. The contractor PM must immediately notify the Contracting Officer (CO) in writing, describe the concern, and not start the work. Starting the work anyway risks performing an unauthorized commitment. Work the government has no legal obligation to pay for.',
       },
       {
-        type: 'mc',
+        id: 'q6',
+        type: 'multiple_choice',
         question: 'CLINs (Contract Line Item Numbers) in a task order serve what primary purpose?',
         options: [
           'They identify which contracting officer is responsible for each deliverable|||incorrect',
@@ -5664,10 +5494,12 @@ export const modules: Module[] = [
           'They establish the vendor\'s security clearance level for each phase of work|||incorrect',
           'They are used exclusively to track travel and ODC reimbursements|||incorrect',
         ],
+        correct: 1,
         explanation: 'CLINs are the financial and contractual architecture of a task order. Each CLIN defines a specific element of work (e.g., base period services, option year 1, travel), has its own funding ceiling and period of performance, and may have its own contract type. Critically, appropriation tracking, or color of money, is managed at the CLIN level, which matters for Antideficiency Act compliance.',
       },
       {
-        type: 'mc',
+        id: 'q7',
+        type: 'multiple_choice',
         question: 'On a GSA OASIS+ task order, the COR verbally directs the contractor to add two analysts to the team starting next week. What is the correct contractor response?',
         options: [
           'Assign the analysts immediately: the COR is the day-to-day authority on all staffing decisions|||incorrect',
@@ -5675,10 +5507,12 @@ export const modules: Module[] = [
           'Decline any staffing change unless it is accompanied by a signed contract modification|||incorrect',
           'Contact OMB to report the unauthorized direction|||incorrect',
         ],
+        correct: 1,
         explanation: 'Verbal direction alone is not sufficient documentation on a government contract. The contractor should immediately follow up in writing, "Per our call today, I understand you\'re directing us to assign two senior analysts starting April 7. Please confirm by email." Once confirmed in writing, the contractor should verify the work is within scope and that CLIN funding covers the effort, then proceed. This protects both parties.',
       },
       {
-        type: 'mc',
+        id: 'q8',
+        type: 'multiple_choice',
         question: 'An agency wants to use OASIS+ to acquire professional services. What document authorizes the interagency transaction between the requesting agency and GSA?',
         options: [
           'A Technical Direction Letter issued by the agency COR|||incorrect',
@@ -5686,6 +5520,7 @@ export const modules: Module[] = [
           'An Interagency Agreement (IAA) executed between the requesting agency and GSA under the Economy Act|||correct',
           'A Sole Source Justification approved by the agency\'s Senior Procurement Executive|||incorrect',
         ],
+        correct: 2,
         explanation: 'When a requesting agency wants to use a GSA vehicle like OASIS+, they execute an Interagency Agreement (IAA) with GSA under the authority of the Economy Act. The IAA documents the scope of the requirement, transfers the funding, and establishes the terms of the interagency relationship. GSA (the servicing agency) then places the task order against OASIS+ on the requesting agency\'s behalf.',
       },
         ],
@@ -5771,7 +5606,7 @@ export const modules: Module[] = [
       },
       {
         type: 'lucas_note',
-        body: `The constructive change is the trap I see contractor PMs fall into constantly. The COR asks for something: a little extra analysis, a slightly different format, a new briefing that wasn't in the SOW: and the PM just says yes because they want to keep the relationship smooth.\n\nThat's admirable. But here's the problem: you just did work that isn't on contract. If you do it enough times, you've created scope creep, burned hours you can't bill, and potentially set a precedent for what "standard" looks like. And if you ever try to get paid for it via an REA, you now have no documentation.\n\nThe right answer isn't to say no. It's to say: "Happy to do that: let's make sure there's a mod." Simple. And it protects everyone.`,
+        body: `The constructive change is the trap I see contractor PMs fall into constantly. The COR asks for something small, a little extra analysis, a slightly different format, a new briefing that wasn't in the SOW. The PM just says yes, because they want to keep the relationship smooth.\n\nThat's admirable. But here's the problem: you just did work that isn't on contract. Do it enough times and you've created scope creep, burned hours you can't bill, and maybe set a precedent for what "standard" looks like. And if you ever try to get paid for it through an REA, you've got no documentation to back it up.\n\nThe right answer isn't to say no. It's to say, "Happy to do that. Let's just make sure there's a mod first." Simple, and it protects everyone.`,
       },
       {
       type: 'text' as const,
@@ -5958,7 +5793,7 @@ export const modules: Module[] = [
         },
       {
         type: 'lucas_note',
-        body: `Simple rule I give every new contractor PM: if your COR asks you to do something that isn't in your Statement of Work, **stop**. Don't do it yet. Say: "I want to make sure we're covered: can we get a mod?"\n\nNine times out of ten, the COR didn't realize it was out of scope. They're not trying to get free work. They just didn't check the SOW. Most of the time you can get a quick mod and execute. The tenth time, the government says "we don't have funding for a mod": which tells you everything you need to know about whether you should do it.\n\nThe contract you won is the starting line, not the finish line. Everything after that is execution: and execution without documentation is just volunteering.`,
+        body: `Simple rule I give every new contractor PM: if your COR asks you to do something that isn't in your Statement of Work, **stop**. Don't do it yet. Just say, "I want to make sure we're covered, can we get a mod?"\n\nNine times out of ten, the COR didn't realize it was out of scope. They're not trying to get free work, they just didn't check the SOW, and you'll get a quick mod and move on. It's the tenth time that matters: when the government comes back and says "we don't have funding for a mod," that tells you everything you need to know about whether you should be doing the work at all.\n\nWinning the contract was the starting line, not the finish line. Everything after that is execution, and execution without documentation is just volunteering.`,
       },
         ],
       quiz: [
@@ -8983,7 +8818,7 @@ export const modules: Module[] = [
         quiz: [
       {
         id: 'q1',
-        type: 'mc',
+        type: 'multiple_choice',
         question: 'What is the most accurate way to describe the difference between working on the government side versus the contractor side in defense acquisition?',
         options: [
           'Government employees do the technical work; contractors oversee it|||This is backwards. Contractors typically perform the technical execution. Government employees provide oversight and are ultimately accountable for outcomes.',
@@ -8996,7 +8831,7 @@ export const modules: Module[] = [
       },
       {
         id: 'q2',
-        type: 'mc',
+        type: 'multiple_choice',
         question: 'A talented systems engineer with 10 years of experience is considering a move into a Program Manager role. What is the most important thing for them to understand about this transition?',
         options: [
           'Their technical expertise will be their biggest advantage as a PM|||Technical depth is useful context but can actually become a liability if the new PM defaults to doing technical work instead of managing it.',
@@ -9009,7 +8844,7 @@ export const modules: Module[] = [
       },
       {
         id: 'q3',
-        type: 'mc',
+        type: 'multiple_choice',
         question: 'A recent college graduate (graduated 14 months ago) wants to start a career on the government side of defense acquisition. What is the best entry path?',
         options: [
           'Apply directly to GS-12 positions using USAJOBS.gov|||GS-12 positions require significant prior experience. A recent graduate without federal service would not be competitive at this level.',
@@ -9022,7 +8857,7 @@ export const modules: Module[] = [
       },
       {
         id: 'q4',
-        type: 'mc',
+        type: 'multiple_choice',
         question: 'Which certification is considered a baseline credential for contractor Program Manager roles and is widely required rather than preferred?',
         options: [
           'DAPA Level III certification|||DAPA (Defense Acquisition Professional Development Program) is the government\'s internal certification framework. It\'s required for government employees, not typically contractors.',
@@ -9035,7 +8870,7 @@ export const modules: Module[] = [
       },
       {
         id: 'q5',
-        type: 'mc',
+        type: 'multiple_choice',
         question: 'How does a security clearance most directly affect a defense acquisition career, especially at senior levels?',
         options: [
           'It primarily affects which DAU courses you can take|||DAU courses are based on your job role and certification level, not your clearance level.',
@@ -9048,7 +8883,7 @@ export const modules: Module[] = [
       },
       {
         id: 'q6',
-        type: 'mc',
+        type: 'multiple_choice',
         question: 'What do job series codes like 1102 and 1101 mean when searching for federal acquisition jobs?',
         options: [
           'They are security classification levels for acquisition programs|||Classification levels are a separate system. ACAT levels classify programs by size and oversight; classification levels (Secret, Top Secret) govern information access.',
@@ -9061,7 +8896,7 @@ export const modules: Module[] = [
       },
       {
         id: 'q7',
-        type: 'mc',
+        type: 'multiple_choice',
         question: 'What does DAU (Defense Acquisition University) provide, and what does it cost government employees?',
         options: [
           'Advanced degree programs in defense management; tuition varies by program|||DAU offers certifications and professional development courses, not accredited degree programs. The cost model is also different.',
@@ -9074,7 +8909,7 @@ export const modules: Module[] = [
       },
       {
         id: 'q8',
-        type: 'mc',
+        type: 'multiple_choice',
         question: 'When a defense contractor recruits a senior government acquisition professional, what are they primarily paying for?',
         options: [
           'Their academic credentials and graduate degrees|||Education is a factor at the entry level, but senior contractors are primarily paying for experience, clearance, and relationships: not degrees.',
@@ -9087,7 +8922,7 @@ export const modules: Module[] = [
       },
       {
         id: 'q9',
-        type: 'mc',
+        type: 'multiple_choice',
         question: 'What is GovWin IQ primarily used for in the defense contractor world?',
         options: [
           'Processing security clearance applications for contractor employees|||Clearances are processed through DCSA, a government agency. GovWin is a private business intelligence platform.',
@@ -9100,7 +8935,7 @@ export const modules: Module[] = [
       },
       {
         id: 'q10',
-        type: 'mc',
+        type: 'multiple_choice',
         question: 'Based on typical 2025 salary ranges, approximately how much of a salary increase might a GS-14 government acquisition professional expect when transitioning to a Senior PM or Program Director role at a defense contractor?',
         options: [
           'Little to no increase: government and contractor salaries are comparable at senior levels|||At the senior level, contractor salaries typically run significantly higher than equivalent government grades, particularly when clearance and program relationships are involved.',
@@ -10050,7 +9885,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
         quiz: [
           {
             id: 'cmmi-q1',
-            type: 'mc',
+            type: 'multiple_choice',
             question: 'A DoD RFP states: "Offerors must demonstrate a current CMMI Maturity Level 3 appraisal." A contractor submits proof of a SCAMPI B assessment at ML3. Is this acceptable?',
             options: [
               'Yes: SCAMPI B and SCAMPI A both produce official ML ratings|||Incorrect. Only SCAMPI Class A produces an official Maturity Level rating publishable in the PAL. SCAMPI B is a lighter gap-analysis: it does not produce a publicly verifiable ML rating.',
@@ -10063,7 +9898,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             id: 'cmmi-q2',
-            type: 'mc',
+            type: 'multiple_choice',
             question: 'What is the most common CMMI compliance gap that government PMs discover after contract award?',
             options: [
               'The contractor\'s appraisal is older than 5 years|||Incorrect: the appraisal validity period is 3 years, and an expired appraisal would typically be caught during proposal evaluation. The more insidious issue is scope.',
@@ -10076,7 +9911,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             id: 'cmmi-q3',
-            type: 'mc',
+            type: 'multiple_choice',
             question: 'What is the key difference between a SCAMPI A and a SCAMPI B appraisal?',
             options: [
               'SCAMPI A covers hardware; SCAMPI B covers software development|||Incorrect. The distinction is not by technology domain: both are general process assessments applicable to any type of work.',
@@ -10089,7 +9924,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             id: 'cmmi-q4',
-            type: 'mc',
+            type: 'multiple_choice',
             question: 'Your ML3-appraised contractor is showing PMB instability. Budgets keep moving forward in the schedule to avoid recording negative schedule variance. What is the most appropriate CMMI-informed response?',
             options: [
               'Immediately report the contractor to DCMA for EVM non-compliance|||Incorrect as the first response. While DCMA has oversight authority, a more targeted approach: requesting a review of the specific CMMI process areas governing PMB integrity: is more effective than a broad EVM non-compliance escalation.',
@@ -10102,7 +9937,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             id: 'cmmi-q5',
-            type: 'mc',
+            type: 'multiple_choice',
             question: 'Which DFARS clause links CMMI requirements to software-intensive DoD programs above certain cost thresholds?',
             options: [
               'DFARS 252.215-7000 (Subcontractor Cost or Pricing Data)|||Incorrect. This clause covers certified cost and pricing data requirements for subcontractors: it has no connection to CMMI process maturity requirements.',
@@ -10112,6 +9947,261 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             ],
             correct: 2,
             explanation: 'DFARS 252.234-7002 links EVM and CMMI for software-intensive programs, requiring ML3+ or an approved plan to achieve it. This reflects DoD\'s recognition that EVM reliability depends on underlying process maturity.',
+          },
+        ],
+      },
+      {
+        id: 'ops-7',
+        title: "What Program Managers Actually Do",
+        duration: '20 min',
+        description: 'You were told you\'re ready to be a Program Manager. Maybe you\'re the best engineer on the team. Maybe you\'ve run circles around everyone else as a contract specialist or analyst. That\'s exactly why someone tapped you. And exactly why this lesson matters. Being a PM is not a step up from what you were doing. It\'s a step sideways into a completely different job. This lesson is the honest conversation nobody has with you before you start.',
+        attachments: [
+          {
+            title: 'Template: PM Approval Authority RACI (Excel)',
+            description: 'Who actually decides what: invoices, travel, ODCs, subcontractor costs, out-of-scope requests, and more, mapped across PM, Subcontracts, Finance, Contracts, COR, and CO.',
+            url: '/examples/pm-approval-raci.xlsx',
+          },
+        ],
+        keyTerms: [
+          {
+            term: 'Program Manager (PM)',
+            definition: 'The person accountable for a program\'s cost, schedule, and performance. Not the technical expert in the room. The integrator. The PM\'s job is to make sure the right people are solving the right problems, leadership always knows where things stand, and decisions get made before they become crises.',
+          },
+          {
+            term: 'Triple Constraint',
+            definition: 'The three things a PM is always balancing: cost, schedule, and performance. They\'re linked. Change one and the others move. Cut the budget and either the schedule slips or you deliver less. Add time and cost goes up. The PM\'s job is to manage that triangle deliberately, not accidentally.',
+          },
+          {
+            term: 'Stakeholder',
+            definition: 'Anyone who has a stake in the program\'s outcome, and that list is longer than most new PMs expect. The government customer, the contracting officer, your company\'s leadership, Congress (on large programs), and even the end users of whatever you\'re delivering. Knowing what each stakeholder wants, and how those interests align or conflict, is one of the PM\'s most important jobs.',
+          },
+          {
+            term: 'Earned Value Management (EVM)',
+            definition: 'A reporting system that compares how much work you\'ve completed against how much work you planned to complete and how much you planned to spend. All at the same time. It\'s how you know whether a program is actually on track, versus just looking busy.',
+          },
+          {
+            term: 'Program Baseline',
+            definition: 'The agreed-upon plan: what you\'ll deliver, when you\'ll deliver it, and for how much. Every cost and schedule report measures actual performance against the baseline. If the baseline changes, everything gets re-zeroed. Which is why protecting it matters.',
+          },
+          {
+            term: 'Risk Register',
+            definition: 'The living list of things that could go wrong on a program. How likely each one is, how bad it would be if it happened, and what you\'ll do about it. A well-maintained risk register is how a PM sees problems coming. An ignored one is how a PM gets surprised.',
+          },
+          {
+            term: 'Program Review',
+            definition: 'A formal briefing where you tell leadership, whether that is your company\'s, the government\'s, or both, exactly where the program stands: cost, schedule, risks, and what you need from them. This is not a status update. It\'s an accountability moment, and how you run it tells leadership everything about whether you have command of your program.',
+          },
+          {
+            term: 'Integrated Master Schedule (IMS)',
+            definition: 'The master timeline for the program, showing every task, who owns it, when it\'s due, and how tasks depend on each other. The IMS should be updated weekly and should never surprise you. The critical path is the one sequence of tasks that, if delayed, delays everything. You need to know before it slips, not after.',
+          },
+          {
+            term: 'Award Fee',
+            definition: 'On cost-plus contracts, the performance bonus the government can pay the contractor on top of base costs. It is earned, not guaranteed, based on government ratings across technical performance, cost control, schedule, and management. The PM\'s decisions directly affect how much award fee the company earns.',
+          },
+        ],
+        content: [
+          {
+            type: 'callout',
+            heading: 'The Promotion That Isn\'t',
+            body: 'Imagine you\'re the best striker on a soccer team. Thirty goals this season. Undeniable. The coach pulls you aside: "You\'re so good at this, we\'re making you the manager."\n\nCongratulations. You just stopped being a striker.\n\nYour job now is not to score goals. Your job is to build a team that scores goals. You don\'t get on the field. You set the strategy, manage the relationships, handle the budget, make sure the training schedule doesn\'t conflict with match days, and answer to the club owners when results don\'t come. The technical skills that made you a great striker are useful background. But they will get you fired as a manager if you keep using them instead of doing the actual management job.\n\nDefense acquisition program management is identical. The best engineers, analysts, and contract specialists who become PMs and struggle usually have one thing in common: they keep doing the old job. They dive into the technical details. They solve the problems themselves. They attend meetings to show off how smart they are instead of to help the room make a decision. They are, in the language of the field, "in the weeds". And while they\'re down there, nobody is flying the plane.\n\nThis lesson is about flying the plane.',
+          },
+          {
+            type: 'highlight',
+            body: 'Everything you do as a PM serves **three things**: Cost. Schedule. Performance.',
+            subtext: 'If someone asks you to do something that doesn\'t protect one of those three, ask why.',
+          },
+          {
+            type: 'stat_row',
+            heading: 'The Four Things a PM Is Always Managing',
+            stats: [
+              { value: '💰', label: 'Cost', sub: 'Spending at the right rate to finish?' },
+              { value: '📅', label: 'Schedule', sub: 'On track for the next milestone?' },
+              { value: '✅', label: 'Performance', sub: 'Delivering what was actually asked for?' },
+              { value: '⚠️', label: 'Risk', sub: 'Seeing problems before they become crises?' },
+            ],
+          },
+          {
+            type: 'two_col',
+            heading: 'What Each One Actually Means Day-to-Day',
+            rows: [
+              {
+                label: 'Cost',
+                badge: 'EVM',
+                text: 'Not just \"is the contract funded?\" It means: are we burning at the right rate, do we have enough to finish, and will leadership be shocked at the next review? EVM (Earned Value Management) is the tool: it compares how much work you\'ve gotten done against how much you planned to spend. It\'s the difference between knowing you\'re on track and hoping you are.',
+              },
+              {
+                label: 'Schedule',
+                badge: 'IMS',
+                text: 'Not a Gantt chart you file and forget. The IMS (Integrated Master Schedule) is a living document that should tell you whether the next milestone is at risk before it slips, not after. If your IMS is ever surprising you: it\'s not doing its job.',
+              },
+              {
+                label: 'Performance',
+                badge: 'CPARS',
+                text: 'The simplest to describe, the hardest to stay honest about. Are you delivering what the customer asked for? This is where your technical background actually helps: not to do the work, but to know whether the work being done meets the requirement. Busy ≠ delivering.',
+              },
+              {
+                label: 'Risk',
+                badge: 'Risk Register',
+                text: "What could go wrong, how likely is it, and what's the plan when it does? The PM who is surprised by problems isn't managing risk. Risk management isn't a quarterly briefing slide: it's a weekly conversation. If it's not on your risk register, it doesn't officially exist.",
+              },
+            ],
+          },
+          {
+            type: 'lucas_note',
+            body: "Somebody once described this job to me as 'being professionally responsible for things you don't personally do.' That stuck with me, because it's exactly right, and it's exactly why the jump into PM work catches so many good engineers and analysts off guard.\n\nYou stop being measured on how well you understand the technical problem. You start being measured on whether the right people are working it, whether leadership knows where things stand, and whether the money and the schedule hold up while that happens. It's a completely different skill set, and nobody really teaches it to you directly. Most PMs learn it the same way: they get blindsided in a program review once, and decide never to let that happen again.",
+          },          {
+            type: 'list',
+            heading: 'What Your Day Actually Looks Like',
+            items: [
+              'Weekly finance review with your cost analyst: not to approve it, but to understand it|||"What\'s our burn rate? Are we trending toward overrun? What\'s the estimate to complete?" If you can\'t answer those three questions off the top of your head on any given week, you don\'t have command of your program\'s finances. This meeting is how you stay current.',
+              'Contractor performance review: not to micromanage, but to stay informed|||"What did you deliver this month? What are your risks? What do you need from me?" The PM who surprises contractors with demands gets bad information. The PM who asks the same questions consistently, week after week, gets the real picture.',
+              'Monthly program review preparation|||This is a PM skill unto itself. Assembling data from six different sources, identifying the story that data tells, and deciding what leadership needs to know: and how to frame it: takes practice. "The data looks fine" is not a program review. A clear narrative about where you are, what\'s at risk, and what you need is.',
+              'Risk register update|||Every week, someone should be asking: did anything new go wrong? Did any risks get worse? Do we have the right mitigations in place? This is not administrative overhead. This is how you see problems coming. The PM who maintains a current risk register is rarely surprised. The PM who doesn\'t is routinely ambushed.',
+              'Stakeholder communication: proactive, not reactive|||The PM who only talks to their government customer when something goes wrong is already in trouble. The PM who maintains a relationship during the quiet periods has political capital when things get hard. Call before there\'s a problem. Update them even when there\'s nothing dramatic to report. That\'s how trust is built.',
+              'Schedule maintenance|||The IMS doesn\'t update itself. Someone needs to collect actuals from the team, update the baseline, and look at the critical path: the one task sequence where a slip delays everything. If you don\'t know what your critical path is right now, that\'s the first thing to find out.',
+              'Decision log|||Document every significant decision: why you made it, who approved it, what the alternatives were. When auditors show up (and they will), the paper trail is your protection. When leadership asks why something was done a certain way six months ago, the log is your answer. When you\'re off the program and your replacement needs to understand context, the log is how institutional knowledge survives.',
+            ],
+          },
+          {
+            type: 'list',
+            heading: 'The Things That Will Trip You Up',
+            items: [
+              'Doing the technical work yourself|||Your engineer misses a test milestone. You know exactly what the problem is: you\'ve seen this before, you could fix it in your sleep. You sit down and start solving it. Three weeks later, you\'ve fixed the technical problem. The schedule has slipped two months because nobody was managing the recovery plan. The PM\'s job was to ask: "What do you need to fix this, and what\'s our path back to the IMS baseline?" Not to be the one who fixes it.',
+              'Being the last to know|||New PMs often think surfacing problems early will make them look bad. The opposite is true. A cost overrun that leadership hears about in a program review: three months after you knew: is a trust-destroying event. The same overrun surfaced proactively, with a recovery plan, is evidence that a PM has command of their program. Leaders are not surprised by problems. They\'re surprised by PMs who hid them.',
+              'Confusing activity with progress|||"The team is working really hard" is not a status update. "We are 40% through the development phase, currently 12 days behind the IMS baseline, with a recovery plan that gets us back on track by March" is a status update. PMs who confuse busyness with progress give leadership the feeling that nobody is actually driving. That feeling tends to result in closer scrutiny: which nobody wants.',
+              'Not understanding the money|||Even if you have a dedicated cost analyst, you must understand your budget, your burn rate, and your estimate to complete. Finance is not someone else\'s job with a summary you glance at. If you cannot answer "how much have we spent and how much do we have left?" without looking it up, you are not doing the PM job. Start there.',
+              'Skipping the relationship with your COR|||On the government side, the Contracting Officer\'s Representative (COR): the government employee who monitors contractor performance day to day: is one of the most important relationships a contractor PM has. The COR writes the CPARS ratings: the past performance assessments that follow your company to every future contract evaluation. Ignoring them, or only calling when there\'s a problem, is a mistake that shows up on the next re-compete. Treat the COR relationship as a standing priority, not an afterthought.',
+            ],
+          },
+          {
+            type: 'text',
+            heading: 'What Good Actually Looks Like',
+            body: 'She walks into the monthly program review knowing every number before the first slide goes up. Not because she memorized the deck. Because she\'s been tracking the data all month. The review is not where she learns what\'s happening. It\'s where she tells leadership what she already knows.\n\nWhen a general officer asks a question that isn\'t on the slides, she answers it without hesitation. When a risk materializes that has everyone in the room on edge, she says: "We saw this coming six weeks ago. Here are the three options. Here\'s our recommendation." The room relaxes. The meeting ends with decisions made instead of questions multiplied.\n\nThat\'s what command of a program looks like. It has nothing to do with technical expertise. It\'s about knowing your program. Its cost, its schedule, its risks, and its stakeholders. Cold. The technical team knows the solution. The PM knows the program.',
+          },
+          {
+            type: 'list',
+            level: 'intermediate' as const,
+            heading: 'Making the Transition: Your First 90 Days',
+            items: [
+              'Get a mentor who\'s done it|||Not a peer who\'s also new to PM: someone who has managed a program through a rough patch. Ask them what surprised them. Ask them what they wish they\'d known in month one. The lessons that come from actual experience are different from any training course, and most veterans in this field are genuinely willing to share them.',
+              'Learn the money first|||Before you try to understand the technical approach in depth, understand the budget structure. How is the contract funded? What type of contract is it: cost-plus, fixed-price? What\'s the award fee period, and when is the next evaluation? The financial structure defines the incentives for everyone on the program, including your company.',
+              'Map your stakeholders|||Write a list of every person who has an opinion about this program: the government COR, the customer program office, your company\'s leadership, the business development team. Understand who wants what and how their interests align or conflict. You cannot manage stakeholders you haven\'t identified.',
+              'Read the contract: the whole thing|||Most new PMs never read the contract. The Statement of Work tells you what you\'re contractually obligated to deliver. The CDRLs (Contract Data Requirements Lists: the official deliverables list) tell you what you\'ll be evaluated on. The evaluation criteria tell you what "good" means in the government\'s eyes. These documents define your job. You should know them cold.',
+              'Find the critical path on the IMS|||One task sequence, if it slips, delays everything else. That\'s the critical path. Find it in the first week. Protect it. Make sure everyone on the program knows what it is. The critical path is where schedule risk lives, and it\'s the first thing experienced reviewers will ask about.',
+            ],
+          },
+          {
+            type: 'text',
+            level: 'advanced' as const,
+            heading: 'The Longer Game',
+            body: 'The PM who masters the transition typically does one thing differently from the ones who plateau: they stop thinking exclusively about their program and start thinking about their portfolio of relationships.\n\nEvery program review is a chance to build trust with leadership. Every problem surfaced early, with a recovery plan already in hand, is a deposit in that trust account. Every crisis managed with composure, clarity, and honest information is a career-defining moment, in the right direction.\n\nThe PMs who advance are not the ones with the cleanest programs. Defense programs are messy by nature. The requirements are hard, the timelines are compressed, the budgets are constrained, and the stakes are real. Clean programs are the exception. The PMs who advance are the ones whose leadership always felt informed. Always felt that problems were under control. Always felt that someone was driving.\n\nThat feeling, that the PM has command of the situation, is what you\'re building. It doesn\'t come from expertise. It comes from consistency: consistent reporting, consistent communication, consistent honesty about where the program stands. Over time, it becomes a reputation. And in this field, reputation is the whole game.',
+          },
+        ],
+        quiz: [
+          {
+            id: 'q1',
+            type: 'multiple_choice',
+            question: 'A senior engineer is told she\'s being promoted to PM on a large defense program. What is the most important mindset shift she needs to make?',
+            options: [
+              'Continue focusing on technical excellence: that\'s what got her here|||Technical excellence is valuable background, but it\'s not the PM job. PMs who default to solving technical problems themselves often neglect the management work that nobody else will do.',
+              'Shift from being the expert who solves problems to being the integrator who makes sure problems get solved|||Correct. The PM is not the person with all the answers: she\'s the person accountable for making sure the right people find the answers, on time, within budget. That requires a fundamentally different way of working.',
+              'Manage the team by personally tackling the hardest technical challenges|||This is the most common mistake new PMs from technical backgrounds make. Diving into technical problems feels productive but leaves the management work unattended.',
+              'Focus primarily on the program schedule and let the technical team manage everything else|||Schedule is important, but it\'s one side of the triple constraint. A PM who focuses only on schedule while ignoring cost and performance is managing a third of the job.',
+            ],
+            correct: 1,
+            explanation: 'The transition from technical expert to PM is a shift in identity, not just responsibilities. The expert is measured by the quality of their individual work. The PM is measured by the outcomes of everyone else\'s work. That shift, from doing to enabling, is the hardest part of the transition, and the most important.',
+          },
+          {
+            id: 'q2',
+            type: 'multiple_choice',
+            question: 'A PM on a cost-plus contract notices the team\'s burn rate is higher than planned. What should they do first?',
+            options: [
+              'Wait a few weeks to see if the rate corrects itself|||Waiting is how a manageable variance becomes a funding crisis. By the time a burn rate problem is obvious, you\'ve already burned time you needed to build a recovery.',
+              'Immediately notify the government customer|||Customer communication matters, but the PM should understand the root cause before that conversation. Calling the customer to report a problem you don\'t yet understand doesn\'t inspire confidence.',
+              'Ask the cost analyst for the current Estimate at Completion (EAC) and understand the root cause before taking action|||Correct. Before escalating, the PM needs to understand what\'s driving the higher burn rate, how significant the variance is, and what the projected impact is at completion. The EAC tells you where you\'re headed, not just where you are today.',
+              'Contact the contracting officer to request additional funding|||Requesting more money is a last resort, not a first response. Most burn rate issues have a root cause that needs to be understood and addressed first.',
+            ],
+            correct: 2,
+            explanation: 'The right first step is diagnosis. Get the current Estimate at Completion from your cost analyst, understand whether this is a timing variance or a trend, and identify what\'s driving it. Then you can have a productive conversation with leadership and, if necessary, the customer. With a recovery plan, not just a problem.',
+          },
+          {
+            id: 'q3',
+            type: 'multiple_choice',
+            question: 'The triple constraint in program management refers to:',
+            options: [
+              'Scope, communication, and risk|||These are important program management concepts, but they\'re not the triple constraint. Scope is sometimes substituted for performance in civilian PM frameworks, but the defense acquisition version is cost, schedule, and performance.',
+              'Cost, schedule, and performance|||Correct. These are the three dimensions a PM is accountable for, and they\'re interdependent: change one and the others are affected. Managing that triangle deliberately is the core of the PM job.',
+              'Quality, safety, and regulatory compliance|||These are important considerations but not the defining framework for program accountability in defense acquisition.',
+              'Budget, personnel, and technology|||These are inputs to a program, not the outcome dimensions the PM is accountable for. The PM is accountable for what gets delivered (performance), when (schedule), and for how much (cost).',
+            ],
+            correct: 1,
+            explanation: 'Cost, schedule, and performance. Sometimes called the "iron triangle". Are the three things a PM is always balancing. They\'re linked: change one and the others move. Add time and costs go up. Cut the budget and something has to give. Either schedule or delivered capability. Managing those tradeoffs deliberately, with clear documentation and stakeholder agreement, is what PMs do.',
+          },
+          {
+            id: 'q4',
+            type: 'multiple_choice',
+            question: 'What does Earned Value Management (EVM) tell you that a simple budget report doesn\'t?',
+            options: [
+              'Nothing different: it\'s just another way to report spending|||EVM is fundamentally different from a budget report. A budget report tells you how much you\'ve spent. EVM tells you how much work you\'ve gotten for that spending.',
+              'Whether you have enough people on the team|||Staffing levels are an input, not what EVM measures. EVM measures outputs: work accomplished: against both the planned work and the planned cost.',
+              'Whether you\'re getting the planned amount of work done for the money spent, at any point in time|||Correct. EVM compares three things simultaneously: planned work, actual work completed, and actual spend. A budget report can show you\'re on plan financially while you\'re significantly behind on work: or vice versa. EVM catches both.',
+              'The contractor\'s profit margin on the contract|||EVM measures program performance against the baseline plan. It doesn\'t reveal the contractor\'s internal cost structure or profit margin.',
+            ],
+            correct: 2,
+            explanation: 'A budget report tells you how much money has been spent. EVM tells you whether you\'re getting the work you expected for that spend. A program can look fine on a simple budget report. Spending at exactly the planned rate. While actually being significantly behind schedule, because the team is spending more per task than planned. EVM catches that disconnect early.',
+          },
+          {
+            id: 'q5',
+            type: 'multiple_choice',
+            question: 'A new PM discovers a technical problem she knows exactly how to solve from her engineering background. What is the right PM response?',
+            options: [
+              'Solve it herself: she\'s the most qualified person to fix it quickly|||This is the most tempting wrong answer in program management. Solving it yourself feels productive, but the schedule impact, stakeholder communication, and recovery plan will go unmanaged while you\'re in the weeds.',
+              'Ask the team to solve it, then manage the recovery plan and schedule impact|||Correct. The PM\'s job is to ask: "What do you need to fix this, and what\'s our path back to the baseline?" The team owns the solution. The PM owns the program-level consequences: the schedule recovery, the customer communication, the risk register update.',
+              'Ignore it and let the engineer figure it out on their own timeline|||Ignoring a known problem is not delegation: it\'s abdication. The PM should be engaged, asking the right questions and managing the impact, without taking over the technical work.',
+              'Escalate immediately to leadership without first understanding the scope|||Escalating before you understand the problem isn\'t leadership: it\'s panic. Understand the scope, assess the schedule impact, and come to leadership with options, not just a problem.',
+            ],
+            correct: 1,
+            explanation: 'The PM\'s job is to manage the impact of the problem. The schedule recovery, the customer communication, the risk register update. Not to solve the problem itself. Stepping in to do the technical work feels helpful but leaves the management work unattended. Three weeks later, you\'ve fixed the technical problem and the schedule has slipped two months because nobody was managing it.',
+          },
+          {
+            id: 'q6',
+            type: 'multiple_choice',
+            question: 'What is a CPARS rating and why does it matter to a contractor PM?',
+            options: [
+              'A financial audit result that has no bearing on future contract work|||CPARS has significant bearing on future work: it\'s one of the primary factors source selection boards use when evaluating past performance on re-compete awards.',
+              'A past performance rating written by the government COR that follows the contractor to future contract evaluations|||Correct. The Contractor Performance Assessment Reporting System (CPARS) rating is the government\'s official assessment of how well the contractor performed. It is used in source selection for future contracts and can affect whether the company wins re-competes: making it a direct business development concern for the PM.',
+              'A project management certification the contractor PM should earn|||CPARS is not a certification. It is an assessment written by the government about contractor performance.',
+              'An internal company performance review for contractor employees|||CPARS is written by the government customer: specifically, typically initiated by the COR: not by the contractor. It is an external evaluation of the contractor\'s performance.',
+            ],
+            correct: 1,
+            explanation: 'CPARS ratings are the government\'s official record of contractor past performance, and they follow the contractor to every future source selection. The COR. The government employee you work with daily. Plays a central role in how those ratings are written. A contractor PM who maintains a strong relationship with the COR and performs consistently is building a track record that directly affects future contract wins.',
+          },
+          {
+            id: 'q7',
+            type: 'multiple_choice',
+            question: 'On a cost-plus contract, what does the award fee represent?',
+            options: [
+              'The government\'s base payment covering all contract work and standard profit|||The base payment covers costs and a small fixed base fee. The award fee is a separate, variable layer on top: and it is not guaranteed.',
+              'A variable bonus the contractor earns based on performance ratings: the PM\'s decisions directly affect how much is earned|||Correct. On cost-plus award fee contracts, the government reimburses allowable costs and pays a fixed base fee regardless of performance. The award fee is earned based on government ratings across technical performance, cost control, schedule, and management. Every call the PM makes affects those ratings.',
+              'A financial penalty the government applies when the contractor has cost overruns|||Award fee works in reverse: it\'s withheld (not earned) when performance is poor, not assessed as a penalty. The contractor earns less; the government doesn\'t collect more.',
+              'The contractor\'s fixed profit margin established at contract award|||Nothing about the award fee is fixed: that\'s the point. The amount earned varies based on performance. A fixed profit margin is more characteristic of fixed-price contract structures.',
+            ],
+            correct: 1,
+            explanation: 'On a cost-plus award fee (CPAF) contract, the government reimburses allowable costs and pays a small guaranteed base fee. The award fee, which can represent real money, is earned based on performance ratings in areas like technical quality, cost control, schedule adherence, and management. A PM who understands this structure manages differently: the choices made every week directly affect how much fee the company collects at the end of the evaluation period.',
+          },
+          {
+            id: 'q8',
+            type: 'multiple_choice',
+            question: 'Which of the following best describes what "command of your program" looks like in practice?',
+            options: [
+              'Knowing the technical solution in depth and being able to explain it to leadership|||Technical depth is useful context, but leadership doesn\'t need you to explain the engineering. They need to know the cost, schedule, and risk picture: and what you\'re doing about it.',
+              'Being able to answer any question about cost, schedule, risk, and stakeholder status without looking it up|||Correct. Command of a program means you know your numbers cold: not because you memorized a briefing, but because you\'ve been tracking the data all month. When a question comes from the room that isn\'t on the slides, you can answer it. When a risk materializes, you have options ready.',
+              'Having more experience than anyone else on the program team|||Experience is valuable, but command of a program is demonstrated through current, accurate knowledge: not tenure. New PMs can demonstrate command. Experienced PMs can lose it.',
+              'Ensuring no problems ever arise on the program|||Problems arise on every defense program. Command of a program doesn\'t mean having no problems: it means knowing about them before leadership does and having a plan when they surface.',
+            ],
+            correct: 1,
+            explanation: 'Command of a program is not about expertise. It\'s about currency and clarity. The PM who walks into a program review knowing every number, who can answer questions that aren\'t on the slides, and who can say "we saw this coming and here are our options" is demonstrating command. That comes from consistent weekly engagement with cost, schedule, risk, and stakeholder data. Not from deep technical knowledge.',
           },
         ],
       },

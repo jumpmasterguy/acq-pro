@@ -564,6 +564,15 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
   const unlockedOrder = levelOrder[unlockedLevel];
   const viewOrder = levelOrder[viewLevel];
 
+  // Most lessons carry quiz questions on lesson.quiz directly. A few (e.g.
+  // finance-8) use the levels-branched format instead, where each skill
+  // level has its own quiz array under lesson.levels[level].quiz. Fall back
+  // to the current view level'''s quiz (or novice'''s) when lesson.quiz is empty.
+  const effectiveQuiz: QuizQuestion[] =
+    (lesson.quiz && lesson.quiz.length > 0)
+      ? lesson.quiz
+      : (lesson.levels?.[viewLevel]?.quiz ?? lesson.levels?.novice?.quiz ?? []);
+
   // A block is visible if: no level tag (universal), OR level <= viewLevel
   // A block is "locked preview" if: level exists AND level > unlockedLevel (user hasn't unlocked it yet)
   const hasLeveledContent = (lesson.content ?? []).some(b => b.level !== undefined);
@@ -588,7 +597,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
   const calcScore = () => {
     let correct = 0;
     let total = 0;
-    for (const q of (lesson!.quiz ?? [])) {
+    for (const q of effectiveQuiz) {
       const qType = q.type ?? 'multiple_choice';
       total++;
       if (qType === 'multiple_choice') {
@@ -635,7 +644,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
   // ── All-answered check ──
   const isAllAnswered = () => {
-    for (const q of (lesson!.quiz ?? [])) {
+    for (const q of effectiveQuiz) {
       const qType = q.type ?? 'multiple_choice';
       if (qType === 'multiple_choice') {
         if (quizAnswers[q.id] === undefined) return false;
@@ -653,7 +662,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
   const answeredCount = (() => {
     let count = 0;
-    for (const q of (lesson.quiz ?? [])) {
+    for (const q of effectiveQuiz) {
       const qType = q.type ?? 'multiple_choice';
       if (qType === 'multiple_choice' && quizAnswers[q.id] !== undefined) count++;
       else if (qType === 'drag_order') count++; // always countable (has default)
@@ -738,8 +747,8 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                 <BookOpen className="w-3 h-3" />
                 {lesson.keyTerms.length} key terms
               </span>
-              {(lesson.quiz ?? []).length > 0 && (
-                <span>{(lesson.quiz ?? []).length} quiz questions</span>
+              {effectiveQuiz.length > 0 && (
+                <span>{effectiveQuiz.length} quiz questions</span>
               )}
             </div>
           </div>
@@ -752,7 +761,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
         </div>
       </div>
 
-      {/* Prominent Download Banner — real-world example document(s) for this lesson */}
+      {/* Prominent Download Banner — example documents and/or fillable templates for this lesson */}
       {lesson.attachments && lesson.attachments.length > 0 && (
         <div className="rounded-xl bg-primary text-primary-foreground p-4 sm:p-5 flex items-center gap-4 flex-wrap shadow-sm">
           <div className="w-11 h-11 rounded-lg bg-white/15 flex items-center justify-center flex-shrink-0">
@@ -760,14 +769,18 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
           </div>
           <div className="flex-1 min-w-[200px]">
             <div className="text-sm font-bold">
-              {lesson.attachments.length === 1 ? 'Real-world example document included' : `${lesson.attachments.length} real-world example documents included`}
+              {lesson.attachments.every(a => /\.xlsx?$/i.test(a.url))
+                ? (lesson.attachments.length === 1 ? 'Fillable template included' : `${lesson.attachments.length} fillable templates included`)
+                : (lesson.attachments.length === 1 ? 'Real-world example document included' : `${lesson.attachments.length} real-world example documents included`)}
             </div>
             <div className="text-xs text-primary-foreground/80 mt-0.5">
-              {lesson.attachments.map(a => a.title.replace('Example: ', '')).join(' · ')}
+              {lesson.attachments.map(a => a.title.replace('Example: ', '').replace('Template: ', '')).join(' · ')}
             </div>
           </div>
           <div className="flex gap-2 flex-wrap">
-            {lesson.attachments.map((att, ai) => (
+            {lesson.attachments.map((att, ai) => {
+              const fileLabel = /\.xlsx?$/i.test(att.url) ? 'Excel' : /\.docx?$/i.test(att.url) ? 'Word' : 'PDF';
+              return (
               <a
                 key={ai}
                 href={att.url}
@@ -777,9 +790,10 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                 data-testid={`banner-download-${ai}`}
               >
                 <Download className="w-3.5 h-3.5" />
-                {lesson.attachments!.length === 1 ? 'Download PDF' : `Download ${ai + 1}`}
+                {lesson.attachments!.length === 1 ? `Download ${fileLabel}` : `Download ${ai + 1}`}
               </a>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
@@ -835,7 +849,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
       {/* Tab Navigation — sticky so it stays visible while scrolling */}
       <div className="sticky top-0 z-20 flex border-b border-border bg-background/95 backdrop-blur-sm w-full max-w-full overflow-x-auto">
         {(['lesson', 'terms', 'quiz'] as Tab[]).map((tab) => {
-          const labels: Record<Tab, string> = { lesson: 'Lesson', terms: `Key Terms (${lesson!.keyTerms.length})`, quiz: `Quiz (${(lesson!.quiz ?? []).length}Q)` };
+          const labels: Record<Tab, string> = { lesson: 'Lesson', terms: `Key Terms (${lesson!.keyTerms.length})`, quiz: `Quiz (${effectiveQuiz.length}Q)` };
           return (
             <button
               key={tab}
@@ -858,8 +872,8 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
       {activeTab === 'lesson' && (
         <div className="space-y-5">
           {/* Levels-based lessons (sections format) */}
-          {!(lesson.content?.length) && (lesson as any).levels && (() => {
-            const lvl = (lesson as any).levels[viewLevel] ?? (lesson as any).levels['novice'];
+          {!(lesson.content?.length) && lesson.levels && (() => {
+            const lvl = lesson.levels[viewLevel] ?? lesson.levels['novice'];
             if (!lvl?.sections) return null;
             return lvl.sections.map((section: any, si: number) => (
               <div key={si} className="space-y-3">
@@ -1058,7 +1072,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
 
             // ── table_visual: clean card-style table (replaces raw table type) ──
-            if ((block as any).type === 'table_visual') {
+            if (block.type === 'table_visual') {
               const b = block as any;
               return (
                 <div key={i} className="space-y-2">
@@ -1091,7 +1105,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── burn_rate_visual ──────────────────────────────────────────────
-            if ((block as any).type === 'burn_rate_visual') {
+            if (block.type === 'burn_rate_visual') {
               return (
                 <div key={i} className="rounded-xl border border-border bg-card p-5 space-y-4">
                   <h3 className="font-bold text-sm">{(block as any).heading}</h3>
@@ -1118,7 +1132,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── color_of_money_visual ─────────────────────────────────────────
-            if ((block as any).type === 'color_of_money_visual') {
+            if (block.type === 'color_of_money_visual') {
               const moneys = [
                 { color: '#4f86c6', label: 'RDT&E', full: 'Research, Development, Test & Evaluation', uses: 'Developing & testing new systems', expires: '2 years', icon: '🔬' },
                 { color: '#5cb85c', label: 'Procurement', full: 'Procurement Appropriations', uses: 'Buying production units & end items', expires: '3 years', icon: '🛒' },
@@ -1149,7 +1163,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── evm_metrics_visual (EVM core metrics) ────────────────────────
-            if ((block as any).type === 'evm_metrics_visual') {
+            if (block.type === 'evm_metrics_visual') {
               const metrics = [
                 { abbr: 'CV', name: 'Cost Variance', formula: 'EV − AC', good: 'Positive = under budget', bad: 'Negative = over budget', color: 'text-blue-600 dark:text-blue-400 bg-blue-500/10' },
                 { abbr: 'SV', name: 'Schedule Variance', formula: 'EV − PV', good: 'Positive = ahead of schedule', bad: 'Negative = behind schedule', color: 'text-violet-600 dark:text-violet-400 bg-violet-500/10' },
@@ -1179,7 +1193,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── eac_quick_visual ──────────────────────────────────────────────
-            if ((block as any).type === 'eac_quick_visual') {
+            if (block.type === 'eac_quick_visual') {
               const methods = [
                 { formula: 'BAC ÷ CPI', when: 'Most common — assumes same efficiency going forward', color: 'border-primary/40 bg-primary/5' },
                 { formula: 'AC + (BAC − EV)', when: 'Remaining work at original planned rate', color: 'border-blue-400/40 bg-blue-500/5' },
@@ -1202,7 +1216,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── eac_methods_visual ────────────────────────────────────────────
-            if ((block as any).type === 'eac_methods_visual') {
+            if (block.type === 'eac_methods_visual') {
               const methods_b = [
                 { num: '1', formula: 'BAC ÷ CPI', title: 'Trend Continuation', when: 'Future work will mirror past efficiency', best: 'Stable programs', color: 'border-primary/40 bg-primary/5 text-primary' },
                 { num: '2', formula: 'AC + (BAC − EV)', title: 'Optimistic Reset', when: 'Remaining work at original planned rate', best: 'One-time anomaly caused the overrun', color: 'border-blue-400/40 bg-blue-500/5 text-blue-600 dark:text-blue-400' },
@@ -1230,7 +1244,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── vac_tcpi_visual ───────────────────────────────────────────────
-            if ((block as any).type === 'vac_tcpi_visual') {
+            if (block.type === 'vac_tcpi_visual') {
               return (
                 <div key={i} className="space-y-3">
                   {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
@@ -1260,7 +1274,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── contractor_finance_waterfall_visual ───────────────────────────
-            if ((block as any).type === 'contractor_finance_waterfall_visual') {
+            if (block.type === 'contractor_finance_waterfall_visual') {
               const bars = [
                 { label: 'Contract Price', sub: 'What gov pays', value: 100, pct: 100, color: '#3b82f6', textColor: 'text-blue-400' },
                 { label: 'Direct Labor', sub: 'Salaries on the contract', value: -45, pct: 45, color: '#ef4444', textColor: 'text-red-400' },
@@ -1307,7 +1321,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── fee_type_comparison_visual ────────────────────────────────────
-            if ((block as any).type === 'fee_type_comparison_visual') {
+            if (block.type === 'fee_type_comparison_visual') {
               const feeTypes = [
                 {
                   label: 'CPFF',
@@ -1411,7 +1425,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── dso_cash_gap_visual ───────────────────────────────────────────
-            if ((block as any).type === 'dso_cash_gap_visual') {
+            if (block.type === 'dso_cash_gap_visual') {
               return (
                 <div key={i} className="space-y-4">
                   {(block as any).heading && <h3 className="font-bold text-base text-foreground">{(block as any).heading}</h3>}
@@ -1466,7 +1480,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               );
             }
             // ── cpaf_formula_visual ───────────────────────────────────────────
-            if ((block as any).type === 'cpaf_formula_visual') {
+            if (block.type === 'cpaf_formula_visual') {
               return (
                 <div key={i} className="space-y-4">
                   {(block as any).heading && <h3 className="font-bold text-base text-foreground">{(block as any).heading}</h3>}
@@ -1507,7 +1521,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── award_fee_factors_visual ──────────────────────────────────────
-            if ((block as any).type === 'award_fee_factors_visual') {
+            if (block.type === 'award_fee_factors_visual') {
               const factors = [
                 { label: 'Technical Performance', pct: 35, color: '#3b82f6', emoji: '🎯', desc: 'Quality of deliverables, solutions, and technical results. The largest single factor. A Fair score here still only earns 25-47% of available fee.' },
                 { label: 'Cost Control (example weighting)', pct: 25, color: '#10b981', emoji: '💰', desc: 'This weighting is set per contract in that program\'s own Award Fee Determination Plan, not a fixed government-wide number. A DoD audit of real CPAF contracts found cost weightings ranging from 13% to 40%. Are you tracking to budget? Weekly burn rate reviews directly protect whatever this number is on your contract.' },
@@ -1566,7 +1580,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── burn_rate_visual ──────────────────────────────────────────────
-            if ((block as any).type === 'burn_rate_status_visual') {
+            if (block.type === 'burn_rate_status_visual') {
               return (
                 <div key={i} className="space-y-4">
                   {(block as any).heading && <h3 className="font-bold text-base text-foreground">{(block as any).heading}</h3>}
@@ -1600,7 +1614,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── award_fee_pitfalls_visual ─────────────────────────────────────
-            if ((block as any).type === 'award_fee_pitfalls_visual') {
+            if (block.type === 'award_fee_pitfalls_visual') {
               const pitfalls = [
                 { n: '01', emoji: '👥', label: 'Overstaffing just in case', factor: 'Cost Control', impact: 'Idle labor burns funding and spikes overhead rates across every other contract in the company. Staff to the work you have.' },
                 { n: '02', emoji: '📊', label: 'Ignoring burn rate until it is urgent', factor: 'Cost + Schedule', impact: 'Weekly reviews catch problems while they are still manageable. Monthly reviews catch them when they are emergencies.' },
@@ -1637,7 +1651,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               );
             }
             // ── dcaa_audits_visual ────────────────────────────────────────────
-            if ((block as any).type === 'dcaa_audits_visual') {
+            if (block.type === 'dcaa_audits_visual') {
               const phases = [
                 { phase: 'Pre-Award', color: 'bg-blue-500', items: ['Accounting System Survey', 'Estimating System Survey', 'Forward Pricing Rate Audit', 'Pre-Award Accounting System Survey'] },
                 { phase: 'During Performance', color: 'bg-violet-500', items: ['Provisional Billing Rate Review', 'Incurred Cost Audit (annual)', 'Labor Timekeeping Audit', 'Progress Payment Reviews'] },
@@ -1670,7 +1684,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
             // ── cpif_share_visual ─────────────────────────────────────────────
             // ── category_cards_visual ── generic color-coded category cards, driven by items[] ──
-            if ((block as any).type === 'category_cards_visual') {
+            if (block.type === 'category_cards_visual') {
               const catColorMap: Record<string, string> = {
                 blue: 'bg-blue-500', teal: 'bg-teal-500', violet: 'bg-violet-500',
                 amber: 'bg-amber-500', orange: 'bg-orange-500', red: 'bg-red-500',
@@ -1699,7 +1713,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── name_change_visual ── clarifies an old term is the same thing as a new term ──
-            if ((block as any).type === 'name_change_visual') {
+            if (block.type === 'name_change_visual') {
               return (
                 <div key={i} className="bg-card border border-border rounded-xl p-5">
                   {block.heading && <h3 className="font-bold text-sm mb-3">{block.heading}</h3>}
@@ -1722,7 +1736,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── numbered_steps_visual ── flat numbered step-by-step flow (no phase grouping) ──
-            if ((block as any).type === 'numbered_steps_visual') {
+            if (block.type === 'numbered_steps_visual') {
               const nsSteps = (block as any).steps ?? [];
               return (
                 <div key={i} className="bg-card border border-border rounded-xl p-5">
@@ -1748,7 +1762,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── source_selection_phases_visual ── grouped multi-step process timeline ──
-            if ((block as any).type === 'source_selection_phases_visual') {
+            if (block.type === 'source_selection_phases_visual') {
               const phases = (block as any).phases ?? [];
               return (
                 <div key={i} className="bg-card border border-border rounded-xl p-5">
@@ -1790,7 +1804,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── related_lesson ── clickable cross-reference to another lesson that explains a term in depth ──
-            if ((block as any).type === 'related_lesson') {
+            if (block.type === 'related_lesson') {
               const refs = (block as any).refs ?? [];
               return (
                 <div key={i} className="rounded-xl border border-primary/25 bg-primary/5 p-4">
@@ -1817,7 +1831,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               );
             }
 
-            if ((block as any).type === 'cpif_share_visual') {
+            if (block.type === 'cpif_share_visual') {
               return (
                 <div key={i} className="rounded-xl border border-border bg-card p-5 space-y-4">
                   <h3 className="font-bold text-sm">{(block as any).heading}</h3>
@@ -1854,7 +1868,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── idiq_process_visual ───────────────────────────────────────────
-            if ((block as any).type === 'idiq_process_visual') {
+            if (block.type === 'idiq_process_visual') {
               const steps = ((block as any).items ?? []).map((item: string, idx: number) => {
                 const [label, detail] = item.split('|||');
                 // Extract just the step label text after the dash
@@ -1926,7 +1940,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── idiq_structure_visual ─────────────────────────────────────────
-            if ((block as any).type === 'idiq_structure_visual') {
+            if (block.type === 'idiq_structure_visual') {
               return (
                 <div key={i} className="space-y-3">
                   {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
@@ -1955,7 +1969,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── rea_process_visual ────────────────────────────────────────────
-            if ((block as any).type === 'rea_process_visual') {
+            if (block.type === 'rea_process_visual') {
               const stepsRea = [
                 { num: '1', label: 'Government Directs Change', desc: 'Formal or constructive direction outside contract scope', icon: '📢', color: 'bg-blue-500' },
                 { num: '2', label: 'Contractor Submits REA', desc: 'Must include: factual basis, legal entitlement, quantified cost impact', icon: '📝', color: 'bg-violet-500' },
@@ -1985,7 +1999,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── commercial_item_visual ────────────────────────────────────────
-            if ((block as any).type === 'commercial_item_visual') {
+            if (block.type === 'commercial_item_visual') {
               const tests = [
                 { label: 'Sold commercially', desc: 'Offered for sale in commercial marketplace', icon: '🏬' },
                 { label: 'Catalog pricing', desc: 'Has established catalog or market prices', icon: '📖' },
@@ -2015,7 +2029,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── risk_formula_visual ───────────────────────────────────────────
-            if ((block as any).type === 'risk_formula_visual') {
+            if (block.type === 'risk_formula_visual') {
               const levels = [
                 { level: 'High', range: 'Score ≥ 10', prob: '≥ 50%', impact: '≥ 3', color: 'bg-red-500', badge: 'bg-red-500/15 text-red-600 dark:text-red-400', action: 'Immediate mitigation required' },
                 { level: 'Medium', range: 'Score 4–9', prob: '20–49%', impact: '2–4', color: 'bg-amber-500', badge: 'bg-amber-500/15 text-amber-600 dark:text-amber-400', action: 'Monitor actively, plan mitigation' },
@@ -2047,7 +2061,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── cost_risk_visual ──────────────────────────────────────────────
-            if ((block as any).type === 'cost_risk_visual') {
+            if (block.type === 'cost_risk_visual') {
               return (
                 <div key={i} className="space-y-3">
                   {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
@@ -2074,7 +2088,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── compa_ratio_visual ────────────────────────────────────────────
-            if ((block as any).type === 'compa_ratio_visual') {
+            if (block.type === 'compa_ratio_visual') {
               return (
                 <div key={i} className="space-y-3">
                   {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
@@ -2102,7 +2116,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── acat_requirements_visual ──────────────────────────────────────
-            if ((block as any).type === 'acat_requirements_visual') {
+            if (block.type === 'acat_requirements_visual') {
               const reqs = [
                 { label: 'Selected Acquisition Report (SAR)', when: 'Annual — submitted to Congress', icon: '📊' },
                 { label: 'Defense Acquisition Board (DAB) Review', when: 'At each major milestone', icon: '🏛️' },
@@ -2132,7 +2146,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── nunn_mccurdy_visual ───────────────────────────────────────────
-            if ((block as any).type === 'nunn_mccurdy_visual') {
+            if (block.type === 'nunn_mccurdy_visual') {
               return (
                 <div key={i} className="space-y-3">
                   {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
@@ -2161,7 +2175,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
 
             // ── principal_agent_visual ────────────────────────────────────────
-            if ((block as any).type === 'principal_agent_visual') {
+            if (block.type === 'principal_agent_visual') {
               return (
                 <div key={i} className="space-y-3">
                   {(block as any).heading && <h3 className="font-bold text-sm">{(block as any).heading}</h3>}
@@ -2215,7 +2229,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── five_step_revenue_visual ──────────────────────────────────────
-            if ((block as any).type === 'five_step_revenue_visual') {
+            if (block.type === 'five_step_revenue_visual') {
               const steps_c = [
                 { num: '1', label: 'Identify the Contract', desc: 'Is the scope airtight? A vague SOW cannot support a performance obligation.', question: 'Is this scope clearly defined?', icon: '📋' },
                 { num: '2', label: 'Define Obligations', desc: 'What specifically are you building, integrating, or engineering? Each deliverable must be distinct.', question: 'What exactly are we delivering?', icon: '🎯' },
@@ -2247,7 +2261,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── value_add_examples_visual ─────────────────────────────────────
-            if ((block as any).type === 'value_add_examples_visual') {
+            if (block.type === 'value_add_examples_visual') {
               const examples = [
                 { before: 'Deliver 50 servers', after: 'Deliver, configure, and security-harden 50 servers per DISA STIG requirements', icon: '🖥️' },
                 { before: 'Provide IT support services', after: 'Provide Tier 1–3 IT support with SLA-governed incident management and monthly reporting', icon: '🛠️' },
@@ -2282,7 +2296,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── fee_limits_visual: contract type fee cap cards ────────────────
-            if ((block as any).type === 'fee_limits_visual') {
+            if (block.type === 'fee_limits_visual') {
               const contracts = [
                 {
                   name: 'Cost-Plus Fixed Fee', abbr: 'CPFF', icon: '📋', color: 'border-blue-400/50 bg-blue-500/5',
@@ -2358,7 +2372,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── weighted_guidelines_visual: 5-factor scoring breakdown ───────────
-            if ((block as any).type === 'weighted_guidelines_visual') {
+            if (block.type === 'weighted_guidelines_visual') {
               const factors_b = [
                 { num: '01', label: 'Performance Risk', desc: 'How technically difficult and risky is the work?', icon: '⚠️', weight: 'High impact' },
                 { num: '02', label: 'Contract Type Risk', desc: 'How much cost risk is the contractor bearing?', icon: '📄', weight: 'High impact' },
@@ -2392,7 +2406,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── wrap_rate_visual: stacked cost build-up graphic ─────────────
-            if ((block as any).type === 'wrap_rate_visual') {
+            if (block.type === 'wrap_rate_visual') {
               const layers = [
                 { label: 'Base Salary', sublabel: 'What you actually earn', amount: '$65.00/hr', color: 'bg-slate-500', width: '47%', icon: '👤' },
                 { label: 'Fringe Benefits', sublabel: 'Health, PTO, retirement (32%)', amount: '+$20.80', color: 'bg-blue-500', width: '15%', icon: '🏥' },
@@ -2442,7 +2456,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── rate_comparison_visual: contractor size rate cards ───────────
-            if ((block as any).type === 'rate_comparison_visual') {
+            if (block.type === 'rate_comparison_visual') {
               const companies = [
                 {
                   label: 'Small Business', sublabel: 'Under 500 employees', icon: '🏪',
@@ -3102,7 +3116,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
           )}
 
           {/* Questions */}
-          {( lesson.quiz ?? [] ).map((question, qi) => {
+          {effectiveQuiz.map((question, qi) => {
             const qzType = question.type ?? 'multiple_choice';
 
             // ── Multiple Choice ──
@@ -3268,7 +3282,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               className="w-full"
               data-testid="submit-quiz"
             >
-              Submit Quiz ({answeredCount}/{(lesson.quiz ?? []).length} answered)
+              Submit Quiz ({answeredCount}/{effectiveQuiz.length} answered)
             </Button>
           )}
 

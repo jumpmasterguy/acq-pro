@@ -51,9 +51,9 @@ const CAREER_TRACKS: CareerTrack[] = [
     desc: 'Government-side PM managing programs, budgets, oversight, and the full acquisition lifecycle',
     primaryLessons: [
       // Foundations — all relevant
-      'foundations-intro', 'foundations-players', 'foundations-contracts',
-      'foundations-lifecycle', 'foundations-money', 'foundations-1', 'foundations-3',
-      'foundations-4', 'foundations-2',
+      'foundations-1', 'foundations-3', 'foundations-5',
+      'foundations-6', 'foundations-9', 'foundations-2', 'foundations-7',
+      'foundations-8', 'foundations-4',
       // Finance — budget/oversight/EVM focus
       'finance-1', 'finance-4', 'finance-3', 'finance-2', 'finance-5', 'finance-7',
       // Contracts — source selection, admin, mods
@@ -78,7 +78,7 @@ const CAREER_TRACKS: CareerTrack[] = [
     desc: 'Industry-side PM executing contracts, managing costs, task orders, and subcontractors',
     primaryLessons: [
       // Foundations — the essentials, skip lifecycle depth and ACAT/OTA
-      'foundations-intro', 'foundations-players', 'foundations-contracts', 'foundations-money',
+      'foundations-1', 'foundations-3', 'foundations-5', 'foundations-9',
       // Contracts — the day-to-day world of a contractor PM
       'contracts-8', 'contracts-1', 'contracts-4', 'contracts-9', 'contracts-3', 'contracts-6',
       'contracts-7', 'contracts-5',
@@ -90,7 +90,7 @@ const CAREER_TRACKS: CareerTrack[] = [
       'ops-1', 'ops-2', 'ops-4', 'ops-5', 'ops-7',
     ],
     bonusLessons: [
-      'foundations-lifecycle', 'foundations-1', 'foundations-3', 'foundations-4', 'foundations-2',
+      'foundations-6', 'foundations-2', 'foundations-7', 'foundations-8', 'foundations-4',
       'finance-1', 'finance-4', 'finance-3',
       'contracts-2',
       'data-2',
@@ -106,9 +106,9 @@ const CAREER_TRACKS: CareerTrack[] = [
     desc: 'Contracting Specialist or KO — source selection, contract administration, FAR/DFARS (the government contracting rulebooks) compliance',
     primaryLessons: [
       // Foundations — full picture needed
-      'foundations-intro', 'foundations-players', 'foundations-contracts',
-      'foundations-lifecycle', 'foundations-money', 'foundations-1', 'foundations-3',
-      'foundations-4', 'foundations-2',
+      'foundations-1', 'foundations-3', 'foundations-5',
+      'foundations-6', 'foundations-9', 'foundations-2', 'foundations-7',
+      'foundations-8', 'foundations-4',
       // Contracts — everything, this is the CO's core domain
       'contracts-1', 'contracts-2', 'contracts-3', 'contracts-6',
       'contracts-4', 'contracts-8', 'contracts-7', 'contracts-5', 'contracts-9',
@@ -130,7 +130,7 @@ const CAREER_TRACKS: CareerTrack[] = [
     desc: 'Win more business — master the capture lifecycle, proposals, and source selection strategy',
     primaryLessons: [
       // Foundations — the essentials
-      'foundations-intro', 'foundations-players', 'foundations-contracts',
+      'foundations-1', 'foundations-3', 'foundations-5',
       // Contracts — vehicles, who's buying, source selection from buyer's side
       'contracts-8', 'contracts-1', 'contracts-4', 'contracts-7', 'contracts-5', 'contracts-9',
       'contracts-2',
@@ -140,8 +140,8 @@ const CAREER_TRACKS: CareerTrack[] = [
       'ops-2',
     ],
     bonusLessons: [
-      'foundations-lifecycle', 'foundations-money', 'foundations-1', 'foundations-3',
-      'foundations-4', 'foundations-2',
+      'foundations-6', 'foundations-9', 'foundations-2', 'foundations-7',
+      'foundations-8', 'foundations-4',
       'finance-6', 'finance-8',
       'contracts-3', 'contracts-6',
       'data-1', 'data-2', 'data-3', 'data-4',

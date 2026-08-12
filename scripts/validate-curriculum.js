@@ -16,11 +16,21 @@ const content = readFileSync(CURRICULUM_PATH, 'utf8');
 const lines = content.split('\n');
 const errors = [];
 
+// Strip string/template literal contents so braces/brackets inside quoted
+// text don't throw off the depth count. Handles the common cases (single,
+// double, backtick) — not a full JS parser, but good enough for this file.
+function stripLiterals(line) {
+  return line
+    .replace(/'(?:[^'\\]|\\.)*'/g, "''")
+    .replace(/"(?:[^"\\]|\\.)*"/g, '""')
+    .replace(/`(?:[^`\\]|\\.)*`/g, '``');
+}
+
 // 1. Brace/bracket balance (ignoring strings and comments)
 let braces = 0, brackets = 0;
 for (const line of lines) {
   if (line.trim().startsWith('//') || line.trim().startsWith('*')) continue;
-  const clean = line.replace(/(['"`])(?:(?!\1)[^\\]|\\.)*\1/g, '""');
+  const clean = stripLiterals(line);
   braces   += (clean.match(/{/g)||[]).length - (clean.match(/}/g)||[]).length;
   brackets += (clean.match(/\[/g)||[]).length - (clean.match(/\]/g)||[]).length;
 }
@@ -44,32 +54,66 @@ for (const mod of moduleIds) {
 const lessonsArrays = (content.match(/lessons:\s*\[/g)||[]).length;
 if (lessonsArrays < 6) errors.push(`Only ${lessonsArrays} lessons arrays found — expected at least 6`);
 
-// 5. No lesson ID at top-level indentation (2-space) — the insertion bug pattern
-// A lesson at 2-space means it's at module level, not inside lessons: []
-// Pattern: line is '  {' (exactly 2 spaces) followed by line with '    id: \'xxx-'
-const contentLines = content.split('\n');
-for (let li = 0; li < contentLines.length - 1; li++) {
-  if (contentLines[li] === '  {' && /^    id: '(finance|contracts|foundations|data|capture|ops|operations)-/.test(contentLines[li+1])) {
-    const lessonId = contentLines[li+1].match(/id: '([^']+)'/)?.[1];
-    errors.push(`Lesson '${lessonId}' appears at module-level indentation (outside lessons array) at line ${li+1}`);
-  }
-}
+// 5. Structural depth check — every lesson object must sit exactly one level
+// inside a module's `lessons: [` array (brace depth 2, bracket depth 2 from
+// the top of the file). This is the check that would have caught the
+// finance-9/finance-10 bug: two full lesson objects that got appended INSIDE
+// finance-8's quiz array by an insertion script, instead of as siblings in
+// the module's lessons array. The brace-balance check above stays green in
+// that scenario (the file is still syntactically valid — just wrong), and
+// the old version of this check only looked for a couple of fixed
+// indentation patterns, which this exact bug didn't match. Walking real
+// brace/bracket depth catches it regardless of indentation.
+//
+// It also tracks which module each lesson is physically nested under, and
+// flags a lesson whose ID prefix doesn't match its module (e.g. an
+// 'ops-N' lesson sitting inside the foundations module's lessons array —
+// syntactically fine, but semantically in the wrong place).
+const MODULE_LESSON_PREFIX = {
+  foundations: 'foundations',
+  finance: 'finance',
+  contracts: 'contracts',
+  data: 'data',
+  capture: 'capture',
+  operations: 'ops',
+};
 
-// 5. No lesson IDs appearing at module-level indentation (the awk insertion bug)
-// A lesson like finance-10 should be deeply nested, not at the top level of the file
-const moduleLevel = /^    \{\s*\n\s+id: '(finance|contracts|foundations|data|capture|ops|operations)-/m;
-// This checks if a lesson starts at 4-space indent (module level) — wrong
-for (let i = 0; i < lines.length - 1; i++) {
-  const twoLines = lines[i] + '\n' + lines[i+1];
-  if (/^    \{$/.test(lines[i]) && /^      id: '(finance|contracts|foundations|data|capture|operations)-/.test(lines[i+1])) {
-    // 4-space lesson block — check it's inside a lessons array
-    // Walk back to find context
-    let inLessons = false;
-    for (let j = i - 1; j >= Math.max(0, i - 50); j--) {
-      if (lines[j].includes('lessons: [')) { inLessons = true; break; }
-      if (lines[j].trim() === '];' || lines[j].trim() === '],') break;
+let depth = 0, bdepth = 0;
+let currentModuleId = null;
+let moduleOpenDepth = null;
+for (let i = 0; i < lines.length; i++) {
+  const line = lines[i];
+  const clean = stripLiterals(line);
+
+  const moduleIdMatch = line.match(/^ {2}id: '([a-z]+)',\s*$/);
+  if (moduleIdMatch && moduleIds.includes(moduleIdMatch[1]) && depth === 1) {
+    currentModuleId = moduleIdMatch[1];
+    moduleOpenDepth = depth;
+  }
+
+  const lessonIdMatch = line.match(/^\s*id: '([a-z]+)-\d+[a-z]?',\s*$/);
+  if (lessonIdMatch) {
+    if (depth !== 2 || bdepth !== 2) {
+      errors.push(`Lesson '${lessonIdMatch[0].match(/'([^']+)'/)[1]}' at line ${i + 1} is nested at brace depth ${depth}/bracket depth ${bdepth} — expected 2/2. It is likely trapped inside a sibling lesson's array (quiz/content/levels) instead of being a direct entry in a module's lessons array.`);
+    } else if (currentModuleId) {
+      const prefix = lessonIdMatch[1];
+      const expectedPrefix = MODULE_LESSON_PREFIX[currentModuleId];
+      if (prefix !== expectedPrefix) {
+        errors.push(`Lesson '${prefix}-...' at line ${i + 1} is physically inside the '${currentModuleId}' module's lessons array, but its ID prefix suggests it belongs to a different module.`);
+      }
     }
-    // This check is approximate — skip for now as the balance check covers it
+  }
+
+  for (const ch of clean) {
+    if (ch === '{') depth++;
+    else if (ch === '}') depth--;
+    else if (ch === '[') bdepth++;
+    else if (ch === ']') bdepth--;
+  }
+
+  if (currentModuleId && depth < moduleOpenDepth) {
+    currentModuleId = null;
+    moduleOpenDepth = null;
   }
 }
 

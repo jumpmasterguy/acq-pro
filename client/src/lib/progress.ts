@@ -11,7 +11,7 @@ export const FREE_MODULES = ['foundations'];
 
 // First lesson of each non-free module — accessible as a free preview
 export const FREE_PREVIEW_LESSONS = [
-  'foundations-1',   // Finance module — first lesson
+  'finance-1',        // Finance module — first lesson
   'contracts-8',     // Contracts module — first lesson  
   'data-1',          // Data module — first lesson
   'capture-1',       // Capture module — first lesson

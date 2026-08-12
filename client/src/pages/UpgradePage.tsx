@@ -305,7 +305,7 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
               <div>
                 <div className="font-semibold text-sm">{mod.title}</div>
                 <div className="text-xs text-muted-foreground mt-0.5">
-                  {mod.lessons.length} lessons · {mod.lessons.reduce((sum, l) => sum + l.quiz.length, 0)} quiz questions
+                  {mod.lessons.length} lessons · {mod.lessons.reduce((sum, l) => sum + (l.quiz?.length ?? 0), 0)} quiz questions
                 </div>
               </div>
             </div>
