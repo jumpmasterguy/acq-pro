@@ -3281,9 +3281,9 @@ export const modules: Module[] = [
             ],
           },
           {
-            title: 'Template: Burn Rate Tracker (Excel)',
-            description: 'A ready-to-use monthly burn rate tracker: enter your TOA and actual spend, and it calculates cumulative variance, a 3-month rolling burn rate, and a projected fund-exhaustion date automatically.',
-            url: '/examples/burn-rate-tracker.xlsx',
+            title: 'Template: Cost & Burn Rate Tracker (Excel)',
+            description: 'A working cost model, not just a spend tracker: enter your negotiated Fringe/OH/G&A/Fee rates once, log labor, ODCs, and travel as they happen, and it builds up your fully burdened cost, tracks funding mods against your TOA, and projects your fund-exhaustion date automatically.',
+            url: '/examples/cost-and-burn-rate-tracker.xlsx',
           },
         ],
         content: [
