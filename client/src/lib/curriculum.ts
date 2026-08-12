@@ -3282,7 +3282,7 @@ export const modules: Module[] = [
           },
           {
             title: 'Template: Cost & Burn Rate Tracker (Excel)',
-            description: 'A working cost model, not just a spend tracker: set up your team on a Personnel tab (LCAT, salary or hourly rate, PTO accrual), log hours/ODCs/travel as they happen, and it builds up fully burdened cost person-by-person, tracks funding mods against your TOA, and projects your fund-exhaustion date automatically.',
+            description: 'A working cost model, not just a spend tracker: set up your team on a Personnel tab (LCAT, salary or hourly rate, PTO accrual), log hours/ODCs/Travel/M&E as they happen, and it builds up fully burdened cost person-by-person, tracks funding mods by CLIN against your TOA, and projects your fund-exhaustion date automatically. Includes a ROM Calculator for quick what-if cost estimates (relocations, OCONUS adders) when a CO or COR needs a fast answer.',
             url: '/examples/cost-and-burn-rate-tracker.xlsx',
           },
         ],
