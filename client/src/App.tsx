@@ -70,7 +70,9 @@ import AuthPage, { type AuthUser, type SkillLevel, type UserProfile } from "@/pa
 import AdminPage from "@/pages/AdminPage";
 import AdminAnalytics from "@/pages/AdminAnalytics";
 import PDUTracker from "@/pages/PDUTracker";
-import CostTracker from "@/pages/CostTracker";
+import CostProjectsPage from "@/pages/cost/CostProjectsPage";
+import CostProjectDetailPage from "@/pages/cost/CostProjectDetailPage";
+import CostRatesPage from "@/pages/cost/CostRatesPage";
 import { ModuleAssessment } from "@/components/ModuleAssessment";
 import OnboardingFlow from "@/components/OnboardingFlow";
 import { apiRequest } from "@/lib/queryClient";
@@ -87,7 +89,9 @@ type View =
   | { type: 'admin' }
   | { type: 'analytics' }
   | { type: 'pdu' }
-  | { type: 'costTracker' };
+  | { type: 'costProjects' }
+  | { type: 'costProject'; projectId: string }
+  | { type: 'costRates' };
 
 // Auth state
 type AuthState =
@@ -121,7 +125,7 @@ function loadSavedView(): View | null {
     const raw = sessionStorage.getItem(VIEW_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as View;
-    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin', 'analytics', 'pdu', 'costTracker'];
+    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin', 'analytics', 'pdu', 'costProjects', 'costRates'];
     if (!valid.includes(parsed.type)) return null;
     // Validate lesson ID still exists in curriculum
     if (parsed.type === 'lesson') {
@@ -760,16 +764,16 @@ function AppContent() {
                     <div className="text-[10px] text-sidebar-foreground/50 leading-tight mt-0.5">{FAR_TRANSLATOR.description}</div>
                   </div>
                 </a>
-                {/* Cost & Burn Rate Calculator — pinned, internal page */}
+                {/* Cost & Burn Rate Tracker — pinned, internal page */}
                 <button
-                  onClick={() => setView({ type: 'costTracker' })}
+                  onClick={() => setView({ type: 'costProjects' })}
                   className="w-full flex items-start gap-2 px-3 py-2.5 rounded-lg bg-primary/10 border border-primary/25 hover:bg-primary/15 transition-colors group text-left"
                   data-testid="sidebar-cost-tracker"
                 >
                   <Calculator className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-primary" />
                   <div className="flex-1 min-w-0">
-                    <div className="text-[11px] font-bold text-primary leading-tight">Cost &amp; Burn Rate Calculator</div>
-                    <div className="text-[10px] text-sidebar-foreground/50 leading-tight mt-0.5">Live Fringe/OH/G&amp;A/M&amp;S/Fee buildup — no download needed.</div>
+                    <div className="text-[11px] font-bold text-primary leading-tight">Cost &amp; Burn Rate Tracker</div>
+                    <div className="text-[10px] text-sidebar-foreground/50 leading-tight mt-0.5">Track funding, mods, and spend across your projects — persists between visits.</div>
                   </div>
                 </button>
 
@@ -953,11 +957,25 @@ function AppContent() {
               completedLessons={Array.from(completedLessons)}
             />
           )}
-          {view.type === 'costTracker' && (
-            <CostTracker
+          {view.type === 'costProjects' && (
+            <CostProjectsPage
               onBack={() => setView({ type: 'dashboard' })}
+              onOpenProject={(projectId) => setView({ type: 'costProject', projectId })}
+              onOpenRates={() => setView({ type: 'costRates' })}
             />
           )}
+          {view.type === 'costProject' && (
+            <CostProjectDetailPage
+              projectId={(view as { type: 'costProject'; projectId: string }).projectId}
+              onBack={() => setView({ type: 'costProjects' })}
+            />
+          )}
+          {view.type === 'costRates' && (
+            <CostRatesPage
+              onBack={() => setView({ type: 'costProjects' })}
+            />
+          )}
+
         </ErrorBoundary>
         </main>
       </div>

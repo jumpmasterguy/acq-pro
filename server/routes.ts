@@ -10,6 +10,11 @@ import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema, userProfileSchema } from "@shared/schema";
 import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
+import { costTrackerStorage } from "./costTrackerStorage";
+import {
+  summarizeProject, createProjectSchema, createFundingModSchema,
+  createCostEntrySchema, updateRatesSchema,
+} from "@shared/costTracker";
 
 // Initialize Stripe — will be undefined if key not set
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
@@ -386,6 +391,107 @@ export async function registerRoutes(
       moduleSkillLevels: updated.moduleSkillLevels,
       moduleAssessmentScores: updated.moduleAssessmentScores,
     });
+  });
+
+  // ─── Cost & Burn Rate Tracker ──────────────────────────────────────
+  // All routes scoped to req.user!.id -- one user's projects are never
+  // visible to another. See server/costTrackerStorage.ts for persistence.
+
+  app.get("/api/cost-tracker/projects", requireAuth as any, async (req: Request, res: Response) => {
+    const projects = await costTrackerStorage.listProjects(req.user!.id);
+    const rates = await costTrackerStorage.getRates(req.user!.id);
+    const summaries = await Promise.all(projects.map(async (p) => {
+      const [mods, entries] = await Promise.all([
+        costTrackerStorage.listFundingMods(p.id),
+        costTrackerStorage.listCostEntries(p.id),
+      ]);
+      return { project: p, summary: summarizeProject(mods, entries, rates) };
+    }));
+    res.json(summaries);
+  });
+
+  app.post("/api/cost-tracker/projects", requireAuth as any, async (req: Request, res: Response) => {
+    const parsed = createProjectSchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ message: parsed.error.errors[0]?.message || "Invalid project" });
+    const project = await costTrackerStorage.createProject(req.user!.id, parsed.data.code, parsed.data.name);
+    res.json(project);
+  });
+
+  app.delete("/api/cost-tracker/projects/:projectId", requireAuth as any, async (req: Request, res: Response) => {
+    const project = await costTrackerStorage.getProject(req.user!.id, (req.params.projectId as string));
+    if (!project) return res.status(404).json({ message: "Project not found" });
+    await costTrackerStorage.archiveProject(req.user!.id, (req.params.projectId as string));
+    res.json({ ok: true });
+  });
+
+  // Load one project + its mods, entries, computed summary, and the user's rates
+  app.get("/api/cost-tracker/projects/:projectId", requireAuth as any, async (req: Request, res: Response) => {
+    const project = await costTrackerStorage.getProject(req.user!.id, (req.params.projectId as string));
+    if (!project) return res.status(404).json({ message: "Project not found" });
+    const [mods, entries, rates] = await Promise.all([
+      costTrackerStorage.listFundingMods(project.id),
+      costTrackerStorage.listCostEntries(project.id),
+      costTrackerStorage.getRates(req.user!.id),
+    ]);
+    res.json({ project, mods, entries, rates, summary: summarizeProject(mods, entries, rates) });
+  });
+
+  app.post("/api/cost-tracker/projects/:projectId/mods", requireAuth as any, async (req: Request, res: Response) => {
+    const project = await costTrackerStorage.getProject(req.user!.id, (req.params.projectId as string));
+    if (!project) return res.status(404).json({ message: "Project not found" });
+    const parsed = createFundingModSchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ message: parsed.error.errors[0]?.message || "Invalid mod" });
+    const mod = await costTrackerStorage.createFundingMod(project.id, {
+      modNumber: parsed.data.modNumber,
+      acrn: parsed.data.acrn ?? null,
+      slin: parsed.data.slin ?? null,
+      clin: parsed.data.clin,
+      amountCents: parsed.data.amountCents,
+      modDate: parsed.data.modDate ?? null,
+      description: parsed.data.description ?? null,
+    });
+    res.json(mod);
+  });
+
+  app.delete("/api/cost-tracker/projects/:projectId/mods/:modId", requireAuth as any, async (req: Request, res: Response) => {
+    const project = await costTrackerStorage.getProject(req.user!.id, (req.params.projectId as string));
+    if (!project) return res.status(404).json({ message: "Project not found" });
+    await costTrackerStorage.deleteFundingMod(project.id, (req.params.modId as string));
+    res.json({ ok: true });
+  });
+
+  app.post("/api/cost-tracker/projects/:projectId/entries", requireAuth as any, async (req: Request, res: Response) => {
+    const project = await costTrackerStorage.getProject(req.user!.id, (req.params.projectId as string));
+    if (!project) return res.status(404).json({ message: "Project not found" });
+    const parsed = createCostEntrySchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ message: parsed.error.errors[0]?.message || "Invalid entry" });
+    const entry = await costTrackerStorage.createCostEntry(project.id, {
+      clin: parsed.data.clin,
+      primeOrSub: parsed.data.primeOrSub,
+      amountCents: parsed.data.amountCents,
+      entryDate: parsed.data.entryDate,
+      description: parsed.data.description ?? null,
+    });
+    res.json(entry);
+  });
+
+  app.delete("/api/cost-tracker/projects/:projectId/entries/:entryId", requireAuth as any, async (req: Request, res: Response) => {
+    const project = await costTrackerStorage.getProject(req.user!.id, (req.params.projectId as string));
+    if (!project) return res.status(404).json({ message: "Project not found" });
+    await costTrackerStorage.deleteCostEntry(project.id, (req.params.entryId as string));
+    res.json({ ok: true });
+  });
+
+  app.get("/api/cost-tracker/rates", requireAuth as any, async (req: Request, res: Response) => {
+    const rates = await costTrackerStorage.getRates(req.user!.id);
+    res.json(rates);
+  });
+
+  app.put("/api/cost-tracker/rates", requireAuth as any, async (req: Request, res: Response) => {
+    const parsed = updateRatesSchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ message: parsed.error.errors[0]?.message || "Invalid rates" });
+    const rates = await costTrackerStorage.updateRates(req.user!.id, parsed.data);
+    res.json(rates);
   });
 
   // ─── Stripe Routes ─────────────────────────────────────────────────
