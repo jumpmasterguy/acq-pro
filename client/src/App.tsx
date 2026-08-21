@@ -9,7 +9,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel } from "@/lib/progress";
 import { isNativeApp } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
-import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink } from "lucide-react";
+import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator } from "lucide-react";
 import { SIDEBAR_RESOURCES } from "@/lib/resources";
 import { FAR_TRANSLATOR, TOOLS_DIRECTORY } from "@/lib/toolsDirectory";
 import { AcqlerateLogo } from "@/components/AcqlerateLogo";
@@ -70,6 +70,7 @@ import AuthPage, { type AuthUser, type SkillLevel, type UserProfile } from "@/pa
 import AdminPage from "@/pages/AdminPage";
 import AdminAnalytics from "@/pages/AdminAnalytics";
 import PDUTracker from "@/pages/PDUTracker";
+import CostTracker from "@/pages/CostTracker";
 import { ModuleAssessment } from "@/components/ModuleAssessment";
 import OnboardingFlow from "@/components/OnboardingFlow";
 import { apiRequest } from "@/lib/queryClient";
@@ -85,7 +86,8 @@ type View =
   | { type: 'upgrade' }
   | { type: 'admin' }
   | { type: 'analytics' }
-  | { type: 'pdu' };
+  | { type: 'pdu' }
+  | { type: 'costTracker' };
 
 // Auth state
 type AuthState =
@@ -119,7 +121,7 @@ function loadSavedView(): View | null {
     const raw = sessionStorage.getItem(VIEW_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as View;
-    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin', 'analytics', 'pdu'];
+    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin', 'analytics', 'pdu', 'costTracker'];
     if (!valid.includes(parsed.type)) return null;
     // Validate lesson ID still exists in curriculum
     if (parsed.type === 'lesson') {
@@ -758,6 +760,18 @@ function AppContent() {
                     <div className="text-[10px] text-sidebar-foreground/50 leading-tight mt-0.5">{FAR_TRANSLATOR.description}</div>
                   </div>
                 </a>
+                {/* Cost & Burn Rate Calculator — pinned, internal page */}
+                <button
+                  onClick={() => setView({ type: 'costTracker' })}
+                  className="w-full flex items-start gap-2 px-3 py-2.5 rounded-lg bg-primary/10 border border-primary/25 hover:bg-primary/15 transition-colors group text-left"
+                  data-testid="sidebar-cost-tracker"
+                >
+                  <Calculator className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-primary" />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[11px] font-bold text-primary leading-tight">Cost &amp; Burn Rate Calculator</div>
+                    <div className="text-[10px] text-sidebar-foreground/50 leading-tight mt-0.5">Live Fringe/OH/G&amp;A/M&amp;S/Fee buildup — no download needed.</div>
+                  </div>
+                </button>
 
                 {TOOLS_DIRECTORY.map((cat, ci) => (
                   <div key={ci}>
@@ -937,6 +951,11 @@ function AppContent() {
             <PDUTracker
               onBack={() => setView({ type: 'dashboard' })}
               completedLessons={Array.from(completedLessons)}
+            />
+          )}
+          {view.type === 'costTracker' && (
+            <CostTracker
+              onBack={() => setView({ type: 'dashboard' })}
             />
           )}
         </ErrorBoundary>
