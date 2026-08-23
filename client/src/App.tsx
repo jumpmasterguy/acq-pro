@@ -73,6 +73,8 @@ import PDUTracker from "@/pages/PDUTracker";
 import CostProjectsPage from "@/pages/cost/CostProjectsPage";
 import CostProjectDetailPage from "@/pages/cost/CostProjectDetailPage";
 import CostRatesPage from "@/pages/cost/CostRatesPage";
+import CostTaskOrdersPage from "@/pages/cost/CostTaskOrdersPage";
+import CostTaskOrderDetailPage from "@/pages/cost/CostTaskOrderDetailPage";
 import { ModuleAssessment } from "@/components/ModuleAssessment";
 import OnboardingFlow from "@/components/OnboardingFlow";
 import { apiRequest } from "@/lib/queryClient";
@@ -91,7 +93,9 @@ type View =
   | { type: 'pdu' }
   | { type: 'costProjects' }
   | { type: 'costProject'; projectId: string }
-  | { type: 'costRates' };
+  | { type: 'costRates' }
+  | { type: 'costTaskOrders' }
+  | { type: 'costTaskOrder'; taskOrderId: string };
 
 // Auth state
 type AuthState =
@@ -125,7 +129,7 @@ function loadSavedView(): View | null {
     const raw = sessionStorage.getItem(VIEW_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as View;
-    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin', 'analytics', 'pdu', 'costProjects', 'costRates'];
+    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin', 'analytics', 'pdu', 'costProjects', 'costRates', 'costTaskOrders'];
     if (!valid.includes(parsed.type)) return null;
     // Validate lesson ID still exists in curriculum
     if (parsed.type === 'lesson') {
@@ -962,17 +966,33 @@ function AppContent() {
               onBack={() => setView({ type: 'dashboard' })}
               onOpenProject={(projectId) => setView({ type: 'costProject', projectId })}
               onOpenRates={() => setView({ type: 'costRates' })}
+              onOpenTaskOrders={() => setView({ type: 'costTaskOrders' })}
+              onOpenTaskOrder={(taskOrderId) => setView({ type: 'costTaskOrder', taskOrderId })}
             />
           )}
           {view.type === 'costProject' && (
             <CostProjectDetailPage
               projectId={(view as { type: 'costProject'; projectId: string }).projectId}
               onBack={() => setView({ type: 'costProjects' })}
+              onOpenTaskOrder={(taskOrderId) => setView({ type: 'costTaskOrder', taskOrderId })}
             />
           )}
           {view.type === 'costRates' && (
             <CostRatesPage
               onBack={() => setView({ type: 'costProjects' })}
+            />
+          )}
+          {view.type === 'costTaskOrders' && (
+            <CostTaskOrdersPage
+              onBack={() => setView({ type: 'costProjects' })}
+              onOpenTaskOrder={(taskOrderId) => setView({ type: 'costTaskOrder', taskOrderId })}
+            />
+          )}
+          {view.type === 'costTaskOrder' && (
+            <CostTaskOrderDetailPage
+              taskOrderId={(view as { type: 'costTaskOrder'; taskOrderId: string }).taskOrderId}
+              onBack={() => setView({ type: 'costTaskOrders' })}
+              onOpenProject={(projectId) => setView({ type: 'costProject', projectId })}
             />
           )}
 

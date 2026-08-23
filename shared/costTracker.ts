@@ -12,9 +12,19 @@ export type Clin = typeof CLINS[number];
 export type FeeType = 'Fixed' | 'Award' | 'CR';
 export type PrimeSub = 'Prime' | 'Sub';
 
+export interface TaskOrder {
+  id: string;
+  userId: string;
+  code: string;
+  name: string;
+  archived: boolean;
+  createdAt: string;
+}
+
 export interface CostProject {
   id: string;
   userId: string;
+  taskOrderId: string | null;
   code: string;
   name: string;
   archived: boolean;
@@ -104,6 +114,52 @@ export interface ProjectSummary {
   pctUsed: number;
   status: Status;
   byClin: ClinSummary[];
+}
+
+/**
+ * Rolls up several projects' summaries into one Task-Order-wide summary.
+ * Rates are per-user (not per-project), so fee type/rate for a given CLIN
+ * is always the same across the projects being combined -- we just sum
+ * dollars and recompute pctUsed/status off the totals.
+ */
+export function aggregateSummaries(summaries: ProjectSummary[]): ProjectSummary {
+  const byClin: ClinSummary[] = CLINS.map((clin) => {
+    const parts = summaries.map((s) => s.byClin.find((c) => c.clin === clin)!);
+    const fundedCents = parts.reduce((s, c) => s + c.fundedCents, 0);
+    const primeRawCents = parts.reduce((s, c) => s + c.primeRawCents, 0);
+    const subRawCents = parts.reduce((s, c) => s + c.subRawCents, 0);
+    const primeBurdenedCents = parts.reduce((s, c) => s + c.primeBurdenedCents, 0);
+    const totalCostCents = parts.reduce((s, c) => s + c.totalCostCents, 0);
+    const feeCents = parts.reduce((s, c) => s + c.feeCents, 0);
+    const totalBilledCents = parts.reduce((s, c) => s + c.totalBilledCents, 0);
+    const pctUsed = fundedCents > 0 ? totalBilledCents / fundedCents : 0;
+    const { feeType, feeRate } = parts[0]
+      ? { feeType: parts[0].feeType, feeRate: parts[0].feeRate }
+      : { feeType: 'CR' as FeeType, feeRate: 0 };
+    return {
+      clin, fundedCents, primeRawCents, subRawCents, primeBurdenedCents, totalCostCents,
+      feeType, feeRate, feeCents, totalBilledCents, pctUsed,
+      status: statusFor(pctUsed, fundedCents),
+    };
+  });
+
+  const gaBaseCents = summaries.reduce((s, p) => s + p.gaBaseCents, 0);
+  const msBaseCents = summaries.reduce((s, p) => s + p.msBaseCents, 0);
+  const gaCents = summaries.reduce((s, p) => s + p.gaCents, 0);
+  const msCents = summaries.reduce((s, p) => s + p.msCents, 0);
+  const subtotalCents = summaries.reduce((s, p) => s + p.subtotalCents, 0);
+  const totalCostCents = summaries.reduce((s, p) => s + p.totalCostCents, 0);
+  const totalFeeCents = summaries.reduce((s, p) => s + p.totalFeeCents, 0);
+  const totalBilledCents = summaries.reduce((s, p) => s + p.totalBilledCents, 0);
+  const totalFundedCents = summaries.reduce((s, p) => s + p.totalFundedCents, 0);
+  const pctUsed = totalFundedCents > 0 ? totalBilledCents / totalFundedCents : 0;
+
+  return {
+    gaBaseCents, msBaseCents, gaCents, msCents, subtotalCents, totalCostCents,
+    totalFeeCents, totalBilledCents, totalFundedCents, pctUsed,
+    status: statusFor(pctUsed, totalFundedCents),
+    byClin,
+  };
 }
 
 function feeRateFor(rates: RatesConfig, clin: Clin): { rate: number; type: FeeType } {
@@ -196,9 +252,19 @@ export const clinEnum = z.enum(['Labor', 'Travel', 'ODC', 'M&E']);
 export const feeTypeEnum = z.enum(['Fixed', 'Award', 'CR']);
 export const primeSubEnum = z.enum(['Prime', 'Sub']);
 
+export const createTaskOrderSchema = z.object({
+  code: z.string().trim().min(1, "Code is required").max(20),
+  name: z.string().trim().min(1, "Name is required").max(200),
+});
+
 export const createProjectSchema = z.object({
   code: z.string().trim().min(1, "Code is required").max(20),
   name: z.string().trim().min(1, "Name is required").max(200),
+  taskOrderId: z.string().trim().min(1).optional().nullable(),
+});
+
+export const setProjectTaskOrderSchema = z.object({
+  taskOrderId: z.string().trim().min(1).optional().nullable(),
 });
 
 export const createFundingModSchema = z.object({

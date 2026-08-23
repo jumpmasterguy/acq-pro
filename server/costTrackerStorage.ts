@@ -14,15 +14,22 @@
 
 import { randomUUID } from "crypto";
 import type {
-  CostProject, FundingMod, CostEntry, RatesConfig, Clin,
+  CostProject, FundingMod, CostEntry, RatesConfig, Clin, TaskOrder,
 } from "@shared/costTracker";
 import { DEFAULT_RATES } from "@shared/costTracker";
 
 export interface ICostTrackerStorage {
+  listTaskOrders(userId: string): Promise<TaskOrder[]>;
+  getTaskOrder(userId: string, taskOrderId: string): Promise<TaskOrder | undefined>;
+  createTaskOrder(userId: string, code: string, name: string): Promise<TaskOrder>;
+  archiveTaskOrder(userId: string, taskOrderId: string): Promise<void>;
+
   listProjects(userId: string): Promise<CostProject[]>;
+  listProjectsByTaskOrder(userId: string, taskOrderId: string): Promise<CostProject[]>;
   getProject(userId: string, projectId: string): Promise<CostProject | undefined>;
-  createProject(userId: string, code: string, name: string): Promise<CostProject>;
+  createProject(userId: string, code: string, name: string, taskOrderId?: string | null): Promise<CostProject>;
   archiveProject(userId: string, projectId: string): Promise<void>;
+  setProjectTaskOrder(userId: string, projectId: string, taskOrderId: string | null): Promise<void>;
 
   listFundingMods(projectId: string): Promise<FundingMod[]>;
   createFundingMod(projectId: string, data: Omit<FundingMod, "id" | "projectId" | "createdAt">): Promise<FundingMod>;
@@ -54,6 +61,16 @@ class PgCostTrackerStorage implements ICostTrackerStorage {
 
   private async ensureTables(pool: any): Promise<void> {
     await pool.query(`
+      CREATE TABLE IF NOT EXISTS cost_task_orders (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        user_id VARCHAR NOT NULL,
+        code TEXT NOT NULL,
+        name TEXT NOT NULL,
+        archived BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS cost_task_orders_user_idx ON cost_task_orders(user_id);
+
       CREATE TABLE IF NOT EXISTS cost_projects (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         user_id VARCHAR NOT NULL,
@@ -63,6 +80,10 @@ class PgCostTrackerStorage implements ICostTrackerStorage {
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
       CREATE INDEX IF NOT EXISTS cost_projects_user_idx ON cost_projects(user_id);
+      -- cost_projects may already exist from an earlier deploy without this
+      -- column -- ADD COLUMN IF NOT EXISTS makes the migration idempotent.
+      ALTER TABLE cost_projects ADD COLUMN IF NOT EXISTS task_order_id UUID REFERENCES cost_task_orders(id) ON DELETE SET NULL;
+      CREATE INDEX IF NOT EXISTS cost_projects_task_order_idx ON cost_projects(task_order_id);
 
       CREATE TABLE IF NOT EXISTS cost_funding_mods (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -108,6 +129,9 @@ class PgCostTrackerStorage implements ICostTrackerStorage {
   }
 
   private rowToProject(r: any): CostProject {
+    return { id: r.id, userId: r.user_id, taskOrderId: r.task_order_id ?? null, code: r.code, name: r.name, archived: r.archived, createdAt: r.created_at };
+  }
+  private rowToTaskOrder(r: any): TaskOrder {
     return { id: r.id, userId: r.user_id, code: r.code, name: r.name, archived: r.archived, createdAt: r.created_at };
   }
   private rowToMod(r: any): FundingMod {
@@ -133,11 +157,54 @@ class PgCostTrackerStorage implements ICostTrackerStorage {
     };
   }
 
+  async listTaskOrders(userId: string): Promise<TaskOrder[]> {
+    return this.withPool(async (pool) => {
+      const res = await pool.query(
+        `SELECT * FROM cost_task_orders WHERE user_id = $1 AND archived = FALSE ORDER BY created_at ASC`,
+        [userId]
+      );
+      return res.rows.map((r: any) => this.rowToTaskOrder(r));
+    });
+  }
+
+  async getTaskOrder(userId: string, taskOrderId: string): Promise<TaskOrder | undefined> {
+    return this.withPool(async (pool) => {
+      const res = await pool.query(`SELECT * FROM cost_task_orders WHERE id = $1 AND user_id = $2`, [taskOrderId, userId]);
+      return res.rows[0] ? this.rowToTaskOrder(res.rows[0]) : undefined;
+    });
+  }
+
+  async createTaskOrder(userId: string, code: string, name: string): Promise<TaskOrder> {
+    return this.withPool(async (pool) => {
+      const res = await pool.query(
+        `INSERT INTO cost_task_orders (user_id, code, name) VALUES ($1, $2, $3) RETURNING *`,
+        [userId, code, name]
+      );
+      return this.rowToTaskOrder(res.rows[0]);
+    });
+  }
+
+  async archiveTaskOrder(userId: string, taskOrderId: string): Promise<void> {
+    await this.withPool(async (pool) => {
+      await pool.query(`UPDATE cost_task_orders SET archived = TRUE WHERE id = $1 AND user_id = $2`, [taskOrderId, userId]);
+    });
+  }
+
   async listProjects(userId: string): Promise<CostProject[]> {
     return this.withPool(async (pool) => {
       const res = await pool.query(
         `SELECT * FROM cost_projects WHERE user_id = $1 AND archived = FALSE ORDER BY created_at ASC`,
         [userId]
+      );
+      return res.rows.map((r: any) => this.rowToProject(r));
+    });
+  }
+
+  async listProjectsByTaskOrder(userId: string, taskOrderId: string): Promise<CostProject[]> {
+    return this.withPool(async (pool) => {
+      const res = await pool.query(
+        `SELECT * FROM cost_projects WHERE user_id = $1 AND task_order_id = $2 AND archived = FALSE ORDER BY created_at ASC`,
+        [userId, taskOrderId]
       );
       return res.rows.map((r: any) => this.rowToProject(r));
     });
@@ -150,11 +217,11 @@ class PgCostTrackerStorage implements ICostTrackerStorage {
     });
   }
 
-  async createProject(userId: string, code: string, name: string): Promise<CostProject> {
+  async createProject(userId: string, code: string, name: string, taskOrderId?: string | null): Promise<CostProject> {
     return this.withPool(async (pool) => {
       const res = await pool.query(
-        `INSERT INTO cost_projects (user_id, code, name) VALUES ($1, $2, $3) RETURNING *`,
-        [userId, code, name]
+        `INSERT INTO cost_projects (user_id, code, name, task_order_id) VALUES ($1, $2, $3, $4) RETURNING *`,
+        [userId, code, name, taskOrderId ?? null]
       );
       return this.rowToProject(res.rows[0]);
     });
@@ -163,6 +230,12 @@ class PgCostTrackerStorage implements ICostTrackerStorage {
   async archiveProject(userId: string, projectId: string): Promise<void> {
     await this.withPool(async (pool) => {
       await pool.query(`UPDATE cost_projects SET archived = TRUE WHERE id = $1 AND user_id = $2`, [projectId, userId]);
+    });
+  }
+
+  async setProjectTaskOrder(userId: string, projectId: string, taskOrderId: string | null): Promise<void> {
+    await this.withPool(async (pool) => {
+      await pool.query(`UPDATE cost_projects SET task_order_id = $1 WHERE id = $2 AND user_id = $3`, [taskOrderId, projectId, userId]);
     });
   }
 
@@ -259,26 +332,51 @@ class PgCostTrackerStorage implements ICostTrackerStorage {
 // ─── In-memory (local dev without DATABASE_URL) ─────────────────────────────
 
 class MemCostTrackerStorage implements ICostTrackerStorage {
+  private taskOrders = new Map<string, TaskOrder>();
   private projects = new Map<string, CostProject>();
   private mods = new Map<string, FundingMod>();
   private entries = new Map<string, CostEntry>();
   private rates = new Map<string, RatesConfig>();
 
+  async listTaskOrders(userId: string): Promise<TaskOrder[]> {
+    return Array.from(this.taskOrders.values()).filter((t) => t.userId === userId && !t.archived);
+  }
+  async getTaskOrder(userId: string, taskOrderId: string): Promise<TaskOrder | undefined> {
+    const t = this.taskOrders.get(taskOrderId);
+    return t && t.userId === userId ? t : undefined;
+  }
+  async createTaskOrder(userId: string, code: string, name: string): Promise<TaskOrder> {
+    const t: TaskOrder = { id: randomUUID(), userId, code, name, archived: false, createdAt: new Date().toISOString() };
+    this.taskOrders.set(t.id, t);
+    return t;
+  }
+  async archiveTaskOrder(userId: string, taskOrderId: string): Promise<void> {
+    const t = this.taskOrders.get(taskOrderId);
+    if (t && t.userId === userId) this.taskOrders.set(taskOrderId, { ...t, archived: true });
+  }
+
   async listProjects(userId: string): Promise<CostProject[]> {
     return Array.from(this.projects.values()).filter((p) => p.userId === userId && !p.archived);
+  }
+  async listProjectsByTaskOrder(userId: string, taskOrderId: string): Promise<CostProject[]> {
+    return Array.from(this.projects.values()).filter((p) => p.userId === userId && p.taskOrderId === taskOrderId && !p.archived);
   }
   async getProject(userId: string, projectId: string): Promise<CostProject | undefined> {
     const p = this.projects.get(projectId);
     return p && p.userId === userId ? p : undefined;
   }
-  async createProject(userId: string, code: string, name: string): Promise<CostProject> {
-    const p: CostProject = { id: randomUUID(), userId, code, name, archived: false, createdAt: new Date().toISOString() };
+  async createProject(userId: string, code: string, name: string, taskOrderId?: string | null): Promise<CostProject> {
+    const p: CostProject = { id: randomUUID(), userId, taskOrderId: taskOrderId ?? null, code, name, archived: false, createdAt: new Date().toISOString() };
     this.projects.set(p.id, p);
     return p;
   }
   async archiveProject(userId: string, projectId: string): Promise<void> {
     const p = this.projects.get(projectId);
     if (p && p.userId === userId) this.projects.set(projectId, { ...p, archived: true });
+  }
+  async setProjectTaskOrder(userId: string, projectId: string, taskOrderId: string | null): Promise<void> {
+    const p = this.projects.get(projectId);
+    if (p && p.userId === userId) this.projects.set(projectId, { ...p, taskOrderId });
   }
 
   async listFundingMods(projectId: string): Promise<FundingMod[]> {

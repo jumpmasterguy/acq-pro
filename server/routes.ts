@@ -12,8 +12,8 @@ import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNoti
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 import { costTrackerStorage } from "./costTrackerStorage";
 import {
-  summarizeProject, createProjectSchema, createFundingModSchema,
-  createCostEntrySchema, updateRatesSchema,
+  summarizeProject, aggregateSummaries, createProjectSchema, createFundingModSchema,
+  createCostEntrySchema, updateRatesSchema, createTaskOrderSchema, setProjectTaskOrderSchema,
 } from "@shared/costTracker";
 
 // Initialize Stripe — will be undefined if key not set
@@ -396,6 +396,61 @@ export async function registerRoutes(
   // ─── Cost & Burn Rate Tracker ──────────────────────────────────────
   // All routes scoped to req.user!.id -- one user's projects are never
   // visible to another. See server/costTrackerStorage.ts for persistence.
+  //
+  // Task Orders are an optional grouping layer above projects: a TO rolls
+  // up funding/spend across every project assigned to it via aggregateSummaries().
+  // A project with taskOrderId === null is simply ungrouped.
+
+  app.get("/api/cost-tracker/task-orders", requireAuth as any, async (req: Request, res: Response) => {
+    const taskOrders = await costTrackerStorage.listTaskOrders(req.user!.id);
+    const rates = await costTrackerStorage.getRates(req.user!.id);
+    const results = await Promise.all(taskOrders.map(async (to) => {
+      const projects = await costTrackerStorage.listProjectsByTaskOrder(req.user!.id, to.id);
+      const summaries = await Promise.all(projects.map(async (p) => {
+        const [mods, entries] = await Promise.all([
+          costTrackerStorage.listFundingMods(p.id),
+          costTrackerStorage.listCostEntries(p.id),
+        ]);
+        return summarizeProject(mods, entries, rates);
+      }));
+      const summary = summaries.length > 0 ? aggregateSummaries(summaries) : aggregateSummaries([summarizeProject([], [], rates)]);
+      return { taskOrder: to, projectCount: projects.length, summary };
+    }));
+    res.json(results);
+  });
+
+  app.post("/api/cost-tracker/task-orders", requireAuth as any, async (req: Request, res: Response) => {
+    const parsed = createTaskOrderSchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ message: parsed.error.errors[0]?.message || "Invalid task order" });
+    const taskOrder = await costTrackerStorage.createTaskOrder(req.user!.id, parsed.data.code, parsed.data.name);
+    res.json(taskOrder);
+  });
+
+  app.delete("/api/cost-tracker/task-orders/:taskOrderId", requireAuth as any, async (req: Request, res: Response) => {
+    const taskOrder = await costTrackerStorage.getTaskOrder(req.user!.id, (req.params.taskOrderId as string));
+    if (!taskOrder) return res.status(404).json({ message: "Task order not found" });
+    await costTrackerStorage.archiveTaskOrder(req.user!.id, (req.params.taskOrderId as string));
+    res.json({ ok: true });
+  });
+
+  // Load one Task Order + its member projects (each with computed summary) + the roll-up
+  app.get("/api/cost-tracker/task-orders/:taskOrderId", requireAuth as any, async (req: Request, res: Response) => {
+    const taskOrder = await costTrackerStorage.getTaskOrder(req.user!.id, (req.params.taskOrderId as string));
+    if (!taskOrder) return res.status(404).json({ message: "Task order not found" });
+    const rates = await costTrackerStorage.getRates(req.user!.id);
+    const projects = await costTrackerStorage.listProjectsByTaskOrder(req.user!.id, taskOrder.id);
+    const projectRows = await Promise.all(projects.map(async (p) => {
+      const [mods, entries] = await Promise.all([
+        costTrackerStorage.listFundingMods(p.id),
+        costTrackerStorage.listCostEntries(p.id),
+      ]);
+      return { project: p, summary: summarizeProject(mods, entries, rates) };
+    }));
+    const rollup = projectRows.length > 0
+      ? aggregateSummaries(projectRows.map((r) => r.summary))
+      : aggregateSummaries([summarizeProject([], [], rates)]);
+    res.json({ taskOrder, projects: projectRows, summary: rollup });
+  });
 
   app.get("/api/cost-tracker/projects", requireAuth as any, async (req: Request, res: Response) => {
     const projects = await costTrackerStorage.listProjects(req.user!.id);
@@ -413,7 +468,11 @@ export async function registerRoutes(
   app.post("/api/cost-tracker/projects", requireAuth as any, async (req: Request, res: Response) => {
     const parsed = createProjectSchema.safeParse(req.body);
     if (!parsed.success) return res.status(400).json({ message: parsed.error.errors[0]?.message || "Invalid project" });
-    const project = await costTrackerStorage.createProject(req.user!.id, parsed.data.code, parsed.data.name);
+    if (parsed.data.taskOrderId) {
+      const taskOrder = await costTrackerStorage.getTaskOrder(req.user!.id, parsed.data.taskOrderId);
+      if (!taskOrder) return res.status(400).json({ message: "Task order not found" });
+    }
+    const project = await costTrackerStorage.createProject(req.user!.id, parsed.data.code, parsed.data.name, parsed.data.taskOrderId ?? null);
     res.json(project);
   });
 
@@ -421,6 +480,20 @@ export async function registerRoutes(
     const project = await costTrackerStorage.getProject(req.user!.id, (req.params.projectId as string));
     if (!project) return res.status(404).json({ message: "Project not found" });
     await costTrackerStorage.archiveProject(req.user!.id, (req.params.projectId as string));
+    res.json({ ok: true });
+  });
+
+  // Assign, move, or unassign a project's Task Order (taskOrderId: null clears it)
+  app.put("/api/cost-tracker/projects/:projectId/task-order", requireAuth as any, async (req: Request, res: Response) => {
+    const project = await costTrackerStorage.getProject(req.user!.id, (req.params.projectId as string));
+    if (!project) return res.status(404).json({ message: "Project not found" });
+    const parsed = setProjectTaskOrderSchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ message: parsed.error.errors[0]?.message || "Invalid request" });
+    if (parsed.data.taskOrderId) {
+      const taskOrder = await costTrackerStorage.getTaskOrder(req.user!.id, parsed.data.taskOrderId);
+      if (!taskOrder) return res.status(400).json({ message: "Task order not found" });
+    }
+    await costTrackerStorage.setProjectTaskOrder(req.user!.id, project.id, parsed.data.taskOrderId ?? null);
     res.json({ ok: true });
   });
 

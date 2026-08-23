@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Layers } from "lucide-react";
 
 interface ProjectDetail {
   project: CostProject;
@@ -24,6 +24,7 @@ interface ProjectDetail {
 interface CostProjectDetailPageProps {
   projectId: string;
   onBack: () => void;
+  onOpenTaskOrder?: (taskOrderId: string) => void;
 }
 
 const fmtMoney = (cents: number) =>
@@ -38,7 +39,7 @@ const statusBadge: Record<string, string> = {
   unfunded: "bg-gray-100 text-gray-600 border-gray-300",
 };
 
-export default function CostProjectDetailPage({ projectId, onBack }: CostProjectDetailPageProps) {
+export default function CostProjectDetailPage({ projectId, onBack, onOpenTaskOrder }: CostProjectDetailPageProps) {
   const qc = useQueryClient();
   const key = [`/api/cost-tracker/projects/${projectId}`];
 
@@ -137,6 +138,15 @@ export default function CostProjectDetailPage({ projectId, onBack }: CostProject
         <div>
           <h1 className="text-2xl font-bold">{project.name}</h1>
           <p className="text-sm text-muted-foreground">{project.code}</p>
+          {project.taskOrderId && onOpenTaskOrder && (
+            <button
+              onClick={() => onOpenTaskOrder(project.taskOrderId as string)}
+              className="inline-flex items-center gap-1 text-[11px] text-primary hover:underline mt-1"
+              data-testid="link-project-taskorder"
+            >
+              <Layers className="w-3 h-3" /> View Task Order
+            </button>
+          )}
         </div>
         <Badge variant="outline" className={statusBadge[summary.status]}>
           {summary.status === "unfunded" ? "No funding" : `${Math.round(summary.pctUsed * 100)}% used`}
