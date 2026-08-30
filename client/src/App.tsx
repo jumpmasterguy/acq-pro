@@ -10,7 +10,7 @@ import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel } from 
 import { hasFullAccess, trialDaysRemaining } from "@shared/access";
 import { isNativeApp } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
-import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator } from "lucide-react";
+import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator, Flame } from "lucide-react";
 import { SIDEBAR_RESOURCES } from "@/lib/resources";
 import { FAR_TRANSLATOR, TOOLS_DIRECTORY } from "@/lib/toolsDirectory";
 import { AcqlerateLogo } from "@/components/AcqlerateLogo";
@@ -165,6 +165,9 @@ function AppContent() {
   // Module assessment modal state
   const [assessmentModuleId, setAssessmentModuleId] = useState<string | null>(null);
   const [showLevels, setShowLevels] = useState(false);
+  // Burn Rate (streak) — surfaced persistently in the sidebar, not just on the
+  // Dashboard page, so it behaves like Duolingo's always-visible flame.
+  const [streak, setStreak] = useState({ currentStreak: 0, longestStreak: 0 });
 
   // Derived progress from server auth
   const isPremium =
@@ -297,6 +300,20 @@ function AppContent() {
         clearSavedView();
       });
   }, []);
+
+  // Fetch Burn Rate (streak) once authenticated, so it's ready before the
+  // user ever visits the Dashboard page (the sidebar shows it everywhere).
+  useEffect(() => {
+    if (authState.status !== 'authenticated') return;
+    apiRequest('GET', '/api/daily-challenge')
+      .then(r => r.json())
+      .then(data => {
+        if (typeof data.currentStreak === 'number') {
+          setStreak({ currentStreak: data.currentStreak, longestStreak: data.longestStreak ?? 0 });
+        }
+      })
+      .catch(() => {});
+  }, [authState.status]);
 
   // Handle successful payment redirect
   useEffect(() => {
@@ -526,10 +543,10 @@ function AppContent() {
           </div>
           <button
             onClick={() => setShowLevels(true)}
-            className="w-full bg-sidebar-accent rounded-lg px-3 py-2 flex items-center gap-2 hover:bg-sidebar-accent/80 transition-colors cursor-pointer text-left"
+            className="w-full bg-sidebar-accent border border-sidebar-primary/25 rounded-lg px-3 py-2 flex items-center gap-2 hover:border-sidebar-primary/50 hover:shadow-sm transition-all cursor-pointer text-left"
             data-testid="xp-level-card"
           >
-            <Zap className="w-3.5 h-3.5 text-sidebar-primary flex-shrink-0" />
+            <Zap className="w-3.5 h-3.5 text-sidebar-primary flex-shrink-0 fill-sidebar-primary/20" />
             <div className="flex-1 min-w-0">
               <div className="text-[10px] text-sidebar-foreground/50">Level {currentLevel.level}</div>
               <div className="text-xs font-bold text-sidebar-foreground">{currentLevel.title}</div>
@@ -539,6 +556,34 @@ function AppContent() {
               <div className="text-[9px] text-sidebar-foreground/40">{completedCount} done</div>
             </div>
           </button>
+
+          {/* Burn Rate — Acqlerate's take on a daily streak. In real acquisitions,
+              burn rate is how fast a program spends its funding; here it's how
+              fast you're spending daily reps. */}
+          {streak.currentStreak > 0 ? (
+            <div
+              className="w-full flex items-center gap-2 rounded-lg px-3 py-1.5 bg-orange-500/10 border border-orange-500/30"
+              title="Burn Rate: your consecutive days active. In acquisitions, burn rate tracks how fast a program spends its funding — here, it tracks how fast you're spending daily reps. Don't let it hit zero."
+              data-testid="burn-rate-badge"
+            >
+              <Flame className="w-3.5 h-3.5 text-orange-400 flex-shrink-0 fill-orange-400/30" />
+              <span className="text-xs font-bold text-orange-300 flex-1 truncate">
+                {streak.currentStreak}-day burn rate
+              </span>
+              {streak.currentStreak >= 7 && (
+                <span className="text-[9px] font-bold text-amber-400 flex-shrink-0">🏆 {streak.longestStreak}d best</span>
+              )}
+            </div>
+          ) : (
+            <div
+              className="w-full flex items-center gap-2 rounded-lg px-3 py-1.5 bg-sidebar-accent/40 border border-dashed border-sidebar-border"
+              title="Complete a lesson or the daily challenge today to start your burn rate."
+              data-testid="burn-rate-badge"
+            >
+              <Flame className="w-3.5 h-3.5 text-sidebar-foreground/35 flex-shrink-0" />
+              <span className="text-xs font-medium text-sidebar-foreground/45">Start your burn rate today</span>
+            </div>
+          )}
         </div>
 
         {/* Navigation */}
@@ -546,14 +591,14 @@ function AppContent() {
           <button
             onClick={() => { setView({ type: 'dashboard' }); setSidebarOpen(false); }}
             className={cn(
-              "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+              "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all border",
               view.type === 'dashboard'
-                ? "bg-sidebar-accent text-sidebar-foreground"
-                : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
+                : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
             )}
             data-testid="nav-dashboard"
           >
-            <LayoutDashboard className="w-4 h-4" />
+            <LayoutDashboard className={cn("w-4 h-4", view.type === 'dashboard' && "text-sidebar-primary")} />
             Dashboard
           </button>
 
@@ -561,14 +606,14 @@ function AppContent() {
             <button
               onClick={() => { setView({ type: 'admin' }); setSidebarOpen(false); }}
               className={cn(
-                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all border",
                 view.type === 'admin'
-                  ? "bg-sidebar-accent text-sidebar-foreground"
-                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                  ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
+                  : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
               )}
               data-testid="nav-admin"
             >
-              <ShieldCheck className="w-4 h-4" />
+              <ShieldCheck className={cn("w-4 h-4", view.type === 'admin' && "text-sidebar-primary")} />
               Admin Panel
             </button>
           )}
@@ -576,14 +621,14 @@ function AppContent() {
             <button
               onClick={() => { setView({ type: 'analytics' }); setSidebarOpen(false); }}
               className={cn(
-                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all border",
                 view.type === 'analytics'
-                  ? "bg-sidebar-accent text-sidebar-foreground"
-                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                  ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
+                  : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
               )}
               data-testid="nav-analytics"
             >
-              <BarChart3 className="w-4 h-4" />
+              <BarChart3 className={cn("w-4 h-4", view.type === 'analytics' && "text-sidebar-primary")} />
               Analytics
             </button>
           )}
@@ -629,11 +674,12 @@ function AppContent() {
                 {/* Module header row */}
                 <div
                   className={cn(
-                    "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-colors cursor-pointer select-none",
+                    "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all cursor-pointer select-none border",
                     (isModActive || isLessonInMod)
-                      ? "bg-sidebar-accent text-sidebar-foreground"
-                      : "text-sidebar-foreground/85 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                      ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
+                      : "text-sidebar-foreground/85 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground hover:-translate-y-px"
                   )}
+                  style={(isModActive || isLessonInMod) ? { borderLeft: `3px solid ${mc.accent}` } : undefined}
                   onClick={(e) => {
                     setView({ type: 'module', moduleId: mod.id });
                     setSidebarOpen(false);
@@ -646,13 +692,18 @@ function AppContent() {
                   <span className="flex-1 text-left text-xs font-medium leading-tight">{mod.title}</span>
                   {/* Progress / lock badge */}
                   {!isAccessible && hasPreview ? (
-                    <span className="text-[10px] text-emerald-400 flex-shrink-0">Free</span>
+                    <span className="text-[10px] font-bold text-emerald-400 flex-shrink-0 bg-emerald-400/10 border border-emerald-400/30 rounded-full px-1.5 py-0.5">Free</span>
                   ) : !isAccessible ? (
                     <span className="text-[10px] text-sidebar-foreground/55 flex-shrink-0">🔒</span>
                   ) : progressPct === 100 ? (
-                    <span className="text-[10px] text-green-400 flex-shrink-0">✓</span>
+                    <span className="text-[10px] flex-shrink-0 bg-green-500/15 border border-green-500/40 rounded-full w-4 h-4 flex items-center justify-center text-green-400">✓</span>
                   ) : progressPct > 0 ? (
-                    <span className="text-[10px] flex-shrink-0" style={{ color: mc.accent }}>{progressPct}%</span>
+                    <span
+                      className="text-[10px] font-bold flex-shrink-0 rounded-full px-1.5 py-0.5 border"
+                      style={{ color: mc.accent, borderColor: mc.accent + '55', backgroundColor: mc.accent + '15' }}
+                    >
+                      {progressPct}%
+                    </span>
                   ) : null}
                   {/* Chevron toggle */}
                   <button
@@ -714,7 +765,12 @@ function AppContent() {
             <div className="pt-3">
               <button
                 onClick={() => setResourcesExpanded(v => !v)}
-                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors select-none"
+                className={cn(
+                  "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all select-none border",
+                  resourcesExpanded
+                    ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border"
+                    : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
+                )}
                 data-testid="sidebar-resources-toggle"
               >
                 <FolderOpen className="w-4 h-4 flex-shrink-0" />
@@ -749,7 +805,12 @@ function AppContent() {
           <div className="pt-1">
             <button
               onClick={() => setToolsExpanded(v => !v)}
-              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors select-none"
+              className={cn(
+                "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all select-none border",
+                toolsExpanded
+                  ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border"
+                  : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
+              )}
               data-testid="sidebar-tools-toggle"
             >
               <Wrench className="w-4 h-4 flex-shrink-0" />
@@ -834,7 +895,7 @@ function AppContent() {
           {!isActuallyPaid && !isNativeApp() && (
             <button
               onClick={() => { setView({ type: 'upgrade' }); setSidebarOpen(false); }}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-sidebar-primary/10 text-sidebar-primary hover:bg-sidebar-primary/20 transition-colors"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold bg-sidebar-primary/10 text-sidebar-primary border border-sidebar-primary/30 hover:bg-sidebar-primary/20 hover:border-sidebar-primary/50 transition-all shadow-sm"
               data-testid="nav-upgrade"
             >
               <Award className="w-4 h-4" />
@@ -916,6 +977,7 @@ function AppContent() {
               username={authState.status === 'authenticated' ? authState.user.username : undefined}
               onEditProfile={handleEditProfile}
               isAdmin={isAdmin}
+              onStreakUpdate={(s) => setStreak(s)}
             />
           )}
           {view.type === 'module' && (() => {

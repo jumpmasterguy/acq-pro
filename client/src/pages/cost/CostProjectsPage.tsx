@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { EmptyState } from "@/components/ui/empty-state";
 import { ArrowLeft, Plus, Settings, Trash2, FolderKanban, Layers } from "lucide-react";
 
 interface Row {
@@ -154,11 +155,16 @@ export default function CostProjectsPage({ onBack, onOpenProject, onOpenRates, o
       {isLoading && <p className="text-sm text-muted-foreground">Loading projects…</p>}
 
       {!isLoading && rows && rows.length === 0 && (
-        <Card>
-          <CardContent className="py-10 text-center text-muted-foreground">
-            No projects yet. Create one above to start tracking funding mods and spend.
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={FolderKanban}
+          title="No projects yet"
+          description="Add your first project to start tracking funding mods, billed spend, and burn rate — it only takes a code and a name."
+          action={
+            <Button onClick={() => setShowNew(true)} data-testid="button-new-project-empty">
+              <Plus className="w-4 h-4 mr-1.5" /> Create your first project
+            </Button>
+          }
+        />
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

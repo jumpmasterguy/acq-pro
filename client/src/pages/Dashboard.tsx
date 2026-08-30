@@ -23,6 +23,8 @@ interface DashboardProps {
   username?: string;
   onEditProfile?: () => void;
   isAdmin?: boolean;
+  /** Mirrors this page's Burn Rate (streak) numbers up to the persistent sidebar badge. */
+  onStreakUpdate?: (streak: { currentStreak: number; longestStreak: number }) => void;
 }
 
 // ── Career track lesson-level definitions ───────────────────────────────────
@@ -382,7 +384,7 @@ function FilterTab({ active, onClick, children }: { active: boolean; onClick: ()
 }
 
 // ── Main Dashboard ───────────────────────────────────────────────────────────
-export default function Dashboard({ progress, onSelectModule, onSelectLesson, onUpgrade, username, isAdmin }: DashboardProps) {
+export default function Dashboard({ progress, onSelectModule, onSelectLesson, onUpgrade, username, isAdmin, onStreakUpdate }: DashboardProps) {
   const totalLessons = getTotalLessons();
   const completedCount = progress.completedLessons.size;
   const xp = calculateXP(progress.completedLessons, progress.quizScores);
@@ -483,6 +485,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
       .then(r => r.json())
       .then(data => {
         setStreak({ currentStreak: data.currentStreak, longestStreak: data.longestStreak, alreadyCompleted: data.alreadyCompleted, date: data.date });
+        onStreakUpdate?.({ currentStreak: data.currentStreak, longestStreak: data.longestStreak });
         setChallenge({ questions: data.questions, date: data.date });
         if (data.alreadyCompleted) setChallengeSubmitted(true);
       })
@@ -498,6 +501,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
       setChallengeResult(data);
       setChallengeSubmitted(true);
       setStreak(s => ({ ...s, currentStreak: data.currentStreak, longestStreak: data.longestStreak }));
+      onStreakUpdate?.({ currentStreak: data.currentStreak, longestStreak: data.longestStreak });
     } catch {}
   }
 
@@ -781,14 +785,20 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
         </div>
       )}
 
-      {/* ── Streak + Daily Challenge ───────────────────────────────────────── */}
+      {/* ── Burn Rate + Daily Challenge ───────────────────────────────────────
+          "Burn Rate" is Acqlerate's acquisitions-flavored spin on a daily streak:
+          in real DoD acquisitions, burn rate is how fast a program spends its
+          funding. Here, it's how fast you're spending daily reps. */}
       <div className="grid sm:grid-cols-2 gap-3">
-        {/* Streak card */}
-        <div className="rounded-2xl border border-border bg-card p-4 flex items-center gap-4">
+        {/* Burn Rate card */}
+        <div
+          className="rounded-2xl border border-orange-500/25 bg-orange-500/[0.04] p-4 flex items-center gap-4"
+          title="In acquisitions, burn rate tracks how fast a program spends its funding. Here, it tracks how fast you're spending daily reps."
+        >
           <div className="text-4xl">{streak.currentStreak > 0 ? '🔥' : '💤'}</div>
           <div className="flex-1">
-            <p className="text-xl font-black">{streak.currentStreak} day{streak.currentStreak !== 1 ? 's' : ''}</p>
-            <p className="text-xs text-muted-foreground">Current streak · Best: {streak.longestStreak}</p>
+            <p className="text-xl font-black">{streak.currentStreak}-day burn rate</p>
+            <p className="text-xs text-muted-foreground">Personal best: {streak.longestStreak} day{streak.longestStreak !== 1 ? 's' : ''}</p>
           </div>
           {streak.currentStreak >= 7 && (
             <div className="text-xs font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 px-2 py-1 rounded-full">🏆 {streak.currentStreak}d</div>

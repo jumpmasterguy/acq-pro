@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Plus, Trash2, Layers } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Layers, FileText } from "lucide-react";
 
 interface ProjectDetail {
   project: CostProject;
@@ -254,7 +254,11 @@ export default function CostProjectDetailPage({ projectId, onBack, onOpenTaskOrd
             </div>
           )}
           {mods.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-4 text-center">No funding mods yet.</p>
+            <div className="flex flex-col items-center text-center py-8 px-4 rounded-lg border-2 border-dashed border-border bg-muted/30">
+              <FileText className="w-5 h-5 text-primary mb-2" />
+              <p className="text-sm font-semibold text-foreground">No funding mods yet</p>
+              <p className="text-xs text-muted-foreground mt-1">Add the first mod above to start tracking funded value against spend.</p>
+            </div>
           ) : (
             <Table>
               <TableHeader>

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { EmptyState } from "@/components/ui/empty-state";
 import { ArrowLeft, Plus, Trash2, Layers } from "lucide-react";
 
 interface Row {
@@ -115,11 +116,16 @@ export default function CostTaskOrdersPage({ onBack, onOpenTaskOrder }: CostTask
       {isLoading && <p className="text-sm text-muted-foreground">Loading task orders…</p>}
 
       {!isLoading && rows && rows.length === 0 && (
-        <Card>
-          <CardContent className="py-10 text-center text-muted-foreground">
-            No task orders yet. Create one above, then assign projects to it.
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={Layers}
+          title="No task orders yet"
+          description="Task Orders group related projects so you can see funded and billed totals rolled up across all of them."
+          action={
+            <Button onClick={() => setShowNew(true)} data-testid="button-new-task-order-empty">
+              <Plus className="w-4 h-4 mr-1.5" /> Create your first task order
+            </Button>
+          }
+        />
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

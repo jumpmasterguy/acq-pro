@@ -210,7 +210,11 @@ export default function CostTaskOrderDetailPage({ taskOrderId, onBack, onOpenPro
           )}
 
           {projects.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-4 text-center">No projects assigned to this Task Order yet.</p>
+            <div className="flex flex-col items-center text-center py-8 px-4 rounded-lg border-2 border-dashed border-border bg-muted/30">
+              <Link2 className="w-5 h-5 text-primary mb-2" />
+              <p className="text-sm font-semibold text-foreground">No projects assigned yet</p>
+              <p className="text-xs text-muted-foreground mt-1">Create a project above and pick this Task Order to link it here.</p>
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {projects.map(({ project, summary: ps }) => (
