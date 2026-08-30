@@ -268,7 +268,7 @@ export default function Landing({ onGetStarted, isAuthenticated, onBackToDashboa
               </Badge>
               <div className="text-lg font-semibold mb-1">Pro Access</div>
               <div className="flex items-end gap-2 mb-1">
-                <span className="text-3xl font-bold">$149</span>
+                <span className="text-3xl font-bold">$99</span>
                 <span className="text-muted-foreground text-sm mb-1">lifetime</span>
               </div>
               <div className="text-xs text-muted-foreground mb-4">or $5.99/month</div>

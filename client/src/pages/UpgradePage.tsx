@@ -66,8 +66,8 @@ export default function UpgradePage({ onBack, trialDaysLeft = null }: UpgradePag
         try {
           (window as any).trackEvent?.('begin_checkout', {
             currency: 'USD',
-            value: priceType === 'lifetime' ? 149 : 5.99,
-            items: [{ item_name: `Acqlerate Pro ${priceType}`, price: priceType === 'lifetime' ? 149 : 5.99 }],
+            value: priceType === 'lifetime' ? 99 : 5.99,
+            items: [{ item_name: `Acqlerate Pro ${priceType}`, price: priceType === 'lifetime' ? 99 : 5.99 }],
           });
         } catch {}
         window.location.href = data.url;
@@ -227,7 +227,7 @@ export default function UpgradePage({ onBack, trialDaysLeft = null }: UpgradePag
           </div>
           <div className="text-base font-semibold mb-1">Lifetime Pro</div>
           <div className="flex items-end gap-1 mb-0.5">
-            <span className="text-3xl font-bold">$149</span>
+            <span className="text-3xl font-bold">$99</span>
             <span className="text-muted-foreground text-sm mb-1">one-time</span>
           </div>
           <div className="text-xs text-muted-foreground mb-4">Pay once, own it forever</div>
