@@ -7,6 +7,7 @@ import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel } from "@/lib/progress";
+import { hasFullAccess, trialDaysRemaining } from "@shared/access";
 import { isNativeApp } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
 import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator } from "lucide-react";
@@ -104,9 +105,7 @@ type AuthState =
   | { status: 'authenticated'; user: AuthUser };
 
 function buildProgressFromUser(user: AuthUser) {
-  const isPremium =
-    user.subscriptionStatus === "active" ||
-    user.subscriptionStatus === "lifetime";
+  const isPremium = hasFullAccess(user);
   return {
     completedLessons: new Set<string>(user.completedLessons ?? []),
     quizScores: user.quizScores ?? {},
@@ -169,9 +168,14 @@ function AppContent() {
 
   // Derived progress from server auth
   const isPremium =
+    authState.status === 'authenticated' && hasFullAccess(authState.user);
+  const trialDaysLeft =
+    authState.status === 'authenticated' ? trialDaysRemaining(authState.user) : null;
+  // Distinct from isPremium: a trialing user has full access right now but
+  // hasn't actually paid, so they should still see the upgrade CTA/countdown.
+  const isActuallyPaid =
     authState.status === 'authenticated' &&
-    (authState.user.subscriptionStatus === 'active' ||
-      authState.user.subscriptionStatus === 'lifetime');
+    (authState.user.subscriptionStatus === 'active' || authState.user.subscriptionStatus === 'lifetime');
   const completedLessons =
     authState.status === 'authenticated'
       ? new Set<string>(authState.user.completedLessons ?? [])
@@ -817,14 +821,24 @@ function AppContent() {
 
         {/* Bottom */}
         <div className="px-3 py-4 border-t border-sidebar-border space-y-1">
-          {!isPremium && !isNativeApp() && (
+          {trialDaysLeft !== null && (
+            <div
+              className="w-full px-3 py-1.5 rounded-lg text-[11px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 text-center"
+              data-testid="trial-days-remaining"
+            >
+              {trialDaysLeft === 0
+                ? "Trial ends today"
+                : `${trialDaysLeft} day${trialDaysLeft === 1 ? '' : 's'} left in your free trial`}
+            </div>
+          )}
+          {!isActuallyPaid && !isNativeApp() && (
             <button
               onClick={() => { setView({ type: 'upgrade' }); setSidebarOpen(false); }}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-sidebar-primary/10 text-sidebar-primary hover:bg-sidebar-primary/20 transition-colors"
               data-testid="nav-upgrade"
             >
               <Award className="w-4 h-4" />
-              Upgrade to Pro
+              {trialDaysLeft !== null ? "Keep Full Access" : "Upgrade to Pro"}
             </button>
           )}
           <button
@@ -947,6 +961,7 @@ function AppContent() {
             <UpgradePage
               onBack={() => setView({ type: 'dashboard' })}
               onUpgrade={handleUpgrade}
+              trialDaysLeft={trialDaysLeft}
             />
           )}
           {view.type === 'admin' && isAdmin && (

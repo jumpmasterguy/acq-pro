@@ -11,9 +11,10 @@ import { cn } from "@/lib/utils";
 interface UpgradePageProps {
   onBack: () => void;
   onUpgrade: () => void; // retained for compatibility but Stripe takes over
+  trialDaysLeft?: number | null;
 }
 
-export default function UpgradePage({ onBack }: UpgradePageProps) {
+export default function UpgradePage({ onBack, trialDaysLeft = null }: UpgradePageProps) {
   const totalLessons = getTotalLessons();
   const [loadingLifetime, setLoadingLifetime] = useState(false);
   const [loadingMonthly, setLoadingMonthly] = useState(false);
@@ -21,8 +22,8 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
   const { toast } = useToast();
 
   const freeFeatures = [
-    "Module 1: Foundations (full access)",
-    "4 in-depth lessons",
+    "Module 1: Foundations (full access, 9 lessons)",
+    "1 free preview lesson in every other module",
     "Progress tracking",
     "Key terms & glossary",
   ];
@@ -65,8 +66,8 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
         try {
           (window as any).trackEvent?.('begin_checkout', {
             currency: 'USD',
-            value: priceType === 'lifetime' ? 149 : 5.99,
-            items: [{ item_name: `Acqlerate Pro ${priceType}`, price: priceType === 'lifetime' ? 149 : 5.99 }],
+            value: priceType === 'lifetime' ? 99 : 5.99,
+            items: [{ item_name: `Acqlerate Pro ${priceType}`, price: priceType === 'lifetime' ? 99 : 5.99 }],
           });
         } catch {}
         window.location.href = data.url;
@@ -119,6 +120,14 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
           Get access to every module, lesson, quiz, and resource —
           everything you need to launch or advance your DoD acquisitions career.
         </p>
+        {trialDaysLeft !== null && (
+          <div className="mt-4 inline-flex items-center gap-2 bg-amber-500/10 text-amber-700 dark:text-amber-400 text-xs font-semibold px-3 py-1.5 rounded-full">
+            <Zap className="w-3.5 h-3.5" />
+            {trialDaysLeft === 0
+              ? "Your free trial ends today — lock in full access before it reverts to the free tier"
+              : `${trialDaysLeft} day${trialDaysLeft === 1 ? '' : 's'} left in your free trial`}
+          </div>
+        )}
       </div>
 
       {/* Pricing Cards — 3 columns, matching landing page layout */}
@@ -145,7 +154,7 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
             ))}
           </ul>
           <Button variant="outline" className="w-full mt-auto" onClick={onBack} data-testid="stay-free">
-            Continue with Free
+            {trialDaysLeft !== null ? "No thanks, I'll drop to Free" : "Continue with Free"}
           </Button>
         </div>
 
@@ -218,7 +227,7 @@ export default function UpgradePage({ onBack }: UpgradePageProps) {
           </div>
           <div className="text-base font-semibold mb-1">Lifetime Pro</div>
           <div className="flex items-end gap-1 mb-0.5">
-            <span className="text-3xl font-bold">$149</span>
+            <span className="text-3xl font-bold">$99</span>
             <span className="text-muted-foreground text-sm mb-1">one-time</span>
           </div>
           <div className="text-xs text-muted-foreground mb-4">Pay once, own it forever</div>

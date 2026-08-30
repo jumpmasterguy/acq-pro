@@ -11,8 +11,12 @@ export const users = pgTable("users", {
   googleId: text("google_id").unique(),  // null for local-auth users
   // Stripe
   stripeCustomerId: text("stripe_customer_id"),
-  subscriptionStatus: text("subscription_status").notNull().default("free"), // 'free' | 'active' | 'lifetime'
+  subscriptionStatus: text("subscription_status").notNull().default("free"), // 'free' | 'trialing' | 'active' | 'lifetime'
   subscriptionId: text("subscription_id"),
+  // 14-day free trial: full access from signup until this date. Set at registration.
+  // null for users who registered before the trial existed, or who are on a
+  // permanent tier (free/active/lifetime) that doesn't need a trial clock.
+  trialEndsAt: text("trial_ends_at"),
   isAdmin: boolean("is_admin").notNull().default(false),
   // Progress
   completedLessons: text("completed_lessons").array().notNull().default(sql`ARRAY[]::text[]`),

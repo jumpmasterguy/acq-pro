@@ -233,7 +233,7 @@ export default function Landing({ onGetStarted, isAuthenticated, onBackToDashboa
         <div className="max-w-5xl mx-auto px-6 py-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-3">Invest in Your Career</h2>
-            <p className="text-muted-foreground">Less than one month of DAU travel costs. Lifetime access.</p>
+            <p className="text-muted-foreground">Try everything free for 14 days. Less than one month of DAU travel costs after that.</p>
           </div>
           <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             <div className="rounded-xl border border-border bg-background p-7">
@@ -241,8 +241,8 @@ export default function Landing({ onGetStarted, isAuthenticated, onBackToDashboa
               <div className="text-3xl font-bold mb-4">$0</div>
               <ul className="space-y-2.5 mb-7">
                 {[
-                  'Module 1: Foundations (full access)',
-                  '4 in-depth lessons',
+                  'Module 1: Foundations (full access, 9 lessons)',
+                  '1 free preview lesson in every other module',
                   'Progress tracking',
                   'Key terms & glossary',
                 ].map((item, i) => (
@@ -259,7 +259,7 @@ export default function Landing({ onGetStarted, isAuthenticated, onBackToDashboa
                 ))}
               </ul>
               <Button variant="outline" className="w-full" onClick={onGetStarted} data-testid="pricing-free">
-                Start Free
+                Start Your Free Trial
               </Button>
             </div>
             <div className="rounded-xl border-2 border-primary bg-primary/5 dark:bg-primary/10 p-7 relative">
@@ -268,7 +268,7 @@ export default function Landing({ onGetStarted, isAuthenticated, onBackToDashboa
               </Badge>
               <div className="text-lg font-semibold mb-1">Pro Access</div>
               <div className="flex items-end gap-2 mb-1">
-                <span className="text-3xl font-bold">$149</span>
+                <span className="text-3xl font-bold">$99</span>
                 <span className="text-muted-foreground text-sm mb-1">lifetime</span>
               </div>
               <div className="text-xs text-muted-foreground mb-4">or $5.99/month</div>
