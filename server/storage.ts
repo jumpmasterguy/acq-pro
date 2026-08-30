@@ -1,4 +1,5 @@
 import { type User, type InsertUser, type InsertGoogleUser, users, emailLeads, type Lead } from "@shared/schema";
+import { computeTrialEndsAt, hasFullAccess } from "@shared/access";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { eq, sql } from "drizzle-orm";
@@ -63,7 +64,7 @@ export interface IStorage {
   getPurchaseBySessionId(sessionId: string): Promise<Purchase | undefined>;
   getPurchaseByToken(token: string): Promise<Purchase | undefined>;
   incrementDownloadCount(purchaseId: string): Promise<void>;
-  getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[] }>>;
+  getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[]; subscriptionStatus: string }>>;
   updateSentEmailDays(userId: string, days: number[]): Promise<void>;
   // Email unsubscribes (marketing/newsletter/drip opt-out)
   isUnsubscribed(email: string): Promise<boolean>;
@@ -203,7 +204,8 @@ export class DrizzleStorage implements IStorage {
         googleId: data.googleId,
         passwordHash: null,
         stripeCustomerId: null,
-        subscriptionStatus: "free",
+        subscriptionStatus: "trialing",
+        trialEndsAt: computeTrialEndsAt(),
         subscriptionId: null,
         completedLessons: [],
         quizScores: {},
@@ -226,7 +228,8 @@ export class DrizzleStorage implements IStorage {
         id,
         ...insertUser,
         stripeCustomerId: null,
-        subscriptionStatus: "free",
+        subscriptionStatus: "trialing",
+        trialEndsAt: computeTrialEndsAt(),
         subscriptionId: null,
         completedLessons: [],
         quizScores: {},
@@ -357,7 +360,10 @@ export class DrizzleStorage implements IStorage {
     const status = (user as any).subscriptionStatus ?? 'free';
     if (status === 'lifetime') return { allowed: true, remaining: null, limit: null }; // unlimited
 
-    const limit = status === 'active' ? 30 : 5; // Monthly Pro vs Free
+    // Trialing users get the paid (Monthly Pro) limit for as long as their
+    // trial clock is still running; once it lapses they fall back to Free
+    // automatically (no separate expiry job needed).
+    const limit = (status === 'active' || hasFullAccess(user as any)) ? 30 : 5; // Monthly Pro / active trial vs Free
     const todayStr = new Date().toISOString().slice(0, 10);
     const isNewDay = (user as any).aiCallsDate !== todayStr;
     const callsSoFar = isNewDay ? 0 : ((user as any).aiCallsToday ?? 0);
@@ -497,13 +503,14 @@ export class DrizzleStorage implements IStorage {
     await pool.end();
   }
 
-  async getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[] }>> {
+  async getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[]; subscriptionStatus: string }>> {
     const rows = await this.db.select({
       id: users.id,
       email: users.email,
       username: users.username,
       registeredAt: users.registeredAt,
       sentEmailDays: users.sentEmailDays,
+      subscriptionStatus: users.subscriptionStatus,
     }).from(users);
     return rows.map(r => ({
       ...r,
@@ -609,7 +616,8 @@ export class MemStorage implements IStorage {
       googleId: data.googleId ?? null,
       passwordHash: null,
       stripeCustomerId: null,
-      subscriptionStatus: "free",
+      subscriptionStatus: "trialing",
+      trialEndsAt: computeTrialEndsAt(),
       subscriptionId: null,
       completedLessons: [],
       quizScores: {},
@@ -631,7 +639,8 @@ export class MemStorage implements IStorage {
       ...insertUser,
       id,
       stripeCustomerId: null,
-      subscriptionStatus: "free",
+      subscriptionStatus: "trialing",
+      trialEndsAt: computeTrialEndsAt(),
       subscriptionId: null,
       completedLessons: [],
       quizScores: {},
@@ -756,13 +765,14 @@ export class MemStorage implements IStorage {
   async getPurchaseByToken(_: string): Promise<Purchase | undefined> { return undefined; }
   async incrementDownloadCount(_: string): Promise<void> {}
 
-  async getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[] }>> {
+  async getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[]; subscriptionStatus: string }>> {
     return Array.from(this.users.values()).map(u => ({
       id: u.id,
       email: u.email,
       username: u.username,
       registeredAt: u.registeredAt ?? new Date().toISOString(),
       sentEmailDays: Array.isArray(u.sentEmailDays) ? (u.sentEmailDays as number[]) : [],
+      subscriptionStatus: (u as any).subscriptionStatus ?? 'free',
     }));
   }
 

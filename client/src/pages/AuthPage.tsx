@@ -55,6 +55,7 @@ export interface AuthUser {
   username: string;
   email: string;
   subscriptionStatus: string;
+  trialEndsAt?: string | null;
   completedLessons: string[];
   quizScores: Record<string, number>;
   isAdmin?: boolean;

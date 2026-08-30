@@ -130,6 +130,7 @@ export async function registerRoutes(
         username: user.username,
         email: user.email,
         subscriptionStatus: user.subscriptionStatus,
+        trialEndsAt: (user as any).trialEndsAt ?? null,
         completedLessons: user.completedLessons ?? [],
         quizScores: user.quizScores ?? {},
         isAdmin: isAdmin(req),
@@ -182,6 +183,7 @@ export async function registerRoutes(
             username: user.username,
             email: user.email,
             subscriptionStatus: user.subscriptionStatus,
+            trialEndsAt: (user as any).trialEndsAt ?? null,
             completedLessons: user.completedLessons ?? [],
             quizScores: user.quizScores ?? {},
             isAdmin: isAdmin(req),
@@ -219,6 +221,7 @@ export async function registerRoutes(
       username: user.username,
       email: user.email,
       subscriptionStatus: user.subscriptionStatus,
+      trialEndsAt: (user as any).trialEndsAt ?? null,
       completedLessons: user.completedLessons ?? [],
       quizScores: user.quizScores ?? {},
       isAdmin: isAdmin(req),
@@ -912,6 +915,7 @@ export async function registerRoutes(
       username: u.username,
       email: u.email,
       subscriptionStatus: u.subscriptionStatus,
+      trialEndsAt: (u as any).trialEndsAt ?? null,
       completedLessons: (u.completedLessons ?? []).length,
       referralCode: u.referralCode ?? null,
       referredBy: u.referredBy ?? null,
@@ -1201,6 +1205,7 @@ export async function registerRoutes(
           username: u.username,
           email: u.email,
           subscriptionStatus: u.subscriptionStatus,
+          trialEndsAt: (u as any).trialEndsAt ?? null,
           lastLoginAt: u.lastLoginAt ?? null,
           lastActiveAt: u.lastActiveAt ?? null,
           loginCount: u.loginCount ?? 0,
@@ -1214,7 +1219,11 @@ export async function registerRoutes(
 
       // Platform aggregate
       const totalUsers = allUsers.length;
-      const proUsers = allUsers.filter(u => u.subscriptionStatus !== 'free').length;
+      // "Pro" = actually paying (active or lifetime). Trialing users have full
+      // access but haven't converted yet — counted separately so this number
+      // doesn't overstate real revenue-paying users.
+      const proUsers = allUsers.filter(u => u.subscriptionStatus === 'active' || u.subscriptionStatus === 'lifetime').length;
+      const trialingUsers = allUsers.filter(u => u.subscriptionStatus === 'trialing').length;
       const dau = allUsers.filter(u => {
         if (!u.lastActiveAt) return false;
         return now - new Date(u.lastActiveAt).getTime() < oneDayMs;
@@ -1229,7 +1238,7 @@ export async function registerRoutes(
         : 0;
 
       return res.json({
-        aggregate: { totalUsers, proUsers, dau, avgXp, avgLessons, avgMinutes },
+        aggregate: { totalUsers, proUsers, trialingUsers, dau, avgXp, avgLessons, avgMinutes },
         users: userStats,
       });
     } catch (err: any) {
@@ -1584,9 +1593,11 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
         if (day) signupsByDay[day] = (signupsByDay[day] ?? 0) + 1;
       });
 
-      // Free to paid conversion
+      // Free to paid conversion — trialing users have full access but haven't
+      // converted yet, so they're excluded from "paid" (see trialingUsers below).
       const totalUsers = allUsers.length;
-      const paidUsers = allUsers.filter(u => u.subscriptionStatus !== 'free').length;
+      const paidUsers = allUsers.filter(u => u.subscriptionStatus === 'active' || u.subscriptionStatus === 'lifetime').length;
+      const trialingUsers = allUsers.filter(u => u.subscriptionStatus === 'trialing').length;
       const conversionRate = totalUsers > 0 ? Math.round((paidUsers / totalUsers) * 100) : 0;
 
       // Lesson completion rates
@@ -1610,7 +1621,8 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
         lifetimeSalesCount: lifetimeSales.length,
         totalUsers,
         paidUsers,
-        freeUsers: totalUsers - paidUsers,
+        trialingUsers,
+        freeUsers: totalUsers - paidUsers - trialingUsers,
         conversionRate,
         signupsByDay,
         topLessons,
@@ -1698,7 +1710,8 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
           user.email,
           user.username,
           user.registeredAt,
-          user.sentEmailDays
+          user.sentEmailDays,
+          user.subscriptionStatus
         );
         if (updated.length !== user.sentEmailDays.length) {
           await storage.updateSentEmailDays(user.id, updated);

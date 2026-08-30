@@ -946,6 +946,32 @@ export async function sendEmail7New(to: string, username: string): Promise<void>
   console.log(`[email] Email 7 new (day 21) sent to ${to}`);
 }
 
+// ─── Trial ending (Day 14) — only sent to users still on an active trial ───
+// Everyone else (already free-tier-only, already paid) never gets this one.
+
+export async function sendTrialEndingEmail(to: string, username: string): Promise<void> {
+  if (!resend) return;
+  const body = `
+    <div class="greeting">Hey ${username} —</div>
+    <p>Your 14-day full-access trial wraps up today.</p>
+    <p>Here's exactly what that means: you keep permanent free access to <strong>Foundations (all 9 lessons)</strong> and the first lesson of every other module. Everything else — the rest of Finance, Contracts, Data & Analytics, Capture & BD, Operations, plus the full AI Study Assistant — goes back behind the paywall unless you upgrade.</p>
+    <div class="highlight-box">
+      <p>If the last two weeks were useful, staying in is <strong>$5.99/month</strong> — or <strong>$99 once, for good</strong> if you'd rather not think about it again.</p>
+    </div>
+    <p>Nothing you've completed is lost either way. Your progress, XP, and streak are all still there.</p>
+    <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
+      <a href="${APP_URL}/app#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Keep Full Access →</a>
+    </div>
+    <p style="font-size:14px;color:#0d2137;font-weight:700;margin-top:4px">— Lucas</p>
+  `;
+  await resend.emails.send({
+    from: FROM, to, replyTo: "hello@acqlerate.com",
+    subject: "Your trial ends today",
+    html: emailShell("Your 14-day trial is up. Here's what stays free and what to do if you want to keep the rest.", body, to),
+  });
+  console.log(`[email] Trial-ending (day 14) sent to ${to}`);
+}
+
 
 // ─── Newsletter broadcast ────────────────────────────────────────────────────
 
@@ -1003,13 +1029,17 @@ const EMAIL_SEQUENCE: Array<{
  * Send any emails due today for a user.
  * `registeredAt` — ISO date string of when the user signed up.
  * `sentEmailDays` — array of day-numbers already sent (e.g. [0, 2]).
+ * `subscriptionStatus` — when 'trialing', the day-14 trial-ending email is
+ *   spliced into the sequence. Anyone else (plain free, or already paid)
+ *   never gets it — the trial-end message would be wrong for them.
  * Returns the updated sentEmailDays array.
  */
 export async function processDripEmails(
   to: string,
   username: string,
   registeredAt: string,
-  sentEmailDays: number[]
+  sentEmailDays: number[],
+  subscriptionStatus?: string
 ): Promise<number[]> {
   const regDate = new Date(registeredAt);
   const now = new Date();
@@ -1017,10 +1047,14 @@ export async function processDripEmails(
 
   const updated = [...sentEmailDays];
 
+  const sequence = subscriptionStatus === 'trialing'
+    ? [...EMAIL_SEQUENCE, { day: 14, fn: sendTrialEndingEmail }].sort((a, b) => a.day - b.day)
+    : EMAIL_SEQUENCE;
+
   // Only send the SINGLE earliest overdue email per call, not the whole backlog.
   // If a user is behind (e.g. after downtime), they catch up one email per
   // scheduler run instead of getting every missed email jammed in at once.
-  for (const { day, fn } of EMAIL_SEQUENCE) {
+  for (const { day, fn } of sequence) {
     if (daysSinceReg >= day && !updated.includes(day)) {
       try {
         await fn(to, username);

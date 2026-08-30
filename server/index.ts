@@ -240,6 +240,8 @@ app.use((req, res, next) => {
         // AI Study Assistant usage tracking
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS ai_calls_today INTEGER NOT NULL DEFAULT 0`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS ai_calls_date TEXT`,
+        // 14-day free trial
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS trial_ends_at TEXT`,
       ];
       // email_leads table for landing page opt-ins
       try {
@@ -404,6 +406,7 @@ function startDripScheduler() {
           user.username,
           user.registeredAt,
           user.sentEmailDays,
+          user.subscriptionStatus,
         );
         if (updated.length !== user.sentEmailDays.length) {
           await storage.updateSentEmailDays(user.id, updated);
