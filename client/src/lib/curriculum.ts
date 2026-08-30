@@ -155,6 +155,13 @@ export interface Module {
   // Module-level gate assessment: 10 questions drawn from across all lessons.
   // Pass ≥75% to unlock next skill level.
   assessment?: ModuleAssessmentQuestion[];
+  // Lesson book PDF, same access rule as the module itself (free module = free PDF).
+  pdfUrl?: string;
+  // "The Debrief" — NotebookLM podcast-style audio overview of the module.
+  audioUrl?: string;
+  // Flip to true once the file at audioUrl actually exists — keeps unfinished
+  // modules showing "Coming soon" instead of a broken player.
+  audioReady?: boolean;
 }
 
 export const modules: Module[] = [
@@ -163,6 +170,9 @@ export const modules: Module[] = [
   // ─────────────────────────────────────────────────────────────
   {
     id: 'foundations',
+    pdfUrl: '/lesson-books/module-1-foundations.pdf',
+    audioUrl: '/audio/module-1-foundations.mp3',
+    audioReady: false,
     title: 'DoD Acquisitions Foundations',
     subtitle: '01 · Start Here',
     icon: '🏛️',
@@ -1892,6 +1902,9 @@ export const modules: Module[] = [
   // ─────────────────────────────────────────────────────────────
   {
     id: 'finance',
+    pdfUrl: '/lesson-books/module-2-finance.pdf',
+    audioUrl: '/audio/module-2-finance.mp3',
+    audioReady: false,
     title: 'Defense Finance & Budgeting',
     subtitle: '02 · Defense Finance',
     icon: '💰',
@@ -4012,6 +4025,9 @@ export const modules: Module[] = [
   // ─────────────────────────────────────────────────────────────
   {
     id: 'contracts',
+    pdfUrl: '/lesson-books/module-3-contracts.pdf',
+    audioUrl: '/audio/module-3-contracts.mp3',
+    audioReady: false,
     title: 'Defense Contracting Fundamentals',
     subtitle: '03 · Defense Contracting',
     icon: '📋',
@@ -6305,6 +6321,9 @@ export const modules: Module[] = [
   // ─────────────────────────────────────────────────────────────
   {
     id: 'data',
+    pdfUrl: '/lesson-books/module-4-data-analytics.pdf',
+    audioUrl: '/audio/module-4-data-analytics.mp3',
+    audioReady: false,
     title: 'Data Analytics for Program Managers',
     subtitle: '04 · Data & Analytics',
     icon: '📊',
@@ -7272,6 +7291,9 @@ export const modules: Module[] = [
   // ─────────────────────────────────────────────────────────────
   {
     id: 'capture',
+    pdfUrl: '/lesson-books/module-5-capture-bd.pdf',
+    audioUrl: '/audio/module-5-capture-bd.mp3',
+    audioReady: false,
     title: 'Capture Management & Business Development',
     subtitle: '05 · Capture & BD',
     icon: '🎯',
@@ -8651,6 +8673,9 @@ export const modules: Module[] = [
   // ─────────────────────────────────────────────────────────────
   {
     id: 'operations',
+    pdfUrl: '/lesson-books/module-6-operations-leadership.pdf',
+    audioUrl: '/audio/module-6-operations-leadership.mp3',
+    audioReady: false,
     title: 'Program Operations & Leadership',
     subtitle: '06 · PM Operations',
     icon: '⚙️',

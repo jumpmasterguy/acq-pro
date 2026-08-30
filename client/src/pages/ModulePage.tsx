@@ -3,7 +3,7 @@ import { modules, type SkillLevel } from "@/lib/curriculum";
 import { getModuleProgress, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
 import { getTrackData, sortLessonsByTrack, type CareerTrackId } from "@/lib/careerTracks";
 import type { UserProgress } from "@/lib/progress";
-import { ArrowLeft, Clock, CheckCircle, Lock, ChevronRight, BookOpen, Trophy, Target, Award, Download } from "lucide-react";
+import { ArrowLeft, Clock, CheckCircle, Lock, ChevronRight, BookOpen, Trophy, Target, Award, Download, FileText, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -139,6 +139,79 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                   </div>
                 ) : null}
               </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Module Resources: lesson book PDF + "The Debrief" audio overview.
+          Same access rule as the module itself — no new gating logic. */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {/* Lesson Book PDF */}
+        <div className={cn(
+          'rounded-xl border p-4 flex items-start gap-3',
+          isAccessible ? 'bg-card border-border' : 'bg-muted/20 border-border opacity-70'
+        )}>
+          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+            <FileText className="w-4 h-4 text-primary" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold">Lesson Book</p>
+            <p className="text-xs text-muted-foreground mb-2">The full module as a printable PDF.</p>
+            {isAccessible && mod.pdfUrl ? (
+              <a
+                href={mod.pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+                data-testid="download-lesson-book"
+              >
+                <Download className="w-3.5 h-3.5" /> Download PDF
+              </a>
+            ) : (
+              <button
+                onClick={onUpgrade}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary"
+              >
+                <Lock className="w-3.5 h-3.5" /> Unlock to download
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* "The Debrief" — NotebookLM audio overview */}
+        <div className={cn(
+          'rounded-xl border p-4 flex items-start gap-3',
+          isAccessible ? 'bg-card border-border' : 'bg-muted/20 border-border opacity-70'
+        )}>
+          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+            <Headphones className="w-4 h-4 text-primary" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold">The Debrief</p>
+            <p className="text-xs text-muted-foreground mb-2">A podcast-style audio overview of this module.</p>
+            {!isAccessible ? (
+              <button
+                onClick={onUpgrade}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary"
+              >
+                <Lock className="w-3.5 h-3.5" /> Unlock to listen
+              </button>
+            ) : mod.audioReady && mod.audioUrl ? (
+              <div className="space-y-1.5">
+                <audio controls preload="none" className="w-full h-9" data-testid="module-audio-player">
+                  <source src={mod.audioUrl} type="audio/mpeg" />
+                </audio>
+                <a
+                  href={mod.audioUrl}
+                  download
+                  className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-primary"
+                >
+                  <Download className="w-3 h-3" /> Download for offline listening
+                </a>
+              </div>
+            ) : (
+              <span className="text-xs font-medium text-muted-foreground">Coming soon</span>
             )}
           </div>
         </div>
