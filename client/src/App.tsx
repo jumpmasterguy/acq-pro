@@ -71,6 +71,7 @@ import AuthPage, { type AuthUser, type SkillLevel, type UserProfile } from "@/pa
 import AdminPage from "@/pages/AdminPage";
 import AdminAnalytics from "@/pages/AdminAnalytics";
 import PDUTracker from "@/pages/PDUTracker";
+import CostTrackerIntroPage from "@/pages/cost/CostTrackerIntroPage";
 import CostProjectsPage from "@/pages/cost/CostProjectsPage";
 import CostProjectDetailPage from "@/pages/cost/CostProjectDetailPage";
 import CostRatesPage from "@/pages/cost/CostRatesPage";
@@ -92,6 +93,7 @@ type View =
   | { type: 'admin' }
   | { type: 'analytics' }
   | { type: 'pdu' }
+  | { type: 'costTrackerIntro' }
   | { type: 'costProjects' }
   | { type: 'costProject'; projectId: string }
   | { type: 'costRates' }
@@ -575,14 +577,16 @@ function AppContent() {
               )}
             </div>
           ) : (
-            <div
-              className="w-full flex items-center gap-2 rounded-lg px-3 py-1.5 bg-sidebar-accent/40 border border-dashed border-sidebar-border"
-              title="Complete a lesson or the daily challenge today to start your burn rate."
+            <button
+              onClick={() => { setView({ type: 'costTrackerIntro' }); setSidebarOpen(false); }}
+              className="w-full flex items-center gap-2 rounded-lg px-3 py-1.5 bg-primary/10 border border-primary/30 hover:bg-primary/15 hover:border-primary/50 transition-all text-left"
+              title="See how the Spend Plan Tracker keeps every funding mod and burn rate in one place."
               data-testid="burn-rate-badge"
             >
-              <Flame className="w-3.5 h-3.5 text-sidebar-foreground/35 flex-shrink-0" />
-              <span className="text-xs font-medium text-sidebar-foreground/45">Start your burn rate today</span>
-            </div>
+              <Calculator className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+              <span className="text-xs font-bold text-primary">Try our spend plan tracker</span>
+              <ChevronRight className="w-3.5 h-3.5 text-primary/60 flex-shrink-0 ml-auto" />
+            </button>
           )}
         </div>
 
@@ -677,7 +681,7 @@ function AppContent() {
                     "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all cursor-pointer select-none border",
                     (isModActive || isLessonInMod)
                       ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
-                      : "text-sidebar-foreground/85 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground hover:-translate-y-px"
+                      : "text-sidebar-foreground/85 border-sidebar-border hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground hover:-translate-y-px"
                   )}
                   style={(isModActive || isLessonInMod) ? { borderLeft: `3px solid ${mc.accent}` } : undefined}
                   onClick={(e) => {
@@ -1036,6 +1040,12 @@ function AppContent() {
             <PDUTracker
               onBack={() => setView({ type: 'dashboard' })}
               completedLessons={Array.from(completedLessons)}
+            />
+          )}
+          {view.type === 'costTrackerIntro' && (
+            <CostTrackerIntroPage
+              onBack={() => setView({ type: 'dashboard' })}
+              onGetStarted={() => setView({ type: 'costProjects' })}
             />
           )}
           {view.type === 'costProjects' && (

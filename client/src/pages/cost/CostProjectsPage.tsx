@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import type { CostProject, ProjectSummary, TaskOrder } from "@shared/costTracker";
@@ -10,7 +10,10 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EmptyState } from "@/components/ui/empty-state";
-import { ArrowLeft, Plus, Settings, Trash2, FolderKanban, Layers } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ArrowLeft, Plus, Settings, Trash2, FolderKanban, Layers, X } from "lucide-react";
+
+const TOUR_SEEN_KEY = "acq_cost_tracker_tour_seen";
 
 interface Row {
   project: CostProject;
@@ -43,6 +46,18 @@ export default function CostProjectsPage({ onBack, onOpenProject, onOpenRates, o
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
   const [taskOrderId, setTaskOrderId] = useState<string>(NO_TASK_ORDER);
+
+  // First-visit help tour: 0 = off, 1 = pointing at New Project, 2 = pointing at Task Orders
+  const [tourStep, setTourStep] = useState(0);
+  useEffect(() => {
+    try {
+      if (!localStorage.getItem(TOUR_SEEN_KEY)) setTourStep(1);
+    } catch {}
+  }, []);
+  const endTour = () => {
+    setTourStep(0);
+    try { localStorage.setItem(TOUR_SEEN_KEY, "1"); } catch {}
+  };
 
   const { data: rows, isLoading } = useQuery<Row[]>({
     queryKey: ["/api/cost-tracker/projects"],
@@ -90,9 +105,25 @@ export default function CostProjectsPage({ onBack, onOpenProject, onOpenRates, o
           <ArrowLeft className="w-4 h-4" /> Back to Dashboard
         </button>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={onOpenTaskOrders} data-testid="button-cost-task-orders">
-            <Layers className="w-4 h-4 mr-1.5" /> Task Orders
-          </Button>
+          <Popover open={tourStep === 2}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" onClick={onOpenTaskOrders} data-testid="button-cost-task-orders">
+                <Layers className="w-4 h-4 mr-1.5" /> Task Orders
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent side="bottom" align="end" onEscapeKeyDown={endTour} onPointerDownOutside={endTour}>
+              <div className="flex items-start justify-between gap-2">
+                <p className="text-sm font-bold">Group projects together</p>
+                <button onClick={endTour} className="text-muted-foreground hover:text-foreground flex-shrink-0" aria-label="Dismiss tour">
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1.5">
+                Task Orders roll up funded and billed totals across every project assigned to them — handy when one TO covers several projects.
+              </p>
+              <Button size="sm" className="mt-3 w-full" onClick={endTour} data-testid="button-tour-done">Got it</Button>
+            </PopoverContent>
+          </Popover>
           <Button variant="outline" size="sm" onClick={onOpenRates} data-testid="button-cost-rates">
             <Settings className="w-4 h-4 mr-1.5" /> Rates &amp; Fee Settings
           </Button>
@@ -108,9 +139,27 @@ export default function CostProjectsPage({ onBack, onOpenProject, onOpenRates, o
             Track funding mods and spend across every project. Group projects under a Task Order to see a rolled-up total.
           </p>
         </div>
-        <Button onClick={() => setShowNew((v) => !v)} data-testid="button-new-project">
-          <Plus className="w-4 h-4 mr-1.5" /> New Project
-        </Button>
+        <Popover open={tourStep === 1}>
+          <PopoverTrigger asChild>
+            <Button onClick={() => setShowNew((v) => !v)} data-testid="button-new-project">
+              <Plus className="w-4 h-4 mr-1.5" /> New Project
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent side="bottom" align="end" onEscapeKeyDown={endTour} onPointerDownOutside={endTour}>
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-sm font-bold">Start here</p>
+              <button onClick={endTour} className="text-muted-foreground hover:text-foreground flex-shrink-0" aria-label="Dismiss tour">
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1.5">
+              Give it a code and a name, and you're tracking funding and spend for that project.
+            </p>
+            <Button size="sm" className="mt-3 w-full" onClick={() => setTourStep(2)} data-testid="button-tour-next">
+              Next
+            </Button>
+          </PopoverContent>
+        </Popover>
       </div>
 
       {showNew && (
