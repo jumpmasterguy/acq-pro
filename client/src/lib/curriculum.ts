@@ -171,7 +171,7 @@ export const modules: Module[] = [
   {
     id: 'foundations',
     pdfUrl: '/lesson-books/module-1-foundations.pdf',
-    audioUrl: '/audio/module-1-foundations.mp3',
+    audioUrl: '/audio/module-1-foundations.m4a',
     audioReady: false,
     title: 'DoD Acquisitions Foundations',
     subtitle: '01 · Start Here',
@@ -1903,7 +1903,7 @@ export const modules: Module[] = [
   {
     id: 'finance',
     pdfUrl: '/lesson-books/module-2-finance.pdf',
-    audioUrl: '/audio/module-2-finance.mp3',
+    audioUrl: '/audio/module-2-finance.m4a',
     audioReady: false,
     title: 'Defense Finance & Budgeting',
     subtitle: '02 · Defense Finance',
@@ -4026,7 +4026,7 @@ export const modules: Module[] = [
   {
     id: 'contracts',
     pdfUrl: '/lesson-books/module-3-contracts.pdf',
-    audioUrl: '/audio/module-3-contracts.mp3',
+    audioUrl: '/audio/module-3-contracts.m4a',
     audioReady: false,
     title: 'Defense Contracting Fundamentals',
     subtitle: '03 · Defense Contracting',
@@ -6322,7 +6322,7 @@ export const modules: Module[] = [
   {
     id: 'data',
     pdfUrl: '/lesson-books/module-4-data-analytics.pdf',
-    audioUrl: '/audio/module-4-data-analytics.mp3',
+    audioUrl: '/audio/module-4-data-analytics.m4a',
     audioReady: false,
     title: 'Data Analytics for Program Managers',
     subtitle: '04 · Data & Analytics',
@@ -7292,7 +7292,7 @@ export const modules: Module[] = [
   {
     id: 'capture',
     pdfUrl: '/lesson-books/module-5-capture-bd.pdf',
-    audioUrl: '/audio/module-5-capture-bd.mp3',
+    audioUrl: '/audio/module-5-capture-bd.m4a',
     audioReady: false,
     title: 'Capture Management & Business Development',
     subtitle: '05 · Capture & BD',
@@ -8674,7 +8674,7 @@ export const modules: Module[] = [
   {
     id: 'operations',
     pdfUrl: '/lesson-books/module-6-operations-leadership.pdf',
-    audioUrl: '/audio/module-6-operations-leadership.mp3',
+    audioUrl: '/audio/module-6-operations-leadership.m4a',
     audioReady: false,
     title: 'Program Operations & Leadership',
     subtitle: '06 · PM Operations',

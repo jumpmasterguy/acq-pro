@@ -211,7 +211,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
             ) : mod.audioReady && mod.audioUrl ? (
               <div className="space-y-1.5">
                 <audio controls preload="none" className="w-full h-9" data-testid="module-audio-player">
-                  <source src={mod.audioUrl} type="audio/mpeg" />
+                  <source src={mod.audioUrl} type="audio/mp4" />
                 </audio>
                 <a
                   href={mod.audioUrl}

@@ -3,12 +3,12 @@
 Drop each module's NotebookLM audio overview in here, named exactly like this:
 
 ```
-module-1-foundations.mp3
-module-2-finance.mp3
-module-3-contracts.mp3
-module-4-data-analytics.mp3
-module-5-capture-bd.mp3
-module-6-operations-leadership.mp3
+module-1-foundations.m4a
+module-2-finance.m4a
+module-3-contracts.m4a
+module-4-data-analytics.m4a
+module-5-capture-bd.m4a
+module-6-operations-leadership.m4a
 ```
 
 That's the only step on this side. The player, the free/paid gating, and the
