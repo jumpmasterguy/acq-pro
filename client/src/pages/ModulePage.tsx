@@ -2,6 +2,7 @@ import React from "react";
 import { modules, type SkillLevel } from "@/lib/curriculum";
 import { getModuleProgress, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
 import { getTrackData, sortLessonsByTrack, type CareerTrackId } from "@/lib/careerTracks";
+import { getModuleTheme } from "@/lib/moduleTheme";
 import type { UserProgress } from "@/lib/progress";
 import { ArrowLeft, Clock, CheckCircle, Lock, ChevronRight, BookOpen, Trophy, Target, Award, Download, FileText, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,10 +15,13 @@ const LEVEL_LABELS: Record<SkillLevel, string> = {
   intermediate: 'Intermediate',
   advanced: 'Advanced',
 };
-const LEVEL_COLORS: Record<SkillLevel, string> = {
-  novice: 'text-blue-400 bg-blue-400/10 border-blue-400/30',
-  intermediate: 'text-amber-400 bg-amber-400/10 border-amber-400/30',
-  advanced: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/30',
+// Icon accent per level — the badge itself is a white glass pill (it sits on
+// the module's colored gradient header), so the level is told apart by icon
+// color + label rather than a full badge color.
+const LEVEL_ICON_COLORS: Record<SkillLevel, string> = {
+  novice: 'text-blue-200',
+  intermediate: 'text-amber-200',
+  advanced: 'text-emerald-200',
 };
 
 interface ModulePageProps {
@@ -47,6 +51,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
 
   const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
   const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
+  const theme = getModuleTheme(mod.color);
 
   return (
     <div className="space-y-6">
@@ -58,45 +63,49 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
         </Button>
       </div>
 
-      {/* Module Header */}
-      <div className="bg-card border border-border rounded-xl p-6">
+      {/* Module Header — colored gradient banner, matching this module's card on the dashboard */}
+      <div className={cn("rounded-2xl p-6 border bg-gradient-to-br shadow-sm", theme.headerGrad)}>
         <div className="flex items-start gap-4">
-          <div className="text-4xl">{mod.icon}</div>
+          <div className="w-16 h-16 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center text-4xl flex-shrink-0">
+            {mod.icon}
+          </div>
           <div className="flex-1">
             <div className="flex items-center flex-wrap gap-2 mb-1">
               {mod.subtitle && (
-                <span className="text-xs font-semibold text-primary/70 uppercase tracking-widest">
+                <span className="text-xs font-bold text-white/70 uppercase tracking-widest">
                   {mod.subtitle}
                 </span>
               )}
               {trackData && (
-                <span className="inline-flex items-center gap-1.5 bg-primary/10 border border-primary/25 text-primary rounded-full px-2.5 py-0.5 text-[11px] font-bold">
+                <span className="inline-flex items-center gap-1.5 bg-white/15 border border-white/25 text-white rounded-full px-2.5 py-0.5 text-[11px] font-bold">
                   <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
                   Your path: {trackData.shortLabel}
                 </span>
               )}
             </div>
             <div className="flex items-center gap-2 flex-wrap mb-1">
-              <h1 className="text-xl font-bold">{mod.title}</h1>
+              <h1 className="text-xl font-bold text-white">{mod.title}</h1>
               {mod.free && (
-                <Badge variant="outline" className="text-green-600 border-green-200 dark:border-green-800 text-xs">Free</Badge>
+                <span className="inline-flex items-center rounded-full bg-emerald-400/20 border border-emerald-300/40 px-2.5 py-0.5 text-[11px] font-bold text-emerald-200 uppercase tracking-wide">
+                  Free
+                </span>
               )}
               {!isAccessible && (
-                <Badge variant="secondary" className="text-xs gap-1">
+                <span className="inline-flex items-center gap-1 rounded-full bg-white/15 border border-white/25 px-2.5 py-0.5 text-[11px] font-bold text-white uppercase tracking-wide">
                   <Lock className="w-3 h-3" />
                   Premium
-                </Badge>
+                </span>
               )}
             </div>
-            <p className="text-muted-foreground text-sm mb-4">{mod.description}</p>
+            <p className="text-white/80 text-sm mb-4">{mod.description}</p>
             {isAccessible && (
               <div className="space-y-3">
                 <div className="space-y-1.5 max-w-xs">
                   <div className="flex justify-between text-xs">
-                    <span className="text-muted-foreground">Module progress</span>
-                    <span className="font-medium text-primary">{progressPct}% complete</span>
+                    <span className="text-white/70">Module progress</span>
+                    <span className="font-bold text-white">{progressPct}% complete</span>
                   </div>
-                  <Progress value={progressPct} className="h-2" />
+                  <Progress value={progressPct} className="h-2 bg-white/20 [&>div]:bg-white" />
                 </div>
                 {/* Certificate download — show when module is 100% complete */}
                 {progressPct === 100 && (
@@ -104,7 +113,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                     href={`/api/certificate/${mod.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary rounded-lg px-3 py-2 text-xs font-semibold transition-colors"
+                    className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 border border-white/30 text-white rounded-lg px-3 py-2 text-xs font-semibold transition-colors"
                     data-testid="download-certificate"
                   >
                     <Award className="w-3.5 h-3.5" />
@@ -115,14 +124,16 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                 {/* Skill level badge + assessment button */}
                 {mod.assessment?.length ? (
                   <div className="flex items-center gap-3 flex-wrap">
-                    <Badge className={cn("text-xs border px-2.5 py-1 gap-1.5", LEVEL_COLORS[unlockedLevel])}>
-                      {unlockedLevel === 'advanced' ? <Trophy className="w-3 h-3" /> : <Target className="w-3 h-3" />}
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 border border-white/25 px-2.5 py-1 text-xs font-bold text-white">
+                      {unlockedLevel === 'advanced'
+                        ? <Trophy className={cn("w-3 h-3", LEVEL_ICON_COLORS[unlockedLevel])} />
+                        : <Target className={cn("w-3 h-3", LEVEL_ICON_COLORS[unlockedLevel])} />}
                       {LEVEL_LABELS[unlockedLevel]} Level
-                    </Badge>
+                    </span>
                     {unlockedLevel !== 'advanced' && (
                       <button
                         onClick={onOpenAssessment}
-                        className="text-xs text-primary border border-primary/30 rounded-lg px-3 py-1.5 hover:bg-primary/10 transition-colors flex items-center gap-1.5"
+                        className="text-xs text-white border border-white/30 rounded-lg px-3 py-1.5 hover:bg-white/15 transition-colors flex items-center gap-1.5 font-semibold"
                       >
                         <Lock className="w-3 h-3" />
                         Test Your Knowledge → Unlock {unlockedLevel === 'novice' ? 'Intermediate' : 'Advanced'}
@@ -131,7 +142,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                     {unlockedLevel === 'advanced' && (
                       <button
                         onClick={onOpenAssessment}
-                        className="text-xs text-muted-foreground border border-border rounded-lg px-3 py-1.5 hover:bg-muted/50 transition-colors"
+                        className="text-xs text-white/70 border border-white/25 rounded-lg px-3 py-1.5 hover:bg-white/10 transition-colors"
                       >
                         Retake Assessment
                       </button>
@@ -150,10 +161,10 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
         {/* Lesson Book PDF */}
         <div className={cn(
           'rounded-xl border p-4 flex items-start gap-3',
-          isAccessible ? 'bg-card border-border' : 'bg-muted/20 border-border opacity-70'
+          isAccessible ? cn('bg-card', theme.border) : 'bg-muted/20 border-border opacity-70'
         )}>
-          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-            <FileText className="w-4 h-4 text-primary" />
+          <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0', isAccessible ? theme.bgTint : 'bg-muted/40')}>
+            <FileText className={cn('w-4 h-4', isAccessible ? theme.text : 'text-muted-foreground')} />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold">Lesson Book</p>
@@ -163,7 +174,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                 href={mod.pdfUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+                className={cn('inline-flex items-center gap-1.5 text-xs font-semibold hover:underline', theme.text)}
                 data-testid="download-lesson-book"
               >
                 <Download className="w-3.5 h-3.5" /> Download PDF
@@ -182,10 +193,10 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
         {/* "The Debrief" — NotebookLM audio overview */}
         <div className={cn(
           'rounded-xl border p-4 flex items-start gap-3',
-          isAccessible ? 'bg-card border-border' : 'bg-muted/20 border-border opacity-70'
+          isAccessible ? cn('bg-card', theme.border) : 'bg-muted/20 border-border opacity-70'
         )}>
-          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-            <Headphones className="w-4 h-4 text-primary" />
+          <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0', isAccessible ? theme.bgTint : 'bg-muted/40')}>
+            <Headphones className={cn('w-4 h-4', isAccessible ? theme.text : 'text-muted-foreground')} />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold">The Debrief</p>
@@ -219,16 +230,9 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
 
       {/* Lessons List */}
       {(() => {
-        // Module accent colors
-        const accentMap: Record<string, { border: string; numBg: string; numText: string; dot: string; barColor: string }> = {
-          foundations: { border: 'hover:border-blue-400/50',    numBg: 'bg-blue-500/15',   numText: 'text-blue-400',   dot: 'bg-blue-400',   barColor: '#3b82f6' },
-          finance:     { border: 'hover:border-amber-400/50',   numBg: 'bg-amber-400/15',  numText: 'text-amber-400',  dot: 'bg-amber-400',  barColor: '#f59e0b' },
-          contracts:   { border: 'hover:border-indigo-400/50',  numBg: 'bg-indigo-400/15', numText: 'text-indigo-400', dot: 'bg-indigo-400', barColor: '#6366f1' },
-          data:        { border: 'hover:border-teal-400/50',    numBg: 'bg-teal-400/15',   numText: 'text-teal-400',   dot: 'bg-teal-400',   barColor: '#14b8a6' },
-          capture:     { border: 'hover:border-orange-400/50',  numBg: 'bg-orange-400/15', numText: 'text-orange-400', dot: 'bg-orange-400', barColor: '#f97316' },
-          operations:  { border: 'hover:border-violet-400/50',  numBg: 'bg-violet-400/15', numText: 'text-violet-400', dot: 'bg-violet-400', barColor: '#8b5cf6' },
-        };
-        const ac = accentMap[mod.id] ?? accentMap.foundations;
+        // Module accent colors — same theme as the header banner above, so
+        // the lesson path visually belongs to this module.
+        const ac = { border: theme.hoverBorder, numBg: theme.bgTint, barColor: theme.hex };
         const completedInModule = mod.lessons.filter(l => progress.completedLessons.has(l.id)).length;
 
         return (
@@ -293,7 +297,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                           ? 'bg-green-500 text-white'
                           : isLocked
                           ? 'bg-muted-foreground/20 text-muted-foreground'
-                          : cn('text-white', ac.numBg.replace('/15', ''))
+                          : 'text-white'
                       )} style={!isCompleted && !isLocked ? { background: ac.barColor } : {}}>
                         {isCompleted ? (
                           <CheckCircle className="w-3.5 h-3.5" />

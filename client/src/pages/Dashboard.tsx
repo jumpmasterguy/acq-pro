@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { modules, getTotalLessons, getModuleTotalMinutes, formatDuration, parseDuration } from "@/lib/curriculum";
+import { getModuleTheme } from "@/lib/moduleTheme";
 import { getModuleProgress, getLevel, calculateXP, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
 import type { UserProgress } from "@/lib/progress";
 import type { UserProfile } from "@/pages/AuthPage";
@@ -198,14 +199,8 @@ const SUBJECT_GROUPS: SubjectGroup[] = [
 ];
 
 // ── Color config ─────────────────────────────────────────────────────────────
-const COLORS: Record<string, { border: string; accent: string; check: string; progress: string; headerGrad: string }> = {
-  navy:  { border: 'border-blue-200  dark:border-blue-800/40',  accent: 'text-blue-600  dark:text-blue-400',  check: 'text-blue-500  dark:text-blue-400',  progress: '[&>div]:bg-blue-500',  headerGrad: 'from-blue-600  to-blue-700  dark:from-blue-800  dark:to-blue-900  border-blue-700/50'  },
-  gold:  { border: 'border-yellow-200 dark:border-yellow-800/40', accent: 'text-yellow-600 dark:text-yellow-400', check: 'text-yellow-500 dark:text-yellow-400', progress: '[&>div]:bg-yellow-500', headerGrad: 'from-yellow-500 to-amber-600  dark:from-yellow-800 dark:to-amber-900  border-yellow-600/50' },
-  blue:  { border: 'border-cyan-200   dark:border-cyan-800/40',   accent: 'text-cyan-600   dark:text-cyan-400',   check: 'text-cyan-500   dark:text-cyan-400',   progress: '[&>div]:bg-cyan-500',   headerGrad: 'from-cyan-500   to-cyan-700   dark:from-cyan-800   dark:to-cyan-900   border-cyan-600/50'   },
-  teal:  { border: 'border-teal-200   dark:border-teal-800/40',   accent: 'text-teal-600   dark:text-teal-400',   check: 'text-teal-500   dark:text-teal-400',   progress: '[&>div]:bg-teal-500',   headerGrad: 'from-teal-500   to-teal-700   dark:from-teal-800   dark:to-teal-900   border-teal-600/50'   },
-  amber: { border: 'border-amber-200  dark:border-amber-800/40',  accent: 'text-amber-600  dark:text-amber-400',  check: 'text-amber-500  dark:text-amber-400',  progress: '[&>div]:bg-amber-500',  headerGrad: 'from-amber-500  to-orange-600 dark:from-amber-800  dark:to-orange-900  border-amber-600/50'  },
-  slate: { border: 'border-slate-300  dark:border-slate-700/40',  accent: 'text-slate-600  dark:text-slate-300',  check: 'text-slate-400  dark:text-slate-400',  progress: '[&>div]:bg-slate-400',  headerGrad: 'from-slate-500  to-slate-700  dark:from-slate-700  dark:to-slate-900  border-slate-600/50'  },
-};
+// Shared with ModulePage.tsx (client/src/lib/moduleTheme.ts) so a module's
+// color is identical on the dashboard card and its detail page.
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -238,7 +233,8 @@ function ModuleCard({
   const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
   const lessonIds = mod.lessons.map(l => l.id);
   const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
-  const c = COLORS[mod.color] || COLORS.slate;
+  const theme = getModuleTheme(mod.color);
+  const c = { border: theme.border, accent: theme.text, check: theme.text, progress: theme.progressBar, headerGrad: theme.headerGrad };
 
   const totalMins = getModuleTotalMinutes(mod.id);
 
