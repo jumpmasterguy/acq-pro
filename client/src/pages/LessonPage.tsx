@@ -2,13 +2,14 @@ import { useState, useRef, useMemo } from "react";
 import { AcronymText } from "@/components/AcronymText";
 import { getTrackData, type CareerTrackId } from "@/lib/careerTracks";
 import { modules, type Lesson, type Module, type QuizQuestion, type SkillLevel, type ExpandableItem } from "@/lib/curriculum";
+import { getModuleTheme } from "@/lib/moduleTheme";
 import type { UserProgress } from "@/lib/progress";
 import {
   ArrowLeft, ChevronRight, CheckCircle, BookOpen, AlertTriangle,
   Lightbulb, Table, Clock, Award, RotateCcw, ChevronDown, ChevronUp,
   GripVertical, ArrowRight, Lock, ChevronUp as LevelUp,
   Sparkles, BrainCircuit, HelpCircle, Briefcase, Loader2, X,
-  Download, FileText
+  Download, FileText, ListChecks
 } from "lucide-react";
 import { apiRequest, API_BASE } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
@@ -175,10 +176,16 @@ function ExpandableBulletItem({
   item,
   lessonTitle,
   heading,
+  index,
+  accentHex,
 }: {
   item: string;
   lessonTitle: string;
   heading?: string;
+  /** Position in the list — renders a small numbered accent chip when given. */
+  index?: number;
+  /** Module accent color for the numbered chip. */
+  accentHex?: string;
 }) {
   // Items can embed static detail: "Bullet text|||Static detail text"
   const sepIdx = item.indexOf(DETAIL_SEP);
@@ -215,8 +222,10 @@ function ExpandableBulletItem({
     }
   };
 
+  const accent = accentHex ?? 'hsl(var(--primary))';
+
   return (
-    <li className="rounded-lg overflow-hidden border border-transparent">
+    <li className={cn("rounded-lg overflow-hidden border border-transparent", index !== undefined ? "mb-1" : "")}>
       <button
         onClick={handleToggle}
         className={cn(
@@ -224,14 +233,22 @@ function ExpandableBulletItem({
           open ? "text-foreground" : "text-muted-foreground hover:text-foreground"
         )}
       >
+        {index !== undefined && (
+          <span
+            className="flex-shrink-0 mt-0.5 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black text-white"
+            style={{ background: accent }}
+          >
+            {index + 1}
+          </span>
+        )}
         <span className={cn(
           "flex-shrink-0 mt-0.5 transition-transform duration-200",
           open ? "rotate-90" : ""
         )}>
-          <ChevronRight className={cn(
-            "w-3.5 h-3.5 transition-colors",
-            open ? "text-primary" : "text-primary/60 group-hover:text-primary"
-          )} />
+          <ChevronRight
+            className={cn("w-3.5 h-3.5 transition-opacity", open ? "opacity-100" : "opacity-60 group-hover:opacity-100")}
+            style={{ color: accent }}
+          />
         </span>
         <span className="flex-1">
           {(() => {
@@ -558,6 +575,9 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
   }
 
   const isCompleted = progress.completedLessons.has(lessonId);
+  // This module's brand color — used to give the plain content blocks
+  // (text/list/table) below some visual identity instead of flat gray/white.
+  const theme = getModuleTheme(mod.color);
 
   // Content filtering: show blocks with no level (universal) + blocks at/below viewLevel
   const levelOrder: Record<SkillLevel, number> = { novice: 0, intermediate: 1, advanced: 2 };
@@ -937,8 +957,17 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             // Render normally
             if (block.type === 'text') {
               return (
-                <div key={i} className="bg-card border border-border rounded-xl p-5">
-                  {block.heading && <h2 className="font-semibold text-lg mb-3">{block.heading}</h2>}
+                <div key={i} className={cn("bg-card border rounded-xl overflow-hidden", theme.border)}>
+                  <div className="h-1.5 w-full" style={{ background: theme.hex }} />
+                  <div className="p-5">
+                  {block.heading && (
+                    <div className="flex items-center gap-2.5 mb-3">
+                      <div className={cn("w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0", theme.bgTint)}>
+                        <BookOpen className={cn("w-3.5 h-3.5", theme.text)} />
+                      </div>
+                      <h2 className="font-bold text-lg">{block.heading}</h2>
+                    </div>
+                  )}
                   {block.body && block.body.split('\n\n').filter(Boolean).map((para, pi) => (
                     <p key={pi} className={`text-[15px] text-muted-foreground leading-relaxed${pi > 0 ? ' mt-3' : ''}`}>
                       {para.trim().split(/\*\*([^*]+)\*\*/).map((seg, si) =>
@@ -948,6 +977,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                       )}
                     </p>
                   ))}
+                  </div>
                 </div>
               );
             }
@@ -1018,8 +1048,17 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
             if (block.type === 'list') {
               return (
-                <div key={i} className="bg-card border border-border rounded-xl p-5">
-                  {block.heading && <h3 className="font-semibold text-base mb-3">{block.heading}</h3>}
+                <div key={i} className={cn("bg-card border rounded-xl overflow-hidden", theme.border)}>
+                  <div className="h-1.5 w-full" style={{ background: theme.hex }} />
+                  <div className="p-5">
+                  {block.heading && (
+                    <div className="flex items-center gap-2.5 mb-3">
+                      <div className={cn("w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0", theme.bgTint)}>
+                        <ListChecks className={cn("w-3.5 h-3.5", theme.text)} />
+                      </div>
+                      <h3 className="font-bold text-base">{block.heading}</h3>
+                    </div>
+                  )}
                   <ul className="space-y-0.5">
                     {block.items?.map((item, ii) => (
                       <ExpandableBulletItem
@@ -1027,27 +1066,31 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                         item={item}
                         lessonTitle={lesson!.title}
                         heading={block.heading}
+                        index={ii}
+                        accentHex={theme.hex}
                       />
                     ))}
                   </ul>
+                  </div>
                 </div>
               );
             }
 
             if (block.type === 'table') {
               return (
-                <div key={i} className="bg-card border border-border rounded-xl overflow-hidden">
+                <div key={i} className={cn("bg-card border rounded-xl overflow-hidden", theme.border)}>
                   {block.heading && (
-                    <div className="px-5 py-3 border-b border-border bg-muted/30">
-                      <h3 className="font-semibold text-sm">{block.heading}</h3>
+                    <div className={cn("px-5 py-3 border-b flex items-center gap-2.5", theme.border, theme.bgTint)}>
+                      <Table className={cn("w-3.5 h-3.5 flex-shrink-0", theme.text)} />
+                      <h3 className="font-bold text-sm">{block.heading}</h3>
                     </div>
                   )}
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
-                        <tr className="bg-muted/20">
+                        <tr style={{ background: theme.hex }}>
                           {block.headers?.map((h, hi) => (
-                            <th key={hi} className="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide border-b border-border whitespace-nowrap">
+                            <th key={hi} className="px-4 py-2.5 text-left text-xs font-bold text-white uppercase tracking-wide whitespace-nowrap">
                               {h}
                             </th>
                           ))}
@@ -1055,7 +1098,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                       </thead>
                       <tbody>
                         {block.rows?.map((row, ri) => (
-                          <tr key={ri} className={ri % 2 === 0 ? '' : 'bg-muted/10'}>
+                          <tr key={ri} className={ri % 2 === 0 ? '' : theme.bgTint}>
                             {row.map((cell, ci) => (
                               <td key={ci} className="px-4 py-2.5 text-sm text-muted-foreground border-b border-border/50 last:border-b-0">
                                 {cell}
