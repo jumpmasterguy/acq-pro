@@ -1045,7 +1045,7 @@ function AppContent() {
           {view.type === 'costTrackerIntro' && (
             <CostTrackerIntroPage
               onBack={() => setView({ type: 'dashboard' })}
-              onGetStarted={() => setView({ type: 'costProjects' })}
+              onGetStarted={() => setView({ type: 'costTaskOrders' })}
             />
           )}
           {view.type === 'costProjects' && (

@@ -2,9 +2,13 @@
  * Cost & Burn Rate Tracker — shared types + calculation engine.
  *
  * Ports the methodology from cost-and-burn-rate-tracker.xlsx (Fringe ->
- * Overhead -> G&A(Prime)/M&S(Sub) -> Fee) so the server and client agree on
- * exactly the same math. All money moves as integer cents end-to-end —
- * only the UI layer formats to dollars.
+ * Overhead -> M&S(Sub) -> G&A(Prime + Sub-after-M&S) -> Fee) so the server
+ * and client agree on exactly the same math. All money moves as integer
+ * cents end-to-end — only the UI layer formats to dollars.
+ *
+ * G&A base = all prime burdened cost (Labor after Fringe+OH, plus prime
+ * Travel/ODC/M&E) PLUS subcontractor Travel/ODC/M&E cost after the M&S
+ * markup is applied to it. Subcontractor labor draws neither M&S nor G&A.
  */
 
 export const CLINS = ['Labor', 'Travel', 'ODC', 'M&E'] as const;
@@ -171,9 +175,9 @@ function feeRateFor(rates: RatesConfig, clin: Clin): { rate: number; type: FeeTy
 
 /**
  * Sums funding mods and cost entries by CLIN, then runs the Fringe -> OH ->
- * G&A(Prime)/M&S(Sub) -> Fee buildup — same logic as Dashboard!K on the
- * Excel tracker, just operating on DB-summed totals instead of monthly
- * spreadsheet cells.
+ * M&S(Sub) -> G&A(Prime + Sub-after-M&S) -> Fee buildup — same logic as
+ * Dashboard!I/K on the Excel tracker, just operating on DB-summed totals
+ * instead of monthly spreadsheet cells.
  */
 export function summarizeProject(mods: FundingMod[], entries: CostEntry[], rates: RatesConfig): ProjectSummary {
   const funded: Record<Clin, number> = { Labor: 0, Travel: 0, ODC: 0, 'M&E': 0 };
@@ -196,10 +200,13 @@ export function summarizeProject(mods: FundingMod[], entries: CostEntry[], rates
     'M&E': primeRaw['M&E'],
   };
 
-  const gaBase = primeBurdened.Labor + primeBurdened.Travel + primeBurdened.ODC + primeBurdened['M&E'];
+  const primeGaBase = primeBurdened.Labor + primeBurdened.Travel + primeBurdened.ODC + primeBurdened['M&E'];
   const msBase = subRaw.Travel + subRaw.ODC + subRaw['M&E']; // Sub labor never draws M&S
-  const gaCents = Math.round(gaBase * rates.ga);
   const msCents = Math.round(msBase * rates.ms);
+  // Subcontractor cost draws G&A too, but only after M&S has been applied to it.
+  const subMsBurdened = msBase + msCents;
+  const gaBase = primeGaBase + subMsBurdened;
+  const gaCents = Math.round(gaBase * rates.ga);
 
   const subtotal = CLINS.reduce((s, c) => s + primeBurdened[c] + (c === 'Labor' ? laborSub : subRaw[c]), 0);
   const totalCost = subtotal + gaCents + msCents;
@@ -207,8 +214,11 @@ export function summarizeProject(mods: FundingMod[], entries: CostEntry[], rates
   const byClin: ClinSummary[] = CLINS.map((clin) => {
     const pb = primeBurdened[clin];
     const sb = clin === 'Labor' ? laborSub : subRaw[clin];
-    const gaShare = gaBase > 0 ? Math.round((pb / gaBase) * gaCents) : 0;
     const msShare = clin !== 'Labor' && msBase > 0 ? Math.round((sb / msBase) * msCents) : 0;
+    // This CLIN's share of the G&A base: its prime cost, plus (for non-Labor
+    // CLINs) its subcontractor cost after that CLIN's own M&S markup.
+    const gaBaseShare = pb + (clin !== 'Labor' ? sb + msShare : 0);
+    const gaShare = gaBase > 0 ? Math.round((gaBaseShare / gaBase) * gaCents) : 0;
     const clinTotalCost = pb + gaShare + sb + msShare;
     const { rate, type } = feeRateFor(rates, clin);
     const fee = Math.round(clinTotalCost * rate);

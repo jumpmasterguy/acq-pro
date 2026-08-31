@@ -47,12 +47,15 @@ export default function CostTaskOrdersPage({ onBack, onOpenTaskOrder }: CostTask
       const res = await apiRequest("POST", "/api/cost-tracker/task-orders", { code, name });
       return res.json();
     },
-    onSuccess: () => {
+    onSuccess: (data: TaskOrder) => {
       qc.invalidateQueries({ queryKey: ["/api/cost-tracker/task-orders"] });
       qc.invalidateQueries({ queryKey: ["/api/cost-tracker/task-orders-lite"] });
       setCode("");
       setName("");
       setShowNew(false);
+      // Straight into the new Task Order so the next step (adding a
+      // project to it) is right there, not another click away.
+      onOpenTaskOrder(data.id);
     },
   });
 
