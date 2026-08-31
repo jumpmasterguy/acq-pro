@@ -62,6 +62,11 @@ export interface AuthUser {
   moduleSkillLevels?: Record<string, SkillLevel>;
   moduleAssessmentScores?: Record<string, number>;
   userProfile?: UserProfile | null;
+  currentStreak?: number;
+  longestStreak?: number;
+  lastChallengeDate?: string | null;
+  /** XP earned from Daily Challenge completions (server-tracked, separate from lesson/quiz XP). */
+  dailyChallengeXP?: number;
 }
 
 interface AuthPageProps {

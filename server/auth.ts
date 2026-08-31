@@ -27,6 +27,10 @@ declare global {
       moduleAssessmentScores: Record<string, number>;
       userProfile: Record<string, any> | null;
       isAdmin: boolean;
+      currentStreak: number;
+      longestStreak: number;
+      lastChallengeDate: string | null;
+      dailyChallengeXP: number;
     }
   }
 }
@@ -201,6 +205,20 @@ export function toPassportUser(user: User): Express.User {
     moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
     userProfile: (user.userProfile as Record<string, any>) ?? null,
     isAdmin: Boolean(user.isAdmin),
+    // Bug fix (2026-08-31): these four were missing here, which meant every
+    // request's req.user was silently stripped of them. Two visible symptoms:
+    // (1) GET /api/daily-challenge computed `alreadyCompleted` off
+    //     req.user.lastChallengeDate, which was always undefined -> the
+    //     challenge always looked un-done, so it could be retaken all day.
+    // (2) The client never received the XP the Daily Challenge actually
+    //     earned server-side, so it never showed up in the user's total.
+    currentStreak: user.currentStreak ?? 0,
+    longestStreak: user.longestStreak ?? 0,
+    lastChallengeDate: user.lastChallengeDate ?? null,
+    dailyChallengeXP: ((user.challengeHistory as any[]) ?? []).reduce(
+      (sum, entry) => sum + (entry?.xpEarned ?? 0),
+      0
+    ),
   };
 }
 

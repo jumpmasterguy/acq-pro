@@ -6,7 +6,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel } from "@/lib/progress";
+import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calculateXP } from "@/lib/progress";
 import { hasFullAccess, trialDaysRemaining } from "@shared/access";
 import { isNativeApp } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
@@ -188,14 +188,18 @@ function AppContent() {
   const quizScores =
     authState.status === 'authenticated' ? authState.user.quizScores ?? {} : {};
 
+  // Daily Challenge XP is tracked separately server-side (see toPassportUser
+  // in server/auth.ts) — fold it in here so it counts toward the user's
+  // total XP everywhere the total is shown (sidebar badge, Dashboard stat).
+  const dailyChallengeXP =
+    authState.status === 'authenticated' ? authState.user.dailyChallengeXP ?? 0 : 0;
+
   const progress = {
     completedLessons,
     quizScores,
     unlockedModules: new Set<string>(['foundations']),
     isPremium,
-    xp:
-      completedLessons.size * 100 +
-      Object.values(quizScores).reduce((sum, s) => sum + Math.floor(s / 10), 0),
+    xp: calculateXP(completedLessons, quizScores, dailyChallengeXP),
   };
 
   // Apply dark mode

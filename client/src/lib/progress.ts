@@ -18,11 +18,16 @@ export const FREE_PREVIEW_LESSONS = [
   'ops-3',           // Operations module — first lesson
 ];
 
-export const calculateXP = (completedLessons: Set<string>, quizScores: Record<string, number>) => {
+export const calculateXP = (
+  completedLessons: Set<string>,
+  quizScores: Record<string, number>,
+  dailyChallengeXP: number = 0
+) => {
   let xp = completedLessons.size * 100;
   Object.values(quizScores).forEach(score => {
     xp += Math.floor(score / 10);
   });
+  xp += dailyChallengeXP;
   return xp;
 };
 

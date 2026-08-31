@@ -1122,14 +1122,21 @@ export async function registerRoutes(
     const userId = req.user!.id;
     const { score } = req.body as { score: number }; // 0-5
     const xpEarned = score === 5 ? 50 : score >= 3 ? 25 : 10;
-    const updated = await storage.completeDailyChallenge(userId, score, xpEarned);
-    if (!updated) return res.status(500).json({ message: 'Failed to record challenge' });
+    const result = await storage.completeDailyChallenge(userId, score, xpEarned);
+    if (!result) return res.status(500).json({ message: 'Failed to record challenge' });
+    const { user: updated, awarded } = result;
+    // If this user already completed today's challenge (e.g. a second tab,
+    // or a retry after the fix to `alreadyCompleted` above), don't claim
+    // fresh XP was earned — nothing was written to the DB this time.
     return res.json({
       score,
-      xpEarned,
+      xpEarned: awarded ? xpEarned : 0,
+      alreadyCompleted: !awarded,
       currentStreak: (updated as any).currentStreak ?? 0,
       longestStreak: (updated as any).longestStreak ?? 0,
-      message: score === 5 ? 'Perfect score! +50 XP' : score >= 3 ? 'Nice work! +25 XP' : 'Keep going! +10 XP',
+      message: !awarded
+        ? "You already completed today's challenge — come back tomorrow!"
+        : score === 5 ? 'Perfect score! +50 XP' : score >= 3 ? 'Nice work! +25 XP' : 'Keep going! +10 XP',
     });
   });
 

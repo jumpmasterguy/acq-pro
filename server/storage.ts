@@ -427,11 +427,13 @@ export class DrizzleStorage implements IStorage {
     return result[0];
   }
 
-  async completeDailyChallenge(userId: string, score: number, xpEarned: number): Promise<User | undefined> {
+  async completeDailyChallenge(userId: string, score: number, xpEarned: number): Promise<{ user: User; awarded: boolean } | undefined> {
     const user = await this.getUser(userId);
     if (!user) return undefined;
     const todayStr = new Date().toISOString().slice(0, 10);
-    if ((user as any).lastChallengeDate === todayStr) return user;
+    // Already completed today — no-op. `awarded: false` lets the route tell
+    // the client the truth instead of claiming fresh XP was just earned.
+    if ((user as any).lastChallengeDate === todayStr) return { user, awarded: false };
     const history = ((user as any).challengeHistory ?? []) as any[];
     history.push({ date: todayStr, score, xpEarned });
     const newXp = (user.xp ?? 0) + xpEarned;
@@ -441,7 +443,8 @@ export class DrizzleStorage implements IStorage {
       .where(eq(users.id, userId))
       .returning();
     await this.updateUserStreak(userId);
-    return result[0];
+    const updatedUser = await this.getUser(userId);
+    return { user: updatedUser ?? result[0], awarded: true };
   }
 
   async saveUserProfile(userId: string, profile: Record<string, any>): Promise<User | undefined> {

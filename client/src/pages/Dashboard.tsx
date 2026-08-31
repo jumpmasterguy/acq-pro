@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { modules, getTotalLessons, getModuleTotalMinutes, formatDuration, parseDuration } from "@/lib/curriculum";
 import { getModuleTheme } from "@/lib/moduleTheme";
-import { getModuleProgress, getLevel, calculateXP, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
+import { getModuleProgress, getLevel, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
 import type { UserProgress } from "@/lib/progress";
 import type { UserProfile } from "@/pages/AuthPage";
 import {
@@ -383,7 +383,10 @@ function FilterTab({ active, onClick, children }: { active: boolean; onClick: ()
 export default function Dashboard({ progress, onSelectModule, onSelectLesson, onUpgrade, username, isAdmin, onStreakUpdate }: DashboardProps) {
   const totalLessons = getTotalLessons();
   const completedCount = progress.completedLessons.size;
-  const xp = calculateXP(progress.completedLessons, progress.quizScores);
+  // Use progress.xp (computed once in App.tsx) rather than recalculating
+  // here — this local recompute used to leave out Daily Challenge XP
+  // entirely, so it never showed up in this page's "XP earned" stat.
+  const xp = progress.xp;
   const levelInfo = getLevel(xp);
 
   // Streak + daily challenge state
