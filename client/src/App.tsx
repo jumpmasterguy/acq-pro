@@ -146,6 +146,28 @@ function clearSavedView() {
   try { sessionStorage.removeItem(VIEW_STORAGE_KEY); } catch {}
 }
 
+// Deep-link support: a URL like acqlerate.com/#/module/finance (used in
+// emails, social posts, etc.) should open straight to that module instead of
+// dumping everyone on the dashboard. Wins over the saved session view, since
+// clicking a specific link is a more explicit signal than "wherever I was."
+function parseHashView(): View | null {
+  const hash = window.location.hash;
+  const moduleMatch = hash.match(/^#\/module\/([a-z-]+)/);
+  if (moduleMatch) {
+    const id = moduleMatch[1];
+    return modules.some(m => m.id === id) ? { type: 'module', moduleId: id } : null;
+  }
+  const lessonMatch = hash.match(/^#\/lesson\/([a-z0-9-]+)/);
+  if (lessonMatch) {
+    const id = lessonMatch[1];
+    const exists = modules.some(m => m.lessons.some(l => l.id === id));
+    return exists ? { type: 'lesson', lessonId: id } : null;
+  }
+  if (hash.startsWith('#/upgrade')) return { type: 'upgrade' };
+  if (hash.startsWith('#/dashboard')) return { type: 'dashboard' };
+  return null;
+}
+
 function AppContent() {
   // Check if we arrived via a landing page CTA (/app#/auth)
   const arrivedAtAuth = typeof window !== 'undefined' &&
@@ -282,19 +304,27 @@ function AppContent() {
           if (window.location.hash.startsWith('#/auth')) {
             window.history.replaceState(null, '', window.location.pathname);
           }
-          // Restore where the user was before the reload
-          const saved = loadSavedView();
-          if (saved && saved.type !== 'auth') {
-            // If saved view was admin but user lost admin, fall back to dashboard
-            if (saved.type === 'admin' && !user.isAdmin) {
-              setView({ type: 'dashboard' });
-            } else if (saved.type === 'analytics' && !user.isAdmin) {
-              setView({ type: 'dashboard' });
-            } else {
-              setView(saved);
-            }
+          // A deep link (e.g. from an email) wins over wherever the user
+          // last was — that's a more explicit signal than a stale session.
+          const linked = parseHashView();
+          if (linked) {
+            setView(linked);
+            window.history.replaceState(null, '', window.location.pathname);
           } else {
-            setView({ type: 'dashboard' });
+            // Restore where the user was before the reload
+            const saved = loadSavedView();
+            if (saved && saved.type !== 'auth') {
+              // If saved view was admin but user lost admin, fall back to dashboard
+              if (saved.type === 'admin' && !user.isAdmin) {
+                setView({ type: 'dashboard' });
+              } else if (saved.type === 'analytics' && !user.isAdmin) {
+                setView({ type: 'dashboard' });
+              } else {
+                setView(saved);
+              }
+            } else {
+              setView({ type: 'dashboard' });
+            }
           }
         } else {
           setAuthState({ status: 'unauthenticated' });
