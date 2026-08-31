@@ -165,6 +165,7 @@ function parseHashView(): View | null {
   }
   if (hash.startsWith('#/upgrade')) return { type: 'upgrade' };
   if (hash.startsWith('#/dashboard')) return { type: 'dashboard' };
+  if (hash.startsWith('#/cost')) return { type: 'costTrackerIntro' };
   return null;
 }
 
