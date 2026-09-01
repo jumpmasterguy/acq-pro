@@ -50,6 +50,10 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
   const primarySet = new Set(primary);
 
   const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
+  // The Lesson Book PDF is a downloadable, keepable asset (unlike the audio,
+  // which is just streamed as a free sample on Module 1) — so it's Pro-only
+  // even on the free module, matching every other download in the app.
+  const canDownloadPdf = progress.isPremium;
   const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
   const theme = getModuleTheme(mod.color);
 
@@ -156,20 +160,25 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
       </div>
 
       {/* Module Resources: lesson book PDF + "The Debrief" audio overview.
-          Same access rule as the module itself — no new gating logic. */}
+          These two intentionally do NOT share one gate. The audio stays tied
+          to the module's own access rule (free for Module 1, same as the
+          lessons) since it's the "try before you buy" hook. The PDF is a
+          downloadable, keepable asset, so it requires Pro even on Module 1 —
+          same rule as every other downloadable in the app (sidebar Resources,
+          the Excel tracker). */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {/* Lesson Book PDF */}
+        {/* Lesson Book PDF — Pro only, regardless of module */}
         <div className={cn(
           'rounded-xl border p-4 flex items-start gap-3',
-          isAccessible ? cn('bg-card', theme.border) : 'bg-muted/20 border-border opacity-70'
+          canDownloadPdf ? cn('bg-card', theme.border) : 'bg-muted/20 border-border opacity-70'
         )}>
-          <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0', isAccessible ? theme.bgTint : 'bg-muted/40')}>
-            <FileText className={cn('w-4 h-4', isAccessible ? theme.text : 'text-muted-foreground')} />
+          <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0', canDownloadPdf ? theme.bgTint : 'bg-muted/40')}>
+            <FileText className={cn('w-4 h-4', canDownloadPdf ? theme.text : 'text-muted-foreground')} />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold">Lesson Book</p>
             <p className="text-xs text-muted-foreground mb-2">The full module as a printable PDF.</p>
-            {isAccessible && mod.pdfUrl ? (
+            {canDownloadPdf && mod.pdfUrl ? (
               <a
                 href={mod.pdfUrl}
                 target="_blank"
