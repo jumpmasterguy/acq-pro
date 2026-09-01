@@ -8,6 +8,7 @@ import fs from "fs";
 import { storage } from "./storage";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema, userProfileSchema } from "@shared/schema";
+import { hasPaidPlan } from "@shared/access";
 import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 import { costTrackerStorage } from "./costTrackerStorage";
@@ -1732,6 +1733,47 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       console.error('[drip] Error running drip cron:', err);
       return res.status(500).json({ message: err.message });
     }
+  });
+
+  // ── GET /api/lesson-book/:moduleId ──────────────────────────────────────────
+  // Streams a module's Lesson Book PDF. These used to be static files under
+  // client/public/lesson-books/, served by express.static with zero access
+  // control — the download button's client-side gate (canDownloadPdf in
+  // ModulePage.tsx) was UI-only, so anyone with the direct file URL could
+  // fetch any module's PDF with no login, no trial, no payment. Moved to
+  // server/assets/lesson-books/ (outside the static-served client/public
+  // tree) and gated here the same way the button decides whether to show:
+  // Module 1 is free for any logged-in user; Modules 2-6 require an actual
+  // paid plan, not just an active trial (hasPaidPlan, shared/access.ts).
+  app.get("/api/lesson-book/:moduleId", requireAuth as any, (req: Request, res: Response) => {
+    const moduleId = req.params.moduleId as string;
+    const user = (req as any).user as { subscriptionStatus?: string | null };
+
+    const LESSON_BOOK_FILES: Record<string, string> = {
+      foundations: 'module-1-foundations.pdf',
+      finance:     'module-2-finance.pdf',
+      contracts:   'module-3-contracts.pdf',
+      data:        'module-4-data-analytics.pdf',
+      capture:     'module-5-capture-bd.pdf',
+      operations:  'module-6-operations-leadership.pdf',
+    };
+    const FREE_LESSON_BOOK_MODULES = ['foundations'];
+
+    const filename = LESSON_BOOK_FILES[moduleId];
+    if (!filename) return res.status(404).json({ message: 'Module not found' });
+
+    if (!FREE_LESSON_BOOK_MODULES.includes(moduleId) && !hasPaidPlan(user)) {
+      return res.status(403).json({ message: 'Upgrade to a paid plan to download this module\'s Lesson Book.' });
+    }
+
+    const filePath = path.join(process.cwd(), 'server', 'assets', 'lesson-books', filename);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.sendFile(filePath, (err) => {
+      if (err && !res.headersSent) {
+        console.error('[lesson-book] send failed:', (err as Error).message);
+        res.status(500).json({ message: 'Could not load Lesson Book' });
+      }
+    });
   });
 
   // ── GET /api/certificate/:moduleId ─────────────────────────────────────────

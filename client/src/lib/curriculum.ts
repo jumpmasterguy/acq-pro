@@ -170,7 +170,7 @@ export const modules: Module[] = [
   // ─────────────────────────────────────────────────────────────
   {
     id: 'foundations',
-    pdfUrl: '/lesson-books/module-1-foundations.pdf',
+    pdfUrl: '/api/lesson-book/foundations',
     audioUrl: '/audio/module-1-foundations.m4a',
     audioReady: true,
     title: 'DoD Acquisitions Foundations',
@@ -1902,7 +1902,7 @@ export const modules: Module[] = [
   // ─────────────────────────────────────────────────────────────
   {
     id: 'finance',
-    pdfUrl: '/lesson-books/module-2-finance.pdf',
+    pdfUrl: '/api/lesson-book/finance',
     audioUrl: '/audio/module-2-finance.m4a',
     audioReady: true,
     title: 'Defense Finance & Budgeting',
@@ -4025,7 +4025,7 @@ export const modules: Module[] = [
   // ─────────────────────────────────────────────────────────────
   {
     id: 'contracts',
-    pdfUrl: '/lesson-books/module-3-contracts.pdf',
+    pdfUrl: '/api/lesson-book/contracts',
     audioUrl: '/audio/module-3-contracts.m4a',
     audioReady: true,
     title: 'Defense Contracting Fundamentals',
@@ -6321,7 +6321,7 @@ export const modules: Module[] = [
   // ─────────────────────────────────────────────────────────────
   {
     id: 'data',
-    pdfUrl: '/lesson-books/module-4-data-analytics.pdf',
+    pdfUrl: '/api/lesson-book/data',
     audioUrl: '/audio/module-4-data-analytics.m4a',
     audioReady: true,
     title: 'Data Analytics for Program Managers',
@@ -7291,7 +7291,7 @@ export const modules: Module[] = [
   // ─────────────────────────────────────────────────────────────
   {
     id: 'capture',
-    pdfUrl: '/lesson-books/module-5-capture-bd.pdf',
+    pdfUrl: '/api/lesson-book/capture',
     audioUrl: '/audio/module-5-capture-bd.m4a',
     audioReady: true,
     title: 'Capture Management & Business Development',
@@ -8673,7 +8673,7 @@ export const modules: Module[] = [
   // ─────────────────────────────────────────────────────────────
   {
     id: 'operations',
-    pdfUrl: '/lesson-books/module-6-operations-leadership.pdf',
+    pdfUrl: '/api/lesson-book/operations',
     audioUrl: '/audio/module-6-operations-leadership.m4a',
     audioReady: true,
     title: 'Program Operations & Leadership',

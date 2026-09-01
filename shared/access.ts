@@ -23,6 +23,18 @@ export function hasFullAccess(user: TrialFields | null | undefined): boolean {
   return false;
 }
 
+/**
+ * True only for an active/lifetime subscriber — false during an unconverted
+ * trial, even though hasFullAccess() is true then. Use this (not
+ * hasFullAccess) to gate anything permanent/keepable — a download the user
+ * still has after the trial ends — as opposed to in-app access, which is
+ * fine to extend through the trial.
+ */
+export function hasPaidPlan(user: TrialFields | null | undefined): boolean {
+  if (!user) return false;
+  return user.subscriptionStatus === "active" || user.subscriptionStatus === "lifetime";
+}
+
 /** True only while an unconverted trial is still running (used for trial-specific UI/emails). */
 export function isTrialActive(user: TrialFields | null | undefined): boolean {
   if (!user || user.subscriptionStatus !== "trialing" || !user.trialEndsAt) return false;

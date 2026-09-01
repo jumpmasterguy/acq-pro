@@ -7,7 +7,7 @@ import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calculateXP } from "@/lib/progress";
-import { hasFullAccess, trialDaysRemaining } from "@shared/access";
+import { hasFullAccess, hasPaidPlan, trialDaysRemaining } from "@shared/access";
 import { isNativeApp } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
 import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator, Flame } from "lucide-react";
@@ -108,7 +108,7 @@ type AuthState =
 
 function buildProgressFromUser(user: AuthUser) {
   const isPremium = hasFullAccess(user);
-  const isActuallyPaid = user.subscriptionStatus === 'active' || user.subscriptionStatus === 'lifetime';
+  const isActuallyPaid = hasPaidPlan(user);
   return {
     completedLessons: new Set<string>(user.completedLessons ?? []),
     quizScores: user.quizScores ?? {},
@@ -218,8 +218,7 @@ function AppContent() {
   // Distinct from isPremium: a trialing user has full access right now but
   // hasn't actually paid, so they should still see the upgrade CTA/countdown.
   const isActuallyPaid =
-    authState.status === 'authenticated' &&
-    (authState.user.subscriptionStatus === 'active' || authState.user.subscriptionStatus === 'lifetime');
+    authState.status === 'authenticated' && hasPaidPlan(authState.user);
   const completedLessons =
     authState.status === 'authenticated'
       ? new Set<string>(authState.user.completedLessons ?? [])
