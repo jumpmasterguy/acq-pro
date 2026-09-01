@@ -72,7 +72,7 @@ export async function sendWelcomeEmail(to: string, username: string): Promise<vo
 
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
       <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Start with Lesson 1 — it takes about 20 minutes and gives you a framework that makes everything else click.</p>
-      <a href="${APP_URL}/#/module/foundations" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Start Module 1 →</a>
+      <a href="${APP_URL}/app#/module/foundations" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Start Module 1 →</a>
     </div>
 
     <div class="section-label">What's ahead</div>
@@ -248,7 +248,7 @@ export async function sendEmail2(to: string, username: string): Promise<void> {
 
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
       <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Haven't started yet? Module 1 is waiting — five focused lessons, real DoD content, no filler.</p>
-      <a href="${APP_URL}/#/module/foundations" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Pick Up Where You Left Off →</a>
+      <a href="${APP_URL}/app#/module/foundations" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Pick Up Where You Left Off →</a>
     </div>
 
     <div class="tip-box">
@@ -296,7 +296,7 @@ export async function sendEmail3(to: string, username: string): Promise<void> {
 
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
       <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Open any lesson, scroll to the bottom, and start a conversation. You'll be surprised how much faster the material sticks when you can ask follow-up questions in real time.</p>
-      <a href="${APP_URL}/#/module/foundations" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Try It in Module 1 →</a>
+      <a href="${APP_URL}/app#/module/foundations" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Try It in Module 1 →</a>
     </div>
 
     <div class="tip-box">
@@ -355,7 +355,7 @@ export async function sendEmail4(to: string, username: string): Promise<void> {
 
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
       <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Start at $5.99/month — or get lifetime access for a one-time payment of $99. Either way, you're covered by a 30-day money-back guarantee.</p>
-      <a href="${APP_URL}/#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Unlock All 6 Modules →</a>
+      <a href="${APP_URL}/app#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Unlock All 6 Modules →</a>
     </div>
 
     <p>Still working through Module 1? No rush. It'll be there when you're ready.</p>
@@ -404,7 +404,7 @@ export async function sendEmail5(to: string, username: string): Promise<void> {
 
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
       <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">This is what Modules 02 and 03 actually look like. Fifteen more lessons, full quizzes, key terms, and an AI assistant to fill in the gaps — starting at $5.99/month.</p>
-      <a href="${APP_URL}/#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Unlock Defense Finance &amp; Contracting →</a>
+      <a href="${APP_URL}/app#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Unlock Defense Finance &amp; Contracting →</a>
     </div>
 
     <p style="font-size:14px;color:#0d2137;font-weight:700;margin-top:4px">— Lucas, Acqlerate</p>
@@ -460,7 +460,7 @@ export async function sendEmail6(to: string, username: string): Promise<void> {
 
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
       <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Your path is waiting. All five Pro modules + your personalized sequence — starting at $5.99/month with a 30-day guarantee.</p>
-      <a href="${APP_URL}/#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Start Your Learning Path →</a>
+      <a href="${APP_URL}/app#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Start Your Learning Path →</a>
     </div>
 
     <p>Reply to this email if you want a more specific recommendation based on your role. I'm happy to point you in the right direction.</p>
@@ -507,7 +507,7 @@ export async function sendEmail7(to: string, username: string): Promise<void> {
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
       <p style="color:#ffffff !important;font-size:16px;font-weight:800;margin:0 0 6px">Start at $5.99/month</p>
       <p style="color:#ffffff !important;font-size:13px;margin:0 0 20px;opacity:0.8">or $99 one-time for lifetime access — no renewals, ever</p>
-      <a href="${APP_URL}/#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none;margin-bottom:10px">Unlock Pro Access →</a>
+      <a href="${APP_URL}/app#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none;margin-bottom:10px">Unlock Pro Access →</a>
       <p style="color:#ffffff !important;font-size:12px;margin:12px 0 0;opacity:0.7">30-day money-back guarantee. No questions asked.</p>
     </div>
 

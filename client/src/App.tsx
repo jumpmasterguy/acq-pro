@@ -146,9 +146,12 @@ function clearSavedView() {
   try { sessionStorage.removeItem(VIEW_STORAGE_KEY); } catch {}
 }
 
-// Deep-link support: a URL like acqlerate.com/#/module/finance (used in
+// Deep-link support: a URL like acqlerate.com/app#/module/finance (used in
 // emails, social posts, etc.) should open straight to that module instead of
-// dumping everyone on the dashboard. Wins over the saved session view, since
+// dumping everyone on the dashboard. Note the /app — the app itself only
+// lives at that path (server/static.ts serves the marketing landing page at
+// the bare root "/"), so any link generated for this needs the /app prefix
+// or the hash never reaches this code at all. Wins over the saved session view, since
 // clicking a specific link is a more explicit signal than "wherever I was."
 function parseHashView(): View | null {
   const hash = window.location.hash;
