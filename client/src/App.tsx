@@ -173,7 +173,18 @@ function AppContent() {
   // Check if we arrived via a landing page CTA (/app#/auth)
   const arrivedAtAuth = typeof window !== 'undefined' &&
     window.location.hash.startsWith('#/auth');
-  const [view, setView] = useState<View>(arrivedAtAuth ? { type: 'auth' } : { type: 'landing' });
+  // Capture any deep link (e.g. #/lesson/finance-8 from an email) once, at
+  // mount, before the session check or anything else touches the hash. If
+  // the visitor turns out to be logged out, we route them to login instead
+  // of the marketing landing page, and send them on to this exact spot the
+  // moment they're in — instead of dropping a signed-out click on the
+  // homepage and a fresh login on the dashboard, both losing the destination.
+  const pendingDeepLinkRef = useRef<View | null>(
+    typeof window !== 'undefined' ? parseHashView() : null
+  );
+  const [view, setView] = useState<View>(
+    arrivedAtAuth ? { type: 'auth' } : pendingDeepLinkRef.current ? { type: 'auth' } : { type: 'landing' }
+  );
   // Dark mode — persisted in cookie (works on Railway, not a sandboxed iframe)
   const [darkMode, setDarkMode] = useState(() => {
     try {
@@ -330,11 +341,16 @@ function AppContent() {
         } else {
           setAuthState({ status: 'unauthenticated' });
           clearSavedView();
+          // Not logged in, but they clicked a real deep link (not just the
+          // generic #/auth) — send them to login rather than the homepage,
+          // so they don't have to also find and click "Sign In" themselves.
+          if (pendingDeepLinkRef.current) setView({ type: 'auth' });
         }
       })
       .catch(() => {
         setAuthState({ status: 'unauthenticated' });
         clearSavedView();
+        if (pendingDeepLinkRef.current) setView({ type: 'auth' });
       });
   }, []);
 
@@ -379,10 +395,13 @@ function AppContent() {
     const profile = user.userProfile as UserProfile | null | undefined;
     if (!profile?.completedOnboarding) {
       track('sign_up', { method: user.googleId ? 'google' : 'email' });
+      // Onboarding still comes first for a brand-new account — the deep
+      // link (if any) is honored right after, in handleOnboardingComplete.
       setView({ type: 'onboarding' });
     } else {
       track('login', { method: user.googleId ? 'google' : 'email' });
-      setView({ type: 'dashboard' });
+      setView(pendingDeepLinkRef.current ?? { type: 'dashboard' });
+      pendingDeepLinkRef.current = null;
     }
   };
 
@@ -392,7 +411,8 @@ function AppContent() {
       return { ...prev, user: { ...prev.user, userProfile: profile } };
     });
     track('onboarding_complete', { role: profile.role, goal: profile.goal });
-    setView({ type: 'dashboard' });
+    setView(pendingDeepLinkRef.current ?? { type: 'dashboard' });
+    pendingDeepLinkRef.current = null;
   };
 
   const handleEditProfile = () => {

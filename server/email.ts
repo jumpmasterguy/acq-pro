@@ -66,17 +66,17 @@ export async function sendWelcomeEmail(to: string, username: string): Promise<vo
 
     <div class="section-label">Your first move</div>
     <div class="highlight-box">
-      <p><strong>Module 01 — DoD Acquisitions Foundations</strong> is yours free, right now. No credit card. No time limit.</p>
+      <p><strong>Module 1 — DoD Acquisitions Foundations</strong> is yours free, right now. No credit card. No time limit.</p>
       <p style="margin-top:10px">It covers the Adaptive Acquisition Framework, ACAT categories, the FAR/DFARS structure, how programs get funded, and who the key players are across the government and industry side. Five lessons, full quizzes, and an AI study assistant ready to answer your questions in plain language.</p>
     </div>
 
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
       <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Start with Lesson 1 — it takes about 20 minutes and gives you a framework that makes everything else click.</p>
-      <a href="${APP_URL}/#/module/foundations" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Start Module 01 →</a>
+      <a href="${APP_URL}/#/module/foundations" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Start Module 1 →</a>
     </div>
 
     <div class="section-label">What's ahead</div>
-    <div class="module-row"><span class="mod-icon">🏛️</span><div><div class="mod-name">Module 01 — DoD Acquisitions Foundations</div><div class="mod-desc">FREE · AAF, ACAT, FAR/DFARS, lifecycle phases, key players</div></div></div>
+    <div class="module-row"><span class="mod-icon">🏛️</span><div><div class="mod-name">Module 1 — DoD Acquisitions Foundations</div><div class="mod-desc">FREE · AAF, ACAT, FAR/DFARS, lifecycle phases, key players</div></div></div>
     <div class="module-row"><span class="mod-icon">💰</span><div><div class="mod-name">Module 02 — Defense Finance & Budgeting</div><div class="mod-desc">Pro · PPBE, color of money, EVM, Nunn-McCurdy, appropriations</div></div></div>
     <div class="module-row"><span class="mod-icon">📋</span><div><div class="mod-name">Module 03 — Defense Contracting Fundamentals</div><div class="mod-desc">Pro · FFP vs. cost-plus, source selection, task orders, GSA vehicles</div></div></div>
     <div class="module-row"><span class="mod-icon">📊</span><div><div class="mod-name">Module 04 — Data Analytics for PMs</div><div class="mod-desc">Pro · Program dashboards, schedule analysis, TPMs, reporting</div></div></div>
@@ -92,7 +92,7 @@ export async function sendWelcomeEmail(to: string, username: string): Promise<vo
     from: FROM, to,
       replyTo: "hello@acqlerate.com",
     subject: "Welcome to Acqlerate — your first module is ready",
-    html: emailShell("Start Module 01 right now — it's free and takes 20 minutes.", body, to),
+    html: emailShell("Start Module 1 right now — it's free and takes 20 minutes.", body, to),
   });
   console.log(`[email] Email 1 (welcome) sent to ${to}`);
 }
@@ -207,7 +207,7 @@ export async function sendStarterKitEmail(to: string, username: string, role: Us
     `}
 
     <hr style="border:none;border-top:1px solid #f1f5f9;margin:4px 0 24px" />
-    <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 6px">This is just the start — Module 01 inside Acqlerate is waiting for you whenever you're ready to go deeper.</p>
+    <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 6px">This is just the start — Module 1 inside Acqlerate is waiting for you whenever you're ready to go deeper.</p>
     <p style="font-size:14px;color:#0d2137;font-weight:700;margin:0">— Lucas, Acqlerate</p>
   `;
 
@@ -238,7 +238,7 @@ export async function sendEmail2(to: string, username: string): Promise<void> {
       <p style="margin-top:10px"><strong>Acquisition literacy isn't a nice-to-have. It's the difference between being effective and being a liability.</strong></p>
     </div>
 
-    <div class="section-label">Your quick win from Module 01</div>
+    <div class="section-label">Your quick win from Module 1</div>
     <p>If you've started the Foundations module, here's the single most important framework to internalize first:</p>
 
     <div class="highlight-box">
@@ -247,7 +247,7 @@ export async function sendEmail2(to: string, username: string): Promise<void> {
     </div>
 
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
-      <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Haven't started yet? Module 01 is waiting — five focused lessons, real DoD content, no filler.</p>
+      <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Haven't started yet? Module 1 is waiting — five focused lessons, real DoD content, no filler.</p>
       <a href="${APP_URL}/#/module/foundations" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Pick Up Where You Left Off →</a>
     </div>
 
@@ -296,7 +296,7 @@ export async function sendEmail3(to: string, username: string): Promise<void> {
 
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
       <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Open any lesson, scroll to the bottom, and start a conversation. You'll be surprised how much faster the material sticks when you can ask follow-up questions in real time.</p>
-      <a href="${APP_URL}/#/module/foundations" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Try It in Module 01 →</a>
+      <a href="${APP_URL}/#/module/foundations" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Try It in Module 1 →</a>
     </div>
 
     <div class="tip-box">
@@ -323,7 +323,7 @@ export async function sendEmail4(to: string, username: string): Promise<void> {
 
   const body = `
     <div class="greeting">Hey ${username} —</div>
-    <p>It's been about a week since you joined. I wanted to check in and share what others are saying — and tell you what's waiting on the other side of Module 01.</p>
+    <p>It's been about a week since you joined. I wanted to check in and share what others are saying — and tell you what's waiting on the other side of Module 1.</p>
 
     <div class="section-label">What Acqlerate users are saying</div>
 
@@ -358,14 +358,14 @@ export async function sendEmail4(to: string, username: string): Promise<void> {
       <a href="${APP_URL}/#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Unlock All 6 Modules →</a>
     </div>
 
-    <p>Still working through Module 01? No rush. It'll be there when you're ready.</p>
+    <p>Still working through Module 1? No rush. It'll be there when you're ready.</p>
     <p style="font-size:14px;color:#0d2137;font-weight:700;margin-top:4px">— Lucas, Acqlerate</p>
   `;
 
   await resend.emails.send({
     from: FROM, to,
       replyTo: "hello@acqlerate.com",
-    subject: "What's waiting after Module 01 (and what users are saying)",
+    subject: "What's waiting after Module 1 (and what users are saying)",
     html: emailShell("Real feedback from defense professionals — and what Pro unlocks.", body, to),
   });
   console.log(`[email] Email 4 (day 7) sent to ${to}`);
@@ -511,7 +511,7 @@ export async function sendEmail7(to: string, username: string): Promise<void> {
       <p style="color:#ffffff !important;font-size:12px;margin:12px 0 0;opacity:0.7">30-day money-back guarantee. No questions asked.</p>
     </div>
 
-    <p>If now isn't the right time, that's genuinely fine. Module 01 stays free forever — come back when you're ready.</p>
+    <p>If now isn't the right time, that's genuinely fine. Module 1 stays free forever — come back when you're ready.</p>
 
     <p>But if you've been thinking about it — this is me telling you the content is worth it. I built Acqlerate because this resource didn't exist when I needed it. I hope it helps you the way I wish it had helped me.</p>
 
@@ -525,7 +525,7 @@ export async function sendEmail7(to: string, username: string): Promise<void> {
     from: FROM, to,
       replyTo: "hello@acqlerate.com",
     subject: "One last note (and why I think Acqlerate is worth it)",
-    html: emailShell("Module 01 stays free forever. But here's what's on the other side.", body, to),
+    html: emailShell("Module 1 stays free forever. But here's what's on the other side.", body, to),
   });
   console.log(`[email] Email 7 (day 21) sent to ${to}`);
 }
@@ -556,7 +556,7 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
       </div>
       <div style="background:#0d2137;border-radius:12px;padding:24px 28px;text-align:center;margin-bottom:24px">
         <p style="color:#ffffff;font-size:14px;font-weight:700;margin:0 0 6px">Put it into practice with Acqlerate.</p>
-        <p style="color:rgba(255,255,255,0.65);font-size:13px;margin:0 0 16px;line-height:1.6">Module 01 is completely free. Give your team a structured path through DoD acquisition — no classroom, no scheduling, no per-seat contracts.</p>
+        <p style="color:rgba(255,255,255,0.65);font-size:13px;margin:0 0 16px;line-height:1.6">Module 1 is completely free. Give your team a structured path through DoD acquisition — no classroom, no scheduling, no per-seat contracts.</p>
         <a href="${APP_URL}/app#/register"
            style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:14px;padding:12px 28px;border-radius:8px;text-decoration:none">
           Start Free →
@@ -591,10 +591,10 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
       </div>
       <div style="background:#0d2137;border-radius:12px;padding:24px 28px;text-align:center;margin-bottom:24px">
         <p style="color:#ffffff;font-size:14px;font-weight:700;margin:0 0 6px">If this made you curious about the bigger picture —</p>
-        <p style="color:rgba(255,255,255,0.65);font-size:13px;margin:0 0 16px;line-height:1.6">Module 01 at acqlerate.com is completely free. It covers the full DoD acquisition system in plain English — who the players are, how money flows, and how contracts actually get awarded.</p>
+        <p style="color:rgba(255,255,255,0.65);font-size:13px;margin:0 0 16px;line-height:1.6">Module 1 at acqlerate.com is completely free. It covers the full DoD acquisition system in plain English — who the players are, how money flows, and how contracts actually get awarded.</p>
         <a href="${APP_URL}/app#/register"
            style="display:inline-block;background:#c8972a;color:#ffffff;font-weight:800;font-size:14px;padding:12px 28px;border-radius:8px;text-decoration:none">
-          Start Module 01 — Free →
+          Start Module 1 — Free →
         </a>
       </div>
       <p style="font-size:12px;color:#9ca3af;line-height:1.7;margin:0">You're receiving this because you requested the pay guide from acqlerate.com. <a href="${unsubscribeUrl(to)}" style="color:#9ca3af;text-decoration:underline">Unsubscribe</a></p>
@@ -656,7 +656,7 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
     </table>
 
     <div style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:24px;border:1px solid #264d73">
-      <p style="color:#ffffff;font-size:15px;font-weight:700;margin:0 0 6px">Want more than a PDF? Module 01 is free.</p>
+      <p style="color:#ffffff;font-size:15px;font-weight:700;margin:0 0 6px">Want more than a PDF? Module 1 is free.</p>
       <p style="color:rgba(255,255,255,0.7);font-size:13px;margin:0 0 20px;line-height:1.6">Create a free account (60 seconds, no credit card) and start the full DoD Acquisitions Foundations module today.</p>
       <a href="${APP_URL}/app#/register"
          style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 32px;border-radius:8px;text-decoration:none">
