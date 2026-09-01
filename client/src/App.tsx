@@ -819,22 +819,43 @@ function AppContent() {
               </button>
               {resourcesExpanded && (
                 <div className="pl-2 pr-1 pt-1 space-y-1">
-                  {SIDEBAR_RESOURCES.map((res, ri) => (
-                    <a
-                      key={ri}
-                      href={res.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-start gap-2 px-3 py-2 rounded-lg text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors group"
-                      data-testid={`sidebar-resource-${ri}`}
-                    >
-                      <Download className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-primary opacity-80 group-hover:opacity-100" />
-                      <div className="flex-1 min-w-0">
-                        <div className="text-[11px] font-semibold leading-tight text-sidebar-foreground/90">{res.title}</div>
-                        <div className="text-[10.5px] text-sidebar-foreground/65 leading-snug mt-0.5">{res.description}</div>
-                      </div>
-                    </a>
-                  ))}
+                  {SIDEBAR_RESOURCES.map((res, ri) => {
+                    const locked = res.proOnly && !progress.isPremium;
+                    const commonClass = "flex items-start gap-2 px-3 py-2 rounded-lg transition-colors group";
+                    if (locked) {
+                      return (
+                        <button
+                          key={ri}
+                          onClick={() => { handleUpgrade(); setSidebarOpen(false); }}
+                          className={cn(commonClass, "w-full text-left text-sidebar-foreground/45 hover:bg-sidebar-accent hover:text-sidebar-foreground/70")}
+                          data-testid={`sidebar-resource-${ri}`}
+                        >
+                          <Lock className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 opacity-70" />
+                          <div className="flex-1 min-w-0">
+                            <div className="text-[11px] font-semibold leading-tight">{res.title}</div>
+                            <div className="text-[10.5px] leading-snug mt-0.5 opacity-80">{res.description}</div>
+                            <div className="text-[10px] font-bold text-primary mt-1">Unlock with Pro →</div>
+                          </div>
+                        </button>
+                      );
+                    }
+                    return (
+                      <a
+                        key={ri}
+                        href={res.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn(commonClass, "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground")}
+                        data-testid={`sidebar-resource-${ri}`}
+                      >
+                        <Download className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-primary opacity-80 group-hover:opacity-100" />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-[11px] font-semibold leading-tight text-sidebar-foreground/90">{res.title}</div>
+                          <div className="text-[10.5px] text-sidebar-foreground/65 leading-snug mt-0.5">{res.description}</div>
+                        </div>
+                      </a>
+                    );
+                  })}
                 </div>
               )}
             </div>
