@@ -116,6 +116,9 @@ export async function registerRoutes(
     // Auto-login after registration
     req.login(toPassportUser(user), async (err) => {
       if (err) return res.status(500).json({ message: "Login failed after registration" });
+      // Stamp when this session started — read back on logout/idle-timeout
+      // to compute how long it lasted (storage.recordLoginEnd).
+      req.session.loginAt = new Date().toISOString();
       // Track first login analytics (non-blocking)
       try {
         await storage.updateUserAnalytics(user.id, {
@@ -166,6 +169,9 @@ export async function registerRoutes(
             console.error("[login] req.login error:", loginErr);
             return res.status(500).json({ message: "Session error" });
           }
+          // Stamp when this session started — read back on logout/idle-timeout
+          // to compute how long it lasted (storage.recordLoginEnd).
+          req.session.loginAt = new Date().toISOString();
           // Track login analytics (non-blocking)
           try {
             const currentUser = await storage.getUser(user.id);
@@ -202,10 +208,17 @@ export async function registerRoutes(
 
   // Logout
   app.post("/api/auth/logout", (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    const loginAt = req.session.loginAt;
     req.logout((err) => {
       if (err) return res.status(500).json({ message: "Logout failed" });
       req.session.destroy(() => {
         res.clearCookie("connect.sid");
+        if (userId && loginAt) {
+          storage.recordLoginEnd(userId, loginAt, 'logout').catch((e) => {
+            console.error('[logout] recordLoginEnd failed:', e.message);
+          });
+        }
         res.json({ message: "Logged out" });
       });
     });
@@ -280,6 +293,9 @@ export async function registerRoutes(
       passport.authenticate("google", { failureRedirect: "/auth?error=google_failed" })(req, res, next);
     },
     async (req: Request, res: Response) => {
+      // Stamp when this session started — read back on logout/idle-timeout
+      // to compute how long it lasted (storage.recordLoginEnd).
+      if (req.user) req.session.loginAt = new Date().toISOString();
       // Track login analytics (non-blocking)
       if (req.user) {
         try {
@@ -1208,6 +1224,15 @@ export async function registerRoutes(
         const highestSkill = Object.values(skillLevels).includes('advanced') ? 'advanced'
           : Object.values(skillLevels).includes('intermediate') ? 'intermediate'
           : 'novice';
+        // Per-session length, from closed sessions in loginHistory (see
+        // shared/schema.ts) — distinct from totalMinutesActive, which is a
+        // lifetime cumulative total, not a per-login figure.
+        const loginHistory = ((u as any).loginHistory ?? []) as Array<{ durationMinutes?: number; endReason?: string }>;
+        const closedSessions = loginHistory.filter(s => typeof s.durationMinutes === 'number');
+        const avgSessionMinutes = closedSessions.length > 0
+          ? Math.round(closedSessions.reduce((sum, s) => sum + (s.durationMinutes ?? 0), 0) / closedSessions.length)
+          : null;
+        const idleTimeoutCount = closedSessions.filter(s => s.endReason === 'idle_timeout').length;
         return {
           id: u.id,
           username: u.username,
@@ -1218,6 +1243,9 @@ export async function registerRoutes(
           lastActiveAt: u.lastActiveAt ?? null,
           loginCount: u.loginCount ?? 0,
           totalMinutesActive: u.totalMinutesActive ?? 0,
+          avgSessionMinutes,
+          closedSessionCount: closedSessions.length,
+          idleTimeoutCount,
           xp: u.xp ?? 0,
           completedLessons,
           avgQuizScore: avgQuiz,
@@ -1244,9 +1272,18 @@ export async function registerRoutes(
       const avgMinutes = totalUsers > 0
         ? Math.round(userStats.reduce((sum, u) => sum + u.totalMinutesActive, 0) / totalUsers)
         : 0;
+      // Platform-wide average login duration — weighted by session, not by
+      // user, so someone with 20 short sessions doesn't count the same as
+      // someone with 1. Pulled from closed sessions across all users.
+      const allClosedSessions = userStats.reduce((sum, u) => sum + u.closedSessionCount, 0);
+      const avgSessionMinutes = allClosedSessions > 0
+        ? Math.round(
+            userStats.reduce((sum, u) => sum + (u.avgSessionMinutes ?? 0) * u.closedSessionCount, 0) / allClosedSessions
+          )
+        : null;
 
       return res.json({
-        aggregate: { totalUsers, proUsers, trialingUsers, dau, avgXp, avgLessons, avgMinutes },
+        aggregate: { totalUsers, proUsers, trialingUsers, dau, avgXp, avgLessons, avgMinutes, avgSessionMinutes, closedSessionCount: allClosedSessions },
         users: userStats,
       });
     } catch (err: any) {

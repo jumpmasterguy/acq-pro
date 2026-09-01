@@ -73,6 +73,10 @@ interface AuthPageProps {
   onAuthenticated: (user: AuthUser) => void;
   darkMode: boolean;
   onBack?: () => void;
+  // Shown above the tab switcher, e.g. after the idle-timeout middleware
+  // (server/auth.ts) ends a session server-side — so it doesn't look like
+  // an unexplained sign-out.
+  notice?: string;
 }
 
 const highlights = [
@@ -82,8 +86,8 @@ const highlights = [
   { icon: Lock, label: "Secure, private progress" },
 ];
 
-export default function AuthPage({ onAuthenticated, darkMode, onBack }: AuthPageProps) {
-  const [tab, setTab] = useState<"login" | "register">("register");
+export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: AuthPageProps) {
+  const [tab, setTab] = useState<"login" | "register">(notice ? "login" : "register");
   const [referralCode, setReferralCode] = useState<string>("");
 
   // Pick up ?ref=CODE and ?mode=login from URL hash params
@@ -227,6 +231,12 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack }: AuthPage
         </div>
 
         <div className="w-full max-w-md">
+          {notice && (
+            <div className="flex items-start gap-2 rounded-lg border border-amber-300/40 bg-amber-500/10 px-3 py-2.5 mb-4 text-xs text-amber-700 dark:text-amber-300">
+              <Lock className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+              <span>{notice}</span>
+            </div>
+          )}
           {/* Tab switcher */}
           <div className="flex gap-1 p-1 bg-muted rounded-lg mb-8">
             <button

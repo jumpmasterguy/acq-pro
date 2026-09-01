@@ -11,6 +11,25 @@ import { type User } from "@shared/schema";
 
 const PgSession = ConnectPgSimple(session);
 
+// Idle timeout: how long an authenticated session can go without a request
+// before it's force-ended (see the middleware below). Separate from the
+// cookie's 30-day maxAge, which just caps how long a session can exist at
+// all — that's refreshed on every request (`rolling: true`) and doesn't
+// care about inactivity. This is the actual "walked away and left it
+// logged in" security control.
+export const IDLE_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
+
+// Type augmentation for session data — loginAt is stamped once at login
+// (used to compute a session's duration when it ends, for loginHistory);
+// lastActivityAt is bumped on every authenticated request and is what the
+// idle-timeout middleware below checks against.
+declare module "express-session" {
+  interface SessionData {
+    loginAt?: string;
+    lastActivityAt?: number;
+  }
+}
+
 // Type augmentation for req.user
 declare global {
   namespace Express {
@@ -114,6 +133,37 @@ export async function setupAuth(app: Express): Promise<void> {
 
   app.use(passport.initialize());
   app.use(passport.session());
+
+  // ── Idle timeout — auto sign-out after IDLE_TIMEOUT_MS of inactivity ──────
+  // Runs before every route. On an authenticated request, if it's been too
+  // long since the last one, the session is force-ended right here: logged
+  // out, destroyed, and (if we know when it started) recorded to
+  // loginHistory as an 'idle_timeout' close before responding 401. A normal
+  // request just bumps lastActivityAt and moves on — this never fires for
+  // someone actively using the app, only for a session nobody's touched in
+  // 30+ minutes (heartbeat included, so an open-but-idle tab still times out).
+  app.use((req, res, next) => {
+    if (!req.isAuthenticated || !req.isAuthenticated()) return next();
+    const now = Date.now();
+    const last = req.session.lastActivityAt;
+    if (last && now - last > IDLE_TIMEOUT_MS) {
+      const userId = req.user!.id;
+      const loginAt = req.session.loginAt;
+      return req.logout(() => {
+        req.session.destroy(() => {
+          res.clearCookie("connect.sid");
+          if (loginAt) {
+            storage.recordLoginEnd(userId, loginAt, 'idle_timeout').catch((e) => {
+              console.error('[idle-timeout] recordLoginEnd failed:', e.message);
+            });
+          }
+          res.status(401).json({ message: "Signed out due to inactivity", idleTimeout: true });
+        });
+      });
+    }
+    req.session.lastActivityAt = now;
+    next();
+  });
 
   // ── Passport local strategy — authenticate by email ───────────────────────
   passport.use(

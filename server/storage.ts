@@ -55,6 +55,11 @@ export interface IStorage {
       xp?: number;
     }
   ): Promise<User | undefined>;
+  // Appends one closed session to loginHistory (capped at the most recent
+  // 100) — called when a login ends, either by explicit logout or by the
+  // idle-timeout middleware in server/auth.ts. loginAt is the ISO timestamp
+  // captured in the session at login time.
+  recordLoginEnd(userId: string, loginAt: string, endReason: 'logout' | 'idle_timeout'): Promise<void>;
   checkAndConsumeAiCall(userId: string): Promise<{ allowed: boolean; remaining: number | null; limit: number | null }>;
   runAiUsageMigration(): Promise<{ ok: boolean; detail: string }>;
   saveLead(email: string, source?: string): Promise<Lead>;
@@ -347,6 +352,21 @@ export class DrizzleStorage implements IStorage {
     return result[0];
   }
 
+  async recordLoginEnd(userId: string, loginAt: string, endReason: 'logout' | 'idle_timeout'): Promise<void> {
+    const user = await this.getUser(userId);
+    if (!user) return;
+    const endedAt = new Date().toISOString();
+    const durationMinutes = Math.max(0, Math.round(
+      (new Date(endedAt).getTime() - new Date(loginAt).getTime()) / 60000
+    ));
+    const history = ((user as any).loginHistory ?? []) as any[];
+    history.push({ loginAt, endedAt, endReason, durationMinutes });
+    const trimmed = history.slice(-100); // cap — don't grow unbounded
+    await this.db
+      .update(users)
+      .set({ loginHistory: trimmed } as any)
+      .where(eq(users.id, userId));
+  }
 
   // AI Study Assistant gating — enforces the tier limits sold on the pricing page:
   // free = 5/day, active (Monthly Pro) = 30/day, lifetime = unlimited.
@@ -630,6 +650,7 @@ export class MemStorage implements IStorage {
       lastActiveAt: null,
       loginCount: 0,
       totalMinutesActive: 0,
+      loginHistory: [],
       xp: 0,
     };
     this.users.set(id, user);
@@ -746,6 +767,19 @@ export class MemStorage implements IStorage {
     const updated = { ...user, ...data };
     this.users.set(userId, updated);
     return updated;
+  }
+
+  async recordLoginEnd(userId: string, loginAt: string, endReason: 'logout' | 'idle_timeout'): Promise<void> {
+    const user = this.users.get(userId);
+    if (!user) return;
+    const endedAt = new Date().toISOString();
+    const durationMinutes = Math.max(0, Math.round(
+      (new Date(endedAt).getTime() - new Date(loginAt).getTime()) / 60000
+    ));
+    const history = ((user as any).loginHistory ?? []) as any[];
+    history.push({ loginAt, endedAt, endReason, durationMinutes });
+    const trimmed = history.slice(-100);
+    this.users.set(userId, { ...user, loginHistory: trimmed } as any);
   }
 
   async saveUserProfile(userId: string, profile: Record<string, any>): Promise<User | undefined> {

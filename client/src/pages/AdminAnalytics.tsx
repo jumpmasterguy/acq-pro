@@ -212,6 +212,12 @@ export default function AdminAnalytics({ onBack }: AdminAnalyticsProps) {
               sub="Active per user"
               color="gold"
             />
+            <Stat
+              label="Avg Session"
+              value={analytics?.aggregate?.avgSessionMinutes != null ? `${analytics.aggregate.avgSessionMinutes}m` : "—"}
+              sub={`${analytics?.aggregate?.closedSessionCount ?? 0} logins tracked`}
+              color="blue"
+            />
           </div>
 
           {/* ── Top Lessons ─────────────────────────── */}

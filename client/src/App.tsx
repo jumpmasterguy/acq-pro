@@ -203,6 +203,10 @@ function AppContent() {
   const [resourcesExpanded, setResourcesExpanded] = useState(false);
   const [toolsExpanded, setToolsExpanded] = useState(false);
   const [authState, setAuthState] = useState<AuthState>({ status: 'loading' });
+  // Set when the server ends a session for inactivity (server/auth.ts idle
+  // timeout) and the client notices via a 401 on the next heartbeat — shown
+  // on the login screen so it doesn't look like an unexplained sign-out.
+  const [idleSignOutNotice, setIdleSignOutNotice] = useState(false);
   // Module assessment modal state
   const [assessmentModuleId, setAssessmentModuleId] = useState<string | null>(null);
   const [showLevels, setShowLevels] = useState(false);
@@ -268,7 +272,20 @@ function AppContent() {
       if (accumulatedMins >= PING_MINS) {
         const minsToSend = Math.floor(accumulatedMins);
         accumulatedMins -= minsToSend;
-        apiRequest('POST', '/api/track-activity', { minutesActive: minsToSend }).catch(() => {});
+        apiRequest('POST', '/api/track-activity', { minutesActive: minsToSend }).catch((e: any) => {
+          // A 401 here means the server already ended this session — almost
+          // certainly the idle timeout (server/auth.ts), since we only get
+          // here when the tab is visible and the heartbeat itself is what
+          // would normally keep it alive. Bring the client's own state in
+          // line with that instead of silently failing every request until
+          // the user happens to reload.
+          if (String(e?.message ?? '').startsWith('401')) {
+            clearSavedView();
+            setAuthState({ status: 'unauthenticated' });
+            setIdleSignOutNotice(true);
+            setView({ type: 'auth' });
+          }
+        });
       }
     }, TICK_MS);
     return () => clearInterval(ticker);
@@ -397,6 +414,7 @@ function AppContent() {
 
   const handleAuthenticated = (user: AuthUser) => {
     setAuthState({ status: 'authenticated', user });
+    setIdleSignOutNotice(false);
     const profile = user.userProfile as UserProfile | null | undefined;
     if (!profile?.completedOnboarding) {
       track('sign_up', { method: user.googleId ? 'google' : 'email' });
@@ -445,6 +463,7 @@ function AppContent() {
     } catch {}
     clearSavedView();
     setAuthState({ status: 'unauthenticated' });
+    setIdleSignOutNotice(false);
     setView({ type: 'landing' });
   }, []);
 
@@ -518,6 +537,7 @@ function AppContent() {
         onAuthenticated={handleAuthenticated}
         darkMode={darkMode}
         onBack={view.type === 'auth' ? () => setView({ type: 'landing' }) : undefined}
+        notice={idleSignOutNotice ? "You were signed out after 30 minutes of inactivity. Log back in to continue." : undefined}
       />
     );
   }

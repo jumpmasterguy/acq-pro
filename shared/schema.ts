@@ -33,6 +33,13 @@ export const users = pgTable("users", {
   lastActiveAt: text("last_active_at"),        // ISO timestamp string (last heartbeat)
   loginCount: integer("login_count").notNull().default(0),
   totalMinutesActive: integer("total_minutes_active").notNull().default(0),
+  // Per-login session history — one entry per login, appended when that
+  // session ends (explicit logout or idle timeout — see server/auth.ts).
+  // [{ loginAt, endedAt, endReason: 'logout' | 'idle_timeout', durationMinutes }]
+  // Capped at the most recent 100 entries (server/storage.ts) so this can't
+  // grow unbounded. totalMinutesActive above is a lifetime cumulative total;
+  // this is what answers "how long does a typical login actually last."
+  loginHistory: jsonb("login_history").notNull().default(sql`'[]'::jsonb`),
   xp: integer("xp").notNull().default(0),
   // Streak tracking
   currentStreak: integer("current_streak").notNull().default(0),
