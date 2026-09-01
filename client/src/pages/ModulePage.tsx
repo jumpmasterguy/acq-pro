@@ -50,10 +50,13 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
   const primarySet = new Set(primary);
 
   const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
-  // The Lesson Book PDF follows the module's own access rule, same as the
-  // lessons — free on Module 1. The Debrief audio is the Pro-only draw
-  // instead: it requires a paid plan on every module, Module 1 included.
-  const canDownloadPdf = isAccessible;
+  // The Lesson Book PDF is a downloadable, keepable asset, so a trialing
+  // user shouldn't be able to grab all 6 and walk away with them for free
+  // once the trial ends. It follows the module's free rule (Module 1) plus
+  // isActuallyPaid — NOT progress.isPremium, which is also true mid-trial.
+  // The Debrief audio stays Pro-only on every module, Module 1 included —
+  // it's streamed, not downloaded, so it carries no such risk.
+  const canDownloadPdf = FREE_MODULES.includes(mod.id) || progress.isActuallyPaid;
   const canListenAudio = progress.isPremium;
   const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
   const theme = getModuleTheme(mod.color);
@@ -161,12 +164,14 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
       </div>
 
       {/* Module Resources: lesson book PDF + "The Debrief" audio overview.
-          These two intentionally do NOT share one gate. The PDF follows the
-          module's own access rule (free for Module 1, same as the lessons).
+          These two intentionally do NOT share one gate. The PDF is free on
+          Module 1 but requires an actual paid plan (not just an active
+          trial) on Modules 2-6, since a download survives the trial ending.
           The Debrief audio is Pro-only on every module, Module 1 included —
-          it's the paid draw, not the free sample. */}
+          it's streamed, not kept, so trial access is fine there. */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {/* Lesson Book PDF — free on Module 1, same rule as the lessons */}
+        {/* Lesson Book PDF — free on Module 1; Modules 2-6 need a paid plan,
+            not just an active trial (see canDownloadPdf above) */}
         <div className={cn(
           'rounded-xl border p-4 flex items-start gap-3',
           canDownloadPdf ? cn('bg-card', theme.border) : 'bg-muted/20 border-border opacity-70'

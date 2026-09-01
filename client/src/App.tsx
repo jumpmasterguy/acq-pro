@@ -108,11 +108,13 @@ type AuthState =
 
 function buildProgressFromUser(user: AuthUser) {
   const isPremium = hasFullAccess(user);
+  const isActuallyPaid = user.subscriptionStatus === 'active' || user.subscriptionStatus === 'lifetime';
   return {
     completedLessons: new Set<string>(user.completedLessons ?? []),
     quizScores: user.quizScores ?? {},
     unlockedModules: new Set<string>(['foundations']),
     isPremium,
+    isActuallyPaid,
     xp: 0,
   };
 }
@@ -236,6 +238,7 @@ function AppContent() {
     quizScores,
     unlockedModules: new Set<string>(['foundations']),
     isPremium,
+    isActuallyPaid,
     xp: calculateXP(completedLessons, quizScores, dailyChallengeXP),
   };
 

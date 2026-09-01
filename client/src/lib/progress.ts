@@ -4,6 +4,11 @@ export interface UserProgress {
   quizScores: Record<string, number>; // lessonId -> best score %
   unlockedModules: Set<string>;
   isPremium: boolean;
+  // Distinct from isPremium: true only for an active/lifetime subscriber, not
+  // a trialing user. isPremium unlocks lesson *access* during the trial;
+  // isActuallyPaid gates anything permanent/keepable (downloads) so a trial
+  // signup can't grab everything and walk away with it for free.
+  isActuallyPaid: boolean;
   xp: number;
 }
 
