@@ -117,6 +117,26 @@ export function serveStatic(app: Express) {
     });
   });
 
+  // Public image assets referenced from third-party contexts (email clients,
+  // Resend's broadcast preview, link-unfurlers). Two things break these
+  // otherwise: helmet's default Cross-Origin-Resource-Policy: same-origin
+  // tells browsers to refuse a cross-origin embed even though the request
+  // succeeds, and serving them with no explicit Cache-Control means a
+  // conditional revalidation (304) can reach a CDN edge that never cached
+  // the underlying bytes, which some edges turn into a 503 for the client
+  // instead of relaying the 304. Giving these a real cache lifetime avoids
+  // the revalidation path entirely, and the explicit CORP header allows the
+  // cross-origin embed.
+  app.get(["/icon-192x192.png", "/icon-512x512.png", "/examples/img/:file"], (req: Request, res: Response) => {
+    const filePath = req.path.startsWith("/examples/img/")
+      ? path.resolve(distPath, "examples", "img", req.params.file as string)
+      : path.resolve(distPath, req.path.slice(1));
+    if (!fs.existsSync(filePath)) return res.status(404).send("Not found");
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    return res.sendFile(filePath);
+  });
+
   // Serve all other static assets (JS, CSS, images, etc.)
   app.use(express.static(distPath));
 
