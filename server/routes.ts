@@ -1292,6 +1292,110 @@ export async function registerRoutes(
     }
   });
 
+  // ─── CSV Exports ─────────────────────────────────────────────────────────
+  // Raw data behind the Analytics page, as downloadable CSVs — for pulling
+  // into a deck, a spreadsheet, or handing to an investor. Two files because
+  // they answer different questions: sessions.csv is every individual login
+  // (time-series, "how does engagement trend over weeks"), users.csv is one
+  // row per user (a snapshot, "who are our users and how engaged are they").
+
+  // Escape a single CSV field per RFC 4180.
+  function csvField(value: unknown): string {
+    const s = value === null || value === undefined ? "" : String(value);
+    if (/[",\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+    return s;
+  }
+  function toCsv(rows: (string | number | null)[][]): string {
+    return rows.map(row => row.map(csvField).join(",")).join("\r\n");
+  }
+
+  // GET /api/admin/export/sessions.csv — one row per completed login, across
+  // all users. This is the raw data behind "Avg Session" on the analytics
+  // page — pull this when you need session-level detail over time rather
+  // than just the aggregate number.
+  app.get("/api/admin/export/sessions.csv", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
+    try {
+      const allUsers = await storage.getAllUsers();
+      const rows: (string | number | null)[][] = [
+        ["email", "username", "subscription_status", "login_at", "logged_out_at", "end_reason", "duration_minutes"],
+      ];
+      for (const u of allUsers) {
+        const history = ((u as any).loginHistory ?? []) as Array<{
+          loginAt?: string; endedAt?: string; endReason?: string; durationMinutes?: number;
+        }>;
+        for (const s of history) {
+          rows.push([
+            u.email,
+            u.username,
+            u.subscriptionStatus,
+            s.loginAt ?? "",
+            s.endedAt ?? "",
+            s.endReason ?? "",
+            s.durationMinutes ?? "",
+          ]);
+        }
+      }
+      const csv = toCsv(rows);
+      const date = new Date().toISOString().slice(0, 10);
+      res.setHeader("Content-Type", "text/csv");
+      res.setHeader("Content-Disposition", `attachment; filename="acqlerate-sessions-${date}.csv"`);
+      return res.send(csv);
+    } catch (err: any) {
+      console.error('[admin/export/sessions] error:', err);
+      return res.status(500).json({ message: "Failed to export sessions" });
+    }
+  });
+
+  // GET /api/admin/export/users.csv — one row per user: signup date,
+  // subscription status, lifetime engagement totals, and session averages.
+  // Pair with sessions.csv (the per-login detail) for a full picture.
+  app.get("/api/admin/export/users.csv", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
+    try {
+      const allUsers = await storage.getAllUsers();
+      const rows: (string | number | null)[][] = [
+        [
+          "email", "username", "subscription_status", "registered_at", "trial_ends_at",
+          "last_login_at", "last_active_at", "login_count", "total_minutes_active",
+          "avg_session_minutes", "closed_session_count", "idle_timeout_count", "xp", "completed_lessons",
+        ],
+      ];
+      for (const u of allUsers) {
+        const history = ((u as any).loginHistory ?? []) as Array<{ durationMinutes?: number; endReason?: string }>;
+        const closed = history.filter(s => typeof s.durationMinutes === "number");
+        const avgSession = closed.length > 0
+          ? Math.round(closed.reduce((sum, s) => sum + (s.durationMinutes ?? 0), 0) / closed.length)
+          : "";
+        const idleCount = closed.filter(s => s.endReason === "idle_timeout").length;
+        rows.push([
+          u.email,
+          u.username,
+          u.subscriptionStatus,
+          (u as any).registeredAt ?? "",
+          (u as any).trialEndsAt ?? "",
+          u.lastLoginAt ?? "",
+          u.lastActiveAt ?? "",
+          u.loginCount ?? 0,
+          u.totalMinutesActive ?? 0,
+          avgSession,
+          closed.length,
+          idleCount,
+          u.xp ?? 0,
+          (u.completedLessons ?? []).length,
+        ]);
+      }
+      const csv = toCsv(rows);
+      const date = new Date().toISOString().slice(0, 10);
+      res.setHeader("Content-Type", "text/csv");
+      res.setHeader("Content-Disposition", `attachment; filename="acqlerate-users-${date}.csv"`);
+      return res.send(csv);
+    } catch (err: any) {
+      console.error('[admin/export/users] error:', err);
+      return res.status(500).json({ message: "Failed to export users" });
+    }
+  });
+
   // POST /api/admin/backfill-logins — fix users who registered before login tracking was added
   app.post("/api/admin/backfill-logins", requireAuth as any, async (req: Request, res: Response) => {
     if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });

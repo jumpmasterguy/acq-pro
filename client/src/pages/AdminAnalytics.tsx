@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { ArrowLeft, TrendingUp, Users, BookOpen, DollarSign, Percent, BarChart3, RefreshCw, ExternalLink } from "lucide-react";
+import { ArrowLeft, TrendingUp, Users, BookOpen, DollarSign, Percent, BarChart3, RefreshCw, ExternalLink, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface AdminAnalyticsProps {
@@ -192,7 +192,28 @@ export default function AdminAnalytics({ onBack }: AdminAnalyticsProps) {
           </div>
 
           {/* ── Engagement ───────────────────────────── */}
-          <SectionHeader title="Engagement" icon={BookOpen} />
+          <div className="flex items-center justify-between mt-8 mb-4">
+            <div className="flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-primary" />
+              <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Engagement</h2>
+            </div>
+            <div className="flex items-center gap-2">
+              {/* Direct links (not fetch): the browser sends the admin session
+                  cookie automatically and downloads the file in one click. */}
+              <a href="/api/admin/export/sessions.csv" download>
+                <Button variant="outline" size="sm" className="gap-1.5">
+                  <Download className="w-3.5 h-3.5" />
+                  Sessions CSV
+                </Button>
+              </a>
+              <a href="/api/admin/export/users.csv" download>
+                <Button variant="outline" size="sm" className="gap-1.5">
+                  <Download className="w-3.5 h-3.5" />
+                  Users CSV
+                </Button>
+              </a>
+            </div>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             <Stat
               label="DAU"
