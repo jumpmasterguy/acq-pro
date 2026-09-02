@@ -10,6 +10,30 @@ export type SkillLevel = 'novice' | 'intermediate' | 'advanced';
 // Every module id in the curriculum — used by the admin "unlock all" action
 const ALL_MODULE_IDS = ['foundations', 'finance', 'contracts', 'data', 'capture', 'operations'];
 
+/**
+ * The stored `currentStreak` only ever gets recomputed when the user does
+ * something (completes a lesson/quiz/daily challenge) — see updateUserStreak
+ * below. That means a user who goes quiet just keeps seeing their last
+ * streak count forever, since nothing runs to notice the gap and zero it
+ * out. Every place that *displays* the streak to the client should go
+ * through this instead of reading the raw column, so a lapsed streak
+ * (more than a day since the last activity) reads as broken (0)
+ * immediately instead of only after the user's next activity re-triggers
+ * updateUserStreak.
+ */
+export function getDisplayStreak(currentStreak: number | null | undefined, lastStreakDate: string | null | undefined): number {
+  if (!lastStreakDate) return 0;
+  const todayStr = new Date().toISOString().slice(0, 10);
+  if (lastStreakDate === todayStr) return currentStreak ?? 0;
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().slice(0, 10);
+  if (lastStreakDate === yesterdayStr) return currentStreak ?? 0;
+  // More than a day has passed since the last completed activity — the
+  // streak is broken even though we haven't written that to the DB yet.
+  return 0;
+}
+
 // ─── Interface ─────────────────────────────────────────────────────────────
 
 export interface IStorage {

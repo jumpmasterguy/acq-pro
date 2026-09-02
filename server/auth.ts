@@ -49,6 +49,7 @@ declare global {
       currentStreak: number;
       longestStreak: number;
       lastChallengeDate: string | null;
+      lastStreakDate: string | null;
       dailyChallengeXP: number;
     }
   }
@@ -265,6 +266,12 @@ export function toPassportUser(user: User): Express.User {
     currentStreak: user.currentStreak ?? 0,
     longestStreak: user.longestStreak ?? 0,
     lastChallengeDate: user.lastChallengeDate ?? null,
+    // Same class of bug as the four fields above: without this, every
+    // req.user is missing the one field getDisplayStreak() (server/storage.ts)
+    // needs to tell a live streak from a lapsed one, so routes reading
+    // req.user directly (GET /api/daily-challenge, /api/auth/me) would
+    // always see it as undefined and report the streak as broken.
+    lastStreakDate: user.lastStreakDate ?? null,
     dailyChallengeXP: ((user.challengeHistory as any[]) ?? []).reduce(
       (sum, entry) => sum + (entry?.xpEarned ?? 0),
       0

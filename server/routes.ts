@@ -5,7 +5,7 @@ import passport from "passport";
 import crypto from "crypto";
 import path from "path";
 import fs from "fs";
-import { storage } from "./storage";
+import { storage, getDisplayStreak } from "./storage";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema, userProfileSchema } from "@shared/schema";
 import { hasPaidPlan } from "@shared/access";
@@ -141,7 +141,7 @@ export async function registerRoutes(
         moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
         moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
         userProfile: (user as any).userProfile ?? null,
-        currentStreak: (user as any).currentStreak ?? 0,
+        currentStreak: getDisplayStreak((user as any).currentStreak, (user as any).lastStreakDate),
         longestStreak: (user as any).longestStreak ?? 0,
         lastChallengeDate: (user as any).lastChallengeDate ?? null,
       });
@@ -197,7 +197,7 @@ export async function registerRoutes(
             moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
             moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
             userProfile: (user as any).userProfile ?? null,
-            currentStreak: (user as any).currentStreak ?? 0,
+            currentStreak: getDisplayStreak((user as any).currentStreak, (user as any).lastStreakDate),
             longestStreak: (user as any).longestStreak ?? 0,
             lastChallengeDate: (user as any).lastChallengeDate ?? null,
           });
@@ -242,7 +242,7 @@ export async function registerRoutes(
       moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
       moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
       userProfile: user.userProfile ?? null,
-      currentStreak: (user as any).currentStreak ?? 0,
+      currentStreak: getDisplayStreak((user as any).currentStreak, (user as any).lastStreakDate),
       longestStreak: (user as any).longestStreak ?? 0,
       lastChallengeDate: (user as any).lastChallengeDate ?? null,
     });
@@ -1128,7 +1128,7 @@ export async function registerRoutes(
       date: todayStr,
       alreadyCompleted,
       lastChallengeDate: (user as any).lastChallengeDate ?? null,
-      currentStreak: (user as any).currentStreak ?? 0,
+      currentStreak: getDisplayStreak((user as any).currentStreak, (user as any).lastStreakDate),
       longestStreak: (user as any).longestStreak ?? 0,
       questions: todaysQuestions,
     });
@@ -1149,7 +1149,7 @@ export async function registerRoutes(
       score,
       xpEarned: awarded ? xpEarned : 0,
       alreadyCompleted: !awarded,
-      currentStreak: (updated as any).currentStreak ?? 0,
+      currentStreak: getDisplayStreak((updated as any).currentStreak, (updated as any).lastStreakDate),
       longestStreak: (updated as any).longestStreak ?? 0,
       message: !awarded
         ? "You already completed today's challenge — come back tomorrow!"

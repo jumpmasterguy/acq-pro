@@ -784,19 +784,21 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
         </div>
       )}
 
-      {/* ── Burn Rate + Daily Challenge ───────────────────────────────────────
-          "Burn Rate" is Acqlerate's acquisitions-flavored spin on a daily streak:
-          in real DoD acquisitions, burn rate is how fast a program spends its
-          funding. Here, it's how fast you're spending daily reps. */}
+      {/* ── Burn Rate Streak + Daily Challenge ─────────────────────────────────
+          "Burn Rate Streak" is Acqlerate's acquisitions-flavored spin on a
+          daily streak: in real DoD acquisitions, burn rate is how fast a
+          program spends its funding. Here, it's how fast you're spending
+          daily reps. "Streak" is spelled out in the label so it reads as a
+          streak counter, not a rate. */}
       <div className="grid sm:grid-cols-2 gap-3">
-        {/* Burn Rate card */}
+        {/* Burn Rate Streak card */}
         <div
           className="rounded-2xl border border-orange-500/25 bg-orange-500/[0.04] p-4 flex items-center gap-4"
           title="In acquisitions, burn rate tracks how fast a program spends its funding. Here, it tracks how fast you're spending daily reps."
         >
           <div className="text-4xl">{streak.currentStreak > 0 ? '🔥' : '💤'}</div>
           <div className="flex-1">
-            <p className="text-xl font-black">{streak.currentStreak}-day burn rate</p>
+            <p className="text-xl font-black">{streak.currentStreak}-day burn rate streak</p>
             <p className="text-xs text-muted-foreground">Personal best: {streak.longestStreak} day{streak.longestStreak !== 1 ? 's' : ''}</p>
           </div>
           {streak.currentStreak >= 7 && (

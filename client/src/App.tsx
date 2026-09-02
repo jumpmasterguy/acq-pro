@@ -639,18 +639,19 @@ function AppContent() {
             </div>
           </button>
 
-          {/* Burn Rate — Acqlerate's take on a daily streak. In real acquisitions,
-              burn rate is how fast a program spends its funding; here it's how
-              fast you're spending daily reps. */}
+          {/* Burn Rate Streak — Acqlerate's take on a daily streak. In real
+              acquisitions, burn rate is how fast a program spends its
+              funding; here it's how fast you're spending daily reps. Named
+              "...Streak" explicitly so it reads as a streak, not just a rate. */}
           {streak.currentStreak > 0 ? (
             <div
               className="w-full flex items-center gap-2 rounded-lg px-3 py-1.5 bg-orange-500/10 border border-orange-500/30"
-              title="Burn Rate: your consecutive days active. In acquisitions, burn rate tracks how fast a program spends its funding — here, it tracks how fast you're spending daily reps. Don't let it hit zero."
+              title="Burn Rate Streak: your consecutive days active. In acquisitions, burn rate tracks how fast a program spends its funding — here, it tracks how fast you're spending daily reps. Don't let it hit zero."
               data-testid="burn-rate-badge"
             >
               <Flame className="w-3.5 h-3.5 text-orange-400 flex-shrink-0 fill-orange-400/30" />
               <span className="text-xs font-bold text-orange-300 flex-1 truncate">
-                {streak.currentStreak}-day burn rate
+                {streak.currentStreak}-day burn rate streak
               </span>
               {streak.currentStreak >= 7 && (
                 <span className="text-[9px] font-bold text-amber-400 flex-shrink-0">🏆 {streak.longestStreak}d best</span>
