@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useRef } from "react";
 import { modules, type SkillLevel } from "@/lib/curriculum";
 import { getModuleProgress, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
 import { getTrackData, sortLessonsByTrack, type CareerTrackId } from "@/lib/careerTracks";
 import { getModuleTheme } from "@/lib/moduleTheme";
+import { apiRequest } from "@/lib/queryClient";
 import type { UserProgress } from "@/lib/progress";
 import { ArrowLeft, Clock, CheckCircle, Lock, ChevronRight, BookOpen, Trophy, Target, Award, Download, FileText, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -60,6 +61,16 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
   const canListenAudio = progress.isPremium;
   const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
   const theme = getModuleTheme(mod.color);
+  // Fires once per page visit, on the first play — not on every pause/resume
+  // — so a listener replaying a section doesn't inflate the play count.
+  const hasLoggedAudioPlay = useRef(false);
+  const handleAudioPlay = () => {
+    if (hasLoggedAudioPlay.current) return;
+    hasLoggedAudioPlay.current = true;
+    apiRequest("POST", "/api/audio/play", { moduleId: mod.id }).catch(() => {
+      // Best-effort tracking — a failed log shouldn't interrupt playback.
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -225,7 +236,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
               </button>
             ) : mod.audioReady && mod.audioUrl ? (
               <div className="space-y-1.5">
-                <audio controls preload="none" className="w-full h-9" data-testid="module-audio-player">
+                <audio controls preload="none" className="w-full h-9" data-testid="module-audio-player" onPlay={handleAudioPlay}>
                   <source src={mod.audioUrl} type="audio/mp4" />
                 </audio>
                 <a

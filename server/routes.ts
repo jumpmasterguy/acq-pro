@@ -1201,6 +1201,25 @@ export async function registerRoutes(
     }
   });
 
+  // POST /api/audio/play — "The Debrief" audio listen tracking. Fired once
+  // per page visit when a module's audio player starts playing (see
+  // client/src/pages/ModulePage.tsx). Feeds the admin-only audioStats
+  // aggregation below — plays + unique listeners per module.
+  app.post("/api/audio/play", requireAuth as any, async (req: Request, res: Response) => {
+    const userId = req.user!.id;
+    const { moduleId } = req.body as { moduleId?: string };
+    if (!moduleId || typeof moduleId !== 'string') {
+      return res.status(400).json({ message: "moduleId is required" });
+    }
+    try {
+      await storage.recordAudioPlay(userId, moduleId);
+      return res.json({ ok: true });
+    } catch (err: any) {
+      console.error('[audio/play] error:', err);
+      return res.status(500).json({ message: 'Failed to record audio play' });
+    }
+  });
+
   // ─── Admin Analytics ─────────────────────────────────────────────────────
 
   // GET /api/admin/analytics — aggregate + per-user engagement stats
@@ -1282,9 +1301,25 @@ export async function registerRoutes(
           )
         : null;
 
+      // "The Debrief" audio listens — total plays and unique listeners per
+      // module, tallied from each user's audioListens map (shared/schema.ts).
+      const audioTotals: Record<string, { totalPlays: number; uniqueListeners: number }> = {};
+      allUsers.forEach(u => {
+        const listens = ((u as any).audioListens ?? {}) as Record<string, { playCount?: number }>;
+        Object.entries(listens).forEach(([moduleId, entry]) => {
+          if (!audioTotals[moduleId]) audioTotals[moduleId] = { totalPlays: 0, uniqueListeners: 0 };
+          audioTotals[moduleId].totalPlays += entry?.playCount ?? 0;
+          audioTotals[moduleId].uniqueListeners += 1;
+        });
+      });
+      const audioStats = Object.entries(audioTotals)
+        .map(([moduleId, stats]) => ({ moduleId, ...stats }))
+        .sort((a, b) => b.totalPlays - a.totalPlays);
+
       return res.json({
         aggregate: { totalUsers, proUsers, trialingUsers, dau, avgXp, avgLessons, avgMinutes, avgSessionMinutes, closedSessionCount: allClosedSessions },
         users: userStats,
+        audioStats,
       });
     } catch (err: any) {
       console.error('[admin/analytics] error:', err);

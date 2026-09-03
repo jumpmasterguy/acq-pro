@@ -48,6 +48,11 @@ export const users = pgTable("users", {
   // Daily challenge tracking
   lastChallengeDate: text("last_challenge_date"), // YYYY-MM-DD of last completed challenge
   challengeHistory: jsonb("challenge_history").notNull().default(sql`'[]'::jsonb`), // [{date, score, xpEarned}]
+  // "The Debrief" audio listens — keyed by module id, not a growing log,
+  // since all we need per module is "has this user ever played it" (for
+  // unique-listener counts) and "how many times" (for a play counter).
+  // { [moduleId]: { firstPlayedAt: string, playCount: number } }
+  audioListens: jsonb("audio_listens").notNull().default(sql`'{}'::jsonb`),
   // AI Study Assistant usage tracking — resets daily, limits enforced per subscription tier
   aiCallsToday: integer("ai_calls_today").notNull().default(0),
   aiCallsDate: text("ai_calls_date"), // YYYY-MM-DD the counter above applies to

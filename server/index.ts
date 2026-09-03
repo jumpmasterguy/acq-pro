@@ -244,6 +244,8 @@ app.use((req, res, next) => {
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS trial_ends_at TEXT`,
         // Per-login session history (login/idle-timeout tracking)
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS login_history JSONB NOT NULL DEFAULT '[]'::JSONB`,
+        // "The Debrief" audio listen tracking, keyed by module id
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS audio_listens JSONB NOT NULL DEFAULT '{}'::JSONB`,
       ];
       // email_leads table for landing page opt-ins
       try {

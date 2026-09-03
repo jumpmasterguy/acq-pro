@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { ArrowLeft, TrendingUp, Users, BookOpen, DollarSign, Percent, BarChart3, RefreshCw, ExternalLink, Download } from "lucide-react";
+import { ArrowLeft, TrendingUp, Users, BookOpen, DollarSign, Percent, BarChart3, RefreshCw, ExternalLink, Download, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { modules } from "@/lib/curriculum";
 
 interface AdminAnalyticsProps {
   onBack: () => void;
@@ -260,6 +261,35 @@ export default function AdminAnalytics({ onBack }: AdminAnalyticsProps) {
                         <td className="px-4 py-2.5 text-sm font-mono text-foreground">{l.id}</td>
                         <td className="px-4 py-2.5 text-sm text-right text-foreground">{l.count}</td>
                         <td className="px-4 py-2.5 text-sm text-right text-primary font-semibold">{l.pct}%</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+
+          {/* ── Audio Listens ────────────────────────── */}
+          {analytics?.audioStats?.length > 0 && (
+            <>
+              <SectionHeader title="The Debrief — Audio Listens" icon={Headphones} />
+              <div className="bg-card border border-border rounded-xl overflow-hidden">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-border bg-muted/20">
+                      <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-2.5 uppercase tracking-wide">Module</th>
+                      <th className="text-right text-xs font-semibold text-muted-foreground px-4 py-2.5 uppercase tracking-wide">Total Plays</th>
+                      <th className="text-right text-xs font-semibold text-muted-foreground px-4 py-2.5 uppercase tracking-wide">Unique Listeners</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {analytics.audioStats.map((a: { moduleId: string; totalPlays: number; uniqueListeners: number }, i: number) => (
+                      <tr key={a.moduleId} className={i % 2 === 0 ? '' : 'bg-muted/10'}>
+                        <td className="px-4 py-2.5 text-sm text-foreground">
+                          {modules.find(m => m.id === a.moduleId)?.title ?? a.moduleId}
+                        </td>
+                        <td className="px-4 py-2.5 text-sm text-right text-foreground">{a.totalPlays}</td>
+                        <td className="px-4 py-2.5 text-sm text-right text-primary font-semibold">{a.uniqueListeners}</td>
                       </tr>
                     ))}
                   </tbody>

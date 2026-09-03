@@ -84,6 +84,10 @@ export interface IStorage {
   // idle-timeout middleware in server/auth.ts. loginAt is the ISO timestamp
   // captured in the session at login time.
   recordLoginEnd(userId: string, loginAt: string, endReason: 'logout' | 'idle_timeout'): Promise<void>;
+  // "The Debrief" audio listen tracking — bumps playCount for this module and
+  // stamps firstPlayedAt the first time this user ever plays it (so admin
+  // analytics can report both total plays and unique listeners per module).
+  recordAudioPlay(userId: string, moduleId: string): Promise<void>;
   checkAndConsumeAiCall(userId: string): Promise<{ allowed: boolean; remaining: number | null; limit: number | null }>;
   runAiUsageMigration(): Promise<{ ok: boolean; detail: string }>;
   saveLead(email: string, source?: string): Promise<Lead>;
@@ -389,6 +393,21 @@ export class DrizzleStorage implements IStorage {
     await this.db
       .update(users)
       .set({ loginHistory: trimmed } as any)
+      .where(eq(users.id, userId));
+  }
+
+  async recordAudioPlay(userId: string, moduleId: string): Promise<void> {
+    const user = await this.getUser(userId);
+    if (!user) return;
+    const listens = { ...(((user as any).audioListens ?? {}) as Record<string, { firstPlayedAt: string; playCount: number }>) };
+    const existing = listens[moduleId];
+    listens[moduleId] = {
+      firstPlayedAt: existing?.firstPlayedAt ?? new Date().toISOString(),
+      playCount: (existing?.playCount ?? 0) + 1,
+    };
+    await this.db
+      .update(users)
+      .set({ audioListens: listens } as any)
       .where(eq(users.id, userId));
   }
 
@@ -804,6 +823,18 @@ export class MemStorage implements IStorage {
     history.push({ loginAt, endedAt, endReason, durationMinutes });
     const trimmed = history.slice(-100);
     this.users.set(userId, { ...user, loginHistory: trimmed } as any);
+  }
+
+  async recordAudioPlay(userId: string, moduleId: string): Promise<void> {
+    const user = this.users.get(userId);
+    if (!user) return;
+    const listens = { ...(((user as any).audioListens ?? {}) as Record<string, { firstPlayedAt: string; playCount: number }>) };
+    const existing = listens[moduleId];
+    listens[moduleId] = {
+      firstPlayedAt: existing?.firstPlayedAt ?? new Date().toISOString(),
+      playCount: (existing?.playCount ?? 0) + 1,
+    };
+    this.users.set(userId, { ...user, audioListens: listens } as any);
   }
 
   async saveUserProfile(userId: string, profile: Record<string, any>): Promise<User | undefined> {
