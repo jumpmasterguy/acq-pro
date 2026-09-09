@@ -46,6 +46,9 @@ export interface IStorage {
   deleteUser(userId: string): Promise<void>;
   createUser(user: InsertUser): Promise<User>;
   upsertGoogleUser(data: InsertGoogleUser & { avatarUrl?: string }): Promise<User>;
+  // My Account — editing name post-signup. Recomputes username to match
+  // (see shared/schema.ts) so every existing reader of username stays correct.
+  updateUserName(userId: string, firstName: string, lastName: string): Promise<User | undefined>;
   saveUserProfile(userId: string, profile: Record<string, any>): Promise<User | undefined>;
   updateUserSubscription(
     userId: string,
@@ -233,6 +236,8 @@ export class DrizzleStorage implements IStorage {
       .values({
         id,
         username: data.username,
+        firstName: (data as any).firstName ?? null,
+        lastName: (data as any).lastName ?? null,
         email: data.email,
         googleId: data.googleId,
         passwordHash: null,
@@ -269,6 +274,16 @@ export class DrizzleStorage implements IStorage {
         moduleSkillLevels: {},
         moduleAssessmentScores: {},
       })
+      .returning();
+    return result[0];
+  }
+
+  async updateUserName(userId: string, firstName: string, lastName: string): Promise<User | undefined> {
+    const username = `${firstName} ${lastName}`.trim();
+    const result = await this.db
+      .update(users)
+      .set({ firstName, lastName, username } as any)
+      .where(eq(users.id, userId))
       .returning();
     return result[0];
   }
@@ -678,6 +693,8 @@ export class MemStorage implements IStorage {
     const user: User = {
       id,
       username: data.username,
+      firstName: (data as any).firstName ?? null,
+      lastName: (data as any).lastName ?? null,
       email: data.email,
       googleId: data.googleId ?? null,
       passwordHash: null,
@@ -695,7 +712,7 @@ export class MemStorage implements IStorage {
       totalMinutesActive: 0,
       loginHistory: [],
       xp: 0,
-    };
+    } as any;
     this.users.set(id, user);
     return user;
   }
@@ -716,6 +733,15 @@ export class MemStorage implements IStorage {
     };
     this.users.set(id, user);
     return user;
+  }
+
+  async updateUserName(userId: string, firstName: string, lastName: string): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const username = `${firstName} ${lastName}`.trim();
+    const updated = { ...user, firstName, lastName, username } as any;
+    this.users.set(userId, updated);
+    return updated;
   }
 
   async updateUserSubscription(

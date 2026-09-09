@@ -246,6 +246,18 @@ app.use((req, res, next) => {
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS login_history JSONB NOT NULL DEFAULT '[]'::JSONB`,
         // "The Debrief" audio listen tracking, keyed by module id
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS audio_listens JSONB NOT NULL DEFAULT '{}'::JSONB`,
+        // My Account — split name fields (see shared/schema.ts for why
+        // username sticks around). Columns first, then a one-time backfill
+        // for every pre-existing row (new signups set these directly, so
+        // first_name is never NULL for them — this only ever touches rows
+        // created before this migration ran).
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS first_name TEXT`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_name TEXT`,
+        `UPDATE users u SET
+           first_name = CASE WHEN p.sp > 0 THEN substring(u.username from 1 for p.sp - 1) ELSE u.username END,
+           last_name = CASE WHEN p.sp > 0 THEN NULLIF(trim(substring(u.username from p.sp + 1)), '') ELSE NULL END
+         FROM (SELECT id, position(' ' in username) AS sp FROM users WHERE first_name IS NULL) p
+         WHERE u.id = p.id`,
       ];
       // email_leads table for landing page opt-ins
       try {

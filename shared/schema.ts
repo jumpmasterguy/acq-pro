@@ -6,6 +6,15 @@ import { z } from "zod";
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   username: text("username").notNull().unique(),
+  // Split name fields, added after username already existed as a single
+  // "Full Name" field collected at signup. Nullable because pre-existing
+  // rows don't have them yet — server/index.ts backfills those once from
+  // username (split on the first space) the first time it boots after this
+  // column exists. New signups set both directly; username keeps being
+  // derived as `${firstName} ${lastName}`.trim() so every place that already
+  // reads it (emails, referral codes, admin tables) keeps working unchanged.
+  firstName: text("first_name"),
+  lastName: text("last_name"),
   email: text("email").notNull().unique(),
   passwordHash: text("password_hash"),  // null for Google OAuth users
   googleId: text("google_id").unique(),  // null for local-auth users
@@ -70,21 +79,29 @@ export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   email: true,
   passwordHash: true,
+  firstName: true,
+  lastName: true,
 });
 
 export const insertGoogleUserSchema = createInsertSchema(users).pick({
   username: true,
   email: true,
   googleId: true,
+  firstName: true,
+  lastName: true,
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type InsertGoogleUser = z.infer<typeof insertGoogleUserSchema>;
 export type User = typeof users.$inferSelect;
 
-// Registration schema (used in auth routes)
+// Registration schema (used in auth routes) — collects First/Last Name
+// separately; the server derives the single `username` column from them
+// (see /api/auth/register) so every existing reader of username (emails,
+// referral codes, admin tables) keeps working unchanged.
 export const registerSchema = z.object({
-  username: z.string().min(2, "Name must be at least 2 characters").max(50),
+  firstName: z.string().trim().min(1, "First name is required").max(50),
+  lastName: z.string().trim().min(1, "Last name is required").max(50),
   email: z.string().email("Please enter a valid email"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
@@ -96,6 +113,13 @@ export const loginSchema = z.object({
 
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
+
+// My Account — editing name after signup (PUT /api/account/name)
+export const updateNameSchema = z.object({
+  firstName: z.string().trim().min(1, "First name is required").max(50),
+  lastName: z.string().trim().min(1, "Last name is required").max(50),
+});
+export type UpdateNameInput = z.infer<typeof updateNameSchema>;
 
 // Onboarding profile
 export const userProfileSchema = z.object({

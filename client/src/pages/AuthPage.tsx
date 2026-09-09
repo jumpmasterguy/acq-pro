@@ -29,7 +29,8 @@ const loginSchema = z.object({
 });
 
 const registerSchema = z.object({
-  username: z.string().min(2, "Name must be at least 2 characters").max(50),
+  firstName: z.string().min(1, "First name is required").max(50),
+  lastName: z.string().min(1, "Last name is required").max(50),
   email: z.string().email("Please enter a valid email"),
   password: z.string().min(8, "Password must be at least 8 characters"),
   confirmPassword: z.string(),
@@ -53,6 +54,8 @@ export interface UserProfile {
 export interface AuthUser {
   id: string;
   username: string;
+  firstName?: string | null;
+  lastName?: string | null;
   email: string;
   subscriptionStatus: string;
   trialEndsAt?: string | null;
@@ -119,7 +122,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
 
   const registerForm = useForm<RegisterValues>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { username: "", email: "", password: "", confirmPassword: "" },
+    defaultValues: { firstName: "", lastName: "", email: "", password: "", confirmPassword: "" },
   });
 
   const getErrorMessage = (err: any): string => {
@@ -275,18 +278,33 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
                 </p>
               </div>
 
-              <div className="space-y-1">
-                <Label htmlFor="reg-name">Full Name</Label>
-                <Input
-                  id="reg-name"
-                  placeholder="Jane Smith"
-                  data-testid="input-name"
-                  {...registerForm.register("username")}
-                  className={registerForm.formState.errors.username ? "border-destructive" : ""}
-                />
-                {registerForm.formState.errors.username && (
-                  <p className="text-xs text-destructive">{registerForm.formState.errors.username.message}</p>
-                )}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <Label htmlFor="reg-first-name">First Name</Label>
+                  <Input
+                    id="reg-first-name"
+                    placeholder="Jane"
+                    data-testid="input-first-name"
+                    {...registerForm.register("firstName")}
+                    className={registerForm.formState.errors.firstName ? "border-destructive" : ""}
+                  />
+                  {registerForm.formState.errors.firstName && (
+                    <p className="text-xs text-destructive">{registerForm.formState.errors.firstName.message}</p>
+                  )}
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="reg-last-name">Last Name</Label>
+                  <Input
+                    id="reg-last-name"
+                    placeholder="Smith"
+                    data-testid="input-last-name"
+                    {...registerForm.register("lastName")}
+                    className={registerForm.formState.errors.lastName ? "border-destructive" : ""}
+                  />
+                  {registerForm.formState.errors.lastName && (
+                    <p className="text-xs text-destructive">{registerForm.formState.errors.lastName.message}</p>
+                  )}
+                </div>
               </div>
 
               <div className="space-y-1">

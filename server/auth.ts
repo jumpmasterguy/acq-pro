@@ -36,6 +36,8 @@ declare global {
     interface User {
       id: string;
       username: string;
+      firstName: string | null;
+      lastName: string | null;
       email: string;
       subscriptionStatus: string;
       stripeCustomerId: string | null;
@@ -210,11 +212,20 @@ export async function setupAuth(app: Express): Promise<void> {
             }
             // Use email as username to guarantee uniqueness; displayName stored separately if needed
             const username = email;
+            // Google's profile carries given/family name separately — grab
+            // them for My Account so a Google sign-up isn't left with blank
+            // First/Last Name fields. Falls back to splitting displayName on
+            // the first space if Google didn't return structured name parts.
+            const displayParts = (profile.displayName || "").split(" ");
+            const firstName = profile.name?.givenName || displayParts[0] || null;
+            const lastName = profile.name?.familyName || (displayParts.length > 1 ? displayParts.slice(1).join(" ") : null);
             const user = await storage.upsertGoogleUser({
               googleId: profile.id,
               email,
               username,
-            });
+              firstName,
+              lastName,
+            } as any);
             return done(null, toPassportUser(user));
           } catch (err) {
             return done(err as Error);
@@ -246,6 +257,8 @@ export function toPassportUser(user: User): Express.User {
   return {
     id: user.id,
     username: user.username,
+    firstName: user.firstName ?? null,
+    lastName: user.lastName ?? null,
     email: user.email,
     subscriptionStatus: user.subscriptionStatus,
     stripeCustomerId: user.stripeCustomerId,

@@ -67,6 +67,7 @@ import Dashboard from "@/pages/Dashboard";
 import ModulePage from "@/pages/ModulePage";
 import LessonPage from "@/pages/LessonPage";
 import UpgradePage from "@/pages/UpgradePage";
+import MyAccountPage from "@/pages/MyAccountPage";
 import AuthPage, { type AuthUser, type SkillLevel, type UserProfile } from "@/pages/AuthPage";
 import AdminPage from "@/pages/AdminPage";
 import AdminAnalytics from "@/pages/AdminAnalytics";
@@ -90,6 +91,7 @@ type View =
   | { type: 'module'; moduleId: string; activeCareer?: string }
   | { type: 'lesson'; lessonId: string; activeCareer?: string }
   | { type: 'upgrade' }
+  | { type: 'account' }
   | { type: 'admin' }
   | { type: 'analytics' }
   | { type: 'pdu' }
@@ -426,6 +428,16 @@ function AppContent() {
       setView(pendingDeepLinkRef.current ?? { type: 'dashboard' });
       pendingDeepLinkRef.current = null;
     }
+  };
+
+  // My Account page: keep authState.user in sync right after a name save,
+  // same pattern as handleOnboardingComplete below — no full /api/auth/me
+  // re-fetch needed since PUT /api/account/name already returns the result.
+  const handleNameUpdated = (firstName: string, lastName: string, username: string) => {
+    setAuthState(prev => {
+      if (prev.status !== 'authenticated') return prev;
+      return { ...prev, user: { ...prev.user, firstName, lastName, username } };
+    });
   };
 
   const handleOnboardingComplete = (profile: UserProfile) => {
@@ -1009,6 +1021,19 @@ function AppContent() {
             </button>
           )}
           <button
+            onClick={() => { setView({ type: 'account' }); setSidebarOpen(false); }}
+            className={cn(
+              "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all border",
+              view.type === 'account'
+                ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
+                : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
+            )}
+            data-testid="nav-account"
+          >
+            <User className={cn("w-4 h-4", view.type === 'account' && "text-sidebar-primary")} />
+            My Account
+          </button>
+          <button
             onClick={handleSignOut}
             className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-sidebar-foreground/50 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
             data-testid="nav-signout"
@@ -1130,6 +1155,14 @@ function AppContent() {
               onBack={() => setView({ type: 'dashboard' })}
               onUpgrade={handleUpgrade}
               trialDaysLeft={trialDaysLeft}
+            />
+          )}
+          {view.type === 'account' && authState.status === 'authenticated' && (
+            <MyAccountPage
+              user={authState.user}
+              onBack={() => setView({ type: 'dashboard' })}
+              onUpgrade={() => setView({ type: 'upgrade' })}
+              onNameUpdated={handleNameUpdated}
             />
           )}
           {view.type === 'admin' && isAdmin && (

@@ -7,7 +7,7 @@ import path from "path";
 import fs from "fs";
 import { storage, getDisplayStreak } from "./storage";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
-import { registerSchema, loginSchema, userProfileSchema } from "@shared/schema";
+import { registerSchema, loginSchema, userProfileSchema, updateNameSchema } from "@shared/schema";
 import { hasPaidPlan } from "@shared/access";
 import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
@@ -82,7 +82,10 @@ export async function registerRoutes(
         message: parsed.error.errors[0]?.message || "Validation error",
       });
     }
-    const { username, email, password } = parsed.data;
+    const { firstName, lastName, email, password } = parsed.data;
+    // username stays a derived field — every existing reader of it (emails,
+    // referral codes, admin tables) keeps working unchanged.
+    const username = `${firstName} ${lastName}`.trim();
 
     // Check for existing email
     const existing = await storage.getUserByEmail(email);
@@ -93,7 +96,7 @@ export async function registerRoutes(
     // Hash password and create user
     const passwordHash = await hashPassword(password);
     const referredBy = (req.body.referralCode as string) || null;
-    const user = await storage.createUser({ username, email, passwordHash });
+    const user = await storage.createUser({ username, firstName, lastName, email, passwordHash });
 
     // Generate and save referral code for new user
     const referralCode = storage.generateReferralCode(email);
@@ -132,6 +135,8 @@ export async function registerRoutes(
       return res.status(201).json({
         id: user.id,
         username: user.username,
+        firstName: (user as any).firstName ?? null,
+        lastName: (user as any).lastName ?? null,
         email: user.email,
         subscriptionStatus: user.subscriptionStatus,
         trialEndsAt: (user as any).trialEndsAt ?? null,
@@ -188,6 +193,8 @@ export async function registerRoutes(
           return res.json({
             id: user.id,
             username: user.username,
+            firstName: (user as any).firstName ?? null,
+            lastName: (user as any).lastName ?? null,
             email: user.email,
             subscriptionStatus: user.subscriptionStatus,
             trialEndsAt: (user as any).trialEndsAt ?? null,
@@ -233,6 +240,8 @@ export async function registerRoutes(
     return res.json({
       id: user.id,
       username: user.username,
+      firstName: (user as any).firstName ?? null,
+      lastName: (user as any).lastName ?? null,
       email: user.email,
       subscriptionStatus: user.subscriptionStatus,
       trialEndsAt: (user as any).trialEndsAt ?? null,
@@ -273,6 +282,28 @@ export async function registerRoutes(
       return res.json({ userProfile: parsed.data });
     } catch (err: any) {
       return res.status(500).json({ message: err.message });
+    }
+  });
+
+  // PUT /api/account/name — My Account page: edit First/Last Name.
+  // Recomputes username to match (storage.updateUserName) so every existing
+  // reader of username (emails, referral codes, admin tables) stays correct.
+  app.put("/api/account/name", requireAuth as any, async (req: Request, res: Response) => {
+    const parsed = updateNameSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ message: parsed.error.errors[0]?.message || "Invalid input" });
+    }
+    try {
+      const updated = await storage.updateUserName(req.user!.id, parsed.data.firstName, parsed.data.lastName);
+      if (!updated) return res.status(404).json({ message: "User not found" });
+      // Keep the session in sync so the next request off req.user (no fresh
+      // DB read) already reflects the change — same pattern as /api/profile.
+      (req.user as any).firstName = updated.firstName;
+      (req.user as any).lastName = updated.lastName;
+      (req.user as any).username = updated.username;
+      return res.json({ firstName: updated.firstName, lastName: updated.lastName, username: updated.username });
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Failed to update name" });
     }
   });
 
