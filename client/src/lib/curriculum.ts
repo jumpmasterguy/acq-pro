@@ -2660,13 +2660,12 @@ export const modules: Module[] = [
         ],
         attachments: [
           {
-            title: 'Example: Contract Funding Page (Section B)',
-            description: 'A sanitized, real-world contract funding page showing where Section B fits in the Uniform Contract Format, CLIN structure, ACRNs, and the difference between Firm Price and Funded Amount when a CLIN is incrementally funded.',
+            title: 'Example: Contract Funding Page',
+            description: 'A sanitized, real-world contract funding page showing CLIN structure, ACRNs, and the difference between Firm Price and Funded Amount when a CLIN is incrementally funded.',
             url: '/examples/example-contract-funding-page.pdf',
             images: [
-              { src: '/examples/img/funding-page-1.png', caption: 'Section B never stands alone. This UCF table shows where the pricing page fits inside the other twelve lettered sections of a negotiated federal contract, Section C is the work, Section F is the schedule, Section B is the price tag.' },
-              { src: '/examples/img/funding-page-2.png', caption: 'Each CLIN is its own funded line item. CLIN 0001 and 0003 are fully funded, Firm Price equals Funded Amount. CLIN 0002 is not: only 75% of its Firm Price has actually been obligated.' },
-              { src: '/examples/img/funding-page-3.png', caption: 'That 75% gap on CLIN 0002 is not decorative. It is the exact threshold where FAR 52.232-22 requires written notification to the CO, before the money actually runs out, not after.' },
+              { src: '/examples/img/funding-page-1.png', caption: 'Each CLIN is its own funded line item. CLIN 0001 and 0003 are fully funded, Firm Price equals Funded Amount. CLIN 0002 is not: only 75% of its Firm Price has actually been obligated.' },
+              { src: '/examples/img/funding-page-2.png', caption: 'That 75% gap on CLIN 0002 is not decorative. It is the exact threshold where FAR 52.232-22 requires written notification to the CO, before the money actually runs out, not after.' },
             ],
           },
         ],
@@ -5934,7 +5933,7 @@ export const modules: Module[] = [
           description: 'Section H is where the government puts everything that does not fit in the standard contract structure. Security requirements, GFE, key personnel clauses, small business subcontracting plans. This section runs your day-to-day program life.',
           keyTerms: [
             { term: 'Section H', definition: 'Special contract requirements. The section of a Uniform Contract Format (UCF) contract where the government places unique, program-specific requirements that are not covered by the standard FAR/DFARS clauses in Sections I and J. This is where your program really lives.' },
-            { term: 'Uniform Contract Format', definition: 'The standard structure for DoD contracts, organized into Sections A through M. Sections A-H cover the contract specifics; Sections I-J cover standard clauses and attachments; K-M cover representations and certifications.' },
+            { term: 'Uniform Contract Format', definition: 'FAR 15.204-1. The standard structure for negotiated federal contracts, organized into Parts I-IV and Sections A through M: Part I (Sections A-H) is the Schedule; Part II (Section I) is Contract Clauses; Part III (Section J) is the List of Attachments; Part IV (Sections K-M) covers Representations, Instructions, and Evaluation Factors.' },
             { term: 'Key Personnel Clause', definition: 'A Section H requirement identifying specific individuals by name and role whose substitution requires prior government approval. Losing a key person without approval is a contract compliance issue.' },
             { term: 'GFE / GFP', definition: 'Government Furnished Equipment or Property. Section H specifies what the government will provide to the contractor, when it will be provided, and who is responsible for tracking and maintaining it. Lost or damaged GFP is a contractor liability.' },
             { term: 'Organizational Conflict of Interest', definition: 'OCI. A situation where a contractor has (or appears to have) an unfair advantage on a competition because of something learned or done on a different contract. The 3 types: Unequal Access to Information (you saw insider data), Biased Ground Rules (you helped write the requirements you are now bidding on), and Impaired Objectivity (you can\'t be neutral about evaluating your own company\'s product). Section H restricts what other work you can pursue specifically to prevent these situations.' },
@@ -7751,7 +7750,7 @@ export const modules: Module[] = [
       {
         type: 'text',
         heading: 'What Section L and Section M Actually Are',
-        body: "Section L is the instructions section of an RFP: it tells you exactly how to format, organize, and submit your proposal. Section M is the scoring rubric: it tells you exactly how the government will evaluate and rank what you submit. Every federal solicitation is organized by the Uniform Contract Format (UCF) from FAR Part 15. Most sections describe requirements: Sections L and M are different. They describe HOW the government will evaluate and select the winner. Winning proposals are built from M backward through L. Losing proposals are built from the SOW forward and hope M matches."
+        body: "Section L is the instructions section of an RFP: it tells you exactly how to format, organize, and submit your proposal. Section M is the scoring rubric: it tells you exactly how the government will evaluate and rank what you submit. Every federal solicitation is organized by the Uniform Contract Format (UCF), FAR 15.204-1. Most sections describe requirements: Sections L and M are different. They describe HOW the government will evaluate and select the winner. Winning proposals are built from M backward through L. Losing proposals are built from the SOW forward and hope M matches."
       },
       {
         type: 'expandable_list',
