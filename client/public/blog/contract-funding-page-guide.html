@@ -130,25 +130,25 @@
 </div>
 
 <h2>What This Actually Looks Like on a Real Funding Page</h2>
-<p>All of this is a lot less abstract once you see an actual funding page. Here's a simplified example, based on a real SD-WAN implementation contract, showing exactly what you'd be looking at: CLINs broken out by type, the ACRN tying each one to its funding, and the Price vs. Funded Amount columns sitting right next to each other.</p>
+<p>All of this is a lot less abstract once you see an actual funding page. Here's a simplified, fully fictional example built for an IT-Services implementation task order, showing exactly what you'd be looking at: CLINs broken out by type, the ACRN tying each one to its funding, and the Price vs. Funded Amount columns sitting right next to each other.</p>
 
 <table class="comparison-table">
   <thead><tr><th>CLIN</th><th>Type &amp; Purpose</th><th>Qty</th><th>Unit Price</th><th>Firm Price</th><th>Funded Amount</th><th>ACRN</th></tr></thead>
   <tbody>
-    <tr><td>0001</td><td>Labor (FFP), Program &amp; Implementation Services</td><td>12 mo</td><td>$87,204.73</td><td>$1,046,456.76</td><td>$1,046,456.76</td><td>AA</td></tr>
-    <tr><td>0002</td><td>Labor (FFP), Tech Writer &amp; Subject Matter Expert</td><td>6 mo</td><td>$70,276.61</td><td>$421,659.66</td><td>$421,659.66</td><td>AA</td></tr>
-    <tr><td>0003</td><td>Travel (FFP), Trips supporting SD-WAN/SRv6 implementation</td><td>25 ea</td><td>$5,478.66</td><td>$136,966.50</td><td>$136,966.50</td><td>AA</td></tr>
-    <tr><td>0004<sup>*</sup></td><td>Labor (FFP), Option Year Sustainment (illustrative, incrementally funded)</td><td>12 mo</td><td>$41,666.67</td><td>$500,000.00</td><td>$350,000.00</td><td>AB</td></tr>
+    <tr><td>0001</td><td>Labor (FFP), Program Management &amp; IT Systems Implementation</td><td>12 mo</td><td>$91,510.00</td><td>$1,098,120.00</td><td>$1,098,120.00</td><td>AA</td></tr>
+    <tr><td>0002</td><td>Labor (FFP), Systems Integration Analyst</td><td>6 mo</td><td>$68,430.00</td><td>$410,580.00</td><td>$410,580.00</td><td>AA</td></tr>
+    <tr><td>0003</td><td>Travel (FFP), Site visits supporting IT systems rollout</td><td>20 ea</td><td>$4,895.00</td><td>$97,900.00</td><td>$97,900.00</td><td>AA</td></tr>
+    <tr><td>0004<sup>*</sup></td><td>Labor (FFP), Option Year Sustainment Support (illustrative, incrementally funded)</td><td>12 mo</td><td>$45,833.33</td><td>$550,000.00</td><td>$412,500.00</td><td>AB</td></tr>
   </tbody>
 </table>
 <p style="font-size:0.8rem;color:#6B7280;margin-top:-8px">*CLIN 0004 is added here for illustration, not part of the original example, to show what a partially funded line looks like.</p>
 
 <p>A few things worth noticing right away:</p>
 <ul>
-<li><strong>Each CLIN has its own purpose.</strong> CLIN 0001 and 0002 are both labor, but they're split out because they cover different roles (Program/Implementation vs. Tech Writer/SME). CLIN 0003 is travel. Splitting them this way keeps each cost category separately trackable and separately billable.</li>
+<li><strong>Each CLIN has its own purpose.</strong> CLIN 0001 and 0002 are both labor, but they're split out because they cover different roles (Program Management vs. Systems Integration Analyst). CLIN 0003 is travel. Splitting them this way keeps each cost category separately trackable and separately billable.</li>
 <li><strong>The ACRN is your funding source tag.</strong> CLINs 0001 through 0003 all carry ACRN "AA," meaning they draw from the same funding line. CLIN 0004 carries "AB," a different ACRN, likely a separate funding action or a different fiscal year's money entirely.</li>
 <li><strong>Firm Price and Funded Amount usually match on fully funded CLINs.</strong> Look at CLINs 0001 through 0003: Firm Price and Funded Amount are identical. That means the full value of the work was obligated up front, nothing incremental here.</li>
-<li><strong>They don't have to match, and that's the part people miss.</strong> CLIN 0004 shows a Firm Price of $500,000 but a Funded Amount of only $350,000. That $150,000 gap is real. It means the government has only obligated part of the total price so far, the rest requires a future funding modification before you can bill against it. Keep performing past your funded amount on a CLIN like this, and you're working ahead of your money, which is exactly the trap the 75% notification rule exists to catch.</li>
+<li><strong>They don't have to match, and that's the part people miss.</strong> CLIN 0004 shows a Firm Price of $550,000 but a Funded Amount of only $412,500, exactly 75% of the total. That's not a rounding coincidence in this example: it's the same FAR 52.232-22 notification threshold from earlier in this post. The remaining $137,500 requires a future funding modification before you can bill against it. Keep performing past your funded amount on a CLIN like this, and you're working ahead of your money.</li>
 </ul>
 
 <h2>Frequently Asked Questions</h2>
