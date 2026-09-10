@@ -4217,6 +4217,182 @@ export const modules: Module[] = [
           ],
         },
       {
+        id: 'contracts-13',
+        title: 'The Uniform Contract Format: How Every Federal Contract Is Built',
+        duration: '20 min',
+        description: 'Before you can read Section H, negotiate around Section L and M, or find your money in Section B, you need to know the skeleton every negotiated federal contract is built on. Four Parts, thirteen lettered sections, always in the same order.',
+        keyTerms: [
+      { term: 'Uniform Contract Format (UCF)', definition: 'FAR 15.204-1. The standard structure for negotiated federal contracts: four Parts, Sections A through M, always in the same order regardless of agency, dollar value, or contract type.' },
+      { term: 'Part I — The Schedule (Sections A-H)', definition: 'The operational core of the contract: what is being bought, for how much, delivered when, inspected how, and administered by whom. This is what a PM lives in day-to-day.' },
+      { term: 'Part II — Contract Clauses (Section I)', definition: 'The standard FAR and DFARS clauses incorporated into the contract, almost always by reference rather than reprinted in full.' },
+      { term: 'Part III — List of Attachments (Section J)', definition: 'The index of every exhibit, attachment, and referenced document: SOW/PWS, CDRLs, wage determinations, security requirements. Section J tells you where the real detail actually lives.' },
+      { term: 'Part IV — Representations and Instructions (Sections K-M)', definition: 'The solicitation-only sections that exist to run the competition: offeror certifications, proposal instructions, and evaluation criteria. Mostly gone from day-to-day contract administration once the contract is awarded.' },
+      { term: 'Section B', definition: 'Supplies or Services and Prices/Costs. The CLIN-by-CLIN pricing table: what is being bought, at what price, and how much of that price is actually funded right now.' },
+      { term: 'Solicitation vs. Contract', definition: 'A solicitation (RFP/RFQ) contains all thirteen UCF sections, including K, L, and M, because it has to run a competition. Once a contract is awarded, K/L/M have generally done their job; Sections A-J carry forward as the contract you actually administer.' },
+        ],
+        attachments: [
+          {
+            title: 'Example: Contract Funding Page (Section B)',
+            description: 'A sanitized, real-world contract funding page showing where Section B fits in the Uniform Contract Format, CLIN structure, ACRNs, and the difference between Firm Price and Funded Amount when a CLIN is incrementally funded.',
+            url: '/examples/example-contract-funding-page.pdf',
+            images: [
+              { src: '/examples/img/funding-page-1.png', caption: 'Section B never stands alone. This UCF table shows where the pricing page fits inside the other twelve lettered sections of a negotiated federal contract, Section C is the work, Section F is the schedule, Section B is the price tag.' },
+              { src: '/examples/img/funding-page-2.png', caption: 'Each CLIN is its own funded line item. CLIN 0001 and 0003 are fully funded, Firm Price equals Funded Amount. CLIN 0002 is not: only 75% of its Firm Price has actually been obligated.' },
+              { src: '/examples/img/funding-page-3.png', caption: 'That 75% gap on CLIN 0002 is not decorative. It is the exact threshold where FAR 52.232-22 requires written notification to the CO, before the money actually runs out, not after.' },
+            ],
+          },
+        ],
+        content: [
+      {
+        type: 'text',
+        heading: 'One Skeleton, Every Contract',
+        body: "Here's something that makes federal contracts far less intimidating once it clicks: a $50,000 base-level task order and a $2 billion weapons program are built on the exact same skeleton. Same sections, same letters, same order, every time.\n\nThat skeleton is called the Uniform Contract Format, or UCF. Learn it once and you can open literally any negotiated federal contract, one you've never seen before, on a program you've never worked, and know roughly where to find what you're looking for. That's not a small thing. Most of the confusion new PMs and contracts professionals feel in their first year isn't about the substance, it's about not knowing which of thirteen sections to even open."
+      },
+      {
+        type: 'callout',
+        heading: 'The Citation',
+        body: "FAR 15.204-1 establishes the Uniform Contract Format for negotiated contracts, which is what you'll work with the vast majority of the time. A separate, older format under FAR 14.201-1 exists for sealed bidding, but sealed bidding is rare in modern DoD acquisition. When someone says \"UCF,\" they mean FAR 15.204-1."
+      },
+      {
+        type: 'table_visual' as any,
+        heading: 'The Four Parts and Thirteen Sections',
+        headers: ['Part', 'Sec.', 'Title', 'What It Actually Contains'],
+        rows: [
+          ['I — Schedule', 'A', 'Solicitation/Contract Form', 'The cover sheet: SF 33 or SF 1449, contract number, agency, dates'],
+          ['I — Schedule', 'B', 'Supplies or Services and Prices/Costs', 'CLIN-by-CLIN pricing: what, how much, and how funded'],
+          ['I — Schedule', 'C', 'Description/Specifications/SOW', 'The actual work: SOW, PWS, or SOO'],
+          ['I — Schedule', 'D', 'Packaging and Marking', 'How deliverables must be packaged, labeled, shipped'],
+          ['I — Schedule', 'E', 'Inspection and Acceptance', 'Who inspects, how, and who has authority to accept'],
+          ['I — Schedule', 'F', 'Deliveries or Performance', 'Period of performance, delivery schedule, place of performance'],
+          ['I — Schedule', 'G', 'Contract Administration Data', 'COR appointment, invoicing instructions, accounting data'],
+          ['I — Schedule', 'H', 'Special Contract Requirements', 'Program-specific rules: key personnel, GFE/GFP, OCI, security'],
+          ['II — Clauses', 'I', 'Contract Clauses', 'Standard FAR/DFARS clauses, almost always incorporated by reference'],
+          ['III — Attachments', 'J', 'List of Attachments', 'Index of every exhibit: SOW, CDRLs, wage determinations, DD254'],
+          ['IV — Reps & Instructions', 'K', 'Representations, Certifications & Other Statements', 'Offeror self-certifications: size status, tax status, compliance'],
+          ['IV — Reps & Instructions', 'L', 'Instructions, Conditions, and Notices to Offerors', 'How to format and submit a proposal, page limits, due date'],
+          ['IV — Reps & Instructions', 'M', 'Evaluation Factors for Award', 'The scoring rubric used to pick a winner'],
+        ]
+      },
+      {
+        type: 'text',
+        heading: "Part I (A-H): Where You'll Actually Live",
+        body: "If you only remember one part of this lesson, remember Part I. Sections A through H are the operational core of the contract, the part a PM, COR, or contracts specialist actually opens day to day. Section B tells you the money. Section C tells you the work. Section F tells you the schedule. Section G tells you who administers it. Everything you do on a live contract traces back to one of these eight letters."
+      },
+      {
+        type: 'list',
+        heading: 'Part I, Section by Section',
+        items: [
+          'Section A (Solicitation/Contract Form): The cover page. Contract number, issuing office, effective dates. Usually an SF 33 (sealed bid) or SF 1449 (commercial items) form.|||Not exciting, but it is the first place to check you have the right contract number before you cite anything from the document elsewhere.',
+          'Section B (Supplies or Services and Prices/Costs): The pricing table, broken out by CLIN. Firm Price, Funded Amount, ACRN, quantity, unit price.|||This is the section covered in depth in the attached example. Firm Price and Funded Amount are not always the same number, and knowing the difference is one of the most practically valuable things a PM can know.',
+          'Section C (Description/Specifications/SOW): The actual work. A Statement of Work (SOW), Performance Work Statement (PWS), or Statement of Objectives (SOO).|||If a COR or TDL ever directs work that is not traceable back to Section C, that is a scope creep red flag, covered in the TDL lesson.',
+          'Section D (Packaging and Marking): How deliverables get packaged, labeled, and shipped.|||Mostly relevant to supply contracts; often minimal or boilerplate on pure services contracts.',
+          'Section E (Inspection and Acceptance): Who inspects deliverables, using what standard, and who has authority to formally accept them.|||On CDRL-heavy contracts, this section is where the acceptance/rejection clock (commonly 15 workdays to review, 10 to resubmit) actually comes from.',
+          'Section F (Deliveries or Performance): The period of performance, delivery schedule, and place of performance.|||This is the section a Technical Direction Letter can never override. A TDL that extends the period of performance is not a TDL, it needs a modification.',
+          'Section G (Contract Administration Data): COR appointment information, invoicing instructions, and accounting/funding data points.|||Your COR\'s formal appointment, the same appointment letter that defines the limits of their authority, is referenced here.',
+          'Section H (Special Contract Requirements): Program-specific rules that do not fit anywhere else: key personnel clauses, GFE/GFP, Organizational Conflict of Interest restrictions, security requirements.|||Covered in full depth in the Section H lesson. This is often the section that runs your actual day-to-day program life.',
+        ]
+      },
+      {
+        type: 'text',
+        heading: 'Part II (Section I): The Clauses You Did Not Write',
+        body: "Section I is the full list of FAR and DFARS clauses that apply to the contract, things like the Changes clause, Limitation of Funds, Termination for Convenience. On most contracts these clauses are not printed out in full, they are incorporated by reference, meaning the contract just cites the clause number and title, and the actual text lives in the FAR itself. You will rarely read Section I start to finish, but you will look up specific clauses from it constantly, usually right after something has gone wrong and someone asks, \"what does our contract actually say about this?\""
+      },
+      {
+        type: 'text',
+        heading: 'Part III (Section J): Where the Real Documents Live',
+        body: "Section J is just a list, an index of every exhibit and attachment referenced elsewhere in the contract. But that list points to some of the most important documents you will use: the actual SOW/PWS text, the CDRL list (DD Form 1423s), wage determinations, a DD Form 254 for security requirements, past performance questionnaires. If Section C or Section H references \"Attachment 3\" or \"Exhibit A,\" Section J is where you find out what that actually is and locate it."
+      },
+      {
+        type: 'text',
+        heading: 'Part IV (Sections K, L, M): The Sections That Mostly Disappear After Award',
+        body: "Sections K, L, and M exist for one purpose: running the competition before award. Section K holds the offeror's self-certifications (small business status, tax compliance, and similar representations). Section L tells offerors exactly how to format and submit a proposal. Section M is the scoring rubric the government uses to evaluate and rank proposals.\n\nOnce a contract is awarded, K, L, and M have generally done their job. You will not find yourself citing Section M during contract administration the way you'll cite Section C or Section G. That's exactly why new PMs sometimes never learn these three sections properly, by the time they're managing the contract, K/L/M are already in the rearview mirror. But if you're on the business development or proposal side, L and M are the two most important pages in the entire solicitation, covered in full depth in the Section L vs. Section M lesson."
+      },
+      {
+        type: 'lucas_note',
+        body: "This is exactly the kind of thing I mean when I talk about practicing the basics every day. Knowing the UCF cold isn't glamorous. Nobody gets promoted for reciting Section letters. But I've watched people burn real credibility in their first few weeks on a program because they didn't know where to look, they'd get asked \"what does Section H say about GFE\" and go silent, or cite a Section M evaluation factor as if it still mattered after award.\n\nThe people who look sharp in their first month aren't smarter. They just know their document cold, the same way an experienced operator knows their gear cold. When someone asks you a question about the contract, you shouldn't be searching, you should already know which of thirteen letters to open."
+      },
+        ],
+        quiz: [
+      {
+        id: 'q1',
+        question: "The Uniform Contract Format for negotiated federal contracts is established by which FAR citation?",
+        options: ['FAR 14.201-1', 'FAR 15.204-1', 'FAR 16.103', 'FAR 52.243-1'],
+        correct: 1,
+        explanation: "FAR 15.204-1 establishes the Uniform Contract Format used for negotiated contracts, the format you'll encounter on the vast majority of DoD contracts. FAR 14.201-1 is the separate, older format for sealed bidding."
+      },
+      {
+        id: 'q2',
+        question: "Which Part of the UCF contains the operational core of the contract, the sections a PM actually works from day to day?",
+        options: ['Part I (Sections A-H)', 'Part II (Section I)', 'Part III (Section J)', 'Part IV (Sections K-M)'],
+        correct: 0,
+        explanation: "Part I, the Schedule, covers Sections A through H: what's being bought, the price, the work, the schedule, and administration data. This is the part a PM, COR, or contracts specialist lives in daily."
+      },
+      {
+        id: 'q3',
+        question: "A CLIN's pricing, including Firm Price, Funded Amount, and ACRN, is found in which section?",
+        options: ['Section A', 'Section B', 'Section G', 'Section J'],
+        correct: 1,
+        explanation: "Section B, Supplies or Services and Prices/Costs, is the CLIN-by-CLIN pricing table. It's where you'll find Firm Price, Funded Amount, quantity, unit price, and the ACRN tying each line to its funding."
+      },
+      {
+        id: 'q4',
+        question: "Where does the actual Statement of Work (SOW) or Performance Work Statement (PWS) live in the UCF?",
+        options: ['Section B', 'Section C', 'Section H', 'Section L'],
+        correct: 1,
+        explanation: "Section C, Description/Specifications/Statement of Work, contains the actual work being bought. If directed work isn't traceable back to Section C, that's a scope creep red flag."
+      },
+      {
+        id: 'q5',
+        question: "Which section holds a contract's Period of Performance and delivery schedule, the section a Technical Direction Letter can never override?",
+        options: ['Section D', 'Section F', 'Section I', 'Section K'],
+        correct: 1,
+        explanation: "Section F, Deliveries or Performance, sets the period of performance and delivery schedule. A TDL that tries to extend the period of performance isn't a valid TDL, it requires a formal contract modification."
+      },
+      {
+        id: 'q6',
+        question: "A COR's formal appointment and invoicing instructions are documented in which section?",
+        options: ['Section E', 'Section G', 'Section I', 'Section J'],
+        correct: 1,
+        explanation: "Section G, Contract Administration Data, contains COR appointment information, invoicing instructions, and accounting/funding data points."
+      },
+      {
+        id: 'q7',
+        question: "Program-specific rules like key personnel clauses, GFE/GFP, and Organizational Conflict of Interest restrictions belong in:",
+        options: ['Section C', 'Section H', 'Section J', 'Section M'],
+        correct: 1,
+        explanation: "Section H, Special Contract Requirements, is where the government places unique, program-specific requirements that don't fit the standard FAR/DFARS clauses elsewhere. It's often the section that runs day-to-day program life."
+      },
+      {
+        id: 'q8',
+        question: "Why are FAR and DFARS clauses in Section I usually cited by reference rather than printed in full?",
+        options: ['It is a security requirement', 'The clauses are too long to reasonably reprint on every contract, and citing the clause number is sufficient since the full text lives in the FAR itself', 'Only Section H clauses require full text', 'Reference citation is only used on contracts under the Simplified Acquisition Threshold'],
+        correct: 1,
+        explanation: "Standard FAR/DFARS clauses in Section I are almost always incorporated by reference, the contract cites the clause number and title, and the actual text lives in the FAR/DFARS itself. This keeps contracts from being thousands of pages long."
+      },
+      {
+        id: 'q9',
+        question: "Sections K, L, and M are best described as:",
+        options: ['Sections that apply equally before and after contract award', 'Solicitation-only sections that exist to run the competition, and are largely gone from day-to-day contract administration once awarded', 'The sections that define CLIN pricing', 'Sections found only on sealed-bid contracts'],
+        correct: 1,
+        explanation: "Sections K, L, and M exist to run the competition before award: certifications, proposal instructions, and evaluation criteria. Once awarded, they've generally done their job; Sections A-J are what carry forward as the contract you actually administer."
+      },
+      {
+        id: 'q10',
+        type: 'drag_match',
+        question: 'Match each UCF section letter to what it actually contains:',
+        options: [],
+        correct: 0,
+        explanation: 'Part I (A-H) is the operational core you live in daily. Section I holds the incorporated clauses. Section J indexes the real attachments. Sections K, L, and M run the competition and mostly disappear after award.',
+        pairs: [
+          { left: 'Section B', right: 'Supplies or Services and Prices/Costs (CLIN pricing)' },
+          { left: 'Section F', right: 'Deliveries or Performance (period of performance, schedule)' },
+          { left: 'Section H', right: 'Special Contract Requirements (key personnel, GFE, OCI)' },
+          { left: 'Section M', right: 'Evaluation Factors for Award (the scoring rubric)' },
+        ],
+      },
+        ]
+      },
+      {
         id: 'contracts-1',
         title: 'Contract Types',
         duration: '16 min',
