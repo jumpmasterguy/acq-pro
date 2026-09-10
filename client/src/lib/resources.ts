@@ -16,6 +16,13 @@ export interface SidebarResource {
 
 export const SIDEBAR_RESOURCES: SidebarResource[] = [
   {
+    title: 'Example: Contract Funding Page (Section B)',
+    description: 'CLIN structure, ACRNs, and Firm Price vs. Funded Amount',
+    url: '/examples/example-contract-funding-page.pdf',
+    lessonId: 'contracts-13',
+    proOnly: true,
+  },
+  {
     title: 'Example: Technical Direction Letter',
     description: 'Real-world TDL structure, sanitized',
     url: '/examples/example-tdl.pdf',
