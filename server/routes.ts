@@ -6,6 +6,7 @@ import crypto from "crypto";
 import path from "path";
 import fs from "fs";
 import { storage, getDisplayStreak } from "./storage";
+import { excludeInternalAccounts } from "./internalAccounts";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema, userProfileSchema, updateNameSchema } from "@shared/schema";
 import { hasPaidPlan } from "@shared/access";
@@ -1247,7 +1248,10 @@ export async function registerRoutes(
     if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
 
     try {
-      const allUsers = await storage.getAllUsers();
+      // Lucas's own admin/testing accounts are not users — see
+      // server/internalAccounts.ts — so every metric below (login time,
+      // audio listens, DAU, XP, lessons) reflects real users only.
+      const allUsers = excludeInternalAccounts(await storage.getAllUsers());
       const now = Date.now();
       const oneDayMs = 24 * 60 * 60 * 1000;
 
@@ -1371,7 +1375,8 @@ export async function registerRoutes(
   app.get("/api/admin/export/sessions.csv", requireAuth as any, async (req: Request, res: Response) => {
     if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
     try {
-      const allUsers = await storage.getAllUsers();
+      // Excludes Lucas's own admin/testing accounts — see server/internalAccounts.ts.
+      const allUsers = excludeInternalAccounts(await storage.getAllUsers());
       const rows: (string | number | null)[][] = [
         ["email", "username", "subscription_status", "login_at", "logged_out_at", "end_reason", "duration_minutes"],
       ];
@@ -1408,7 +1413,8 @@ export async function registerRoutes(
   app.get("/api/admin/export/users.csv", requireAuth as any, async (req: Request, res: Response) => {
     if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
     try {
-      const allUsers = await storage.getAllUsers();
+      // Excludes Lucas's own admin/testing accounts — see server/internalAccounts.ts.
+      const allUsers = excludeInternalAccounts(await storage.getAllUsers());
       const rows: (string | number | null)[][] = [
         [
           "email", "username", "subscription_status", "registered_at", "trial_ends_at",
@@ -1853,18 +1859,11 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       const emailModule = await import('./email.js') as any;
       const sendNewsletterIssue = emailModule.sendNewsletterIssue;
       const allUsers = await storage.getAllUsers();
-      const excludedEmails = new Set([
-        'lucas@acqlerate.com',
-        'lucas.l.cruz.es@gmail.com',
-        'lucas.l.cruz.pr@gmail.com',
-        'jumpmasterguy@gmail.com',
-      ]);
       const unsubscribed = await storage.getUnsubscribedSet();
-      const recipients = allUsers
+      const recipients = excludeInternalAccounts(allUsers)
         .filter((u: any) => {
           if (!u.email) return false;
           const lower = u.email.toLowerCase();
-          if (excludedEmails.has(lower)) return false;
           if (unsubscribed.has(lower)) return false;
           return true;
         })
