@@ -2658,6 +2658,17 @@ export const modules: Module[] = [
           { term: 'ACRN', definition: 'Accounting Classification Reference Number. The specific funding line on a contract that ties obligated dollars to a particular appropriation and CLIN.' },
           { term: 'Limitation of Funds / Limitation of Cost', definition: 'FAR 52.232-22 and 52.232-20. The clauses governing incrementally funded cost-reimbursement contracts, requiring the contractor to notify the government (commonly at 75% of funded value) before they run out of money.' },
         ],
+        attachments: [
+          {
+            title: 'Example: Contract Funding Page',
+            description: 'A sanitized, real-world contract funding page showing CLIN structure, ACRNs, and the difference between Firm Price and Funded Amount when a CLIN is incrementally funded.',
+            url: '/examples/example-contract-funding-page.pdf',
+            images: [
+              { src: '/examples/img/funding-page-1.png', caption: 'Each CLIN is its own funded line item. CLIN 0001 and 0003 are fully funded, Firm Price equals Funded Amount. CLIN 0002 is not: only 75% of its Firm Price has actually been obligated.' },
+              { src: '/examples/img/funding-page-2.png', caption: 'That 75% gap on CLIN 0002 is not decorative. It is the exact threshold where FAR 52.232-22 requires written notification to the CO, before the money actually runs out, not after.' },
+            ],
+          },
+        ],
         content: [
           {
             type: 'text',
