@@ -129,6 +129,28 @@
   <a href="/app#/auth" style="display:inline-block;background:var(--teal, #01696F);color:white;font-weight:800;font-size:0.875rem;padding:10px 20px;border-radius:8px;text-decoration:none">Start This Lesson Free →</a>
 </div>
 
+<h2>What This Actually Looks Like on a Real Funding Page</h2>
+<p>All of this is a lot less abstract once you see an actual funding page. Here's a simplified example, based on a real SD-WAN implementation contract, showing exactly what you'd be looking at: CLINs broken out by type, the ACRN tying each one to its funding, and the Price vs. Funded Amount columns sitting right next to each other.</p>
+
+<table class="comparison-table">
+  <thead><tr><th>CLIN</th><th>Type &amp; Purpose</th><th>Qty</th><th>Unit Price</th><th>Firm Price</th><th>Funded Amount</th><th>ACRN</th></tr></thead>
+  <tbody>
+    <tr><td>0001</td><td>Labor (FFP), Program &amp; Implementation Services</td><td>12 mo</td><td>$87,204.73</td><td>$1,046,456.76</td><td>$1,046,456.76</td><td>AA</td></tr>
+    <tr><td>0002</td><td>Labor (FFP), Tech Writer &amp; Subject Matter Expert</td><td>6 mo</td><td>$70,276.61</td><td>$421,659.66</td><td>$421,659.66</td><td>AA</td></tr>
+    <tr><td>0003</td><td>Travel (FFP), Trips supporting SD-WAN/SRv6 implementation</td><td>25 ea</td><td>$5,478.66</td><td>$136,966.50</td><td>$136,966.50</td><td>AA</td></tr>
+    <tr><td>0004<sup>*</sup></td><td>Labor (FFP), Option Year Sustainment (illustrative, incrementally funded)</td><td>12 mo</td><td>$41,666.67</td><td>$500,000.00</td><td>$350,000.00</td><td>AB</td></tr>
+  </tbody>
+</table>
+<p style="font-size:0.8rem;color:#6B7280;margin-top:-8px">*CLIN 0004 is added here for illustration, not part of the original example, to show what a partially funded line looks like.</p>
+
+<p>A few things worth noticing right away:</p>
+<ul>
+<li><strong>Each CLIN has its own purpose.</strong> CLIN 0001 and 0002 are both labor, but they're split out because they cover different roles (Program/Implementation vs. Tech Writer/SME). CLIN 0003 is travel. Splitting them this way keeps each cost category separately trackable and separately billable.</li>
+<li><strong>The ACRN is your funding source tag.</strong> CLINs 0001 through 0003 all carry ACRN "AA," meaning they draw from the same funding line. CLIN 0004 carries "AB," a different ACRN, likely a separate funding action or a different fiscal year's money entirely.</li>
+<li><strong>Firm Price and Funded Amount usually match on fully funded CLINs.</strong> Look at CLINs 0001 through 0003: Firm Price and Funded Amount are identical. That means the full value of the work was obligated up front, nothing incremental here.</li>
+<li><strong>They don't have to match, and that's the part people miss.</strong> CLIN 0004 shows a Firm Price of $500,000 but a Funded Amount of only $350,000. That $150,000 gap is real. It means the government has only obligated part of the total price so far, the rest requires a future funding modification before you can bill against it. Keep performing past your funded amount on a CLIN like this, and you're working ahead of your money, which is exactly the trap the 75% notification rule exists to catch.</li>
+</ul>
+
 <h2>Frequently Asked Questions</h2>
 <p><strong>What's an ACRN and why is it on the funding page?</strong><br>
 An Accounting Classification Reference Number ties a specific dollar amount on your CLIN back to a specific appropriation. Think of it like a routing number, it tells finance exactly which pool of money a payment is coming from.</p>
@@ -159,6 +181,7 @@ No. The ceiling is just the maximum the contract could ever be worth. Plenty of 
         <li style="font-size:0.8rem;margin-bottom:5px"><a href="#" style="color:var(--teal)">The Two Numbers That Actually Matter</a></li>
         <li style="font-size:0.8rem;margin-bottom:5px"><a href="#" style="color:var(--teal)">CLINs: Your Contract's Itemized Receipt</a></li>
         <li style="font-size:0.8rem;margin-bottom:5px"><a href="#" style="color:var(--teal)">The 75% Rule Nobody Tells You About</a></li>
+        <li style="font-size:0.8rem;margin-bottom:5px"><a href="#" style="color:var(--teal)">What This Actually Looks Like</a></li>
         <li style="font-size:0.8rem;margin-bottom:5px"><a href="#" style="color:var(--teal)">Where We Cover This in the Lessons</a></li>
         <li style="font-size:0.8rem;margin-bottom:5px"><a href="#" style="color:var(--teal)">Frequently Asked Questions</a></li>
       </ul>
