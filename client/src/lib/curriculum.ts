@@ -2660,12 +2660,13 @@ export const modules: Module[] = [
         ],
         attachments: [
           {
-            title: 'Example: Contract Funding Page',
-            description: 'A sanitized, real-world contract funding page showing CLIN structure, ACRNs, and the difference between Firm Price and Funded Amount when a CLIN is incrementally funded.',
+            title: 'Example: Contract Funding Page (Section B)',
+            description: 'A sanitized, real-world contract funding page showing where Section B fits in the Uniform Contract Format, the full CLIN field set (SOW reference, PSC, ACRN, PR Number, CIN), and the difference between Firm Price and Funded Amount when a CLIN is incrementally funded.',
             url: '/examples/example-contract-funding-page.pdf',
             images: [
-              { src: '/examples/img/funding-page-1.png', caption: 'Each CLIN is its own funded line item. CLIN 0001 and 0003 are fully funded, Firm Price equals Funded Amount. CLIN 0002 is not: only 75% of its Firm Price has actually been obligated.' },
-              { src: '/examples/img/funding-page-2.png', caption: 'That 75% gap on CLIN 0002 is not decorative. It is the exact threshold where FAR 52.232-22 requires written notification to the CO, before the money actually runs out, not after.' },
+              { src: '/examples/img/funding-page-1.png', caption: 'Section B never stands alone. This UCF table shows where the pricing page fits inside the other twelve lettered sections of a negotiated federal contract, Section C is the work, Section F is the schedule, Section B is the price tag.' },
+              { src: '/examples/img/funding-page-3.png', caption: 'This is what a real Section B actually looks like: each CLIN carries its SOW reference, Product Service Code, Pricing Arrangement, ACRN, PR Number, and CIN, not just a price. CLIN 0002 here is funded at exactly 75% of its Firm Price, the FAR 52.232-22 notification threshold.' },
+              { src: '/examples/img/funding-page-5.png', caption: 'That 75% gap on CLIN 0002 is not decorative. Ceiling tells you what is possible. Funded Amount tells you what is real, and that is the number a PM tracks.' },
             ],
           },
         ],
@@ -4233,12 +4234,12 @@ export const modules: Module[] = [
         attachments: [
           {
             title: 'Example: Contract Funding Page (Section B)',
-            description: 'A sanitized, real-world contract funding page showing where Section B fits in the Uniform Contract Format, CLIN structure, ACRNs, and the difference between Firm Price and Funded Amount when a CLIN is incrementally funded.',
+            description: 'A sanitized, real-world contract funding page showing where Section B fits in the Uniform Contract Format, the full CLIN field set (SOW reference, PSC, ACRN, PR Number, CIN), and the difference between Firm Price and Funded Amount when a CLIN is incrementally funded.',
             url: '/examples/example-contract-funding-page.pdf',
             images: [
               { src: '/examples/img/funding-page-1.png', caption: 'Section B never stands alone. This UCF table shows where the pricing page fits inside the other twelve lettered sections of a negotiated federal contract, Section C is the work, Section F is the schedule, Section B is the price tag.' },
-              { src: '/examples/img/funding-page-2.png', caption: 'Each CLIN is its own funded line item. CLIN 0001 and 0003 are fully funded, Firm Price equals Funded Amount. CLIN 0002 is not: only 75% of its Firm Price has actually been obligated.' },
-              { src: '/examples/img/funding-page-3.png', caption: 'That 75% gap on CLIN 0002 is not decorative. It is the exact threshold where FAR 52.232-22 requires written notification to the CO, before the money actually runs out, not after.' },
+              { src: '/examples/img/funding-page-3.png', caption: 'This is what a real Section B actually looks like: each CLIN carries its SOW reference, Product Service Code, Pricing Arrangement, ACRN, PR Number, and CIN, not just a price. CLIN 0002 here is funded at exactly 75% of its Firm Price, the FAR 52.232-22 notification threshold.' },
+              { src: '/examples/img/funding-page-5.png', caption: 'That 75% gap on CLIN 0002 is not decorative. Ceiling tells you what is possible. Funded Amount tells you what is real, and that is the number a PM tracks.' },
             ],
           },
         ],
