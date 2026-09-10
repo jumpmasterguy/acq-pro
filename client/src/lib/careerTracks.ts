@@ -3,6 +3,8 @@
  * Shared between Dashboard (filter bar) and ModulePage (lesson ordering).
  */
 
+import { getAllLessons, parseDuration } from "./curriculum";
+
 export type CareerTrackId = 'usg_pm' | 'contractor_pm' | 'contracting_officer' | 'capture_bd';
 
 export interface CareerTrackData {
@@ -10,6 +12,13 @@ export interface CareerTrackData {
   label: string;
   shortLabel: string;
   desc: string;
+  /** Emoji for the path-switcher card (My Account page). Plain string, not
+   * JSX, to keep this file's "pure data" contract from the header comment. */
+  icon: string;
+  /** Funny "before" one-liner for the path-switcher card. */
+  before: string;
+  /** Funny "after" one-liner for the path-switcher card. */
+  after: string;
   /** Lessons shown first, in order — this is what the user should focus on */
   primaryLessons: string[];
   /** Lessons shown below a divider — useful but not the core path */
@@ -22,6 +31,9 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
     label: 'USG Program Manager',
     shortLabel: 'USG PM',
     desc: 'Government-side PM managing programs, budgets, oversight, and the full acquisition lifecycle',
+    icon: '🏛️',
+    before: 'Before: buried in status decks, hoping nobody asks about the IPMR',
+    after: "After: the PM who reads the IPMR before the PMR — and brings receipts",
     primaryLessons: [
       'foundations-1', 'foundations-3', 'foundations-5',
       'foundations-6', 'foundations-9', 'foundations-2', 'foundations-7',
@@ -43,6 +55,9 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
     label: 'DoD Contractor PM',
     shortLabel: 'Contractor PM',
     desc: 'Industry-side PM executing contracts, managing costs, task orders, and subcontractors',
+    icon: '💼',
+    before: 'Before: nodding along when someone says "fully burdened rate"',
+    after: 'After: fluent in burn rate, DCAA audits, and CPAF math',
     primaryLessons: [
       // Foundations — what you need to operate, skip ACAT/congressional deep dives
       'foundations-1', 'foundations-3', 'foundations-5', 'foundations-9',
@@ -72,6 +87,9 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
     label: 'Contracting Specialist / KO',
     shortLabel: 'KO / Specialist',
     desc: 'Source selection, contract administration, FAR/DFARS compliance',
+    icon: '📜',
+    before: 'Before: FAR Part 15 gives you a minor existential crisis',
+    after: 'After: running source selection like you wrote the FAR yourself',
     primaryLessons: [
       'foundations-1', 'foundations-3', 'foundations-5',
       'foundations-6', 'foundations-9', 'foundations-2', 'foundations-7',
@@ -92,6 +110,9 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
     label: 'Capture & Business Development',
     shortLabel: 'Capture / BD',
     desc: 'Win more business — proposals, pipeline, and source selection strategy',
+    icon: '🎯',
+    before: 'Before: chasing revenue and QoQ project fire drills',
+    after: 'After: running the full capture lifecycle like a playbook, not a scramble',
     primaryLessons: [
       'foundations-1', 'foundations-3', 'foundations-5',
       'contracts-8', 'contracts-1', 'contracts-4', 'contracts-7', 'contracts-5', 'contracts-9', 'contracts-2',
@@ -146,4 +167,19 @@ export function sortLessonsByTrack(
   }
 
   return { primary, bonus, unclassified };
+}
+
+/**
+ * Core-focus lesson count + total minutes for a track, for the path-switcher
+ * card on the My Account page ("24 core lessons · 5h 10m"). Computed against
+ * the actual curriculum rather than trackData.primaryLessons.length directly,
+ * so a lesson id that's been renamed or removed can never inflate the count.
+ */
+export function getTrackStats(id: CareerTrackId): { lessonCount: number; totalMinutes: number } {
+  const track = getTrackData(id);
+  if (!track) return { lessonCount: 0, totalMinutes: 0 };
+  const primarySet = new Set(track.primaryLessons);
+  const matches = getAllLessons().filter(({ lesson }) => primarySet.has(lesson.id));
+  const totalMinutes = matches.reduce((sum, { lesson }) => sum + parseDuration(lesson.duration), 0);
+  return { lessonCount: matches.length, totalMinutes };
 }

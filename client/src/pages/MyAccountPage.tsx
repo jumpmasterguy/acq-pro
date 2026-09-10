@@ -6,7 +6,10 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { hasPaidPlan, trialDaysRemaining } from "@shared/access";
-import type { AuthUser, UserProfile } from "./AuthPage";
+import { CAREER_TRACK_DATA, getTrackStats, type CareerTrackId } from "@/lib/careerTracks";
+import { formatDuration } from "@/lib/curriculum";
+import { cn } from "@/lib/utils";
+import type { AuthUser } from "./AuthPage";
 
 interface MyAccountPageProps {
   user: AuthUser;
@@ -15,14 +18,11 @@ interface MyAccountPageProps {
   onNameUpdated: (firstName: string, lastName: string, username: string) => void;
 }
 
-// "Path selected" = the goal picked during onboarding (OnboardingFlow.tsx
-// calls this step "Build My Path") — the same four labels shown there.
-const GOAL_LABELS: Record<UserProfile['goal'], string> = {
-  program_management: 'Become a Better Program Manager',
-  contracts_finance: 'Master Contracts & Finance',
-  bd_capture: 'Win More Business (BD / Capture)',
-  full_picture: 'Understand the Full Picture',
-};
+// Same localStorage key + default Dashboard.tsx already uses for the career
+// filter bar — the path switcher here is a second way to change the same
+// setting, so it has to read/write the exact same place to stay in sync.
+const ACTIVE_CAREER_KEY = 'acq_active_career';
+const DEFAULT_CAREER: CareerTrackId = 'contractor_pm';
 
 const SUBSCRIPTION_LABELS: Record<string, { label: string; tone: string }> = {
   free: { label: 'Free', tone: 'bg-muted text-muted-foreground' },
@@ -49,6 +49,9 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated }
   const [lastName, setLastName] = useState(user.lastName ?? "");
   const [saving, setSaving] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
+  const [activeCareer, setActiveCareer] = useState<CareerTrackId>(() => {
+    try { return (localStorage.getItem(ACTIVE_CAREER_KEY) as CareerTrackId) || DEFAULT_CAREER; } catch { return DEFAULT_CAREER; }
+  });
 
   const dirty = firstName.trim() !== (user.firstName ?? "") || lastName.trim() !== (user.lastName ?? "");
   const canSave = dirty && firstName.trim().length > 0 && lastName.trim().length > 0 && !saving;
@@ -86,7 +89,14 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated }
     }
   };
 
-  const goal = user.userProfile?.goal;
+  const handleSelectPath = (id: CareerTrackId) => {
+    if (id === activeCareer) return;
+    setActiveCareer(id);
+    try { localStorage.setItem(ACTIVE_CAREER_KEY, id); } catch {}
+    const track = CAREER_TRACK_DATA.find(t => t.id === id);
+    toast({ title: `Switched to ${track?.label ?? id}`, description: "Your Dashboard will reorder lessons to match on your next visit." });
+  };
+
   const sub = SUBSCRIPTION_LABELS[user.subscriptionStatus] ?? SUBSCRIPTION_LABELS.free;
   const paid = hasPaidPlan(user);
   const daysLeft = trialDaysRemaining(user);
@@ -139,13 +149,50 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated }
         <p className="text-xs text-muted-foreground mt-1">Tied to your login — contact support to change it.</p>
       </Section>
 
-      {/* Path selected — read-only */}
+      {/* Your Path — editable, drives lesson ordering on the Dashboard */}
       <Section icon={Compass} title="Your Path">
-        {goal ? (
-          <p className="text-sm text-foreground font-medium">{GOAL_LABELS[goal] ?? goal}</p>
-        ) : (
-          <p className="text-sm text-muted-foreground">You haven't set a learning path yet.</p>
-        )}
+        <div className="space-y-2.5">
+          {CAREER_TRACK_DATA.map((track) => {
+            const isActive = track.id === activeCareer;
+            const stats = getTrackStats(track.id);
+            return (
+              <button
+                key={track.id}
+                type="button"
+                onClick={() => handleSelectPath(track.id)}
+                className={cn(
+                  "w-full text-left rounded-xl border-2 p-3.5 transition-all",
+                  isActive
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:border-primary/40 hover:bg-muted/30"
+                )}
+                data-testid={`path-card-${track.id}`}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl leading-none flex-shrink-0">{track.icon}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <span className="font-semibold text-sm">{track.label}</span>
+                      {isActive && (
+                        <span className="text-[10px] font-bold uppercase tracking-wide text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                          Current
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground italic mb-0.5">{track.before}</p>
+                    <p className="text-xs font-medium text-foreground mb-2">{track.after}</p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {stats.lessonCount} core lessons · {formatDuration(stats.totalMinutes)} focused
+                    </p>
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+        <p className="text-xs text-muted-foreground mt-3">
+          Switch anytime — nothing gets locked away. Lessons outside your core focus are still there, just filed as bonus content instead of top billing.
+        </p>
       </Section>
 
       {/* Subscription — read-only, with billing/upgrade actions */}
