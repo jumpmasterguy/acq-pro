@@ -236,16 +236,17 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
               </button>
             ) : mod.audioReady && mod.audioUrl ? (
               <div className="space-y-1.5">
-                <audio controls preload="none" className="w-full h-9" data-testid="module-audio-player" onPlay={handleAudioPlay}>
+                <audio
+                  controls
+                  controlsList="nodownload"
+                  onContextMenu={(e) => e.preventDefault()}
+                  preload="none"
+                  className="w-full h-9"
+                  data-testid="module-audio-player"
+                  onPlay={handleAudioPlay}
+                >
                   <source src={mod.audioUrl} type="audio/mp4" />
                 </audio>
-                <a
-                  href={mod.audioUrl}
-                  download
-                  className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-primary"
-                >
-                  <Download className="w-3 h-3" /> Download for offline listening
-                </a>
               </div>
             ) : (
               <span className="text-xs font-medium text-muted-foreground">Coming soon</span>

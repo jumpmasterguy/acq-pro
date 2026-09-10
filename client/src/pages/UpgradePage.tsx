@@ -34,6 +34,7 @@ export default function UpgradePage({ onBack, trialDaysLeft = null }: UpgradePag
     "All quiz questions with detailed explanations",
     "Key terms glossary for every lesson",
     "Career roadmap for gov & contractor tracks",
+    "\"The Debrief\" — audio lessons for every module (stream anytime)",
     "AI Study Assistant — limited",
     "Cancel anytime",
   ];
@@ -46,6 +47,7 @@ export default function UpgradePage({ onBack, trialDaysLeft = null }: UpgradePag
     "Formulas, tables & quick-reference content",
     "Career roadmap for gov & contractor tracks",
     "Salary benchmarks & certification guidance",
+    "\"The Debrief\" — audio lessons for every module (stream anytime)",
     "AI Study Assistant — unlimited",
     "Lifetime content updates as regulations change",
     "Priority email support",

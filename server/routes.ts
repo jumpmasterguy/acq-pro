@@ -9,7 +9,7 @@ import { storage, getDisplayStreak } from "./storage";
 import { excludeInternalAccounts } from "./internalAccounts";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema, userProfileSchema, updateNameSchema } from "@shared/schema";
-import { hasPaidPlan } from "@shared/access";
+import { hasPaidPlan, hasFullAccess } from "@shared/access";
 import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 import { costTrackerStorage } from "./costTrackerStorage";
@@ -1967,6 +1967,53 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       if (err && !res.headersSent) {
         console.error('[lesson-book] send failed:', (err as Error).message);
         res.status(500).json({ message: 'Could not load Lesson Book' });
+      }
+    });
+  });
+
+  // ── GET /api/audio/:moduleId ────────────────────────────────────────────────
+  // Streams a module's "The Debrief" audio overview. These used to be static
+  // .m4a files under client/public/audio/, served by express.static with zero
+  // access control — the same gap the Lesson Book PDFs had (see
+  // /api/lesson-book above). The player's "Download for offline listening"
+  // link has been removed from the UI (streaming-only now), but that alone
+  // never stopped anyone hitting the static file URL directly, logged out,
+  // no trial, no payment. Moved to server/assets/audio/ (outside the
+  // static-served client/public tree) and gated the same way canListenAudio
+  // decides in ModulePage.tsx: any full-access user, trial included
+  // (hasFullAccess, not hasPaidPlan) — audio is streamed, not kept, so it
+  // doesn't need the "paid, not just trialing" restriction the PDF download
+  // does. res.sendFile natively handles Range requests, so seeking/scrubbing
+  // in the <audio> element still works against this authenticated route.
+  app.get("/api/audio/:moduleId", requireAuth as any, (req: Request, res: Response) => {
+    const moduleId = req.params.moduleId as string;
+    const user = (req as any).user as { subscriptionStatus?: string | null; trialEndsAt?: string | null };
+
+    const AUDIO_FILES: Record<string, string> = {
+      foundations: 'module-1-foundations.m4a',
+      finance:     'module-2-finance.m4a',
+      contracts:   'module-3-contracts.m4a',
+      data:        'module-4-data-analytics.m4a',
+      capture:     'module-5-capture-bd.m4a',
+      operations:  'module-6-operations-leadership.m4a',
+    };
+
+    const filename = AUDIO_FILES[moduleId];
+    if (!filename) return res.status(404).json({ message: 'Module not found' });
+
+    if (!hasFullAccess(user)) {
+      return res.status(403).json({ message: 'Upgrade (or start your free trial) to listen to The Debrief.' });
+    }
+
+    const filePath = path.join(process.cwd(), 'server', 'assets', 'audio', filename);
+    res.setHeader('Content-Type', 'audio/mp4');
+    // Discourage casual "save as" without pretending this is real DRM —
+    // a signed-in request through this route is required either way.
+    res.setHeader('Content-Disposition', 'inline');
+    res.sendFile(filePath, (err) => {
+      if (err && !res.headersSent) {
+        console.error('[audio] send failed:', (err as Error).message);
+        res.status(500).json({ message: 'Could not load audio' });
       }
     });
   });

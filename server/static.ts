@@ -91,6 +91,28 @@ export function serveStatic(app: Express) {
   app.get(["/blog", "/blog/"], (_req: Request, res: Response) => {
     sendNoCache(res, path.resolve(distPath, "blog", "index.html"));
   });
+  // 301s for old posts that got merged into a newer rewrite of the same
+  // topic — same content republished under a fresh slug, weeks to months
+  // later (ACAT Levels, CMMC, Continuing Resolutions, and the Bid Protests
+  // post all had this happen; CRs alone had 3 separate rewrites over 2
+  // months before being consolidated to one). The old .html files are gone
+  // from client/public/blog/; this keeps any existing backlinks/bookmarks/
+  // search results landing on the current post instead of a 404 or the
+  // bare blog index.
+  const BLOG_SLUG_REDIRECTS: Record<string, string> = {
+    'acat-levels-your-programs-blueprint-for-management-and-oversight': 'acat-levels-your-programs-blueprint-for-oversight-and-management',
+    'cmmc-in-2026-the-compliance-clock-is-ticking-are-you-ready': 'cmmc-in-2026-the-compliance-clock-is-ticking-are-you-ready-2026-07-07',
+    // Continuing Resolutions had 3 rewrites (May 5, Jun 30 x2) — all three
+    // now point to the single surviving post.
+    'crs-the-hidden-risk-crippling-your-defense-programs-future': 'continuing-resolutions-budget-gridlocks-hidden-risk-to-your-defense-program',
+    'crs-budget-gridlocks-silent-sabotage-of-your-defense-program': 'continuing-resolutions-budget-gridlocks-hidden-risk-to-your-defense-program',
+    'why-the-government-loses-bid-protests-your-2026-action-plan': 'why-the-government-loses-protests-what-you-must-do-now',
+    // Stale sitemap.xml entry (lastmod 2025-11-15, predates the current slug
+    // scheme entirely) that never matched a real file — sends it to the
+    // current ACAT post instead of 404ing/falling through to the blog index.
+    'acat-levels-explained': 'acat-levels-your-programs-blueprint-for-oversight-and-management',
+  };
+
   app.get("/blog/:slug", (req: Request, res: Response) => {
     const slug = req.params.slug;
     // Serve static assets directly (avoid redirect loop)
@@ -98,6 +120,9 @@ export function serveStatic(app: Express) {
       const assetPath = path.resolve(distPath, "blog", slug);
       if (fs.existsSync(assetPath)) return res.sendFile(assetPath);
       return res.status(404).send('Not found');
+    }
+    if (BLOG_SLUG_REDIRECTS[slug]) {
+      return res.redirect(301, `/blog/${BLOG_SLUG_REDIRECTS[slug]}`);
     }
     const filePath = path.resolve(distPath, "blog", `${slug}.html`);
     if (fs.existsSync(filePath)) {
