@@ -83,7 +83,7 @@ interface AuthPageProps {
 }
 
 const highlights = [
-  { icon: BookOpen, label: "15+ in-depth lessons" },
+  { icon: BookOpen, label: "48 in-depth lessons" },
   { icon: Zap, label: "XP tracking & gamification" },
   { icon: Award, label: "DoD Acquisitions expertise" },
   { icon: Lock, label: "Secure, private progress" },
