@@ -477,6 +477,9 @@ REQUIREMENTS:
     <figure class="post-figure"><svg ...>...</svg><figcaption>One line saying what it shows.</figcaption></figure>
     Rules for the SVG:
       - viewBox="0 0 720 360", no width/height attributes, no external references, no <image>.
+      - Wrap EVERY shape (rect, line, path, circle, polygon) in a single <g class="sketch"> ... </g>.
+        Leave all <text> OUTSIDE that group. The group gets a hand-drawn wobble filter; text must
+        stay sharp and is rendered in a handwriting face by the stylesheet.
       - Whiteboard look: stroke-width 2 to 3, stroke-linecap="round", stroke-linejoin="round",
         fill="none" for strokes, generous white space, nothing crowded.
       - Palette only: ink #0D1B2A, primary #01696F, wash #E6F2F3, highlight #C9A227.
@@ -488,6 +491,10 @@ REQUIREMENTS:
         never on top of text and never pointing into a bare label. Leave at least 12px of clear
         space around every <text>. Keep all drawing inside x 20 to 700 and y 20 to 340, and use
         the full height rather than crowding everything into the top half.
+      - UNITS ALWAYS. Never print a bare number. Every value carries $ or % or a unit word, so a
+        reader never has to ask "40 of what". Where a whole splits into parts, label the whole too.
+      - Where a figure is derived, show the arithmetic on the diagram (for example
+        "rate / base = multiple"), not just the result.
       - It must carry information. A decorative shape with no data is a failure.
 
 Start with the title on line 1, deck on line 2, then the body HTML."""
@@ -648,6 +655,14 @@ def assemble_post(title: str, deck: str, body_html: str, topic: dict,
   </script>
 </head>
 <body>
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <filter id="sketch" filterUnits="userSpaceOnUse" x="-20" y="-20" width="800" height="440">
+      <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" seed="11" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
 
 <nav>
   <div class="nav-inner">

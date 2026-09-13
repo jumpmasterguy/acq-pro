@@ -11,12 +11,32 @@ concurrency:
 jobs:
   post:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v6
-      - run: python3 scripts/generate_blog_post.py
+
+      # A staged draft whose date has arrived takes priority over generating a new post.
+      - id: drafts
+        run: |
+          python3 scripts/publish_drafts.py | tee /tmp/drafts.log
+          if grep -qE '^[1-9][0-9]* published' /tmp/drafts.log; then
+            echo "published=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit the published draft
+        if: steps.drafts.outputs.published == 'yes'
+        run: |
+          git config user.name  "Acqlerate Blog Bot"
+          git config user.email "blog-bot@acqlerate.com"
+          git add -A client/public/blog
+          git commit -m "blog: publish staged draft"
+          git push origin HEAD:main
+
+      - name: Generate a new post
+        if: steps.drafts.outputs.published != 'yes'
+        run: python3 scripts/generate_blog_post.py
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

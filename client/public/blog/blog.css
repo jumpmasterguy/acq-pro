@@ -397,3 +397,12 @@ footer {
   font-size: 0.8rem; color: #5A6B78; text-align: center; line-height: 1.5;
 }
 @media (max-width: 600px) { .post-figure { padding: 14px 12px 10px; } }
+
+
+/* Whiteboard diagram: hand-drawn strokes, handwritten labels */
+.post-figure svg .sketch { filter: url(#sketch); }
+.post-figure svg text {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-style: normal;
+}
+.post-figure { background: #FCFCF7; }
