@@ -384,3 +384,16 @@ footer {
   background: #f5c842;
   color: #0d2137;
 }
+
+
+/* Whiteboard diagram */
+.post-figure {
+  margin: 28px 0; padding: 22px 20px 16px;
+  background: #FCFCFA; border: 1px solid var(--border); border-radius: 10px;
+}
+.post-figure svg { display: block; width: 100%; height: auto; font-family: inherit; }
+.post-figure figcaption {
+  margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border);
+  font-size: 0.8rem; color: #5A6B78; text-align: center; line-height: 1.5;
+}
+@media (max-width: 600px) { .post-figure { padding: 14px 12px 10px; } }

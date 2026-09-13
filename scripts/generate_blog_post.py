@@ -19,6 +19,7 @@ ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 if not ANTHROPIC_API_KEY:
     raise SystemExit("ANTHROPIC_API_KEY environment variable is not set. Set it before running this script.")
 CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5")
+WEB_SEARCH_TOOL = os.environ.get("WEB_SEARCH_TOOL", "web_search_20260318")
 BLOG_DIR       = Path(__file__).parent.parent / "client" / "public" / "blog"
 REPO_ROOT      = Path(__file__).parent.parent
 
@@ -304,27 +305,69 @@ TOPIC_POOL_EDUCATIONAL = [
 ]
 
 
-def claude_generate(prompt: str) -> str:
-    url = "https://api.anthropic.com/v1/messages"
-    payload = {
-        "model": CLAUDE_MODEL,
-        "max_tokens": 8192,
-        "messages": [{"role": "user", "content": prompt}],
-    }
+def _api(payload: dict) -> dict:
     data = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(url, data=data, headers={
+    req = urllib.request.Request("https://api.anthropic.com/v1/messages", data=data, headers={
         "content-type": "application/json",
         "x-api-key": ANTHROPIC_API_KEY,
         "anthropic-version": "2023-06-01",
     })
+    with urllib.request.urlopen(req, timeout=300) as resp:
+        return json.loads(resp.read())
+
+
+def _text_of(result: dict) -> str:
+    return "".join(b.get("text", "") for b in result.get("content", []) if b.get("type") == "text")
+
+
+def claude_generate(prompt: str) -> str:
     try:
-        with urllib.request.urlopen(req, timeout=180) as resp:
-            result = json.loads(resp.read())
-            return "".join(b["text"] for b in result["content"] if b.get("type") == "text")
+        return _text_of(_api({
+            "model": CLAUDE_MODEL,
+            "max_tokens": 8192,
+            "messages": [{"role": "user", "content": prompt}],
+        }))
     except urllib.error.HTTPError as e:
         print(f"Claude API error {e.code}: {e.read().decode()[:500]}"); sys.exit(1)
     except Exception as e:
         print(f"Claude error: {e}"); sys.exit(1)
+
+
+def claude_research(prompt: str) -> str:
+    """Research with live web search. Falls back to a plain call if the tool fails,
+    so a search outage degrades quality instead of killing the run."""
+    tools = [{"type": WEB_SEARCH_TOOL, "name": "web_search", "max_uses": 6}]
+    messages = [{"role": "user", "content": prompt}]
+    collected, searches = [], 0
+    try:
+        for _ in range(5):
+            result = _api({"model": CLAUDE_MODEL, "max_tokens": 8192,
+                           "messages": messages, "tools": tools})
+            searches += (result.get("usage", {}).get("server_tool_use", {})
+                                .get("web_search_requests", 0))
+            collected.append(_text_of(result))
+            if result.get("stop_reason") != "pause_turn":
+                break
+            messages.append({"role": "assistant", "content": result["content"]})
+        out = "\n".join(t for t in collected if t.strip())
+        print(f"Research complete ({searches} web searches)")
+        return out
+    except urllib.error.HTTPError as e:
+        print(f"Web search unavailable ({e.code}): {e.read().decode()[:300]}")
+        print("Falling back to research without web access.")
+        return claude_generate(prompt)
+    except Exception as e:
+        print(f"Web search error: {e} - falling back to research without web access.")
+        return claude_generate(prompt)
+
+
+EM_DASH_RANGE = re.compile(r"(\d)\s*[\u2014\u2013]\s*(\d)")
+
+def strip_em_dashes(text: str) -> str:
+    """House style: no em dashes. They read as AI-generated."""
+    text = EM_DASH_RANGE.sub(r"\1-\2", text)
+    text = re.sub(r"\s*[\u2014\u2013]\s*", ", ", text)
+    return re.sub(r",\s*,", ",", text)
 
 
 def build_comparison_table(title: str, headers: list, rows: list) -> str:
@@ -420,8 +463,28 @@ REQUIREMENTS:
 6. 4-6 sections. Total 800-1200 words of body text.
 7. DO NOT include a "Start free at acqlerate.com" section — that will be added programmatically.
 8. DO NOT use <h1> tags — the title is added separately.
-9. Write like a knowledgeable colleague explaining something important over coffee. Direct, practical, zero fluff.
-10. Every section should have a "so what" — connect facts to what the reader should actually DO or KNOW.
+9. VOICE. Write like a knowledgeable colleague explaining something important over coffee.
+   Warm, conversational, with real personality and light humor throughout. Acqlerate has a voice;
+   it is not a government training portal. Humor stays workplace-appropriate, never silly.
+   Plain English always. Explain through concrete mechanics, not abstract definitions. Assume the
+   reader may still be learning fundamentals, so do not lean on FAR clause citations or heavy
+   regulatory jargon. Respect them: they are professionals, just not all specialists.
+10. Every section needs a "so what". Connect facts to what the reader should actually DO or KNOW.
+11. NO EM DASHES OR EN DASHES anywhere, in the title, deck or body. They read as AI-generated.
+    Use periods, commas or parentheses instead. This rule is absolute.
+12. DIAGRAM. Include exactly one hand-drawn-whiteboard-style inline SVG that makes the single most
+    important idea in the article visually obvious. Put it after the section it illustrates, as:
+    <figure class="post-figure"><svg ...>...</svg><figcaption>One line saying what it shows.</figcaption></figure>
+    Rules for the SVG:
+      - viewBox="0 0 720 360", no width/height attributes, no external references, no <image>.
+      - Whiteboard look: stroke-width 2 to 3, stroke-linecap="round", stroke-linejoin="round",
+        fill="none" for strokes, generous white space, nothing crowded.
+      - Palette only: ink #0D1B2A, primary #01696F, wash #E6F2F3, highlight #C9A227.
+      - Label everything with <text> at font-size 13 to 16, font-family="inherit", fill #0D1B2A.
+      - Pick the form that fits the DATA: a timeline for a process, stacked or side-by-side bars
+        for a comparison, boxes and arrows for a flow, a 2x2 for a trade-off. Real numbers from the
+        article wherever the topic has them. Roughly 6 to 12 labelled elements.
+      - It must carry information. A decorative shape with no data is a failure.
 
 Start with the title on line 1, deck on line 2, then the body HTML."""
     
@@ -793,16 +856,25 @@ def main() -> int:
     # 1. Research
     print("Researching...")
     research_prompt = f"""You are a defense acquisition expert and journalist.
-Research this topic and provide current (2025-2026) facts, developments, and context:
+Search the web for the CURRENT state of this topic and report what you find:
 {topic['search']}
 
-Provide: specific recent events with dates, key dollar amounts/statistics, practical implications
-for defense PMs and contractors, any recent policy changes. Be specific and factual."""
-    research = claude_generate(research_prompt)
+Prioritise, with dates and sources:
+- Anything that changed in the last 6 months, and where it stands as of {pub_date}
+- Recent FAR/DFARS rules, proposed rules and class deviations touching this topic
+- Major contract awards, recompetes and GAO bid protest decisions
+- Commercial and big-tech moves into the defense market where relevant
+- Specific dollar amounts, programme names, agency names, dates and statistics
+
+Prefer primary sources: acquisition.gov, GAO, DoD and service press releases, Federal Register,
+congressional documents. Say plainly when something is uncertain or contested rather than
+guessing. Do not state a figure you did not find."""
+    research = claude_research(research_prompt)
 
     # 2. Generate article
     print("Writing article...")
     title, deck, body_html = generate_article_body(topic, research, pub_date)
+    title, deck, body_html = strip_em_dashes(title), strip_em_dashes(deck), strip_em_dashes(body_html)
     print(f"Title: {title}")
 
     # 3. Build slug
@@ -823,7 +895,7 @@ for defense PMs and contractors, any recent policy changes. Be specific and fact
 
     # 6. Generate excerpt for index card
     excerpt_prompt = f"Write a 1-sentence excerpt (under 160 chars) for a blog index card. Title: {title}. No quotes."
-    excerpt = claude_generate(excerpt_prompt).strip().strip('"').strip("'")
+    excerpt = strip_em_dashes(claude_generate(excerpt_prompt).strip().strip('"').strip("'"))
 
     # 7. Update index
     add_to_index(slug, title, excerpt, topic, read_time)
