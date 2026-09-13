@@ -718,7 +718,20 @@ def git_push(slug: str, title: str) -> bool:
             ["git", "commit", "-m", f"blog: publish '{title[:60]}'"],
         ]:
             subprocess.run(cmd, cwd=REPO_ROOT, check=True, capture_output=True)
-        # Push using gh auth token — with multiple fallback strategies
+        # In GitHub Actions, actions/checkout has already put an Authorization
+        # header on the remote. Adding a second one makes git send two, and
+        # GitHub rejects the push with 400 Duplicate header. Just push normally.
+        if os.environ.get("GITHUB_ACTIONS") == "true":
+            result = subprocess.run(["git", "push", "origin", "HEAD:main"],
+                                    cwd=REPO_ROOT, capture_output=True)
+            if result.returncode != 0:
+                err = result.stderr.decode() if result.stderr else ""
+                print(f"Push failed: {err}")
+                raise subprocess.CalledProcessError(result.returncode, "git push", stderr=result.stderr)
+            print("Push succeeded (Actions credentials)")
+            return True
+
+        # Local runs: fall back to an explicit token
         import shutil, os
 
         token = ""
