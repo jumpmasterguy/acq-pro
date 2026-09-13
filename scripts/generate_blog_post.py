@@ -312,7 +312,7 @@ def _api(payload: dict) -> dict:
         "x-api-key": ANTHROPIC_API_KEY,
         "anthropic-version": "2023-06-01",
     })
-    with urllib.request.urlopen(req, timeout=300) as resp:
+    with urllib.request.urlopen(req, timeout=600) as resp:
         return json.loads(resp.read())
 
 
@@ -336,7 +336,7 @@ def claude_generate(prompt: str) -> str:
 def claude_research(prompt: str) -> str:
     """Research with live web search. Falls back to a plain call if the tool fails,
     so a search outage degrades quality instead of killing the run."""
-    tools = [{"type": WEB_SEARCH_TOOL, "name": "web_search", "max_uses": 6}]
+    tools = [{"type": WEB_SEARCH_TOOL, "name": "web_search", "max_uses": 4}]
     messages = [{"role": "user", "content": prompt}]
     collected, searches = [], 0
     try:
@@ -795,7 +795,7 @@ def git_push(slug: str, title: str) -> bool:
             return True
 
         # Local runs: fall back to an explicit token
-        import shutil, os
+        import shutil
 
         token = ""
 
