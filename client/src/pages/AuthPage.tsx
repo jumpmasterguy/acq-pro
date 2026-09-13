@@ -173,32 +173,60 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
 
   return (
     <div className="min-h-screen bg-background flex flex-col lg:flex-row safe-top">
-      {/* Left panel — branding */}
-      <div className="hidden lg:flex flex-col justify-between w-[45%] bg-sidebar text-sidebar-foreground p-10">
+      {/* Left panel — branding. Deliberately dark regardless of the app's
+          light/dark toggle (a "deep field" brand treatment, not the sidebar
+          theme) — see claude/auth-page-logo-back-link-2026-09.md for why. */}
+      <div
+        className="hidden lg:flex flex-col justify-between w-[45%] p-10 relative overflow-hidden text-white"
+        style={{ background: "linear-gradient(165deg, #0a1e23 0%, #0e2c30 55%, #0a2226 100%)" }}
+      >
+        {/* Decorative hexagon field — echoes the logo's own hex mark, enlarged */}
+        <svg
+          width="620" height="620" viewBox="0 0 620 620"
+          className="absolute -top-36 -right-56 opacity-50 pointer-events-none"
+          aria-hidden="true"
+        >
+          <polygon points="310,40 500,150 500,370 310,480 120,370 120,150" fill="none" stroke="#164047" strokeWidth="2" />
+          <polygon points="310,110 440,185 440,335 310,410 180,335 180,185" fill="none" stroke="#1d5058" strokeWidth="2" />
+        </svg>
+        <svg
+          width="420" height="420" viewBox="0 0 420 420"
+          className="absolute -bottom-24 -left-36 opacity-45 pointer-events-none"
+          aria-hidden="true"
+        >
+          <polygon points="210,20 350,100 350,260 210,340 70,260 70,100" fill="none" stroke="#164047" strokeWidth="2" />
+        </svg>
+        <div
+          className="absolute top-28 right-16 w-80 h-80 rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(45,212,191,0.16) 0%, rgba(45,212,191,0) 70%)" }}
+        />
+
         {/* Logo — clickable back to the homepage whenever we can (see onBack) */}
-        {onBack ? (
-          <button
-            type="button"
-            onClick={onBack}
-            className="flex items-center self-start hover:opacity-80 transition-opacity cursor-pointer"
-            aria-label="Back to homepage"
-            title="Back to homepage"
-          >
-            <AcqlerateLogo iconSize={40} />
-          </button>
-        ) : (
-          <AcqlerateLogo iconSize={40} />
-        )}
+        <div className="relative z-10">
+          {onBack ? (
+            <button
+              type="button"
+              onClick={onBack}
+              className="flex items-center self-start hover:opacity-80 transition-opacity cursor-pointer"
+              aria-label="Back to homepage"
+              title="Back to homepage"
+            >
+              <AcqlerateLogo iconSize={40} wordmarkTheme="light" />
+            </button>
+          ) : (
+            <AcqlerateLogo iconSize={40} wordmarkTheme="light" />
+          )}
+        </div>
 
         {/* Hero copy */}
-        <div className="space-y-6">
+        <div className="space-y-6 relative z-10">
           <div>
-            <h1 className="text-3xl font-bold leading-tight mb-3">
+            <h1 className="text-3xl font-bold leading-tight mb-3 text-white">
               Master DoD Acquisitions.<br />
-              <span className="text-sidebar-primary">Advance your career.</span>
+              <span style={{ color: "#2dd4bf" }}>Advance your career.</span>
             </h1>
-            <p className="text-sidebar-foreground/60 text-sm leading-relaxed max-w-sm">
-              The comprehensive training platform for professionals breaking into 
+            <p className="text-white/60 text-sm leading-relaxed max-w-sm">
+              The comprehensive training platform for professionals breaking into
               Defense Program Management — finance, contracts, data, capture, and ops.
             </p>
           </div>
@@ -206,22 +234,28 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
           <div className="space-y-3">
             {highlights.map(({ icon: Icon, label }) => (
               <div key={label} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-sidebar-accent flex items-center justify-center flex-shrink-0">
-                  <Icon className="w-4 h-4 text-sidebar-primary" />
+                <div
+                  className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ background: "rgba(45,212,191,0.14)" }}
+                >
+                  <Icon className="w-4 h-4" style={{ color: "#2dd4bf" }} />
                 </div>
-                <span className="text-sm text-sidebar-foreground/80">{label}</span>
+                <span className="text-sm text-white/80">{label}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Testimonial */}
-        <div className="bg-sidebar-accent rounded-xl p-5">
-          <p className="text-sm text-sidebar-foreground/80 italic mb-3">
-            "Acqlerate gave me exactly what I needed to understand the FAR, DFARS, and how 
+        <div
+          className="rounded-xl p-5 relative z-10"
+          style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}
+        >
+          <p className="text-sm italic mb-3 text-white/80">
+            "Acqlerate gave me exactly what I needed to understand the FAR, DFARS, and how
             defense budgets actually work — all in one place."
           </p>
-          <div className="text-xs text-sidebar-foreground/50">— Defense PM Candidate</div>
+          <div className="text-xs text-white/45">— Defense PM Candidate</div>
         </div>
       </div>
 

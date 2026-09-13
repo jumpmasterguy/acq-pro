@@ -5,6 +5,15 @@ interface AcqllerateLogoProps {
   showWordmark?: boolean;
   /** Additional className for the wrapper */
   className?: string;
+  /**
+   * Wordmark color scheme. 'auto' (default) follows the sidebar theme token
+   * (dark navy "Acq" in light mode, light in dark mode) — correct on a
+   * surface that itself follows the app's light/dark toggle. 'light' forces
+   * a white "Acq" and a lighter teal "lerate", for a surface that's
+   * permanently dark regardless of theme (e.g. the sign-in page's branding
+   * panel).
+   */
+  wordmarkTheme?: "auto" | "light";
 }
 
 /**
@@ -15,6 +24,7 @@ export function AcqlerateLogo({
   iconSize = 36,
   showWordmark = true,
   className = "",
+  wordmarkTheme = "auto",
 }: AcqllerateLogoProps) {
   const textSize = Math.round(iconSize * 0.52);
   const gap = Math.round(iconSize * 0.33);
@@ -70,8 +80,12 @@ export function AcqlerateLogo({
             fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
           }}
         >
-          <span className="text-sidebar-foreground">Acq</span>
-          <span style={{ color: "#01696f" }}>lerate</span>
+          {wordmarkTheme === "light" ? (
+            <span style={{ color: "#ffffff" }}>Acq</span>
+          ) : (
+            <span className="text-sidebar-foreground">Acq</span>
+          )}
+          <span style={{ color: wordmarkTheme === "light" ? "#2dd4bf" : "#01696f" }}>lerate</span>
         </span>
       )}
     </div>
