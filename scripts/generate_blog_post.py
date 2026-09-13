@@ -411,7 +411,7 @@ def build_email_capture_block(form_id: str, success_id: str, source: str) -> str
     return f"""
 <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:14px;padding:28px 32px;margin:40px 0;color:white;">
   <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;opacity:0.7;margin-bottom:6px">Free Starter Kit</div>
-  <h3 style="font-size:1.1rem;font-weight:800;margin:0 0 8px;color:white">Get the Acqlerate Acquisition Starter Kit — Free</h3>
+  <h3 style="font-size:1.1rem;font-weight:800;margin:0 0 8px;color:white">Get the Acqlerate Acquisition Starter Kit (Free)</h3>
   <p style="font-size:0.9rem;opacity:0.9;margin:0 0 18px;line-height:1.5">Key terms, ACAT levels, career roadmaps, and the 5 most common acquisition mistakes. Tailored to your role — USG, contractor, or career changer.</p>
   <form id="{form_id}" onsubmit="submitSidebarLead(event,'{form_id}','{success_id}')" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
     <input type="email" placeholder="your@email.com" required style="padding:10px 14px;border:none;border-radius:8px;font-size:0.9rem;font-family:inherit;width:240px;max-width:100%;outline:none;color:#1A1A1A" />
@@ -484,6 +484,10 @@ REQUIREMENTS:
       - Pick the form that fits the DATA: a timeline for a process, stacked or side-by-side bars
         for a comparison, boxes and arrows for a flow, a 2x2 for a trade-off. Real numbers from the
         article wherever the topic has them. Roughly 6 to 12 labelled elements.
+      - LAYOUT: nothing may overlap. Every arrow must start and end at the edge of a box,
+        never on top of text and never pointing into a bare label. Leave at least 12px of clear
+        space around every <text>. Keep all drawing inside x 20 to 700 and y 20 to 340, and use
+        the full height rather than crowding everything into the top half.
       - It must carry information. A decorative shape with no data is a failure.
 
 Start with the title on line 1, deck on line 2, then the body HTML."""
@@ -532,7 +536,7 @@ def build_sidebar_capture(form_id: str, success_id: str) -> str:
     return f"""
     <div class="sidebar-capture" style="margin-top:24px;background:var(--gold-bg);border:1.5px solid #F0D060;border-radius:12px;padding:20px">
       <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold);margin-bottom:6px">Free Resource</div>
-      <p style="font-size:0.85rem;color:var(--text);margin:0 0 12px;line-height:1.5">Acquisition Starter Kit — tailored to your role. Key terms, career paths, the 5 biggest mistakes.</p>
+      <p style="font-size:0.85rem;color:var(--text);margin:0 0 12px;line-height:1.5">Acquisition Starter Kit, tailored to your role. Key terms, career paths, the 5 biggest mistakes.</p>
       <form id="{form_id}" onsubmit="submitSidebarLead(event,'{form_id}','{success_id}')" style="display:flex;flex-direction:column;gap:8px">
         <input type="email" placeholder="your@email.com" required style="padding:9px 12px;border:1.5px solid #E0C050;border-radius:7px;font-size:0.85rem;font-family:inherit;outline:none" />
         <button type="submit" style="background:var(--gold);color:white;border:none;cursor:pointer;font-size:0.85rem;font-weight:700;padding:9px;border-radius:7px;font-family:inherit">Get Starter Kit →</button>
@@ -606,7 +610,7 @@ def assemble_post(title: str, deck: str, body_html: str, topic: dict,
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{title} — Acqlerate</title>
+  <title>{title} | Acqlerate</title>
   <meta name="description" content="{deck}" />
   <meta property="og:title" content="{title}" />
   <meta property="og:description" content="{deck}" />
@@ -680,7 +684,7 @@ def assemble_post(title: str, deck: str, body_html: str, topic: dict,
     <!-- Bottom CTA -->
     <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:16px;padding:32px;margin-top:48px;color:white;">
       <div style="font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;opacity:0.7;margin-bottom:8px">Master Defense Acquisitions</div>
-      <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:10px;color:white">Start Free — Six Modules, 42 Lessons</h3>
+      <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:10px;color:white">Start Free. Six Modules, 42 Lessons</h3>
       <p style="font-size:0.95rem;opacity:0.9;margin-bottom:20px;line-height:1.6">Built for DoD program managers, contracting officers, and defense contractors. Novice through advanced. The <strong>{mod['title']}</strong> module goes deep on everything covered in this post.</p>
       <a href="/app#/auth" style="display:inline-block;background:white;color:#01696F;font-weight:800;font-size:0.95rem;padding:12px 24px;border-radius:10px;text-decoration:none;margin-right:12px">Start Learning Free →</a>
       <a href="/app#/upgrade" style="display:inline-block;color:rgba(255,255,255,0.85);font-weight:600;font-size:0.9rem;padding:12px 0;text-decoration:none">See all modules →</a>
@@ -886,7 +890,7 @@ guessing. Do not state a figure you did not find."""
 
     # 4. Assemble full HTML with all required elements
     print("Assembling post...")
-    post_html = assemble_post(title, deck, body_html, topic, pub_date, slug, read_time)
+    post_html = strip_em_dashes(assemble_post(title, deck, body_html, topic, pub_date, slug, read_time))
 
     # 5. Write file
     post_path = BLOG_DIR / f"{slug}.html"
