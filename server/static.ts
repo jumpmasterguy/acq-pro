@@ -137,8 +137,13 @@ export function serveStatic(app: Express) {
     if (fs.existsSync(filePath)) {
       return sendNoCache(res, filePath);
     }
-    // Fallback to blog index if post not found
-    return res.redirect("/blog");
+    // Unknown slug: serve the blog index so a human still lands somewhere
+    // useful, but with a real 404 status. The previous 302 → /blog told
+    // search engines "this URL is fine, it just moved," which keeps dead
+    // URLs in the index and gets flagged as a soft 404 in Search Console.
+    // Deliberately removed posts belong in BLOG_SLUG_REDIRECTS above (301).
+    res.status(404);
+    return sendNoCache(res, path.resolve(distPath, "blog", "index.html"));
   });
 
   // Static informational pages

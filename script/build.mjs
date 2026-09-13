@@ -6,6 +6,9 @@ try { rmSync("dist", { recursive: true, force: true }); } catch(e) {}
 
 console.log("Node version:", process.version);
 
+console.log("Syncing blog-derived files (homepage carousel, sitemap)...");
+execSync("node scripts/sync-blog.mjs", { stdio: "inherit" });
+
 console.log("Building client (vite)...");
 execSync("node node_modules/vite/bin/vite.js build", { stdio: "inherit" });
 
