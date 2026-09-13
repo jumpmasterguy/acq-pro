@@ -62,7 +62,6 @@ function PWAInstallLink() {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import Landing from "@/pages/Landing";
 import Dashboard from "@/pages/Dashboard";
 import ModulePage from "@/pages/ModulePage";
 import LessonPage from "@/pages/LessonPage";
@@ -84,7 +83,6 @@ import { apiRequest } from "@/lib/queryClient";
 
 // View types
 type View =
-  | { type: 'landing' }
   | { type: 'auth' }
   | { type: 'onboarding' }
   | { type: 'dashboard' }
@@ -125,7 +123,7 @@ const VIEW_STORAGE_KEY = 'acqpro_last_view';
 
 function saveView(v: View) {
   // Only persist meaningful authenticated views
-  if (v.type === 'landing' || v.type === 'auth') return;
+  if (v.type === 'auth') return;
   try { sessionStorage.setItem(VIEW_STORAGE_KEY, JSON.stringify(v)); } catch {}
 }
 
@@ -177,21 +175,20 @@ function parseHashView(): View | null {
 }
 
 function AppContent() {
-  // Check if we arrived via a landing page CTA (/app#/auth)
-  const arrivedAtAuth = typeof window !== 'undefined' &&
-    window.location.hash.startsWith('#/auth');
   // Capture any deep link (e.g. #/lesson/finance-8 from an email) once, at
   // mount, before the session check or anything else touches the hash. If
   // the visitor turns out to be logged out, we route them to login instead
-  // of the marketing landing page, and send them on to this exact spot the
+  // of the marketing homepage, and send them on to this exact spot the
   // moment they're in — instead of dropping a signed-out click on the
   // homepage and a fresh login on the dashboard, both losing the destination.
   const pendingDeepLinkRef = useRef<View | null>(
     typeof window !== 'undefined' ? parseHashView() : null
   );
-  const [view, setView] = useState<View>(
-    arrivedAtAuth ? { type: 'auth' } : pendingDeepLinkRef.current ? { type: 'auth' } : { type: 'landing' }
-  );
+  // The SPA (this file) only ever lives at /app — the actual marketing
+  // homepage is a separate static page served at the bare "/" (see
+  // server/static.ts) — so there's no in-app "landing" view to default to
+  // here; every unauthenticated path starts at the sign-in screen.
+  const [view, setView] = useState<View>({ type: 'auth' });
   // Dark mode — persisted in cookie (works on Railway, not a sandboxed iframe)
   const [darkMode, setDarkMode] = useState(() => {
     try {
@@ -454,14 +451,6 @@ function AppContent() {
     setView({ type: 'onboarding' });
   };
 
-  const handleGetStarted = () => {
-    if (authState.status === 'authenticated') {
-      setView({ type: 'dashboard' });
-    } else {
-      setView({ type: 'auth' });
-    }
-  };
-
   const handleSelectModule = (moduleId: string, activeCareer?: string) => setView({ type: 'module', moduleId, activeCareer });
   const handleSelectLesson = (lessonId: string) => {
     const career = (view as any).activeCareer;
@@ -476,7 +465,9 @@ function AppContent() {
     clearSavedView();
     setAuthState({ status: 'unauthenticated' });
     setIdleSignOutNotice(false);
-    setView({ type: 'landing' });
+    // Send them to the real marketing homepage (a separate static page at
+    // "/" — see server/static.ts), not an in-app view.
+    window.location.href = 'https://acqlerate.com/';
   }, []);
 
   const handleCompleteLesson = useCallback(async (lessonId: string, quizScore: number) => {
@@ -527,18 +518,6 @@ function AppContent() {
           <div className="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
         </div>
       </div>
-    );
-  }
-
-  // Landing page (no sidebar). When already authenticated, we still allow it
-  // so the user can return to the marketing page without signing out.
-  if (view.type === 'landing') {
-    return (
-      <Landing
-        onGetStarted={handleGetStarted}
-        isAuthenticated={authState.status === 'authenticated'}
-        onBackToDashboard={() => setView({ type: 'dashboard' })}
-      />
     );
   }
 
