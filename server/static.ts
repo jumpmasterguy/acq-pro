@@ -110,6 +110,8 @@ export function serveStatic(app: Express) {
     // Stale sitemap.xml entry (lastmod 2025-11-15, predates the current slug
     // scheme entirely) that never matched a real file — sends it to the
     // current ACAT post instead of 404ing/falling through to the blog index.
+    // Fourth post on the same Section L vs M thesis, removed 2026-09-13.
+    'why-most-defense-proposals-lose-before-anyone-writes-a-word': 'losing-before-you-write-the-l-m-discipline-for-2026-defense-wins',
     'acat-levels-explained': 'acat-levels-your-programs-blueprint-for-oversight-and-management',
   };
 
