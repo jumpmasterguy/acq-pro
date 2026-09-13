@@ -175,8 +175,20 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
     <div className="min-h-screen bg-background flex flex-col lg:flex-row safe-top">
       {/* Left panel — branding */}
       <div className="hidden lg:flex flex-col justify-between w-[45%] bg-sidebar text-sidebar-foreground p-10">
-        {/* Logo */}
-        <AcqlerateLogo iconSize={40} />
+        {/* Logo — clickable back to the homepage whenever we can (see onBack) */}
+        {onBack ? (
+          <button
+            type="button"
+            onClick={onBack}
+            className="flex items-center self-start hover:opacity-80 transition-opacity cursor-pointer"
+            aria-label="Back to homepage"
+            title="Back to homepage"
+          >
+            <AcqlerateLogo iconSize={40} />
+          </button>
+        ) : (
+          <AcqlerateLogo iconSize={40} />
+        )}
 
         {/* Hero copy */}
         <div className="space-y-6">
@@ -230,7 +242,19 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
 
         {/* Mobile logo */}
         <div className="mb-8 lg:hidden">
-          <AcqlerateLogo iconSize={36} />
+          {onBack ? (
+            <button
+              type="button"
+              onClick={onBack}
+              className="flex items-center hover:opacity-80 transition-opacity cursor-pointer"
+              aria-label="Back to homepage"
+              title="Back to homepage"
+            >
+              <AcqlerateLogo iconSize={36} />
+            </button>
+          ) : (
+            <AcqlerateLogo iconSize={36} />
+          )}
         </div>
 
         <div className="w-full max-w-md">
