@@ -548,7 +548,11 @@ function AppContent() {
       <AuthPage
         onAuthenticated={handleAuthenticated}
         darkMode={darkMode}
-        onBack={view.type === 'auth' ? () => setView({ type: 'landing' }) : undefined}
+        // Send them to the real marketing site, not the in-app `landing` view
+        // — that view is an old, out-of-sync copy of the homepage (stale
+        // headline/stats vs. the live acqlerate.com), so routing back into it
+        // from the sign-in page showed visitors an outdated page.
+        onBack={view.type === 'auth' ? () => { window.location.href = 'https://acqlerate.com/'; } : undefined}
         notice={idleSignOutNotice ? "You were signed out after 30 minutes of inactivity. Log back in to continue." : undefined}
       />
     );
