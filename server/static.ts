@@ -112,6 +112,10 @@ export function serveStatic(app: Express) {
     // current ACAT post instead of 404ing/falling through to the blog index.
     // Fourth post on the same Section L vs M thesis, removed 2026-09-13.
     'why-most-defense-proposals-lose-before-anyone-writes-a-word': 'losing-before-you-write-the-l-m-discipline-for-2026-defense-wins',
+    // Duplicate-intent merges, 2026-09-13.
+    'idiqs-task-orders-win-big-in-defenses-contract-powerhouse': 'mastering-idiqs-your-2025-2026-playbook-for-winning-defense-task-orders',
+    'defense-pm-your-2026-playbook-for-certs-skills-timeline': 'what-it-actually-takes-to-become-a-defense-program-manager-in-2026',
+    'fy26-dod-contracts-pentagons-big-bets-what-they-mean': 'decoding-dods-latest-spends-fy26-contracts-point-to-future-priorities',
     'acat-levels-explained': 'acat-levels-your-programs-blueprint-for-oversight-and-management',
   };
 
