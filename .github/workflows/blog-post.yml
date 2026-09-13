@@ -1,0 +1,22 @@
+name: Blog post
+on:
+  schedule:
+    - cron: "0 7 * * 2,6"
+  workflow_dispatch:
+
+concurrency:
+  group: blog-post
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - run: python3 scripts/generate_blog_post.py
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -15,9 +15,10 @@ from pathlib import Path
 import urllib.request
 
 # ── Config ────────────────────────────────────────────────────────────────────
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-if not GEMINI_API_KEY:
-    raise SystemExit("GEMINI_API_KEY environment variable is not set. Set it before running this script.")
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
+if not ANTHROPIC_API_KEY:
+    raise SystemExit("ANTHROPIC_API_KEY environment variable is not set. Set it before running this script.")
+CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5")
 BLOG_DIR       = Path(__file__).parent.parent / "client" / "public" / "blog"
 REPO_ROOT      = Path(__file__).parent.parent
 
@@ -303,20 +304,28 @@ TOPIC_POOL_EDUCATIONAL = [
 ]
 
 
-def gemini_generate(prompt: str) -> str:
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+def claude_generate(prompt: str) -> str:
+    url = "https://api.anthropic.com/v1/messages"
     payload = {
-        "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.7, "maxOutputTokens": 8192},
+        "model": CLAUDE_MODEL,
+        "max_tokens": 8192,
+        "temperature": 0.7,
+        "messages": [{"role": "user", "content": prompt}],
     }
     data = json.dumps(payload).encode("utf-8")
-    req  = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
+    req = urllib.request.Request(url, data=data, headers={
+        "content-type": "application/json",
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+    })
     try:
-        with urllib.request.urlopen(req, timeout=120) as resp:
+        with urllib.request.urlopen(req, timeout=180) as resp:
             result = json.loads(resp.read())
-            return result["candidates"][0]["content"]["parts"][0]["text"]
+            return "".join(b["text"] for b in result["content"] if b.get("type") == "text")
+    except urllib.error.HTTPError as e:
+        print(f"Claude API error {e.code}: {e.read().decode()[:500]}"); sys.exit(1)
     except Exception as e:
-        print(f"Gemini error: {e}"); sys.exit(1)
+        print(f"Claude error: {e}"); sys.exit(1)
 
 
 def build_comparison_table(title: str, headers: list, rows: list) -> str:
@@ -385,7 +394,7 @@ def build_module_cta(module_key: str, context_note: str) -> str:
 
 
 def generate_article_body(topic: dict, research: str, pub_date: str) -> tuple:
-    """Ask Gemini for the article body + title + deck. Returns (title, deck, body_html)."""
+    """Ask Claude for the article body + title + deck. Returns (title, deck, body_html)."""
     
     table_instruction = (
         "Include a comparison table where most helpful (use <table class='comparison-table'>)."
@@ -417,7 +426,7 @@ REQUIREMENTS:
 
 Start with the title on line 1, deck on line 2, then the body HTML."""
     
-    raw = gemini_generate(prompt)
+    raw = claude_generate(prompt)
     lines = raw.strip().split('\n')
     
     # Parse title from line 1
@@ -436,10 +445,10 @@ Start with the title on line 1, deck on line 2, then the body HTML."""
     
     # If title/deck look wrong (too long or contain HTML), regenerate
     if len(title) > 120 or '<' in title:
-        title_raw = gemini_generate(f"Write ONE blog post title under 85 characters for this content. Return ONLY the title, no quotes:\n\n{body[:400]}")
+        title_raw = claude_generate(f"Write ONE blog post title under 85 characters for this content. Return ONLY the title, no quotes:\n\n{body[:400]}")
         title = title_raw.strip().strip('"').strip("'")
     if len(deck) > 200 or '<' in deck:
-        deck_raw = gemini_generate(f"Write ONE subtitle sentence under 160 characters for a blog post titled '{title}'. Return ONLY the sentence, no quotes.")
+        deck_raw = claude_generate(f"Write ONE subtitle sentence under 160 characters for a blog post titled '{title}'. Return ONLY the sentence, no quotes.")
         deck = deck_raw.strip().strip('"').strip("'")
     
     return title, deck, body
@@ -777,7 +786,7 @@ Research this topic and provide current (2025-2026) facts, developments, and con
 
 Provide: specific recent events with dates, key dollar amounts/statistics, practical implications
 for defense PMs and contractors, any recent policy changes. Be specific and factual."""
-    research = gemini_generate(research_prompt)
+    research = claude_generate(research_prompt)
 
     # 2. Generate article
     print("Writing article...")
@@ -802,7 +811,7 @@ for defense PMs and contractors, any recent policy changes. Be specific and fact
 
     # 6. Generate excerpt for index card
     excerpt_prompt = f"Write a 1-sentence excerpt (under 160 chars) for a blog index card. Title: {title}. No quotes."
-    excerpt = gemini_generate(excerpt_prompt).strip().strip('"').strip("'")
+    excerpt = claude_generate(excerpt_prompt).strip().strip('"').strip("'")
 
     # 7. Update index
     add_to_index(slug, title, excerpt, topic, read_time)
