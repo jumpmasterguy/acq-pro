@@ -116,6 +116,9 @@ export function serveStatic(app: Express) {
     'idiqs-task-orders-win-big-in-defenses-contract-powerhouse': 'mastering-idiqs-your-2025-2026-playbook-for-winning-defense-task-orders',
     'defense-pm-your-2026-playbook-for-certs-skills-timeline': 'what-it-actually-takes-to-become-a-defense-program-manager-in-2026',
     'fy26-dod-contracts-pentagons-big-bets-what-they-mean': 'decoding-dods-latest-spends-fy26-contracts-point-to-future-priorities',
+    // Duplicate-intent merges, 2026-09-13.
+    'the-dods-workforce-gap-your-call-to-a-critical-career': 'dods-1102-shortage-your-gateway-to-a-high-impact-career',
+    'otas-in-2026-what-the-15b-surge-means-for-your-defense-business': 'dods-ota-surge-in-2026-what-defense-contractors-need-to-know-now',
     'acat-levels-explained': 'acat-levels-your-programs-blueprint-for-oversight-and-management',
   };
 

@@ -13,6 +13,12 @@ PAIRS = [
   "defense-pm-your-2026-playbook-for-certs-skills-timeline"),
  ("decoding-dods-latest-spends-fy26-contracts-point-to-future-priorities",
   "fy26-dod-contracts-pentagons-big-bets-what-they-mean"),
+ # 1102 names the job series people actually search for, and is the newer post.
+ ("dods-1102-shortage-your-gateway-to-a-high-impact-career",
+  "the-dods-workforce-gap-your-call-to-a-critical-career"),
+ # The $15B post opens "As we stand in April 2026", which dates it. Newer one does not.
+ ("dods-ota-surge-in-2026-what-defense-contractors-need-to-know-now",
+  "otas-in-2026-what-the-15b-surge-means-for-your-defense-business"),
 ]
 
 index = BLOG / "index.html"
