@@ -5,6 +5,7 @@ Allow: /blog
 Allow: /teams
 Allow: /pay-guide
 Disallow: /app
+Allow: /api/stats
 Disallow: /api/
 
 Sitemap: https://acqlerate.com/sitemap.xml

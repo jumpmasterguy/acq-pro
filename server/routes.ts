@@ -1241,6 +1241,73 @@ export async function registerRoutes(
     }
   });
 
+  // ─── Public stats ────────────────────────────────────────────────────────
+
+  // GET /api/stats — aggregate counts only. No auth, no PII.
+  //
+  // Feeds the cost ledger's weekly refresh, which runs unattended and has no
+  // way to hold an admin session. Returns integers and nothing else; per-user
+  // data stays behind requireAuth + isAdmin on /api/admin/analytics.
+  //
+  // Deliberately does NOT apply excludeInternalAccounts: the ledger wants the
+  // true registered total and nets out the internal accounts in its own
+  // arithmetic. Only one of the two layers should filter — if this ever starts
+  // filtering, the ledger's user table and cost-per-user denominator must
+  // change with it.
+  app.get("/api/stats", async (_req: Request, res: Response) => {
+    try {
+      const users = await storage.getAllUsers();
+      const now = Date.now();
+      const oneDayMs = 24 * 60 * 60 * 1000;
+
+      let free = 0, trialing = 0, lifetime = 0, paying = 0, dau = 0;
+
+      // Signups per calendar month, e.g. { "2026-03": 4 }. registeredAt is the
+      // signup timestamp on the users table (there is no createdAt column).
+      // This is what lets the ledger backfill user growth from March 2026
+      // instead of starting its series the day it was built.
+      const signupsByMonth: Record<string, number> = {};
+
+      for (const u of users) {
+        switch (u.subscriptionStatus) {
+          case "lifetime": lifetime++; break;
+          case "trialing": trialing++; break;
+          case "active":   paying++;   break;
+          default:         free++;
+        }
+
+        const lastSeen = u.lastActiveAt ?? u.lastLoginAt;
+        if (lastSeen && now - new Date(lastSeen).getTime() < oneDayMs) dau++;
+
+        const registered = (u as any).registeredAt;
+        if (registered) {
+          const d = new Date(registered);
+          if (!isNaN(d.getTime())) {
+            const key = d.toISOString().slice(0, 7);
+            signupsByMonth[key] = (signupsByMonth[key] ?? 0) + 1;
+          }
+        }
+      }
+
+      // Five minutes is plenty — this is read weekly, not per pageview.
+      res.set("Cache-Control", "public, max-age=300");
+
+      res.json({
+        asOf: new Date().toISOString(),
+        totalUsers: users.length,
+        free,
+        trialing,
+        lifetime,
+        paying,
+        dau,
+        signupsByMonth,
+      });
+    } catch (err) {
+      console.error("[stats] failed", err);
+      res.status(500).json({ error: "stats_unavailable" });
+    }
+  });
+
   // ─── Admin Analytics ─────────────────────────────────────────────────────
 
   // GET /api/admin/analytics — aggregate + per-user engagement stats
