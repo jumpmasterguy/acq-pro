@@ -64,4 +64,34 @@ export const SIDEBAR_RESOURCES: SidebarResource[] = [
     lessonId: 'finance-8',
     proOnly: true,
   },
+  // Defense Finance Cheat Sheets — free for everyone (lead magnet, not a paid
+  // pack). Print-ready reference cards; the paid packs are the working tools.
+  {
+    title: 'Cheat Sheet: Color of Money Decision Tree',
+    description: 'Which appropriation to use, obligation periods, and what each color can not buy',
+    url: '/products/pack3-finance-cheat-sheets/color-of-money-decision-tree.xlsx',
+    lessonId: 'finance-1',
+    proOnly: false,
+  },
+  {
+    title: 'Cheat Sheet: EVM Formulas Quick Reference',
+    description: 'CV, SV, CPI, SPI, TCPI and all four EAC methods on one printable page',
+    url: '/products/pack3-finance-cheat-sheets/evm-formulas-quick-reference.xlsx',
+    lessonId: 'finance-8',
+    proOnly: false,
+  },
+  {
+    title: 'Cheat Sheet: PPBE Cycle One-Pager',
+    description: 'All four phases, who owns each, key outputs, and milestone dates',
+    url: '/products/pack3-finance-cheat-sheets/ppbe-cycle-one-pager.xlsx',
+    lessonId: 'finance-1',
+    proOnly: false,
+  },
+  {
+    title: 'Cheat Sheet: Wrap Rate Breakdown',
+    description: 'Live rate build-up calculator plus typical wrap rates by contractor type',
+    url: '/products/pack3-finance-cheat-sheets/wrap-rate-breakdown.xlsx',
+    lessonId: 'finance-8',
+    proOnly: false,
+  },
 ];

@@ -47,18 +47,17 @@
   <!-- Header -->
   <div style="display:grid;grid-template-columns:1fr auto;gap:32px;align-items:start;margin-bottom:40px">
     <div>
-      <span style="background:#D19900;color:white;font-size:0.7rem;font-weight:800;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.06em">Best Value</span>
+      <span style="background:#01696F;color:white;font-size:0.7rem;font-weight:800;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.06em">Free</span>
       <h1 style="font-size:2rem;font-weight:800;margin:12px 0 8px;line-height:1.2;color:#0D1B2A">Defense Finance Cheat Sheets</h1>
       <p style="font-size:1.05rem;color:#6B7280;margin:0 0 16px">4 quick-reference tools for the financial mechanics of DoD programs</p>
       <p style="font-size:0.85rem;color:#9CA3AF">For: Program managers, financial analysts, resource managers, and defense contractors dealing with cost-type contracts</p>
     </div>
-    <!-- Pricing box -->
+    <!-- Free download box -->
     <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:16px;padding:28px 24px;color:white;text-align:center;min-width:200px;flex-shrink:0">
-      <div style="font-size:0.75rem;opacity:0.7;text-decoration:line-through;margin-bottom:2px">$15</div>
-      <div style="font-size:3rem;font-weight:900;line-height:1">$12</div>
-      <div style="font-size:0.8rem;opacity:0.8;margin-bottom:20px">Instant download</div>
-      <button onclick="buyPack('finance-cheat-sheets')" style="display:block;width:100%;background:white;color:#01696F;font-weight:800;font-size:0.95rem;padding:12px;border-radius:10px;border:none;cursor:pointer;margin-bottom:10px" id="buyBtn">Get This Pack →</button>
-      <div style="font-size:0.75rem;opacity:0.7">Secured by Stripe · 30-day guarantee</div>
+      <div style="font-size:3rem;font-weight:900;line-height:1">Free</div>
+      <div style="font-size:0.8rem;opacity:0.8;margin-bottom:20px">No signup required</div>
+      <a href="#downloads" style="display:block;width:100%;background:white;color:#01696F;font-weight:800;font-size:0.95rem;padding:12px;border-radius:10px;border:none;cursor:pointer;margin-bottom:10px;text-decoration:none;box-sizing:border-box">Download Now →</a>
+      <div style="font-size:0.75rem;opacity:0.7">Print-ready · Keep them at your desk</div>
     </div>
   </div>
 
@@ -138,18 +137,28 @@
     </a>
   </div>
 
-  <!-- Bottom CTA -->
-  <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:16px;padding:40px;text-align:center;color:white">
-    <h2 style="font-size:1.5rem;font-weight:800;margin:0 0 10px;color:white">Defense Finance Cheat Sheets</h2>
-    <p style="font-size:1rem;opacity:0.9;margin:0 0 24px">4 professional templates · Instant download · 30-day guarantee</p>
-    <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
-      <div>
-        <div style="font-size:2.5rem;font-weight:900;line-height:1">$12</div>
-        <div style="font-size:0.8rem;opacity:0.7">one-time</div>
-      </div>
-      <button onclick="buyPack('finance-cheat-sheets')" style="background:white;color:#01696F;font-weight:800;font-size:1rem;padding:14px 32px;border-radius:12px;border:none;cursor:pointer">Get Instant Access →</button>
+  <!-- Free downloads -->
+  <div id="downloads" style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:16px;padding:40px;text-align:center;color:white">
+    <h2 style="font-size:1.5rem;font-weight:800;margin:0 0 10px;color:white">Download the Cheat Sheets</h2>
+    <p style="font-size:1rem;opacity:0.9;margin:0 0 28px">4 print-ready references · Free · No signup required</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;max-width:640px;margin:0 auto">
+      <a href="/products/pack3-finance-cheat-sheets/color-of-money-decision-tree.xlsx" download style="background:white;color:#01696F;font-weight:700;font-size:0.9rem;padding:14px;border-radius:10px;text-decoration:none">Color of Money Decision Tree ↓</a>
+      <a href="/products/pack3-finance-cheat-sheets/evm-formulas-quick-reference.xlsx" download style="background:white;color:#01696F;font-weight:700;font-size:0.9rem;padding:14px;border-radius:10px;text-decoration:none">EVM Formulas Quick Reference ↓</a>
+      <a href="/products/pack3-finance-cheat-sheets/ppbe-cycle-one-pager.xlsx" download style="background:white;color:#01696F;font-weight:700;font-size:0.9rem;padding:14px;border-radius:10px;text-decoration:none">PPBE Cycle One-Pager ↓</a>
+      <a href="/products/pack3-finance-cheat-sheets/wrap-rate-breakdown.xlsx" download style="background:white;color:#01696F;font-weight:700;font-size:0.9rem;padding:14px;border-radius:10px;text-decoration:none">Wrap Rate Breakdown ↓</a>
     </div>
-    <p style="font-size:0.8rem;opacity:0.6;margin:16px 0 0">Secured by Stripe · Instant download · Questions? <a href="mailto:lucas@acqlerate.com" style="color:rgba(255,255,255,0.7)">Contact us</a></p>
+    <a href="/products/pack3-finance-cheat-sheets/pack-guide.pdf" download style="display:inline-block;margin-top:16px;color:rgba(255,255,255,0.85);font-size:0.85rem">Or grab the full guide (PDF) ↓</a>
+    <p style="font-size:0.8rem;opacity:0.6;margin:24px 0 0">Questions? <a href="mailto:lucas@acqlerate.com" style="color:rgba(255,255,255,0.7)">Contact us</a></p>
+  </div>
+
+  <!-- Upsell to paid packs -->
+  <div style="background:#FEF9E7;border:1.5px solid #F0D060;border-radius:16px;padding:28px;margin-top:24px;text-align:center">
+    <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:#D19900;margin-bottom:8px">Want the working tools?</div>
+    <p style="font-size:0.95rem;color:#374151;margin:0 0 18px;line-height:1.6">These cheat sheets are references. Our template packs are live, formula-driven tools — auto-calculating risk maps, IGCE cost models, and compliance dashboards you fill in and print.</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <a href="/products/pm-essentials" style="background:#D19900;color:white;font-weight:700;font-size:0.9rem;padding:12px 24px;border-radius:9px;text-decoration:none">PM Essentials — $24 →</a>
+      <a href="/products/proposal-toolkit" style="background:white;border:1px solid #E0C050;color:#D19900;font-weight:700;font-size:0.9rem;padding:11px 24px;border-radius:9px;text-decoration:none">Proposal Toolkit — $34 →</a>
+    </div>
   </div>
 
 </div>
@@ -173,28 +182,5 @@
 </footer>
 <script src="/blog/blog.js"></script>
 
-<script>
-async function buyPack(pack) {
-  const btn = document.getElementById('buyBtn');
-  if (btn) { btn.textContent = 'Redirecting to checkout...'; btn.disabled = true; }
-  try {
-    const res = await fetch('/api/packs/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pack })
-    });
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert(data.message || 'Checkout unavailable — please try again.');
-      if (btn) { btn.textContent = 'Get This Pack →'; btn.disabled = false; }
-    }
-  } catch (err) {
-    alert('Network error — please try again.');
-    if (btn) { btn.textContent = 'Get This Pack →'; btn.disabled = false; }
-  }
-}
-</script>
 </body>
 </html>

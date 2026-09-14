@@ -33,7 +33,9 @@ const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 const PACK_PRICES: Record<string, string | undefined> = {
   "pm-essentials":      process.env.STRIPE_PRICE_PACK_PM_ESSENTIALS,
   "proposal-toolkit":   process.env.STRIPE_PRICE_PACK_PROPOSAL_TOOLKIT,
-  "finance-cheat-sheets": process.env.STRIPE_PRICE_PACK_FINANCE_SHEETS,
+  // finance-cheat-sheets is now a FREE lead magnet — no price entry, so
+  // /api/packs/checkout rejects it. It stays in PACK_FILES below so that
+  // anyone who bought it previously keeps working download links.
 };
 
 const PACK_FILES: Record<string, string[]> = {
