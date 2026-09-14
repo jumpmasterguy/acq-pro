@@ -176,6 +176,25 @@ export function serveStatic(app: Express) {
     return res.sendFile(filePath);
   });
 
+  // Paid template pack files live under client/public/products/ so that the
+  // token-checked /api/packs/download route can resolve them from distPath.
+  // That also puts them inside express.static's reach below, which would let
+  // anyone download a paid pack by guessing the URL
+  // (/products/pack1-pm-essentials/igce-calculator.xlsx). Block direct access
+  // to the paid pack directories so the download token is the only way in.
+  //
+  // pack3-finance-cheat-sheets is deliberately NOT listed: it's a free lead
+  // magnet and its product page links straight to those files.
+  const PAID_PACK_DIRS = ["pack1-pm-essentials", "pack2-proposal-toolkit"];
+  app.use((req: Request, res: Response, next) => {
+    const match = req.path.match(/^\/products\/([^/]+)\/.+$/);
+    // 404 rather than 403 — don't confirm the file exists.
+    if (match && PAID_PACK_DIRS.includes(match[1])) {
+      return res.status(404).send("Not found");
+    }
+    next();
+  });
+
   // Serve all other static assets (JS, CSS, images, etc.)
   app.use(express.static(distPath));
 
