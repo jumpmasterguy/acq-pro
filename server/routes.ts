@@ -33,6 +33,7 @@ const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 const PACK_PRICES: Record<string, string | undefined> = {
   "pm-essentials":      process.env.STRIPE_PRICE_PACK_PM_ESSENTIALS,
   "proposal-toolkit":   process.env.STRIPE_PRICE_PACK_PROPOSAL_TOOLKIT,
+  "cpars-playbook":     process.env.STRIPE_PRICE_PACK_CPARS_PLAYBOOK,
   // finance-cheat-sheets is now a FREE lead magnet — no price entry, so
   // /api/packs/checkout rejects it. It stays in PACK_FILES below so that
   // anyone who bought it previously keeps working download links.
@@ -49,6 +50,10 @@ const PACK_FILES: Record<string, string[]> = {
     "risk-register.xlsx",
     "igce-calculator.xlsx",
     "stakeholder-raci.xlsx",
+  ],
+  "cpars-playbook": [
+    "pack-guide.pdf",
+    "cpars-playbook.xlsx",
   ],
   "proposal-toolkit": [
     "pack-guide.pdf",
@@ -836,6 +841,14 @@ export async function registerRoutes(
 
   // ─── Template Pack Routes ────────────────────────────────────────────────────
 
+  // Slug -> folder under client/public/products/
+  const PACK_DIRS: Record<string, string> = {
+    "pm-essentials":        "pack1-pm-essentials",
+    "proposal-toolkit":     "pack2-proposal-toolkit",
+    "finance-cheat-sheets": "pack3-finance-cheat-sheets",
+    "cpars-playbook":       "pack4-cpars-playbook",
+  };
+
   // POST /api/packs/checkout — create Stripe checkout for a template pack
   app.post("/api/packs/checkout", async (req: Request, res: Response) => {
     if (!stripe) return res.status(503).json({ message: "Payment processing not configured" });
@@ -936,7 +949,8 @@ export async function registerRoutes(
     const packFiles = PACK_FILES[purchase.pack] || [];
     if (!packFiles.includes(filename)) return res.status(403).json({ message: "File not in this pack" });
 
-    const packDir = `pack${purchase.pack === "pm-essentials" ? "1" : purchase.pack === "proposal-toolkit" ? "2" : "3"}-${purchase.pack}`;
+    const packDir = PACK_DIRS[purchase.pack];
+    if (!packDir) return res.status(404).json({ message: "Unknown pack" });
     const filePath = require("path").resolve(__dirname, "public", "products", packDir, filename);
     if (!require("fs").existsSync(filePath)) return res.status(404).json({ message: "File temporarily unavailable" });
 

@@ -185,7 +185,7 @@ export function serveStatic(app: Express) {
   //
   // pack3-finance-cheat-sheets is deliberately NOT listed: it's a free lead
   // magnet and its product page links straight to those files.
-  const PAID_PACK_DIRS = ["pack1-pm-essentials", "pack2-proposal-toolkit"];
+  const PAID_PACK_DIRS = ["pack1-pm-essentials", "pack2-proposal-toolkit", "pack4-cpars-playbook"];
   app.use((req: Request, res: Response, next) => {
     const match = req.path.match(/^\/products\/([^/]+)\/.+$/);
     // 404 rather than 403 — don't confirm the file exists.
