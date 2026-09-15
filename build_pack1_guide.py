@@ -6,11 +6,11 @@ ICON_SVG = '''<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/20
 
 def header(page_num, title="PM Essentials: Your First 90 Days"):
     return f'''<div class="header-bar">
-    <div class="left" style="display:flex;align-items:center;gap:8px">
+    <div class="left">
       <div class="icon-badge sm">{ICON_SVG}</div>
       <span class="wordmark-text on-dark sm">Acq<span class="lerate">lerate</span></span>
       <span style="color:#5C6B7A">|</span>
-      <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1 1 auto;min-width:0">{title}</span>
+      <span class="title">{title}</span>
     </div>
     <div class="right">Page {page_num}</div>
   </div>
@@ -63,6 +63,8 @@ HEAD = '''<!DOCTYPE html>
 
   .content { background: white; color: #1f2937; }
   .header-bar { position: absolute; top: 0; left: 0; right: 0; height: 46px; background: var(--navy); display: flex; align-items: center; justify-content: space-between; padding: 0 0.6in; }
+  .header-bar .left { display: flex; align-items: center; gap: 8px; color: #E8EDF1; font-size: 12px; }
+  .header-bar .left .title { white-space: nowrap; }
   .header-bar .right { color: #9AA6B2; font-size: 12px; flex-shrink: 0; margin-left: 12px; }
   .header-accent { position: absolute; top: 46px; left: 0; right: 0; height: 3px; background: var(--teal); }
   .body-area { position: absolute; top: 80px; bottom: 46px; left: 0.75in; right: 0.75in; }
