@@ -41,11 +41,14 @@ const PACK_PRICES: Record<string, string | undefined> = {
 const PACK_FILES: Record<string, string[]> = {
   "pm-essentials": [
     "pack-guide.pdf",
+    "pm-essentials-workbook.xlsx",
+    "pm-briefing-deck.pptx",
+    // Legacy files kept so download links issued before the Sept 2026
+    // rebuild keep working. Not listed on the product page.
     "rfp-compliance-matrix.xlsx",
     "risk-register.xlsx",
     "igce-calculator.xlsx",
     "stakeholder-raci.xlsx",
-    "pm-briefing-deck.pptx",
   ],
   "proposal-toolkit": [
     "pack-guide.pdf",
