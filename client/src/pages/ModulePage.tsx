@@ -418,7 +418,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
             with a one-time Pro upgrade.
           </p>
           <Button onClick={onUpgrade} data-testid="module-upgrade-btn">
-            Upgrade to Pro — $149 lifetime
+            Upgrade to Pro — $99 lifetime
           </Button>
         </div>
       )}

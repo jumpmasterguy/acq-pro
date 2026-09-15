@@ -13,6 +13,7 @@ import { hasPaidPlan, hasFullAccess } from "@shared/access";
 import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 import { costTrackerStorage } from "./costTrackerStorage";
+import { reportCheckoutFailure } from "./stripeHealth";
 import { dailyChallengeQuestionBank } from "./dailyChallengeQuestions";
 import {
   summarizeProject, aggregateSummaries, createProjectSchema, createFundingModSchema,
@@ -699,7 +700,7 @@ export async function registerRoutes(
 
         return res.json({ url: session.url });
       } catch (err: any) {
-        console.error("Stripe checkout error:", err);
+        reportCheckoutFailure("/api/stripe/create-checkout-session", err, { priceType, priceId, userId, userEmail });
         return res.status(500).json({ message: "Payment error — please try again" });
       }
     }
@@ -880,7 +881,7 @@ export async function registerRoutes(
       });
       return res.json({ url: session.url });
     } catch (err: any) {
-      console.error("[packs/checkout] error:", err);
+      reportCheckoutFailure("/api/packs/checkout", err, { pack, priceId, customerEmail });
       return res.status(500).json({ message: "Payment error — please try again" });
     }
   });
@@ -915,7 +916,7 @@ export async function registerRoutes(
       });
       return res.json({ url: session.url });
     } catch (err: any) {
-      console.error("[team/checkout] error:", err);
+      reportCheckoutFailure("/api/team/checkout", err, { priceId, customerEmail });
       return res.status(500).json({ message: "Payment error — please try again" });
     }
   });

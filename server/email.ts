@@ -683,6 +683,28 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
  * Notify the admin (Lucas) whenever a new user signs up.
  * Fires non-blocking — failures are logged but never surface to the user.
  */
+// ── Ops alerts (Stripe config, checkout 500s) ─────────────────────────────────
+// Plain-text-ish alert to the founder. Never throws: if Resend is missing or
+// fails, the caller's console.error is the fallback and the app carries on.
+export async function sendOpsAlertEmail(subject: string, lines: string[]): Promise<void> {
+  const adminEmail = process.env.ADMIN_EMAILS || 'lucas.l.cruz.es@gmail.com';
+  if (!resend) { console.error(`[ops-alert] RESEND_API_KEY not set — could not email: ${subject}`); return; }
+  const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const body = `
+    <div style="font-size:17px;font-weight:700;color:#b91c1c;margin:0 0 16px">${esc(subject)}</div>
+    <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:18px 22px;font-size:14px;line-height:1.7;color:#0d2137">
+      ${lines.map((l) => `<div style="margin:0 0 6px">${esc(l)}</div>`).join('')}
+    </div>
+    <p style="font-size:13px;color:#64748b;margin:16px 0 0">Automated alert from the Acqlerate server.</p>
+  `;
+  try {
+    await resend.emails.send({ from: FROM, to: adminEmail, subject, html: emailShell(subject, body) });
+    console.log(`[ops-alert] emailed ${adminEmail}: ${subject}`);
+  } catch (err: any) {
+    console.error(`[ops-alert] Resend failed for "${subject}": ${err?.message ?? err}`);
+  }
+}
+
 export async function sendAdminNotification(
   newUserEmail: string,
   newUserName: string,

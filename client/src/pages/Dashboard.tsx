@@ -1109,7 +1109,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
             quizzes, and career resources for a one-time investment in your career.
           </p>
           <Button onClick={onUpgrade} size="lg" data-testid="upgrade-cta">
-            Upgrade to Pro — $149 lifetime
+            Upgrade to Pro — $99 lifetime
           </Button>
         </div>
       )}

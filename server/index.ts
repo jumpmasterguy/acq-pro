@@ -3,6 +3,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { registerRoutes } from "./routes";
+import { runStripeBootCheck } from "./stripeHealth";
 import { serveStatic } from "./static";
 import { createServer } from "http";
 import { storage } from "./storage";
@@ -400,6 +401,7 @@ app.use((req, res, next) => {
     () => {
       log(`serving on port ${port}`);
       startDripScheduler();
+      runStripeBootCheck();
     },
   );
 })();

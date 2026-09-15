@@ -46,8 +46,19 @@ SESSION_SECRET=30946563cb7fe5481d1b4dcf79250a43657fe6c66de64c7522ead00fae11f6d66
 
 STRIPE_SECRET_KEY=sk_live_...          ← from Stripe Dashboard
 STRIPE_WEBHOOK_SECRET=whsec_...        ← after creating webhook (Step 4)
-STRIPE_PRICE_ID_LIFETIME=price_...     ← $149 one-time price ID
-STRIPE_PRICE_ID_MONTHLY=price_...      ← $29/mo recurring price ID
+STRIPE_PRICE_ID_LIFETIME=price_...     ← $99 one-time price ID
+STRIPE_PRICE_ID_MONTHLY=price_...      ← $5.99/mo recurring price ID
+STRIPE_PRICE_ID_TEAM=price_...         ← $399 one-time (Team Pack)
+STRIPE_PRICE_PACK_PM_ESSENTIALS=price_...    ← $24
+STRIPE_PRICE_PACK_PROPOSAL_TOOLKIT=price_... ← $34
+STRIPE_PRICE_PACK_CPARS_PLAYBOOK=price_...   ← $34
+
+# On every boot the server looks each STRIPE_PRICE_* ID up in Stripe and checks it is
+# active and charges the amount above (table: server/stripeHealth.ts). Mismatches are
+# printed in a loud banner in the Railway logs AND emailed to ADMIN_EMAILS via Resend.
+# Any checkout route that returns 500 also emails ADMIN_EMAILS (max one per route / 15 min).
+ADMIN_EMAILS=you@example.com           ← where the alerts go
+RESEND_API_KEY=re_...                  ← needed for the alert emails
 
 APP_URL=https://YOUR-APP.up.railway.app  ← your Railway URL (shown after first deploy)
 NODE_ENV=production
