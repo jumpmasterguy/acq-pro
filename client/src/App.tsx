@@ -470,6 +470,13 @@ function AppContent() {
     window.location.href = 'https://acqlerate.com/';
   }, []);
 
+  // Server has already deleted the row and destroyed the session; just leave.
+  const handleAccountDeleted = useCallback(() => {
+    clearSavedView();
+    setAuthState({ status: 'unauthenticated' });
+    window.location.href = 'https://acqlerate.com/?account=deleted';
+  }, []);
+
   const handleCompleteLesson = useCallback(async (lessonId: string, quizScore: number) => {
     if (authState.status !== 'authenticated') return;
     try {
@@ -1146,6 +1153,7 @@ function AppContent() {
               onBack={() => setView({ type: 'dashboard' })}
               onUpgrade={() => setView({ type: 'upgrade' })}
               onNameUpdated={handleNameUpdated}
+              onAccountDeleted={handleAccountDeleted}
             />
           )}
           {view.type === 'admin' && isAdmin && (

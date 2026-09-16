@@ -1,6 +1,10 @@
 import { useState, type ReactNode } from "react";
-import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap } from "lucide-react";
+import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap, Trash2, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription,
+  AlertDialogFooter, AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
@@ -16,6 +20,7 @@ interface MyAccountPageProps {
   onBack: () => void;
   onUpgrade: () => void;
   onNameUpdated: (firstName: string, lastName: string, username: string) => void;
+  onAccountDeleted: () => void;
 }
 
 // Same localStorage key + default Dashboard.tsx already uses for the career
@@ -43,12 +48,15 @@ function Section({ icon: Icon, title, children }: { icon: any; title: string; ch
   );
 }
 
-export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated }: MyAccountPageProps) {
+export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, onAccountDeleted }: MyAccountPageProps) {
   const { toast } = useToast();
   const [firstName, setFirstName] = useState(user.firstName ?? "");
   const [lastName, setLastName] = useState(user.lastName ?? "");
   const [saving, setSaving] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteText, setDeleteText] = useState("");
+  const [deleting, setDeleting] = useState(false);
   const [activeCareer, setActiveCareer] = useState<CareerTrackId>(() => {
     try { return (localStorage.getItem(ACTIVE_CAREER_KEY) as CareerTrackId) || DEFAULT_CAREER; } catch { return DEFAULT_CAREER; }
   });
@@ -86,6 +94,20 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated }
       toast({ title: "Billing portal error", description: err.message, variant: "destructive" });
     } finally {
       setPortalLoading(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (deleteText !== "DELETE" || deleting) return;
+    setDeleting(true);
+    try {
+      const res = await apiRequest("DELETE", "/api/account", { confirm: "DELETE" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || "Couldn't delete your account");
+      onAccountDeleted();
+    } catch (err: any) {
+      toast({ title: "Couldn't delete account", description: err.message || "Please try again.", variant: "destructive" });
+      setDeleting(false);
     }
   };
 
@@ -219,6 +241,42 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated }
           )}
         </div>
       </Section>
+
+      {/* Danger zone */}
+      <Section icon={AlertTriangle} title="Delete Account">
+        <p className="text-sm text-muted-foreground mb-3">
+          Permanently deletes your account, progress, streaks and XP.
+          {user.subscriptionStatus === 'active' && ' Your monthly subscription is cancelled immediately.'}
+          {' '}This cannot be undone.
+        </p>
+        <Button size="sm" variant="outline" className="gap-1.5 border-destructive/40 text-destructive hover:bg-destructive/10" onClick={() => { setDeleteText(""); setDeleteOpen(true); }} data-testid="delete-account">
+          <Trash2 className="w-3.5 h-3.5" />
+          Delete my account
+        </Button>
+      </Section>
+
+      <AlertDialog open={deleteOpen} onOpenChange={(o) => { if (!deleting) setDeleteOpen(o); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete your account?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This removes <strong>{user.email}</strong> and everything tied to it — lessons completed, quiz scores, streak and XP. There is no undo.
+              {user.subscriptionStatus === 'lifetime' && ' Your lifetime purchase will be gone too.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="delete-confirm" className="text-xs">Type <span className="font-mono font-bold">DELETE</span> to confirm</Label>
+            <Input id="delete-confirm" value={deleteText} onChange={(e) => setDeleteText(e.target.value)} autoComplete="off" placeholder="DELETE" data-testid="delete-confirm-input" />
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Keep my account</AlertDialogCancel>
+            <Button variant="destructive" onClick={handleDeleteAccount} disabled={deleteText !== "DELETE" || deleting} data-testid="delete-account-confirm">
+              {deleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+              Delete permanently
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

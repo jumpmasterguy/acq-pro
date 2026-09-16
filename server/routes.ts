@@ -14,6 +14,7 @@ import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNoti
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 import { costTrackerStorage } from "./costTrackerStorage";
 import { reportCheckoutFailure } from "./stripeHealth";
+import { sendOpsAlertEmail } from "./email";
 import { dailyChallengeQuestionBank } from "./dailyChallengeQuestions";
 import {
   summarizeProject, aggregateSummaries, createProjectSchema, createFundingModSchema,
@@ -326,6 +327,58 @@ export async function registerRoutes(
     } catch (err: any) {
       return res.status(500).json({ message: err.message || "Failed to update name" });
     }
+  });
+
+  // DELETE /api/account — the user deletes their own account.
+  // Order matters: cancel any live Stripe subscription first so a deleted user
+  // can never keep getting billed; then remove the row; then end the session.
+  // Pack purchase rows are kept (keyed by email, needed for refunds/records).
+  app.delete("/api/account", requireAuth as any, async (req: Request, res: Response) => {
+    if (req.body?.confirm !== "DELETE") {
+      return res.status(400).json({ message: 'Type DELETE to confirm' });
+    }
+    const user = req.user!;
+    const userId = user.id;
+    const email = user.email;
+    let billingNote = "no subscription";
+
+    if (stripe && user.subscriptionId && user.subscriptionStatus === "active") {
+      try {
+        await stripe.subscriptions.cancel(user.subscriptionId);
+        billingNote = `monthly subscription ${user.subscriptionId} cancelled in Stripe`;
+      } catch (err: any) {
+        // Don't block the deletion — but make sure the founder knows to cancel by hand.
+        billingNote = `FAILED to cancel subscription ${user.subscriptionId}: ${err?.message ?? err} — cancel it manually in Stripe`;
+        console.error(`[account-delete] ${billingNote}`);
+      }
+    } else if (user.subscriptionStatus === "lifetime") {
+      billingNote = "lifetime purchase (no recurring billing)";
+    }
+
+    try {
+      await storage.deleteUser(userId);
+    } catch (err: any) {
+      console.error(`[account-delete] deleteUser failed for ${email}:`, err);
+      return res.status(500).json({ message: "Couldn't delete your account — please contact support." });
+    }
+    console.log(`[account-delete] ${email} deleted (${billingNote})`);
+
+    sendOpsAlertEmail(`👋 Account deleted: ${email}`, [
+      `A user deleted their own account from the My Account page.`,
+      `Email: ${email}`,
+      `Name: ${(user as any).firstName ?? ""} ${(user as any).lastName ?? ""}`.trim(),
+      `Plan at deletion: ${user.subscriptionStatus}`,
+      `Billing: ${billingNote}`,
+      user.stripeCustomerId ? `Stripe customer: https://dashboard.stripe.com/customers/${user.stripeCustomerId}` : "",
+      `Time (UTC): ${new Date().toISOString()}`,
+    ].filter(Boolean)).catch(() => {});
+
+    req.logout(() => {
+      req.session.destroy(() => {
+        res.clearCookie("connect.sid");
+        return res.json({ message: "Account deleted" });
+      });
+    });
   });
 
   // ─── Google OAuth Routes ──────────────────────────────────────────
