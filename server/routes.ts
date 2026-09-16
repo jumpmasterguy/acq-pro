@@ -10,7 +10,7 @@ import { excludeInternalAccounts } from "./internalAccounts";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema, userProfileSchema, updateNameSchema } from "@shared/schema";
 import { hasPaidPlan, hasFullAccess } from "@shared/access";
-import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken } from "./email";
+import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken, sendPurchaseAdminAlert, sendSubscriptionCancelledAdminAlert } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 import { costTrackerStorage } from "./costTrackerStorage";
 import { reportCheckoutFailure } from "./stripeHealth";
@@ -38,6 +38,14 @@ const PACK_PRICES: Record<string, string | undefined> = {
   // finance-cheat-sheets is now a FREE lead magnet — no price entry, so
   // /api/packs/checkout rejects it. It stays in PACK_FILES below so that
   // anyone who bought it previously keeps working download links.
+};
+
+// Human-readable names for the founder purchase alert email.
+const PACK_LABELS: Record<string, string> = {
+  "pm-essentials":        "PM Essentials Pack",
+  "proposal-toolkit":     "Proposal Toolkit Pack",
+  "cpars-playbook":       "CPARS Playbook Pack",
+  "finance-cheat-sheets": "Finance Cheat Sheets Pack",
 };
 
 const PACK_FILES: Record<string, string[]> = {
@@ -753,6 +761,16 @@ export async function registerRoutes(
                   downloadToken,
                 });
                 console.log(`[webhook] Pack purchase saved: ${pack} for ${email}`);
+                await sendPurchaseAdminAlert({
+                  product: PACK_LABELS[pack] || `${pack} Pack`,
+                  kind: "pack",
+                  buyerEmail: email,
+                  amountPaidCents: session.amount_total || 0,
+                  currency: session.currency || undefined,
+                  stripeSessionId: session.id,
+                  stripeCustomerId: (session.customer as string) || undefined,
+                  stripePaymentIntentId: (session.payment_intent as string) || undefined,
+                });
               }
             } else if (purchaseType === "team_purchase") {
               // Team Pack — save purchase record + alert admin to manually provision seats.
@@ -775,10 +793,26 @@ export async function registerRoutes(
             } else if (userId) {
               // Subscription / lifetime upgrade
               const isSubscription = session.mode === "subscription";
+              // Read the user first so the alert can say "trial → paid" and show their name.
+              const before = await storage.getUser(userId).catch(() => undefined);
               await storage.updateUserSubscription(userId, {
                 subscriptionStatus: isSubscription ? "active" : "lifetime",
                 subscriptionId: isSubscription ? (session.subscription as string) : undefined,
                 stripeCustomerId: session.customer as string,
+              });
+              console.log(`[webhook] ${isSubscription ? "Monthly" : "Lifetime"} upgrade saved for user ${userId}`);
+              await sendPurchaseAdminAlert({
+                product: isSubscription ? "Monthly Pro" : "Lifetime Pro",
+                kind: isSubscription ? "monthly" : "lifetime",
+                buyerEmail: session.customer_details?.email || session.customer_email || before?.email || "(unknown email)",
+                buyerName: before?.username || undefined,
+                amountPaidCents: session.amount_total || 0,
+                currency: session.currency || undefined,
+                previousStatus: before?.subscriptionStatus || undefined,
+                stripeSessionId: session.id,
+                stripeCustomerId: (session.customer as string) || undefined,
+                stripeSubscriptionId: isSubscription ? ((session.subscription as string) || undefined) : undefined,
+                stripePaymentIntentId: !isSubscription ? ((session.payment_intent as string) || undefined) : undefined,
               });
             }
             break;
@@ -793,6 +827,15 @@ export async function registerRoutes(
                 subscriptionStatus: "free",
                 subscriptionId: undefined,
               });
+              console.log(`[webhook] Subscription cancelled — user ${allUsers.id} moved to free`);
+              await sendSubscriptionCancelledAdminAlert({
+                userEmail: allUsers.email || "(unknown email)",
+                userName: allUsers.username || undefined,
+                stripeCustomerId: customerId,
+                stripeSubscriptionId: sub.id,
+              });
+            } else {
+              console.warn(`[webhook] Subscription ${sub.id} cancelled but no user has stripeCustomerId ${customerId}`);
             }
             break;
           }

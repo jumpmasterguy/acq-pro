@@ -802,6 +802,128 @@ export async function sendTeamPurchaseAdminAlert(
   console.log(`[email] Team purchase admin alert sent — ${buyerEmail}`);
 }
 
+// ── Purchase alerts — founder notification for every paid checkout ──────────
+// Fires from the Stripe webhook for Monthly, Lifetime and template-pack
+// purchases (Team Pack has its own alert above because it needs action).
+// Never throws: a failed email must not break the webhook, which has already
+// granted access / saved the purchase by the time this runs.
+export interface PurchaseAlert {
+  product: string;             // "Lifetime Pro", "Monthly Pro", "PM Essentials Pack"
+  kind: "lifetime" | "monthly" | "pack";
+  buyerEmail: string;
+  buyerName?: string;
+  amountPaidCents: number;
+  currency?: string;           // Stripe's lowercase code, e.g. "usd"
+  previousStatus?: string;     // "trialing" | "free" | … — shows trial → paid
+  stripeSessionId: string;
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
+  stripePaymentIntentId?: string;
+}
+
+const esc = (t: string) =>
+  String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+const money = (cents: number, currency = 'usd') =>
+  `${currency.toUpperCase() === 'USD' ? '$' : currency.toUpperCase() + ' '}${(cents / 100).toFixed(2)}`;
+
+const row = (label: string, value: string, strong = false) => `
+  <tr><td style="font-size:13px;color:#64748b;padding:4px 0;width:130px;vertical-align:top">${esc(label)}</td>
+      <td style="font-size:14px;font-weight:${strong ? 700 : 500};color:#0d2137;padding:4px 0">${value}</td></tr>`;
+
+export async function sendPurchaseAdminAlert(p: PurchaseAlert): Promise<void> {
+  const adminEmail = process.env.ADMIN_EMAILS || 'lucas.l.cruz.es@gmail.com';
+  if (!resend) { console.error('[email] RESEND_API_KEY not set — could not send purchase alert'); return; }
+
+  const amount = money(p.amountPaidCents, p.currency);
+  const when = new Date().toLocaleString('en-US', {
+    timeZone: 'America/New_York', dateStyle: 'medium', timeStyle: 'short',
+  });
+  const recurring = p.kind === 'monthly' ? ' / month' : ' one-time';
+  const cameFrom = p.previousStatus === 'trialing' ? 'Free trial → paid'
+    : p.previousStatus ? `${p.previousStatus} → paid` : undefined;
+
+  // Deep links so a purchase can be checked from the phone in one tap.
+  const stripeLink = p.stripeSubscriptionId
+    ? `https://dashboard.stripe.com/subscriptions/${p.stripeSubscriptionId}`
+    : p.stripePaymentIntentId
+      ? `https://dashboard.stripe.com/payments/${p.stripePaymentIntentId}`
+      : p.stripeCustomerId
+        ? `https://dashboard.stripe.com/customers/${p.stripeCustomerId}`
+        : undefined;
+
+  const body = `
+    <div style="font-size:17px;font-weight:700;color:#0d2137;margin:0 0 16px">💰 New purchase: ${esc(p.product)} — ${esc(amount)}${recurring}</div>
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:20px">
+      <tr><td style="background:#f0f9fa;border:1px solid #d1ede0;border-radius:10px;padding:20px 24px">
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+          ${row('Product', esc(p.product), true)}
+          ${row('Amount', `<span style="color:#01696f;font-weight:700">${esc(amount)}${esc(recurring)}</span>`)}
+          ${row('Buyer', `${p.buyerName ? esc(p.buyerName) + ' &middot; ' : ''}<span style="color:#01696f;font-weight:600">${esc(p.buyerEmail)}</span>`)}
+          ${cameFrom ? row('Came from', esc(cameFrom)) : ''}
+          ${row('Time (ET)', esc(when))}
+          ${stripeLink ? row('Stripe', `<a href="${stripeLink}" style="color:#01696f">Open in Stripe dashboard</a>`) : ''}
+          ${row('Session', `<span style="font-size:12px;color:#64748b">${esc(p.stripeSessionId)}</span>`)}
+        </table>
+      </td></tr>
+    </table>
+    <p style="font-size:13px;color:#64748b;margin:0">Access was granted automatically. No action needed — but a personal thank-you note within the hour converts a buyer into a referrer.</p>
+  `;
+
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: adminEmail,
+      subject: `💰 ${p.product} purchase: ${p.buyerEmail} (${amount}${recurring})`,
+      html: emailShell(`${p.buyerEmail} just bought ${p.product}.`, body),
+    });
+    console.log(`[email] Purchase alert sent — ${p.product} for ${p.buyerEmail} (${amount})`);
+  } catch (err: any) {
+    console.error(`[email] Purchase alert failed for ${p.buyerEmail}: ${err?.message ?? err}`);
+  }
+}
+
+// ── Cancellation alert — subscription ended (customer.subscription.deleted) ─
+export async function sendSubscriptionCancelledAdminAlert(opts: {
+  userEmail: string;
+  userName?: string;
+  stripeCustomerId: string;
+  stripeSubscriptionId: string;
+}): Promise<void> {
+  const adminEmail = process.env.ADMIN_EMAILS || 'lucas.l.cruz.es@gmail.com';
+  if (!resend) { console.error('[email] RESEND_API_KEY not set — could not send cancellation alert'); return; }
+
+  const when = new Date().toLocaleString('en-US', {
+    timeZone: 'America/New_York', dateStyle: 'medium', timeStyle: 'short',
+  });
+  const body = `
+    <div style="font-size:17px;font-weight:700;color:#b91c1c;margin:0 0 16px">📉 Monthly subscription cancelled</div>
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:20px">
+      <tr><td style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:20px 24px">
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+          ${row('User', `${opts.userName ? esc(opts.userName) + ' &middot; ' : ''}<span style="color:#01696f;font-weight:600">${esc(opts.userEmail)}</span>`)}
+          ${row('Time (ET)', esc(when))}
+          ${row('Stripe', `<a href="https://dashboard.stripe.com/customers/${opts.stripeCustomerId}" style="color:#01696f">Open customer in Stripe</a>`)}
+          ${row('Subscription', `<span style="font-size:12px;color:#64748b">${esc(opts.stripeSubscriptionId)}</span>`)}
+        </table>
+      </td></tr>
+    </table>
+    <p style="font-size:13px;color:#64748b;margin:0">Their account has been moved back to the free tier. Worth a short "what made you leave?" email — churn reasons are the cheapest product research there is.</p>
+  `;
+
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: adminEmail,
+      subject: `📉 Subscription cancelled: ${opts.userEmail}`,
+      html: emailShell(`${opts.userEmail} cancelled their monthly subscription.`, body),
+    });
+    console.log(`[email] Cancellation alert sent — ${opts.userEmail}`);
+  } catch (err: any) {
+    console.error(`[email] Cancellation alert failed for ${opts.userEmail}: ${err?.message ?? err}`);
+  }
+}
+
 // ─── Admin Lead Notification ────────────────────────────────────────────────
 
 /**
