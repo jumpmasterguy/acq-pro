@@ -552,3 +552,34 @@
   color: var(--acq-text-muted);
 }
 
+
+/* Bottom sheets — key terms, daily challenge. Slide up, never bounce. */
+@keyframes acq-sheet-up {
+  from { transform: translateY(24px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Lesson body, mobile ────────────────────────────────────────────────────
+   The block renderers are shared with desktop, so the mobile reading
+   typography is applied to the body wrapper rather than threaded through
+   twenty-five renderers. 16px/1.65 with 18px between blocks, per the
+   handoff. */
+.acq-lesson-body { display: flex; flex-direction: column; gap: 18px; }
+.acq-lesson-body p { font-size: 16px; line-height: 1.65; color: var(--acq-text-body); }
+.acq-lesson-body li { font-size: 15px; line-height: 1.6; }
+.acq-lesson-body h2 { font-size: 18px; letter-spacing: -0.01em; color: var(--acq-text-heading); }
+.acq-lesson-body h3 { font-size: 16px; color: var(--acq-text-heading); }
+.acq-lesson-body img { width: 100%; height: auto; border-radius: 12px; background: var(--acq-surface-sunken); }
+
+/* Inline key term — dotted underline, tap opens the sheet. */
+.acq-term {
+  color: var(--acq-text-brand);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  font: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+

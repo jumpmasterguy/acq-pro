@@ -1,4 +1,5 @@
-import { useMemo, useRef, Fragment } from "react";
+import { useMemo, useRef, useContext, createContext, Fragment } from "react";
+import type { ReactNode } from "react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import type { KeyTerm } from "@/lib/curriculum";
 
@@ -19,6 +20,12 @@ interface AcronymTextProps {
   text: string;
   keyTerms: KeyTerm[];
   seenTerms: Set<string>;
+  /**
+   * When supplied, a term renders as a button that calls this instead of a
+   * hover tooltip. Mobile passes it so tapping a term opens the key-term
+   * bottom sheet — a hover tooltip has no sensible touch equivalent.
+   */
+  onTermTap?: (term: KeyTerm) => void;
 }
 
 // Build a regex that matches any key term as a whole word, longest terms first
@@ -34,7 +41,20 @@ function buildTermRegex(keyTerms: KeyTerm[]): RegExp | null {
   return new RegExp(`\\b(${escaped.join("|")})\\b`, "g");
 }
 
-export function AcronymText({ text, keyTerms, seenTerms }: AcronymTextProps) {
+/**
+ * Lets the mobile lesson switch every term in the tree to tap-to-open-sheet
+ * without threading a prop through the ~15 places the block renderers call
+ * AcronymText. Desktop never provides it, so those keep their tooltips.
+ */
+const TermTapContext = createContext<((term: KeyTerm) => void) | null>(null);
+
+export function TermTapProvider({ onTermTap, children }: { onTermTap: (term: KeyTerm) => void; children: ReactNode }) {
+  return <TermTapContext.Provider value={onTermTap}>{children}</TermTapContext.Provider>;
+}
+
+export function AcronymText({ text, keyTerms, seenTerms, onTermTap: onTermTapProp }: AcronymTextProps) {
+  const contextTap = useContext(TermTapContext);
+  const onTermTap = onTermTapProp ?? contextTap;
   const regex = useMemo(() => buildTermRegex(keyTerms), [keyTerms]);
   const termMap = useMemo(() => {
     const m = new Map<string, string>();
@@ -60,6 +80,20 @@ export function AcronymText({ text, keyTerms, seenTerms }: AcronymTextProps) {
     if (!alreadySeen && termMap.has(lower)) {
       seenTerms.add(lower);
       const definition = termMap.get(lower)!;
+      if (onTermTap) {
+        nodes.push(
+          <button
+            key={key++}
+            type="button"
+            className="acq-term"
+            onClick={() => onTermTap({ term: matched, definition })}
+          >
+            {matched}
+          </button>
+        );
+        lastIndex = match.index + matched.length;
+        continue;
+      }
       nodes.push(
         <Tooltip key={key++} delayDuration={150}>
           <TooltipTrigger asChild>

@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo } from "react";
 import { AcronymText } from "@/components/AcronymText";
 import { getTrackData, type CareerTrackId } from "@/lib/careerTracks";
-import { modules, type Lesson, type Module, type QuizQuestion, type SkillLevel, type ExpandableItem } from "@/lib/curriculum";
+import { modules, type Lesson, type LessonContent, type KeyTerm, type Module, type QuizQuestion, type SkillLevel, type ExpandableItem } from "@/lib/curriculum";
 import { getModuleTheme } from "@/lib/moduleTheme";
 import type { UserProgress } from "@/lib/progress";
 import {
@@ -16,6 +16,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { TermTapProvider } from "@/components/AcronymText";
+import { KeyTermSheet, QuizOption, LessonFooter } from "@/components/mobile/LessonPieces";
 
 const SKILL_LEVELS: SkillLevel[] = ['novice', 'intermediate', 'advanced'];
 const LEVEL_LABELS: Record<SkillLevel, string> = {
@@ -146,7 +149,7 @@ interface LessonPageProps {
   lessonId: string;
   progress: UserProgress;
   onBack: () => void;
-  onComplete: (lessonId: string, quizScore: number) => void;
+  onComplete: (lessonId: string, quizScore: number, scoreOnly?: boolean) => void;
   onNextLesson: (lessonId: string) => void;
   // Highest unlocked skill level for this lesson's module
   unlockedLevel?: SkillLevel;
@@ -521,6 +524,7 @@ function DragMatchQuestion({ question, submitted, onMatchChange, currentMatches 
 // ─── Main LessonPage ───────────────────────────────────────────────────────
 
 export default function LessonPage({ lessonId, progress, onBack, onComplete, onNextLesson, unlockedLevel = 'novice', onOpenAssessment, isLifetime = false, activeCareer }: LessonPageProps) {
+  const isMobile = useIsMobile();
   const trackData = getTrackData((activeCareer as CareerTrackId) ?? null);
   const [activeTab, setActiveTab] = useState<Tab>('lesson');
   // MC answers: questionId → optionIndex
@@ -542,10 +546,17 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
   const [aiResult, setAiResult] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
-  // Tracks which key terms have already gotten a tooltip annotation in this
-  // lesson view, so only the first occurrence of each term is highlighted.
+  // Tracks which key terms have already been annotated during THIS render, so
+  // only the first occurrence of each term in the lesson is highlighted.
+  //
+  // This has to be rebuilt on every render, not memoized on lessonId. The
+  // renderers fill the set as they go, so once it was populated by the first
+  // render, every later render found every term already "seen" and annotated
+  // nothing — the key terms silently disappeared on the first state change
+  // (picking a quiz answer, or, on mobile, scrolling). Reassigning a fresh Set
+  // during render is safe because the render pass consumes it immediately.
   const seenTermsRef = useRef<Set<string>>(new Set());
-  seenTermsRef.current = useMemo(() => new Set<string>(), [lessonId]);
+  seenTermsRef.current = new Set<string>();
 
   // Find lesson and module
   let lesson: Lesson | null = null;
@@ -575,6 +586,8 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
   }
 
   const isCompleted = progress.completedLessons.has(lessonId);
+  // Mobile: the open key term drives the bottom sheet.
+  const [openTerm, setOpenTerm] = useState<KeyTerm | null>(null);
   // This module's brand color — used to give the plain content blocks
   // (text/list/table) below some visual identity instead of flat gray/white.
   const theme = getModuleTheme(mod.color);
@@ -649,6 +662,21 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
         quiz_score: score,
       });
     } catch {}
+  };
+
+  // Mobile's "Check answers". Records the score — which is what earns quiz XP
+  // — but leaves completion to the sticky footer's Mark Complete, per the
+  // handoff. Desktop's handleSubmitQuiz still does both.
+  const handleCheckAnswers = () => {
+    if (!isAllAnswered()) return;
+    setQuizSubmitted(true);
+    const score = calcScore();
+    if (progress.completedLessons.has(lessonId)) {
+      // Already complete — re-record the score so a retake can improve it.
+      onComplete(lessonId, score);
+    } else {
+      onComplete(lessonId, score, true);
+    }
   };
 
   const handleRetakeQuiz = () => {
@@ -734,190 +762,174 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
     }
   };
 
-  return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="sm" onClick={onBack} className="gap-1.5" data-testid="lesson-back">
-          <ArrowLeft className="w-4 h-4" />
-          Back to Module
-        </Button>
-      </div>
+  // ── Quiz question renderer ───────────────────────────────────────────────
+  // Hoisted alongside renderContentBlock so the mobile lesson can fall back
+  // to it for drag_match / drag_order, which the handoff's A./B. option
+  // design doesn't cover.
+  const renderQuizQuestion = (question: QuizQuestion, qi: number): React.ReactNode => {
+            const qzType = question.type ?? 'multiple_choice';
 
-      {/* Lesson Header Card */}
-      <div className="bg-card border border-border rounded-xl p-5">
-        <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className="text-xs text-muted-foreground">{mod.title}</span>
-              {trackData && (
-                <span className="inline-flex items-center gap-1.5 bg-primary/10 border border-primary/25 text-primary rounded-full px-2.5 py-0.5 text-[11px] font-bold">
-                  <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
-                  Your path: {trackData.shortLabel}
-                </span>
-              )}
-            </div>
-            <h1 className="text-lg font-bold leading-tight mb-2">{lesson.title}</h1>
-            <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
-              <span className="flex items-center gap-1">
-                <Clock className="w-3 h-3" />
-                {lesson.duration}
-              </span>
-              <span className="flex items-center gap-1">
-                <BookOpen className="w-3 h-3" />
-                {lesson.keyTerms.length} key terms
-              </span>
-              {effectiveQuiz.length > 0 && (
-                <span>{effectiveQuiz.length} quiz questions</span>
-              )}
-            </div>
-          </div>
-          {isCompleted && (
-            <div className="flex items-center gap-1.5 bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-400 rounded-full px-3 py-1 text-xs font-medium flex-shrink-0">
-              <CheckCircle className="w-3.5 h-3.5" />
-              Completed
-            </div>
-          )}
-        </div>
-      </div>
+            // ── Multiple Choice ──
+            if (qzType === 'multiple_choice') {
+              const answered = quizAnswers[question.id] !== undefined;
+              const qzIsCorrect = quizSubmitted && quizAnswers[question.id] === question.correct;
+              const isWrong = quizSubmitted && answered && !qzIsCorrect;
 
-      {/* Prominent Download Banner — example documents and/or fillable templates for this lesson */}
-      {lesson.attachments && lesson.attachments.length > 0 && (
-        <div className="rounded-xl bg-primary text-primary-foreground p-4 sm:p-5 flex items-center gap-4 flex-wrap shadow-sm">
-          <div className="w-11 h-11 rounded-lg bg-white/15 flex items-center justify-center flex-shrink-0">
-            <FileText className="w-5 h-5" />
-          </div>
-          <div className="flex-1 min-w-[200px]">
-            <div className="text-sm font-bold">
-              {lesson.attachments.every(a => /\.xlsx?$/i.test(a.url))
-                ? (lesson.attachments.length === 1 ? 'Fillable template included' : `${lesson.attachments.length} fillable templates included`)
-                : (lesson.attachments.length === 1 ? 'Real-world example document included' : `${lesson.attachments.length} real-world example documents included`)}
-            </div>
-            <div className="text-xs text-primary-foreground/80 mt-0.5">
-              {lesson.attachments.map(a => a.title.replace('Example: ', '').replace('Template: ', '')).join(' · ')}
-            </div>
-          </div>
-          <div className="flex gap-2 flex-wrap">
-            {lesson.attachments.map((att, ai) => {
-              const fileLabel = /\.xlsx?$/i.test(att.url) ? 'Excel' : /\.docx?$/i.test(att.url) ? 'Word' : 'PDF';
               return (
-              <a
-                key={ai}
-                href={att.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 bg-white text-primary font-bold text-xs px-3.5 py-2 rounded-lg hover:bg-white/90 transition-colors flex-shrink-0"
-                data-testid={`banner-download-${ai}`}
-              >
-                <Download className="w-3.5 h-3.5" />
-                {lesson.attachments!.length === 1 ? `Download ${fileLabel}` : `Download ${ai + 1}`}
-              </a>
-              );
-            })}
-          </div>
-        </div>
-      )}
+                <div key={question.id} className="bg-card border border-border rounded-xl p-5 space-y-3" data-testid={`question-${qi}`}>
+                  <div className="flex items-start gap-2.5">
+                    <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+                      {qi + 1}
+                    </span>
+                    <p className="font-medium text-sm leading-relaxed">{question.question}</p>
+                  </div>
 
-      {/* Skill Level Selector — only shown if this lesson has leveled content */}
-      {hasLeveledContent && (
-        <div className="bg-card border border-border rounded-xl p-4">
-          <div className="flex items-center justify-between gap-2 flex-wrap mb-3">
-            <div className="text-xs font-semibold text-foreground">Skill Level</div>
-            {unlockedLevel !== 'advanced' && (
-              <button
-                onClick={onOpenAssessment}
-                className="text-xs text-primary hover:underline flex items-center gap-1 text-left"
-              >
-                <Lock className="w-3 h-3 flex-shrink-0" />
-                Take module assessment to unlock more
-              </button>
-            )}
-          </div>
-          <div className="flex gap-2">
-            {SKILL_LEVELS.map((lvl) => {
-              const lvlOrder = levelOrder[lvl];
-              const isUnlocked = lvlOrder <= unlockedOrder;
-              const isActive = viewLevel === lvl;
-              return (
-                <button
-                  key={lvl}
-                  onClick={() => isUnlocked && setViewLevel(lvl)}
-                  disabled={!isUnlocked}
-                  className={cn(
-                    "flex-1 py-1.5 px-2 rounded-lg border text-xs font-medium transition-all",
-                    isActive && isUnlocked
-                      ? cn("border", LEVEL_COLORS[lvl])
-                      : isUnlocked
-                        ? "border-border text-muted-foreground hover:border-primary/50"
-                        : "border-border/50 text-muted-foreground/40 cursor-not-allowed"
-                  )}
-                >
-                  {!isUnlocked && <Lock className="w-3 h-3 inline mr-1 mb-0.5 opacity-60" />}
-                  {LEVEL_LABELS[lvl]}
-                </button>
-              );
-            })}
-          </div>
-          {viewLevel !== 'novice' && (
-            <p className="text-[11px] text-muted-foreground mt-2">
-              Showing <strong className="text-foreground">{LEVEL_LABELS[viewLevel]}</strong>-level content. Includes all Novice content plus deeper analysis.
-            </p>
-          )}
-        </div>
-      )}
+                  <div className="space-y-2 ml-8">
+                    {question.options.map((option, oi) => {
+                      const isSelected = quizAnswers[question.id] === oi;
+                      const isTheCorrect = question.correct === oi;
 
-      {/* Tab Navigation — sticky so it stays visible while scrolling */}
-      <div className="sticky top-0 z-20 flex border-b border-border bg-background/95 backdrop-blur-sm w-full max-w-full overflow-x-auto">
-        {(['lesson', 'terms', 'quiz'] as Tab[]).map((tab) => {
-          const labels: Record<Tab, string> = { lesson: 'Lesson', terms: `Key Terms (${lesson!.keyTerms.length})`, quiz: `Quiz (${effectiveQuiz.length}Q)` };
-          return (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={cn(
-                "px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors",
-                activeTab === tab
-                  ? "border-primary text-primary"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              )}
-              data-testid={`tab-${tab}`}
-            >
-              {labels[tab]}
-            </button>
-          );
-        })}
-      </div>
+                      let optionClass = "border-border bg-background hover:border-primary/50 hover:bg-primary/5";
+                      if (quizSubmitted) {
+                        if (isTheCorrect) optionClass = "border-green-400 bg-green-50 dark:bg-green-950/40 text-green-800 dark:text-green-300";
+                        else if (isSelected && !isTheCorrect) optionClass = "border-red-400 bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300";
+                        else optionClass = "border-border bg-background opacity-60";
+                      } else if (isSelected) {
+                        optionClass = "border-primary bg-primary/10";
+                      }
 
-      {/* TAB: LESSON CONTENT */}
-      {activeTab === 'lesson' && (
-        <div className="space-y-5">
-          {/* Levels-based lessons (sections format) */}
-          {!(lesson.content?.length) && lesson.levels && (() => {
-            const lvl = lesson.levels[viewLevel] ?? lesson.levels['novice'];
-            if (!lvl?.sections) return null;
-            return lvl.sections.map((section: any, si: number) => (
-              <div key={si} className="space-y-3">
-                {section.heading && <h3 className="font-bold text-sm text-foreground">{section.heading}</h3>}
-                {section.content && <p className="text-sm text-muted-foreground leading-relaxed">{section.content}</p>}
-                {section.items && (
-                  <ul className="space-y-2">
-                    {section.items.map((item: string, ii: number) => {
-                      const [label, desc] = item.split('|||');
                       return (
-                        <li key={ii} className="bg-card border border-border rounded-xl p-4">
-                          <p className="font-semibold text-sm text-foreground">{label}</p>
-                          {desc && <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{desc}</p>}
-                        </li>
+                        <button
+                          key={oi}
+                          onClick={() => handleAnswerSelect(question.id, oi)}
+                          disabled={quizSubmitted}
+                          className={cn(
+                            "w-full text-left px-4 py-3 rounded-lg border text-sm transition-all duration-150",
+                            optionClass,
+                            !quizSubmitted && "cursor-pointer"
+                          )}
+                          data-testid={`option-${qi}-${oi}`}
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <div className={cn(
+                              "w-4 h-4 rounded-full border-2 flex-shrink-0",
+                              isSelected ? "border-primary bg-primary" : "border-muted-foreground/40"
+                            )} />
+                            {option.split('|||')[0]}
+                          </div>
+                        </button>
                       );
                     })}
-                  </ul>
-                )}
-              </div>
-            ));
-          })()}
+                  </div>
 
-          {/* Standard content-array lessons */}
-          {(lesson.content ?? []).map((block, i) => {
+                  {quizSubmitted && (
+                    <div className={cn(
+                      "ml-8 rounded-lg p-3 text-xs leading-relaxed border",
+                      qzIsCorrect
+                        ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-900 text-green-800 dark:text-green-300"
+                        : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300"
+                    )} data-testid={`explanation-${qi}`}>
+                      <strong className="font-semibold">{qzIsCorrect ? "✓ Correct!" : "✗ Incorrect."}</strong>{" "}
+                      {question.explanation || question.options[question.correct]?.split('|||')[1] || ""}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            // ── Drag Order ──
+            if (qzType === 'drag_order') {
+              const qzUserOrder = dragOrders[question.id] ?? question.orderedItems ?? [];
+              const qzCorrectOrder = question.orderedItems ?? [];
+              const qzIsCorrectOrder = quizSubmitted && JSON.stringify(qzUserOrder) === JSON.stringify(qzCorrectOrder);
+
+              return (
+                <div key={question.id} className="bg-card border border-border rounded-xl p-5 space-y-3" data-testid={`question-${qi}`}>
+                  <div className="flex items-start gap-2.5">
+                    <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+                      {qi + 1}
+                    </span>
+                    <div>
+                      <p className="font-medium text-sm leading-relaxed">{question.question}</p>
+                      <span className="inline-flex items-center gap-1 mt-1 text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                        <GripVertical className="w-2.5 h-2.5" /> Drag to Order
+                      </span>
+                    </div>
+                  </div>
+
+                  <DragOrderQuestion
+                    question={question}
+                    submitted={quizSubmitted}
+                    onOrderChange={handleOrderChange}
+                    currentOrder={qzUserOrder}
+                  />
+
+                  {quizSubmitted && (
+                    <div className={cn(
+                      "ml-8 rounded-lg p-3 text-xs leading-relaxed border",
+                      qzIsCorrectOrder
+                        ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-900 text-green-800 dark:text-green-300"
+                        : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300"
+                    )} data-testid={`explanation-${qi}`}>
+                      <strong className="font-semibold">{qzIsCorrectOrder ? "✓ Correct!" : "✗ Incorrect."}</strong>{" "}
+                      {question.explanation}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            // ── Drag Match ──
+            if (qzType === 'drag_match') {
+              const qzPairs = question.qzPairs ?? [];
+              const qzUserMatches = dragMatches[question.id] ?? {};
+              const qzAllCorrect = quizSubmitted && qzPairs.every(p => qzUserMatches[p.left] === p.right);
+
+              return (
+                <div key={question.id} className="bg-card border border-border rounded-xl p-5 space-y-3" data-testid={`question-${qi}`}>
+                  <div className="flex items-start gap-2.5">
+                    <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+                      {qi + 1}
+                    </span>
+                    <div>
+                      <p className="font-medium text-sm leading-relaxed">{question.question}</p>
+                      <span className="inline-flex items-center gap-1 mt-1 text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                        <ArrowRight className="w-2.5 h-2.5" /> Drag to Match
+                      </span>
+                    </div>
+                  </div>
+
+                  <DragMatchQuestion
+                    question={question}
+                    submitted={quizSubmitted}
+                    onMatchChange={handleMatchChange}
+                    currentMatches={qzUserMatches}
+                  />
+
+                  {quizSubmitted && (
+                    <div className={cn(
+                      "ml-8 rounded-lg p-3 text-xs leading-relaxed border",
+                      qzAllCorrect
+                        ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-900 text-green-800 dark:text-green-300"
+                        : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300"
+                    )} data-testid={`explanation-${qi}`}>
+                      <strong className="font-semibold">{qzAllCorrect ? "✓ All Correct!" : "✗ Some incorrect."}</strong>{" "}
+                      {question.explanation}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            return null;
+  };
+
+  // ── Content block renderer ───────────────────────────────────────────────
+  // Hoisted out of the JSX so the mobile branch can render the same blocks.
+  // It's a long if-chain over ~25 block types (tables, formulas, and a dozen
+  // bespoke visuals); mobile restyles the chrome around it rather than
+  // reimplementing it and silently dropping content.
+  const renderContentBlock = (block: LessonContent, i: number): React.ReactNode => {
             // Skill level filtering
             if (block.level) {
               const blockOrder = levelOrder[block.level];
@@ -2930,7 +2942,369 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             return null;
-          })}
+  };
+
+  // ── Mobile Lesson ─────────────────────────────────────────────────────────
+  // Single scroll: meta, title, lede, body, inline quiz, sticky footer. The
+  // body reuses renderContentBlock so no block type is lost; the handoff's
+  // reading typography is applied to the wrapper (.acq-lesson-body).
+  if (isMobile) {
+    const lessonIdx = mod.lessons.findIndex(l => l.id === lessonId);
+    const isLastLesson = lessonIdx === mod.lessons.length - 1;
+    const hasQuiz = effectiveQuiz.length > 0;
+
+    // Mark Complete owns completion. Submitting the quiz records its score
+    // (which is what earns quiz XP) but doesn't complete the lesson — the
+    // handoff makes those two separate actions.
+    const handleMarkComplete = () => {
+      onComplete(lessonId, quizScore ?? storedScore ?? 0);
+      try {
+        (window as any).trackEvent?.('lesson_complete', {
+          lesson_id: lessonId,
+          lesson_title: lesson?.title,
+          quiz_score: quizScore ?? 0,
+        });
+      } catch {}
+    };
+
+    return (
+      <div className="flex min-h-full flex-col">
+        <div className="px-4 pb-6 pt-4">
+          {/* Meta */}
+          <div className="flex flex-col gap-1">
+            <span
+              className="text-[10px] font-extrabold uppercase tracking-[0.1em]"
+              style={{ color: theme.mobileHex }}
+            >
+              {mod.title}
+            </span>
+            <span className="text-xs" style={{ color: 'var(--acq-text-muted)' }}>
+              Lesson {lessonIdx + 1} of {mod.lessons.length} · {lesson.duration}
+            </span>
+            {isCompleted && (
+              <span
+                className="mt-0.5 w-fit rounded-full px-2 py-px text-[11px] font-semibold"
+                style={{ background: 'var(--acq-success-wash)', color: 'var(--acq-success-ink)' }}
+              >
+                ✓ Complete
+              </span>
+            )}
+          </div>
+
+          <h1
+            className="mb-1.5 mt-3.5 text-2xl font-bold leading-[1.2] tracking-[-0.025em]"
+            style={{ color: 'var(--acq-text-heading)', textWrap: 'pretty' } as any}
+          >
+            {lesson.title}
+          </h1>
+          {lesson.description && (
+            <p className="mb-5 text-[15px] leading-[1.5]" style={{ color: 'var(--acq-text-secondary)' }}>
+              {lesson.description}
+            </p>
+          )}
+
+          {/* Body — shared renderers, mobile reading typography */}
+          <TermTapProvider onTermTap={setOpenTerm}>
+            <div className="acq-lesson-body">
+              {(lesson.content ?? []).map((block, i) => renderContentBlock(block, i))}
+            </div>
+          </TermTapProvider>
+
+          {/* Inline quiz */}
+          {hasQuiz && (
+            <div className="mt-8">
+              <div
+                className="text-[10px] font-extrabold uppercase tracking-[0.1em]"
+                style={{ color: theme.mobileHex }}
+              >
+                ✦ Check yourself · {effectiveQuiz.length} question{effectiveQuiz.length === 1 ? '' : 's'}
+              </div>
+
+              <div className="mt-4 flex flex-col gap-7">
+                {effectiveQuiz.map((q, qi) => {
+                  const qType = q.type ?? 'multiple_choice';
+                  if (qType !== 'multiple_choice') {
+                    // drag_match / drag_order keep their existing renderers —
+                    // the handoff's A./B. option design doesn't cover them.
+                    return (
+                      <div key={q.id} className="acq-lesson-body">
+                        {renderQuizQuestion(q, qi)}
+                      </div>
+                    );
+                  }
+                  const picked = quizAnswers[q.id];
+                  return (
+                    <div key={q.id}>
+                      <p
+                        className="text-[15px] font-semibold leading-[1.45]"
+                        style={{ color: 'var(--acq-text-heading)' }}
+                      >
+                        {q.question}
+                      </p>
+                      <div className="mt-3 flex flex-col gap-2">
+                        {q.options.map((opt, oi) => {
+                          const state = !quizSubmitted
+                            ? (picked === oi ? 'selected' : 'default')
+                            : oi === q.correct
+                              ? 'correct'
+                              : picked === oi
+                                ? 'incorrect'
+                                : 'default';
+                          return (
+                            <QuizOption
+                              key={oi}
+                              index={oi}
+                              label={opt.split('|||')[0]}
+                              state={state}
+                              disabled={quizSubmitted}
+                              onSelect={() => handleAnswerSelect(q.id, oi)}
+                            />
+                          );
+                        })}
+                      </div>
+                      {quizSubmitted && (
+                        <div
+                          className="mt-3 rounded-xl border p-3.5 text-sm leading-[1.5]"
+                          style={
+                            picked === q.correct
+                              ? { background: 'var(--acq-success-wash)', borderColor: 'var(--acq-success-border)', color: 'var(--acq-text-body)' }
+                              : { background: 'var(--acq-danger-wash)', borderColor: 'var(--acq-danger-border)', color: 'var(--acq-text-body)' }
+                          }
+                        >
+                          <strong>{picked === q.correct ? '✓ Correct.' : '✗ Not quite.'}</strong>{' '}
+                          {q.explanation || q.options[q.correct]?.split('|||')[1] || ''}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {!quizSubmitted ? (
+                <button
+                  type="button"
+                  onClick={handleCheckAnswers}
+                  disabled={!isAllAnswered()}
+                  className="mt-5 h-11 w-full rounded-[10px] text-[15px] font-semibold text-white disabled:opacity-50"
+                  style={{ background: 'var(--acq-teal)' }}
+                  data-testid="lesson-check-answer"
+                >
+                  Check answer{effectiveQuiz.length === 1 ? '' : 's'}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleRetakeQuiz}
+                  className="mt-5 h-11 w-full rounded-[10px] border text-[15px] font-semibold"
+                  style={{ borderColor: 'var(--acq-border-default)', color: 'var(--acq-text-secondary)' }}
+                >
+                  Retake quiz
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
+        <LessonFooter
+          completed={isCompleted}
+          isLastLesson={isLastLesson}
+          onComplete={handleMarkComplete}
+          onNext={() => (isLastLesson ? onBack() : onNextLesson(lessonId))}
+        />
+
+        <KeyTermSheet
+          term={openTerm}
+          moduleHex={theme.mobileHex}
+          onClose={() => setOpenTerm(null)}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="sm" onClick={onBack} className="gap-1.5" data-testid="lesson-back">
+          <ArrowLeft className="w-4 h-4" />
+          Back to Module
+        </Button>
+      </div>
+
+      {/* Lesson Header Card */}
+      <div className="bg-card border border-border rounded-xl p-5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap mb-1">
+              <span className="text-xs text-muted-foreground">{mod.title}</span>
+              {trackData && (
+                <span className="inline-flex items-center gap-1.5 bg-primary/10 border border-primary/25 text-primary rounded-full px-2.5 py-0.5 text-[11px] font-bold">
+                  <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
+                  Your path: {trackData.shortLabel}
+                </span>
+              )}
+            </div>
+            <h1 className="text-lg font-bold leading-tight mb-2">{lesson.title}</h1>
+            <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
+              <span className="flex items-center gap-1">
+                <Clock className="w-3 h-3" />
+                {lesson.duration}
+              </span>
+              <span className="flex items-center gap-1">
+                <BookOpen className="w-3 h-3" />
+                {lesson.keyTerms.length} key terms
+              </span>
+              {effectiveQuiz.length > 0 && (
+                <span>{effectiveQuiz.length} quiz questions</span>
+              )}
+            </div>
+          </div>
+          {isCompleted && (
+            <div className="flex items-center gap-1.5 bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-400 rounded-full px-3 py-1 text-xs font-medium flex-shrink-0">
+              <CheckCircle className="w-3.5 h-3.5" />
+              Completed
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Prominent Download Banner — example documents and/or fillable templates for this lesson */}
+      {lesson.attachments && lesson.attachments.length > 0 && (
+        <div className="rounded-xl bg-primary text-primary-foreground p-4 sm:p-5 flex items-center gap-4 flex-wrap shadow-sm">
+          <div className="w-11 h-11 rounded-lg bg-white/15 flex items-center justify-center flex-shrink-0">
+            <FileText className="w-5 h-5" />
+          </div>
+          <div className="flex-1 min-w-[200px]">
+            <div className="text-sm font-bold">
+              {lesson.attachments.every(a => /\.xlsx?$/i.test(a.url))
+                ? (lesson.attachments.length === 1 ? 'Fillable template included' : `${lesson.attachments.length} fillable templates included`)
+                : (lesson.attachments.length === 1 ? 'Real-world example document included' : `${lesson.attachments.length} real-world example documents included`)}
+            </div>
+            <div className="text-xs text-primary-foreground/80 mt-0.5">
+              {lesson.attachments.map(a => a.title.replace('Example: ', '').replace('Template: ', '')).join(' · ')}
+            </div>
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            {lesson.attachments.map((att, ai) => {
+              const fileLabel = /\.xlsx?$/i.test(att.url) ? 'Excel' : /\.docx?$/i.test(att.url) ? 'Word' : 'PDF';
+              return (
+              <a
+                key={ai}
+                href={att.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 bg-white text-primary font-bold text-xs px-3.5 py-2 rounded-lg hover:bg-white/90 transition-colors flex-shrink-0"
+                data-testid={`banner-download-${ai}`}
+              >
+                <Download className="w-3.5 h-3.5" />
+                {lesson.attachments!.length === 1 ? `Download ${fileLabel}` : `Download ${ai + 1}`}
+              </a>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Skill Level Selector — only shown if this lesson has leveled content */}
+      {hasLeveledContent && (
+        <div className="bg-card border border-border rounded-xl p-4">
+          <div className="flex items-center justify-between gap-2 flex-wrap mb-3">
+            <div className="text-xs font-semibold text-foreground">Skill Level</div>
+            {unlockedLevel !== 'advanced' && (
+              <button
+                onClick={onOpenAssessment}
+                className="text-xs text-primary hover:underline flex items-center gap-1 text-left"
+              >
+                <Lock className="w-3 h-3 flex-shrink-0" />
+                Take module assessment to unlock more
+              </button>
+            )}
+          </div>
+          <div className="flex gap-2">
+            {SKILL_LEVELS.map((lvl) => {
+              const lvlOrder = levelOrder[lvl];
+              const isUnlocked = lvlOrder <= unlockedOrder;
+              const isActive = viewLevel === lvl;
+              return (
+                <button
+                  key={lvl}
+                  onClick={() => isUnlocked && setViewLevel(lvl)}
+                  disabled={!isUnlocked}
+                  className={cn(
+                    "flex-1 py-1.5 px-2 rounded-lg border text-xs font-medium transition-all",
+                    isActive && isUnlocked
+                      ? cn("border", LEVEL_COLORS[lvl])
+                      : isUnlocked
+                        ? "border-border text-muted-foreground hover:border-primary/50"
+                        : "border-border/50 text-muted-foreground/40 cursor-not-allowed"
+                  )}
+                >
+                  {!isUnlocked && <Lock className="w-3 h-3 inline mr-1 mb-0.5 opacity-60" />}
+                  {LEVEL_LABELS[lvl]}
+                </button>
+              );
+            })}
+          </div>
+          {viewLevel !== 'novice' && (
+            <p className="text-[11px] text-muted-foreground mt-2">
+              Showing <strong className="text-foreground">{LEVEL_LABELS[viewLevel]}</strong>-level content. Includes all Novice content plus deeper analysis.
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Tab Navigation — sticky so it stays visible while scrolling */}
+      <div className="sticky top-0 z-20 flex border-b border-border bg-background/95 backdrop-blur-sm w-full max-w-full overflow-x-auto">
+        {(['lesson', 'terms', 'quiz'] as Tab[]).map((tab) => {
+          const labels: Record<Tab, string> = { lesson: 'Lesson', terms: `Key Terms (${lesson!.keyTerms.length})`, quiz: `Quiz (${effectiveQuiz.length}Q)` };
+          return (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={cn(
+                "px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors",
+                activeTab === tab
+                  ? "border-primary text-primary"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              )}
+              data-testid={`tab-${tab}`}
+            >
+              {labels[tab]}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* TAB: LESSON CONTENT */}
+      {activeTab === 'lesson' && (
+        <div className="space-y-5">
+          {/* Levels-based lessons (sections format) */}
+          {!(lesson.content?.length) && lesson.levels && (() => {
+            const lvl = lesson.levels[viewLevel] ?? lesson.levels['novice'];
+            if (!lvl?.sections) return null;
+            return lvl.sections.map((section: any, si: number) => (
+              <div key={si} className="space-y-3">
+                {section.heading && <h3 className="font-bold text-sm text-foreground">{section.heading}</h3>}
+                {section.content && <p className="text-sm text-muted-foreground leading-relaxed">{section.content}</p>}
+                {section.items && (
+                  <ul className="space-y-2">
+                    {section.items.map((item: string, ii: number) => {
+                      const [label, desc] = item.split('|||');
+                      return (
+                        <li key={ii} className="bg-card border border-border rounded-xl p-4">
+                          <p className="font-semibold text-sm text-foreground">{label}</p>
+                          {desc && <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{desc}</p>}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
+            ));
+          })()}
+
+          {/* Standard content-array lessons */}
+          {(lesson.content ?? []).map((block, i) => renderContentBlock(block, i))}
 
           {/* AI Explain Panel */}
           <div className="rounded-xl border border-primary/20 bg-primary/5 overflow-hidden">
@@ -3159,163 +3533,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
           )}
 
           {/* Questions */}
-          {effectiveQuiz.map((question, qi) => {
-            const qzType = question.type ?? 'multiple_choice';
-
-            // ── Multiple Choice ──
-            if (qzType === 'multiple_choice') {
-              const answered = quizAnswers[question.id] !== undefined;
-              const qzIsCorrect = quizSubmitted && quizAnswers[question.id] === question.correct;
-              const isWrong = quizSubmitted && answered && !qzIsCorrect;
-
-              return (
-                <div key={question.id} className="bg-card border border-border rounded-xl p-5 space-y-3" data-testid={`question-${qi}`}>
-                  <div className="flex items-start gap-2.5">
-                    <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
-                      {qi + 1}
-                    </span>
-                    <p className="font-medium text-sm leading-relaxed">{question.question}</p>
-                  </div>
-
-                  <div className="space-y-2 ml-8">
-                    {question.options.map((option, oi) => {
-                      const isSelected = quizAnswers[question.id] === oi;
-                      const isTheCorrect = question.correct === oi;
-
-                      let optionClass = "border-border bg-background hover:border-primary/50 hover:bg-primary/5";
-                      if (quizSubmitted) {
-                        if (isTheCorrect) optionClass = "border-green-400 bg-green-50 dark:bg-green-950/40 text-green-800 dark:text-green-300";
-                        else if (isSelected && !isTheCorrect) optionClass = "border-red-400 bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300";
-                        else optionClass = "border-border bg-background opacity-60";
-                      } else if (isSelected) {
-                        optionClass = "border-primary bg-primary/10";
-                      }
-
-                      return (
-                        <button
-                          key={oi}
-                          onClick={() => handleAnswerSelect(question.id, oi)}
-                          disabled={quizSubmitted}
-                          className={cn(
-                            "w-full text-left px-4 py-3 rounded-lg border text-sm transition-all duration-150",
-                            optionClass,
-                            !quizSubmitted && "cursor-pointer"
-                          )}
-                          data-testid={`option-${qi}-${oi}`}
-                        >
-                          <div className="flex items-center gap-2.5">
-                            <div className={cn(
-                              "w-4 h-4 rounded-full border-2 flex-shrink-0",
-                              isSelected ? "border-primary bg-primary" : "border-muted-foreground/40"
-                            )} />
-                            {option.split('|||')[0]}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {quizSubmitted && (
-                    <div className={cn(
-                      "ml-8 rounded-lg p-3 text-xs leading-relaxed border",
-                      qzIsCorrect
-                        ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-900 text-green-800 dark:text-green-300"
-                        : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300"
-                    )} data-testid={`explanation-${qi}`}>
-                      <strong className="font-semibold">{qzIsCorrect ? "✓ Correct!" : "✗ Incorrect."}</strong>{" "}
-                      {question.explanation || question.options[question.correct]?.split('|||')[1] || ""}
-                    </div>
-                  )}
-                </div>
-              );
-            }
-
-            // ── Drag Order ──
-            if (qzType === 'drag_order') {
-              const qzUserOrder = dragOrders[question.id] ?? question.orderedItems ?? [];
-              const qzCorrectOrder = question.orderedItems ?? [];
-              const qzIsCorrectOrder = quizSubmitted && JSON.stringify(qzUserOrder) === JSON.stringify(qzCorrectOrder);
-
-              return (
-                <div key={question.id} className="bg-card border border-border rounded-xl p-5 space-y-3" data-testid={`question-${qi}`}>
-                  <div className="flex items-start gap-2.5">
-                    <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
-                      {qi + 1}
-                    </span>
-                    <div>
-                      <p className="font-medium text-sm leading-relaxed">{question.question}</p>
-                      <span className="inline-flex items-center gap-1 mt-1 text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                        <GripVertical className="w-2.5 h-2.5" /> Drag to Order
-                      </span>
-                    </div>
-                  </div>
-
-                  <DragOrderQuestion
-                    question={question}
-                    submitted={quizSubmitted}
-                    onOrderChange={handleOrderChange}
-                    currentOrder={qzUserOrder}
-                  />
-
-                  {quizSubmitted && (
-                    <div className={cn(
-                      "ml-8 rounded-lg p-3 text-xs leading-relaxed border",
-                      qzIsCorrectOrder
-                        ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-900 text-green-800 dark:text-green-300"
-                        : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300"
-                    )} data-testid={`explanation-${qi}`}>
-                      <strong className="font-semibold">{qzIsCorrectOrder ? "✓ Correct!" : "✗ Incorrect."}</strong>{" "}
-                      {question.explanation}
-                    </div>
-                  )}
-                </div>
-              );
-            }
-
-            // ── Drag Match ──
-            if (qzType === 'drag_match') {
-              const qzPairs = question.qzPairs ?? [];
-              const qzUserMatches = dragMatches[question.id] ?? {};
-              const qzAllCorrect = quizSubmitted && qzPairs.every(p => qzUserMatches[p.left] === p.right);
-
-              return (
-                <div key={question.id} className="bg-card border border-border rounded-xl p-5 space-y-3" data-testid={`question-${qi}`}>
-                  <div className="flex items-start gap-2.5">
-                    <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
-                      {qi + 1}
-                    </span>
-                    <div>
-                      <p className="font-medium text-sm leading-relaxed">{question.question}</p>
-                      <span className="inline-flex items-center gap-1 mt-1 text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                        <ArrowRight className="w-2.5 h-2.5" /> Drag to Match
-                      </span>
-                    </div>
-                  </div>
-
-                  <DragMatchQuestion
-                    question={question}
-                    submitted={quizSubmitted}
-                    onMatchChange={handleMatchChange}
-                    currentMatches={qzUserMatches}
-                  />
-
-                  {quizSubmitted && (
-                    <div className={cn(
-                      "ml-8 rounded-lg p-3 text-xs leading-relaxed border",
-                      qzAllCorrect
-                        ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-900 text-green-800 dark:text-green-300"
-                        : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300"
-                    )} data-testid={`explanation-${qi}`}>
-                      <strong className="font-semibold">{qzAllCorrect ? "✓ All Correct!" : "✗ Some incorrect."}</strong>{" "}
-                      {question.explanation}
-                    </div>
-                  )}
-                </div>
-              );
-            }
-
-            return null;
-          })}
+          {effectiveQuiz.map((question, qi) => renderQuizQuestion(question, qi))}
 
           {/* Submit */}
           {!quizSubmitted && (

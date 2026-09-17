@@ -430,7 +430,11 @@ export async function registerRoutes(
 
   // Save lesson progress
   app.post("/api/progress", requireAuth as any, async (req: Request, res: Response) => {
-    const { lessonId, quizScore } = req.body;
+    // `scoreOnly` records a quiz result without completing the lesson. The
+    // mobile lesson separates the two: checking your answers earns the quiz
+    // score, while the sticky footer's Mark Complete is what finishes the
+    // lesson. Absent the flag this behaves exactly as before.
+    const { lessonId, quizScore, scoreOnly } = req.body;
     if (!lessonId) {
       return res.status(400).json({ message: "lessonId is required" });
     }
@@ -441,9 +445,9 @@ export async function registerRoutes(
       return res.status(404).json({ message: "User not found" });
     }
 
-    const completedLessons = Array.from(
-      new Set([...(currentUser.completedLessons ?? []), lessonId])
-    );
+    const completedLessons = scoreOnly === true
+      ? (currentUser.completedLessons ?? [])
+      : Array.from(new Set([...(currentUser.completedLessons ?? []), lessonId]));
     const currentScores = (currentUser.quizScores as Record<string, number>) ?? {};
     const newScores = { ...currentScores };
     if (quizScore !== undefined && quizScore !== null) {
@@ -457,7 +461,9 @@ export async function registerRoutes(
       return res.status(500).json({ message: "Failed to save progress" });
     }
 
-    // Update streak on lesson completion
+    // Update streak on lesson completion — and on a quiz submission too,
+    // which is just as much a daily rep. updateUserStreak is idempotent for
+    // the day, so doing both can't double-count.
     await storage.updateUserStreak(userId);
 
     // Refresh the session user

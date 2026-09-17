@@ -10,6 +10,7 @@ import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calcul
 import { hasFullAccess, hasPaidPlan, trialDaysRemaining } from "@shared/access";
 import { isNativeApp } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
+import { getModuleTheme } from "@/lib/moduleTheme";
 import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator, Flame } from "lucide-react";
 import { SIDEBAR_RESOURCES } from "@/lib/resources";
 import { FAR_TRANSLATOR, TOOLS_DIRECTORY } from "@/lib/toolsDirectory";
@@ -215,6 +216,8 @@ function AppContent() {
   // Below `md` the app swaps the sidebar shell for the native-style mobile
   // shell (bottom tab bar + 56px top bar). Desktop is untouched.
   const isMobile = useIsMobile();
+  // Lesson reading-progress bar — MobileShell reports scroll percentage.
+  const [readPct, setReadPct] = useState(0);
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
   const [resourcesExpanded, setResourcesExpanded] = useState(false);
   const [toolsExpanded, setToolsExpanded] = useState(false);
@@ -523,10 +526,12 @@ function AppContent() {
     window.location.href = 'https://acqlerate.com/?account=deleted';
   }, []);
 
-  const handleCompleteLesson = useCallback(async (lessonId: string, quizScore: number) => {
+  // `scoreOnly` records the quiz result without marking the lesson complete —
+  // the mobile lesson separates checking your answers from finishing.
+  const handleCompleteLesson = useCallback(async (lessonId: string, quizScore: number, scoreOnly = false) => {
     if (authState.status !== 'authenticated') return;
     try {
-      const res = await apiRequest("POST", "/api/progress", { lessonId, quizScore });
+      const res = await apiRequest("POST", "/api/progress", { lessonId, quizScore, scoreOnly });
       if (res.ok) {
         const data = await res.json();
         setAuthState(prev => {
@@ -671,6 +676,13 @@ function AppContent() {
       : { type: 'account' }
     );
   };
+
+  // The reading bar is filled in the current module's color.
+  const lessonModuleHex = (() => {
+    if (view.type !== 'lesson') return 'var(--acq-teal)';
+    const parent = modules.find(m => m.lessons.some(l => l.id === (view as any).lessonId));
+    return parent ? getModuleTheme(parent.color).mobileHex : 'var(--acq-teal)';
+  })();
 
   // Drives the scroll-to-top reset on navigation.
   const mobileScrollKey = `${view.type}:${(view as any).moduleId ?? (view as any).lessonId ?? ''}`;
@@ -830,6 +842,8 @@ function AppContent() {
         onStreakPress={() => setView({ type: 'account' })}
         trialDaysLeft={view.type === 'dashboard' ? trialDaysLeft : null}
         scrollKey={mobileScrollKey}
+        onScrollProgress={view.type === 'lesson' ? setReadPct : undefined}
+        readingBar={view.type === 'lesson' ? { pct: readPct, color: lessonModuleHex } : null}
       >
         <ErrorBoundary>{pageContent}</ErrorBoundary>
       </MobileShell>
