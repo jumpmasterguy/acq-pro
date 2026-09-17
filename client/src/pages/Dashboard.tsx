@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { MobileHome } from "@/components/mobile/MobileHome";
 import { getActiveTrack } from "@/lib/careerTracks";
+import { DailyChallengeSheet } from "@/components/mobile/DailyChallengeSheet";
 
 interface DashboardProps {
   progress: UserProgress;
@@ -643,7 +644,12 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
           streak={{
             currentStreak: streak.currentStreak,
             longestStreak: streak.longestStreak,
-            lastStreakDate: lastStreakDate ?? null,
+            // lastStreakDate comes from the auth payload, which isn't refetched
+            // after a submission — so once today's challenge is done, treat
+            // today as the last active day and today's circle lights up.
+            lastStreakDate: challengeDone
+              ? new Date().toISOString().slice(0, 10)
+              : lastStreakDate ?? null,
           }}
           challenge={{
             done: challengeDone,
@@ -658,7 +664,16 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
           onOpenChallenge={() => setChallengeActive(true)}
           onUpgrade={onUpgrade}
         />
-        {challengeModal}
+        {challengeActive && challenge && !challengeSubmitted && (
+          <DailyChallengeSheet
+            date={challenge.date}
+            questions={challenge.questions}
+            answers={challengeAnswers}
+            onAnswer={(id, oi) => setChallengeAnswers(prev => ({ ...prev, [id]: oi }))}
+            onSubmit={async () => { await submitChallenge(); setChallengeActive(false); }}
+            onClose={() => setChallengeActive(false)}
+          />
+        )}
       </>
     );
   }

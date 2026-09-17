@@ -165,23 +165,31 @@ export function weekStrip(
   lastStreakDate: string | null,
   today = new Date(),
 ): ('done' | 'today-pending' | 'future' | 'empty')[] {
-  const todayStr = today.toISOString().slice(0, 10);
-  // JS weeks start Sunday; the strip starts Monday.
-  const mondayOffset = (today.getDay() + 6) % 7;
+  // All of this runs in UTC, because that's the calendar the server keeps:
+  // updateUserStreak and lastChallengeDate both store
+  // `new Date().toISOString().slice(0, 10)`. Mixing in local dates gets the
+  // strip off by a day for anyone east of UTC — parsing "2026-09-17T00:00:00"
+  // as local midnight and calling toISOString() yields 2026-09-16 in CEST.
+  const utcDay = (d: Date) => d.toISOString().slice(0, 10);
+  const todayStr = utcDay(today);
+
+  // Day number since the epoch, so stepping back a day is just subtraction.
+  const dayNumber = (iso: string) => Math.floor(Date.parse(`${iso}T00:00:00Z`) / 86_400_000);
+  const isoForDayNumber = (n: number) => new Date(n * 86_400_000).toISOString().slice(0, 10);
+
+  const todayNum = dayNumber(todayStr);
+  // getUTCDay: 0 = Sunday. The strip starts Monday.
+  const mondayOffset = (today.getUTCDay() + 6) % 7;
+  const mondayNum = todayNum - mondayOffset;
 
   const doneDates = new Set<string>();
   if (lastStreakDate && currentStreak > 0) {
-    const cursor = new Date(`${lastStreakDate}T00:00:00`);
-    for (let i = 0; i < currentStreak; i++) {
-      doneDates.add(cursor.toISOString().slice(0, 10));
-      cursor.setDate(cursor.getDate() - 1);
-    }
+    const lastNum = dayNumber(lastStreakDate);
+    for (let i = 0; i < currentStreak; i++) doneDates.add(isoForDayNumber(lastNum - i));
   }
 
   return WEEKDAY_LETTERS.map((_, i) => {
-    const d = new Date(today);
-    d.setDate(d.getDate() - mondayOffset + i);
-    const iso = d.toISOString().slice(0, 10);
+    const iso = isoForDayNumber(mondayNum + i);
     if (doneDates.has(iso)) return 'done';
     if (iso === todayStr) return 'today-pending';
     return i > mondayOffset ? 'future' : 'empty';
