@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap, Trash2, AlertTriangle } from "lucide-react";
+import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap, Trash2, AlertTriangle, Award, LogOut, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription,
@@ -13,6 +13,11 @@ import { hasPaidPlan, trialDaysRemaining } from "@shared/access";
 import { CAREER_TRACK_DATA, getTrackStats, type CareerTrackId } from "@/lib/careerTracks";
 import { formatDuration } from "@/lib/curriculum";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { isNativeApp } from "@/lib/platform";
+import { getLevel } from "@/lib/progress";
+import { AccountSection, LevelHero, ModuleStanding, earnedClps } from "@/components/mobile/AccountCards";
+import { EmojiOptionCard } from "@/components/mobile/OptionCard";
 import type { AuthUser } from "./AuthPage";
 
 interface MyAccountPageProps {
@@ -21,7 +26,25 @@ interface MyAccountPageProps {
   onUpgrade: () => void;
   onNameUpdated: (firstName: string, lastName: string, username: string) => void;
   onAccountDeleted: () => void;
+  // ── Mobile Account ────────────────────────────────────────────────────────
+  // The mobile screen carries the level hero, module standing and the theme
+  // row, none of which the desktop page has.
+  xp?: number;
+  completedLessons?: Set<string>;
+  streak?: number;
+  onSignOut?: () => void;
+  themeMode?: 'light' | 'dark' | 'system';
+  onThemeChange?: (mode: 'light' | 'dark' | 'system') => void;
 }
+
+/**
+ * XP at which each level begins — the lower bound getLevel() checks against.
+ * Needed to draw the progress bar as "how far through this level", rather
+ * than "how far from zero".
+ */
+const LEVEL_FLOOR: Record<number, number> = {
+  1: 0, 2: 200, 3: 500, 4: 1000, 5: 1800, 6: 3000, 7: 5000,
+};
 
 // Same localStorage key + default Dashboard.tsx already uses for the career
 // filter bar — the path switcher here is a second way to change the same
@@ -48,7 +71,10 @@ function Section({ icon: Icon, title, children }: { icon: any; title: string; ch
   );
 }
 
-export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, onAccountDeleted }: MyAccountPageProps) {
+export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, onAccountDeleted,
+  xp = 0, completedLessons = new Set<string>(), streak = 0, onSignOut, themeMode = 'system', onThemeChange }: MyAccountPageProps) {
+  const isMobile = useIsMobile();
+  const nativeApp = isNativeApp();
   const { toast } = useToast();
   const [firstName, setFirstName] = useState(user.firstName ?? "");
   const [lastName, setLastName] = useState(user.lastName ?? "");
@@ -119,9 +145,227 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
     toast({ title: `Switched to ${track?.label ?? id}`, description: "Your Dashboard will reorder lessons to match on your next visit." });
   };
 
+  // Hoisted so the mobile branch can render the same confirmation.
+  const deleteDialog = (
+      <AlertDialog open={deleteOpen} onOpenChange={(o) => { if (!deleting) setDeleteOpen(o); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete your account?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This removes <strong>{user.email}</strong> and everything tied to it — lessons completed, quiz scores, streak and XP. There is no undo.
+              {user.subscriptionStatus === 'lifetime' && ' Your lifetime purchase will be gone too.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="delete-confirm" className="text-xs">Type <span className="font-mono font-bold">DELETE</span> to confirm</Label>
+            <Input id="delete-confirm" value={deleteText} onChange={(e) => setDeleteText(e.target.value)} autoComplete="off" placeholder="DELETE" data-testid="delete-confirm-input" />
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Keep my account</AlertDialogCancel>
+            <Button variant="destructive" onClick={handleDeleteAccount} disabled={deleteText !== "DELETE" || deleting} data-testid="delete-account-confirm">
+              {deleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+              Delete permanently
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+  );
+
   const sub = SUBSCRIPTION_LABELS[user.subscriptionStatus] ?? SUBSCRIPTION_LABELS.free;
   const paid = hasPaidPlan(user);
   const daysLeft = trialDaysRemaining(user);
+
+  // ── Mobile Account ────────────────────────────────────────────────────────
+  if (isMobile) {
+    const level = getLevel(xp);
+    const nextLevel = getLevel(level.nextXP);
+    const levelFloor = LEVEL_FLOOR[level.level] ?? 0;
+    const span = Math.max(1, level.nextXP - levelFloor);
+    const levelPct = Math.min(100, Math.round(((xp - levelFloor) / span) * 100));
+
+    return (
+      <div className="flex flex-col gap-4 px-4 pb-8 pt-4" data-testid="account-page-mobile">
+        <LevelHero
+          level={level.level}
+          title={level.title}
+          xp={xp}
+          toNext={Math.max(0, level.nextXP - xp)}
+          nextTitle={nextLevel.title}
+          pct={levelPct}
+          lessonsDone={completedLessons.size}
+          dayStreak={streak}
+          clpsEarned={earnedClps(completedLessons)}
+        />
+
+        <AccountSection icon={Award} title="Module standing">
+          <ModuleStanding
+            completedLessons={completedLessons}
+            skillLevels={(user.moduleSkillLevels ?? {}) as Record<string, string>}
+          />
+        </AccountSection>
+
+        <AccountSection icon={UserCircle} title="Name">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label htmlFor="m-first" className="text-xs">First Name</Label>
+              <Input id="m-first" value={firstName} onChange={e => setFirstName(e.target.value)} className="mt-1 min-h-[44px]" />
+            </div>
+            <div>
+              <Label htmlFor="m-last" className="text-xs">Last Name</Label>
+              <Input id="m-last" value={lastName} onChange={e => setLastName(e.target.value)} className="mt-1 min-h-[44px]" />
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={!canSave}
+            className="mt-3 flex h-9 items-center gap-1.5 rounded-lg px-3 text-[13px] font-semibold text-white disabled:opacity-50"
+            style={{ background: 'var(--acq-teal)' }}
+            data-testid="account-save-name"
+          >
+            {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <>✓</>} Save Changes
+          </button>
+        </AccountSection>
+
+        <AccountSection icon={Mail} title="Email">
+          <div className="text-sm" style={{ color: 'var(--acq-text-body)' }}>{user.email}</div>
+          <p className="mt-1 text-xs" style={{ color: 'var(--acq-text-muted)' }}>
+            Tied to your login — contact support to change it.
+          </p>
+        </AccountSection>
+
+        <AccountSection icon={Compass} title="Your Path">
+          <div className="flex flex-col gap-2.5">
+            {CAREER_TRACK_DATA.map(track => {
+              const stats = getTrackStats(track.id);
+              const isActive = track.id === activeCareer;
+              return (
+                <EmojiOptionCard
+                  key={track.id}
+                  emoji={track.icon}
+                  selected={isActive}
+                  onSelect={() => handleSelectPath(track.id)}
+                  data-testid={`account-track-${track.id}`}
+                >
+                  <span className="mb-1 flex flex-wrap items-center gap-2">
+                    <span className="text-sm font-semibold" style={{ color: 'var(--acq-text-heading)' }}>
+                      {track.label}
+                    </span>
+                    {isActive && (
+                      <span
+                        className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.06em]"
+                        style={{ color: 'var(--acq-text-brand)', background: 'var(--acq-surface-brand-wash)' }}
+                      >
+                        Current
+                      </span>
+                    )}
+                  </span>
+                  <span className="block text-xs italic" style={{ color: 'var(--acq-text-muted)' }}>
+                    {track.before}
+                  </span>
+                  <span className="my-0.5 block text-xs font-medium">{track.after}</span>
+                  <span className="block text-[11px]" style={{ color: 'var(--acq-text-muted)' }}>
+                    {stats.lessonCount} core lessons · {formatDuration(stats.totalMinutes)} focused
+                  </span>
+                </EmojiOptionCard>
+              );
+            })}
+          </div>
+          <p className="mt-3 text-xs leading-[1.5]" style={{ color: 'var(--acq-text-muted)' }}>
+            Switch anytime — nothing gets locked away. Lessons outside your core focus are still
+            there, just filed as bonus content instead of top billing.
+          </p>
+        </AccountSection>
+
+        <AccountSection icon={CreditCard} title="Subscription">
+          <div className="flex flex-wrap items-center gap-2">
+            <span
+              className="rounded-full px-2.5 py-1 text-xs font-bold"
+              style={{ background: 'var(--acq-surface-gold-wash)', color: 'var(--acq-text-gold)' }}
+            >
+              {sub.label}
+            </span>
+            {daysLeft !== null && (
+              <span className="acq-tnum text-xs" style={{ color: 'var(--acq-text-muted)' }}>
+                {daysLeft === 0 ? 'Ends today' : `${daysLeft} days left`}
+              </span>
+            )}
+          </div>
+          {/* Native can't take payment, so it explains where to. On the web the
+              billing portal and the priced upgrade page are both fair game. */}
+          {nativeApp ? (
+            <p className="mt-2 text-xs leading-[1.5]" style={{ color: 'var(--acq-text-muted)' }}>
+              Plans are managed on acqlerate.com, not in the app. Upgrade there and sign back in here
+              to unlock every module.
+            </p>
+          ) : paid ? (
+            <p className="mt-2 text-xs leading-[1.5]" style={{ color: 'var(--acq-text-muted)' }}>
+              Manage billing, payment method and cancellation in the customer portal.
+            </p>
+          ) : null}
+          <button
+            type="button"
+            onClick={paid && !nativeApp ? handleManageBilling : onUpgrade}
+            className="mt-3 flex h-10 items-center gap-1.5 rounded-lg border px-3 text-[13px] font-semibold"
+            style={{ borderColor: 'var(--acq-border-default)', color: 'var(--acq-text-body)' }}
+            data-testid="account-upgrade"
+          >
+            {portalLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Zap className="h-3.5 w-3.5" />}
+            {paid && !nativeApp ? 'Manage billing' : 'How to upgrade'}
+          </button>
+        </AccountSection>
+
+        {/* Theme — not in the handoff, but the mobile top bar has no toggle and
+            the app otherwise follows the OS with no way to override it. */}
+        <AccountSection icon={Moon} title="Appearance">
+          <div className="flex gap-2">
+            {(['light', 'dark', 'system'] as const).map(mode => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => onThemeChange?.(mode)}
+                className="h-11 flex-1 rounded-lg border text-[13px] font-semibold capitalize"
+                style={
+                  themeMode === mode
+                    ? { borderColor: 'var(--acq-teal)', background: 'rgba(1,105,111,.05)', color: 'var(--acq-text-brand)' }
+                    : { borderColor: 'var(--acq-border-default)', color: 'var(--acq-text-secondary)' }
+                }
+                data-testid={`account-theme-${mode}`}
+              >
+                {mode}
+              </button>
+            ))}
+          </div>
+        </AccountSection>
+
+        <button
+          type="button"
+          onClick={onSignOut}
+          className="mx-auto flex h-11 items-center gap-2 text-sm"
+          style={{ color: 'var(--acq-text-muted)' }}
+          data-testid="account-signout"
+        >
+          <LogOut className="h-4 w-4" strokeWidth={2} />
+          Sign out
+        </button>
+
+        {/* Required by App Store guideline 5.1.1(v): an app that lets you
+            create an account has to let you delete it in-app. */}
+        <button
+          type="button"
+          onClick={() => setDeleteOpen(true)}
+          className="mx-auto flex h-11 items-center gap-2 text-xs"
+          style={{ color: 'var(--acq-text-faint)' }}
+          data-testid="account-delete"
+        >
+          <Trash2 className="h-3.5 w-3.5" strokeWidth={2} />
+          Delete account
+        </button>
+
+        {deleteDialog}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -255,28 +499,7 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
         </Button>
       </Section>
 
-      <AlertDialog open={deleteOpen} onOpenChange={(o) => { if (!deleting) setDeleteOpen(o); }}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete your account?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This removes <strong>{user.email}</strong> and everything tied to it — lessons completed, quiz scores, streak and XP. There is no undo.
-              {user.subscriptionStatus === 'lifetime' && ' Your lifetime purchase will be gone too.'}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className="space-y-2">
-            <Label htmlFor="delete-confirm" className="text-xs">Type <span className="font-mono font-bold">DELETE</span> to confirm</Label>
-            <Input id="delete-confirm" value={deleteText} onChange={(e) => setDeleteText(e.target.value)} autoComplete="off" placeholder="DELETE" data-testid="delete-confirm-input" />
-          </div>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleting}>Keep my account</AlertDialogCancel>
-            <Button variant="destructive" onClick={handleDeleteAccount} disabled={deleteText !== "DELETE" || deleting} data-testid="delete-account-confirm">
-              {deleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
-              Delete permanently
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {deleteDialog}
     </div>
   );
 }

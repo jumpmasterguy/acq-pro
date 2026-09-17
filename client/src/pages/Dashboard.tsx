@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { apiRequest } from "@/lib/queryClient";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { isNativeApp } from "@/lib/platform";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { MobileHome } from "@/components/mobile/MobileHome";
 import { getActiveTrack } from "@/lib/careerTracks";
@@ -1182,7 +1183,8 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
             quizzes, and career resources for a one-time investment in your career.
           </p>
           <Button onClick={onUpgrade} size="lg" data-testid="upgrade-cta">
-            Upgrade to Pro — $99 lifetime
+            {/* No price on native — App Store 3.1.1. */}
+            {isNativeApp() ? "Upgrade to Pro" : "Upgrade to Pro — $99 lifetime"}
           </Button>
         </div>
       )}

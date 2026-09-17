@@ -198,20 +198,42 @@ function AppContent() {
   // server/static.ts) — so there's no in-app "landing" view to default to
   // here; every unauthenticated path starts at the sign-in screen.
   const [view, setView] = useState<View>({ type: 'auth' });
-  // Dark mode — persisted in cookie (works on Railway, not a sandboxed iframe).
-  // With no cookie set we follow the OS, which is what the mobile handoff
-  // specifies; the old unconditional `true` meant a phone in light mode still
-  // booted the app dark. An explicit choice (the cookie) always wins.
-  const [darkMode, setDarkMode] = useState(() => {
+  // Theme — an explicit choice is persisted in a cookie (works on Railway,
+  // unlike a sandboxed iframe's storage); no cookie means follow the OS, which
+  // is what the mobile handoff specifies. The old code booted dark
+  // unconditionally, so a phone in light mode still got a dark app.
+  type ThemeMode = 'light' | 'dark' | 'system';
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
     try {
       const c = document.cookie.split('; ').find(r => r.startsWith('theme='));
-      if (c) return c.split('=')[1] !== 'light';
+      if (c) {
+        const v = c.split('=')[1];
+        if (v === 'light' || v === 'dark') return v;
+      }
     } catch {}
-    try {
-      return window.matchMedia('(prefers-color-scheme: light)').matches ? false : true;
-    } catch {}
-    return true;
+    return 'system';
   });
+  const [systemDark, setSystemDark] = useState(() => {
+    try { return window.matchMedia('(prefers-color-scheme: dark)').matches; } catch { return true; }
+  });
+  useEffect(() => {
+    try {
+      const mq = window.matchMedia('(prefers-color-scheme: dark)');
+      const onChange = (e: MediaQueryListEvent) => setSystemDark(e.matches);
+      mq.addEventListener('change', onChange);
+      return () => mq.removeEventListener('change', onChange);
+    } catch {}
+  }, []);
+  const darkMode = themeMode === 'system' ? systemDark : themeMode === 'dark';
+
+  const applyThemeMode = (mode: ThemeMode) => {
+    setThemeMode(mode);
+    try {
+      document.cookie = mode === 'system'
+        ? 'theme=;path=/;max-age=0'
+        : `theme=${mode};path=/;max-age=31536000`;
+    } catch {}
+  };
   const [sidebarOpen, setSidebarOpen] = useState(false);
   // Below `md` the app swaps the sidebar shell for the native-style mobile
   // shell (bottom tab bar + 56px top bar). Desktop is untouched.
@@ -297,11 +319,8 @@ function AppContent() {
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
-  const toggleDark = () => setDarkMode(d => {
-    const next = !d;
-    try { document.cookie = `theme=${next ? 'dark' : 'light'};path=/;max-age=31536000`; } catch {}
-    return next;
-  });
+  // Desktop's top-bar button still flips between explicit light and dark.
+  const toggleDark = () => applyThemeMode(darkMode ? 'light' : 'dark');
 
   // Activity heartbeat — sends accumulated active-minutes to server every 2 mins
   useEffect(() => {
@@ -764,6 +783,8 @@ function AppContent() {
               onBack={() => setView({ type: 'dashboard' })}
               onUpgrade={handleUpgrade}
               trialDaysLeft={trialDaysLeft}
+              userEmail={authState.status === 'authenticated' ? authState.user.email : undefined}
+              onSignOut={handleSignOut}
             />
           )}
           {view.type === 'account' && authState.status === 'authenticated' && (
@@ -773,6 +794,12 @@ function AppContent() {
               onUpgrade={() => setView({ type: 'upgrade' })}
               onNameUpdated={handleNameUpdated}
               onAccountDeleted={handleAccountDeleted}
+              xp={progress.xp}
+              completedLessons={completedLessons}
+              streak={streak.currentStreak}
+              onSignOut={handleSignOut}
+              themeMode={themeMode}
+              onThemeChange={applyThemeMode}
             />
           )}
           {view.type === 'admin' && isAdmin && (

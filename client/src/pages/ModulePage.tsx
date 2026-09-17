@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { isNativeApp } from "@/lib/platform";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { moduleGradient } from "@/lib/moduleTheme";
 import { getTotalLessons } from "@/lib/curriculum";
@@ -641,7 +642,8 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
             with a one-time Pro upgrade.
           </p>
           <Button onClick={onUpgrade} data-testid="module-upgrade-btn">
-            Upgrade to Pro — $99 lifetime
+            {/* No price on native — App Store 3.1.1. */}
+            {isNativeApp() ? "Upgrade to Pro" : "Upgrade to Pro — $99 lifetime"}
           </Button>
         </div>
       )}
