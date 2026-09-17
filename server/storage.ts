@@ -863,6 +863,102 @@ export class MemStorage implements IStorage {
     this.users.set(userId, { ...user, audioListens: listens } as any);
   }
 
+  // ── Parity with DrizzleStorage ────────────────────────────────────────────
+  // These seven existed only on the Postgres path, so `npm run dev` without a
+  // DATABASE_URL crashed on signup ("storage.generateReferralCode is not a
+  // function") and again on the daily challenge. MemStorage is only ever
+  // constructed when DATABASE_URL is unset, so this is local-dev only.
+
+  generateReferralCode(username: string): string {
+    const base = username.split('@')[0].toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+    const suffix = Math.floor(Math.random() * 900 + 100);
+    return `${base}${suffix}`;
+  }
+
+  async getUserByReferralCode(code: string): Promise<User | undefined> {
+    const wanted = code.toUpperCase();
+    return Array.from(this.users.values())
+      .find((u) => ((u as any).referralCode ?? '').toUpperCase() === wanted);
+  }
+
+  async recordReferral(referralCode: string): Promise<{ rewarded: boolean; referrer: User | undefined }> {
+    const referrer = await this.getUserByReferralCode(referralCode);
+    if (!referrer) return { rewarded: false, referrer: undefined };
+
+    const newCount = (referrer.referralCount ?? 0) + 1;
+    const rewardsEarned = Math.floor(newCount / 2); // every 2 referrals = 1 reward
+    const alreadyGranted = referrer.referralRewardGranted ?? 0;
+    const shouldReward = rewardsEarned > alreadyGranted;
+
+    const updates: any = { referralCount: newCount };
+    if (shouldReward) {
+      updates.referralRewardGranted = rewardsEarned;
+      updates.subscriptionStatus = 'active';
+      updates.subscriptionId = `referral_reward_${Date.now()}`;
+    }
+
+    const updated = { ...referrer, ...updates } as User;
+    this.users.set(referrer.id, updated);
+    return { rewarded: shouldReward, referrer: updated };
+  }
+
+  async updateUserFields(userId: string, fields: Record<string, any>): Promise<void> {
+    const user = this.users.get(userId);
+    if (!user) return;
+    this.users.set(userId, { ...user, ...fields } as User);
+  }
+
+  async grantYearlyPro(userId: string): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const updated = {
+      ...user,
+      subscriptionStatus: 'active',
+      subscriptionId: `yearly_pro_${Date.now()}`,
+    } as User;
+    this.users.set(userId, updated);
+    return updated;
+  }
+
+  async updateUserStreak(userId: string): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const lastDate = (user as any).lastStreakDate;
+    if (lastDate === todayStr) return user;
+
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().slice(0, 10);
+
+    const currentStreak = lastDate === yesterdayStr ? ((user as any).currentStreak ?? 0) + 1 : 1;
+    const longestStreak = Math.max((user as any).longestStreak ?? 0, currentStreak);
+
+    const updated = { ...user, currentStreak, longestStreak, lastStreakDate: todayStr } as User;
+    this.users.set(userId, updated);
+    return updated;
+  }
+
+  async completeDailyChallenge(userId: string, score: number, xpEarned: number): Promise<{ user: User; awarded: boolean } | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const todayStr = new Date().toISOString().slice(0, 10);
+    if ((user as any).lastChallengeDate === todayStr) return { user, awarded: false };
+
+    const history = ((user as any).challengeHistory ?? []) as any[];
+    history.push({ date: todayStr, score, xpEarned });
+    const withChallenge = {
+      ...user,
+      lastChallengeDate: todayStr,
+      challengeHistory: history,
+      xp: (user.xp ?? 0) + xpEarned,
+    } as User;
+    this.users.set(userId, withChallenge);
+
+    const updatedUser = await this.updateUserStreak(userId);
+    return { user: updatedUser ?? withChallenge, awarded: true };
+  }
+
   async saveUserProfile(userId: string, profile: Record<string, any>): Promise<User | undefined> {
     const user = this.users.get(userId);
     if (!user) return undefined;

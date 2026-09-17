@@ -11,6 +11,8 @@ import { type User } from "@shared/schema";
 
 const PgSession = ConnectPgSimple(session);
 
+const IS_DEV = process.env.NODE_ENV === "development";
+
 // Idle timeout: how long an authenticated session can go without a request
 // before it's force-ended (see the middleware below). Separate from the
 // cookie's 30-day maxAge, which just caps how long a session can exist at
@@ -103,7 +105,9 @@ export async function setupAuth(app: Express): Promise<void> {
 
     console.log("[session] Using PostgreSQL session store");
   } else {
-    const MemoryStore = require("memorystore")(session);
+    // `require` is not defined in this ESM module — the local-dev fallback
+    // threw on every boot without a DATABASE_URL.
+    const MemoryStore = (await import("memorystore")).default(session);
     store = new MemoryStore({ checkPeriod: 86400000 });
     console.log("[session] No DATABASE_URL — using MemoryStore (local dev)");
   }
@@ -127,9 +131,16 @@ export async function setupAuth(app: Express): Promise<void> {
       store,
       cookie: {
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-        secure: true,      // always true — Railway + Cloudflare always serve HTTPS
+        // Production (Railway + Cloudflare) is always HTTPS, so the cookie is
+        // secure + SameSite=None — the latter is required for the Google OAuth
+        // cross-origin redirect to set it. Over plain http://localhost a
+        // secure cookie is simply dropped, which signed you out on every
+        // reload, so dev relaxes both. The check is for an explicit
+        // "development" rather than "not production", so an unset NODE_ENV
+        // still gets the hardened production cookie.
+        secure: !IS_DEV,
         httpOnly: true,
-        sameSite: "none",  // required for Google OAuth cross-origin redirect to set cookie
+        sameSite: IS_DEV ? "lax" : "none",
       },
     })
   );
