@@ -29,6 +29,8 @@ interface DashboardProps {
   isAdmin?: boolean;
   /** Mirrors this page's Burn Rate (streak) numbers up to the persistent sidebar badge. */
   onStreakUpdate?: (streak: { currentStreak: number; longestStreak: number }) => void;
+  /** Fired when a brief awards XP, so App can show it before the next reload. */
+  onBriefXpEarned?: (xpEarned: number) => void;
 }
 
 // ── Career track lesson-level definitions ───────────────────────────────────
@@ -404,7 +406,7 @@ function FilterTab({ active, onClick, children }: { active: boolean; onClick: ()
 }
 
 // ── Main Dashboard ───────────────────────────────────────────────────────────
-export default function Dashboard({ progress, onSelectModule, onSelectLesson, onUpgrade, username, isAdmin, onStreakUpdate, onOpenAccount }: DashboardProps) {
+export default function Dashboard({ progress, onSelectModule, onSelectLesson, onUpgrade, username, isAdmin, onStreakUpdate, onBriefXpEarned, onOpenAccount }: DashboardProps) {
   const totalLessons = getTotalLessons();
   const completedCount = progress.completedLessons.size;
   // Use progress.xp (computed once in App.tsx) rather than recalculating
@@ -857,7 +859,8 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
           integration is a follow-up. */}
       <WeeklyBrief
         onSelectLesson={onSelectLesson}
-        onXpEarned={(_xp, currentStreak) => {
+        onXpEarned={(xp, currentStreak) => {
+          if (xp > 0) onBriefXpEarned?.(xp);
           if (typeof currentStreak === 'number') {
             setStreak(st => ({ ...st, currentStreak }));
             onStreakUpdate?.({ currentStreak, longestStreak: streak.longestStreak });

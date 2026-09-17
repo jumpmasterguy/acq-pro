@@ -1366,17 +1366,28 @@ export async function registerRoutes(
       const skillLevels = (currentUser.moduleSkillLevels as Record<string, string>) ?? {};
       const skillUnlocks = Object.values(skillLevels).filter(l => l === 'intermediate' || l === 'advanced').length
         + Object.values(skillLevels).filter(l => l === 'advanced').length; // advanced counts double
-      // Brief XP is added to this total rather than left in the xp column on
-      // its own, because this recalculation overwrites xp on every heartbeat.
-      // Anything not represented here disappears the next time the client
-      // checks in.
-      const briefEntries = (((currentUser as any).briefsRead ?? []) as Array<{ xpEarned?: number }>);
-      const briefXp = briefEntries.reduce((sum, e) => sum + (Number(e?.xpEarned) || 0), 0);
+      // This recalculation overwrites the xp column on every heartbeat, so
+      // anything earned outside the lesson/quiz/skill formula has to be a term
+      // here or it disappears on the next check-in. Daily challenge XP used to
+      // be written straight to the column by completeDailyChallenge and then
+      // wiped seconds later, which made this column read low for every active
+      // user. (The XP a user actually *sees* is computed client-side in
+      // App.tsx from challengeHistory and briefsRead, so that display was
+      // always right; this column feeds admin analytics, and it was the number
+      // that drifted.)
+      const sumXpEarned = (entries: unknown) =>
+        (Array.isArray(entries) ? entries : []).reduce(
+          (sum: number, e: any) => sum + (Number(e?.xpEarned) || 0),
+          0,
+        );
+      const challengeXp = sumXpEarned((currentUser as any).challengeHistory);
+      const briefXp = sumXpEarned((currentUser as any).briefsRead);
 
       const newXp = Math.round(
         completedCount * 10
         + avgQuiz * 5
         + skillUnlocks * 50
+        + challengeXp
         + briefXp
       );
 

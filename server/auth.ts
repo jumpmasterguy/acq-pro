@@ -53,6 +53,7 @@ declare global {
       lastChallengeDate: string | null;
       lastStreakDate: string | null;
       dailyChallengeXP: number;
+      briefsXP: number;
     }
   }
 }
@@ -293,6 +294,14 @@ export function toPassportUser(user: User): Express.User {
     // always see it as undefined and report the streak as broken.
     lastStreakDate: user.lastStreakDate ?? null,
     dailyChallengeXP: ((user.challengeHistory as any[]) ?? []).reduce(
+      (sum, entry) => sum + (entry?.xpEarned ?? 0),
+      0
+    ),
+    // Same shape and same reason as dailyChallengeXP above: brief XP is
+    // tracked server-side in its own column, and the client folds it into the
+    // total it displays. Without this the user earns brief XP and never sees
+    // it anywhere.
+    briefsXP: ((user.briefsRead as any[]) ?? []).reduce(
       (sum, entry) => sum + (entry?.xpEarned ?? 0),
       0
     ),
