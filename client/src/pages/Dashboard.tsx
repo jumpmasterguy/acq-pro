@@ -67,7 +67,7 @@ const CAREER_TRACKS: CareerTrack[] = [
       'ops-1', 'ops-2', 'ops-5',
     ],
     bonusLessons: [
-      'finance-6', 'finance-8', 'business-1', 'business-2', 'business-3', 'business-4', 'business-5', 'business-6', 'business-7', 'business-8', 'business-9', 'business-10', 'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10',
+      'finance-6', 'finance-8', 'business-1', 'business-2', 'business-3', 'business-4', 'business-5', 'business-6', 'business-7', 'business-8', 'business-9', 'business-10', 'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10',
       'contracts-8', 'contracts-1', 'contracts-4', 'contracts-9', 'contracts-7', 'contracts-5',
       'capture-1', 'capture-3', 'capture-2', 'capture-4', 'capture-5',
       'ops-3', 'ops-4', 'ops-6', 'ops-7',
@@ -86,7 +86,7 @@ const CAREER_TRACKS: CareerTrack[] = [
       'contracts-8', 'contracts-1', 'contracts-4', 'contracts-9', 'contracts-3', 'contracts-6',
       'contracts-7', 'contracts-5',
       // Finance — cost structure, EVM, DCAA, CPAF burn rate
-      'finance-2', 'finance-5', 'finance-6', 'finance-7', 'finance-8', 'business-1', 'business-2', 'business-3', 'business-4', 'business-5', 'business-6', 'business-7', 'business-8', 'business-9', 'business-10', 'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10',
+      'finance-2', 'finance-5', 'finance-6', 'finance-7', 'finance-8', 'business-1', 'business-2', 'business-3', 'business-4', 'business-5', 'business-6', 'business-7', 'business-8', 'business-9', 'business-10', 'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10',
       // Data — metrics, EVM terms, IPMR
       'data-1', 'data-3', 'data-4',
       // Ops — risk, comms, subs, PM mistakes, what PMs actually do
@@ -117,7 +117,7 @@ const CAREER_TRACKS: CareerTrack[] = [
       'contracts-4', 'contracts-8', 'contracts-7', 'contracts-5', 'contracts-9',
       // Finance — appropriations, cost estimating
       'finance-4', 'finance-3',
-      'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10',
+      'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10',
     ],
     bonusLessons: [
       'finance-1', 'finance-2', 'finance-5', 'finance-6', 'finance-7', 'finance-8', 'business-1', 'business-2', 'business-3', 'business-4', 'business-5', 'business-6', 'business-7', 'business-8', 'business-9', 'business-10',
@@ -142,7 +142,7 @@ const CAREER_TRACKS: CareerTrack[] = [
       'capture-1', 'capture-3', 'capture-2', 'capture-4', 'capture-5',
       // Ops — stakeholder comms matters for BD
       'ops-2',
-      'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10',
+      'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10',
     ],
     bonusLessons: [
       'foundations-6', 'foundations-9', 'foundations-2', 'foundations-7',
@@ -180,7 +180,7 @@ const SUBJECT_GROUPS: SubjectGroup[] = [
     shortLabel: 'Finance + Contracts',
     icon: <FileText className="w-3.5 h-3.5" />,
     desc: 'Appropriations, EVM (Earned Value Management), the business side of contracting, contract types, source selection, COR (Contracting Officer\'s Rep), and modifications',
-    moduleIds: ['finance', 'business', 'contracts'],
+    moduleIds: ['finance', 'business', 'contracts', 'compliance'],
   },
   {
     id: 'capture_analytics',
@@ -514,7 +514,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
       const careerTrack = CAREER_TRACKS.find(careerT => careerT.id === activeCareer)!;
       const careerPrimarySet = new Set(careerTrack.primaryLessons);
       new Set(careerTrack.bonusLessons);
-      const careerModuleOrder = ['foundations', 'finance', 'business', 'contracts', 'data', 'capture', 'smallbiz', 'operations'];
+      const careerModuleOrder = ['foundations', 'finance', 'business', 'contracts', 'data', 'capture', 'smallbiz', 'compliance', 'operations'];
       const careerPrimary = careerModuleOrder
         .map(careerModId => modules.find(careerMod => careerMod.id === careerModId))
         .filter(Boolean)
