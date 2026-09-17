@@ -45,7 +45,7 @@ for (const m of content.matchAll(/\bid:\s*'([a-z]+-\d+[a-z]?)'/g)) {
 }
 
 // 3. Minimum module count
-const moduleIds = ['finance','contracts','foundations','data','capture','operations','business'];
+const moduleIds = ['finance','contracts','foundations','data','capture','operations','business','smallbiz'];
 for (const mod of moduleIds) {
   if (!content.includes(`id: '${mod}'`)) errors.push(`Missing module: ${mod}`);
 }
@@ -77,6 +77,7 @@ const MODULE_LESSON_PREFIX = {
   capture: 'capture',
   operations: 'ops',
   business: 'business',
+  smallbiz: 'smallbiz',
 };
 
 let depth = 0, bdepth = 0;
