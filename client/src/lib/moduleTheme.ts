@@ -25,6 +25,34 @@ export interface ModuleTheme {
   borderTint: string;
   /** Progress bar fill override. */
   progressBar: string;
+
+  // ── Mobile identity ──────────────────────────────────────────────────────
+  // The mobile design gives each module a base color and a gradient, both a
+  // shade lighter/deeper than the single `hex` desktop uses. These are kept
+  // as separate fields rather than repointing `hex`, so adopting the mobile
+  // palette can't recolor the desktop module pages.
+  //
+  // Source note: the handoff README's color table lists base and the
+  // `--module-*-alt` value, which is `hex` above; the prototype that produced
+  // the screenshots ends its gradients a further step darker. These are the
+  // prototype's values, since the screenshots are what fidelity is judged on.
+
+  /** Module identity color on mobile — seq tiles, progress fills, rails. */
+  mobileHex: string;
+  /** Gradient start — `linear-gradient(135deg, from, to)`. */
+  gradientFrom: string;
+  /** Gradient end. */
+  gradientTo: string;
+}
+
+/** 12% tint of a module's mobile hex — rails, icon backgrounds. */
+export function moduleTint(hex: string): string {
+  return `${hex}1f`;
+}
+
+/** The mobile module gradient. */
+export function moduleGradient(theme: ModuleTheme): string {
+  return `linear-gradient(135deg, ${theme.gradientFrom}, ${theme.gradientTo})`;
 }
 
 export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
@@ -37,6 +65,9 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
     bgTint: 'bg-blue-500/10',
     borderTint: 'border-blue-500/30',
     progressBar: '[&>div]:bg-blue-600',
+    mobileHex: '#3b82f6',
+    gradientFrom: '#3b82f6',
+    gradientTo: '#1d4ed8',
   },
   gold: {
     hex: '#d97706',
@@ -47,6 +78,9 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
     bgTint: 'bg-amber-500/10',
     borderTint: 'border-amber-500/30',
     progressBar: '[&>div]:bg-amber-500',
+    mobileHex: '#f59e0b',
+    gradientFrom: '#f59e0b',
+    gradientTo: '#b45309',
   },
   blue: {
     hex: '#0891b2',
@@ -57,6 +91,9 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
     bgTint: 'bg-cyan-500/10',
     borderTint: 'border-cyan-500/30',
     progressBar: '[&>div]:bg-cyan-500',
+    mobileHex: '#6366f1',
+    gradientFrom: '#6366f1',
+    gradientTo: '#4338ca',
   },
   teal: {
     hex: '#0d9488',
@@ -67,6 +104,9 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
     bgTint: 'bg-teal-500/10',
     borderTint: 'border-teal-500/30',
     progressBar: '[&>div]:bg-teal-500',
+    mobileHex: '#14b8a6',
+    gradientFrom: '#14b8a6',
+    gradientTo: '#0f766e',
   },
   amber: {
     hex: '#ea580c',
@@ -77,6 +117,9 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
     bgTint: 'bg-orange-500/10',
     borderTint: 'border-orange-500/30',
     progressBar: '[&>div]:bg-orange-500',
+    mobileHex: '#f97316',
+    gradientFrom: '#f97316',
+    gradientTo: '#c2410c',
   },
   slate: {
     hex: '#7c3aed',
@@ -87,6 +130,9 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
     bgTint: 'bg-violet-500/10',
     borderTint: 'border-violet-500/30',
     progressBar: '[&>div]:bg-violet-500',
+    mobileHex: '#8b5cf6',
+    gradientFrom: '#8b5cf6',
+    gradientTo: '#6d28d9',
   },
 };
 

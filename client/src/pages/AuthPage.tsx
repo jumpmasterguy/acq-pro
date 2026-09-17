@@ -70,6 +70,8 @@ export interface AuthUser {
   currentStreak?: number;
   longestStreak?: number;
   lastChallengeDate?: string | null;
+  /** YYYY-MM-DD of the last day with activity. Drives the mobile week strip. */
+  lastStreakDate?: string | null;
   /** XP earned from Daily Challenge completions (server-tracked, separate from lesson/quiz XP). */
   dailyChallengeXP?: number;
 }

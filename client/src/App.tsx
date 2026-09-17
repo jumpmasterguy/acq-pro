@@ -689,6 +689,11 @@ function AppContent() {
               onEditProfile={handleEditProfile}
               isAdmin={isAdmin}
               onStreakUpdate={(s) => setStreak(s)}
+              firstName={authState.status === 'authenticated' ? authState.user.firstName : null}
+              lastName={authState.status === 'authenticated' ? authState.user.lastName : null}
+              lastStreakDate={authState.status === 'authenticated' ? authState.user.lastStreakDate ?? null : null}
+              onOpenModules={() => setView({ type: 'modules' })}
+              onOpenAccount={() => setView({ type: 'account' })}
             />
           )}
           {view.type === 'module' && (() => {

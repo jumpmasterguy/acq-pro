@@ -14,6 +14,9 @@ import { Button } from "@/components/ui/button";
 import { apiRequest } from "@/lib/queryClient";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { MobileHome } from "@/components/mobile/MobileHome";
+import { getActiveTrack } from "@/lib/careerTracks";
 
 interface DashboardProps {
   progress: UserProgress;
@@ -26,6 +29,17 @@ interface DashboardProps {
   isAdmin?: boolean;
   /** Mirrors this page's Burn Rate (streak) numbers up to the persistent sidebar badge. */
   onStreakUpdate?: (streak: { currentStreak: number; longestStreak: number }) => void;
+  // ── Mobile Home ───────────────────────────────────────────────────────────
+  // Below `md` this page renders MobileHome instead. These are the extra bits
+  // that layout needs and the desktop one doesn't.
+  firstName?: string | null;
+  lastName?: string | null;
+  /** Last day with activity — drives the week strip on the streak card. */
+  lastStreakDate?: string | null;
+  /** Learn tab target, for the carousel's "See all →". */
+  onOpenModules?: () => void;
+  /** Account tab target, for the greeting row, XP pill and path card. */
+  onOpenAccount?: () => void;
 }
 
 // ── Career track lesson-level definitions ───────────────────────────────────
@@ -380,7 +394,7 @@ function FilterTab({ active, onClick, children }: { active: boolean; onClick: ()
 }
 
 // ── Main Dashboard ───────────────────────────────────────────────────────────
-export default function Dashboard({ progress, onSelectModule, onSelectLesson, onUpgrade, username, isAdmin, onStreakUpdate }: DashboardProps) {
+export default function Dashboard({ progress, onSelectModule, onSelectLesson, onUpgrade, username, isAdmin, onStreakUpdate, firstName, lastName, lastStreakDate, onOpenModules, onOpenAccount }: DashboardProps) {
   const totalLessons = getTotalLessons();
   const completedCount = progress.completedLessons.size;
   // Use progress.xp (computed once in App.tsx) rather than recalculating
@@ -409,6 +423,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
   const searchRef = useRef<HTMLDivElement>(null);
   const [referralCopied, setReferralCopied] = useState(false);
   const [challenge, setChallenge] = useState<{ questions: any[], date: string } | null>(null);
+  const isMobile = useIsMobile();
   const [challengeActive, setChallengeActive] = useState(false);
   const [challengeAnswers, setChallengeAnswers] = useState<Record<string, number>>({});
   const [challengeSubmitted, setChallengeSubmitted] = useState(false);
@@ -487,6 +502,9 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
         onStreakUpdate?.({ currentStreak: data.currentStreak, longestStreak: data.longestStreak });
         setChallenge({ questions: data.questions, date: data.date });
         if (data.alreadyCompleted) setChallengeSubmitted(true);
+        // Today's score, so a reload still shows "complete · 4/5" rather than
+        // just "complete" (see the todayResult note in GET /api/daily-challenge).
+        if (data.todayResult) setChallengeResult({ score: data.todayResult.score, xpEarned: data.todayResult.xpEarned, message: '' });
       })
       .catch(() => {});
   }, []);
@@ -560,6 +578,90 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
       { icon: <Users className="w-5 h-5 text-violet-500" />, value: adminStats.totalUsers, label: 'Total signups', sub: `${adminStats.proUsers} paid · ${adminStats.freeUsers} free` },
     ] : []),
   ];
+
+  // Hoisted so the mobile branch can render it too. Step 6 of the mobile
+  // build replaces this with the bottom-sheet version.
+  const challengeModal = (
+    challengeActive && challenge && !challengeSubmitted && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setChallengeActive(false)}>
+          <div className="bg-card border border-border rounded-2xl w-full max-w-lg shadow-2xl flex flex-col max-h-[90vh]" onClick={e => e.stopPropagation()}>
+            {/* Fixed header */}
+            <div className="flex items-center justify-between p-6 pb-4 border-b border-border flex-shrink-0">
+              <div>
+                <h2 className="font-bold text-lg">⚡ Daily Challenge</h2>
+                <p className="text-xs text-muted-foreground">{challenge.date} · 5 questions</p>
+              </div>
+              <button onClick={() => setChallengeActive(false)} className="text-muted-foreground hover:text-foreground text-xl">✕</button>
+            </div>
+            {/* Scrollable body */}
+            <div className="overflow-y-auto flex-1 px-6 py-4">
+            <div className="space-y-5">
+              {challenge.questions.map((q: any, qi: number) => (
+                <div key={q.id} className="space-y-2">
+                  <p className="text-sm font-semibold">{qi + 1}. {q.question}</p>
+                  <div className="space-y-1.5">
+                    {q.options.map((opt: string, oi: number) => (
+                      <button
+                        key={oi}
+                        onClick={() => setChallengeAnswers(a => ({ ...a, [q.id]: oi }))}
+                        className={cn(
+                          "w-full text-left text-xs px-3 py-2 rounded-lg border transition-all",
+                          challengeAnswers[q.id] === oi
+                            ? "border-primary bg-primary/10 text-primary font-semibold"
+                            : "border-border hover:border-primary/40 hover:bg-muted/40"
+                        )}
+                      >{opt}</button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <Button
+              className="w-full mt-5"
+              disabled={Object.keys(challengeAnswers).length < challenge.questions.length}
+              onClick={submitChallenge}
+            >
+              Submit Answers
+            </Button>
+            </div>{/* end scrollable body */}
+            </div>{/* end scrollable wrapper */}
+        </div>
+    )
+  );
+
+  // ── Mobile Home ───────────────────────────────────────────────────────────
+  if (isMobile) {
+    const challengeDone = challengeSubmitted || streak.alreadyCompleted;
+    return (
+      <>
+        <MobileHome
+          firstName={(firstName || username?.split(' ')[0] || 'there') as string}
+          lastName={lastName ?? undefined}
+          xp={progress.xp}
+          completedLessons={progress.completedLessons}
+          isPremium={progress.isPremium}
+          streak={{
+            currentStreak: streak.currentStreak,
+            longestStreak: streak.longestStreak,
+            lastStreakDate: lastStreakDate ?? null,
+          }}
+          challenge={{
+            done: challengeDone,
+            score: challengeResult?.score,
+            xpEarned: challengeResult?.xpEarned,
+          }}
+          track={getActiveTrack()}
+          onOpenAccount={() => onOpenAccount?.()}
+          onOpenModule={(id) => onSelectModule(id)}
+          onOpenLesson={onSelectLesson}
+          onOpenModules={() => onOpenModules?.()}
+          onOpenChallenge={() => setChallengeActive(true)}
+          onUpgrade={onUpgrade}
+        />
+        {challengeModal}
+      </>
+    );
+  }
 
   const activeTrack = CAREER_TRACKS.find(t => t.id === activeCareer);
   const activeGroup = SUBJECT_GROUPS.find(g => g.id === activeSubject);
@@ -839,51 +941,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
       </div>
 
       {/* Daily challenge modal */}
-      {challengeActive && challenge && !challengeSubmitted && (
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setChallengeActive(false)}>
-          <div className="bg-card border border-border rounded-2xl w-full max-w-lg shadow-2xl flex flex-col max-h-[90vh]" onClick={e => e.stopPropagation()}>
-            {/* Fixed header */}
-            <div className="flex items-center justify-between p-6 pb-4 border-b border-border flex-shrink-0">
-              <div>
-                <h2 className="font-bold text-lg">⚡ Daily Challenge</h2>
-                <p className="text-xs text-muted-foreground">{challenge.date} · 5 questions</p>
-              </div>
-              <button onClick={() => setChallengeActive(false)} className="text-muted-foreground hover:text-foreground text-xl">✕</button>
-            </div>
-            {/* Scrollable body */}
-            <div className="overflow-y-auto flex-1 px-6 py-4">
-            <div className="space-y-5">
-              {challenge.questions.map((q: any, qi: number) => (
-                <div key={q.id} className="space-y-2">
-                  <p className="text-sm font-semibold">{qi + 1}. {q.question}</p>
-                  <div className="space-y-1.5">
-                    {q.options.map((opt: string, oi: number) => (
-                      <button
-                        key={oi}
-                        onClick={() => setChallengeAnswers(a => ({ ...a, [q.id]: oi }))}
-                        className={cn(
-                          "w-full text-left text-xs px-3 py-2 rounded-lg border transition-all",
-                          challengeAnswers[q.id] === oi
-                            ? "border-primary bg-primary/10 text-primary font-semibold"
-                            : "border-border hover:border-primary/40 hover:bg-muted/40"
-                        )}
-                      >{opt}</button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <Button
-              className="w-full mt-5"
-              disabled={Object.keys(challengeAnswers).length < challenge.questions.length}
-              onClick={submitChallenge}
-            >
-              Submit Answers
-            </Button>
-            </div>{/* end scrollable body */}
-            </div>{/* end scrollable wrapper */}
-        </div>
-      )}
+      {challengeModal}
 
       {/* ── Referral Card ─────────────────────────────────────────────── */}
       {referral && (

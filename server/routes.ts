@@ -1261,9 +1261,24 @@ export async function registerRoutes(
       id, question: q, options, correct, module,
     }));
 
+    // Today's result, if it's already been played. Without this the client
+    // knows the challenge is done but not how it went, so the completed state
+    // ("Daily Challenge complete · 4/5 · +25 XP earned") couldn't be rendered
+    // after a reload — only in the session that submitted it.
+    // Read from storage rather than req.user: toPassportUser deliberately
+    // reduces challengeHistory to a single dailyChallengeXP total, so the
+    // session user has no per-day entries to look in.
+    let todayEntry: { date: string; score: number; xpEarned: number } | null = null;
+    if (alreadyCompleted) {
+      const dbUser = await storage.getUser(user.id);
+      const history = ((dbUser as any)?.challengeHistory ?? []) as { date: string; score: number; xpEarned: number }[];
+      todayEntry = history.find(h => h?.date === todayStr) ?? null;
+    }
+
     return res.json({
       date: todayStr,
       alreadyCompleted,
+      todayResult: todayEntry ? { score: todayEntry.score, xpEarned: todayEntry.xpEarned } : null,
       lastChallengeDate: (user as any).lastChallengeDate ?? null,
       currentStreak: getDisplayStreak((user as any).currentStreak, (user as any).lastStreakDate),
       longestStreak: (user as any).longestStreak ?? 0,
