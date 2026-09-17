@@ -1097,6 +1097,7 @@ function AppContent() {
               userProfile={authState.status === 'authenticated' ? (authState.user.userProfile as UserProfile | null) : null}
               username={authState.status === 'authenticated' ? authState.user.username : undefined}
               onEditProfile={handleEditProfile}
+              onOpenAccount={() => setView({ type: 'account' })}
               isAdmin={isAdmin}
               onStreakUpdate={(s) => setStreak(s)}
             />

@@ -1,5 +1,5 @@
-import { useState, type ReactNode } from "react";
-import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap, Trash2, AlertTriangle } from "lucide-react";
+import { useState, useEffect, type ReactNode } from "react";
+import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap, Trash2, AlertTriangle, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription,
@@ -54,6 +54,8 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
   const [lastName, setLastName] = useState(user.lastName ?? "");
   const [saving, setSaving] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
+  const [referral, setReferral] = useState<{ referralCode: string; referralCount: number; rewardsEarned: number; referralLink: string; nextRewardAt: number } | null>(null);
+  const [referralCopied, setReferralCopied] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteText, setDeleteText] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -96,6 +98,13 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
       setPortalLoading(false);
     }
   };
+
+  useEffect(() => {
+    apiRequest('GET', '/api/my-referral')
+      .then(r => r.json())
+      .then(data => { if (data.referralCode) setReferral(data); })
+      .catch(() => {});
+  }, []);
 
   const handleDeleteAccount = async () => {
     if (deleteText !== "DELETE" || deleting) return;
@@ -241,6 +250,42 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
           )}
         </div>
       </Section>
+
+      {/* Referrals */}
+      {referral && (
+        <Section icon={Gift} title="Refer & Earn Pro">
+          <div className="flex items-start justify-between gap-3 mb-3">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-bold text-primary mb-0.5">Spread the word, earn a year of Pro</p>
+              <p className="text-xs text-muted-foreground">
+                Get 2 people to sign up free and you earn <strong>1 year of Pro access</strong>. Every 2 signups = another year.
+              </p>
+            </div>
+            <div className="text-right flex-shrink-0 bg-primary/10 rounded-xl px-3 py-2">
+              <p className="text-2xl font-black text-primary leading-none">{referral.referralCount}</p>
+              <p className="text-[10px] text-muted-foreground">signups</p>
+              <p className="text-[10px] text-primary/70 font-medium mt-0.5">{referral.nextRewardAt - referral.referralCount} to go</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <code className="text-xs bg-muted px-2 py-1 rounded font-mono truncate flex-1 min-w-0 block">{referral.referralLink}</code>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(referral.referralLink);
+                setReferralCopied(true);
+                setTimeout(() => setReferralCopied(false), 2000);
+              }}
+              className="text-xs text-primary font-semibold hover:underline flex-shrink-0"
+              data-testid="copy-referral-link"
+            >
+              {referralCopied ? '✓ Copied!' : 'Copy link'}
+            </button>
+          </div>
+          {referral.rewardsEarned > 0 && (
+            <p className="text-xs text-muted-foreground mt-2">You've earned {referral.rewardsEarned} year{referral.rewardsEarned === 1 ? '' : 's'} of Pro so far.</p>
+          )}
+        </Section>
+      )}
 
       {/* Danger zone */}
       <Section icon={AlertTriangle} title="Delete Account">

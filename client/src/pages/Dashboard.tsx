@@ -23,6 +23,8 @@ interface DashboardProps {
   userProfile?: UserProfile | null;
   username?: string;
   onEditProfile?: () => void;
+  /** Opens My Account — the only place the career path can be changed now. */
+  onOpenAccount?: () => void;
   isAdmin?: boolean;
   /** Mirrors this page's Burn Rate (streak) numbers up to the persistent sidebar badge. */
   onStreakUpdate?: (streak: { currentStreak: number; longestStreak: number }) => void;
@@ -382,7 +384,7 @@ function FilterTab({ active, onClick, children }: { active: boolean; onClick: ()
 }
 
 // ── Main Dashboard ───────────────────────────────────────────────────────────
-export default function Dashboard({ progress, onSelectModule, onSelectLesson, onUpgrade, username, isAdmin, onStreakUpdate }: DashboardProps) {
+export default function Dashboard({ progress, onSelectModule, onSelectLesson, onUpgrade, username, isAdmin, onStreakUpdate, onOpenAccount }: DashboardProps) {
   const totalLessons = getTotalLessons();
   const completedCount = progress.completedLessons.size;
   // Use progress.xp (computed once in App.tsx) rather than recalculating
@@ -396,7 +398,8 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
   const [filterMode, setFilterMode] = useState<FilterMode>(() => {
     try { return (localStorage.getItem('acq_filter_mode') as FilterMode) || 'career'; } catch { return 'career'; }
   });
-  const [activeCareer, setActiveCareer] = useState<CareerTrackId>(() => {
+  // Read-only here: the career path is chosen on the My Account page.
+  const [activeCareer] = useState<CareerTrackId>(() => {
     try { return (localStorage.getItem('acq_active_career') as CareerTrackId) || 'contractor_pm'; } catch { return 'contractor_pm'; }
   });
   const [activeSubject, setActiveSubject] = useState<SubjectGroupId>('acquisition_foundations');
@@ -405,32 +408,20 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
   const [startHereDismissed, setStartHereDismissed] = useState(() => {
     try { return localStorage.getItem('acq_start_here_dismissed') === '1'; } catch { return false; }
   });
-  const [referral, setReferral] = useState<{ referralCode: string; referralCount: number; rewardsEarned: number; referralLink: string; nextRewardAt: number } | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
-  const [referralCopied, setReferralCopied] = useState(false);
   const [challenge, setChallenge] = useState<{ questions: any[], date: string } | null>(null);
   const [challengeActive, setChallengeActive] = useState(false);
   const [challengeAnswers, setChallengeAnswers] = useState<Record<string, number>>({});
   const [challengeSubmitted, setChallengeSubmitted] = useState(false);
   const [challengeResult, setChallengeResult] = useState<{ score: number, xpEarned: number, message: string } | null>(null);
 
-  useEffect(() => {
-    apiRequest('GET', '/api/my-referral')
-      .then(r => r.json())
-      .then(data => { if (data.referralCode) setReferral(data); })
-      .catch(() => {});
-  }, []);
-
   // Persist filter choices to localStorage
   useEffect(() => {
     try { localStorage.setItem('acq_filter_mode', filterMode); } catch {}
   }, [filterMode]);
 
-  useEffect(() => {
-    try { localStorage.setItem('acq_active_career', activeCareer); } catch {}
-  }, [activeCareer]);
 
   // Close search on outside click
   useEffect(() => {
@@ -887,40 +878,6 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
         </div>
       )}
 
-      {/* ── Referral Card ─────────────────────────────────────────────── */}
-      {referral && (
-        <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4">
-          <div className="space-y-3">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-bold text-primary mb-0.5">🎁 Spread the word, earn a year of Pro</p>
-                <p className="text-xs text-muted-foreground">
-                  Get 2 people to sign up free and you earn <strong>1 year of Pro access</strong>. Every 2 signups = another year.
-                </p>
-              </div>
-              <div className="text-right flex-shrink-0 bg-primary/10 rounded-xl px-3 py-2">
-                <p className="text-2xl font-black text-primary leading-none">{referral.referralCount}</p>
-                <p className="text-[10px] text-muted-foreground">signups</p>
-                <p className="text-[10px] text-primary/70 font-medium mt-0.5">{referral.nextRewardAt - referral.referralCount} to go</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <code className="text-xs bg-muted px-2 py-1 rounded font-mono truncate flex-1 min-w-0 block">{referral.referralLink}</code>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(referral.referralLink);
-                  setReferralCopied(true);
-                  setTimeout(() => setReferralCopied(false), 2000);
-                }}
-                className="text-xs text-primary font-semibold hover:underline flex-shrink-0"
-              >
-                {referralCopied ? '✓ Copied!' : 'Copy link'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* ── Start Here Banner (new users only) ─────────────────────────────── */}
       {completedCount === 0 && !startHereDismissed && (
         <div className="relative overflow-hidden rounded-2xl border-2 border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-5">
@@ -935,10 +892,10 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
           <div className="pr-12">
             <p className="text-[11px] font-bold tracking-widest uppercase text-primary mb-1">Start Here</p>
             <h3 className="text-lg font-bold text-foreground leading-snug mb-1">
-              Pick your career path below.
+              Pick your career path in My Account.
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Are you on the <strong className="text-foreground">contractor side</strong> or the <strong className="text-foreground">government side</strong>? Moving into <strong className="text-foreground">Capture &amp; BD</strong>? Select your path and we'll show you exactly which lessons matter most for your role.
+              Are you on the <strong className="text-foreground">contractor side</strong> or the <strong className="text-foreground">government side</strong>? Moving into <strong className="text-foreground">Capture &amp; BD</strong>? Choose your path in My Account and we'll show you exactly which lessons matter most for your role.
             </p>
           </div>
 
@@ -948,10 +905,11 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
               <button
                 key={track.id}
                 onClick={() => {
+                  // The path itself is chosen on My Account — this just takes them there.
                   setFilterMode('career');
-                  setActiveCareer(track.id as CareerTrackId);
                   setStartHereDismissed(true);
                   try { localStorage.setItem('acq_start_here_dismissed', '1'); } catch {}
+                  onOpenAccount?.();
                 }}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all duration-150 group"
               >
@@ -994,20 +952,21 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
 
           {/* Role / subject pills — inline with toggle */}
           {filterMode === 'career'
-            ? CAREER_TRACKS.map(track => (
-                <button
-                  key={track.id}
-                  onClick={() => setActiveCareer(track.id)}
-                  className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all",
-                    activeCareer === track.id
-                      ? "bg-primary/10 border-primary/40 text-primary"
-                      : "bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-foreground"
-                  )}
-                >
-                  {track.icon}{track.shortLabel}
-                </button>
-              ))
+            ? (() => {
+                const track = CAREER_TRACKS.find(t => t.id === activeCareer)!;
+                return (
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border bg-primary/10 border-primary/40 text-primary">
+                      {track.icon}{track.shortLabel}
+                    </span>
+                    {onOpenAccount && (
+                      <button onClick={onOpenAccount} className="text-xs text-muted-foreground hover:text-primary underline-offset-2 hover:underline" data-testid="change-path-link">
+                        Change path in My Account
+                      </button>
+                    )}
+                  </div>
+                );
+              })()
             : SUBJECT_GROUPS.map(group => (
                 <button
                   key={group.id}
