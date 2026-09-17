@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { apiRequest } from "@/lib/queryClient";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { WeeklyBrief } from "@/components/WeeklyBrief";
 
 interface DashboardProps {
   progress: UserProgress;
@@ -849,6 +850,12 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
           )}
         </div>
       </div>
+
+      {/* ── Acquisition This Week ──────────────────────────────────────────
+          A short, dated brief that gives returning users a reason to open the
+          app between lessons. Read state is local to the browser; XP and streak
+          integration is a follow-up. */}
+      <WeeklyBrief onSelectLesson={onSelectLesson} className="mb-6" />
 
       {/* Daily challenge modal */}
       {challengeActive && challenge && !challengeSubmitted && (
