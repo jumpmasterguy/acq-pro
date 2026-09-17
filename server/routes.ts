@@ -2189,8 +2189,8 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
   // fetch any module's PDF with no login, no trial, no payment. Moved to
   // server/assets/lesson-books/ (outside the static-served client/public
   // tree) and gated here the same way the button decides whether to show:
-  // Module 1 is free for any logged-in user; Modules 2-6 require an actual
-  // paid plan, not just an active trial (hasPaidPlan, shared/access.ts).
+  // Module 1 is free for any logged-in user; every other module requires an
+  // actual paid plan, not just an active trial (hasPaidPlan, shared/access.ts).
   app.get("/api/lesson-book/:moduleId", requireAuth as any, (req: Request, res: Response) => {
     const moduleId = req.params.moduleId as string;
     const user = (req as any).user as { subscriptionStatus?: string | null };
@@ -2202,6 +2202,14 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       data:        'module-4-data-analytics.pdf',
       capture:     'module-5-capture-bd.pdf',
       operations:  'module-6-operations-leadership.pdf',
+      business:    'module-7-business-of-defense-contracting.pdf',
+      smallbiz:    'module-8-small-business.pdf',
+      compliance:  'module-9-compliance-stack.pdf',
+      preaward:    'module-10-government-pre-award.pdf',
+      lifecycle:   'module-11-beyond-award.pdf',
+      onramp:      'module-12-startup-on-ramp.pdf',
+      veteran:     'module-13-veteran-transition.pdf',
+      history:     'module-14-why-the-rules-exist.pdf',
     };
     const FREE_LESSON_BOOK_MODULES = ['foundations'];
 

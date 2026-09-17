@@ -11614,6 +11614,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
   {
     id: 'business',
     audioUrl: '/api/audio/business',
+    pdfUrl: '/api/lesson-book/business',
     audioReady: false,
     title: 'The Business of Defense Contracting',
     subtitle: '07 · Business Finance',
@@ -13313,6 +13314,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
   {
     id: 'smallbiz',
     audioUrl: '/api/audio/smallbiz',
+    pdfUrl: '/api/lesson-book/smallbiz',
     audioReady: false,
     title: 'Small Business in Defense Contracting',
     subtitle: '08 · Small Business',
@@ -14905,6 +14907,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
   {
     id: 'compliance',
     audioUrl: '/api/audio/compliance',
+    pdfUrl: '/api/lesson-book/compliance',
     audioReady: false,
     title: 'The Compliance Stack',
     subtitle: '09 · Compliance',
@@ -16523,6 +16526,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
   {
     id: 'preaward',
     audioUrl: '/api/audio/preaward',
+    pdfUrl: '/api/lesson-book/preaward',
     audioReady: false,
     title: 'From Need to RFP: The Government Pre-Award Process',
     subtitle: '10 · Pre-Award',
@@ -18151,6 +18155,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
   {
     id: 'lifecycle',
     audioUrl: '/api/audio/lifecycle',
+    pdfUrl: '/api/lesson-book/lifecycle',
     audioReady: false,
     title: 'Beyond Award: Sustainment, Test, Software, and Closeout',
     subtitle: '11 · Lifecycle',
@@ -19442,6 +19447,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
   {
     id: 'onramp',
     audioUrl: '/api/audio/onramp',
+    pdfUrl: '/api/lesson-book/onramp',
     audioReady: false,
     title: 'The Startup On-Ramp: SBIR, OTs, DIU, and the Valley of Death',
     subtitle: '12 · On-Ramp',
@@ -20670,6 +20676,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
   {
     id: 'veteran',
     audioUrl: '/api/audio/veteran',
+    pdfUrl: '/api/lesson-book/veteran',
     audioReady: false,
     title: 'Veteran Transition: From Uniform to Acquisition',
     subtitle: '13 · Veterans',
@@ -21754,6 +21761,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
   {
     id: 'history',
     audioUrl: '/api/audio/history',
+    pdfUrl: '/api/lesson-book/history',
     audioReady: false,
     title: 'Why the Rules Exist: A History of Defense Acquisition',
     subtitle: '14 · History',
