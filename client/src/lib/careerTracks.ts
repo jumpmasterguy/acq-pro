@@ -45,6 +45,7 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
       'preaward-1', 'preaward-2', 'preaward-3', 'preaward-4', 'preaward-5', 'preaward-6', 'preaward-7', 'preaward-8', 'preaward-9', 'preaward-10', 'lifecycle-1', 'lifecycle-2', 'lifecycle-3', 'lifecycle-4', 'lifecycle-5', 'lifecycle-6', 'lifecycle-7', 'lifecycle-8',
     ],
     bonusLessons: [
+      'history-1', 'history-2', 'history-3', 'history-4', 'history-5', 'history-6', 'history-7',
       'veteran-1', 'veteran-2', 'veteran-3', 'veteran-4', 'veteran-5', 'veteran-6', 'veteran-7',
       'contracts-10', 'contracts-11', 'contracts-12', 'contracts-13',
       'onramp-1', 'onramp-2', 'onramp-3', 'onramp-4', 'onramp-5', 'onramp-6', 'onramp-7', 'onramp-8',
@@ -78,6 +79,7 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
       'ops-1', 'ops-2', 'ops-4', 'ops-5', 'ops-7',
     ],
     bonusLessons: [
+      'history-1', 'history-2', 'history-3', 'history-4', 'history-5', 'history-6', 'history-7',
       'veteran-1', 'veteran-2', 'veteran-3', 'veteran-4', 'veteran-5', 'veteran-6', 'veteran-7',
       'contracts-13',
       // Useful context but not your core job
@@ -107,6 +109,7 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
       'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10', 'preaward-1', 'preaward-2', 'preaward-3', 'preaward-4', 'preaward-5', 'preaward-6', 'preaward-7', 'preaward-8', 'preaward-9', 'preaward-10',
     ],
     bonusLessons: [
+      'history-1', 'history-2', 'history-3', 'history-4', 'history-5', 'history-6', 'history-7',
       'veteran-1', 'veteran-2', 'veteran-3', 'veteran-4', 'veteran-5', 'veteran-6', 'veteran-7',
       'contracts-10', 'contracts-11', 'contracts-12', 'contracts-13',
       'onramp-1', 'onramp-2', 'onramp-3', 'onramp-4', 'onramp-5', 'onramp-6', 'onramp-7', 'onramp-8',
@@ -134,6 +137,7 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
       'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10', 'preaward-1', 'preaward-2', 'preaward-3', 'preaward-4', 'preaward-5', 'preaward-6', 'preaward-7', 'preaward-8', 'preaward-9', 'preaward-10',
     ],
     bonusLessons: [
+      'history-1', 'history-2', 'history-3', 'history-4', 'history-5', 'history-6', 'history-7',
       'veteran-1', 'veteran-2', 'veteran-3', 'veteran-4', 'veteran-5', 'veteran-6', 'veteran-7',
       'contracts-10', 'contracts-11', 'contracts-12', 'contracts-13',
       'lifecycle-1', 'lifecycle-2', 'lifecycle-3', 'lifecycle-4', 'lifecycle-5', 'lifecycle-6', 'lifecycle-7', 'lifecycle-8',
