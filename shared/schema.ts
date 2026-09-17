@@ -57,6 +57,10 @@ export const users = pgTable("users", {
   // Daily challenge tracking
   lastChallengeDate: text("last_challenge_date"), // YYYY-MM-DD of last completed challenge
   challengeHistory: jsonb("challenge_history").notNull().default(sql`'[]'::jsonb`), // [{date, score, xpEarned}]
+  // Acquisition This Week — one entry per brief the user has completed the
+  // check for: [{id, date, score, xpEarned}]. Keyed by brief id rather than
+  // date, because briefs are weekly and a user can work through the archive.
+  briefsRead: jsonb("briefs_read").notNull().default(sql`'[]'::jsonb`),
   // "The Debrief" audio listens — keyed by module id, not a growing log,
   // since all we need per module is "has this user ever played it" (for
   // unique-listener counts) and "how many times" (for a play counter).

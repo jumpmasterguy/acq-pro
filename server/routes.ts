@@ -1294,6 +1294,55 @@ export async function registerRoutes(
     });
   });
 
+  // ─── Acquisition This Week ────────────────────────────────────────────────
+
+  // GET /api/briefs/read — brief ids this user has completed the check for.
+  // The client merges this with its local-only record so a user who read a
+  // brief before this endpoint existed (or in a private window) keeps it.
+  app.get("/api/briefs/read", requireAuth as any, async (req: Request, res: Response) => {
+    try {
+      const ids = await storage.getBriefsRead(req.user!.id);
+      return res.json({ briefsRead: ids });
+    } catch (err: any) {
+      console.error('[briefs/read] error:', err);
+      return res.status(500).json({ message: 'Failed to load brief history' });
+    }
+  });
+
+  // POST /api/briefs/complete — Body: { briefId: string, score: number }
+  // score is out of 3. Idempotent per brief id: reopening an old brief never
+  // awards XP twice.
+  app.post("/api/briefs/complete", requireAuth as any, async (req: Request, res: Response) => {
+    const userId = req.user!.id;
+    const { briefId, score } = req.body as { briefId?: string; score?: number };
+    if (!briefId || typeof briefId !== 'string') {
+      return res.status(400).json({ message: 'briefId is required' });
+    }
+    const clamped = Math.max(0, Math.min(3, Math.round(Number(score) || 0)));
+    // Deliberately smaller than the daily challenge (10 to 50 XP): a brief is
+    // three questions, not five, and it should reward the habit without
+    // letting the archive become an XP farm.
+    const xpEarned = clamped === 3 ? 20 : clamped === 2 ? 12 : 8;
+    try {
+      const result = await storage.completeBrief(userId, briefId, clamped, xpEarned);
+      if (!result) return res.status(500).json({ message: 'Failed to record brief' });
+      const { user: updated, awarded, briefsRead } = result;
+      return res.json({
+        briefId,
+        score: clamped,
+        xpEarned: awarded ? xpEarned : 0,
+        alreadyCompleted: !awarded,
+        briefsRead,
+        xp: updated.xp ?? 0,
+        currentStreak: getDisplayStreak((updated as any).currentStreak, (updated as any).lastStreakDate),
+        longestStreak: (updated as any).longestStreak ?? 0,
+      });
+    } catch (err: any) {
+      console.error('[briefs/complete] error:', err);
+      return res.status(500).json({ message: 'Failed to record brief' });
+    }
+  });
+
   // ─── Activity Tracking ────────────────────────────────────────────────────
 
   // POST /api/track-activity
@@ -1317,10 +1366,18 @@ export async function registerRoutes(
       const skillLevels = (currentUser.moduleSkillLevels as Record<string, string>) ?? {};
       const skillUnlocks = Object.values(skillLevels).filter(l => l === 'intermediate' || l === 'advanced').length
         + Object.values(skillLevels).filter(l => l === 'advanced').length; // advanced counts double
+      // Brief XP is added to this total rather than left in the xp column on
+      // its own, because this recalculation overwrites xp on every heartbeat.
+      // Anything not represented here disappears the next time the client
+      // checks in.
+      const briefEntries = (((currentUser as any).briefsRead ?? []) as Array<{ xpEarned?: number }>);
+      const briefXp = briefEntries.reduce((sum, e) => sum + (Number(e?.xpEarned) || 0), 0);
+
       const newXp = Math.round(
         completedCount * 10
         + avgQuiz * 5
         + skillUnlocks * 50
+        + briefXp
       );
 
       const newMinutes = (currentUser.totalMinutesActive ?? 0) + Math.max(0, Math.round(minutesActive));

@@ -855,7 +855,16 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
           A short, dated brief that gives returning users a reason to open the
           app between lessons. Read state is local to the browser; XP and streak
           integration is a follow-up. */}
-      <WeeklyBrief onSelectLesson={onSelectLesson} className="mb-6" />
+      <WeeklyBrief
+        onSelectLesson={onSelectLesson}
+        onXpEarned={(_xp, currentStreak) => {
+          if (typeof currentStreak === 'number') {
+            setStreak(st => ({ ...st, currentStreak }));
+            onStreakUpdate?.({ currentStreak, longestStreak: streak.longestStreak });
+          }
+        }}
+        className="mb-6"
+      />
 
       {/* Daily challenge modal */}
       {challengeActive && challenge && !challengeSubmitted && (

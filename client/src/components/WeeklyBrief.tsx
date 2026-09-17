@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -6,7 +6,8 @@ import {
   getCurrentBrief,
   getBriefArchive,
   getReadBriefIds,
-  markBriefRead,
+  fetchReadBriefIds,
+  completeBrief,
   formatWeekOf,
   type Brief,
 } from "@/lib/briefs";
@@ -24,6 +25,8 @@ import {
 interface WeeklyBriefProps {
   /** Opens a lesson by ID when the reader follows a "go deeper" link. */
   onSelectLesson?: (lessonId: string) => void;
+  /** Fired after the server awards XP, so the dashboard can refresh its header. */
+  onXpEarned?: (xpEarned: number, currentStreak?: number) => void;
   className?: string;
 }
 
@@ -79,7 +82,7 @@ function BriefBody({ brief }: { brief: Brief }) {
   );
 }
 
-function BriefQuiz({ brief, onComplete }: { brief: Brief; onComplete: () => void }) {
+function BriefQuiz({ brief, onComplete, earnedXp }: { brief: Brief; onComplete: (score: number) => void; earnedXp: number | null }) {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const answeredAll = brief.quiz.every(q => answers[q.id] !== undefined);
 
@@ -87,7 +90,10 @@ function BriefQuiz({ brief, onComplete }: { brief: Brief; onComplete: () => void
     if (answers[qid] !== undefined) return;
     const next = { ...answers, [qid]: idx };
     setAnswers(next);
-    if (brief.quiz.every(q => next[q.id] !== undefined)) onComplete();
+    if (brief.quiz.every(q => next[q.id] !== undefined)) {
+      const score = brief.quiz.reduce((n, q) => n + (next[q.id] === q.correct ? 1 : 0), 0);
+      onComplete(score);
+    }
   };
 
   return (
@@ -135,7 +141,9 @@ function BriefQuiz({ brief, onComplete }: { brief: Brief; onComplete: () => void
       })}
       {answeredAll && (
         <div className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-          Brief complete. Back next week.
+          {earnedXp && earnedXp > 0
+            ? `Brief complete. +${earnedXp} XP, and your streak is safe for today.`
+            : 'Brief complete. Back next week.'}
         </div>
       )}
     </div>
@@ -149,6 +157,7 @@ function BriefCard({
   onSelectLesson,
   isRead,
   onRead,
+  earnedXp,
   featured,
 }: {
   brief: Brief;
@@ -156,7 +165,8 @@ function BriefCard({
   onToggle: () => void;
   onSelectLesson?: (lessonId: string) => void;
   isRead: boolean;
-  onRead: () => void;
+  onRead: (score: number) => void;
+  earnedXp: number | null;
   featured?: boolean;
 }) {
   const catStyle = CATEGORY_STYLES[brief.category] ?? 'text-muted-foreground bg-muted border-border';
@@ -222,7 +232,7 @@ function BriefCard({
 
           <div>
             <div className="text-sm font-semibold mb-3">Quick check</div>
-            <BriefQuiz brief={brief} onComplete={onRead} />
+            <BriefQuiz brief={brief} onComplete={onRead} earnedXp={earnedXp} />
           </div>
 
           {brief.relatedLessons && brief.relatedLessons.length > 0 && onSelectLesson && (
@@ -275,18 +285,36 @@ function BriefCard({
   );
 }
 
-export function WeeklyBrief({ onSelectLesson, className }: WeeklyBriefProps) {
+export function WeeklyBrief({ onSelectLesson, onXpEarned, className }: WeeklyBriefProps) {
   const current = useMemo(() => getCurrentBrief(), []);
   const archive = useMemo(() => getBriefArchive(), []);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showArchive, setShowArchive] = useState(false);
   const [readIds, setReadIds] = useState<Set<string>>(() => getReadBriefIds());
+  const [xpByBrief, setXpByBrief] = useState<Record<string, number>>({});
+
+  // Merge in what the server has recorded, so read state follows the user
+  // across devices instead of living in one browser.
+  useEffect(() => {
+    let cancelled = false;
+    fetchReadBriefIds().then(ids => {
+      if (!cancelled) setReadIds(ids);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   if (!current) return null;
 
-  const handleRead = (id: string) => {
-    markBriefRead(id);
+  const handleRead = (id: string, score: number) => {
     setReadIds(prev => new Set(prev).add(id));
+    completeBrief(id, score).then(result => {
+      if (result.xpEarned > 0) {
+        setXpByBrief(prev => ({ ...prev, [id]: result.xpEarned }));
+        onXpEarned?.(result.xpEarned, result.currentStreak);
+      }
+    });
   };
 
   const toggle = (id: string) => setExpandedId(prev => (prev === id ? null : id));
@@ -317,7 +345,8 @@ export function WeeklyBrief({ onSelectLesson, className }: WeeklyBriefProps) {
         onToggle={() => toggle(current.id)}
         onSelectLesson={onSelectLesson}
         isRead={readIds.has(current.id)}
-        onRead={() => handleRead(current.id)}
+        onRead={score => handleRead(current.id, score)}
+        earnedXp={xpByBrief[current.id] ?? null}
       />
 
       {showArchive && (
@@ -330,7 +359,8 @@ export function WeeklyBrief({ onSelectLesson, className }: WeeklyBriefProps) {
               onToggle={() => toggle(b.id)}
               onSelectLesson={onSelectLesson}
               isRead={readIds.has(b.id)}
-              onRead={() => handleRead(b.id)}
+              onRead={score => handleRead(b.id, score)}
+              earnedXp={xpByBrief[b.id] ?? null}
             />
           ))}
         </div>

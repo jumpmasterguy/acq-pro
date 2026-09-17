@@ -13,6 +13,8 @@
 // 6. `actions` is what the reader does differently on Monday. If you cannot write three, the topic
 //    is not a brief.
 
+import { apiRequest } from '@/lib/queryClient';
+
 export type BriefCategory =
   | 'Rule Change'
   | 'Money'
@@ -582,5 +584,50 @@ export function markBriefRead(id: string): void {
     window.localStorage.setItem(READ_STORAGE_KEY, JSON.stringify(Array.from(ids)));
   } catch {
     // Storage unavailable (private window, blocked cookies). Read state is a convenience only.
+  }
+}
+
+/**
+ * Brief ids the server has recorded for this user, merged with anything this
+ * browser knows about locally. Falls back to local only if the request fails,
+ * so the card still renders sensibly offline or for a signed-out preview.
+ */
+export async function fetchReadBriefIds(): Promise<Set<string>> {
+  const local = getReadBriefIds();
+  try {
+    const res = await apiRequest('GET', '/api/briefs/read');
+    const data = await res.json();
+    const ids: string[] = Array.isArray(data?.briefsRead) ? data.briefsRead : [];
+    ids.forEach(id => local.add(id));
+  } catch {
+    // Offline, signed out, or the endpoint is unavailable. Local state stands.
+  }
+  return local;
+}
+
+export interface BriefCompletionResult {
+  xpEarned: number;
+  alreadyCompleted: boolean;
+  currentStreak?: number;
+}
+
+/**
+ * Records a completed brief check. Writes local storage first so the UI is
+ * correct even if the request fails, then reports what the server awarded.
+ * The server is idempotent per brief id, so reopening an archived brief never
+ * awards XP twice.
+ */
+export async function completeBrief(briefId: string, score: number): Promise<BriefCompletionResult> {
+  markBriefRead(briefId);
+  try {
+    const res = await apiRequest('POST', '/api/briefs/complete', { briefId, score });
+    const data = await res.json();
+    return {
+      xpEarned: Number(data?.xpEarned) || 0,
+      alreadyCompleted: Boolean(data?.alreadyCompleted),
+      currentStreak: typeof data?.currentStreak === 'number' ? data.currentStreak : undefined,
+    };
+  } catch {
+    return { xpEarned: 0, alreadyCompleted: false };
   }
 }

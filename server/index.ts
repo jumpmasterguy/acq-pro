@@ -238,6 +238,8 @@ app.use((req, res, next) => {
         // Daily challenge tracking
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_challenge_date TEXT`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS challenge_history JSONB NOT NULL DEFAULT '[]'::JSONB`,
+        // Acquisition This Week brief completions: [{id, date, score, xpEarned}]
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS briefs_read JSONB NOT NULL DEFAULT '[]'::JSONB`,
         // AI Study Assistant usage tracking
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS ai_calls_today INTEGER NOT NULL DEFAULT 0`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS ai_calls_date TEXT`,

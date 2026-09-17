@@ -91,6 +91,11 @@ export interface IStorage {
   // stamps firstPlayedAt the first time this user ever plays it (so admin
   // analytics can report both total plays and unique listeners per module).
   recordAudioPlay(userId: string, moduleId: string): Promise<void>;
+  // Acquisition This Week — records the brief check a user just completed.
+  // Idempotent per brief id: a second submission for the same brief returns
+  // awarded:false and writes nothing, so XP cannot be farmed by reopening it.
+  completeBrief(userId: string, briefId: string, score: number, xpEarned: number): Promise<{ user: User; awarded: boolean; briefsRead: string[] } | undefined>;
+  getBriefsRead(userId: string): Promise<string[]>;
   checkAndConsumeAiCall(userId: string): Promise<{ allowed: boolean; remaining: number | null; limit: number | null }>;
   runAiUsageMigration(): Promise<{ ok: boolean; detail: string }>;
   saveLead(email: string, source?: string): Promise<Lead>;
@@ -525,6 +530,40 @@ export class DrizzleStorage implements IStorage {
     return { user: updatedUser ?? result[0], awarded: true };
   }
 
+  async getBriefsRead(userId: string): Promise<string[]> {
+    const user = await this.getUser(userId);
+    if (!user) return [];
+    const entries = (((user as any).briefsRead ?? []) as Array<{ id?: string }>);
+    return entries.map(e => e?.id).filter((x): x is string => typeof x === 'string');
+  }
+
+  async completeBrief(
+    userId: string,
+    briefId: string,
+    score: number,
+    xpEarned: number,
+  ): Promise<{ user: User; awarded: boolean; briefsRead: string[] } | undefined> {
+    const user = await this.getUser(userId);
+    if (!user) return undefined;
+    const entries = [...(((user as any).briefsRead ?? []) as Array<{ id: string; date: string; score: number; xpEarned: number }>)];
+    const already = entries.some(e => e?.id === briefId);
+    if (already) {
+      return { user, awarded: false, briefsRead: entries.map(e => e.id) };
+    }
+    entries.push({ id: briefId, date: new Date().toISOString().slice(0, 10), score, xpEarned });
+    const newXp = (user.xp ?? 0) + xpEarned;
+    const result = await this.db
+      .update(users)
+      .set({ briefsRead: entries, xp: newXp } as any)
+      .where(eq(users.id, userId))
+      .returning();
+    // Reading a brief is real activity, so it keeps the burn-rate streak alive
+    // the same way a lesson or the daily challenge does.
+    await this.updateUserStreak(userId);
+    const updatedUser = await this.getUser(userId);
+    return { user: updatedUser ?? result[0], awarded: true, briefsRead: entries.map(e => e.id) };
+  }
+
   async saveUserProfile(userId: string, profile: Record<string, any>): Promise<User | undefined> {
     const result = await this.db
       .update(users)
@@ -849,6 +888,31 @@ export class MemStorage implements IStorage {
     history.push({ loginAt, endedAt, endReason, durationMinutes });
     const trimmed = history.slice(-100);
     this.users.set(userId, { ...user, loginHistory: trimmed } as any);
+  }
+
+  async getBriefsRead(userId: string): Promise<string[]> {
+    const user = this.users.get(userId);
+    if (!user) return [];
+    const entries = (((user as any).briefsRead ?? []) as Array<{ id?: string }>);
+    return entries.map(e => e?.id).filter((x): x is string => typeof x === 'string');
+  }
+
+  async completeBrief(
+    userId: string,
+    briefId: string,
+    score: number,
+    xpEarned: number,
+  ): Promise<{ user: User; awarded: boolean; briefsRead: string[] } | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const entries = [...(((user as any).briefsRead ?? []) as Array<{ id: string; date: string; score: number; xpEarned: number }>)];
+    if (entries.some(e => e?.id === briefId)) {
+      return { user, awarded: false, briefsRead: entries.map(e => e.id) };
+    }
+    entries.push({ id: briefId, date: new Date().toISOString().slice(0, 10), score, xpEarned });
+    const updated = { ...user, briefsRead: entries, xp: (user.xp ?? 0) + xpEarned } as any;
+    this.users.set(userId, updated);
+    return { user: updated, awarded: true, briefsRead: entries.map(e => e.id) };
   }
 
   async recordAudioPlay(userId: string, moduleId: string): Promise<void> {
