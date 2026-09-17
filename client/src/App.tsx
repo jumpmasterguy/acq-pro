@@ -68,6 +68,7 @@ import { cn } from "@/lib/utils";
 import Dashboard from "@/pages/Dashboard";
 import ModulePage from "@/pages/ModulePage";
 import ModulesPage from "@/pages/ModulesPage";
+import ResourcesPage from "@/pages/ResourcesPage";
 import LessonPage from "@/pages/LessonPage";
 import UpgradePage from "@/pages/UpgradePage";
 import MyAccountPage from "@/pages/MyAccountPage";
@@ -774,9 +775,8 @@ function AppContent() {
               onUpgrade={handleUpgrade}
             />
           )}
-          {/* Placeholder — Resources & tools lands in step 8. */}
           {view.type === 'resources' && (
-            <div className="p-4 text-sm text-muted-foreground">Resources &amp; tools — coming in this build.</div>
+            <ResourcesPage isPremium={progress.isPremium} onUpgrade={handleUpgrade} />
           )}
           {view.type === 'upgrade' && (
             <UpgradePage
