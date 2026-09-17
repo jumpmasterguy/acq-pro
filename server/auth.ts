@@ -160,7 +160,14 @@ export async function setupAuth(app: Express): Promise<void> {
               console.error('[idle-timeout] recordLoginEnd failed:', e.message);
             });
           }
-          res.status(401).json({ message: "Signed out due to inactivity", idleTimeout: true });
+          // API calls get the JSON the app expects (it reads idleTimeout to show
+          // the "signed out due to inactivity" notice). A page load — someone
+          // typing acqlerate.com after a long break — must NOT get raw JSON:
+          // the session is already gone, so just let the page render signed-out.
+          if (req.path.startsWith("/api/")) {
+            return res.status(401).json({ message: "Signed out due to inactivity", idleTimeout: true });
+          }
+          next();
         });
       });
     }
