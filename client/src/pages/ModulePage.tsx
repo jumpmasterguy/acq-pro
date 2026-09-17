@@ -10,6 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { moduleGradient } from "@/lib/moduleTheme";
+import { getTotalLessons } from "@/lib/curriculum";
+import { formatClps, moduleClps } from "@shared/moduleClps";
+import { SkillLevelPill, ResourceRow, LessonRow } from "@/components/mobile/ModulePieces";
 
 const LEVEL_LABELS: Record<SkillLevel, string> = {
   novice: 'Novice',
@@ -37,6 +42,7 @@ interface ModulePageProps {
 }
 
 export default function ModulePage({ moduleId, progress, onBack, onSelectLesson, onUpgrade, unlockedLevel = 'novice', onOpenAssessment, activeCareer }: ModulePageProps) {
+  const isMobile = useIsMobile();
   const mod = modules.find(m => m.id === moduleId);
   if (!mod) return null;
 
@@ -71,6 +77,223 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
       // Best-effort tracking — a failed log shouldn't interrupt playback.
     });
   };
+
+  // ── Mobile Module screen ──────────────────────────────────────────────────
+  if (isMobile) {
+    const seq = modules.findIndex(m => m.id === mod.id) + 1;
+    const doneCount = lessonIds.filter(id => progress.completedLessons.has(id)).length;
+    const nextLevel: SkillLevel = unlockedLevel === 'novice' ? 'intermediate' : 'advanced';
+    const clpLine = `${formatClps(moduleClps(mod.id))} · self-report as External Training in WarU`;
+
+    return (
+      <div className="flex flex-col gap-4 px-4 pb-8 pt-4" data-testid="module-page-mobile">
+        {/* Header card */}
+        <div
+          className="rounded-2xl p-5 text-white"
+          style={{ background: moduleGradient(theme), boxShadow: 'var(--acq-shadow-sm)' }}
+        >
+          <div className="flex items-start gap-3.5">
+            <span
+              className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-[14px]"
+              style={{ background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.25)' }}
+            >
+              <BookOpen className="h-6 w-6" strokeWidth={2} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <div
+                className="text-[11px] font-bold uppercase tracking-[0.1em]"
+                style={{ color: 'rgba(255,255,255,.7)' }}
+              >
+                {mod.subtitle}
+              </div>
+              <h1 className="mt-0.5 text-[19px] font-bold leading-[1.25]" style={{ textWrap: 'pretty' } as any}>
+                {mod.title}
+              </h1>
+            </div>
+          </div>
+
+          <p className="mt-3 text-[13px] leading-[1.5]" style={{ color: 'rgba(255,255,255,.85)' }}>
+            {mod.description}
+          </p>
+
+          {isAccessible ? (
+            <>
+              <div className="mt-3.5 flex items-center justify-between text-xs">
+                <span style={{ color: 'rgba(255,255,255,.8)' }}>Module progress</span>
+                <span className="acq-tnum font-semibold">{progressPct}% complete</span>
+              </div>
+              <div
+                className="mt-1.5 h-2 w-full overflow-hidden rounded-full"
+                style={{ background: 'rgba(255,255,255,.25)' }}
+              >
+                <div className="h-full rounded-full bg-white" style={{ width: `${progressPct}%` }} />
+              </div>
+
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <SkillLevelPill level={unlockedLevel} onDark />
+                {mod.assessment?.length ? (
+                  <button
+                    type="button"
+                    onClick={onOpenAssessment}
+                    className="flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold"
+                    style={{ background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.25)' }}
+                    data-testid="module-assessment-cta"
+                  >
+                    <Lock className="h-3 w-3" strokeWidth={2} />
+                    Test Your Knowledge → Unlock {LEVEL_LABELS[nextLevel]}
+                  </button>
+                ) : null}
+              </div>
+
+              <p className="mt-2.5 text-[11px]" style={{ color: 'rgba(255,255,255,.7)' }}>
+                {clpLine}
+              </p>
+            </>
+          ) : (
+            <span
+              className="mt-3.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold"
+              style={{ background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.25)' }}
+            >
+              🔒 Premium
+            </span>
+          )}
+        </div>
+
+        {/* Lesson Book */}
+        <ResourceRow
+          icon={<FileText className="h-4 w-4" strokeWidth={2} />}
+          title="Lesson Book"
+          description="The full module as a printable PDF."
+          theme={theme}
+          locked={!canDownloadPdf}
+          action={
+            canDownloadPdf && mod.pdfUrl ? (
+              <a
+                href={mod.pdfUrl}
+                className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-bold text-white"
+                style={{ background: theme.mobileHex }}
+                data-testid="module-pdf-download"
+              >
+                <Download className="h-3 w-3" strokeWidth={2} />
+                Download PDF
+              </a>
+            ) : (
+              <button
+                type="button"
+                onClick={onUpgrade}
+                className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-bold"
+                style={{ background: 'var(--acq-surface-sunken)', color: 'var(--acq-text-muted)' }}
+              >
+                <Lock className="h-3 w-3" strokeWidth={2} />
+                Unlock to download
+              </button>
+            )
+          }
+        />
+
+        {/* The Debrief */}
+        <ResourceRow
+          icon={<Headphones className="h-4 w-4" strokeWidth={2} />}
+          title="The Debrief"
+          description="A podcast-style audio overview of this module."
+          theme={theme}
+          locked={!canListenAudio}
+          action={
+            !canListenAudio ? (
+              <button
+                type="button"
+                onClick={onUpgrade}
+                className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-bold"
+                style={{ background: 'var(--acq-surface-sunken)', color: 'var(--acq-text-muted)' }}
+              >
+                <Lock className="h-3 w-3" strokeWidth={2} />
+                Unlock to listen
+              </button>
+            ) : mod.audioReady && mod.audioUrl ? (
+              <audio
+                controls
+                controlsList="nodownload"
+                onContextMenu={(e) => e.preventDefault()}
+                onPlay={handleAudioPlay}
+                preload="none"
+                className="h-9 w-full"
+                data-testid="module-audio-player-mobile"
+              >
+                <source src={mod.audioUrl} type="audio/mp4" />
+              </audio>
+            ) : (
+              <span className="text-xs" style={{ color: 'var(--acq-text-muted)' }}>Coming soon</span>
+            )
+          }
+        />
+
+        {/* Lessons */}
+        <div className="mt-2 flex items-baseline justify-between">
+          <h2
+            className="text-xs font-semibold uppercase tracking-[0.1em]"
+            style={{ color: 'var(--acq-text-muted)' }}
+          >
+            Lessons
+          </h2>
+          <span className="acq-tnum text-xs" style={{ color: 'var(--acq-text-muted)' }}>
+            {doneCount} / {lessonIds.length} done
+          </span>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          {sortedLessons.map((lesson, i) => {
+            const isFreePreview = FREE_PREVIEW_LESSONS.includes(lesson.id);
+            const lessonLocked = !isAccessible && !isFreePreview;
+            const state = progress.completedLessons.has(lesson.id)
+              ? 'done'
+              : lessonLocked
+                ? 'locked'
+                : 'open';
+            return (
+              <LessonRow
+                key={lesson.id}
+                lesson={lesson}
+                seq={i + 1}
+                state={state}
+                isLast={i === sortedLessons.length - 1}
+                moduleColor={mod.color}
+                isFreePreview={isFreePreview && !isAccessible}
+                onOpen={() => (lessonLocked ? onUpgrade() : onSelectLesson(lesson.id))}
+              />
+            );
+          })}
+        </div>
+
+        {/* Locked module footer */}
+        {!isAccessible && (
+          <div
+            className="mt-2 rounded-[14px] p-6 text-center"
+            style={{
+              border: '2px dashed rgba(1,105,111,.3)',
+              background: 'rgba(1,105,111,.05)',
+            }}
+          >
+            <Lock className="mx-auto h-7 w-7" style={{ color: 'var(--acq-teal)' }} strokeWidth={2} />
+            <h3 className="mt-2 text-[15px] font-semibold" style={{ color: 'var(--acq-text-heading)' }}>
+              This Module Requires Pro Access
+            </h3>
+            <p className="mt-1 text-[13px]" style={{ color: 'var(--acq-text-muted)' }}>
+              Unlock all {getTotalLessons()} lessons across all modules. Pro is managed on acqlerate.com.
+            </p>
+            <button
+              type="button"
+              onClick={onUpgrade}
+              className="mt-4 h-11 w-full rounded-[10px] text-[15px] font-semibold text-white"
+              style={{ background: 'var(--acq-teal)' }}
+              data-testid="module-unlock-cta"
+            >
+              How to unlock Pro
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

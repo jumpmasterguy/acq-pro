@@ -10,6 +10,7 @@ import { excludeInternalAccounts } from "./internalAccounts";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema, userProfileSchema, updateNameSchema } from "@shared/schema";
 import { hasPaidPlan, hasFullAccess } from "@shared/access";
+import { MODULE_CLPS } from "@shared/moduleClps";
 import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken, sendPurchaseAdminAlert, sendSubscriptionCancelledAdminAlert } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 import { costTrackerStorage } from "./costTrackerStorage";
@@ -2223,15 +2224,9 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
     const { moduleId } = req.params;
     const user = (req as any).user as { id: number; username: string; email: string };
 
-    const MODULE_CLPS: Record<string, { title: string; clps: number }> = {
-      foundations: { title: 'DoD Acquisitions Foundations',          clps: 1.5 },
-      finance:     { title: 'Defense Finance & Budgeting',            clps: 3.8 },
-      contracts:   { title: 'Defense Contracting Fundamentals',       clps: 3.0 },
-      data:        { title: 'Data Analytics for Program Managers',     clps: 1.3 },
-      capture:     { title: 'Capture Management & Business Development', clps: 1.6 },
-      operations:  { title: 'Program Operations & Leadership',         clps: 1.5 },
-    };
-
+    // Moved to shared/moduleClps.ts so the client can show the same numbers
+    // it will print here — the mobile Modules list and Module header both
+    // display CLPs, and a second copy would have drifted.
     const mod = MODULE_CLPS[moduleId];
     if (!mod) return res.status(404).json({ message: 'Module not found' });
 

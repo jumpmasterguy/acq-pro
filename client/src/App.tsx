@@ -66,6 +66,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Dashboard from "@/pages/Dashboard";
 import ModulePage from "@/pages/ModulePage";
+import ModulesPage from "@/pages/ModulesPage";
 import LessonPage from "@/pages/LessonPage";
 import UpgradePage from "@/pages/UpgradePage";
 import MyAccountPage from "@/pages/MyAccountPage";
@@ -735,11 +736,14 @@ function AppContent() {
               />
             );
           })()}
-          {/* Placeholders — the real Modules list and Resources & tools screens
-              land in later steps of the mobile build. */}
           {view.type === 'modules' && (
-            <div className="p-4 text-sm text-muted-foreground">Modules list — coming in this build.</div>
+            <ModulesPage
+              progress={progress}
+              onSelectModule={(id) => setView({ type: 'module', moduleId: id })}
+              onUpgrade={handleUpgrade}
+            />
           )}
+          {/* Placeholder — Resources & tools lands in step 8. */}
           {view.type === 'resources' && (
             <div className="p-4 text-sm text-muted-foreground">Resources &amp; tools — coming in this build.</div>
           )}
