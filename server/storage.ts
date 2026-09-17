@@ -8,7 +8,7 @@ import { Pool } from "pg";
 export type SkillLevel = 'novice' | 'intermediate' | 'advanced';
 
 // Every module id in the curriculum — used by the admin "unlock all" action
-const ALL_MODULE_IDS = ['foundations', 'finance', 'contracts', 'data', 'capture', 'operations', 'business', 'smallbiz', 'compliance', 'preaward', 'lifecycle', 'onramp'];
+const ALL_MODULE_IDS = ['foundations', 'finance', 'contracts', 'data', 'capture', 'operations', 'business', 'smallbiz', 'compliance', 'preaward', 'lifecycle', 'onramp', 'veteran'];
 
 /**
  * The stored `currentStreak` only ever gets recomputed when the user does
