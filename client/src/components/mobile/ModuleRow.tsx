@@ -24,7 +24,7 @@ export function ModuleRow({
 
   // Locked wins over progress — a locked module shouldn't advertise a percent.
   const status = locked
-    ? { label: '🔒', color: 'var(--acq-text-faint)' }
+    ? { label: '🔒', color: 'var(--acq-text-muted)' }   // locked is state, not decoration
     : pct === 100
       ? { label: '✓ Done', color: 'var(--acq-success)' }
       : pct > 0

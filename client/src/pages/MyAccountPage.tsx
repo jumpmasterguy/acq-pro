@@ -350,12 +350,14 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
         </button>
 
         {/* Required by App Store guideline 5.1.1(v): an app that lets you
-            create an account has to let you delete it in-app. */}
+            create an account has to let you delete it in-app.
+            Muted rather than faint — faint (#6B7280) reads at 3.74:1 on the
+            dark page, which is fine for decoration but not for a real action. */}
         <button
           type="button"
           onClick={() => setDeleteOpen(true)}
           className="mx-auto flex h-11 items-center gap-2 text-xs"
-          style={{ color: 'var(--acq-text-faint)' }}
+          style={{ color: 'var(--acq-text-muted)' }}
           data-testid="account-delete"
         >
           <Trash2 className="h-3.5 w-3.5" strokeWidth={2} />

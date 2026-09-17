@@ -85,7 +85,16 @@ export function AcqlerateLogo({
           ) : (
             <span className="text-sidebar-foreground">Acq</span>
           )}
-          <span style={{ color: wordmarkTheme === "light" ? "#2dd4bf" : "#01696f" }}>lerate</span>
+          {/* "auto" is meant to follow the theme, but "lerate" was pinned to the
+              dark brand teal in both — 2.8:1 on any dark surface, so it was
+              barely legible in the dark sidebar and the mobile top bar. Dark
+              now uses the brand's own light teal (#4fc3cb), the same value the
+              design system lists as "teal on dark". */}
+          {wordmarkTheme === "light" ? (
+            <span style={{ color: "#2dd4bf" }}>lerate</span>
+          ) : (
+            <span className="text-[#01696f] dark:text-[#4fc3cb]">lerate</span>
+          )}
         </span>
       )}
     </div>
