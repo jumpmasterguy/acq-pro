@@ -15,6 +15,8 @@ import { SIDEBAR_RESOURCES } from "@/lib/resources";
 import { FAR_TRANSLATOR, TOOLS_DIRECTORY } from "@/lib/toolsDirectory";
 import { AcqlerateLogo } from "@/components/AcqlerateLogo";
 import InstallPrompt from "@/components/InstallPrompt";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { MobileShell, type MobileTab, type MobileHeader } from "@/components/mobile/MobileShell";
 
 // ── Error Boundary — catches render crashes and shows a recovery UI ─────────
 class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
@@ -86,6 +88,11 @@ type View =
   | { type: 'auth' }
   | { type: 'onboarding' }
   | { type: 'dashboard' }
+  // Mobile-only screens. The desktop shell reaches modules through the
+  // sidebar tree and resources through its collapsible sections, so these
+  // two views exist to give the bottom tab bar a Learn and a Resources tab.
+  | { type: 'modules' }
+  | { type: 'resources' }
   | { type: 'module'; moduleId: string; activeCareer?: string }
   | { type: 'lesson'; lessonId: string; activeCareer?: string }
   | { type: 'upgrade' }
@@ -189,15 +196,24 @@ function AppContent() {
   // server/static.ts) — so there's no in-app "landing" view to default to
   // here; every unauthenticated path starts at the sign-in screen.
   const [view, setView] = useState<View>({ type: 'auth' });
-  // Dark mode — persisted in cookie (works on Railway, not a sandboxed iframe)
+  // Dark mode — persisted in cookie (works on Railway, not a sandboxed iframe).
+  // With no cookie set we follow the OS, which is what the mobile handoff
+  // specifies; the old unconditional `true` meant a phone in light mode still
+  // booted the app dark. An explicit choice (the cookie) always wins.
   const [darkMode, setDarkMode] = useState(() => {
     try {
       const c = document.cookie.split('; ').find(r => r.startsWith('theme='));
       if (c) return c.split('=')[1] !== 'light';
     } catch {}
-    return true; // default dark
+    try {
+      return window.matchMedia('(prefers-color-scheme: light)').matches ? false : true;
+    } catch {}
+    return true;
   });
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  // Below `md` the app swaps the sidebar shell for the native-style mobile
+  // shell (bottom tab bar + 56px top bar). Desktop is untouched.
+  const isMobile = useIsMobile();
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
   const [resourcesExpanded, setResourcesExpanded] = useState(false);
   const [toolsExpanded, setToolsExpanded] = useState(false);
@@ -243,6 +259,35 @@ function AppContent() {
     isActuallyPaid,
     xp: calculateXP(completedLessons, quizScores, dailyChallengeXP),
   };
+
+  // Streak — fetched here rather than only in Dashboard. The mobile top bar
+  // shows the flame on every screen, so waiting for a Home visit to populate
+  // it would mean every other screen read "🔥 0" until you went Home.
+  // Dashboard keeps its own fetch (it also needs the questions) and continues
+  // to push updates back up through onStreakUpdate.
+  useEffect(() => {
+    if (authState.status !== 'authenticated') return;
+    apiRequest('GET', '/api/daily-challenge')
+      .then(r => r.json())
+      .then(data => {
+        if (typeof data?.currentStreak === 'number') {
+          setStreak({ currentStreak: data.currentStreak, longestStreak: data.longestStreak });
+        }
+      })
+      .catch(() => {});
+  }, [authState.status]);
+
+  // Admin, Analytics, PDU and the Cost Tracker have no home in the four-tab
+  // map, so they stay desktop-only. A saved view (sessionStorage) or a resize
+  // could otherwise strand a phone on a screen it can't navigate away from.
+  // Must sit above the auth/onboarding early returns — it's a hook.
+  useEffect(() => {
+    if (!isMobile) return;
+    const MOBILE_VIEWS: View['type'][] = [
+      'dashboard', 'modules', 'module', 'lesson', 'upgrade', 'account', 'resources', 'auth', 'onboarding',
+    ];
+    if (!MOBILE_VIEWS.includes(view.type)) setView({ type: 'dashboard' });
+  }, [isMobile, view.type]);
 
   // Apply dark mode
   useEffect(() => {
@@ -576,13 +621,215 @@ function AppContent() {
   ];
   const currentLevel = getLevel(xp);
 
+  // ── Mobile shell wiring ───────────────────────────────────────────────────
+  // Admin, Analytics, PDU and the Cost Tracker have no home in the four-tab
+  // map, so they stay desktop-only. A saved view (sessionStorage) or a resize
+  // could otherwise strand a phone on a screen it can't navigate away from.
+  // Which tab lights up. Module, Lesson and Pro access all live under Learn.
+  const mobileTab: MobileTab =
+    view.type === 'resources' ? 'resources'
+    : view.type === 'account' ? 'account'
+    : (view.type === 'modules' || view.type === 'module' || view.type === 'lesson' || view.type === 'upgrade') ? 'modules'
+    : 'home';
+
+  // Back: Lesson → its Module; Module and Pro access → Modules list.
+  const mobileHeader: MobileHeader = (() => {
+    switch (view.type) {
+      case 'dashboard':
+        return { kind: 'logo' };
+      case 'modules':
+        return { kind: 'title', title: 'Modules' };
+      case 'resources':
+        return { kind: 'title', title: 'Resources & tools' };
+      case 'account':
+        return { kind: 'title', title: 'My Account' };
+      case 'upgrade':
+        return { kind: 'back', title: 'Pro access', onBack: () => setView({ type: 'modules' }) };
+      case 'module': {
+        const mod = modules.find(m => m.id === (view as any).moduleId);
+        return { kind: 'back', title: mod?.title ?? 'Module', onBack: () => setView({ type: 'modules' }) };
+      }
+      case 'lesson': {
+        const parent = modules.find(m => m.lessons.some(l => l.id === (view as any).lessonId));
+        return {
+          kind: 'back',
+          title: parent?.title ?? 'Lesson',
+          onBack: () => setView(parent ? { type: 'module', moduleId: parent.id } : { type: 'modules' }),
+        };
+      }
+      default:
+        return { kind: 'logo' };
+    }
+  })();
+
+  const handleMobileTab = (tab: MobileTab) => {
+    setView(
+      tab === 'home' ? { type: 'dashboard' }
+      : tab === 'modules' ? { type: 'modules' }
+      : tab === 'resources' ? { type: 'resources' }
+      : { type: 'account' }
+    );
+  };
+
+  // Drives the scroll-to-top reset on navigation.
+  const mobileScrollKey = `${view.type}:${(view as any).moduleId ?? (view as any).lessonId ?? ''}`;
+
+  // The page switch, shared by both shells. Desktop renders it inside the
+  // sidebar layout; mobile renders it inside MobileShell.
+  const pageContent = (
+    <>
+          {view.type === 'dashboard' && (
+            <Dashboard
+              progress={progress}
+              onSelectModule={handleSelectModule}
+              onSelectLesson={handleSelectLesson}
+              onUpgrade={handleUpgrade}
+              userProfile={authState.status === 'authenticated' ? (authState.user.userProfile as UserProfile | null) : null}
+              username={authState.status === 'authenticated' ? authState.user.username : undefined}
+              onEditProfile={handleEditProfile}
+              isAdmin={isAdmin}
+              onStreakUpdate={(s) => setStreak(s)}
+            />
+          )}
+          {view.type === 'module' && (() => {
+            const modId = (view as { type: 'module'; moduleId: string }).moduleId;
+            const skillLevels = authState.status === 'authenticated'
+              ? (authState.user.moduleSkillLevels ?? {}) : {};
+            return (
+              <ModulePage
+                moduleId={modId}
+                progress={progress}
+                onBack={() => setView({ type: 'dashboard', activeCareer: (view as any).activeCareer } as any)}
+                onSelectLesson={handleSelectLesson}
+                onUpgrade={handleUpgrade}
+                unlockedLevel={(skillLevels[modId] as SkillLevel) ?? 'novice'}
+                onOpenAssessment={() => setAssessmentModuleId(modId)}
+                activeCareer={(view as any).activeCareer ?? null}
+              />
+            );
+          })()}
+          {view.type === 'lesson' && (() => {
+            const lessonId = (view as { type: 'lesson'; lessonId: string }).lessonId;
+            const parentMod = modules.find(m => m.lessons.some(l => l.id === lessonId));
+            const skillLevels = authState.status === 'authenticated'
+              ? (authState.user.moduleSkillLevels ?? {}) : {};
+            const unlockedLevel = parentMod
+              ? ((skillLevels[parentMod.id] as SkillLevel) ?? 'novice')
+              : 'novice';
+            return (
+              <LessonPage
+                lessonId={lessonId}
+                progress={progress}
+                onBack={handleBackFromLesson}
+                onComplete={handleCompleteLesson}
+                onNextLesson={handleNextLesson}
+                unlockedLevel={unlockedLevel}
+                onOpenAssessment={parentMod ? () => setAssessmentModuleId(parentMod.id) : undefined}
+                isLifetime={authState.status === 'authenticated' && authState.user.subscriptionStatus === 'lifetime'}
+                activeCareer={(view as any).activeCareer ?? null}
+              />
+            );
+          })()}
+          {/* Placeholders — the real Modules list and Resources & tools screens
+              land in later steps of the mobile build. */}
+          {view.type === 'modules' && (
+            <div className="p-4 text-sm text-muted-foreground">Modules list — coming in this build.</div>
+          )}
+          {view.type === 'resources' && (
+            <div className="p-4 text-sm text-muted-foreground">Resources &amp; tools — coming in this build.</div>
+          )}
+          {view.type === 'upgrade' && (
+            <UpgradePage
+              onBack={() => setView({ type: 'dashboard' })}
+              onUpgrade={handleUpgrade}
+              trialDaysLeft={trialDaysLeft}
+            />
+          )}
+          {view.type === 'account' && authState.status === 'authenticated' && (
+            <MyAccountPage
+              user={authState.user}
+              onBack={() => setView({ type: 'dashboard' })}
+              onUpgrade={() => setView({ type: 'upgrade' })}
+              onNameUpdated={handleNameUpdated}
+              onAccountDeleted={handleAccountDeleted}
+            />
+          )}
+          {view.type === 'admin' && isAdmin && (
+            <AdminPage />
+          )}
+          {view.type === 'analytics' && isAdmin && (
+            <AdminAnalytics onBack={() => setView({ type: 'admin' })} />
+          )}
+          {view.type === 'pdu' && (
+            <PDUTracker
+              onBack={() => setView({ type: 'dashboard' })}
+              completedLessons={Array.from(completedLessons)}
+            />
+          )}
+          {view.type === 'costTrackerIntro' && (
+            <CostTrackerIntroPage
+              onBack={() => setView({ type: 'dashboard' })}
+              onGetStarted={() => setView({ type: 'costTaskOrders' })}
+            />
+          )}
+          {view.type === 'costProjects' && (
+            <CostProjectsPage
+              onBack={() => setView({ type: 'dashboard' })}
+              onOpenProject={(projectId) => setView({ type: 'costProject', projectId })}
+              onOpenRates={() => setView({ type: 'costRates' })}
+              onOpenTaskOrders={() => setView({ type: 'costTaskOrders' })}
+              onOpenTaskOrder={(taskOrderId) => setView({ type: 'costTaskOrder', taskOrderId })}
+            />
+          )}
+          {view.type === 'costProject' && (
+            <CostProjectDetailPage
+              projectId={(view as { type: 'costProject'; projectId: string }).projectId}
+              onBack={() => setView({ type: 'costProjects' })}
+              onOpenTaskOrder={(taskOrderId) => setView({ type: 'costTaskOrder', taskOrderId })}
+            />
+          )}
+          {view.type === 'costRates' && (
+            <CostRatesPage
+              onBack={() => setView({ type: 'costProjects' })}
+            />
+          )}
+          {view.type === 'costTaskOrders' && (
+            <CostTaskOrdersPage
+              onBack={() => setView({ type: 'costProjects' })}
+              onOpenTaskOrder={(taskOrderId) => setView({ type: 'costTaskOrder', taskOrderId })}
+            />
+          )}
+          {view.type === 'costTaskOrder' && (
+            <CostTaskOrderDetailPage
+              taskOrderId={(view as { type: 'costTaskOrder'; taskOrderId: string }).taskOrderId}
+              onBack={() => setView({ type: 'costTaskOrders' })}
+              onOpenProject={(projectId) => setView({ type: 'costProject', projectId })}
+            />
+          )}
+
+    </>
+  );
+
   return (
     <ErrorBoundary>
+    {isMobile ? (
+      <MobileShell
+        header={mobileHeader}
+        activeTab={mobileTab}
+        onTabChange={handleMobileTab}
+        streak={streak.currentStreak}
+        onStreakPress={() => setView({ type: 'account' })}
+        trialDaysLeft={view.type === 'dashboard' ? trialDaysLeft : null}
+        scrollKey={mobileScrollKey}
+      >
+        <ErrorBoundary>{pageContent}</ErrorBoundary>
+      </MobileShell>
+    ) : (
     <div className="min-h-screen bg-background flex">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/40 z-30 lg:hidden"
+          className="fixed inset-0 bg-black/40 z-30 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -590,7 +837,7 @@ function AppContent() {
       {/* Sidebar */}
       <aside className={cn(
         "fixed left-0 top-0 h-full w-64 bg-sidebar text-sidebar-foreground border-r border-sidebar-border z-40 flex flex-col transition-transform duration-300 safe-top",
-        sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
       )}>
         {/* Logo — opens the real acqlerate.com marketing site in a new tab
             so the user's authenticated dashboard tab stays open. */}
@@ -606,7 +853,7 @@ function AppContent() {
           >
             <AcqlerateLogo iconSize={32} />
           </a>
-          <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-sidebar-foreground/60 hover:text-sidebar-foreground">
+          <button onClick={() => setSidebarOpen(false)} className="md:hidden text-sidebar-foreground/60 hover:text-sidebar-foreground">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -1040,9 +1287,9 @@ function AppContent() {
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 lg:ml-64 flex flex-col min-h-screen min-w-0 relative">
+      <div className="flex-1 md:ml-64 flex flex-col min-h-screen min-w-0 relative">
         {/* Background: hex grid + radial glow */}
-        <div aria-hidden="true" className="pointer-events-none fixed lg:left-64 inset-y-0 right-0 z-0 overflow-hidden">
+        <div aria-hidden="true" className="pointer-events-none fixed md:left-64 inset-y-0 right-0 z-0 overflow-hidden">
           {/* Radial teal glow top-right */}
           <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full opacity-[0.07] dark:opacity-[0.12]" style={{background: 'radial-gradient(circle, #01696f 0%, transparent 70%)'}} />
           {/* Radial teal glow bottom-left */}
@@ -1058,15 +1305,15 @@ function AppContent() {
           </svg>
         </div>
         {/* Top Bar */}
-        <header className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-20 flex items-center justify-between px-4 lg:px-6 safe-top" style={{minHeight: '3.5rem'}}>
+        <header className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-20 flex items-center justify-between px-4 md:px-6 safe-top" style={{minHeight: '3.5rem'}}>
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-muted-foreground hover:text-foreground"
+            className="md:hidden text-muted-foreground hover:text-foreground"
             data-testid="mobile-menu"
           >
             <Menu className="w-5 h-5" />
           </button>
-          <div className="flex-1 lg:flex-none" />
+          <div className="flex-1 md:flex-none" />
           <div className="flex items-center gap-2">
             {isPremium && (
               <Badge className="bg-primary/10 text-primary border-0 text-xs hidden sm:flex">
@@ -1086,133 +1333,12 @@ function AppContent() {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 min-w-0 p-4 lg:p-6 max-w-6xl mx-auto w-full relative z-10">
-        <ErrorBoundary>
-          {view.type === 'dashboard' && (
-            <Dashboard
-              progress={progress}
-              onSelectModule={handleSelectModule}
-              onSelectLesson={handleSelectLesson}
-              onUpgrade={handleUpgrade}
-              userProfile={authState.status === 'authenticated' ? (authState.user.userProfile as UserProfile | null) : null}
-              username={authState.status === 'authenticated' ? authState.user.username : undefined}
-              onEditProfile={handleEditProfile}
-              isAdmin={isAdmin}
-              onStreakUpdate={(s) => setStreak(s)}
-            />
-          )}
-          {view.type === 'module' && (() => {
-            const modId = (view as { type: 'module'; moduleId: string }).moduleId;
-            const skillLevels = authState.status === 'authenticated'
-              ? (authState.user.moduleSkillLevels ?? {}) : {};
-            return (
-              <ModulePage
-                moduleId={modId}
-                progress={progress}
-                onBack={() => setView({ type: 'dashboard', activeCareer: (view as any).activeCareer } as any)}
-                onSelectLesson={handleSelectLesson}
-                onUpgrade={handleUpgrade}
-                unlockedLevel={(skillLevels[modId] as SkillLevel) ?? 'novice'}
-                onOpenAssessment={() => setAssessmentModuleId(modId)}
-                activeCareer={(view as any).activeCareer ?? null}
-              />
-            );
-          })()}
-          {view.type === 'lesson' && (() => {
-            const lessonId = (view as { type: 'lesson'; lessonId: string }).lessonId;
-            const parentMod = modules.find(m => m.lessons.some(l => l.id === lessonId));
-            const skillLevels = authState.status === 'authenticated'
-              ? (authState.user.moduleSkillLevels ?? {}) : {};
-            const unlockedLevel = parentMod
-              ? ((skillLevels[parentMod.id] as SkillLevel) ?? 'novice')
-              : 'novice';
-            return (
-              <LessonPage
-                lessonId={lessonId}
-                progress={progress}
-                onBack={handleBackFromLesson}
-                onComplete={handleCompleteLesson}
-                onNextLesson={handleNextLesson}
-                unlockedLevel={unlockedLevel}
-                onOpenAssessment={parentMod ? () => setAssessmentModuleId(parentMod.id) : undefined}
-                isLifetime={authState.status === 'authenticated' && authState.user.subscriptionStatus === 'lifetime'}
-                activeCareer={(view as any).activeCareer ?? null}
-              />
-            );
-          })()}
-          {view.type === 'upgrade' && (
-            <UpgradePage
-              onBack={() => setView({ type: 'dashboard' })}
-              onUpgrade={handleUpgrade}
-              trialDaysLeft={trialDaysLeft}
-            />
-          )}
-          {view.type === 'account' && authState.status === 'authenticated' && (
-            <MyAccountPage
-              user={authState.user}
-              onBack={() => setView({ type: 'dashboard' })}
-              onUpgrade={() => setView({ type: 'upgrade' })}
-              onNameUpdated={handleNameUpdated}
-              onAccountDeleted={handleAccountDeleted}
-            />
-          )}
-          {view.type === 'admin' && isAdmin && (
-            <AdminPage />
-          )}
-          {view.type === 'analytics' && isAdmin && (
-            <AdminAnalytics onBack={() => setView({ type: 'admin' })} />
-          )}
-          {view.type === 'pdu' && (
-            <PDUTracker
-              onBack={() => setView({ type: 'dashboard' })}
-              completedLessons={Array.from(completedLessons)}
-            />
-          )}
-          {view.type === 'costTrackerIntro' && (
-            <CostTrackerIntroPage
-              onBack={() => setView({ type: 'dashboard' })}
-              onGetStarted={() => setView({ type: 'costTaskOrders' })}
-            />
-          )}
-          {view.type === 'costProjects' && (
-            <CostProjectsPage
-              onBack={() => setView({ type: 'dashboard' })}
-              onOpenProject={(projectId) => setView({ type: 'costProject', projectId })}
-              onOpenRates={() => setView({ type: 'costRates' })}
-              onOpenTaskOrders={() => setView({ type: 'costTaskOrders' })}
-              onOpenTaskOrder={(taskOrderId) => setView({ type: 'costTaskOrder', taskOrderId })}
-            />
-          )}
-          {view.type === 'costProject' && (
-            <CostProjectDetailPage
-              projectId={(view as { type: 'costProject'; projectId: string }).projectId}
-              onBack={() => setView({ type: 'costProjects' })}
-              onOpenTaskOrder={(taskOrderId) => setView({ type: 'costTaskOrder', taskOrderId })}
-            />
-          )}
-          {view.type === 'costRates' && (
-            <CostRatesPage
-              onBack={() => setView({ type: 'costProjects' })}
-            />
-          )}
-          {view.type === 'costTaskOrders' && (
-            <CostTaskOrdersPage
-              onBack={() => setView({ type: 'costProjects' })}
-              onOpenTaskOrder={(taskOrderId) => setView({ type: 'costTaskOrder', taskOrderId })}
-            />
-          )}
-          {view.type === 'costTaskOrder' && (
-            <CostTaskOrderDetailPage
-              taskOrderId={(view as { type: 'costTaskOrder'; taskOrderId: string }).taskOrderId}
-              onBack={() => setView({ type: 'costTaskOrders' })}
-              onOpenProject={(projectId) => setView({ type: 'costProject', projectId })}
-            />
-          )}
-
-        </ErrorBoundary>
+        <main className="flex-1 min-w-0 p-4 md:p-6 max-w-6xl mx-auto w-full relative z-10">
+        <ErrorBoundary>{pageContent}</ErrorBoundary>
         </main>
       </div>
     </div>
+    )}
 
     {/* Module Assessment Modal */}
     {assessmentModuleId && authState.status === 'authenticated' && (() => {

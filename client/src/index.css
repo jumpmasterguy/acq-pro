@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── General Sans — the app face, self-hosted ──────────────────────────────
+   `--font-sans` has always named General Sans, but the files were never in
+   the repo, so every surface silently rendered in the Inter fallback. These
+   are the four weights the mobile type scale uses (400/500/600/700). */
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* BASE — Light mode (default) */
 :root {
   --button-outline: rgba(0,0,0, .08);
@@ -139,6 +172,136 @@
   --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   MOBILE APP TOKEN RAMP  (--acq-*)
+   The dedicated mobile layout (below `md`) draws from this namespace only.
+   It is deliberately separate from the shadcn HSL ramp above: the mobile
+   design uses a warm parchment neutral ramp, while the desktop web app is
+   cool gray. Keeping them apart means the mobile screens can be exact
+   without repainting desktop. Values are the handoff's light/dark tables;
+   light-theme status values come from the design system's tokens/colors.css.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root {
+  /* ── Brand (identical in both themes) ── */
+  --acq-teal: #01696F;
+  --acq-teal-dark: #0C4E54;
+  --acq-cyan: #4FC3CB;
+  --acq-navy: #0D1B2A;
+  --acq-gold: #D19900;
+  --acq-gold-bright: #F5C842;
+  --acq-gold-ink: #7A5800;
+  --acq-gold-border: #F0D060;
+  --acq-success: #22C55E;
+  --acq-streak: #F97316;
+
+  /* Hero gradient — dashboard + account level card */
+  --acq-gradient-hero: linear-gradient(135deg, #0D2137 0%, #123047 55%, #0A1B2D 100%);
+
+  /* On-gradient text (module cards, hero cards) */
+  --acq-on-dark: #FFFFFF;
+  --acq-on-dark-muted: rgba(255,255,255,.8);
+  --acq-on-dark-faint: rgba(255,255,255,.75);
+  --acq-glass: rgba(255,255,255,.18);
+  --acq-glass-border: rgba(255,255,255,.25);
+
+  /* ── Surfaces — light ── */
+  --acq-surface-page: #FAF6EE;
+  --acq-surface-card: #FFFFFF;
+  --acq-surface-raised: #FDFCF8;
+  --acq-surface-sunken: #F4EDE0;
+  --acq-surface-muted: #EAE0CE;
+  --acq-surface-brand-wash: #E6F2F3;
+  --acq-surface-gold-wash: #FEF9E7;
+
+  /* ── Text — light ── */
+  --acq-text-body: #1A1A1A;
+  --acq-text-heading: #1A1A1A;
+  --acq-text-secondary: #4F4A44;
+  --acq-text-muted: #6E6659;
+  --acq-text-faint: #A99B85;
+  --acq-text-brand: #01696F;
+  --acq-text-gold: #7A5800;
+  --acq-text-streak: #EA580C;
+
+  /* ── Borders — light ── */
+  --acq-border-subtle: #EAE0CE;
+  --acq-border-default: #D9CBB3;
+  --acq-border-button: rgba(0,0,0,.08);
+
+  /* ── Streak pill — light ── */
+  --acq-streak-wash: rgba(249,115,22,.08);
+  --acq-streak-border: rgba(249,115,22,.3);
+  --acq-streak-day: rgba(249,115,22,.15);
+
+  /* ── Status — light (design system tokens/colors.css) ── */
+  --acq-success-wash: #ECFDF5;
+  --acq-success-ink: #065F46;
+  --acq-success-border: #6EE7B7;
+  --acq-danger-wash: rgba(220,38,38,.06);
+  --acq-danger-border: rgba(220,38,38,.3);
+
+  /* ── Elevation — light ── */
+  --acq-shadow-sm: 0 1px 4px rgba(20,26,38,.07), 0 1px 2px -1px rgba(20,26,38,.05);
+  --acq-shadow-md: 0 4px 12px rgba(20,26,38,.10), 0 2px 4px -1px rgba(20,26,38,.06);
+  --acq-shadow-lg: 0 8px 24px rgba(20,26,38,.12), 0 4px 8px -2px rgba(20,26,38,.08);
+  --acq-shadow-2xl: 0 24px 56px rgba(20,26,38,.18);
+
+  /* ── Press / hover washes ── */
+  --acq-elevate-1: rgba(0,0,0,.03);
+  --acq-elevate-2: rgba(0,0,0,.06);
+
+  /* ── Type ── */
+  --acq-font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+}
+
+.dark {
+  /* ── Surfaces — dark ── */
+  --acq-surface-page: #0E121B;
+  --acq-surface-card: #121621;
+  --acq-surface-raised: #171C28;
+  --acq-surface-sunken: #1B2130;
+  --acq-surface-muted: #262D3A;
+  --acq-surface-brand-wash: rgba(79,195,203,.14);
+  --acq-surface-gold-wash: rgba(245,200,66,.12);
+
+  /* ── Text — dark ── */
+  --acq-text-body: #E7EBEF;
+  --acq-text-heading: #FFFFFF;
+  --acq-text-secondary: #C3C9D2;
+  --acq-text-muted: #8F94A3;
+  --acq-text-faint: #6B7280;
+  --acq-text-brand: #4FC3CB;
+  --acq-text-gold: #F5C842;
+  --acq-text-streak: #FDBA74;
+
+  /* ── Borders — dark ── */
+  --acq-border-subtle: #252B37;
+  --acq-border-default: #303845;
+  --acq-border-button: rgba(255,255,255,.12);
+
+  /* ── Streak pill — dark ── */
+  --acq-streak-wash: rgba(249,115,22,.12);
+  --acq-streak-border: rgba(249,115,22,.3);
+  --acq-streak-day: rgba(249,115,22,.18);
+
+  /* ── Status — dark ── */
+  --acq-success-wash: rgba(16,185,129,.12);
+  --acq-success-ink: #6EE7B7;
+  --acq-success-border: rgba(16,185,129,.35);
+  --acq-danger-wash: rgba(220,38,38,.10);
+  --acq-danger-border: rgba(220,38,38,.35);
+
+  /* ── Elevation — dark ── */
+  --acq-shadow-sm: 0 1px 4px rgba(0,0,0,.3);
+  --acq-shadow-md: 0 4px 12px rgba(0,0,0,.4);
+  --acq-shadow-lg: 0 8px 24px rgba(0,0,0,.45);
+  --acq-shadow-2xl: 0 24px 56px rgba(0,0,0,.6);
+
+  /* ── Press / hover washes ── */
+  --acq-elevate-1: rgba(255,255,255,.04);
+  --acq-elevate-2: rgba(255,255,255,.09);
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -261,4 +424,46 @@
   .badge-pulse {
     animation: badge-pulse 2s ease-in-out infinite;
   }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MOBILE APP SHELL utilities
+   ══════════════════════════════════════════════════════════════════════════ */
+@layer utilities {
+  /* The global `body { padding-bottom: env(safe-area-inset-bottom) }` would
+     shrink the shell and leave a dead strip under the tab bar. The shell
+     toggles this class on <body> while mounted so the tab bar can own the
+     home-indicator area itself. */
+  body.acq-mobile-shell {
+    padding-bottom: 0;
+    overflow: hidden;
+    overscroll-behavior-y: none;
+  }
+
+  .acq-shell {
+    background: var(--acq-surface-page);
+    color: var(--acq-text-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Status bar / home indicator */
+  .acq-inset-top { padding-top: env(safe-area-inset-top); }
+  .acq-inset-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+  /* Scroll area — scrollbar hidden per the handoff */
+  .acq-scroll {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .acq-scroll::-webkit-scrollbar { display: none; }
+
+  /* Anything numeric that changes */
+  .acq-tnum { font-variant-numeric: tabular-nums; }
+
+  .acq-mono { font-family: var(--acq-font-mono); }
+
+  /* Press feedback — darken, never scale (handoff: "Nothing bounces") */
+  .acq-press { transition: background-color 100ms ease, border-color 150ms ease; }
+  .acq-press:active { background-color: var(--acq-elevate-2); }
 }
