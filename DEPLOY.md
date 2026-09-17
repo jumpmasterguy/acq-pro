@@ -153,18 +153,24 @@ for you. Nothing else below works until it's run — it blocks `xcodebuild`,
 sudo xcodebuild -license accept
 ```
 
-**2. Android toolchain** (not needed for iOS):
+**2. Android toolchain** (not needed for iOS). This is the combination that
+actually works — `brew install --cask temurin` needs an admin password, and
+plain `brew install openjdk` gives you JDK 26, which Gradle 8.14 rejects:
 
 ```bash
-brew install --cask temurin
+brew install openjdk@21
 brew install --cask android-commandlinetools
-export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
-sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
-sdkmanager --licenses   # review and accept Google's SDK licences
+
+export JAVA_HOME=/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home
+export ANDROID_HOME=/opt/homebrew/share/android-commandlinetools
+export ANDROID_SDK_ROOT=$ANDROID_HOME
+export PATH="$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:$PATH"
+
+sdkmanager --sdk_root="$ANDROID_HOME" --licenses          # accept Google's SDK licences
+sdkmanager --sdk_root="$ANDROID_HOME" "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 ```
 
-Add `ANDROID_HOME` (and `$ANDROID_HOME/platform-tools` on `PATH`) to your
-shell profile so it survives new terminals.
+Put those four exports in your shell profile so they survive new terminals.
 
 ### Every build
 
@@ -180,6 +186,33 @@ npx cap open ios       # opens Xcode    — run on a simulator or device
 npx cap open android   # opens Android Studio
 ```
 
+Or straight from the command line:
+
+```bash
+# iOS simulator
+cd ios/App && xcodebuild -workspace App.xcworkspace -scheme App \
+  -configuration Debug -sdk iphonesimulator \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
+
+# Android debug APK → android/app/build/outputs/apk/debug/app-debug.apk
+cd android && ./gradlew assembleDebug
+```
+
+### Testing a native build against a local server
+
+`server.url` points the native shells at Railway, so a native build always
+shows the *deployed* site — bundled assets are never used, and `API_BASE` is
+empty so relative `/api` calls only resolve against that origin. To test
+local changes on a device, temporarily point it at your machine:
+
+```ts
+server: { url: 'http://localhost:5050/app', cleartext: true },
+ios: { limitsNavigationsToAppBoundDomains: false, ... }
+```
+
+and run the server with `LOCAL_HTTP=1` so the CSP doesn't force every asset
+to https. Revert all three before committing.
+
 ### Notes
 
 - Keep `@capacitor/cli`, `core`, `ios` and `android` on the same major
@@ -193,3 +226,8 @@ npx cap open android   # opens Android Studio
 - Google OAuth does not complete inside an embedded webview
   (`disallowed_useragent`). "Continue with Google" needs a native
   social-login plugin or a system-browser handoff before it works on device.
+- `ios.contentInset` must stay `'never'`. On `'automatic'` WKWebView adds its
+  own safe-area inset on top of the CSS `env()` ones, which leaves a blank
+  strip under the status bar and an uncovered home-indicator area.
+- Because `server.url` is the site root, the native app opens the marketing
+  landing page, not the academy at `/app`. Worth deciding deliberately.
