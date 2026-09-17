@@ -183,3 +183,58 @@ export function getTrackStats(id: CareerTrackId): { lessonCount: number; totalMi
   const totalMinutes = matches.reduce((sum, { lesson }) => sum + parseDuration(lesson.duration), 0);
   return { lessonCount: matches.length, totalMinutes };
 }
+
+// ── Active track persistence ─────────────────────────────────────────────────
+// The track lives in localStorage, so it's per-device: it does not follow the
+// user between their phone and the web app, or survive a reinstall. Moving it
+// into the server-side profile is a schema change and is tracked separately.
+
+export const ACTIVE_CAREER_KEY = 'acq_active_career';
+export const DEFAULT_CAREER_TRACK: CareerTrackId = 'contractor_pm';
+
+export function getActiveTrack(): CareerTrackId {
+  try {
+    const stored = localStorage.getItem(ACTIVE_CAREER_KEY) as CareerTrackId | null;
+    if (stored && CAREER_TRACK_DATA.some(t => t.id === stored)) return stored;
+  } catch {}
+  return DEFAULT_CAREER_TRACK;
+}
+
+export function setActiveTrack(id: CareerTrackId): void {
+  try { localStorage.setItem(ACTIVE_CAREER_KEY, id); } catch {}
+}
+
+/**
+ * Turn the three onboarding answers into a career track.
+ *
+ * Onboarding asks about role, experience and goal; the rest of the app
+ * organises lessons by track. Nothing connected the two, so finishing
+ * onboarding used to leave the track at its default — "Build My Path" built
+ * no path. This is that missing mapping.
+ *
+ * Goal wins for the two specialist tracks, because someone who says their
+ * primary goal is source selection or winning work has told us more than
+ * their job title does. Otherwise role decides which side of the table the
+ * program-management track should be written from. Experience isn't used: it
+ * tunes lesson depth, not which lessons are core.
+ */
+export function deriveTrackFromOnboarding(answers: {
+  role: string | null;
+  goal: string | null;
+}): CareerTrackId {
+  const { role, goal } = answers;
+
+  if (goal === 'bd_capture') return 'capture_bd';
+  if (goal === 'contracts_finance') {
+    return role === 'dod_employee' ? 'contracting_officer' : 'contractor_pm';
+  }
+
+  // program_management | full_picture | unanswered — pick the PM track that
+  // matches which side of the contract they sit on.
+  if (role === 'dod_employee') return 'usg_pm';
+  if (role === 'dod_contractor') return 'contractor_pm';
+
+  // career_changer / student have no side yet. Contractor PM is the broadest
+  // entry point and is already the app's default.
+  return DEFAULT_CAREER_TRACK;
+}

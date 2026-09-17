@@ -250,6 +250,17 @@
   --acq-elevate-1: rgba(0,0,0,.03);
   --acq-elevate-2: rgba(0,0,0,.06);
 
+  /* ── Option card (onboarding, account path picker) — light ── */
+  --acq-option-text: var(--acq-text-heading);
+  --acq-option-border: #D9CBB3;
+  --acq-option-border-selected: #01696F;
+  --acq-option-bg-selected: rgba(1,105,111,.05);
+  --acq-option-label-selected: #01696F;
+  --acq-option-icon-bg: #F4EDE0;
+  --acq-option-icon-fg: #6E6659;
+  --acq-option-icon-bg-selected: #01696F;
+  --acq-option-icon-fg-selected: #FFFFFF;
+
   /* ── Type ── */
   --acq-font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
 }
@@ -296,6 +307,17 @@
   --acq-shadow-md: 0 4px 12px rgba(0,0,0,.4);
   --acq-shadow-lg: 0 8px 24px rgba(0,0,0,.45);
   --acq-shadow-2xl: 0 24px 56px rgba(0,0,0,.6);
+
+  /* ── Option card — dark ── */
+  --acq-option-text: #F3EFE6;
+  --acq-option-border: rgba(255,255,255,.14);
+  --acq-option-border-selected: #4FC3CB;
+  --acq-option-bg-selected: rgba(79,195,203,.12);
+  --acq-option-label-selected: #4FC3CB;
+  --acq-option-icon-bg: #262D3A;
+  --acq-option-icon-fg: #C9C3B6;
+  --acq-option-icon-bg-selected: #4FC3CB;
+  --acq-option-icon-fg-selected: #0E121B;
 
   /* ── Press / hover washes ── */
   --acq-elevate-1: rgba(255,255,255,.04);
@@ -466,4 +488,66 @@
   /* Press feedback — darken, never scale (handoff: "Nothing bounces") */
   .acq-press { transition: background-color 100ms ease, border-color 150ms ease; }
   .acq-press:active { background-color: var(--acq-elevate-2); }
+}
+
+/* ── Auth screen, mobile ────────────────────────────────────────────────────
+   The form's react-hook-form wiring is shared with desktop, so rather than
+   duplicating twenty fields to restyle them, the mobile sizing and token
+   colors are scoped to the wrapper. Inputs are 44px and buttons 48px per the
+   handoff's hit-target floor; 16px input text keeps iOS from zooming on
+   focus. */
+.acq-auth {
+  background: var(--acq-surface-page);
+  color: var(--acq-text-body);
+}
+.acq-auth label {
+  color: var(--acq-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+}
+.acq-auth input {
+  min-height: 44px;
+  border-radius: 8px;
+  font-size: 16px;
+  background: var(--acq-surface-card);
+  border-color: var(--acq-border-default);
+  color: var(--acq-text-body);
+}
+.acq-auth input::placeholder { color: var(--acq-text-faint); }
+.acq-auth h2 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--acq-text-heading);
+}
+.acq-auth form > div > p,
+.acq-auth p { color: var(--acq-text-muted); }
+/* The two block CTAs (submit + Google) */
+.acq-auth button[type="submit"],
+.acq-auth button[data-testid^="btn-google"] {
+  min-height: 48px;
+  border-radius: 10px;
+  font-size: 15px;
+}
+.acq-auth button[type="submit"] {
+  background: var(--acq-teal);
+  color: #fff;
+}
+.acq-auth button[type="submit"]:active { background: var(--acq-teal-dark); }
+.acq-auth button[data-testid^="btn-google"] {
+  background: var(--acq-surface-card);
+  border-color: var(--acq-border-default);
+  color: var(--acq-text-body);
+  font-weight: 500;
+}
+/* Eye toggle — 40x40 tap target pinned to the field's right edge */
+.acq-auth button[data-testid="toggle-password"],
+.acq-auth .relative > button[type="button"]:not([data-testid]) {
+  width: 40px;
+  height: 40px;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--acq-text-muted);
 }

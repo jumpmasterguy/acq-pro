@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, API_BASE } from "@/lib/queryClient";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { isNativeApp } from "@/lib/platform";
 
 // Official Google "G" SVG icon
 function GoogleIcon() {
@@ -107,6 +109,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const isMobile = useIsMobile();
   const { toast } = useToast();
 
   // Google OAuth: redirect to server-side OAuth flow (full page redirect)
@@ -171,8 +174,18 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
     }
   };
 
+  // Native has no marketing site to return to, and capacitor.config.ts sets
+  // limitsNavigationsToAppBoundDomains, so the homepage link would strand the
+  // user rather than navigate. The handoff's auth screen has no Back button.
+  const showBack = !!onBack && !isNativeApp();
+
   return (
-    <div className="min-h-screen bg-background flex flex-col lg:flex-row safe-top">
+    <div
+      className={cn(
+        "min-h-screen flex flex-col lg:flex-row safe-top",
+        isMobile ? "acq-auth acq-shell" : "bg-background",
+      )}
+    >
       {/* Left panel — branding. Deliberately dark regardless of the app's
           light/dark toggle (a "deep field" brand treatment, not the sidebar
           theme) — see claude/auth-page-logo-back-link-2026-09.md for why. */}
@@ -260,9 +273,14 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
       </div>
 
       {/* Right panel — auth form */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
+      <div
+        className={cn(
+          "flex-1 flex flex-col items-center justify-center",
+          isMobile ? "px-5 pb-8" : "px-6 py-12",
+        )}
+      >
         {/* Back button */}
-        {onBack && (
+        {showBack && (
           <div className="w-full max-w-md mb-2">
             <button
               onClick={onBack}
@@ -274,9 +292,9 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
           </div>
         )}
 
-        {/* Mobile logo */}
-        <div className="mb-8 lg:hidden">
-          {onBack ? (
+        {/* Mobile logo — centered, 28px of air above and below */}
+        <div className={cn("lg:hidden", isMobile ? "py-7" : "mb-8")}>
+          {showBack ? (
             <button
               type="button"
               onClick={onBack}
@@ -299,15 +317,25 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
             </div>
           )}
           {/* Tab switcher */}
-          <div className="flex gap-1 p-1 bg-muted rounded-lg mb-8">
+          <div
+            className={cn(
+              "flex gap-1 rounded-lg mb-8",
+              isMobile ? "gap-1 rounded-[10px] p-1 mb-7" : "p-1 bg-muted",
+            )}
+            style={isMobile ? { background: "var(--acq-surface-sunken)" } : undefined}
+          >
             <button
               onClick={() => setTab("register")}
               className={cn(
-                "flex-1 py-2 rounded-md text-sm font-medium transition-all",
-                tab === "register"
+                "flex-1 text-sm font-medium transition-all",
+                isMobile ? "min-h-[44px] rounded-[7px] p-2.5" : "py-2 rounded-md",
+                !isMobile && (tab === "register"
                   ? "bg-background shadow-sm text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground"),
               )}
+              style={isMobile ? (tab === "register"
+                ? { background: "var(--acq-surface-card)", color: "var(--acq-text-heading)", boxShadow: "var(--acq-shadow-sm)" }
+                : { color: "var(--acq-text-muted)" }) : undefined}
               data-testid="tab-register"
             >
               Create Account
@@ -315,11 +343,15 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
             <button
               onClick={() => setTab("login")}
               className={cn(
-                "flex-1 py-2 rounded-md text-sm font-medium transition-all",
-                tab === "login"
+                "flex-1 text-sm font-medium transition-all",
+                isMobile ? "min-h-[44px] rounded-[7px] p-2.5" : "py-2 rounded-md",
+                !isMobile && (tab === "login"
                   ? "bg-background shadow-sm text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground"),
               )}
+              style={isMobile ? (tab === "login"
+                ? { background: "var(--acq-surface-card)", color: "var(--acq-text-heading)", boxShadow: "var(--acq-shadow-sm)" }
+                : { color: "var(--acq-text-muted)" }) : undefined}
               data-testid="tab-login"
             >
               Sign In
@@ -465,11 +497,13 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
                 Continue with Google
               </Button>
 
+              {/* These were inert <span>s — underlined, cursor-pointer, no
+                  destination. App Store review checks that they resolve. */}
               <p className="text-xs text-muted-foreground text-center">
                 By creating an account, you agree to our{" "}
-                <span className="underline cursor-pointer">Terms of Service</span>{" "}
+                <a href="/terms" target="_blank" rel="noopener noreferrer" className="underline">Terms of Service</a>{" "}
                 and{" "}
-                <span className="underline cursor-pointer">Privacy Policy</span>.
+                <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline">Privacy Policy</a>.
               </p>
             </form>
           )}

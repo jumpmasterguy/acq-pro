@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { apiRequest } from "@/lib/queryClient";
 import type { UserProfile } from "@/pages/AuthPage";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { OptionCard as MobileOptionCard } from "@/components/mobile/OptionCard";
+import { deriveTrackFromOnboarding, setActiveTrack } from "@/lib/careerTracks";
 
 interface OnboardingFlowProps {
   username: string;
@@ -167,6 +170,21 @@ export default function OnboardingFlow({ username, onComplete }: OnboardingFlowP
 
   const currentStep = steps[step];
   const isLastStep = step === steps.length - 1;
+  const isMobile = useIsMobile();
+
+  // Skipping still picks a track — from whatever was answered before the
+  // skip, falling back to the defaults below.
+  const handleSkip = () => {
+    const profile: UserProfile = {
+      role: role ?? 'student',
+      experience: experience ?? 'new',
+      goal: goal ?? 'full_picture',
+      completedOnboarding: true,
+    };
+    setActiveTrack(deriveTrackFromOnboarding({ role: profile.role, goal: profile.goal }));
+    apiRequest("POST", "/api/profile", profile).catch(() => {});
+    onComplete(profile);
+  };
 
   const handleNext = async () => {
     if (!currentStep.canAdvance) return;
@@ -178,6 +196,9 @@ export default function OnboardingFlow({ username, onComplete }: OnboardingFlowP
     // Final step — save profile
     if (!role || !experience || !goal) return;
     setSaving(true);
+    // "Build My Path" has to actually build one: the rest of the app organises
+    // lessons by career track, which onboarding never used to set.
+    setActiveTrack(deriveTrackFromOnboarding({ role, goal }));
     try {
       const profile: UserProfile = { role, experience, goal, completedOnboarding: true };
       await apiRequest("POST", "/api/profile", profile);
@@ -190,6 +211,107 @@ export default function OnboardingFlow({ username, onComplete }: OnboardingFlowP
       setSaving(false);
     }
   };
+
+  // ── Mobile layout ─────────────────────────────────────────────────────────
+  // No shell — onboarding owns the whole screen, like auth.
+  if (isMobile) {
+    return (
+      <div
+        className="acq-shell acq-scroll acq-inset-top min-h-[100dvh] overflow-y-auto px-5 pb-8"
+        data-testid="onboarding-mobile"
+      >
+        <div className="pb-6 pt-5">
+          <AcqlerateLogo iconSize={32} />
+        </div>
+
+        {/* Progress pills — current step is wider, everything up to it fills */}
+        <div className="mb-6 flex items-center gap-2">
+          {steps.map((_, i) => (
+            <div
+              key={i}
+              className="h-1.5 rounded-full"
+              style={{
+                width: i === step ? 44 : 30,
+                background: i <= step ? 'var(--acq-teal)' : 'var(--acq-surface-muted)',
+                transition: 'width .3s ease, background .3s ease',
+              }}
+            />
+          ))}
+          <span className="ml-2 text-xs" style={{ color: 'var(--acq-text-muted)' }}>
+            {step + 1} of {steps.length}
+          </span>
+        </div>
+
+        <h1
+          className="text-xl font-bold tracking-[-0.02em]"
+          style={{ color: 'var(--acq-text-heading)', textWrap: 'pretty' } as any}
+        >
+          {currentStep.title}
+        </h1>
+        <p className="mb-5 mt-1 text-sm" style={{ color: 'var(--acq-text-muted)' }}>
+          {currentStep.subtitle}
+        </p>
+
+        <div className="flex flex-col gap-2.5">
+          {(currentStep.options as typeof ROLE_OPTIONS).map((option) => (
+            <MobileOptionCard
+              key={option.id}
+              icon={option.icon}
+              label={option.label}
+              description={option.desc}
+              selected={currentStep.value === option.id}
+              onSelect={() => (currentStep.onSelect as any)(option.id)}
+              data-testid={`onboarding-option-${option.id}`}
+            />
+          ))}
+        </div>
+
+        <div className="mt-6 flex items-center justify-between">
+          {step > 0 ? (
+            <button
+              type="button"
+              onClick={() => setStep(s => s - 1)}
+              className="flex min-h-[44px] items-center text-sm"
+              style={{ color: 'var(--acq-text-muted)' }}
+            >
+              ← Back
+            </button>
+          ) : (
+            <div />
+          )}
+          <button
+            type="button"
+            onClick={handleNext}
+            disabled={!currentStep.canAdvance || saving}
+            className="flex h-11 min-w-[140px] items-center justify-center gap-1.5 rounded-[10px] text-[15px] font-semibold disabled:opacity-50"
+            style={{ background: 'var(--acq-teal)', color: '#FFFFFF' }}
+            data-testid="onboarding-continue"
+          >
+            {saving ? (
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+            ) : (
+              <>
+                {isLastStep ? 'Build My Path' : 'Continue'}
+                {!isLastStep && <ChevronRight className="h-4 w-4" />}
+              </>
+            )}
+          </button>
+        </div>
+
+        <p className="mt-5 text-center text-xs">
+          <button
+            type="button"
+            onClick={handleSkip}
+            className="underline"
+            style={{ color: 'var(--acq-text-muted)' }}
+            data-testid="onboarding-skip"
+          >
+            Skip for now — show everything
+          </button>
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-12">
@@ -265,16 +387,7 @@ export default function OnboardingFlow({ username, onComplete }: OnboardingFlowP
         {/* Skip */}
         <p className="text-xs text-muted-foreground text-center mt-4">
           <button
-            onClick={() => {
-              const profile: UserProfile = {
-                role: role ?? 'student',
-                experience: experience ?? 'new',
-                goal: goal ?? 'full_picture',
-                completedOnboarding: true,
-              };
-              apiRequest("POST", "/api/profile", profile).catch(() => {});
-              onComplete(profile);
-            }}
+            onClick={handleSkip}
             className="underline hover:text-foreground transition-colors"
           >
             Skip for now — show everything
