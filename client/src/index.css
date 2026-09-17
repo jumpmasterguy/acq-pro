@@ -588,3 +588,27 @@
 
 
 
+
+/* ── Full-screen mobile pages (auth, onboarding) ────────────────────────────
+   These render without the app shell, so nothing opaque sits behind the iOS
+   status bar. Padding the scroll container isn't enough: on iOS the content
+   scrolls up underneath the status bar and collides with the clock. The page
+   is pinned to the viewport and a fixed scrim in the page color fills the
+   inset, so scrolled content passes behind a solid strip instead. */
+.acq-fullscreen {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  background: var(--acq-surface-page);
+}
+.acq-fullscreen::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top);
+  background: var(--acq-surface-page);
+  z-index: 50;
+  pointer-events: none;
+}

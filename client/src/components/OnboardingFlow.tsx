@@ -217,7 +217,7 @@ export default function OnboardingFlow({ username, onComplete }: OnboardingFlowP
   if (isMobile) {
     return (
       <div
-        className="acq-shell acq-scroll acq-inset-top min-h-[100dvh] overflow-y-auto px-5 pb-8"
+        className="acq-shell acq-fullscreen acq-scroll acq-inset-top px-5 pb-8"
         data-testid="onboarding-mobile"
       >
         <div className="pb-6 pt-5">

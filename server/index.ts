@@ -60,7 +60,15 @@ app.use(
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
         // Allow onclick= and other inline event handlers on static HTML pages
         scriptSrcAttr: ["'unsafe-inline'"],
-        upgradeInsecureRequests: [],
+        // Rewrites every http:// subresource to https://. That's correct on
+        // Railway, which is always TLS, but it makes the app unloadable when
+        // it's served over plain http — Chrome exempts localhost, WKWebView
+        // does not, so a Capacitor build pointed at a local server renders a
+        // blank page with SSL errors. LOCAL_HTTP=1 is for exactly that case
+        // and must never be set in a deployed environment.
+        // `null` (not omission) is how helmet disables one of its default
+        // directives — leaving it out just lets the default re-add it.
+        upgradeInsecureRequests: process.env.LOCAL_HTTP === "1" ? null : [],
       },
     },
     // HSTS — tell browsers to always use HTTPS for 1 year

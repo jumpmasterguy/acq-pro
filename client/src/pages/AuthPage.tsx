@@ -185,7 +185,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
     <div
       className={cn(
         "min-h-screen flex flex-col lg:flex-row safe-top",
-        isMobile ? "acq-auth acq-shell" : "bg-background",
+        isMobile ? "acq-auth acq-shell acq-fullscreen acq-inset-top" : "bg-background",
       )}
     >
       {/* Left panel — branding. Deliberately dark regardless of the app's
