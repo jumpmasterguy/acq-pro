@@ -134,3 +134,62 @@ Use Stripe test mode keys first:
 - `sk_test_...` instead of `sk_live_...`
 - Test card: `4242 4242 4242 4242`, any future date, any CVC
 - Switch to live keys when ready to charge real customers
+
+---
+
+## Native builds (iOS + Android via Capacitor)
+
+The web app is wrapped by Capacitor. `capacitor.config.ts` points the native
+shells at the Railway backend, so a native build serves the deployed web app
+rather than a bundled copy — but the web assets still have to be copied in.
+
+### One-time setup on a new Mac
+
+**1. Accept the Xcode licence.** This needs your password and cannot be done
+for you. Nothing else below works until it's run — it blocks `xcodebuild`,
+`simctl`, CocoaPods *and* Homebrew:
+
+```bash
+sudo xcodebuild -license accept
+```
+
+**2. Android toolchain** (not needed for iOS):
+
+```bash
+brew install --cask temurin
+brew install --cask android-commandlinetools
+export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
+sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+sdkmanager --licenses   # review and accept Google's SDK licences
+```
+
+Add `ANDROID_HOME` (and `$ANDROID_HOME/platform-tools` on `PATH`) to your
+shell profile so it survives new terminals.
+
+### Every build
+
+```bash
+npm run build && npx cap sync
+```
+
+`sync` copies `dist/public` into both platforms and installs native
+dependencies. Then:
+
+```bash
+npx cap open ios       # opens Xcode    — run on a simulator or device
+npx cap open android   # opens Android Studio
+```
+
+### Notes
+
+- Keep `@capacitor/cli`, `core`, `ios` and `android` on the same major
+  version. They drifted once (CLI on 7, everything else on 8), which makes
+  `cap sync` unsupported.
+- **No prices or purchase actions may appear in a native build** (App Store
+  guideline 3.1.1). This is enforced by `isNativeApp()` in
+  `client/src/lib/platform.ts`; the native Pro access screen explains
+  upgrading on acqlerate.com instead. Re-check this after any change to
+  `UpgradePage.tsx`.
+- Google OAuth does not complete inside an embedded webview
+  (`disallowed_useragent`). "Continue with Google" needs a native
+  social-login plugin or a system-browser handoff before it works on device.
