@@ -6,7 +6,7 @@
  *
  * Keyed by the `color` field on each module in curriculum.ts.
  */
-export type ModuleColorKey = 'navy' | 'gold' | 'blue' | 'teal' | 'amber' | 'slate' | 'emerald' | 'rose' | 'indigo';
+export type ModuleColorKey = 'navy' | 'gold' | 'blue' | 'teal' | 'amber' | 'slate' | 'emerald' | 'rose' | 'indigo' | 'sky';
 
 export interface ModuleTheme {
   /** Solid hex — used for lesson-number circles, bars, and inline styles. */
@@ -117,6 +117,16 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
     bgTint: 'bg-indigo-500/10',
     borderTint: 'border-indigo-500/30',
     progressBar: '[&>div]:bg-indigo-500',
+  },
+  sky: {
+    hex: '#0284c7',
+    headerGrad: 'from-sky-500 to-sky-700 dark:from-sky-800 dark:to-sky-950 border-sky-600/50',
+    border: 'border-sky-200 dark:border-sky-800/40',
+    hoverBorder: 'hover:border-sky-400/60',
+    text: 'text-sky-600 dark:text-sky-400',
+    bgTint: 'bg-sky-500/10',
+    borderTint: 'border-sky-500/30',
+    progressBar: '[&>div]:bg-sky-500',
   },
 };
 

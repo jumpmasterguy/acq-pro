@@ -42,6 +42,7 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
       'contracts-2', 'contracts-3', 'contracts-6',
       'data-1', 'data-2', 'data-3', 'data-4',
       'ops-1', 'ops-2', 'ops-5',
+      'preaward-1', 'preaward-2', 'preaward-3', 'preaward-4', 'preaward-5', 'preaward-6', 'preaward-7', 'preaward-8', 'preaward-9', 'preaward-10',
     ],
     bonusLessons: [
       'finance-6', 'finance-8', 'finance-9', 'finance-10', 'business-1', 'business-2', 'business-3', 'business-4', 'business-5', 'business-6', 'business-7', 'business-8', 'business-9', 'business-10', 'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10',
@@ -66,7 +67,7 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
       'contracts-3', 'contracts-6', 'contracts-7', 'contracts-5',
       'contracts-10', 'contracts-11', 'contracts-12',
       // Finance — wrap rates, burn rate, CPAF, DCAA, revenue recognition
-      'finance-2', 'finance-5', 'finance-6', 'finance-7', 'finance-8', 'finance-9', 'finance-10', 'business-1', 'business-2', 'business-3', 'business-4', 'business-5', 'business-6', 'business-7', 'business-8', 'business-9', 'business-10', 'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10',
+      'finance-2', 'finance-5', 'finance-6', 'finance-7', 'finance-8', 'finance-9', 'finance-10', 'business-1', 'business-2', 'business-3', 'business-4', 'business-5', 'business-6', 'business-7', 'business-8', 'business-9', 'business-10', 'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10', 'preaward-1', 'preaward-2', 'preaward-3', 'preaward-4', 'preaward-5', 'preaward-6', 'preaward-7', 'preaward-8', 'preaward-9', 'preaward-10',
       // Data — metrics, EVM, IPMR
       'data-1', 'data-3', 'data-4',
       // Ops — risk, comms, subs, PM mistakes
@@ -97,7 +98,7 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
       'contracts-1', 'contracts-2', 'contracts-3', 'contracts-6',
       'contracts-4', 'contracts-8', 'contracts-7', 'contracts-5', 'contracts-9',
       'finance-4', 'finance-3',
-      'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10',
+      'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10', 'preaward-1', 'preaward-2', 'preaward-3', 'preaward-4', 'preaward-5', 'preaward-6', 'preaward-7', 'preaward-8', 'preaward-9', 'preaward-10',
     ],
     bonusLessons: [
       'finance-1', 'finance-2', 'finance-5', 'finance-6', 'finance-7', 'finance-8', 'finance-9', 'finance-10', 'business-1', 'business-2', 'business-3', 'business-4', 'business-5', 'business-6', 'business-7', 'business-8', 'business-9', 'business-10',
@@ -119,7 +120,7 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
       'contracts-8', 'contracts-1', 'contracts-4', 'contracts-7', 'contracts-5', 'contracts-9', 'contracts-2',
       'capture-1', 'capture-3', 'capture-2', 'capture-4', 'capture-5',
       'ops-2',
-      'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10',
+      'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10', 'preaward-1', 'preaward-2', 'preaward-3', 'preaward-4', 'preaward-5', 'preaward-6', 'preaward-7', 'preaward-8', 'preaward-9', 'preaward-10',
     ],
     bonusLessons: [
       'foundations-6', 'foundations-9', 'foundations-2', 'foundations-7',
