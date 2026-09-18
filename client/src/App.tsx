@@ -570,8 +570,18 @@ function AppContent() {
     clearSavedView();
     setAuthState({ status: 'unauthenticated' });
     setIdleSignOutNotice(false);
-    // Send them to the real marketing homepage (a separate static page at
-    // "/" — see server/static.ts), not an in-app view.
+    // On the web, send them to the real marketing homepage (a separate static
+    // page at "/" — see server/static.ts), not an in-app view.
+    //
+    // In the native shell there is nowhere else to go: the marketing page is
+    // not part of the app, it has no way back, and its sticky header has no
+    // safe-area padding, so it renders under the status bar. Signing out there
+    // stranded the user on a broken-looking page. Stay on the sign-in screen
+    // instead, which is what the app launches on anyway.
+    if (isNativeApp()) {
+      setView({ type: 'auth' });
+      return;
+    }
     window.location.href = 'https://acqlerate.com/';
   }, []);
 
@@ -641,11 +651,19 @@ function AppContent() {
       <AuthPage
         onAuthenticated={handleAuthenticated}
         darkMode={darkMode}
-        // Send them to the real marketing site, not the in-app `landing` view
-        // — that view is an old, out-of-sync copy of the homepage (stale
-        // headline/stats vs. the live acqlerate.com), so routing back into it
-        // from the sign-in page showed visitors an outdated page.
-        onBack={view.type === 'auth' ? () => { window.location.href = 'https://acqlerate.com/'; } : undefined}
+        // On the web, send them to the real marketing site, not the in-app
+        // `landing` view — that view is an old, out-of-sync copy of the
+        // homepage (stale headline/stats vs. the live acqlerate.com), so
+        // routing back into it from the sign-in page showed visitors an
+        // outdated page.
+        //
+        // Undefined in the native shell, which also makes the logo
+        // non-clickable (AuthPage renders it as a plain mark when there is no
+        // onBack, and its own showBack already checks isNativeApp). Tapping it
+        // in the app loaded the marketing homepage inside the webview: no way
+        // back, and its sticky header sits under the status bar because that
+        // page was never built to run full-screen.
+        onBack={view.type === 'auth' && !isNativeApp() ? () => { window.location.href = 'https://acqlerate.com/'; } : undefined}
         notice={idleSignOutNotice ? "You were signed out after 30 minutes of inactivity. Log back in to continue." : undefined}
       />
     );
