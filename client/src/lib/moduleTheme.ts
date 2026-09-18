@@ -143,6 +143,9 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
     bgTint: 'bg-emerald-500/10',
     borderTint: 'border-emerald-500/30',
     progressBar: '[&>div]:bg-emerald-500',
+    mobileHex: '#10b981',
+    gradientFrom: '#10b981',
+    gradientTo: '#047857',
   },
   rose: {
     hex: '#e11d48',
@@ -153,6 +156,9 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
     bgTint: 'bg-rose-500/10',
     borderTint: 'border-rose-500/30',
     progressBar: '[&>div]:bg-rose-500',
+    mobileHex: '#f43f5e',
+    gradientFrom: '#f43f5e',
+    gradientTo: '#be123c',
   },
   indigo: {
     hex: '#4f46e5',
@@ -163,6 +169,9 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
     bgTint: 'bg-indigo-500/10',
     borderTint: 'border-indigo-500/30',
     progressBar: '[&>div]:bg-indigo-500',
+    mobileHex: '#818cf8',
+    gradientFrom: '#818cf8',
+    gradientTo: '#4f46e5',
   },
   sky: {
     hex: '#0284c7',
@@ -173,6 +182,9 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
     bgTint: 'bg-sky-500/10',
     borderTint: 'border-sky-500/30',
     progressBar: '[&>div]:bg-sky-500',
+    mobileHex: '#0ea5e9',
+    gradientFrom: '#0ea5e9',
+    gradientTo: '#0369a1',
   },
   fuchsia: {
     hex: '#c026d3',
@@ -183,6 +195,9 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
     bgTint: 'bg-fuchsia-500/10',
     borderTint: 'border-fuchsia-500/30',
     progressBar: '[&>div]:bg-fuchsia-500',
+    mobileHex: '#d946ef',
+    gradientFrom: '#d946ef',
+    gradientTo: '#a21caf',
   },
   orange: {
     hex: '#ea580c',
@@ -193,6 +208,9 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
     bgTint: 'bg-orange-500/10',
     borderTint: 'border-orange-500/30',
     progressBar: '[&>div]:bg-orange-500',
+    mobileHex: '#fb923c',
+    gradientFrom: '#fb923c',
+    gradientTo: '#ea580c',
   },
   lime: {
     hex: '#65a30d',
@@ -203,6 +221,9 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
     bgTint: 'bg-lime-500/10',
     borderTint: 'border-lime-500/30',
     progressBar: '[&>div]:bg-lime-500',
+    mobileHex: '#84cc16',
+    gradientFrom: '#84cc16',
+    gradientTo: '#4d7c0f',
   },
   stone: {
     hex: '#78716c',
@@ -213,6 +234,9 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
     bgTint: 'bg-stone-500/10',
     borderTint: 'border-stone-500/30',
     progressBar: '[&>div]:bg-stone-500',
+    mobileHex: '#78716c',
+    gradientFrom: '#78716c',
+    gradientTo: '#44403c',
   },
 };
 
