@@ -16044,7 +16044,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Revenue, Billing, and Cash Are Three Different Words",
             body: 'Revenue, billing, and cash are three different things. You can recognize revenue on work you have not invoiced yet. You can invoice for work you recognized last month. You can wait 45 days for the cash. PMs who mix these up tell leadership "we billed $2M" when the question was "what did we book?" Keep the three words separate and you will already sound sharper than most of the room.',
           },
           {
@@ -16414,7 +16414,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "One Idea, Three Rulebooks",
             body: 'There is nothing wrong with subcontracting. Every large program does it. The problem is a prime whose only real function is holding the contract. The government does not want to pay a markup for that, the accounting rules will not let the company book revenue for it, and a buyer will not pay for it when the company is sold. Three different rulebooks, one underlying idea: you get paid for the work you actually do.',
           },
           {
@@ -16631,7 +16631,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: 'When a company announces "record backlog," check two things before being impressed. How much of it is funded, and when do the biggest contracts recompete? A $500M backlog that is 30% funded and has its two largest contracts up for recompete next year is a lot less than $500M. The number is only as good as its quality.',
+            body: "Every GovCon press release eventually announces record backlog, and every one of them is technically true. Backlog is just the pile of work you are allowed to do someday, and \"allowed to\" is carrying a lot of weight in that sentence. Before you are impressed, ask two questions: how much of it is funded, and when do the biggest pieces recompete? A $500M backlog that is 30 percent funded, with its two largest contracts up next spring, is not a $500M backlog. It is a $150M backlog wearing a very nice suit.",
           },
           {
             type: 'list',
@@ -16962,7 +16962,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Why Profit Lives in the Last 10% of Hours",
             body: 'The table above is why services executives obsess over utilization and why "we have a few people on the bench" is never a small problem. The bill rate in this example was deliberately thin, a 1.98 multiplier, which is common on competitive vehicles. On a fatter rate the break-even utilization is lower, but the shape is the same: profit lives in the last 10% of hours.',
           },
           {
@@ -17127,7 +17127,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Your Labor Forecast Is the Denominator",
             body: 'When finance sends the "please update your direct labor forecast" email, it is not bureaucracy. It is the denominator. A PM who forecasts 40 heads and delivers 34 has, on their own, moved the company\'s overhead rate. Give the number you actually believe, not the one in the staffing plan.',
           },
           {
@@ -17278,7 +17278,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Every \"Maybe Not\" Is a Discount",
             body: 'A company is worth what a buyer can keep after the sale. Not what it billed last year. Every contract in backlog gets asked the same question: will this revenue exist in three years under a new owner? Set-asides, key personnel who might leave, a recompete next spring, and a subcontractor who does all the real work each answer "maybe not," and each "maybe not" is a discount.',
           },
           {
@@ -17438,7 +17438,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: 'The most common mistake a small company makes is staying a sub too long because it is easy. The revenue is steady, the prime handles the customer, and nobody has to write a proposal. Then the prime loses the recompete, or replaces you with a cheaper sub, and you discover you have no past performance in your own name, no customer relationships, and no pipeline. Being a sub is a way in. Priming is how you stay.',
+            body: "Being a sub is comfortable in the way a recliner is comfortable. The revenue shows up, the prime handles the customer, and nobody has to write a proposal at eleven at night. Then the prime loses the recompete, or finds someone cheaper, and you discover you spent four years building past performance in somebody else's name. Being a sub is how you get in the door. Priming is how you get to stay in the building.",
           },
           {
             type: 'text',
@@ -17595,7 +17595,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The Habit: Read the Paragraph in the 10-Q",
             body: 'The single most useful habit from this lesson: when a large prime announces a charge on a program, open the 10-Q and read the paragraph. It will describe, in the company\'s own words, exactly the chain of events from the Why Q3 Was Bad lesson: an EAC change, a cumulative catch-up, a segment margin hit. Once you have seen it in a filing, you will never look at your own EAC review the same way.',
           },
           {
@@ -17774,7 +17774,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Certify From the Numbers, Not From the Feeling",
             body: 'Self-certification means nobody checks until someone has a reason to. The reason is usually a competitor who lost and files a size protest, or an auditor years later. At that point the company has to prove it was small on the day it bid, with tax returns and affiliate analysis. Certify from the numbers, not from the feeling, and keep the numbers.',
           },
           {
@@ -17935,7 +17935,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Your Certification Is a Marketing Asset",
             body: 'Contracting officers and small business specialists are graded on these goals every year, and the grades are public. That means a certified HUBZone or SDVOSB firm is not just eligible for work; it is actively useful to the people who award it. The certification is a reason for a CO to call you. Companies that treat certification as paperwork miss that it is a marketing asset.',
           },
           {
@@ -18087,7 +18087,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "When 49% on Paper Becomes 65% in Practice",
             body: 'The 49% large subcontractor is a legal and common structure. The problem is when the 49% is the plan and 65% is the reality, because the large sub had the people and the small prime did not. Compliance is measured at the end of the period on real dollars. A prime that cannot staff its share has to fix that before the period ends, not explain it after.',
           },
           {
@@ -18236,7 +18236,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Who Is Actually Performing This Contract?",
             body: 'The ostensible subcontractor cases almost always involve a large incumbent that lost its contract to a set-aside and found a small partner so it could keep the work. The small firm primes, the large firm keeps its people on the job, and everyone tells themselves the paperwork is fine. A competitor protests, SBA asks who actually runs the program, and the award is unwound. If the true answer to "who is performing this contract" is the sub, the structure does not work.',
           },
           {
@@ -18401,7 +18401,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The 40% Rule Is the One That Fails Last",
             body: 'The 40% is the number everyone remembers, and it is the one that fails last. The JVs that get unwound usually fail earlier: the mentor\'s employee is the project manager, the mentor wrote the proposal and runs the customer relationship, the profit split is 50/50 regardless of work, or the JV agreement was signed after the proposal went in. SBA reads the agreement and then reads the program. If the protégé is not visibly managing, the paper does not save it.',
           },
           {
@@ -18555,7 +18555,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The Prime's Liaison Is Not Doing You a Favor",
             body: 'When a large prime\'s small business liaison calls you, it is not charity. The prime has a plan on file with goals it is being measured against, and it needs qualified small businesses in specific categories to hit them. A certified HUBZone or SDVOSB firm with relevant capability is solving the prime\'s problem. Walk in knowing that, and the conversation is between partners, not between a supplicant and a gatekeeper.',
           },
           {
@@ -18723,7 +18723,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The Cheapest High-Return Meeting in Contracting",
             body: 'The small business specialist at a buying activity sees every acquisition above the simplified threshold before it is released and gets asked, on each one, whether there are small businesses who can do it. If they know you, you are the answer to that question. If they do not, you are not. The cheapest, highest-return action in small business contracting is a 30-minute meeting with the small business specialist at each activity you want to work with, with a capability statement they will keep.',
           },
           {
@@ -18867,7 +18867,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: 'The most common failure is not lack of warning. It is that the company kept taking set-aside work because it was easier, right up to the crossover date, and arrived on the other side with a backlog of contracts it cannot recompete and no experience competing without a preference. The cure is uncomfortable: start losing full-and-open competitions while you are still small, because that is how you learn to win them.',
+            body: "Nobody graduates out of small business status by surprise. The date is in a spreadsheet and everyone can see it coming for years. The failure is that set-aside work is easy and full-and-open is hard, so companies keep taking the easy thing right up to the last day, and then get thrown in the deep end having never learned to swim. The cure is genuinely unpleasant: go lose some full-and-open competitions while you are still small and can afford to. Losing is tuition. Pay it early, while it is cheap.",
           },
           {
             type: 'list',
@@ -19024,7 +19024,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: 'The tell in almost every status fraud case is that the eligible owner cannot describe the business. Not the finances, not the contracts, not the staff. Investigators interview the owner first. An SDVOSB owner who cannot name the company\'s three largest contracts has just become the government\'s best witness. If your company\'s eligible owner is a figurehead, that is not a compliance risk; it is the case.',
+            body: "Here is the tell in almost every status fraud case, and it is not subtle. Investigators interview the eligible owner first, and they ask easy questions. What does the company do. Who are your three biggest customers. How many people work here. An SDVOSB owner who has to think about any of those has just become the government's best witness, for free, in the first ten minutes. If the veteran on the paperwork cannot describe the business, that is not a compliance risk you manage. That is the case.",
           },
           {
             type: 'text',
@@ -19177,7 +19177,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk for Government PMs',
+            heading: "A Vague Sources Sought Costs the Program a Year",
             body: 'The set-aside decision is made on market research you probably helped write. If your sources sought was vague, the responses were vague, and the CO could not find two capable small firms, the acquisition goes unrestricted and the PM has just spent a year on a full-and-open competition that a clearer notice might have avoided. Write the sources sought as if you want to find capable small businesses. If they exist, you will, and the acquisition gets faster.',
           },
           {
@@ -19362,7 +19362,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The Certification Has to Exist Before the Pursuit",
             body: 'C3PAO assessments are scheduled months out, and the assessment itself takes weeks of preparation. A company that decides to get certified when it sees the requirement in an RFP has already lost that RFP. The certification has to exist before the pursuit, which means the decision to get it has to be made a year or more ahead of the first contract that requires it.',
           },
           {
@@ -19512,7 +19512,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The Most Common CUI Failure Is Not a Hacker",
             body: 'The most common CUI failure is not a hacker. It is an engineer emailing a drawing to a supplier from a personal account, or a PM putting the test report in a shared drive the whole company can see, or a proposal team pasting CTI into a commercial cloud tool. None of those people meant harm. All of them created a reportable incident. The controls in 800-171 exist to make the easy path the compliant path, and the training exists to make people notice when they are about to leave it.',
           },
           {
@@ -19671,7 +19671,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Ask the U.S. Person Question at the Requisition",
             body: 'The question "is this person a U.S. person" is a legal question, not a personal one. It is asked about the role, not the individual, and it should be answered the same way for everyone. Companies that skip it to avoid an awkward conversation end up in a voluntary disclosure explaining why a visa holder had two years of access to controlled technical data. Ask it at the job requisition stage, for every role that touches controlled information, and document the answer.',
           },
           {
@@ -19836,7 +19836,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "On Clearances, There Is No Free Option",
             body: 'On a cleared program, an uncleared hire is a cost with no revenue for as long as the investigation takes. Companies that hire ahead of clearance carry that cost on overhead, sometimes for months, sometimes to find the person is denied. Companies that hire only already-cleared people pay a premium for them and compete with every other contractor for the same pool. There is no free option. The plan has to include the pipeline, the cost of carrying people through it, and the risk that some do not come out the other side.',
           },
           {
@@ -19990,7 +19990,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "How Companies Hand Over Their Crown Jewels",
             body: 'The most valuable thing a company builds is often a component it developed on its own money and then delivered under a government contract. If the assertions table did not list it, the drawings went out without a restrictive marking, or the development cost was charged to the contract, the company just gave the government unlimited rights to its crown jewel. Nobody stole it. The company handed it over through paperwork it did not read.',
           },
           {
@@ -20151,7 +20151,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Defective Pricing Is Almost Never a Lie",
             body: 'Defective pricing is almost never a lie. It is a quote that came in lower the week before certification and did not make it into the proposal. It is the labor rate that was updated in the accounting system but not in the pricing model. It is the sub\'s revised cost estimate sitting in someone\'s inbox. The government audits years later, compares what you knew to what you showed, and bills you for the difference plus interest. The sweep exists to catch these, and companies that skip it pay for it.',
           },
           {
@@ -20313,7 +20313,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Domestic Preference Fails at the Third Tier",
             body: 'The failure mode is not a company choosing a cheap foreign source on purpose. It is a third-tier supplier who changed mills, a distributor who cannot say where the bar stock was melted, or a COTS assumption that turned out not to apply because the item was modified. The prime certifies compliance for the whole product and finds out about the problem when a DCMA quality assurance representative asks for the mill certifications. Supply chain compliance is documentation, tier by tier, before delivery.',
           },
           {
@@ -20467,7 +20467,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The SCA Finding That Hurts Most Is the Fringe",
             body: 'The SCA finding that hurts most is the one where a company paid its people well above the wage determination but got the fringe wrong: benefits that did not count as bona fide, H&W not paid for employees who waived insurance, or vacation accrual that ignored predecessor service. Back pay is owed to every affected employee for every hour, going back two or three years, and DOL can also withhold contract payments and debar. It is not a rounding error.',
           },
           {
@@ -20626,7 +20626,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: 'The rules are not about intent. A contractor who buys a $45 dinner for a COR who is a friend from a previous life has put that COR in violation. A program manager who mentions to a contractor over lunch that they might be looking for a job next year has triggered a PIA reporting obligation. Nobody meant anything by it. The rules are structured so that the ordinary things people do to be friendly are the things that create problems, which is why both sides need to know them cold.',
+            body: "The ethics rules are not about whether you are a good person. They assume you are, and they will get you anyway. Buy a $45 dinner for a COR who happens to be an old friend, and you just put your friend in violation. Mention over lunch that you might be looking around next year, and the government PM across the table now owes a written disclosure. Nobody meant anything by any of it. That is the entire point: the rules are built around the ordinary friendly things people do, which is exactly why both sides need to know them cold.",
           },
           {
             type: 'text',
@@ -20802,7 +20802,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: 'The annual SAM representations and certifications are the most under-read document in government contracting. Dozens of statements, each a certification, each renewed by clicking through. Size, status, ownership, Section 889, lobbying, FCA compliance, and more. The person who clicks "certify" should read every one, every year, with the current facts in hand, because that click is what a False Claims Act complaint quotes.',
+            body: "The annual SAM representations are the most-clicked, least-read document in government contracting. Dozens of statements about size, ownership, status, Section 889, lobbying, and each one is a certification you are personally making. Most people renew them the way they accept a software license agreement. Read them. Every one, every year, with the actual current facts in front of you, because that click is what gets quoted back at you in a False Claims Act complaint, and \"I did not really read it\" has never once been the winning answer.",
           },
           {
             type: 'text',
@@ -20975,7 +20975,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk for Government PMs',
+            heading: "The Clock Starts When the Package Is Actionable",
             body: 'The contracting office does not start the clock when you decide you need something. It starts when it receives a package it can act on. Every week the package spends going back and forth for corrections is a week added to award. The fastest way to shorten an acquisition is to hand contracting a package that does not come back: a clear requirement, an IGCE that matches it, market research that supports the strategy, and funding that is real. That is entirely within the PM\'s control.',
           },
           {
@@ -21146,7 +21146,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Write the Acquisition Plan in the Same Room",
             body: 'The acquisition plan is where the contracting officer and the program manager either become a team or do not. A PM who writes the technical sections and hands the rest to contracting gets a contract strategy chosen by someone who does not know the program. A CO who writes the whole plan gets a requirement they do not understand. The plans that work are written together, in a room, with the market research on the table.',
           },
           {
@@ -21301,7 +21301,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The Question Sets the Quality of the Answer",
             body: 'A sources sought that asks "are you interested" gets thirty responses, twenty-eight of them from firms that could not perform. The CO cannot set the acquisition aside on that basis and cannot defend not setting it aside either. A sources sought that asks "show us your contract that did this at this scale" gets six responses, and the CO knows exactly what the market looks like. The quality of the question sets the quality of the decision.',
           },
           {
@@ -21473,7 +21473,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Hand the PWS to the Future COR",
             body: 'The test of a PWS is to hand it to the future COR and ask: on the first of next month, what will you measure, where will you get the data, and what will you do if the number is bad? If the COR cannot answer for a standard, delete it or fix it. If the COR cannot answer for any of them, the document is a SOW, and it should be written as one honestly rather than pretending.',
           },
           {
@@ -21627,7 +21627,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: 'The most common IGCE mistake is pricing contractor labor at government salary levels. A GS-13 costs the government one number; a contractor delivering the same skill bills two to three times that base salary once fringe, overhead, G&A, and profit are added. An IGCE built on government pay produces a requirement the program cannot afford, a purchase request that is short, and an evaluation in which every proposal looks inflated. Use burdened market rates.',
+            body: "The classic IGCE mistake is pricing contractor labor like government labor. A GS-13 costs the government one number. A contractor delivering that same skill bills two to three times the base salary once fringe, overhead, G&A, and fee are stacked on top. Build your estimate on government pay and you get a requirement the program cannot afford, a purchase request that comes up short, and an evaluation where every single proposal looks outrageous. They are not outrageous. Your estimate is. Use burdened market rates.",
           },
           {
             type: 'list',
@@ -21783,7 +21783,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The Bridge J&A Nobody Wants to Write",
             body: 'The bridge contract is where most PMs learn about J&As, and it is the least defensible one to write. The recompete slipped, the incumbent\'s contract ends, and someone has to justify six more months sole source. It gets approved because the alternative is a gap in service. It also goes on the record, is posted publicly, and shows up in the next inspector general report on competition. The way to avoid writing a bridge J&A is the timeline lesson: start the follow-on eighteen months out.',
           },
           {
@@ -21942,7 +21942,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Three People Who Would Have Written It Differently",
             body: 'The recurring failure in services acquisition is a requirement written by someone who will not manage the contract, handed to a CO who did not help shape it, administered by a COR who inherited both. Each of them would have written it differently. The workshop exists to put all three in a room for three days before any of it is written. Teams that skip it because they are busy spend the time later in package returns, protests, and an unenforceable QASP.',
           },
           {
@@ -22096,7 +22096,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Ask Industry What Type They Would Bid",
             body: 'The contract type conversation with industry, during market research, is worth more than the policy memo. Ask potential offerors what type they would bid and why. If the credible firms all say they will not bid fixed-price on this requirement, the government can either change the requirement so it can be priced, accept cost-type, or run a competition nobody serious enters. Industry\'s answer is data about the requirement\'s risk, and the acquisition plan should record it.',
           },
           {
@@ -22268,7 +22268,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Section M Is Read by the Losing Offeror's Lawyer",
             body: 'Section M is read by the offerors more carefully than by anyone in the government. They build their proposals to it, sentence by sentence, and they build their protests to it too. Every word is a commitment. A subfactor mentioned in Section M and forgotten in the evaluation is a sustained protest. A strength awarded for something Section M did not ask for is a sustained protest. Write Section M as if the losing offeror\'s lawyer will read it next to the evaluation report, because they will.',
           },
           {
@@ -22418,7 +22418,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: 'The contracting officer has a queue. Your acquisition is in it with twenty others, and the ones that move are the ones whose packages do not come back and whose PMs answer questions the same day. That is not favoritism; it is the only way a CO can manage a queue. The PM who wants to be first in line earns it by being the easiest to work with, which means complete, responsive, and predictable.',
+            body: "Your contracting officer has a queue, and your acquisition is in it with twenty others. The ones that move are the ones whose packages do not bounce back and whose PMs answer a question the same day instead of next Tuesday. This is not favoritism and it is not about who likes whom. It is the only way a human being can manage a queue. You cannot jump the line by being important. You can absolutely jump it by being easy to work with, which is a much cheaper thing to be.",
           },
           {
             type: 'list',
@@ -22618,7 +22618,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The Data Rights Bill Arrives Fifteen Years Later",
             body: 'Sustainment is where the data rights decision made fifteen years earlier arrives with an invoice. A program that delivered without securing interface data and depot-level technical data cannot compete a single spare or a single repair, and the OEM knows it. The largest sustainment cost driver is not the design. It is whether anyone other than the original contractor can touch the system.',
           },
           {
@@ -22784,7 +22784,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Programs That Skip the TRR Test Twice",
             body: 'The most expensive test is the one that runs before the system is ready. A failed event consumes the range time, the articles, and the budget, and produces a deficiency report that everyone already knew was coming. The TRR exists to prevent that. Programs that treat the TRR as a formality, because the schedule says the test is next week, are the programs that test twice.',
           },
           {
@@ -22933,7 +22933,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: 'The single most common failure is a government team that says "Agile" and means "we will change our minds constantly and pay a fixed price." Agile has discipline: a prioritized backlog owned by one person, a fixed sprint length, a definition of done, working software every sprint, and metrics that show delivery. A program with a product owner who cannot decide, a backlog nobody grooms, and sprints that slip is not Agile. It is a cost-type contract with worse reporting.',
+            body: "The most common failure in government Agile is a team that says \"Agile\" and means \"we would like to change our minds constantly and also pay a fixed price.\" Real Agile has more discipline than waterfall, not less: one product owner who actually decides, a fixed sprint length, a definition of done, working software at the end of every sprint, and metrics somebody looks at. A program with a product owner who cannot make a call, a backlog nobody grooms, and sprints that quietly slip is not Agile. It is a cost-type contract with worse paperwork.",
           },
           {
             type: 'list',
@@ -23100,7 +23100,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: 'Closeout is nobody\'s priority because nobody is measured on it: the PM has moved on, the COR has a new contract, the contractor\'s finance team is chasing current invoices, and the contracting office is measured on awards. Meanwhile the withheld fee sits, the expiring funds cancel, and the audit years pile up. The contractor who assigns one person to closeout, with a tracker and a monthly call to the ACO, closes contracts years before the one who waits to be asked.',
+            body: "Closeout is nobody's job, which is exactly why it is always late. The PM moved on, the COR has a new contract, the contractor's finance team is chasing invoices that might actually get paid this month, and the contracting office is measured on awards, not on finishing things. So the withheld fee sits there, the expiring funds quietly cancel, and the stack of unclosed years grows. The contractor who assigns one person, a tracker, and a standing monthly call with the ACO closes contracts years ahead of everyone waiting to be asked. It is the least glamorous competitive advantage in the business.",
           },
           {
             type: 'text',
@@ -23255,7 +23255,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The Settlement Is the Last Deliverable",
             body: 'A convenience termination is a business event, not a disaster, if the contractor handles it as a project. The companies that lose money on them are the ones that keep working for a week hoping for a reversal, mix termination costs into the regular charge numbers, forget a subcontractor, and submit a proposal eleven months later that the auditor cannot follow. The settlement is the last deliverable on the contract. Run it like one.',
           },
           {
@@ -23421,7 +23421,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Only the Government Can Enforce Transition-Out",
             body: 'The incumbent who lost the recompete has every incentive to make the transition hard and a contractual obligation to make it smooth. Most behave professionally; some do not. The government is the only party that can enforce the incumbent\'s transition-out obligations, and it should, early and in writing: the continuity of services clause, the transition-out requirements in the PWS, and the CPARS that is still being written. An incoming contractor that cannot get the incumbent\'s cooperation goes to the COR and the CO, not to the incumbent\'s program manager.',
           },
           {
@@ -23568,7 +23568,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The Option Is Not Automatic",
             body: 'An option year is the single largest booking most contractor PMs will produce in a year, and it depends on a government employee sending a letter on time. The contractor PM who confirms the option calendar with the CO six months out, keeps performance strong through the decision window, and has the CPARS record ready is the one whose options get exercised on time. The one who assumes the option is automatic finds out otherwise in the last week of the period.',
           },
           {
@@ -23716,7 +23716,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The Review Is Never Where the Problem Is Revealed",
             body: 'Leadership can absorb almost any bad news if they hear it first from the PM, early, with the cause and a plan. What they cannot absorb is hearing it at a review from a chart, or from someone else, or after the decision window has closed. The PMs who survive breaches are the ones who walked into the PEO\'s office the week they saw it coming. The review is where the plan is presented; it is never where the problem is revealed.',
           },
           {
@@ -23906,7 +23906,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: 'The innovation units will tell you, sincerely, that they want to help you transition. They mean it. But a DIU project manager cannot write a requirement into a PEO\'s budget, and an AFWERX contracting officer cannot make a wing commander buy your product with money the wing does not have. The people who found you are your advocates, not your buyers. Treat every prototype award as the start of a two-year sales campaign to find the actual buyer, and start that campaign on day one.',
+            body: "The innovation units want to help you transition. They will tell you so, and they mean it. Here is the part nobody says out loud at the pitch day: a DIU project manager cannot write a requirement into a PEO's budget, and an AFWERX contracting officer cannot make a wing commander buy your product with money the wing does not have. The people who found you are your advocates. They are not your buyers. Treat every prototype award as opening day of a two-year sales campaign to find whoever the buyer actually turns out to be.",
           },
           {
             type: 'stat_row',
@@ -24063,7 +24063,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Reviewers Are Screening for SBIR Mills",
             body: 'The SBIR program has a reputation problem: companies that live on Phase I and II awards for years without ever selling anything. The program calls them SBIR mills and has added rules to screen them out (benchmarks for Phase II transition rates, limits on serial awardees). The reason it matters to you is that reviewers now look hard at whether you are building a business or collecting grants. A credible commercialization plan and an identified customer beat a better technical volume.',
           },
           {
@@ -24213,7 +24213,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "An OT Is a Negotiation With No Referee",
             body: 'An OT is a negotiation between two parties with no referee. A large prime with a legal department will negotiate an OT to its advantage. A startup that treats the government\'s draft as a form to sign will get the government\'s draft. The government AOs are not trying to take advantage of you, but they are not going to volunteer terms you did not ask for. Get someone who has negotiated OTs before to read yours, and treat data rights and follow-on production as the two terms worth spending money on.',
           },
           {
@@ -24365,7 +24365,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Two Kinds of Problem Statement",
             body: 'Innovation units publish problem statements for two reasons. Sometimes a program office with money brought them a real gap and is standing behind the solicitation. Sometimes the innovation unit thinks the problem is important and hopes a program office will care once a prototype exists. The first kind transitions. The second kind produces a nice demo. Before you spend a month on a solution brief, find out which kind you are looking at. Ask, in the question period or in the pitch: who is the transition partner, and what money have they committed?',
           },
           {
@@ -24520,7 +24520,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: 'A champion is a government person who will spend their credibility on you. You need one. You also need to understand that a colonel who loves your product and a program office that has budgeted for it are different things, and companies die betting on the first. Champions retire, rotate, and get overruled. A budget line survives them. Use the champion to get the line, then treat the line as the customer.',
+            body: "You need a champion, a government person willing to spend their own credibility on you. Go get one. Then remember that a colonel who loves your product and a program office that has budgeted for it are two completely different things, and startups die betting on the first one. Champions retire. Champions rotate. Champions get overruled by someone who has never heard of you. A budget line does none of those things. Use the champion to get the line, then treat the line as the customer.",
           },
           {
             type: 'text',
@@ -24670,7 +24670,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Nobody Will Chase You to Fix a Registration",
             body: 'Government contracting offices will not chase you to fix a registration. If SAM lapses the week before award, the award waits. If the SPRS score is missing, the CO cannot sign. If the bank account changed and SAM was not updated, the payment goes nowhere and you find out when it bounces back thirty days later. Assign one person to own the registrations, put every renewal on a calendar with a sixty-day warning, and check SAM status before every submission.',
           },
           {
@@ -24806,7 +24806,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "A Low R&D Price Reads as Not Understanding the Work",
             body: 'The instinct to price low to win a first government award is almost always wrong. The evaluator does not reward a low price on R&D; they mark it as unrealistic and question whether you understand the work. The rates you set become your history. And a Phase I priced at half of what the work costs teaches the company that government work loses money, which is the wrong lesson from a program designed to fund you fully. Price the work at what it costs with a fair fee, and compete on the technology and the customer pull.',
           },
           {
@@ -24953,7 +24953,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The Term Sheet That Ends Your Defense Business",
             body: 'The term sheet that saves your company can end your defense business. A single large investor taking a majority, a foreign strategic taking a board seat, or a control provision buried in the protective provisions can make you ineligible for SBIR, large by affiliation for set-asides, and a FOCI problem for clearances, all in one signature. Run every term sheet past someone who knows the SBIR eligibility rules, the SBA affiliation rules, and the FOCI rules before you sign, and negotiate the control terms with those rules in view.',
           },
           {
@@ -25142,7 +25142,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: 'Nobody in a program office cares that you were a company commander. They care that you ran a 130-person organization with a budget and a mission, made decisions with bad information, and delivered. Those are the same fact. Only one of them is written in a language the hiring manager reads. The veterans who struggle in this transition are usually not underqualified; they are untranslated, and they get frustrated that civilians cannot see what is obvious to them. Do the translation yourself, once, thoroughly, and the rest gets easier.',
+            body: "Nobody in a program office cares that you were a company commander. They care that you ran a 130-person organization with a budget and a mission, made decisions on bad information, and delivered anyway. Those are the same fact. Only one of them is written in a language the hiring manager can read. Most veterans who struggle here are not underqualified, they are untranslated, and the maddening part is watching civilians fail to see something that is completely obvious to you. Do the translation yourself, once, properly, and stop waiting for anyone else to do it.",
           },
           {
             type: 'text',
@@ -25295,7 +25295,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: 'The USAJOBS process feels designed to reject you, and in a sense it is: HR is screening hundreds of applications against a standard, and anything ambiguous gets cut. Veterans who get hired usually did two things. They wrote the federal resume the way HR reads it, word for word against the announcement. And they found the hiring manager, through the network, before or after applying, so that a person who wanted them was watching for their name on the certificate. Neither is cheating. Both are how the system actually works.',
+            body: "USAJOBS feels like it was designed to reject you, and in fairness, it sort of was. HR is screening hundreds of applications against a written standard, and anything ambiguous gets cut, because ambiguous is how you end up with a complaint. Veterans who get hired almost always did two things. They wrote the federal resume the way HR reads it, word for word against the announcement, which feels ridiculous and works anyway. And they found the hiring manager through the network, so a real person was watching for their name on the certificate. Neither one is cheating. Both are just how the machine actually runs.",
           },
           {
             type: 'highlight',
@@ -25450,7 +25450,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Know What Your Clearance Is Worth",
             body: 'Your clearance and your customer relationships are worth real money to a contractor, and a good recruiter knows it before you do. This does not mean you should be cynical; it means you should know your value and negotiate from it. The company that hires you for a key personnel position on a contract it needs to win is getting something it could not get elsewhere. Ask for the compensation that reflects it, in writing, and understand that the relationship is a business one on both sides. Loyalty is earned, not assumed, in both directions.',
           },
           {
@@ -25584,7 +25584,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Clearances Fail Through Neglect, Not Drama",
             body: 'The most common way a veteran loses a clearance in transition is not a dramatic event. It is a slow job search, a few missed payments, a foreign trip not reported because there was no security office to report it to, and then a new employer\'s FSO submitting the reinstatement request and getting a flag. Every one of those is avoidable with a calendar, a budget, and the habit of reporting. Treat the clearance like the professional credential it is: it has maintenance requirements, and neglect is the way it fails.',
           },
           {
@@ -25750,7 +25750,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The Path Is Almost Always Open. Ask in Writing.",
             body: 'The rules sound like they were written to keep you out of the industry. They were not. A contracting NCO who administered a contractor\'s task order can go work for that contractor the day after separation; what they cannot do is come back to the contracting office as the contractor\'s representative on that task order, ever, or disclose the source selection information they saw. A program manager who ran a source selection can work for the winner after the one-year compensation ban, and behind the scenes even sooner. The path is almost always open. The step everyone skips is asking the ethics counselor in writing, which takes a week and produces a letter you keep forever.',
           },
           {
@@ -25894,7 +25894,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "When Someone Offers to Make You the Owner",
             body: 'Every year, prosecutors announce cases where a non-veteran-owned company put a veteran\'s name on the paperwork, won set-aside contracts, and paid the veteran a salary while the real owners ran everything. The veterans in those cases often thought they were doing a friend a favor. They were committing fraud, and some went to prison. If someone offers to make you the owner of their company so it can win SDVOSB work, the answer is no. If you are building a company with a non-veteran partner who has the industry experience you lack, structure it honestly: you own and control it, you run it, and the partner is an employee or a minority owner without control, or it is not an SDVOSB.',
           },
           {
@@ -26037,7 +26037,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The Question to Ask in Your First Month",
             body: 'The single most useful thing you can do in the first month is find the person who has been in the office the longest and ask them to explain how a decision actually gets made here: who has to agree, in what order, and what each of them needs. Then ask what the last new arrival got wrong. That conversation, repeated with two or three people, is worth more than any orientation, and the people you ask will remember that you asked.',
           },
           {
@@ -26221,7 +26221,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: 'When a contracting officer tells you a rule is there for a reason, the reason is usually a specific person who did a specific thing, often a century ago. The cost-plus-percentage ban is a World War I factory owner. The False Claims Act is a Civil War horse dealer. The rules are not arbitrary. They are scar tissue. That does not make every rule wise or every application sensible, but it should change how you argue against one: not "this is bureaucratic" but "the abuse this prevents is not possible here, and here is why."',
+            body: "When a contracting officer tells you a rule is there for a reason, the reason is usually one specific person who did one specific thing, often about a century ago. The ban on cost-plus-percentage-of-cost is a World War I factory owner. The False Claims Act is a Civil War horse dealer who sold the Union Army some deeply disappointing horses. The rules are not arbitrary. They are scar tissue. That does not make every rule wise or every application of one sensible, but it should change how you argue against it. Not \"this is bureaucratic,\" which has never worked for anybody. Try \"the abuse this was written to prevent cannot happen here, and here is why.\"",
           },
           {
             type: 'highlight',
@@ -26360,7 +26360,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             type: 'callout',
             heading: 'Real Talk',
-            body: 'The 1980s reforms pulled in two directions at once, and the tension is still in the system. CICA and the integrity rules added process: justifications, approvals, stays, disclosure limits. Packard asked for speed, commercial practice, and professional judgment. Every reform since has been an attempt to get Packard\'s outcomes inside CICA\'s rules. When you feel the system fighting itself, you are feeling 1984 and 1986 at the same time.',
+            body: "The 1980s reforms pulled in two directions at once, and we are all still living in the gap. CICA and the integrity rules added process: justifications, approvals, stays, disclosure limits. Packard asked for speed, commercial practice, and trusting professional judgment. Every reform since has been an attempt to get Packard's outcomes while staying inside CICA's rules. So the next time the system seems to be actively fighting itself, relax. It is. You are feeling 1984 and 1986 argue, and they have been at it a while.",
           },
           {
             type: 'text',
@@ -26503,7 +26503,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "If You Cannot Show Your Numbers, Stay Commercial",
             body: 'The cost and pricing regime is the part of defense contracting that commercial companies find most alien, and it is the part that is least negotiable. A company that wants sole-source or cost-type work will disclose its costs, keep its accounting consistent, and be audited. The rules were written because contractors used information asymmetry to their advantage for two decades before Congress noticed, and every subsequent relaxation has been about thresholds and exemptions, never about the principle. If your business model depends on not showing your numbers, stay in competitive fixed-price work or commercial items, where the exemptions apply.',
           },
           {
@@ -26643,7 +26643,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Keep the Evidence That You Sell Commercially",
             body: 'FAR Part 12 is the most valuable thing in the FAR for a commercial company, and the hardest to get. The contracting officer must determine that what you sell is a commercial product or service, and on the defense side that determination is scrutinized, second-guessed, and sometimes reversed years later by auditors who argue that the government-specific configuration was not really commercial. If you sell commercially, keep the evidence: price lists, commercial sales records, standard terms, customer lists. The determination rests on facts you have and the contracting officer does not.',
           },
           {
@@ -26782,7 +26782,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "The Line Is Enforced by People, Not Systems",
             body: 'If you work in a program office today, look around: a significant share of the people supporting the program are contractors, and the government staff is smaller than the work requires. That is the structural legacy of this era, and it creates a daily judgment call. The contractor analyst who drafts your decision memo is doing legitimate closely-associated work; the same analyst deciding what the memo recommends, unsupervised, is not. The line is not enforced by a system. It is enforced by government people who know where it is.',
           },
           {
@@ -26935,7 +26935,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Optimism Is Rewarded Right Up Until It Is Not",
             body: 'Every program that later breached its baseline had a cost estimate at the start that the people making it believed. The estimates were not usually dishonest; they were optimistic in a system where optimism is rewarded, because the estimate that gets a program approved is the one that is low, and by the time the truth arrives the people who made the estimate have rotated. This is why independent cost estimating exists and why it is resented. If you are ever asked to build an estimate that supports a decision that has already been made, you are standing at the exact point where these programs went wrong.',
           },
           {
@@ -27080,7 +27080,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
           {
             type: 'callout',
-            heading: 'Real Talk',
+            heading: "Know What Each Authority Gives Up",
             body: 'There is a real debate about the alternatives-beside-the-process strategy, and it is worth understanding rather than picking a side. Supporters point out that OTs and middle tier programs deliver years faster and have brought new companies in. Critics point out that the same authorities reduce cost visibility, weaken data rights unless negotiated well, produce less competition documentation, and are sometimes used to avoid scrutiny rather than to gain speed. Both are true, and which one applies depends entirely on how a specific program uses the authority. The professional position is to know what protection each authority gives up and to replace it deliberately in the agreement.',
           },
           {
