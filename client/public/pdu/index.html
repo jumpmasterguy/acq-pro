@@ -287,6 +287,16 @@
       .ccrs-row { flex-direction: column; gap: 4px; }
       .ccrs-label { min-width: 0; }
       .price-card.featured::before { display: none; }
+      /* On a phone the 4-column table squeezes every cell into a narrow
+         column of wrapped fragments. Drop the Topics Covered column, which is
+         supporting detail, so the three things a reader came for (module, PDU
+         value, Talent Triangle area) get the full width. */
+      .pdu-table th:nth-child(4), .pdu-table td:nth-child(4) { display: none; }
+      .pdu-table { font-size: 0.85rem; }
+      .pdu-table thead th { padding: 10px 12px; }
+      .pdu-table tbody td { padding: 12px 12px; }
+      .pdu-table th:nth-child(2), .pdu-table td:nth-child(2) { text-align: right; white-space: nowrap; }
+      .pdu-table th:nth-child(3), .pdu-table td:nth-child(3) { text-align: right; }
     }
     @media(max-width:460px) {
       .steps-grid { grid-template-columns: 1fr; }
