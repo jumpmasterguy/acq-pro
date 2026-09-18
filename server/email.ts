@@ -344,8 +344,8 @@ export async function sendEmail4(to: string, username: string): Promise<void> {
 
     <div class="section-label">What unlocks with Pro</div>
     <ul class="checklist">
-      <li>All 6 modules — Defense Finance, Contracting, Data Analytics, Capture Management, Program Ops</li>
-      <li>30+ lessons with real DoD content — not textbook theory</li>
+      <li>All 14 modules — Defense Finance, Contracting, Data Analytics, Capture Management, Program Ops, contractor business finance, small business, compliance, government pre-award, sustainment, the startup on-ramp, veteran transition, and acquisition history</li>
+      <li>120+ lessons with real DoD content — not textbook theory</li>
       <li>Skill-level system: Novice → Intermediate → Advanced in every lesson</li>
       <li>Module gate assessments to validate what you've learned</li>
       <li>Career roadmap for USG and contractor tracks — with salary benchmarks</li>
@@ -496,7 +496,7 @@ export async function sendEmail7(to: string, username: string): Promise<void> {
 
     <ul class="checklist">
       <li>5 Pro modules — Defense Finance, Contracting, Data Analytics, Capture Management, Program Ops</li>
-      <li>30+ lessons built from real DoD programs, contracts, and career paths</li>
+      <li>120+ lessons built from real DoD programs, contracts, and career paths</li>
       <li>Skill levels (Novice → Intermediate → Advanced) so the content grows with you</li>
       <li>Module gate assessments to validate what you've actually learned</li>
       <li>Full career roadmap — USG and contractor tracks, salary benchmarks, certification guidance</li>
@@ -1046,7 +1046,7 @@ export async function sendEmail4New(to: string, username: string): Promise<void>
     <p>A DAU resident course runs <strong>$1,500 or more</strong> once you factor in travel and time off. Management Concepts charges <strong>$2,000+ per course.</strong> Graduate School USA is in the same range.</p>
     <p>Acqlerate is <strong>$5.99/month.</strong></p>
     <div class="highlight-box">
-      <p>For that, you unlock all 6 modules (45 lessons), the AI Study Assistant, CLP certificates for every module, and PDU credit for PMP holders.</p>
+      <p>For that, you unlock all 14 modules (122 lessons), the AI Study Assistant, CLP certificates for every module, and PDU credit for PMP holders.</p>
       <p style="margin-top:10px">If you'd rather not pay monthly, the <strong>lifetime option is $99</strong> — less than a single day of government-sponsored classroom training.</p>
     </div>
     <p>You've already seen what Foundations looks like. The other five modules are built the same way.</p>
@@ -1235,7 +1235,7 @@ export async function sendReferralRewardEmail(to: string, username: string): Pro
       </div>
       <h1 style="color:#fff;font-size:1.5rem;font-weight:800;margin:0 0 16px;text-align:center;">You just earned 1 year of Pro.</h1>
       <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.8;margin:0 0 16px;">Hey ${name} — two people signed up through your referral link. That means you've earned a full year of Acqlerate Pro, on us.</p>
-      <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.8;margin:0 0 24px;">Your account has already been upgraded. Full access to all 6 modules, 45 lessons, unlimited AI study assistant, and everything we add going forward — for a year.</p>
+      <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.8;margin:0 0 24px;">Your account has already been upgraded. Full access to all 14 modules, 122 lessons, unlimited AI study assistant, and everything we add going forward — for a year.</p>
       <div style="background:#01696f22;border:1px solid #01696f44;border-radius:12px;padding:16px 20px;margin-bottom:24px;">
         <p style="color:#4FC3CB;font-size:0.85rem;margin:0;font-weight:600;">Keep sharing your link — every 2 new signups earns another year of Pro.</p>
       </div>

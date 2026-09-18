@@ -55,6 +55,7 @@ declare global {
       lastChallengeDate: string | null;
       lastStreakDate: string | null;
       dailyChallengeXP: number;
+      briefsXP: number;
     }
   }
 }
@@ -171,7 +172,14 @@ export async function setupAuth(app: Express): Promise<void> {
               console.error('[idle-timeout] recordLoginEnd failed:', e.message);
             });
           }
-          res.status(401).json({ message: "Signed out due to inactivity", idleTimeout: true });
+          // API calls get the JSON the app expects (it reads idleTimeout to show
+          // the "signed out due to inactivity" notice). A page load — someone
+          // typing acqlerate.com after a long break — must NOT get raw JSON:
+          // the session is already gone, so just let the page render signed-out.
+          if (req.path.startsWith("/api/")) {
+            return res.status(401).json({ message: "Signed out due to inactivity", idleTimeout: true });
+          }
+          next();
         });
       });
     }
@@ -297,6 +305,14 @@ export function toPassportUser(user: User): Express.User {
     // always see it as undefined and report the streak as broken.
     lastStreakDate: user.lastStreakDate ?? null,
     dailyChallengeXP: ((user.challengeHistory as any[]) ?? []).reduce(
+      (sum, entry) => sum + (entry?.xpEarned ?? 0),
+      0
+    ),
+    // Same shape and same reason as dailyChallengeXP above: brief XP is
+    // tracked server-side in its own column, and the client folds it into the
+    // total it displays. Without this the user earns brief XP and never sees
+    // it anywhere.
+    briefsXP: ((user.briefsRead as any[]) ?? []).reduce(
       (sum, entry) => sum + (entry?.xpEarned ?? 0),
       0
     ),

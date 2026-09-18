@@ -19,6 +19,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { MobileHome } from "@/components/mobile/MobileHome";
 import { getActiveTrack } from "@/lib/careerTracks";
 import { DailyChallengeSheet } from "@/components/mobile/DailyChallengeSheet";
+import { WeeklyBrief } from "@/components/WeeklyBrief";
 
 interface DashboardProps {
   progress: UserProgress;
@@ -28,6 +29,8 @@ interface DashboardProps {
   userProfile?: UserProfile | null;
   username?: string;
   onEditProfile?: () => void;
+  /** Opens My Account — the only place the career path can be changed now. */
+  onOpenAccount?: () => void;
   isAdmin?: boolean;
   /** Mirrors this page's Burn Rate (streak) numbers up to the persistent sidebar badge. */
   onStreakUpdate?: (streak: { currentStreak: number; longestStreak: number }) => void;
@@ -40,8 +43,8 @@ interface DashboardProps {
   lastStreakDate?: string | null;
   /** Learn tab target, for the carousel's "See all →". */
   onOpenModules?: () => void;
-  /** Account tab target, for the greeting row, XP pill and path card. */
-  onOpenAccount?: () => void;
+  /** Fired when a brief awards XP, so App can show it before the next reload. */
+  onBriefXpEarned?: (xpEarned: number) => void;
 }
 
 // ── Career track lesson-level definitions ───────────────────────────────────
@@ -78,12 +81,17 @@ const CAREER_TRACKS: CareerTrack[] = [
       // Contracts — source selection, admin, mods
       'contracts-2', 'contracts-3', 'contracts-6',
       // Data — metrics, EVM deep dive, IPMR
-      'data-1', 'data-2', 'data-3', 'data-4',
+      'data-1', 'data-2', 'data-3', 'data-4', 'data-5', 'data-6', 'data-7', 'data-8',
       // Ops — risk, stakeholders, PM mistakes
       'ops-1', 'ops-2', 'ops-5',
+      'preaward-1', 'preaward-2', 'preaward-3', 'preaward-4', 'preaward-5', 'preaward-6', 'preaward-7', 'preaward-8', 'preaward-9', 'preaward-10', 'lifecycle-1', 'lifecycle-2', 'lifecycle-3', 'lifecycle-4', 'lifecycle-5', 'lifecycle-6', 'lifecycle-7', 'lifecycle-8',
     ],
     bonusLessons: [
-      'finance-6', 'finance-8',
+      'history-1', 'history-2', 'history-3', 'history-4', 'history-5', 'history-6', 'history-7',
+      'veteran-1', 'veteran-2', 'veteran-3', 'veteran-4', 'veteran-5', 'veteran-6', 'veteran-7',
+      'contracts-10', 'contracts-11', 'contracts-12', 'contracts-13',
+      'onramp-1', 'onramp-2', 'onramp-3', 'onramp-4', 'onramp-5', 'onramp-6', 'onramp-7', 'onramp-8',
+      'finance-6', 'finance-8', 'business-1', 'business-2', 'business-3', 'business-4', 'business-5', 'business-6', 'business-7', 'business-8', 'business-9', 'business-10', 'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10',
       'contracts-8', 'contracts-1', 'contracts-4', 'contracts-9', 'contracts-7', 'contracts-5',
       'capture-1', 'capture-3', 'capture-2', 'capture-4', 'capture-5',
       'ops-3', 'ops-4', 'ops-6', 'ops-7',
@@ -96,23 +104,27 @@ const CAREER_TRACKS: CareerTrack[] = [
     icon: <Briefcase className="w-3.5 h-3.5" />,
     desc: 'Industry-side PM executing contracts, managing costs, task orders, and subcontractors',
     primaryLessons: [
+      'onramp-1', 'onramp-2', 'onramp-3', 'onramp-4', 'onramp-5', 'onramp-6', 'onramp-7', 'onramp-8',
       // Foundations — the essentials, skip lifecycle depth and ACAT/OTA
       'foundations-1', 'foundations-3', 'foundations-5', 'foundations-9',
       // Contracts — the day-to-day world of a contractor PM
       'contracts-8', 'contracts-1', 'contracts-4', 'contracts-9', 'contracts-3', 'contracts-6',
       'contracts-7', 'contracts-5',
       // Finance — cost structure, EVM, DCAA, CPAF burn rate
-      'finance-2', 'finance-5', 'finance-6', 'finance-7', 'finance-8',
+      'finance-2', 'finance-5', 'finance-6', 'finance-7', 'finance-8', 'business-1', 'business-2', 'business-3', 'business-4', 'business-5', 'business-6', 'business-7', 'business-8', 'business-9', 'business-10', 'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10', 'preaward-1', 'preaward-2', 'preaward-3', 'preaward-4', 'preaward-5', 'preaward-6', 'preaward-7', 'preaward-8', 'preaward-9', 'preaward-10', 'lifecycle-1', 'lifecycle-2', 'lifecycle-3', 'lifecycle-4', 'lifecycle-5', 'lifecycle-6', 'lifecycle-7', 'lifecycle-8',
       // Data — metrics, EVM terms, IPMR
-      'data-1', 'data-3', 'data-4',
+      'data-1', 'data-3', 'data-4', 'data-5', 'data-6', 'data-7',
       // Ops — risk, comms, subs, PM mistakes, what PMs actually do
       'ops-1', 'ops-2', 'ops-4', 'ops-5', 'ops-7',
     ],
     bonusLessons: [
+      'history-1', 'history-2', 'history-3', 'history-4', 'history-5', 'history-6', 'history-7',
+      'veteran-1', 'veteran-2', 'veteran-3', 'veteran-4', 'veteran-5', 'veteran-6', 'veteran-7',
+      'contracts-13',
       'foundations-6', 'foundations-2', 'foundations-7', 'foundations-8', 'foundations-4',
       'finance-1', 'finance-4', 'finance-3',
       'contracts-2',
-      'data-2',
+      'data-2', 'data-8',
       'capture-1', 'capture-3', 'capture-2', 'capture-4', 'capture-5',
       'ops-3', 'ops-6',
     ],
@@ -133,10 +145,16 @@ const CAREER_TRACKS: CareerTrack[] = [
       'contracts-4', 'contracts-8', 'contracts-7', 'contracts-5', 'contracts-9',
       // Finance — appropriations, cost estimating
       'finance-4', 'finance-3',
+      'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10', 'preaward-1', 'preaward-2', 'preaward-3', 'preaward-4', 'preaward-5', 'preaward-6', 'preaward-7', 'preaward-8', 'preaward-9', 'preaward-10',
     ],
     bonusLessons: [
-      'finance-1', 'finance-2', 'finance-5', 'finance-6', 'finance-7', 'finance-8',
-      'data-1', 'data-2', 'data-3', 'data-4',
+      'history-1', 'history-2', 'history-3', 'history-4', 'history-5', 'history-6', 'history-7',
+      'veteran-1', 'veteran-2', 'veteran-3', 'veteran-4', 'veteran-5', 'veteran-6', 'veteran-7',
+      'contracts-10', 'contracts-11', 'contracts-12', 'contracts-13',
+      'onramp-1', 'onramp-2', 'onramp-3', 'onramp-4', 'onramp-5', 'onramp-6', 'onramp-7', 'onramp-8',
+      'lifecycle-1', 'lifecycle-2', 'lifecycle-3', 'lifecycle-4', 'lifecycle-5', 'lifecycle-6', 'lifecycle-7', 'lifecycle-8',
+      'finance-1', 'finance-2', 'finance-5', 'finance-6', 'finance-7', 'finance-8', 'business-1', 'business-2', 'business-3', 'business-4', 'business-5', 'business-6', 'business-7', 'business-8', 'business-9', 'business-10',
+      'data-1', 'data-2', 'data-3', 'data-4', 'data-5', 'data-6', 'data-7', 'data-8',
       'capture-1', 'capture-2', 'capture-3', 'capture-4', 'capture-5',
       'ops-1', 'ops-2', 'ops-3', 'ops-4', 'ops-5', 'ops-6', 'ops-7',
     ],
@@ -148,6 +166,7 @@ const CAREER_TRACKS: CareerTrack[] = [
     icon: <LayoutGrid className="w-3.5 h-3.5" />,
     desc: 'Win more business — master the capture lifecycle, proposals, and source selection strategy',
     primaryLessons: [
+      'onramp-1', 'onramp-2', 'onramp-3', 'onramp-4', 'onramp-5', 'onramp-6', 'onramp-7', 'onramp-8',
       // Foundations — the essentials
       'foundations-1', 'foundations-3', 'foundations-5',
       // Contracts — vehicles, who's buying, source selection from buyer's side
@@ -157,13 +176,18 @@ const CAREER_TRACKS: CareerTrack[] = [
       'capture-1', 'capture-3', 'capture-2', 'capture-4', 'capture-5',
       // Ops — stakeholder comms matters for BD
       'ops-2',
+      'smallbiz-1', 'smallbiz-2', 'smallbiz-3', 'smallbiz-4', 'smallbiz-5', 'smallbiz-6', 'smallbiz-7', 'smallbiz-8', 'smallbiz-9', 'smallbiz-10', 'compliance-1', 'compliance-2', 'compliance-3', 'compliance-4', 'compliance-5', 'compliance-6', 'compliance-7', 'compliance-8', 'compliance-9', 'compliance-10', 'preaward-1', 'preaward-2', 'preaward-3', 'preaward-4', 'preaward-5', 'preaward-6', 'preaward-7', 'preaward-8', 'preaward-9', 'preaward-10',
     ],
     bonusLessons: [
+      'history-1', 'history-2', 'history-3', 'history-4', 'history-5', 'history-6', 'history-7',
+      'veteran-1', 'veteran-2', 'veteran-3', 'veteran-4', 'veteran-5', 'veteran-6', 'veteran-7',
+      'contracts-10', 'contracts-11', 'contracts-12', 'contracts-13',
+      'lifecycle-1', 'lifecycle-2', 'lifecycle-3', 'lifecycle-4', 'lifecycle-5', 'lifecycle-6', 'lifecycle-7', 'lifecycle-8',
       'foundations-6', 'foundations-9', 'foundations-2', 'foundations-7',
       'foundations-8', 'foundations-4',
-      'finance-6', 'finance-8',
+      'finance-6', 'finance-8', 'business-1', 'business-2', 'business-3', 'business-4', 'business-5', 'business-6', 'business-7', 'business-8', 'business-9', 'business-10',
       'contracts-3', 'contracts-6',
-      'data-1', 'data-2', 'data-3', 'data-4',
+      'data-1', 'data-2', 'data-3', 'data-4', 'data-5', 'data-6', 'data-7', 'data-8',
       'finance-1', 'finance-4', 'finance-3', 'finance-2', 'finance-5', 'finance-7',
       'ops-1', 'ops-3', 'ops-4', 'ops-5', 'ops-6', 'ops-7',
     ],
@@ -185,24 +209,24 @@ const SUBJECT_GROUPS: SubjectGroup[] = [
     label: 'Acquisition Foundations',
     shortLabel: 'Foundations',
     icon: <Building2 className="w-3.5 h-3.5" />,
-    desc: 'Lifecycle, key players, contract basics — the framework everything else builds on',
-    moduleIds: ['foundations'],
+    desc: 'Lifecycle, key players, contract basics, and the government pre-award process — the framework everything else builds on',
+    moduleIds: ['foundations', 'preaward', 'veteran', 'history'],
   },
   {
     id: 'finance_contracts',
     label: 'Finance & Contracting',
     shortLabel: 'Finance + Contracts',
     icon: <FileText className="w-3.5 h-3.5" />,
-    desc: 'Appropriations, EVM (Earned Value Management), contract types, source selection, COR (Contracting Officer\'s Rep), and modifications',
-    moduleIds: ['finance', 'contracts'],
+    desc: 'Appropriations, EVM (Earned Value Management), the business side of contracting, contract types, source selection, COR (Contracting Officer\'s Rep), and modifications',
+    moduleIds: ['finance', 'business', 'contracts', 'compliance'],
   },
   {
     id: 'capture_analytics',
     label: 'Capture, BD & Analytics',
     shortLabel: 'Capture + Data',
     icon: <Target className="w-3.5 h-3.5" />,
-    desc: 'Winning work and measuring it — proposals, pipelines, dashboards, and KPIs (Key Performance Indicators)',
-    moduleIds: ['capture', 'data'],
+    desc: 'Winning work and measuring it — proposals, pipelines, small business set-asides, dashboards, and KPIs (Key Performance Indicators)',
+    moduleIds: ['capture', 'smallbiz', 'onramp', 'data'],
   },
   {
     id: 'pm_operations',
@@ -210,7 +234,7 @@ const SUBJECT_GROUPS: SubjectGroup[] = [
     shortLabel: 'PM Operations',
     icon: <TrendingUp className="w-3.5 h-3.5" />,
     desc: 'Risk management, stakeholder communication, career roadmap, and subcontractor oversight',
-    moduleIds: ['operations'],
+    moduleIds: ['operations', 'lifecycle'],
   },
 ];
 
@@ -396,7 +420,7 @@ function FilterTab({ active, onClick, children }: { active: boolean; onClick: ()
 }
 
 // ── Main Dashboard ───────────────────────────────────────────────────────────
-export default function Dashboard({ progress, onSelectModule, onSelectLesson, onUpgrade, username, isAdmin, onStreakUpdate, firstName, lastName, lastStreakDate, onOpenModules, onOpenAccount }: DashboardProps) {
+export default function Dashboard({ progress, onSelectModule, onSelectLesson, onUpgrade, username, isAdmin, onStreakUpdate, onBriefXpEarned, firstName, lastName, lastStreakDate, onOpenModules, onOpenAccount }: DashboardProps) {
   const totalLessons = getTotalLessons();
   const completedCount = progress.completedLessons.size;
   // Use progress.xp (computed once in App.tsx) rather than recalculating
@@ -410,7 +434,8 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
   const [filterMode, setFilterMode] = useState<FilterMode>(() => {
     try { return (localStorage.getItem('acq_filter_mode') as FilterMode) || 'career'; } catch { return 'career'; }
   });
-  const [activeCareer, setActiveCareer] = useState<CareerTrackId>(() => {
+  // Read-only here: the career path is chosen on the My Account page.
+  const [activeCareer] = useState<CareerTrackId>(() => {
     try { return (localStorage.getItem('acq_active_career') as CareerTrackId) || 'contractor_pm'; } catch { return 'contractor_pm'; }
   });
   const [activeSubject, setActiveSubject] = useState<SubjectGroupId>('acquisition_foundations');
@@ -419,11 +444,9 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
   const [startHereDismissed, setStartHereDismissed] = useState(() => {
     try { return localStorage.getItem('acq_start_here_dismissed') === '1'; } catch { return false; }
   });
-  const [referral, setReferral] = useState<{ referralCode: string; referralCount: number; rewardsEarned: number; referralLink: string; nextRewardAt: number } | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
-  const [referralCopied, setReferralCopied] = useState(false);
   const [challenge, setChallenge] = useState<{ questions: any[], date: string } | null>(null);
   const isMobile = useIsMobile();
   const [challengeActive, setChallengeActive] = useState(false);
@@ -431,21 +454,11 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
   const [challengeSubmitted, setChallengeSubmitted] = useState(false);
   const [challengeResult, setChallengeResult] = useState<{ score: number, xpEarned: number, message: string } | null>(null);
 
-  useEffect(() => {
-    apiRequest('GET', '/api/my-referral')
-      .then(r => r.json())
-      .then(data => { if (data.referralCode) setReferral(data); })
-      .catch(() => {});
-  }, []);
-
   // Persist filter choices to localStorage
   useEffect(() => {
     try { localStorage.setItem('acq_filter_mode', filterMode); } catch {}
   }, [filterMode]);
 
-  useEffect(() => {
-    try { localStorage.setItem('acq_active_career', activeCareer); } catch {}
-  }, [activeCareer]);
 
   // Close search on outside click
   useEffect(() => {
@@ -532,7 +545,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
       const careerTrack = CAREER_TRACKS.find(careerT => careerT.id === activeCareer)!;
       const careerPrimarySet = new Set(careerTrack.primaryLessons);
       new Set(careerTrack.bonusLessons);
-      const careerModuleOrder = ['foundations', 'finance', 'contracts', 'data', 'capture', 'operations'];
+      const careerModuleOrder = ['foundations', 'finance', 'business', 'contracts', 'data', 'preaward', 'capture', 'smallbiz', 'onramp', 'compliance', 'lifecycle', 'veteran', 'history', 'operations'];
       const careerPrimary = careerModuleOrder
         .map(careerModId => modules.find(careerMod => careerMod.id === careerModId))
         .filter(Boolean)
@@ -956,42 +969,24 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
         </div>
       </div>
 
+      {/* ── Acquisition This Week ──────────────────────────────────────────
+          A short, dated brief that gives returning users a reason to open the
+          app between lessons. Read state is local to the browser; XP and streak
+          integration is a follow-up. */}
+      <WeeklyBrief
+        onSelectLesson={onSelectLesson}
+        onXpEarned={(xp, currentStreak) => {
+          if (xp > 0) onBriefXpEarned?.(xp);
+          if (typeof currentStreak === 'number') {
+            setStreak(st => ({ ...st, currentStreak }));
+            onStreakUpdate?.({ currentStreak, longestStreak: streak.longestStreak });
+          }
+        }}
+        className="mb-6"
+      />
+
       {/* Daily challenge modal */}
       {challengeModal}
-
-      {/* ── Referral Card ─────────────────────────────────────────────── */}
-      {referral && (
-        <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4">
-          <div className="space-y-3">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-bold text-primary mb-0.5">🎁 Spread the word, earn a year of Pro</p>
-                <p className="text-xs text-muted-foreground">
-                  Get 2 people to sign up free and you earn <strong>1 year of Pro access</strong>. Every 2 signups = another year.
-                </p>
-              </div>
-              <div className="text-right flex-shrink-0 bg-primary/10 rounded-xl px-3 py-2">
-                <p className="text-2xl font-black text-primary leading-none">{referral.referralCount}</p>
-                <p className="text-[10px] text-muted-foreground">signups</p>
-                <p className="text-[10px] text-primary/70 font-medium mt-0.5">{referral.nextRewardAt - referral.referralCount} to go</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <code className="text-xs bg-muted px-2 py-1 rounded font-mono truncate flex-1 min-w-0 block">{referral.referralLink}</code>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(referral.referralLink);
-                  setReferralCopied(true);
-                  setTimeout(() => setReferralCopied(false), 2000);
-                }}
-                className="text-xs text-primary font-semibold hover:underline flex-shrink-0"
-              >
-                {referralCopied ? '✓ Copied!' : 'Copy link'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ── Start Here Banner (new users only) ─────────────────────────────── */}
       {completedCount === 0 && !startHereDismissed && (
@@ -1007,10 +1002,10 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
           <div className="pr-12">
             <p className="text-[11px] font-bold tracking-widest uppercase text-primary mb-1">Start Here</p>
             <h3 className="text-lg font-bold text-foreground leading-snug mb-1">
-              Pick your career path below.
+              Pick your career path in My Account.
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Are you on the <strong className="text-foreground">contractor side</strong> or the <strong className="text-foreground">government side</strong>? Moving into <strong className="text-foreground">Capture &amp; BD</strong>? Select your path and we'll show you exactly which lessons matter most for your role.
+              Are you on the <strong className="text-foreground">contractor side</strong> or the <strong className="text-foreground">government side</strong>? Moving into <strong className="text-foreground">Capture &amp; BD</strong>? Choose your path in My Account and we'll show you exactly which lessons matter most for your role.
             </p>
           </div>
 
@@ -1020,10 +1015,11 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
               <button
                 key={track.id}
                 onClick={() => {
+                  // The path itself is chosen on My Account — this just takes them there.
                   setFilterMode('career');
-                  setActiveCareer(track.id as CareerTrackId);
                   setStartHereDismissed(true);
                   try { localStorage.setItem('acq_start_here_dismissed', '1'); } catch {}
+                  onOpenAccount?.();
                 }}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all duration-150 group"
               >
@@ -1066,20 +1062,21 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
 
           {/* Role / subject pills — inline with toggle */}
           {filterMode === 'career'
-            ? CAREER_TRACKS.map(track => (
-                <button
-                  key={track.id}
-                  onClick={() => setActiveCareer(track.id)}
-                  className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all",
-                    activeCareer === track.id
-                      ? "bg-primary/10 border-primary/40 text-primary"
-                      : "bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-foreground"
-                  )}
-                >
-                  {track.icon}{track.shortLabel}
-                </button>
-              ))
+            ? (() => {
+                const track = CAREER_TRACKS.find(t => t.id === activeCareer)!;
+                return (
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border bg-primary/10 border-primary/40 text-primary">
+                      {track.icon}{track.shortLabel}
+                    </span>
+                    {onOpenAccount && (
+                      <button onClick={onOpenAccount} className="text-xs text-muted-foreground hover:text-primary underline-offset-2 hover:underline" data-testid="change-path-link">
+                        Change path in My Account
+                      </button>
+                    )}
+                  </div>
+                );
+              })()
             : SUBJECT_GROUPS.map(group => (
                 <button
                   key={group.id}

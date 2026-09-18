@@ -74,6 +74,8 @@ export interface AuthUser {
   lastStreakDate?: string | null;
   /** XP earned from Daily Challenge completions (server-tracked, separate from lesson/quiz XP). */
   dailyChallengeXP?: number;
+  /** XP earned from Acquisition This Week briefs (server-tracked, same deal). */
+  briefsXP?: number;
 }
 
 interface AuthPageProps {

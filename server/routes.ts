@@ -1316,6 +1316,55 @@ export async function registerRoutes(
     });
   });
 
+  // ─── Acquisition This Week ────────────────────────────────────────────────
+
+  // GET /api/briefs/read — brief ids this user has completed the check for.
+  // The client merges this with its local-only record so a user who read a
+  // brief before this endpoint existed (or in a private window) keeps it.
+  app.get("/api/briefs/read", requireAuth as any, async (req: Request, res: Response) => {
+    try {
+      const ids = await storage.getBriefsRead(req.user!.id);
+      return res.json({ briefsRead: ids });
+    } catch (err: any) {
+      console.error('[briefs/read] error:', err);
+      return res.status(500).json({ message: 'Failed to load brief history' });
+    }
+  });
+
+  // POST /api/briefs/complete — Body: { briefId: string, score: number }
+  // score is out of 3. Idempotent per brief id: reopening an old brief never
+  // awards XP twice.
+  app.post("/api/briefs/complete", requireAuth as any, async (req: Request, res: Response) => {
+    const userId = req.user!.id;
+    const { briefId, score } = req.body as { briefId?: string; score?: number };
+    if (!briefId || typeof briefId !== 'string') {
+      return res.status(400).json({ message: 'briefId is required' });
+    }
+    const clamped = Math.max(0, Math.min(3, Math.round(Number(score) || 0)));
+    // Deliberately smaller than the daily challenge (10 to 50 XP): a brief is
+    // three questions, not five, and it should reward the habit without
+    // letting the archive become an XP farm.
+    const xpEarned = clamped === 3 ? 20 : clamped === 2 ? 12 : 8;
+    try {
+      const result = await storage.completeBrief(userId, briefId, clamped, xpEarned);
+      if (!result) return res.status(500).json({ message: 'Failed to record brief' });
+      const { user: updated, awarded, briefsRead } = result;
+      return res.json({
+        briefId,
+        score: clamped,
+        xpEarned: awarded ? xpEarned : 0,
+        alreadyCompleted: !awarded,
+        briefsRead,
+        xp: updated.xp ?? 0,
+        currentStreak: getDisplayStreak((updated as any).currentStreak, (updated as any).lastStreakDate),
+        longestStreak: (updated as any).longestStreak ?? 0,
+      });
+    } catch (err: any) {
+      console.error('[briefs/complete] error:', err);
+      return res.status(500).json({ message: 'Failed to record brief' });
+    }
+  });
+
   // ─── Activity Tracking ────────────────────────────────────────────────────
 
   // POST /api/track-activity
@@ -1339,10 +1388,29 @@ export async function registerRoutes(
       const skillLevels = (currentUser.moduleSkillLevels as Record<string, string>) ?? {};
       const skillUnlocks = Object.values(skillLevels).filter(l => l === 'intermediate' || l === 'advanced').length
         + Object.values(skillLevels).filter(l => l === 'advanced').length; // advanced counts double
+      // This recalculation overwrites the xp column on every heartbeat, so
+      // anything earned outside the lesson/quiz/skill formula has to be a term
+      // here or it disappears on the next check-in. Daily challenge XP used to
+      // be written straight to the column by completeDailyChallenge and then
+      // wiped seconds later, which made this column read low for every active
+      // user. (The XP a user actually *sees* is computed client-side in
+      // App.tsx from challengeHistory and briefsRead, so that display was
+      // always right; this column feeds admin analytics, and it was the number
+      // that drifted.)
+      const sumXpEarned = (entries: unknown) =>
+        (Array.isArray(entries) ? entries : []).reduce(
+          (sum: number, e: any) => sum + (Number(e?.xpEarned) || 0),
+          0,
+        );
+      const challengeXp = sumXpEarned((currentUser as any).challengeHistory);
+      const briefXp = sumXpEarned((currentUser as any).briefsRead);
+
       const newXp = Math.round(
         completedCount * 10
         + avgQuiz * 5
         + skillUnlocks * 50
+        + challengeXp
+        + briefXp
       );
 
       const newMinutes = (currentUser.totalMinutesActive ?? 0) + Math.max(0, Math.round(minutesActive));
@@ -2143,8 +2211,8 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
   // fetch any module's PDF with no login, no trial, no payment. Moved to
   // server/assets/lesson-books/ (outside the static-served client/public
   // tree) and gated here the same way the button decides whether to show:
-  // Module 1 is free for any logged-in user; Modules 2-6 require an actual
-  // paid plan, not just an active trial (hasPaidPlan, shared/access.ts).
+  // Module 1 is free for any logged-in user; every other module requires an
+  // actual paid plan, not just an active trial (hasPaidPlan, shared/access.ts).
   app.get("/api/lesson-book/:moduleId", requireAuth as any, (req: Request, res: Response) => {
     const moduleId = req.params.moduleId as string;
     const user = (req as any).user as { subscriptionStatus?: string | null };
@@ -2156,6 +2224,14 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       data:        'module-4-data-analytics.pdf',
       capture:     'module-5-capture-bd.pdf',
       operations:  'module-6-operations-leadership.pdf',
+      business:    'module-7-business-of-defense-contracting.pdf',
+      smallbiz:    'module-8-small-business.pdf',
+      compliance:  'module-9-compliance-stack.pdf',
+      preaward:    'module-10-government-pre-award.pdf',
+      lifecycle:   'module-11-beyond-award.pdf',
+      onramp:      'module-12-startup-on-ramp.pdf',
+      veteran:     'module-13-veteran-transition.pdf',
+      history:     'module-14-why-the-rules-exist.pdf',
     };
     const FREE_LESSON_BOOK_MODULES = ['foundations'];
 

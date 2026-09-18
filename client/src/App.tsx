@@ -255,6 +255,8 @@ function AppContent() {
   // Burn Rate (streak) — surfaced persistently in the sidebar, not just on the
   // Dashboard page, so it behaves like Duolingo's always-visible flame.
   const [streak, setStreak] = useState({ currentStreak: 0, longestStreak: 0 });
+  // XP from briefs completed since this session's user object was loaded.
+  const [sessionBriefXp, setSessionBriefXp] = useState(0);
 
   // Derived progress from server auth
   const isPremium =
@@ -278,13 +280,21 @@ function AppContent() {
   const dailyChallengeXP =
     authState.status === 'authenticated' ? authState.user.dailyChallengeXP ?? 0 : 0;
 
+  // Acquisition This Week brief XP, same treatment as the Daily Challenge.
+  // `sessionBriefXp` is the optimistic part: the session user object was
+  // loaded at sign-in, so a brief completed since then is not in it yet. The
+  // delta is added here and resets to 0 on the next load, when the server
+  // value already includes it.
+  const briefsXP =
+    authState.status === 'authenticated' ? authState.user.briefsXP ?? 0 : 0;
+
   const progress = {
     completedLessons,
     quizScores,
     unlockedModules: new Set<string>(['foundations']),
     isPremium,
     isActuallyPaid,
-    xp: calculateXP(completedLessons, quizScores, dailyChallengeXP),
+    xp: calculateXP(completedLessons, quizScores, dailyChallengeXP, briefsXP + sessionBriefXp),
   };
 
   // Streak — fetched here rather than only in Dashboard. The mobile top bar
@@ -722,6 +732,7 @@ function AppContent() {
               onEditProfile={handleEditProfile}
               isAdmin={isAdmin}
               onStreakUpdate={(s) => setStreak(s)}
+              onBriefXpEarned={(amount) => setSessionBriefXp(x => x + amount)}
               firstName={authState.status === 'authenticated' ? authState.user.firstName : null}
               lastName={authState.status === 'authenticated' ? authState.user.lastName : null}
               lastStreakDate={authState.status === 'authenticated' ? authState.user.lastStreakDate ?? null : null}

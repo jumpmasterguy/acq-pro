@@ -45,7 +45,7 @@ for (const m of content.matchAll(/\bid:\s*'([a-z]+-\d+[a-z]?)'/g)) {
 }
 
 // 3. Minimum module count
-const moduleIds = ['finance','contracts','foundations','data','capture','operations'];
+const moduleIds = ['finance','contracts','foundations','data','capture','operations','business','smallbiz','compliance','preaward','lifecycle','onramp','veteran','history'];
 for (const mod of moduleIds) {
   if (!content.includes(`id: '${mod}'`)) errors.push(`Missing module: ${mod}`);
 }
@@ -76,6 +76,14 @@ const MODULE_LESSON_PREFIX = {
   data: 'data',
   capture: 'capture',
   operations: 'ops',
+  business: 'business',
+  smallbiz: 'smallbiz',
+  compliance: 'compliance',
+  preaward: 'preaward',
+  lifecycle: 'lifecycle',
+  onramp: 'onramp',
+  veteran: 'veteran',
+  history: 'history',
 };
 
 let depth = 0, bdepth = 0;
@@ -85,7 +93,7 @@ for (let i = 0; i < lines.length; i++) {
   const line = lines[i];
   const clean = stripLiterals(line);
 
-  const moduleIdMatch = line.match(/^ {2}id: '([a-z]+)',\s*$/);
+  const moduleIdMatch = line.match(/^ {2,4}id: '([a-z]+)',\s*$/);
   if (moduleIdMatch && moduleIds.includes(moduleIdMatch[1]) && depth === 1) {
     currentModuleId = moduleIdMatch[1];
     moduleOpenDepth = depth;

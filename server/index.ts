@@ -246,6 +246,8 @@ app.use((req, res, next) => {
         // Daily challenge tracking
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_challenge_date TEXT`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS challenge_history JSONB NOT NULL DEFAULT '[]'::JSONB`,
+        // Acquisition This Week brief completions: [{id, date, score, xpEarned}]
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS briefs_read JSONB NOT NULL DEFAULT '[]'::JSONB`,
         // AI Study Assistant usage tracking
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS ai_calls_today INTEGER NOT NULL DEFAULT 0`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS ai_calls_date TEXT`,
@@ -386,6 +388,16 @@ app.use((req, res, next) => {
     }
 
     return res.status(status).json({ message });
+  });
+
+  // Unmatched /api/* must not fall through to the SPA catch-all below.
+  // Every real API route is registered above this point, so anything still
+  // here does not exist. Without this, the catch-all answers vulnerability
+  // scanners probing /api/.env, /api/v1/.env and similar with a 200 and a
+  // page of HTML, which is both the wrong status and a steady stream of
+  // misleading 200s in the access log.
+  app.use("/api", (_req, res) => {
+    res.status(404).json({ message: "Not found" });
   });
 
   // importantly only setup vite in development and after

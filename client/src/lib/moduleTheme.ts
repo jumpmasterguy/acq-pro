@@ -6,7 +6,7 @@
  *
  * Keyed by the `color` field on each module in curriculum.ts.
  */
-export type ModuleColorKey = 'navy' | 'gold' | 'blue' | 'teal' | 'amber' | 'slate';
+export type ModuleColorKey = 'navy' | 'gold' | 'blue' | 'teal' | 'amber' | 'slate' | 'emerald' | 'rose' | 'indigo' | 'sky' | 'fuchsia' | 'orange' | 'lime' | 'stone';
 
 export interface ModuleTheme {
   /** Solid hex — used for lesson-number circles, bars, and inline styles. */
@@ -133,6 +133,86 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
     mobileHex: '#8b5cf6',
     gradientFrom: '#8b5cf6',
     gradientTo: '#6d28d9',
+  },
+  emerald: {
+    hex: '#059669',
+    headerGrad: 'from-emerald-500 to-emerald-700 dark:from-emerald-800 dark:to-emerald-950 border-emerald-600/50',
+    border: 'border-emerald-200 dark:border-emerald-800/40',
+    hoverBorder: 'hover:border-emerald-400/60',
+    text: 'text-emerald-600 dark:text-emerald-400',
+    bgTint: 'bg-emerald-500/10',
+    borderTint: 'border-emerald-500/30',
+    progressBar: '[&>div]:bg-emerald-500',
+  },
+  rose: {
+    hex: '#e11d48',
+    headerGrad: 'from-rose-500 to-rose-700 dark:from-rose-800 dark:to-rose-950 border-rose-600/50',
+    border: 'border-rose-200 dark:border-rose-800/40',
+    hoverBorder: 'hover:border-rose-400/60',
+    text: 'text-rose-600 dark:text-rose-400',
+    bgTint: 'bg-rose-500/10',
+    borderTint: 'border-rose-500/30',
+    progressBar: '[&>div]:bg-rose-500',
+  },
+  indigo: {
+    hex: '#4f46e5',
+    headerGrad: 'from-indigo-500 to-indigo-700 dark:from-indigo-800 dark:to-indigo-950 border-indigo-600/50',
+    border: 'border-indigo-200 dark:border-indigo-800/40',
+    hoverBorder: 'hover:border-indigo-400/60',
+    text: 'text-indigo-600 dark:text-indigo-400',
+    bgTint: 'bg-indigo-500/10',
+    borderTint: 'border-indigo-500/30',
+    progressBar: '[&>div]:bg-indigo-500',
+  },
+  sky: {
+    hex: '#0284c7',
+    headerGrad: 'from-sky-500 to-sky-700 dark:from-sky-800 dark:to-sky-950 border-sky-600/50',
+    border: 'border-sky-200 dark:border-sky-800/40',
+    hoverBorder: 'hover:border-sky-400/60',
+    text: 'text-sky-600 dark:text-sky-400',
+    bgTint: 'bg-sky-500/10',
+    borderTint: 'border-sky-500/30',
+    progressBar: '[&>div]:bg-sky-500',
+  },
+  fuchsia: {
+    hex: '#c026d3',
+    headerGrad: 'from-fuchsia-500 to-fuchsia-700 dark:from-fuchsia-800 dark:to-fuchsia-950 border-fuchsia-600/50',
+    border: 'border-fuchsia-200 dark:border-fuchsia-800/40',
+    hoverBorder: 'hover:border-fuchsia-400/60',
+    text: 'text-fuchsia-600 dark:text-fuchsia-400',
+    bgTint: 'bg-fuchsia-500/10',
+    borderTint: 'border-fuchsia-500/30',
+    progressBar: '[&>div]:bg-fuchsia-500',
+  },
+  orange: {
+    hex: '#ea580c',
+    headerGrad: 'from-orange-500 to-orange-700 dark:from-orange-800 dark:to-orange-950 border-orange-600/50',
+    border: 'border-orange-200 dark:border-orange-800/40',
+    hoverBorder: 'hover:border-orange-400/60',
+    text: 'text-orange-600 dark:text-orange-400',
+    bgTint: 'bg-orange-500/10',
+    borderTint: 'border-orange-500/30',
+    progressBar: '[&>div]:bg-orange-500',
+  },
+  lime: {
+    hex: '#65a30d',
+    headerGrad: 'from-lime-500 to-lime-700 dark:from-lime-800 dark:to-lime-950 border-lime-600/50',
+    border: 'border-lime-200 dark:border-lime-800/40',
+    hoverBorder: 'hover:border-lime-400/60',
+    text: 'text-lime-600 dark:text-lime-400',
+    bgTint: 'bg-lime-500/10',
+    borderTint: 'border-lime-500/30',
+    progressBar: '[&>div]:bg-lime-500',
+  },
+  stone: {
+    hex: '#78716c',
+    headerGrad: 'from-stone-500 to-stone-700 dark:from-stone-800 dark:to-stone-950 border-stone-600/50',
+    border: 'border-stone-200 dark:border-stone-800/40',
+    hoverBorder: 'hover:border-stone-400/60',
+    text: 'text-stone-600 dark:text-stone-400',
+    bgTint: 'bg-stone-500/10',
+    borderTint: 'border-stone-500/30',
+    progressBar: '[&>div]:bg-stone-500',
   },
 };
 

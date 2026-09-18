@@ -26,13 +26,18 @@ export const FREE_PREVIEW_LESSONS = [
 export const calculateXP = (
   completedLessons: Set<string>,
   quizScores: Record<string, number>,
-  dailyChallengeXP: number = 0
+  dailyChallengeXP: number = 0,
+  briefsXP: number = 0
 ) => {
   let xp = completedLessons.size * 100;
   Object.values(quizScores).forEach(score => {
     xp += Math.floor(score / 10);
   });
   xp += dailyChallengeXP;
+  // Acquisition This Week brief XP, tracked server-side per brief. Folded in
+  // here for the same reason as the Daily Challenge: it is earned outside the
+  // lesson/quiz formula, so without this line the user never sees it.
+  xp += briefsXP;
   return xp;
 };
 

@@ -3450,6 +3450,19 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             </div>
           )}
 
+          {/* Contractor-side note: authored on some lessons, shown to users on
+              an industry-side path (Contractor PM, Capture/BD) or with no path
+              chosen. Government-path users skip it. */}
+          {lesson.contractorNote && (activeCareer === 'contractor_pm' || activeCareer === 'capture_bd' || !activeCareer) && (
+            <div className="bg-card border border-primary/25 rounded-xl p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <Briefcase className="w-4 h-4 text-primary flex-shrink-0" />
+                <h3 className="font-bold text-sm">If You Are on the Contractor Side</h3>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">{lesson.contractorNote}</p>
+            </div>
+          )}
+
           {/* Next Actions */}
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <Button
