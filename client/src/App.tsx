@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calculateXP } from "@/lib/progress";
 import { hasFullAccess, hasPaidPlan, trialDaysRemaining } from "@shared/access";
-import { isNativeApp } from "@/lib/platform";
+import { isNativeApp, getPlatform } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
 import { getModuleTheme } from "@/lib/moduleTheme";
 import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator, Flame } from "lucide-react";
@@ -403,6 +403,32 @@ function AppContent() {
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  // Android's hardware/gesture Back. A Capacitor webview with no backButton
+  // listener falls through to the platform default, which finishes the whole
+  // activity — so Back from a lesson closed the app instead of returning to
+  // the module. The view stack is already mirrored into real history entries
+  // by the effect above, so Back only has to walk that stack, and exit when
+  // there is nothing left to walk. iOS has no hardware back and uses the
+  // in-app back affordance, so this is Android-only.
+  useEffect(() => {
+    if (getPlatform() !== 'android') return;
+    let cancelled = false;
+    let detach: (() => void) | undefined;
+    // Imported lazily so the plugin never loads in the browser build.
+    import('@capacitor/app')
+      .then(({ App: CapacitorApp }) => {
+        if (cancelled) return;
+        const handle = CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+          if (canGoBack) window.history.back();
+          else CapacitorApp.exitApp();
+        });
+        detach = () => { void handle.then(h => h.remove()).catch(() => {}); };
+        if (cancelled) detach();
+      })
+      .catch(() => {});
+    return () => { cancelled = true; detach?.(); };
   }, []);
 
   // Check session on mount — restore last view if session is still valid

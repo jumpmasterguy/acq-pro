@@ -11,7 +11,14 @@ const config: CapacitorConfig = {
     // cookies and the Google OAuth callback are both issued for acqlerate.com,
     // and the old acq-pro-production.up.railway.app service domain no longer
     // resolves to a service at all (Railway answers it with a 404 fallback).
-    url: 'https://acqlerate.com',
+    // Must include /app. Bare https://acqlerate.com serves landing.html, the
+    // marketing homepage, so the shell used to launch onto the sales page:
+    // its sticky header has no safe-area padding, so under contentInset
+    // 'never' the status bar sat on top of the wordmark and the Start Free
+    // button, and App Review guideline 4.2.2 treats an app that opens on
+    // marketing material as a repackaged website. /app serves the SPA, which
+    // does handle the insets.
+    url: 'https://acqlerate.com/app',
     cleartext: false,
   },
   ios: {
