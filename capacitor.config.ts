@@ -20,6 +20,13 @@ const config: CapacitorConfig = {
     // does handle the insets.
     url: 'https://acqlerate.com/app',
     cleartext: false,
+    // Hosts the webview is allowed to navigate to itself. Anything not listed
+    // here (and not the server host above) is handed to the system browser,
+    // which is what broke Google sign-in: the flow left for Safari, completed
+    // there, and set the session cookie in Safari's jar, so the app came back
+    // to its own sign-in screen still logged out. accounts.google.com has to
+    // be navigable in-app for the cookie to land where the app can see it.
+    allowNavigation: ['accounts.google.com'],
   },
   ios: {
     // 'never' lets the webview own the full screen so the CSS env(safe-area-*)
@@ -31,7 +38,13 @@ const config: CapacitorConfig = {
     // Brand teal, matching the launch screen. Previously the old AcqPro navy,
     // which flashed between the splash and the first painted frame.
     backgroundColor: '#01696F',
-    limitsNavigationsToAppBoundDomains: true,
+    // Off deliberately. With it on and no WKAppBoundDomains array in
+    // Info.plist, WKWebView treats every host as out of bounds, so the
+    // allowNavigation entry above cannot take effect. Nothing here uses the
+    // APIs app-bound domains exists to protect, and Apple does not require
+    // it. If it is ever turned back on, WKAppBoundDomains must list both
+    // acqlerate.com and accounts.google.com or sign-in breaks again.
+    limitsNavigationsToAppBoundDomains: false,
     scrollEnabled: true,
     keyboardDisplayRequiresUserAction: false,
   },
