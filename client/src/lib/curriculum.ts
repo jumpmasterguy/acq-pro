@@ -1921,6 +1921,26 @@ export const modules: Module[] = [
           { term: 'FYDP', definition: 'Future Years Defense Program, 5-year funding baseline for all DoD programs.' },
           { term: 'PBD', definition: 'Program Budget Decision. OSD decisions on Service POMs that shape the President\'s Budget.' },
           { term: 'NDAA', definition: 'National Defense Authorization Act. Annual legislation authorizing DoD activities and funding.' },
+          {
+            term: "Continuing Resolution (CR)",
+            definition: "A stopgap appropriation that continues prior-year funding levels when the new appropriation is late. It generally bars new starts and production rate increases.",
+          },
+          {
+            term: "Reprogramming",
+            definition: "Moving appropriated money between programs or line items within a year. Below-threshold moves are internal; above-threshold moves need congressional notification or approval.",
+          },
+          {
+            term: "Obligation Rate",
+            definition: "The share of a year's appropriation put on contract. Tracked against benchmarks because unobligated money invites rescission.",
+          },
+          {
+            term: "Expenditure Rate",
+            definition: "The share of obligated money actually paid out. Slow expenditure on fast obligation signals a program buying paper rather than progress.",
+          },
+          {
+            term: "Unfunded Priority List (UPL)",
+            definition: "The list each service sends Congress of needs it could not fit inside the budget request. A route to money outside the normal cycle.",
+          },
         ],
         content: [
           {
@@ -1984,10 +2004,133 @@ export const modules: Module[] = [
           body: 'Mid-career PMs live in two worlds simultaneously: executing the current year\'s approved budget and defending next year\'s POM submission. Your POM submission must be defensible with cost data, supported by your program\'s APB, and internally consistent with your contract structure. The most common POM mistake: projecting out-year costs that don\'t match your contract\'s performance schedule, or requesting procurement funding before RDT&E work is complete. Budget analysts at the Component and OSD level will catch these inconsistencies. Build your POM from the contract up. Not from the budget down. Cross-walk your WBS to your budget line items. When the two don\'t align, you get reprogramming problems in execution.',
         },
         {
+          type: "text",
+          level: "intermediate",
+          heading: "The Two-Year Lag, on a Calendar",
+          body: "The single most useful thing to internalize about PPBE is when your money was decided. The dollars you are executing this October were built into a program objective memorandum roughly two years ago, reviewed inside the department the year after, sent to Congress in February of last year, and appropriated somewhere between October and, in a bad year, the following spring. So the question \"can we fund this new requirement?\" almost never has a this-year answer. It has three possible answers: find it inside what you already have, move it from somewhere else through reprogramming, or put it in the POM being built right now for two years out. A PM who can say which of those three they are asking for gets taken seriously by the comptroller. A PM who just asks for money gets a lecture about the cycle.",
+        },
+        {
+          type: "table",
+          level: "intermediate",
+          heading: "What the PM Is Actually Doing in Each Phase",
+          headers: ["Phase", "Who is deciding", "What the PM does that matters"],
+          rows: [
+            [
+              "Planning",
+              "OSD and the services, against strategy",
+              "Make sure the capability your program delivers is described in the language the strategy uses",
+            ],
+            [
+              "Programming",
+              "Service staff building the POM",
+              "Supply the cost estimate, the schedule, and the consequence of not funding. This is where programs live or die",
+            ],
+            [
+              "Budgeting",
+              "Comptroller and OMB",
+              "Defend the justification books; answer passbacks fast and in writing",
+            ],
+            [
+              "Execution",
+              "You",
+              "Obligate on plan, expend on plan, and report problems while they are still small enough to fix",
+            ],
+          ],
+        },
+        {
+          type: "text",
+          level: "intermediate",
+          heading: "Living Under a Continuing Resolution",
+          body: "Congress rarely appropriates on time, so the first months of most fiscal years run on a continuing resolution. A CR continues last year's funding levels and, critically, generally prohibits new starts and production rate increases. For a program in steady state this is an annoyance: you are funded at last year's rate and you manage the difference. For a program with a milestone this year, or a planned production ramp, it is a schedule event, and the time to plan for it is August, not December. The mechanisms that help are anomaly requests, which carve out specific exceptions in the CR language for named programs, and careful obligation sequencing so the work that can proceed does. Both take advance staff work, which is the point: the programs that suffer least under a CR are the ones that assumed there would be one.",
+        },
+        {
+          type: "list",
+          level: "intermediate",
+          heading: "Moving Money Inside the Year",
+          items: [
+            "Below-threshold reprogramming|||Moves under the dollar and percentage thresholds can be handled internally with comptroller approval. Fastest route, smallest amounts. Verify current thresholds, which change with each appropriations act.",
+            "Above-threshold reprogramming|||Requires notification to, or approval from, the congressional defense committees. Takes months and spends political capital.",
+            "Internal realignment|||Moving between elements inside the same program element and appropriation is usually simplest, and is the first place to look.",
+            "Prior-year funds|||Money already obligated but deobligated from a completed action may be reusable within its period of availability. Worth an inventory before asking for anything new.",
+            "The unfunded priority list|||If it is genuinely unfunded and genuinely a priority, the service's list to Congress is a real, if uncertain, route.",
+          ],
+        },
+        {
           type: 'callout' as const,
           level: 'advanced' as const,
           heading: 'Congressional Marks and Unfunded Priorities: The Hidden Budget Game',
           body: 'The President\'s Budget Request is a starting position, not an ending position. Congress marks up every defense bill. Adding earmarks, cutting programs, fencing funds pending reports. Senior PMs must track their program\'s budget through the NDAA markup process: House HASC mark, Senate SASC mark, conference report. Fenced funding (congressionally restricted) requires notifications or reports before obligation. Failing to track these leads to Anti-Deficiency Act violations. Unfunded Priorities Lists (UPLs) are the Service Chiefs\' mechanism for asking Congress to add money above the budget request. If your program is on a UPL, it creates both opportunity (more money) and risk (congressional attention). Know where your program sits in the congressional priority stack. Your program\'s survival may depend on it.',
+        },
+        {
+          type: "text",
+          level: "advanced",
+          heading: "How a Program Actually Gets Into the POM",
+          body: "Programs are not funded because they are good ideas. They are funded because someone on the service staff put them in a program objective memorandum, defended them through the internal review, and survived the trades made when the total exceeded the fiscal guidance. The PM's leverage is entirely in what they hand that person: a credible cost estimate that will not move six months later, a schedule tied to a capability delivery date leadership already cares about, and a clear statement of what the service does not get if this is cut. That last one is what wins. The programs that lose are the ones described in terms of their own activity rather than the capability gap they close. Senior PMs start this conversation a year before the POM build, not when the call for inputs goes out.",
+        },
+        {
+          type: "text",
+          level: "advanced",
+          heading: "Marks, Passbacks and Appeals",
+          body: "The budget request is a starting position. OMB passbacks change it before it reaches Congress. Then each of the four committees marks it, and the marks rarely agree, so the conference produces a number nobody proposed. A mark can cut for cause, cut for execution (they see your unobligated balances and conclude you cannot spend what you have), or add money you did not ask for, sometimes for facilities or suppliers in a particular district. Each of those calls for a different response. A cut for execution is answered with an obligation plan and, if you have one, a credible story about why last year's balance was justified. A cut for cause is answered through the service's appeal process, quickly, with the operational consequence stated plainly. An add is answered by making sure you can actually execute it, because failing to obligate a congressional add is remembered.",
+        },
+        {
+          type: "table",
+          level: "advanced",
+          heading: "What Leadership Reads in Your Execution Numbers",
+          headers: ["Pattern", "What it suggests", "What to do before you are asked"],
+          rows: [
+            [
+              "Low obligation, low expenditure",
+              "The program cannot execute; a target for marks and rescission",
+              "Publish a monthly obligation plan and hold to it",
+            ],
+            [
+              "High obligation, low expenditure",
+              "Money placed on contract but work not happening",
+              "Explain the lag: long-lead items, milestone payments, or a real problem",
+            ],
+            [
+              "Obligation spike in September",
+              "Year-end sweeping rather than planning",
+              "Level the plan; explain the genuinely seasonal pieces",
+            ],
+            [
+              "Expenditure ahead of plan",
+              "Burning faster than the profile assumed",
+              "Refresh the EAC before someone else notices the divergence",
+            ],
+          ],
+        },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They know which of the three funding answers they are asking for before they open their mouth: found inside, reprogrammed, or POMed for two years out. They assume a continuing resolution and sequence the year's obligations so the work that can proceed does. They start the POM conversation a year early and describe the program by the gap it closes, not by its own activity. And they publish an obligation plan and hold to it, because an execution record is what protects a program from marks.",
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **the money you are spending this year was decided about two years ago, so every funding question has one of three answers, find it inside, move it, or program it for two years out, and saying which one you mean is what gets you taken seriously.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "finance-4",
+              label: "Color of Money by Service",
+              sub: "What each appropriation may legally buy",
+            },
+            {
+              lessonId: "onramp-5",
+              label: "Crossing the Valley of Death",
+              sub: "The same two-year lag, seen from a company's side",
+            },
+            {
+              lessonId: "preaward-1",
+              label: "From Validated Need to Award",
+              sub: "How the funded requirement becomes a contract",
+            },
+          ],
         },
         ],
       quiz: [
@@ -2088,7 +2231,47 @@ export const modules: Module[] = [
               { left: 'Procurement', right: '3 Years' },
               { left: 'MILCON (Military Construction)', right: '5 Years' }
             ]
-          }
+          },
+          {
+            type: "drag_order",
+            question: "Order the PPBE phases from strategy to spending:",
+            options: [],
+            correct: 0,
+            explanation: "Planning sets the strategy, programming builds the POM, budgeting defends it, and execution spends what was appropriated, roughly two years after programming.",
+            orderedItems: [
+              "Planning: strategy and guidance set the priorities",
+              "Programming: the service builds the POM for the out years",
+              "Budgeting: the request is defended through OMB and Congress",
+              "Execution: the PM obligates and expends the appropriation",
+            ],
+            id: "q13",
+          },
+          {
+            type: "drag_match",
+            question: "Match each funding situation to the right mechanism:",
+            options: [],
+            correct: 0,
+            explanation: "Naming the mechanism is what separates a fundable request from a complaint about money.",
+            pairs: [
+              {
+                left: "Small shortfall inside the same program element",
+                right: "Internal realignment",
+              },
+              {
+                left: "Moving money between programs, above the threshold",
+                right: "Above-threshold reprogramming with congressional notification",
+              },
+              {
+                left: "A genuine need the budget could not fit",
+                right: "The service's unfunded priority list",
+              },
+              {
+                left: "A new requirement with no near-term source",
+                right: "Program it into the POM being built now",
+              },
+            ],
+            id: "q14",
+          },
         ]
       },
       {
@@ -2730,6 +2913,14 @@ export const modules: Module[] = [
           { term: 'Funded Value', definition: 'The amount of money actually obligated to a contract right now, tied to a specific funding document. This is the real money a contractor can legally bill against today, separate from the ceiling.' },
           { term: 'ACRN', definition: 'Accounting Classification Reference Number. The specific funding line on a contract that ties obligated dollars to a particular appropriation and CLIN.' },
           { term: 'Limitation of Funds / Limitation of Cost', definition: 'FAR 52.232-22 and 52.232-20. The clauses governing incrementally funded cost-reimbursement contracts, requiring the contractor to notify the government (commonly at 75% of funded value) before they run out of money.' },
+          {
+            term: "Management Reserve",
+            definition: "Budget held by the contractor inside the contract value for in-scope work the plan did not anticipate. It is not profit and it is not the government's to direct.",
+          },
+          {
+            term: "To-Complete Performance Index (TCPI)",
+            definition: "The efficiency the remaining work must achieve to finish at a target. Compare it to the CPI already achieved: a large gap means the target is not real.",
+          },
         ],
         attachments: [
           {
@@ -2805,6 +2996,106 @@ export const modules: Module[] = [
             type: 'tip',
             heading: 'The Golden Rule of EAC',
             body: 'Never manage to the EAC you want. Manage to the EAC the data is telling you. PMs who quietly sandbag their number to avoid scrutiny always get caught eventually, and it costs them far more credibility than an early, uncomfortable, honest number ever would.',
+          },
+          {
+            type: "text",
+            level: "intermediate",
+            heading: "Three Ways to Build an EAC, and the Argument Between Them",
+            body: "There is no single correct EAC, which is why the number gets argued about. The statistical version takes the budget and divides by the efficiency achieved so far: if you have been getting 89 cents of work per dollar, assume that continues. The bottom-up version rebuilds the remaining work package by package with current knowledge, which is better informed and reliably more optimistic, because the people producing it are the people who will be judged against it. The composite version divides the budget by CPI multiplied by SPI, which is harsher and appropriate when schedule pressure is what is driving cost. Research on completed programs has repeatedly found the statistical version hard to beat once a contract is past roughly twenty percent complete. The professional move is to compute all three, present the spread, and say which assumption each one rests on.",
+          },
+          {
+            type: "table",
+            level: "intermediate",
+            heading: "The Same Program, Three EACs (BAC $20M, CPI 0.89, SPI 0.80)",
+            headers: ["Method", "Formula", "Result", "When it is the honest one"],
+            rows: [
+              [
+                "Statistical",
+                "BAC / CPI",
+                "$22.5M",
+                "Default past 20 percent complete; performance rarely improves on its own",
+              ],
+              [
+                "Bottom-up",
+                "Rebuild remaining work",
+                "Contractor's number, usually lower",
+                "Early, or after a real change in how the work is being done",
+              ],
+              ["Composite", "BAC / (CPI x SPI)", "$28.1M", "When recovering the schedule is what will cost the money"],
+              [
+                "Management EAC",
+                "Judgment, documented",
+                "Whatever you can defend",
+                "Always the one you brief, with the basis stated",
+              ],
+            ],
+          },
+          {
+            type: "text",
+            level: "intermediate",
+            heading: "Funded, Obligated, Ceiling: Three Numbers People Mix Up",
+            body: "The contract ceiling is the most the contract could ever be worth. The obligated amount is what the government has actually put on it, line by line, through accounting classification reference numbers. The funded value is what is available to spend right now. A cost-type contract can have a $30M ceiling, $12M obligated, and a limitation of funds clause that stops work when the contractor's costs approach that $12M, regardless of the ceiling. New PMs see the ceiling and relax. The number that governs whether your team gets paid next month is the funded value, and the date that matters is when your projected spend crosses it. Track that date the way you track a delivery date, because incremental funding actions take weeks of staff work that has to start before the money runs out, not after.",
+          },
+          {
+            type: "list",
+            level: "intermediate",
+            heading: "The Monthly EAC Review, and Who Signs",
+            items: [
+              "The contractor brings the number|||Their EAC, with the basis: what changed, which work packages moved, what assumptions are behind the remaining work.",
+              "The government challenges the basis, not the number|||Arguing about the total goes nowhere. Asking which assumption changed since last month produces answers.",
+              "Compare against the statistical EAC|||If the bottom-up number is far below BAC divided by CPI, ask what will make the remaining work more efficient than the work so far.",
+              "Check the funded-value date|||Every EAC revision moves the date you run out of funded money. That date drives staff action.",
+              "Someone signs|||On the contractor side an EAC is a financial commitment the PM attests to. Treat your acceptance of it the same way.",
+            ],
+          },
+          {
+            type: "text",
+            level: "advanced",
+            heading: "Your EAC Is Also the Contractor's Revenue Number",
+            body: "On most defense contracts the contractor recognizes revenue over time using cost-to-cost: percent complete equals costs incurred divided by total estimated costs, and that denominator is the EAC. So when the EAC moves, the company's reported revenue and profit for the quarter move with it, not as an analogy but as arithmetic. An EAC increase on a fixed-price contract reduces the profit rate applied to all work done to date and produces a one-period catch-up charge. This is why contractor PMs sometimes resist EAC increases far past the point where the program office finds it reasonable: they are not defending a program management number, they are defending a quarter. Knowing that changes how you run the conversation. It also tells you when to expect resistance, and it makes the case for raising bad news early, when the adjustment is small.",
+          },
+          {
+            type: "text",
+            level: "advanced",
+            heading: "Management Reserve, Undistributed Budget, and Where the Cushion Hides",
+            body: "Not all of the contract budget is in work packages. Management reserve is held back by the contractor for in-scope surprises; undistributed budget is authorized work not yet assigned to a control account. Both are legitimate, and both are places where a program's true position can be obscured. A program burning management reserve at a steady rate while reporting stable variances is a program whose plan is wrong and whose reserve is absorbing the difference; when the reserve runs out, the variances appear all at once. Ask for the reserve balance and its burn rate every month. A reserve that has not moved on a program with real technical problems is as suspicious as one draining fast, because it usually means problems are being carried in the baseline instead.",
+          },
+          {
+            type: "text",
+            level: "advanced",
+            heading: "Defending an EAC You Believe",
+            body: "Sooner or later you will brief an EAC that leadership does not want to hear, and the pressure to soften it is real and rarely explicit. What protects you is the basis. Write down, before the meeting, the three things driving the number, the assumption behind each one, and what would have to change for the number to come down. Then the conversation is about those assumptions rather than about your confidence or your attitude. If you are asked to brief a lower number, brief the range with the conditions attached: this is what it costs if the supplier recovers to their committed rate, and this is what it costs if they hold where they have been for six months. That is an honest answer, it is defensible in writing later, and in practice it usually gets the decision made on the facts rather than on the mood in the room.",
+          },
+          {
+            type: "callout",
+            level: "advanced",
+            heading: "What Senior PMs Do Differently",
+            body: "They compute EAC three ways and brief the spread with its assumptions rather than a single number. They track the date the program crosses its funded value like a delivery date, because the staff work takes weeks. They ask for the management reserve balance and burn every month. They know the contractor's resistance to an EAC increase is often about a quarter, not about the program, and they raise bad news early while the adjustment is still small.",
+          },
+          {
+            type: "highlight",
+            body: "One sentence to teach your team: **the ceiling is what the contract could be worth, the funded value is what you can actually spend, and the EAC is the honest estimate of what the work will cost, so the date your EAC crosses your funded value is the one to manage.**",
+          },
+          {
+            type: "related_lesson",
+            heading: "Build on This",
+            refs: [
+              {
+                lessonId: "data-3",
+                label: "EVM Acronym Deep Dive",
+                sub: "The arithmetic behind each EAC method",
+              },
+              {
+                lessonId: "business-1",
+                label: "Revenue Recognition II",
+                sub: "Why your EAC is the contractor's revenue denominator",
+              },
+              {
+                lessonId: "business-2",
+                label: "Why Q3 Was Bad",
+                sub: "What an EAC change does to a quarter",
+              },
+            ],
           },
         ],
       quiz: [
@@ -2884,6 +3175,44 @@ export const modules: Module[] = [
             options: ['Following best practice for program stability', 'Sandbagging, which erodes credibility once leadership eventually sees the real numbers', 'Required to do this under DFARS', 'Only a problem on contracts above $50M'],
             correct: 1,
             explanation: "An artificially stable or optimistic EAC that does not reflect real performance is a red flag to experienced leadership. Reporting an accurate, even uncomfortable, number early protects a PM's credibility far more than a comfortable number that later blows up.",
+          },
+          {
+            question: "A cost-type contract has a $30M ceiling, $12M obligated and funded, and the contractor has spent $10M. What governs whether work continues next month?",
+            options: [
+              "The $30M ceiling",
+              "The $12M funded value and the limitation of funds clause",
+              "The original proposal",
+              "The award fee schedule",
+            ],
+            correct: 1,
+            explanation: "The ceiling is the maximum the contract could ever be worth. The funded value is what is available now, and the limitation of funds clause stops work as costs approach it.",
+            id: "q12",
+          },
+          {
+            type: "drag_match",
+            question: "Match each EAC method to when it is the honest one:",
+            options: [],
+            correct: 0,
+            explanation: "Compute all three and brief the spread with the assumption behind each.",
+            pairs: [
+              {
+                left: "BAC / CPI",
+                right: "Default once the contract is past about 20 percent complete",
+              },
+              {
+                left: "Bottom-up rebuild",
+                right: "Early, or after a real change in how the work is done",
+              },
+              {
+                left: "BAC / (CPI x SPI)",
+                right: "When recovering the schedule is what will cost the money",
+              },
+              {
+                left: "Management EAC",
+                right: "The number you brief, with its basis written down",
+              },
+            ],
+            id: "q13",
           },
         ],
       },
@@ -3868,6 +4197,18 @@ export const modules: Module[] = [
             { term: 'Value-Add', definition: 'Technical work, such as integration, hardening, configuration, or testing, that transforms a product and supports Principal classification.' },
             { term: 'GAAP', definition: 'Generally Accepted Accounting Principles. The accounting rules your company\'s financials follow. ASC 606 is part of GAAP.' },
             { term: 'Gross vs. Net Revenue', definition: 'Gross = full contract value. Net = fee only. The difference determines how large and valuable your company appears to investors and lenders.' },
+            {
+              term: "Gross vs. Net Presentation",
+              definition: "Whether a company reports the full contract value as revenue (principal) or only its fee on the pass-through portion (agent). Same cash, very different reported revenue.",
+            },
+            {
+              term: "Control Indicators",
+              definition: "The facts auditors weigh to decide principal or agent: inventory risk, pricing discretion, primary responsibility for the deliverable, and who the customer looks to when it fails.",
+            },
+            {
+              term: "Revenue Memo",
+              definition: "The accounting position paper written for a significant contract, documenting the performance obligations and the principal or agent conclusion before the first invoice.",
+            },
           ],
           content: [
             {
@@ -3945,6 +4286,24 @@ export const modules: Module[] = [
             ],
           },
           {
+            type: "text",
+            level: "intermediate",
+            heading: "The Same $10M Contract, Booked Two Ways",
+            body: "Take a contract with $9.5M of hardware bought from a manufacturer and $500K of your own integration labor. As an agent you report revenue of $500K, and if your margin on that labor is 20 percent you report $100K of profit. As a principal you report $10M of revenue and the same $100K of profit. The cash is identical. What changes is the revenue line, and revenue is what most of the outside world uses to size a company: bonding capacity, the size of contract a customer believes you can carry, and the revenue multiple an acquirer applies. This is why the classification is worth getting right at proposal time rather than discovering it during an audit, and why the facts that drive it have to be built into how the work is actually structured.",
+          },
+          {
+            type: "list",
+            level: "intermediate",
+            heading: "Facts That Support a Principal Position, Built In Before Award",
+            items: [
+              "You specify, not just relay|||The technical requirement for the purchased item is yours, documented in your own specification, not a customer part number you forwarded.",
+              "You carry inventory or acceptance risk|||You take delivery, inspect, and are responsible if it fails inspection, rather than drop-shipping direct to the government.",
+              "You set the price|||You have discretion in what you charge, rather than passing a quoted price through with a fixed handling fee.",
+              "You are who the customer calls|||Your name is on the warranty, the field service response and the failure investigation.",
+              "Your integration is real|||Test, configuration, kitting or qualification that changes what the customer receives, described in the SOW as your work.",
+            ],
+          },
+          {
             type: 'text',
             level: 'advanced',
             heading: 'Mixed Contracts: Principal on Some CLINs, Agent on Others',
@@ -3970,6 +4329,24 @@ export const modules: Module[] = [
               { lessonId: 'business-3', label: 'Pass-Through vs. Value-Add', sub: 'The government\'s own version of the Principal/Agent question' },
               { lessonId: 'business-8', label: 'How GovCon Companies Are Valued', sub: 'What gross vs. net does to the sale price' },
             ],
+          },
+          {
+            type: "text",
+            level: "advanced",
+            heading: "How an Auditor Actually Tests It",
+            body: "An auditor does not read your intent, they sample documents. They will pull purchase orders to see whether you or the government specified the item; delivery records to see whether it passed through your facility; the pricing file to see whether you exercised discretion; the quality records to see who dispositioned nonconforming material; and the correspondence to see who the customer contacted when something failed. If those documents say pass-through, the memo saying principal will not survive, and a restatement of reported revenue is an event no small company recovers from quietly. The lesson for a PM is narrow and practical: the documents your program generates in normal operation are the evidence for a conclusion the finance team has already written down. Ask to read the revenue memo for your contract, then make sure your program's records match it.",
+          },
+          {
+            type: "text",
+            level: "advanced",
+            heading: "What This Does to What the Company Is Worth",
+            body: "Services and integration businesses are usually valued on a multiple of revenue or of EBITDA, and the mix matters as much as the level. Pass-through hardware revenue at a thin handling margin dilutes the margin percentage an acquirer sees even when it raises the revenue number. Engineering and integration content does the opposite. That is why the same company can be described two ways in a diligence conversation, and why the honest version of the story matters: a buyer will rebuild the revenue by type, find the pass-through, and discount it. The business module's valuation lesson walks through the arithmetic. The connection to your job is that how the work is scoped and described in the proposal decides which category it lands in years before anyone runs a valuation.",
+          },
+          {
+            type: "callout",
+            level: "advanced",
+            heading: "What Senior PMs Do Differently",
+            body: "They read the revenue memo for their own contract and make sure the program's records support it. They structure scope at proposal time so the facts fit the position the company intends to take, rather than arguing the position after the documents exist. And they know that pass-through volume flatters revenue and dilutes margin, so they push for engineering content when the customer is indifferent between the two.",
           },
           ],
           quiz: [
@@ -4001,6 +4378,44 @@ export const modules: Module[] = [
           { id: 'q8', question: 'Which SOW language most supports Principal treatment?', options: ['"Deliver 50 servers to Building 4"', '"Deliver, configure, harden, integrate, and acceptance-test 50 servers per the government\'s security baseline"', '"Provide servers as specified by the manufacturer"', '"Coordinate delivery of 50 servers"'], correct: 1, explanation: 'Configuration, integration, and acceptance testing are performance obligations the company controls. Delivery alone is a hand-off.' },
           { id: 'q9', question: 'Why would an acquirer restate a target\'s revenue from gross to net?', options: ['Because the target is too large', 'Because diligence shows a subcontractor does the work and the company merely holds the contract', 'Because the contract is cost-type', 'Because CPARS ratings are low'], correct: 1, explanation: 'Buyers test the Principal claim against who actually performs and controls the work. If control is absent, they model the revenue as net and price accordingly.' },
           { id: 'q10', type: 'drag_match', question: 'Match the indicator to the classification it supports:', options: [], correct: 0, explanation: 'Bearing performance risk, setting price, and directing the work point to Principal. Forwarding invoices with a markup points to Agent.', pairs: [ { left: 'Company bears risk if the deliverable fails', right: 'Principal' }, { left: 'Company sets the price to the government', right: 'Principal' }, { left: 'Company forwards the supplier invoice plus a percentage', right: 'Agent' }, { left: 'Company issues technical direction and accepts sub output', right: 'Principal' } ] },
+          {
+            question: "A company books $10M gross rather than $500K net on the same contract. What actually changes?",
+            options: [
+              "The cash it collects",
+              "The reported revenue line, and therefore bonding capacity, perceived size and revenue multiples",
+              "The profit in dollars",
+              "The contract type",
+            ],
+            correct: 1,
+            explanation: "Cash and dollar profit are identical. Revenue is what the outside world uses to size a company, which is why the classification matters.",
+            id: "q11",
+          },
+          {
+            type: "drag_match",
+            question: "Match each control indicator to the evidence an auditor pulls:",
+            options: [],
+            correct: 0,
+            explanation: "The conclusion lives in the memo, but it stands or falls on documents your program generates in normal operation.",
+            pairs: [
+              {
+                left: "Who specified the item",
+                right: "Purchase orders and the technical specification",
+              },
+              {
+                left: "Who carried inventory risk",
+                right: "Delivery and receiving records",
+              },
+              {
+                left: "Who had pricing discretion",
+                right: "The pricing file and the quote",
+              },
+              {
+                left: "Who the customer holds responsible",
+                right: "Warranty claims and failure correspondence",
+              },
+            ],
+            id: "q12",
+          },
           ],
         },
         {
@@ -4017,6 +4432,14 @@ export const modules: Module[] = [
             { term: 'DSO', definition: 'Days Sales Outstanding. How many days between billing the government and receiving cash. Under 45 days is healthy. Above 60 means the company is fronting money it has not collected yet.' },
             { term: 'Unallowable Costs', definition: 'Costs the government refuses to reimburse under FAR Part 31. Includes entertainment, lobbying, and advertising. DCAA will find them and require repayment.' },
             { term: 'EBITDA', definition: 'Earnings Before Interest, Taxes, Depreciation, and Amortization. Used in M&A and corporate valuation. PE-backed contractors watch this closely.' },
+            {
+              term: "Unbilled Receivable",
+              definition: "Revenue recognized on work performed but not yet invoiced. Real revenue on the income statement, and cash the company has spent but not collected.",
+            },
+            {
+              term: "Reforecast",
+              definition: "The mid-quarter revision of expected results a business unit makes when a program's numbers move. Surprises here are what damage a PM's standing, not the numbers themselves.",
+            },
           ],
           quiz: [
             {
@@ -4060,6 +4483,18 @@ export const modules: Module[] = [
           { id: 'q9', question: 'Your integration milestone slipped two weeks into next quarter. What is the financial translation leadership wants?', options: ['"The customer is fine with it"', 'The revenue moving between quarters and whether the EAC changed', 'The name of the engineer responsible', 'Nothing; schedule is not a financial topic'], correct: 1, explanation: 'Leadership hears a schedule slip as a revenue timing question. Give the dollars and the EAC status.' },
           { id: 'q10', question: 'Which item belongs in the "forward look" of a business review?', options: ['Last quarter\'s revenue', 'The expected award fee determination, option exercise timing, and funding mod dates', 'The org chart', 'The contract number'], correct: 1, explanation: 'Leadership already knows last quarter. The events that will change next quarter\'s revenue, margin, and cash are what they need from the PM.' },
           { id: 'q11', type: 'drag_order', question: 'Order these lines as they appear on a program P&L from top to bottom:', options: [], correct: 0, explanation: 'Revenue, then direct costs, then gross margin, then indirect allocations, then operating margin.', orderedItems: ['Revenue', 'Direct labor, fringe, subcontracts, ODCs', 'Gross margin', 'Overhead and G&A allocations', 'Operating margin'] },
+          {
+            question: "Your program is on budget and on schedule but invoices 90 days after performance. What is the CFO's concern?",
+            options: [
+              "Nothing; cost and schedule are green",
+              "Unbilled receivables and working capital: real revenue and spent cash with no collection",
+              "Award fee",
+              "The indirect rate",
+            ],
+            correct: 1,
+            explanation: "Working capital usually bites before profitability does, and invoicing timeliness is largely inside the PM's control.",
+            id: "q12",
+          },
           ],
           content: [
             {
@@ -4154,6 +4589,18 @@ export const modules: Module[] = [
             ],
           },
           {
+            type: "text",
+            level: "intermediate",
+            heading: "The Balance Sheet Lines Your Program Moves",
+            body: "PMs think in income statement terms, revenue and margin, because that is what gets reviewed. The CFO is also watching two balance sheet lines your program drives directly. Unbilled receivables grow when you perform work faster than you invoice it: real revenue, spent cash, no invoice yet. Accounts receivable grow when you have invoiced and not been paid. Both consume working capital, which on a growing program is the constraint that bites before profitability does. A program that is on budget, on schedule, and ninety days slow to invoice is a program the CFO worries about, and the fix is usually inside your control: a milestone definition that is unambiguous, a deliverable accepted on time, a receiving report that does not sit in someone's queue. Ask your finance lead what your program's unbilled balance is. The number is usually larger than PMs expect.",
+          },
+          {
+            type: "text",
+            level: "intermediate",
+            heading: "Why Your Margin Moves When You Did Nothing",
+            body: "Your program's reported margin can change in a month in which nothing on your program changed, because indirect rates are allocated across the whole business unit. If another program's direct labor base shrinks, the overhead pool spreads across fewer direct hours and every remaining program's burdened cost rises. Your team did the same work for the same salaries and your cost went up. This is worth understanding for two reasons. It stops you from chasing a variance that has nothing to do with you, and it explains why business unit leadership cares so much about keeping the direct base full: their indirect rates, and therefore the competitiveness of every bid the unit makes, depend on it.",
+          },
+          {
             type: 'text',
             level: 'advanced',
             heading: 'Why Your 10% Program Shows Up as 6% in the Roll-Up',
@@ -4186,6 +4633,44 @@ export const modules: Module[] = [
               { lessonId: 'business-7', label: 'Indirect Rate Games', sub: 'Why the roll-up margin is lower than your program margin' },
               { lessonId: 'business-2', label: 'Why Q3 Was Bad', sub: 'What an EAC change does to the quarter' },
             ],
+          },
+          {
+            type: "text",
+            level: "advanced",
+            heading: "What Happens Upstairs When Your Program Misses",
+            body: "When your EAC moves against you, the business unit does not simply absorb it. The controller reforecasts the quarter, looks for offsets in other programs, and decides whether to release reserve or take the hit. If the number is large enough to move the segment's reported margin, it goes up another level and may end up in a public earnings explanation. None of that is your decision, but the timing of your information determines how well it goes. A problem surfaced in month one of the quarter can be managed inside the quarter. The same problem surfaced in the last week becomes a surprise, and surprises get attributed to the person who delivered them late. The practical rule that senior contractor PMs follow: tell finance what you think is coming before you are certain, with the range, and update it. Being early and approximately right is worth far more than being late and exact.",
+          },
+          {
+            type: "table",
+            level: "advanced",
+            heading: "Saying It in the Language the Review Uses",
+            headers: ["What you would say", "What the business review hears", "Say this instead"],
+            rows: [
+              [
+                "We had some technical issues",
+                "Unquantified risk, probably worse than stated",
+                "EAC is up $400K, all in integration labor, isolated to one CLIN",
+              ],
+              [
+                "The customer was slow",
+                "Blame without a plan",
+                "Government furnished property slipped six weeks; we have a request for equitable adjustment prepared",
+              ],
+              [
+                "We should make it up next quarter",
+                "Hope",
+                "Recovery depends on the supplier holding their committed rate; here is the number if they do not",
+              ],
+              [
+                "Award fee should be fine",
+                "No basis",
+                "Last period scored 82; the two factors that moved are cost control and schedule, both trending up",
+              ],
+            ],
+          },
+          {
+            type: "highlight",
+            body: "One sentence to teach your team: **the government grades your program on deliverables and schedule, the company grades it on margin, cash and the forecast, and the PM who can speak both is the one who gets consulted before decisions instead of after.**",
           },
           ],
         },
