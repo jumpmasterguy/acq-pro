@@ -298,6 +298,19 @@ app.use((req, res, next) => {
           )
         `);
       } catch (e: any) { /* table already exists */ }
+      // Password reset / first-password tokens
+      try {
+        await schemaPool.query(`
+          CREATE TABLE IF NOT EXISTS password_reset_tokens (
+            id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid()::varchar,
+            user_id VARCHAR NOT NULL,
+            token_hash TEXT NOT NULL UNIQUE,
+            expires_at TEXT NOT NULL,
+            used_at TEXT,
+            created_at TEXT NOT NULL DEFAULT now()::text
+          )
+        `);
+      } catch (e: any) { /* table already exists */ }
       for (const stmt of schemaCols) {
         try { await schemaPool.query(stmt); } catch (e: any) { /* column already exists or already nullable */ }
       }

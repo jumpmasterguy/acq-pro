@@ -99,17 +99,68 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
   const [tab, setTab] = useState<"login" | "register">(notice ? "login" : "register");
   const [referralCode, setReferralCode] = useState<string>("");
 
-  // Pick up ?ref=CODE and ?mode=login from URL hash params
+  // 'auth' is the normal sign-in/register pair. 'forgot' asks for an email,
+  // 'reset' is what the emailed link lands on.
+  const [flow, setFlow] = useState<"auth" | "forgot" | "reset">("auth");
+  const [resetToken, setResetToken] = useState("");
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetSent, setResetSent] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+  // Pick up ?ref=CODE, ?mode=login and the reset link's ?token= from URL hash params
   useEffect(() => {
-    const hash = window.location.hash; // e.g. #/auth?ref=LUCAS123 or #/auth?mode=login
+    const hash = window.location.hash; // e.g. #/auth?ref=LUCAS123 or #/reset-password?token=...
     const queryStart = hash.indexOf('?');
     if (queryStart >= 0) {
       const params = new URLSearchParams(hash.slice(queryStart + 1));
       const ref = params.get('ref');
       if (ref) { setReferralCode(ref); setTab('register'); }
       if (params.get('mode') === 'login') { setTab('login'); }
+      const token = params.get('token');
+      if (token && hash.startsWith('#/reset-password')) {
+        setResetToken(token);
+        setFlow('reset');
+      }
     }
   }, []);
+
+  // Always reports success. The server does the same, so neither the page nor
+  // the API can be used to work out which email addresses have accounts.
+  const handleRequestReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await apiRequest("POST", "/api/auth/request-password-reset", { email: resetEmail });
+    } catch { /* deliberately silent — see above */ }
+    setLoading(false);
+    setResetSent(true);
+  };
+
+  const handleSubmitReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newPassword.length < 8) {
+      toast({ title: "Password too short", description: "Use at least 8 characters.", variant: "destructive" });
+      return;
+    }
+    if (newPassword !== confirmNewPassword) {
+      toast({ title: "Passwords don't match", description: "Both fields need to be the same.", variant: "destructive" });
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await apiRequest("POST", "/api/auth/reset-password", { token: resetToken, password: newPassword });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || "That link didn't work.");
+      toast({ title: "Password set", description: "You can sign in with it now." });
+      window.history.replaceState(null, '', window.location.pathname);
+      setFlow('auth');
+      setTab('login');
+    } catch (err: any) {
+      toast({ title: "Couldn't set your password", description: err.message, variant: "destructive" });
+    }
+    setLoading(false);
+  };
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -182,6 +233,131 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
   // limitsNavigationsToAppBoundDomains, so the homepage link would strand the
   // user rather than navigate. The handoff's auth screen has no Back button.
   const showBack = !!onBack && !isNativeApp();
+
+  // Forgot-password and set-password are full-screen on their own rather than
+  // squeezed into the tab card: they are one-shot, arrive cold from an email,
+  // and the branding panel has nothing to add to either. Controls are 44px so
+  // they clear the iOS and Android minimum touch target.
+  if (flow === 'forgot' || flow === 'reset') {
+    const backToSignIn = (
+      <button
+        type="button"
+        onClick={() => { setFlow('auth'); setTab('login'); }}
+        className="w-full text-center text-sm text-muted-foreground hover:text-foreground underline underline-offset-4 min-h-11"
+        data-testid="link-back-to-signin"
+      >
+        Back to sign in
+      </button>
+    );
+
+    return (
+      <div className={cn(
+        "min-h-screen flex flex-col items-center justify-center p-6 safe-top",
+        isMobile ? "acq-auth acq-shell acq-fullscreen acq-inset-top" : "bg-background",
+      )}>
+        <div className="w-full max-w-sm space-y-6">
+          <div className="flex justify-center">
+            <AcqlerateLogo className="h-9" />
+          </div>
+
+          {flow === 'forgot' && (resetSent ? (
+            <div className="space-y-4 text-center">
+              <h1 className="text-xl font-bold text-foreground">Check your email</h1>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                If there's an account for <span className="font-medium text-foreground">{resetEmail}</span>, a link to set
+                a password is on its way. It works once and expires in an hour.
+              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Signed up with Google? Same link — it lets you add a password so you can sign in here.
+              </p>
+              {backToSignIn}
+            </div>
+          ) : (
+            <form onSubmit={handleRequestReset} className="space-y-4">
+              <div className="space-y-1.5 text-center">
+                <h1 className="text-xl font-bold text-foreground">Set a new password</h1>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Enter your email and we'll send a link. This also works if you created your account with Google and
+                  have never had a password.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="reset-email">Email Address</Label>
+                <Input
+                  id="reset-email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  className="h-11"
+                  data-testid="input-reset-email"
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full h-11 gap-2" disabled={loading} data-testid="btn-request-reset">
+                {loading ? <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" /> : <Lock className="w-4 h-4" />}
+                Email me a link
+              </Button>
+              {backToSignIn}
+            </form>
+          ))}
+
+          {flow === 'reset' && (
+            <form onSubmit={handleSubmitReset} className="space-y-4">
+              <div className="space-y-1.5 text-center">
+                <h1 className="text-xl font-bold text-foreground">Choose a password</h1>
+                <p className="text-sm text-muted-foreground">At least 8 characters.</p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="new-password">New Password</Label>
+                <div className="relative">
+                  <Input
+                    id="new-password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    placeholder="At least 8 characters"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="h-11 pr-10"
+                    data-testid="input-new-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirm-new-password">Confirm Password</Label>
+                <Input
+                  id="confirm-new-password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  placeholder="Repeat your password"
+                  value={confirmNewPassword}
+                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  className="h-11"
+                  data-testid="input-confirm-new-password"
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full h-11 gap-2" disabled={loading} data-testid="btn-submit-reset">
+                {loading ? <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" /> : <Lock className="w-4 h-4" />}
+                Save password
+              </Button>
+              {backToSignIn}
+            </form>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -479,27 +655,35 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
                 Create Free Account
               </Button>
 
-              {/* Divider */}
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-border" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">or</span>
-                </div>
-              </div>
+              {/* Google sign-in, web only. Google refuses OAuth inside an app's
+                  embedded browser, and handing it to the system browser puts the
+                  session cookie in Safari's jar where the app can't see it. App
+                  users sign in with email and password; "Forgot password" also
+                  covers Google-created accounts, which have no password yet. */}
+              {!isNativeApp() && (
+                <>
+                  {/* Divider */}
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t border-border" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">or</span>
+                    </div>
+                  </div>
 
-              {/* Google Sign-In */}
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full gap-2.5 font-medium"
-                onClick={handleGoogleSignIn}
-                data-testid="btn-google-register"
-              >
-                <GoogleIcon />
-                Continue with Google
-              </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full gap-2.5 font-medium"
+                    onClick={handleGoogleSignIn}
+                    data-testid="btn-google-register"
+                  >
+                    <GoogleIcon />
+                    Continue with Google
+                  </Button>
+                </>
+              )}
 
               {/* These were inert <span>s — underlined, cursor-pointer, no
                   destination. App Store review checks that they resolve. */}
@@ -575,27 +759,44 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
                 Sign In
               </Button>
 
-              {/* Divider */}
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-border" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">or</span>
-                </div>
-              </div>
-
-              {/* Google Sign-In */}
-              <Button
+              <button
                 type="button"
-                variant="outline"
-                className="w-full gap-2.5 font-medium"
-                onClick={handleGoogleSignIn}
-                data-testid="btn-google-login"
+                onClick={() => { setResetEmail(loginForm.getValues("email") || ""); setResetSent(false); setFlow('forgot'); }}
+                className="w-full text-center text-sm text-muted-foreground hover:text-foreground underline underline-offset-4"
+                data-testid="link-forgot-password"
               >
-                <GoogleIcon />
-                Continue with Google
-              </Button>
+                Forgot your password?
+              </button>
+
+              {/* Google sign-in, web only. Google refuses OAuth inside an app's
+                  embedded browser, and handing it to the system browser puts the
+                  session cookie in Safari's jar where the app can't see it. App
+                  users sign in with email and password; "Forgot password" also
+                  covers Google-created accounts, which have no password yet. */}
+              {!isNativeApp() && (
+                <>
+                  {/* Divider */}
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t border-border" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">or</span>
+                    </div>
+                  </div>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full gap-2.5 font-medium"
+                    onClick={handleGoogleSignIn}
+                    data-testid="btn-google-login"
+                  >
+                    <GoogleIcon />
+                    Continue with Google
+                  </Button>
+                </>
+              )}
 
               <p className="text-sm text-center text-muted-foreground">
                 Don't have an account?{" "}

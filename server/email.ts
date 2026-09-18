@@ -97,6 +97,53 @@ export async function sendWelcomeEmail(to: string, username: string): Promise<vo
   console.log(`[email] Email 1 (welcome) sent to ${to}`);
 }
 
+
+// ─── Password reset / set first password ──────────────────────────────────
+// Transactional, so it deliberately skips the unsubscribe footer (emailShell
+// only adds one when given a recipient) and is never gated on unsubscribe
+// status: someone who opted out of marketing must still be able to get back
+// into their account.
+export async function sendPasswordResetEmail(
+  to: string,
+  username: string,
+  resetUrl: string,
+  isFirstPassword: boolean,
+): Promise<void> {
+  if (!resend) { console.log("[email] RESEND_API_KEY not set — skipping password reset email"); return; }
+
+  const headline = isFirstPassword
+    ? `Set a password for your account, ${username}.`
+    : `Let's get you back in, ${username}.`;
+
+  const explain = isFirstPassword
+    ? `<p>You created your Acqlerate account with Google, so it has never had a password. The mobile app signs you in with an email and password, so you'll need to set one.</p>
+       <p>Setting a password doesn't change anything on the website — you can keep using the Google button there.</p>`
+    : `<p>Someone asked to reset the password on your Acqlerate account. If that was you, the button below will let you choose a new one.</p>`;
+
+  const body = `
+    <div class="greeting">${headline}</div>
+    ${explain}
+
+    <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin:28px 0;border:1px solid #264d73">
+      <a href="${resetUrl}" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">${isFirstPassword ? "Set my password →" : "Choose a new password →"}</a>
+    </div>
+
+    <p style="font-size:14px;color:#475569">This link works once and expires in 60 minutes. If it has already expired, just ask for a new one from the sign-in screen.</p>
+    <p style="font-size:14px;color:#475569">If you didn't ask for this, you can ignore this email — nothing has changed on your account.</p>
+
+    <hr class="divider"/>
+    <p style="font-size:14px;color:#0d2137;font-weight:700;margin-top:4px">— Lucas, Acqlerate</p>
+  `;
+
+  await resend.emails.send({
+    from: FROM, to,
+    replyTo: "hello@acqlerate.com",
+    subject: isFirstPassword ? "Set a password for Acqlerate" : "Reset your Acqlerate password",
+    html: emailShell(isFirstPassword ? "One link to set a password so you can sign in on mobile." : "One link to choose a new password.", body),
+  });
+  console.log(`[email] password reset sent to ${to} (firstPassword=${isFirstPassword})`);
+}
+
 // ─── Starter Kit Email ────────────────────────────────────────────────────
 // Sent after onboarding is complete and role is known
 

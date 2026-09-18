@@ -11,7 +11,7 @@ import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { registerSchema, loginSchema, userProfileSchema, updateNameSchema } from "@shared/schema";
 import { hasPaidPlan, hasFullAccess } from "@shared/access";
 import { MODULE_CLPS } from "@shared/moduleClps";
-import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken, sendPurchaseAdminAlert, sendSubscriptionCancelledAdminAlert } from "./email";
+import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken, sendPurchaseAdminAlert, sendSubscriptionCancelledAdminAlert, sendPasswordResetEmail } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 import { costTrackerStorage } from "./costTrackerStorage";
 import { reportCheckoutFailure } from "./stripeHealth";
@@ -380,6 +380,82 @@ export async function registerRoutes(
         return res.json({ message: "Account deleted" });
       });
     });
+  });
+
+  // ─── Password reset / set first password ─────────────────────────────
+
+  // Throttle by email so the endpoint can't be used to mail-bomb someone, and
+  // by IP so one client can't sweep a list of addresses. In memory on purpose:
+  // a restart clearing it is harmless, and it avoids a write per attempt.
+  const resetRequests = new Map<string, number[]>();
+  const RESET_WINDOW_MS = 60 * 60 * 1000;
+  const bumpAndCheck = (key: string, limit: number): boolean => {
+    const now = Date.now();
+    const hits = (resetRequests.get(key) ?? []).filter((t) => now - t < RESET_WINDOW_MS);
+    hits.push(now);
+    resetRequests.set(key, hits);
+    if (resetRequests.size > 5000) resetRequests.clear();
+    return hits.length <= limit;
+  };
+
+  app.post("/api/auth/request-password-reset", async (req: Request, res: Response) => {
+    const email = String(req.body?.email ?? "").trim().toLowerCase();
+    // Always 200, always the same body, whether or not the address exists.
+    // Anything else turns this into a way to test which emails have accounts.
+    const ok = () => res.json({ ok: true });
+    if (!email || !email.includes("@")) return ok();
+
+    const ip = String(req.headers["x-forwarded-for"] ?? req.ip ?? "unknown").split(",")[0].trim();
+    if (!bumpAndCheck(`e:${email}`, 3) || !bumpAndCheck(`i:${ip}`, 15)) {
+      console.warn(`[password-reset] throttled ${email} from ${ip}`);
+      return ok();
+    }
+
+    try {
+      const user = await storage.getUserByEmail(email);
+      if (!user) return ok();
+
+      // Raw token goes in the email and nowhere else; only its hash is stored.
+      const token = crypto.randomBytes(32).toString("hex");
+      const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+      const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+
+      await storage.consumePasswordResetTokens(user.id);   // a new link kills the old one
+      await storage.createPasswordResetToken(user.id, tokenHash, expiresAt);
+
+      const appUrl = process.env.APP_URL || "https://acqlerate.com";
+      const resetUrl = `${appUrl}/app#/reset-password?token=${token}`;
+      // A Google-created account has no password hash — this is a first
+      // password, not a reset, and the email says so.
+      await sendPasswordResetEmail(user.email, user.firstName || user.username, resetUrl, !user.passwordHash);
+    } catch (err: any) {
+      console.error("[password-reset] request failed:", err.message);
+    }
+    return ok();
+  });
+
+  app.post("/api/auth/reset-password", async (req: Request, res: Response) => {
+    const token = String(req.body?.token ?? "");
+    const password = String(req.body?.password ?? "");
+    if (!token || password.length < 8) {
+      return res.status(400).json({ message: "Password must be at least 8 characters." });
+    }
+    try {
+      const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+      const match = await storage.findValidPasswordResetToken(tokenHash);
+      if (!match) {
+        return res.status(400).json({ message: "That link has expired or has already been used. Request a new one." });
+      }
+      const passwordHash = await hashPassword(password);
+      await storage.updateUserPassword(match.userId, passwordHash);
+      // Burn every outstanding link for this user, not just the one redeemed.
+      await storage.consumePasswordResetTokens(match.userId);
+      console.log(`[password-reset] password set for user ${match.userId}`);
+      return res.json({ ok: true });
+    } catch (err: any) {
+      console.error("[password-reset] reset failed:", err.message);
+      return res.status(500).json({ message: "Something went wrong. Please request a new link." });
+    }
   });
 
   // ─── Google OAuth Routes ──────────────────────────────────────────

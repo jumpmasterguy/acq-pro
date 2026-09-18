@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type InsertGoogleUser, users, emailLeads, type Lead } from "@shared/schema";
+import { type User, type InsertUser, type InsertGoogleUser, users, emailLeads, type Lead, passwordResetTokens } from "@shared/schema";
 import { computeTrialEndsAt, hasFullAccess } from "@shared/access";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/node-postgres";
@@ -64,6 +64,11 @@ export interface IStorage {
     quizScores: Record<string, number>
   ): Promise<User | undefined>;
   updateUserPassword(userId: string, passwordHash: string): Promise<User | undefined>;
+  // Password reset / first-password tokens. Callers pass the SHA-256 of the
+  // token, never the token itself.
+  createPasswordResetToken(userId: string, tokenHash: string, expiresAt: string): Promise<void>;
+  findValidPasswordResetToken(tokenHash: string): Promise<{ userId: string } | undefined>;
+  consumePasswordResetTokens(userId: string): Promise<void>;
   updateModuleSkillLevel(
     userId: string,
     moduleId: string,
@@ -329,6 +334,29 @@ export class DrizzleStorage implements IStorage {
       .where(eq(users.id, userId))
       .returning();
     return result[0];
+  }
+
+  async createPasswordResetToken(userId: string, tokenHash: string, expiresAt: string): Promise<void> {
+    await this.db.insert(passwordResetTokens).values({ userId, tokenHash, expiresAt });
+  }
+
+  async findValidPasswordResetToken(tokenHash: string): Promise<{ userId: string } | undefined> {
+    const rows = await this.db.select().from(passwordResetTokens)
+      .where(eq(passwordResetTokens.tokenHash, tokenHash)).limit(1);
+    const row = rows[0];
+    if (!row) return undefined;
+    if (row.usedAt) return undefined;
+    if (new Date(row.expiresAt).getTime() < Date.now()) return undefined;
+    return { userId: row.userId };
+  }
+
+  // Burns every outstanding token for the user, not just the one redeemed.
+  // Requesting a second link should invalidate the first, and a completed
+  // reset should invalidate any link still sitting in an old inbox.
+  async consumePasswordResetTokens(userId: string): Promise<void> {
+    await this.db.update(passwordResetTokens)
+      .set({ usedAt: new Date().toISOString() })
+      .where(eq(passwordResetTokens.userId, userId));
   }
 
   async updateModuleSkillLevel(
@@ -812,6 +840,28 @@ export class MemStorage implements IStorage {
     const updated = { ...user, passwordHash };
     this.users.set(userId, updated);
     return updated;
+  }
+
+  private resetTokens = new Map<string, { userId: string; expiresAt: string; usedAt?: string }>();
+
+  async createPasswordResetToken(userId: string, tokenHash: string, expiresAt: string): Promise<void> {
+    this.resetTokens.set(tokenHash, { userId, expiresAt });
+  }
+
+  async findValidPasswordResetToken(tokenHash: string): Promise<{ userId: string } | undefined> {
+    const row = this.resetTokens.get(tokenHash);
+    if (!row || row.usedAt) return undefined;
+    if (new Date(row.expiresAt).getTime() < Date.now()) return undefined;
+    return { userId: row.userId };
+  }
+
+  async consumePasswordResetTokens(userId: string): Promise<void> {
+    const now = new Date().toISOString();
+    // Array.from rather than iterating the Map directly: this project's
+    // tsconfig target predates downlevel Map iteration.
+    for (const [hash, row] of Array.from(this.resetTokens.entries())) {
+      if (row.userId === userId) this.resetTokens.set(hash, { ...row, usedAt: now });
+    }
   }
 
   async updateModuleSkillLevel(

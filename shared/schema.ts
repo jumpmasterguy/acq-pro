@@ -161,3 +161,21 @@ export const purchases = pgTable("purchases", {
 });
 
 export type Purchase = typeof purchases.$inferSelect;
+
+// One row per password-reset request. Serves two cases that look identical to
+// the user: resetting a forgotten password, and setting a first password on an
+// account created through Google (those rows have password_hash null).
+//
+// Only the SHA-256 of the token is stored. The raw token exists in the emailed
+// link and nowhere else, so a leaked database backup cannot be used to take
+// over an account. Single use, and short-lived via expires_at.
+export const passwordResetTokens = pgTable("password_reset_tokens", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
+  tokenHash: text("token_hash").notNull().unique(),
+  expiresAt: text("expires_at").notNull(),
+  usedAt: text("used_at"),
+  createdAt: text("created_at").notNull().default(sql`now()::text`),
+});
+
+export type PasswordResetToken = typeof passwordResetTokens.$inferSelect;
