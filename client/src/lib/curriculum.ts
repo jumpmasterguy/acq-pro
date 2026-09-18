@@ -6936,6 +6936,22 @@ export const modules: Module[] = [
       { term: 'Objective', definition: 'The desired best value for a performance parameter; program tries to achieve this.' },
       { term: 'Leading Indicator', definition: 'A metric that predicts future performance (e.g., staffing levels predict schedule performance).' },
       { term: 'Lagging Indicator', definition: 'A metric that reports past performance (e.g., CPI shows what has already happened).' },
+      {
+        term: "Source of Record",
+        definition: "The one system a metric is drawn from, named and agreed, so two briefings cannot show different numbers for the same thing.",
+      },
+      {
+        term: "Data Lineage",
+        definition: "The traceable path from a number on the dashboard back to the transaction or measurement that produced it, including how stale it is.",
+      },
+      {
+        term: "Variance at Completion (VAC)",
+        definition: "Budget at Completion minus Estimate at Completion. The projected overrun or underrun in dollars when the work is finished.",
+      },
+      {
+        term: "Critical Path Float",
+        definition: "Days of slack on the longest chain of dependent tasks. When it reaches zero, every further slip moves the program's end date.",
+      },
         ],
         content: [
       {
@@ -7000,10 +7016,137 @@ export const modules: Module[] = [
       body: 'Mid-career PMs often inherit a metrics framework designed by someone else. Or no framework at all. Building a good one requires discipline: limit leading indicators to 5-7 (more creates noise), ensure each KPI has a data owner responsible for accuracy, and tie thresholds to contract performance criteria not arbitrary round numbers. The most important distinction: leading indicators (staffing ramp, BCWP/BCWS trend, open action item age) predict future performance; lagging indicators (CPI, SPI, schedule slippage) confirm what already happened. Programs that only track lagging indicators are always reacting, never preventing. Build at least two leading indicators per major risk area. Review them weekly at the PM level, not just monthly at program reviews.',
         },
         {
+          type: "text",
+          level: "intermediate",
+          heading: "Thresholds That Mean Something",
+          body: "Most inherited dashboards use round numbers: CPI below 0.95 is yellow, below 0.90 is red. Nobody remembers where those came from and nobody acts on them. A threshold earns its place when it is tied to a consequence in your contract or your schedule. CPI below 0.92 matters if that is the point where your funded ceiling runs out before the period of performance ends. Critical path float below 10 days matters if your test range booking is 10 days out. Work backward from the thing that breaks: what value of this metric means I lose the range slot, blow the funding line, or miss the delivery? That number is your threshold, and because you can explain it, people act on it.",
+        },
+        {
+          type: "table",
+          level: "intermediate",
+          heading: "Where a Defensible Threshold Comes From",
+          headers: ["Metric", "Weak threshold", "Threshold tied to a consequence"],
+          rows: [
+            ["CPI", "Below 0.95 is yellow", "Below the value where projected EAC exceeds the funded ceiling"],
+            ["Critical path float", "Below 10 days", "Below the lead time of the next unmovable external event"],
+            ["Staffing fill rate", "Below 90 percent", "Below the level that misses the integration start date"],
+            [
+              "Supplier on-time delivery",
+              "Below 95 percent",
+              "Below the rate that consumes your assembly buffer",
+            ],
+            ["Open high risks", "More than 5", "Any risk whose realized cost exceeds management reserve"],
+            [
+              "Defect closure",
+              "Backlog growing",
+              "Backlog growth rate that pushes test completion past the milestone",
+            ],
+          ],
+        },
+        {
+          type: "text",
+          level: "intermediate",
+          heading: "The Review Rhythm: Who Looks at What, and How Often",
+          body: "Metrics without a cadence become a monthly slide nobody reads. The working pattern on healthy programs has three loops. Weekly, the PM and leads look at the leading indicators only: staffing, supplier deliveries, test asset availability, open action age. These change fast enough to act on. Monthly, the full set comes together with the contractor's cost report, and the question is whether the trend changed, not what this month's number was. Quarterly, you look at the baseline itself: is the plan we are measuring against still the plan? Each loop has a different owner and a different decision. If your weekly review is looking at cumulative CPI, you are reviewing history at a frequency that cannot change it.",
+        },
+        {
+          type: "list",
+          level: "intermediate",
+          heading: "Every Metric Needs Four Things Before It Goes on the Dashboard",
+          items: [
+            "A source of record|||The system the number comes from, named. Not a spreadsheet someone maintains by hand, and not two systems that disagree.",
+            "An owner|||A person accountable for the number being right and current, on the government side, not just the contractor's analyst.",
+            "A refresh cadence|||How often it updates and how stale it can be before it is misleading. A number refreshed monthly cannot support a weekly decision.",
+            "A defined action|||What happens when it crosses the threshold, and who does it. A threshold with no action is decoration.",
+          ],
+        },
+        {
       type: 'callout' as const,
       level: 'advanced' as const,
       heading: 'Metrics Manipulation: How Contractors Game KPIs and How to Catch It',
       body: 'Experienced senior PMs know that any metric a contractor is evaluated on will eventually be gamed. The classic EVM manipulations: retroactive replanning (moving budget into periods where work was already done), schedule logic manipulation (adding constraints to remove negative float), and loading budget into early periods then underspending to generate positive CPI artificially. For technical metrics: systems that report "green" on readiness metrics by narrowing the denominator (counting only tested units, not all units required). The countermeasure: build cross-referencing requirements into your metrics framework. If CPI is 1.05 but cost-per-unit is rising, something is wrong. If schedule shows green but critical path items keep slipping, the schedule logic is suspect. Require contractors to explain anomalies. Not just report metrics.',
+        },
+        {
+          type: "text",
+          level: "advanced",
+          heading: "Building a Leading Indicator Set for Your Actual Risks",
+          body: "Generic dashboards track generic things. A senior PM builds the leading set from the program's own top risks, because a leading indicator is only leading if it predicts the specific failure you are worried about. If your top risk is software integration, the leading indicators are requirements churn rate, build failure rate, and defect discovery rate per build, none of which appear on a standard EVM dashboard. If your top risk is a sole-source supplier, the leading indicators are that supplier's on-time delivery, their staffing on your line, and their own supplier issues. Two leading indicators per top risk is the working rule. Any more and the dashboard stops fitting on a page; any fewer and you are watching one thermometer in a building with several fires.",
+        },
+        {
+          type: "table",
+          level: "advanced",
+          heading: "Matching Leading Indicators to the Risk They Predict",
+          headers: ["Program risk", "Leading indicators that actually predict it", "Lag before it shows in EVM"],
+          rows: [
+            [
+              "Software integration failure",
+              "Requirements churn, build failure rate, defect discovery per build",
+              "Two to four months",
+            ],
+            [
+              "Sole-source supplier slip",
+              "Supplier on-time delivery, their staffing on your line, their own supplier alerts",
+              "One to three months",
+            ],
+            [
+              "Staffing shortfall",
+              "Requisitions open over 60 days, clearance queue age, attrition rate",
+              "Two to three months",
+            ],
+            [
+              "Test failure cascade",
+              "Test asset availability, dry-run pass rate, range schedule confirmations",
+              "One to two months",
+            ],
+            [
+              "Requirements instability",
+              "Change requests opened per month, unresolved interface issues",
+              "Three to six months",
+            ],
+          ],
+        },
+        {
+          type: "text",
+          level: "advanced",
+          heading: "When Your Metrics Disagree, Believe the Physical One",
+          body: "The most useful moments in metrics work are the contradictions. CPI is 1.03 but the cost per delivered unit keeps climbing. Schedule shows green while the critical path slips a week each month. Defect closure looks healthy while the same defects keep reopening. In every case one number is measuring the accounting system and the other is measuring the physical work, and the physical one is right. Cost efficiency can look fine while unit cost rises because the work being performed shifted to easier tasks. Schedule can hold while float erodes because the logic was changed. Build the habit of pairing each financial metric with a physical one: CPI with unit cost, SPI with critical path float, defect closure with reopen rate. When the pair disagrees, you have found something worth a meeting.",
+        },
+        {
+          type: "text",
+          level: "advanced",
+          heading: "What the PEO Is Watching, and Why It Is Not Your Dashboard",
+          body: "Your program dashboard answers whether you are executing. The level above you is answering a different question: whether this program still belongs in the portfolio. That means unit cost against the baseline, the distance to a reportable breach, whether the schedule still supports the fielding date the requirement promised, and how much of the funding line you will actually obligate this year. A PM who only ever reports execution metrics gets surprised when the portfolio question arrives. The fix is to keep a second, four-number view for leadership and to put your own program's distance-to-breach on it before anyone asks. The lifecycle module covers what a baseline breach triggers; the point here is that the number should never be new to you.",
+        },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They tie every threshold to a consequence they can name, so the dashboard produces decisions instead of colors. They build leading indicators from their own top risks rather than from a template. They pair every financial metric with a physical one and chase the contradictions. And they track their distance to a reportable breach themselves, so the portfolio conversation is one they start rather than one that happens to them.",
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **a metric earns its place on the dashboard only when it has a source of record, an owner, a refresh cadence, and a defined action at a threshold you can trace to something that actually breaks.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "data-5",
+              label: "Building a One-Page Program Dashboard",
+              sub: "Turning this into the artifact you actually brief",
+            },
+            {
+              lessonId: "data-7",
+              label: "Forecasting Burn",
+              sub: "Where leading indicators become a prediction",
+            },
+            {
+              lessonId: "lifecycle-8",
+              label: "Program Reviews and the Baseline",
+              sub: "The portfolio question your metrics have to answer",
+            },
+          ],
         },
         ],
       quiz: [
@@ -7076,7 +7219,48 @@ export const modules: Module[] = [
         options: ['All technical parameters must be 100% achieved at contract award', 'Technical performance is expected to improve progressively; the profile shows whether achievement is on pace', 'DFARS requires a specific TPM format at every program review', 'TPMs are only meaningful at final delivery testing'],
         correct: 1,
         explanation: "TPMs are not expected to achieve their final values immediately: they mature progressively as development proceeds. The planned maturity profile shows what value should be achievable at each point in time. Tracking actual TPM values against the profile tells the PM whether technical development is proceeding on pace or falling behind: before the program reaches system integration testing."
-      }
+      },
+      {
+        id: "q11",
+        type: "drag_order",
+        question: "Order the steps for putting a new metric on your program dashboard:",
+        options: [],
+        correct: 0,
+        explanation: "Name the decision first. A metric with no decision behind it is decoration, however good the data is.",
+        orderedItems: [
+          "Name the decision the metric is supposed to inform",
+          "Identify the consequence that defines the threshold",
+          "Name the source of record and the person who owns the number",
+          "Set the refresh cadence against how fast the decision must be made",
+          "Write down the action that fires when the threshold is crossed",
+        ],
+      },
+      {
+        id: "q12",
+        type: "drag_match",
+        question: "Match each financial metric to the physical metric that should be paired with it:",
+        options: [],
+        correct: 0,
+        explanation: "Pairing an accounting measure with a physical one is how you catch the contradictions that reveal real problems.",
+        pairs: [
+          {
+            left: "CPI",
+            right: "Cost per delivered unit",
+          },
+          {
+            left: "SPI",
+            right: "Critical path float",
+          },
+          {
+            left: "Defect closure rate",
+            right: "Defect reopen rate",
+          },
+          {
+            left: "Obligation rate",
+            right: "Work physically completed",
+          },
+        ],
+      },
         ]
       },
       {
@@ -7090,6 +7274,26 @@ export const modules: Module[] = [
       { term: 'Waterfall Chart', definition: 'Shows how an initial value is affected by positive and negative changes. Useful for variance analysis.' },
       { term: 'Trend Line', definition: 'A line projected from historical data showing where the program is headed if current performance continues.' },
       { term: 'Data Normalization', definition: 'Adjusting data to a common scale for meaningful comparison (e.g., cost per unit, not total cost).' },
+      {
+        term: "Source of Record",
+        definition: "The single system a number is drawn from, so two briefings cannot show different values for the same metric.",
+      },
+      {
+        term: "Confidence Band",
+        definition: "The range around a forecast showing the pessimistic and optimistic cases with their assumptions, rather than a single line.",
+      },
+      {
+        term: "Bridge Chart",
+        definition: "A chart that walks from the original baseline to the current estimate one change at a time, attributing each step to what caused it.",
+      },
+      {
+        term: "Small Multiples",
+        definition: "A grid of small charts with identical axes, used to compare many series without stacking them into one unreadable plot.",
+      },
+      {
+        term: "Annotation",
+        definition: "A label placed on the chart itself marking the point that matters, so the finding survives without the presenter.",
+      },
         ],
         content: [
       {
@@ -7143,10 +7347,117 @@ export const modules: Module[] = [
       body: 'Mid-career PMs spend a significant portion of their time briefing flag officers, SES officials, and congressional staff who have limited technical background. The most effective briefings for this audience: one chart per major message, direct headline titles that state the conclusion (not "CPI Trend" but "Cost Performance Is Recovering. CPI Up 0.08 in 90 Days"), and explicit "so what" statements. Avoid EVM jargon in flag-level briefings. Translate: "negative SV" becomes "we are behind schedule"; "VAC" becomes "projected overrun at completion." Spend 80% of your preparation on the narrative, 20% on the charts. Decision makers who can\'t understand your data can\'t support your program.',
         },
         {
+          type: "text",
+          level: "intermediate",
+          heading: "One Chart, One Decision",
+          body: "The fastest way to improve a program briefing is to give every chart a job. Before you build it, write the sentence the chart is supposed to make true: \"we will run out of funded ceiling in March unless we descope\" or \"the supplier, not our team, is driving the slip.\" If you cannot write that sentence, the chart is decoration and it is costing you attention you will need later. This also tells you when a chart is finished. A burn chart that shows obligations against a funded line, with the crossing point marked, has done its job. The same chart with three extra series, a secondary axis and the full work breakdown has not done a better job; it has done four jobs badly.",
+        },
+        {
+          type: "list",
+          level: "intermediate",
+          heading: "The Chart Failures That Show Up in Every Program Review",
+          items: [
+            "Dual axes|||Two different units on left and right make any two lines appear related. Split them into two stacked charts that share an x-axis instead.",
+            "Truncated y-axis|||Starting the axis at 94 percent turns a two-point move into a cliff. Start at zero unless you say plainly that you did not.",
+            "Pie charts with more than four slices|||Nobody can rank the middle slices. A sorted bar chart answers the same question in one glance.",
+            "Rainbow categories|||More than about six colors and the legend becomes a lookup table. Gray everything except the one or two series that carry the point.",
+            "The unlabeled threshold|||A chart with no line for the number that matters makes the reader do the comparison in their head, which they will do wrong.",
+            "Month-to-month noise|||Plotting a volatile monthly figure without its trend invites the room to argue about the last data point instead of the direction.",
+          ],
+        },
+        {
+          type: "text",
+          level: "intermediate",
+          heading: "Annotate the Chart, Do Not Narrate It",
+          body: "A chart that needs you standing next to it is a chart that fails the moment your slide is forwarded to someone who was not in the room, which is how most decisions actually get made. Put the finding in the title: not \"Monthly Obligations,\" but \"Obligations trail plan by $2.1M; funded through March.\" Mark the one point that matters with a short label on the chart itself. Keep the legend out of the way, or drop it entirely by labeling the lines where they end. The test is simple: hand the page to someone unfamiliar with the program and ask what it says. Whatever they tell you is what the chart says, regardless of what you meant.",
+        },
+        {
+          type: "table",
+          level: "intermediate",
+          heading: "The Five-Chart Monthly Review Set",
+          headers: ["Chart", "Question it answers", "Decision it supports"],
+          rows: [
+            [
+              "Funding burn against funded ceiling",
+              "When do we run out of money?",
+              "Reprogram, descope, or request funds now",
+            ],
+            [
+              "Cost and schedule index trend, twelve months",
+              "Is performance getting better or worse?",
+              "Intervene, or stop intervening",
+            ],
+            [
+              "Critical path float trend",
+              "Is the end date still real?",
+              "Re-sequence, add capacity, or renegotiate the date",
+            ],
+            [
+              "Staffing fill against plan",
+              "Can we do the work we promised?",
+              "Escalate hiring, or replan the ramp",
+            ],
+            [
+              "Top risks with movement since last month",
+              "What is most likely to hurt us next?",
+              "Fund a mitigation, or accept and watch",
+            ],
+          ],
+        },
+        {
       type: 'callout' as const,
       level: 'advanced' as const,
       heading: 'Building a Program Data Architecture: From Contract to Dashboard',
       body: 'Senior PMs on large programs should architect the data flow from the start: IPMR data → government EVMS analysis tool (SMART, Cobra, wInsight) → program office dashboard → leadership briefing. Each translation introduces error and delay; minimize handoffs. Define your data schema before contract award: what format does the contractor submit IPMR data in? What are your visualization requirements? For software programs, define your agile metrics pipeline: how does sprint velocity, defect backlog, and code coverage data flow from contractor dev tools (Jira, GitLab) to your dashboard? Programs that build data architecture retroactively spend 6-12 months cleaning inconsistent data before they can make it useful. Contract for the data architecture. Not just the deliverable.',
+        },
+        {
+          type: "text",
+          level: "advanced",
+          heading: "Show the Range, Not the Line",
+          body: "A single forecast line communicates a precision nobody has. The honest version of a forecast is a band: the pessimistic case if current performance holds, the plan case, and the optimistic case with stated assumptions. Senior audiences respond well to this once they understand what it buys them, because the width of the band is itself information. A narrow band on a mature program says the estimate is stable. A band wide enough to cross the funded ceiling says the decision is not really about the midpoint, it is about whether you can live with the top of the range. When you are asked for one number anyway, give the number and the condition attached to it: \"$18.4M if the supplier holds their current delivery rate; $19.6M if it stays where it has been for the last three months.\"",
+        },
+        {
+          type: "text",
+          level: "advanced",
+          heading: "The Same Data, Two Audiences",
+          body: "The government team and the contractor are looking at the same cost report and drawing different pictures from it, and a senior PM knows what the other side's version looks like. The contractor's view emphasizes what is inside their control and what the government caused: growth traceable to direction, late government-furnished property, requirement changes. The government's view emphasizes performance against the negotiated baseline. Neither is dishonest. The practical move is to build the bridge chart yourself, the one that starts at the original baseline and walks through each change to the current estimate, categorized by who drove it. Bring that to the review before the argument happens, and the conversation moves from whose chart is right to what to do next.",
+        },
+        {
+          type: "text",
+          level: "advanced",
+          heading: "Building the Pipeline So the Chart Is Never the Bottleneck",
+          body: "On a program with a monthly rhythm, the analyst rebuilding the deck by hand each month is a single point of failure and a source of quiet errors. The architecture worth investing in is boring: one source of record per number, an extraction that runs on a schedule rather than on request, a small set of stored views that the charts read from, and a versioned template so last month's chart and this month's are actually comparable. The payoff is not prettier charts. It is that when leadership asks an unscheduled question in week two, you can answer it that day, and the answer ties to the number you briefed in week one. The dashboard lesson in this module covers the artifact; this is the plumbing that keeps it honest.",
+        },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They write the sentence the chart has to prove before they build it. They put the finding in the title so the page survives being forwarded. They show forecasts as ranges with the assumption attached rather than as a single confident line. They build the baseline-to-current bridge before the contractor does. And they invest in the pipeline so an unscheduled question does not cost a week.",
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **every chart should have one job, say its finding in the title, and show a threshold or a range, because a chart that needs you standing beside it fails the moment it is forwarded.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "data-5",
+              label: "Building a One-Page Program Dashboard",
+              sub: "The artifact this discipline produces",
+            },
+            {
+              lessonId: "data-7",
+              label: "Forecasting Burn",
+              sub: "Where the range replaces the line",
+            },
+            {
+              lessonId: "ops-2",
+              label: "Stakeholder Management & Communication",
+              sub: "Reading the room you are briefing",
+            },
+          ],
         },
         ],
       quiz: [
@@ -7219,7 +7530,48 @@ export const modules: Module[] = [
         options: ['Showing cumulative cost and schedule trends over time', 'Comparing multiple programs or contractors across several dimensions simultaneously', 'Displaying the critical path and dependencies', 'Calculating EAC from CPI data'],
         correct: 1,
         explanation: "Radar/spider charts plot multiple dimensions (e.g., cost, schedule, technical, risk, quality) for multiple entities on the same chart, making them ideal for portfolio-level comparisons. A PEO reviewing 10 programs can quickly identify which programs are strong across all dimensions and which have specific weaknesses. They're not appropriate for single-program trend analysis over time."
-      }
+      },
+      {
+        id: "q11",
+        type: "drag_order",
+        question: "Order the steps for building a chart that will survive being forwarded:",
+        options: [],
+        correct: 0,
+        explanation: "Writing the finding first is what keeps a chart to one job, and putting it in the title is what makes it travel.",
+        orderedItems: [
+          "Write the sentence the chart has to make true",
+          "Pick the chart form that answers that question most directly",
+          "Put the finding in the title rather than a generic label",
+          "Mark the threshold, the crossing point, or the range on the chart itself",
+          "Hand it to someone outside the program and ask what it says",
+        ],
+      },
+      {
+        id: "q12",
+        type: "drag_match",
+        question: "Match each chart failure to the fix:",
+        options: [],
+        correct: 0,
+        explanation: "Each of these shows up in most program reviews, and each has a standard remedy.",
+        pairs: [
+          {
+            left: "Dual axes implying a relationship",
+            right: "Two stacked charts sharing an x-axis",
+          },
+          {
+            left: "Truncated y-axis exaggerating a move",
+            right: "Start at zero, or state plainly that you did not",
+          },
+          {
+            left: "Pie chart with seven slices",
+            right: "A sorted bar chart",
+          },
+          {
+            left: "Rainbow of series colors",
+            right: "Gray everything except the one or two that carry the point",
+          },
+        ],
+      },
         ]
       },
       {
@@ -7446,10 +7798,93 @@ export const modules: Module[] = [
       body: 'Mid-career PMs know that no single EVM index tells the full story. The most robust EAC formula weights CPI and SPI: EAC = BAC ÷ (0.2×SPI + 0.8×CPI). This formula reflects the empirical finding that cost performance has more predictive power than schedule performance for final cost outcomes. But use indices in combination: a program with CPI 0.95 and SPI 0.85 has both a cost problem and a schedule problem. The schedule pressure will likely drive overtime and accelerated work that further degrades CPI. Programs with CPI ≥ 1.00 but SPI < 0.85 are common: they appear cost-efficient but the schedule pressure is a leading indicator of future cost overruns. Don\'t let a healthy CPI lull you into ignoring a deteriorating SPI.',
         },
         {
+          type: "text",
+          level: "intermediate",
+          heading: "One Program, Walked All the Way Through",
+          body: "Acronyms stick once you have pushed a single program through every formula. Take a $20M contract, twelve months, with work planned evenly at about $1.67M a month. At the end of month six the plan said $10M of work should be done (BCWS). The contractor has actually completed $8M worth of the planned work (BCWP). Getting that far has cost $9M (ACWP). Everything else is arithmetic on those three numbers, and the table below does all of it. Work through it once with a pen and the acronyms stop being a list to memorize.",
+        },
+        {
+          type: "table",
+          level: "intermediate",
+          heading: "Every Metric From Three Numbers (BAC $20M, month 6)",
+          headers: ["Metric", "Formula", "This program", "What it says"],
+          rows: [
+            ["Cost Variance", "BCWP - ACWP", "$8M - $9M = -$1M", "A million dollars over budget for the work done"],
+            ["Schedule Variance", "BCWP - BCWS", "$8M - $10M = -$2M", "Two million dollars of planned work not done"],
+            ["CPI", "BCWP / ACWP", "8 / 9 = 0.89", "89 cents of work per dollar spent"],
+            ["SPI", "BCWP / BCWS", "8 / 10 = 0.80", "Running at 80 percent of planned pace"],
+            ["EAC (statistical)", "BAC / CPI", "20 / 0.89 = $22.5M", "Where it lands if efficiency holds"],
+            ["ETC", "EAC - ACWP", "22.5 - 9 = $13.5M", "Cost still to come"],
+            ["VAC", "BAC - EAC", "20 - 22.5 = -$2.5M", "Projected overrun"],
+            ["TCPI (to BAC)", "(BAC-BCWP) / (BAC-ACWP)", "12 / 11 = 1.09", "Must run at 1.09 to still hit $20M"],
+          ],
+        },
+        {
+          type: "text",
+          level: "intermediate",
+          heading: "Three Ways to Compute EAC, and When Each One Is Honest",
+          body: "The statistical EAC above assumes the future looks like the past, which research has repeatedly found to be the safest default once a contract is roughly 20 percent complete. The second method is the contractor's bottom-up EAC, rebuilt from the remaining work package by package. It is more informed and reliably more optimistic, because the people estimating are the same people who will be judged on it. The third weights both: BAC divided by the product of CPI and SPI, used when schedule pressure is driving cost, since recovering a late schedule usually costs money. On our program those give $22.5M statistical, whatever the contractor's build-up says, and $28.1M on the CPI times SPI method. Present the spread, not one number, and say which assumption each rests on.",
+        },
+        {
+          type: "text",
+          level: "intermediate",
+          heading: "Where These Numbers Live in the Report You Receive",
+          body: "The formats of the Integrated Program Management Report carry these values in specific places, and knowing which format answers which question saves an hour every month. Format 1 gives the work breakdown structure view: BCWS, BCWP, ACWP and the variances by element, which is where you find what is driving the problem. Format 2 gives the same by the contractor's organization, which tells you which functional group owns it. Format 3 is the baseline and its changes, which is where rebaselining hides. Format 4 is staffing, the best leading indicator in the whole package. Format 5 is the narrative, where the contractor explains variances and states corrective action. The next lesson works through reading them; the point here is that every acronym you just computed arrives on a specific page.",
+        },
+        {
       type: 'callout' as const,
       level: 'advanced' as const,
       heading: 'The Cumulative CPI Stability Finding and What It Means for PMs',
       body: 'Research by Christle, Bhatt and others (the "Christle Findings") established that once a program has expended 20% of its budget, the cumulative CPI rarely improves by more than 10%. This has profound implications: a program at 20% complete with a cumulative CPI of 0.85 will, with very high probability, complete at a CPI no better than 0.85. Meaning a 15%+ cost overrun is essentially locked in. Senior PMs use this finding to drive two actions: (1) early IBR. Challenge cost realism before 20% is spent; (2) early OTB/EAC revision. If CPI is deteriorating before the 20% mark, don\'t wait for it to stabilize. The longer you wait to acknowledge an overrun, the more the sunk cost fallacy traps the program. The cumulative CPI stability finding is the empirical basis for "fix it early or pay double."',
+        },
+        {
+          type: "text",
+          level: "advanced",
+          heading: "Why SV Lies at the End, and What Earned Schedule Fixes",
+          body: "Schedule Variance is measured in dollars, which is the original sin of EVM schedule analysis. At completion the contractor has earned the entire budget and the entire budget was planned, so BCWP equals BCWS equals BAC and SV equals zero, no matter how late the program finished. A program can deliver a year behind and show perfect schedule performance on the last report. Earned Schedule solves this by converting earned value into time: find the point on the planned curve where the cumulative BCWS equals the BCWP you have actually earned, and the distance between that point and today, in months, is your schedule variance in time. On our example program, $8M of earned value corresponds to the four-point-eight-month point on the plan, so at month six the program is roughly 1.2 months behind. That number keeps working right up to delivery, which is exactly when the dollar version stops.",
+        },
+        {
+          type: "text",
+          level: "advanced",
+          heading: "Rebaselining, Over Target Baseline, and Reading the Reset",
+          body: "When a baseline no longer represents any achievable plan, measuring against it produces variances nobody learns anything from. The formal remedy is an Over Target Baseline: the government agrees the contractor may replan to a budget above the contract value, so future performance is measured against something real. An Over Target Schedule does the same for dates. Both require government approval and both reset the variances to zero, which is why they attract attention. The legitimate case is a program where the original plan was overtaken by events everyone acknowledges. The illegitimate case is a program using a reset to erase a performance record before a review. What a senior PM watches is the pattern: how many resets, how close to a milestone decision, and whether the new baseline's assumptions are any more defensible than the ones that just failed.",
+        },
+        {
+          type: "text",
+          level: "advanced",
+          heading: "How EVM Gets Gamed, and the Cross-Checks That Catch It",
+          body: "Any number a contractor is evaluated on will eventually be managed, and EVM has a standard repertoire. Front-loading puts generous budget in early work packages so early CPI looks strong and the pain arrives late. Retroactive replanning moves budget into periods where the work is already done. Level-of-effort work packages earn value simply by time passing, so converting discrete work to level of effort makes performance problems invisible. Schedule logic changes remove negative float instead of recovering it. The cross-checks are all comparisons rather than single metrics: CPI against cost per physical unit delivered, SPI against critical path float, the percentage of budget in level-of-effort packages over time, and the count of baseline changes per quarter. None of these is proof of anything. All of them are questions worth asking out loud in a review, and asking them early changes behavior more than finding them later ever does.",
+        },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They compute EAC three ways and present the spread with its assumptions rather than a single number. They switch to Earned Schedule for schedule analysis in the last third of a program, when the dollar version stops working. They treat every baseline reset as a question about the new assumptions, not just a procedural step. And they cross-check every index against a physical measure, because a number under evaluation is a number under management.",
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **every EVM metric comes from three numbers, planned work, earned work, and actual cost, so once you can walk one program through the arithmetic the acronyms stop being vocabulary and start being a diagnosis.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "data-4",
+              label: "Reading IPMR Reports",
+              sub: "Where each of these numbers arrives, by format",
+            },
+            {
+              lessonId: "finance-5",
+              label: "Estimate at Completion (EAC)",
+              sub: "The forecast argument in depth",
+            },
+            {
+              lessonId: "business-1",
+              label: "Revenue Recognition II",
+              sub: "Why your EAC is also the contractor's revenue number",
+            },
+          ],
         },
         ],
       quiz: [
@@ -7487,6 +7922,97 @@ export const modules: Module[] = [
         options: ['All overruns are corrected at completion', 'BCWP and BCWS both equal BAC at completion, making SV = 0 regardless of lateness', 'Contractor reconciles variances before final payment', 'Government accepts any date within 10% of plan'],
         correct: 1,
         explanation: 'At contract completion all work is earned (BCWP = BAC) and all was planned (BCWS = BAC), so SV = 0 regardless of how late the program finished. Use Earned Schedule (ES) for late-program schedule analysis.'
+      },
+      {
+        id: "q6",
+        question: "On the worked program (BAC $20M, BCWS $10M, BCWP $8M, ACWP $9M), what is the ETC using the statistical EAC?",
+        options: ["$11.0M", "$12.0M", "$13.5M", "$20.0M"],
+        correct: 2,
+        explanation: "EAC is BAC/CPI = 20/0.89 = $22.5M. ETC is EAC minus ACWP: $22.5M - $9M = $13.5M.",
+      },
+      {
+        id: "q7",
+        question: "Why is the contractor's bottom-up EAC usually more optimistic than the statistical one?",
+        options: [
+          "It uses different accounting rules",
+          "The people rebuilding the estimate are the same people who will be judged on it",
+          "It excludes indirect costs",
+          "It is calculated less often",
+        ],
+        correct: 1,
+        explanation: "It is better informed and structurally optimistic. Present it alongside the statistical figure rather than instead of it.",
+      },
+      {
+        id: "q8",
+        question: "Which IPMR format is the best leading indicator of future performance?",
+        options: [
+          "Format 1, the work breakdown view",
+          "Format 3, the baseline",
+          "Format 4, staffing",
+          "Format 5, the narrative",
+        ],
+        correct: 2,
+        explanation: "Staffing moves before cost and schedule do. A ramp that does not materialize shows up in Format 4 months before it shows up in CPI.",
+      },
+      {
+        id: "q9",
+        question: "A program delivers a year late. What does its final Schedule Variance show?",
+        options: ["A large negative number", "Zero", "The number of months late", "It cannot be calculated"],
+        correct: 1,
+        explanation: "At completion BCWP and BCWS both equal BAC, so SV is zero regardless of lateness. This is why Earned Schedule exists.",
+      },
+      {
+        id: "q10",
+        question: "What does an Over Target Baseline do?",
+        options: [
+          "Reduces the contract value",
+          "Lets the contractor replan to a budget above contract value, with government approval, so variances measure something achievable",
+          "Cancels the EVM requirement",
+          "Transfers cost risk to the government automatically",
+        ],
+        correct: 1,
+        explanation: "It resets variances to zero, which is why the pattern of resets and the credibility of the new assumptions matter more than the mechanics.",
+      },
+      {
+        id: "q11",
+        type: "drag_order",
+        question: "Order the calculation from the three source numbers to a projected overrun:",
+        options: [],
+        correct: 0,
+        explanation: "Variances give magnitude, indices normalize it, EAC projects it, and VAC states the overrun.",
+        orderedItems: [
+          "Collect BCWS, BCWP and ACWP for the period",
+          "Compute the variances: CV = BCWP - ACWP and SV = BCWP - BCWS",
+          "Compute the indices: CPI = BCWP / ACWP and SPI = BCWP / BCWS",
+          "Project EAC, most defensibly as BAC / CPI",
+          "State VAC = BAC - EAC as the projected overrun or underrun",
+        ],
+      },
+      {
+        id: "q12",
+        type: "drag_match",
+        question: "Match each gaming pattern to the cross-check that catches it:",
+        options: [],
+        correct: 0,
+        explanation: "Each check pairs a reported number with a physical or structural one, which is the only way these show up early.",
+        pairs: [
+          {
+            left: "Front-loaded budget in early work packages",
+            right: "CPI against cost per physical unit delivered",
+          },
+          {
+            left: "Schedule logic changed to remove negative float",
+            right: "SPI against critical path float trend",
+          },
+          {
+            left: "Discrete work converted to level of effort",
+            right: "Share of budget in level-of-effort packages over time",
+          },
+          {
+            left: "Retroactive replanning",
+            right: "Count of baseline changes per quarter",
+          },
+        ],
       },
         ],
       },
