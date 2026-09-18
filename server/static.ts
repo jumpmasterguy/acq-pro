@@ -31,9 +31,9 @@ export function serveStatic(app: Express) {
   app.get("/", (_req: Request, res: Response) => {
     const landingPath = path.resolve(distPath, "landing.html");
     if (fs.existsSync(landingPath)) {
-      return res.sendFile(landingPath);
+      return sendNoCache(res, landingPath);
     }
-    return res.sendFile(path.resolve(distPath, "index.html"));
+    return sendNoCache(res, path.resolve(distPath, "index.html"));
   });
 
   // /app route — always serves the React app (index.html)
@@ -51,11 +51,15 @@ export function serveStatic(app: Express) {
 
 
 
-  // /pdu — PMI PDU landing page
+  // /pdu — PMI PDU landing page. sendNoCache for the same reason the blog uses
+  // it: these are hand-edited marketing pages, and without an explicit
+  // Cache-Control the Cloudflare edge can keep serving a stale copy long after
+  // a deploy. That is how the PDU page kept showing old figures on a phone
+  // while the desktop already had the new ones.
   app.get(["/pdu", "/pdu/"], (_req: Request, res: Response) => {
     const filePath = path.resolve(distPath, "pdu", "index.html");
     if (fs.existsSync(filePath)) {
-      return res.sendFile(filePath);
+      return sendNoCache(res, filePath);
     }
     return res.redirect("/");
   });
@@ -151,7 +155,7 @@ export function serveStatic(app: Express) {
   staticPages.forEach(page => {
     app.get([`/${page}`, `/${page}/`], (_req: Request, res: Response) => {
       const filePath = path.resolve(distPath, `${page}.html`);
-      if (fs.existsSync(filePath)) return res.sendFile(filePath);
+      if (fs.existsSync(filePath)) return sendNoCache(res, filePath);
       return res.redirect('/');
     });
   });

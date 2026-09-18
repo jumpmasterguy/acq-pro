@@ -48,7 +48,7 @@
     .footer-links a { color: rgba(255,255,255,0.5); }
     .footer-links a:hover { color: white; }
     .footer-logo-text { color: white; }
-    .footer-logo-text span { color: #01696F; }
+    .footer-logo-text span { color: #4FB3BF; }
 
     /* ── HERO ── */
     .pdu-hero {
@@ -72,7 +72,11 @@
       font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; color: white;
       letter-spacing: -0.04em; line-height: 1.1; margin: 0 0 18px;
     }
-    .pdu-hero h1 span { color: #01696F; }
+    /* Teal TEXT on the dark hero/cards uses a lighter teal: the brand #01696F
+       is only 2.69:1 against the hero gradient (1.84:1 at its teal end), which
+       fails WCAG even for large text and is invisible on a phone. Solid teal
+       buttons keep #01696F because white on it is 6.46:1. */
+    .pdu-hero h1 span { color: #4FB3BF; }
     .pdu-hero .sub {
       font-size: clamp(1rem, 2vw, 1.15rem); color: rgba(255,255,255,0.6);
       max-width: 580px; margin: 0 auto 32px; line-height: 1.65;
@@ -82,7 +86,7 @@
       margin-bottom: 36px;
     }
     .hero-stat { text-align: center; }
-    .hero-stat .num { font-size: 2rem; font-weight: 900; color: #01696F; line-height: 1; }
+    .hero-stat .num { font-size: 2rem; font-weight: 900; color: #4FB3BF; line-height: 1; }
     .hero-stat .lbl { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.4); margin-top: 4px; }
     .hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
     .btn-hero-primary {
@@ -128,7 +132,7 @@
     }
     .pdu-table tbody td { padding: 13px 16px; color: rgba(255,255,255,0.8); line-height: 1.5; }
     .pdu-table tbody td strong { color: white; }
-    .pdu-table .pdu-num { font-size: 1rem; font-weight: 800; color: #01696F; }
+    .pdu-table .pdu-num { font-size: 1rem; font-weight: 800; color: #4FB3BF; }
     .total-row .pdu-num { font-size: 1.1rem; color: #4F98A3; }
     .badge {
       display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 3px 9px; border-radius: 20px;
@@ -169,7 +173,7 @@
       font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
       color: rgba(255,255,255,0.4); margin-bottom: 6px;
     }
-    .tri-pdu { font-size: 2.2rem; font-weight: 900; color: #01696F; line-height: 1; margin-bottom: 6px; }
+    .tri-pdu { font-size: 2.2rem; font-weight: 900; color: #4FB3BF; line-height: 1; margin-bottom: 6px; }
     .tri-card.primary .tri-pdu { font-size: 2.8rem; }
     .tri-name { font-size: 0.9rem; font-weight: 700; color: white; margin: 0 0 8px; }
     .tri-modules { font-size: 0.78rem; color: rgba(255,255,255,0.4); line-height: 1.6; }
@@ -229,7 +233,7 @@
       font-size: 0.85rem; color: rgba(255,255,255,0.65); padding: 7px 0;
       border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; gap: 8px;
     }
-    .price-features li::before { content: '✓'; color: #01696F; font-weight: 800; flex-shrink: 0; }
+    .price-features li::before { content: '✓'; color: #4FB3BF; font-weight: 800; flex-shrink: 0; }
     .btn-price-primary {
       display: block; background: #01696F; color: white; font-weight: 800; font-size: 0.9rem;
       padding: 13px 20px; border-radius: 10px; text-decoration: none; text-align: center;
