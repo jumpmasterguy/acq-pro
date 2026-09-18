@@ -176,7 +176,14 @@ export async function setupAuth(app: Express): Promise<void> {
           // the "signed out due to inactivity" notice). A page load — someone
           // typing acqlerate.com after a long break — must NOT get raw JSON:
           // the session is already gone, so just let the page render signed-out.
-          if (req.path.startsWith("/api/")) {
+          // ...except the routes whose whole job is to start a new session.
+          // Hitting the idle timeout and then clicking "Continue with Google"
+          // used to answer this JSON instead of the Google redirect, so the
+          // user got a page of raw JSON and no way to sign back in. The
+          // session is already destroyed above; just let the request through
+          // and let them log in again.
+          const isSignInEntry = /^\/api\/auth\/(google|login|register|logout)\b/.test(req.path);
+          if (req.path.startsWith("/api/") && !isSignInEntry) {
             return res.status(401).json({ message: "Signed out due to inactivity", idleTimeout: true });
           }
           next();

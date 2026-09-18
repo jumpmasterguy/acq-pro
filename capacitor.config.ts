@@ -26,7 +26,15 @@ const config: CapacitorConfig = {
     // there, and set the session cookie in Safari's jar, so the app came back
     // to its own sign-in screen still logged out. accounts.google.com has to
     // be navigable in-app for the cookie to land where the app can see it.
-    allowNavigation: ['accounts.google.com'],
+    // acqlerate.com must be listed even though it is our own host. Capacitor
+    // decides in-app vs system browser with a plain string prefix match of the
+    // full URL against server.url (WebViewDelegationHandler.swift:
+    // navURL.absoluteString.starts(with: config.serverURL.absoluteString)).
+    // Because server.url carries the /app path, every other path on our own
+    // domain - /api/auth/google above all - failed that prefix and got handed
+    // to Safari. allowNavigation is checked first and matches on hostname, so
+    // listing the host restores in-app navigation for the whole site.
+    allowNavigation: ['acqlerate.com', 'accounts.google.com'],
   },
   ios: {
     // 'never' lets the webview own the full screen so the CSS env(safe-area-*)
