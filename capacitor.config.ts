@@ -5,8 +5,13 @@ const config: CapacitorConfig = {
   appName: 'Acqlerate',
   webDir: 'dist/public',
   server: {
-    // Point to Railway backend for API calls in the native app
-    url: 'https://acq-pro-production.up.railway.app',
+    // The native shell is a thin wrapper: it loads the deployed site rather
+    // than its own bundled copy, and API_BASE is empty so every /api call
+    // resolves against this origin. It must be the custom domain — session
+    // cookies and the Google OAuth callback are both issued for acqlerate.com,
+    // and the old acq-pro-production.up.railway.app service domain no longer
+    // resolves to a service at all (Railway answers it with a 404 fallback).
+    url: 'https://acqlerate.com',
     cleartext: false,
   },
   ios: {
@@ -16,7 +21,9 @@ const config: CapacitorConfig = {
     // below the status bar, and the tab bar stopped short of the home indicator,
     // leaving a bare strip of the native background.
     contentInset: 'never',
-    backgroundColor: '#1e3a5f',
+    // Brand teal, matching the launch screen. Previously the old AcqPro navy,
+    // which flashed between the splash and the first painted frame.
+    backgroundColor: '#01696F',
     limitsNavigationsToAppBoundDomains: true,
     scrollEnabled: true,
     keyboardDisplayRequiresUserAction: false,
