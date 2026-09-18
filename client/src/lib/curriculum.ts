@@ -193,6 +193,14 @@ export const modules: Module[] = [
           { term: 'Requirement', definition: 'A documented need for a product or service. Before any contract can be awarded, a requirement must be defined. What does the government need, how much, and by when.' },
           { term: 'Appropriation', definition: 'Money authorized by Congress for a specific purpose. The government can only spend money that Congress has appropriated. And only for the purpose Congress intended.' },
           { term: 'Contractor', definition: 'A private company or individual that has a contract with the government to provide goods or services. Also called a vendor, industry partner, or prime contractor.' },
+          {
+            term: "Appropriation",
+            definition: "Money Congress has made available for a stated purpose, for a stated period. Acquisition converts it into capability.",
+          },
+          {
+            term: "Capability Gap",
+            definition: "The difference between what the force can do and what it needs to do. The reason any program exists.",
+          },
         ],
         content: [
           {
@@ -284,6 +292,37 @@ export const modules: Module[] = [
             heading: 'You Don\'t Need to Memorize Everything',
             body: 'The FAR alone is thousands of pages. No one memorizes it. What matters is understanding the framework. The why behind the rules. So you can find the right answer when you need it and make good judgment calls when the regulation doesn\'t give you a clear answer. That\'s what this course is designed to build.',
           },
+          {
+            type: "callout",
+            level: "advanced",
+            heading: "What Senior PMs Do Differently",
+            body: "They learn the purpose behind a rule before they argue with it, because arguing from purpose is what persuades a contracting officer and arguing from inconvenience is what does not. And they treat the vocabulary as a tool for being understood by people who control money and authority, not as jargon to be endured.",
+          },
+          {
+            type: "highlight",
+            body: "One sentence to teach your team: **defense acquisition is the system that turns appropriated money into fielded capability, and every rule in it exists because somebody once did something that made the rule necessary.**",
+          },
+          {
+            type: "related_lesson",
+            heading: "Build on This",
+            refs: [
+              {
+                lessonId: "history-1",
+                label: "Why There Is a FAR",
+                sub: "Where these rules came from",
+              },
+              {
+                lessonId: "foundations-5",
+                label: "How the Government Actually Buys",
+                sub: "The mechanics, step by step",
+              },
+              {
+                lessonId: "foundations-9",
+                label: "How DoD Money Works",
+                sub: "The money side of the same system",
+              },
+            ],
+          },
         ],
         quiz: [
           {
@@ -346,6 +385,94 @@ export const modules: Module[] = [
             correct: 2,
             explanation: 'Services. Contractors providing labor and expertise to support government operations, programs, and missions. Represent the largest category of DoD contract spending by volume. This includes everything from IT support and base operations to program management support and professional advisory services.',
           },
+          {
+            question: "Why does the government follow special rules when buying rather than simply shopping?",
+            options: [
+              "To create administrative jobs",
+              "Because it spends public money and must be able to show it was spent fairly and accountably",
+              "Because industry demanded it",
+              "To slow down spending",
+            ],
+            correct: 1,
+            explanation: "Fairness, transparency and accountability to Congress and taxpayers are the reasons the process exists at all.",
+            id: "q6",
+          },
+          {
+            question: "Which best describes the relationship between requirements and acquisition?",
+            options: [
+              "Acquisition sets the requirements",
+              "Requirements are validated in a separate process, and acquisition buys against that output",
+              "They are the same process",
+              "Contractors write the requirements",
+            ],
+            correct: 1,
+            explanation: "The separation is why a program can be funded for less than its requirement implies.",
+            id: "q7",
+          },
+          {
+            question: "What is the largest category of DoD contract spending?",
+            options: ["Aircraft", "Services", "Construction", "Ammunition"],
+            correct: 1,
+            explanation: "Services grew to roughly half of contract obligations, which is why the services pathway and surveillance discipline matter so much.",
+            id: "q8",
+          },
+          {
+            question: "Who has authority to obligate the government to pay under a contract?",
+            options: ["The program manager", "The contracting officer", "The COR", "The requiring activity"],
+            correct: 1,
+            explanation: "Only a warranted contracting officer can bind the government. Everyone else recommends.",
+            id: "q9",
+          },
+          {
+            question: "A rule seems to make no sense in your situation. What is the professional first move?",
+            options: [
+              "Ignore it",
+              "Ask what abuse it was written to prevent, and whether that abuse is possible here",
+              "Request a waiver immediately",
+              "Escalate to leadership",
+            ],
+            correct: 1,
+            explanation: "That question usually reveals either a legitimate exception the drafters anticipated or the reason the rule does apply.",
+            id: "q10",
+          },
+          {
+            question: "What does it mean that acquisition is a system rather than a process?",
+            options: [
+              "It is automated",
+              "Several organizations with separate authorities have to agree, and none reports to the others",
+              "It is governed by one regulation",
+              "It is managed by one office",
+            ],
+            correct: 1,
+            explanation: "Requirements, budgeting and acquisition each hold a piece, which is the source of most of the friction.",
+            id: "q11",
+          },
+          {
+            type: "drag_match",
+            question: "Match each role to what it controls:",
+            options: [],
+            correct: 0,
+            explanation: "Knowing who controls what is the fastest way to stop asking the wrong person.",
+            pairs: [
+              {
+                left: "Contracting officer",
+                right: "Authority to bind the government",
+              },
+              {
+                left: "Program manager",
+                right: "Cost, schedule and performance of the program",
+              },
+              {
+                left: "COR",
+                right: "Day-to-day monitoring and inspection, within a delegation",
+              },
+              {
+                left: "Requiring activity",
+                right: "What the government needs and why",
+              },
+            ],
+            id: "q12",
+          },
         ],
       },
       {
@@ -359,6 +486,26 @@ export const modules: Module[] = [
           { term: 'DoDI 5000.02', definition: 'The primary DoD instruction governing the acquisition of major defense systems.' },
           { term: 'JCIDS', definition: 'Joint Capabilities Integration and Development System. The requirements generation process.' },
           { term: 'PPBE', definition: 'Planning, Programming, Budgeting, and Execution. DoD\'s resource allocation process.' },
+          {
+            term: "Adaptive Acquisition Framework",
+            definition: "The 2020 restructuring of DoD acquisition policy into six pathways, so a satellite, a payroll system and a services contract are not governed by one process.",
+          },
+          {
+            term: "Milestone Decision Authority",
+            definition: "The official empowered to approve a program's passage through a milestone. Which official depends on the program's ACAT level.",
+          },
+          {
+            term: "Requirements Process",
+            definition: "The separate system, JCIDS at the joint level, that validates what the force needs. Acquisition buys against its output and does not control it.",
+          },
+          {
+            term: "Program of Record",
+            definition: "A funded program with a budget line, a program office and a validated requirement. Where recurring money lives.",
+          },
+          {
+            term: "Middle Tier of Acquisition",
+            definition: "The rapid prototyping and rapid fielding pathway, aimed at delivering capability within five years without the full major-program process.",
+          },
         ],
         content: [
           {
@@ -431,6 +578,62 @@ export const modules: Module[] = [
             ]
           },
           {
+            type: "text",
+            level: "intermediate",
+            heading: "Three Systems, Not One, and They Do Not Share a Calendar",
+            body: "The thing that makes defense acquisition confusing is that three separate systems have to agree before anything happens, and none of them reports to the others. Requirements decides what the force needs, through a joint or service validation process. Budgeting decides what gets funded, on the two-year PPBE cycle. Acquisition decides how to buy it and runs the program. A program manager sits at the intersection holding responsibility for an outcome that depends on two systems they do not control. This explains most of what seems irrational from inside a program: a validated requirement with no money, funding for something whose requirement has changed, or an acquisition strategy that cannot start because the appropriation is late. The competent move is not to fight it but to track all three, because a problem in any one of them arrives as a problem in your program.",
+          },
+          {
+            type: "table",
+            level: "intermediate",
+            heading: "The Six Pathways, and What Each Is For",
+            headers: ["Pathway", "Built for", "Speed target", "What makes it different"],
+            rows: [
+              [
+                "Urgent capability",
+                "An urgent operational need",
+                "Under two years",
+                "Fielded fast; sustainment decided later",
+              ],
+              [
+                "Middle tier",
+                "Rapid prototyping or rapid fielding",
+                "Within five years",
+                "Exempt from much of the major-program process",
+              ],
+              [
+                "Major capability",
+                "Large complex systems",
+                "Years to decades",
+                "Milestones, independent cost estimates, formal test",
+              ],
+              [
+                "Software",
+                "Software-intensive capability",
+                "Continuous delivery",
+                "Minimum viable release; value assessments, not milestones",
+              ],
+              [
+                "Business systems",
+                "Enterprise IT and business process",
+                "Iterative",
+                "Fit to standard: change the process before customizing",
+              ],
+              [
+                "Services",
+                "Contracted services",
+                "Recurring",
+                "Requirements validation, measurable standards, surveillance",
+              ],
+            ],
+          },
+          {
+            type: "text",
+            level: "intermediate",
+            heading: "Choosing a Pathway Is a Real Decision",
+            body: "Programs default to the pathway their office has always used, which is how software ends up inside a milestone process built for aircraft. The choice is supposed to follow what you are buying. If the capability is software that can be delivered continuously to users, the software pathway removes the milestone structure that would otherwise force you to predict two years of requirements. If the need is urgent and the sustainment question can wait, urgent capability acquisition exists for exactly that. Pathways can also be combined or switched: prototype under middle tier, then transition to major capability for production. The cost of choosing badly is not procedural, it is that you spend the program's energy producing documents the pathway demands rather than capability the user needs.",
+          },
+          {
             type: 'text',
             level: 'advanced',
             heading: "Title 10 Authorities and the Limits of DAU Training",
@@ -441,7 +644,50 @@ export const modules: Module[] = [
             level: 'advanced',
             heading: "The Real Purpose of Milestone Reviews: and Why They Fail",
             body: "Milestone reviews exist to ensure the government is not committing to programs that are not ready. In theory, a Milestone B review verifies that requirements are stable, design is mature, and cost/schedule are executable before committing to EMD. In practice, programs routinely breach Milestones with immature technology, unstable requirements, and optimistic cost estimates: because the institutional pressure to keep programs moving outweighs the discipline to hold the gate. As a senior PM, your job is to resist this pressure. A program that breaches Milestone B with a 60% design maturity will statistically overrun its cost estimate by 40%+ and breach schedule by 2+ years. The Milestone review is your last, best chance to reset before billions are committed. Use it."
-          }
+          },
+          {
+            type: "text",
+            level: "advanced",
+            heading: "Why Programs Fail at the Seams",
+            body: "When a major program fails, the post-mortem usually finds the failure at a seam between the three systems rather than inside any one of them. A requirement was validated without a cost estimate, so the program was funded for less than the requirement implied. Technology was assumed mature by the requirements process and was not, so development consumed the schedule. The budget was built for a plan that testing later invalidated, and the two-year lag meant the correction arrived long after it was needed. The acquisition system takes the blame because it is the visible one, and it is where the program office sits. A senior PM's practical defense is to force the seams into the open early: attach a cost estimate to the requirement, put a technology readiness assessment in front of the milestone, and make the budget's assumptions explicit so that when one breaks, everyone can see which one it was.",
+          },
+          {
+            type: "text",
+            level: "advanced",
+            heading: "What the Framework Did Not Fix",
+            body: "The Adaptive Acquisition Framework changed how programs are governed, not how they are funded. Money still moves on the PPBE calendar, in specific colors, planned two years ahead. So a software program on a pathway designed for continuous delivery still has to predict its funding needs two years out and still cannot easily move money between lines when priorities shift within a year. This is the structural limit on every speed reform of the last decade, and it is why portfolio funding proposals keep returning. For a PM the useful consequence is expectation setting: the pathway determines your documentation and decision structure, the appropriation determines your actual pace, and confusing the two leads to promising schedules the money cannot support.",
+          },
+          {
+            type: "callout",
+            level: "advanced",
+            heading: "What Senior PMs Do Differently",
+            body: "They track requirements, budget and acquisition as three separate systems and watch for problems arriving from the two they do not control. They choose the pathway deliberately, and switch or combine when the work changes. They force the seams into the open early with cost estimates attached to requirements and technology readiness assessed before commitment. And they set schedule expectations against the appropriation, not against the pathway.",
+          },
+          {
+            type: "highlight",
+            body: "One sentence to teach your team: **requirements, budgeting and acquisition are three separate systems that do not report to each other and do not share a calendar, and a program manager is accountable for an outcome that depends on all three.**",
+          },
+          {
+            type: "related_lesson",
+            heading: "Build on This",
+            refs: [
+              {
+                lessonId: "finance-1",
+                label: "The PPBE Cycle",
+                sub: "The system that decides whether you are funded",
+              },
+              {
+                lessonId: "history-7",
+                label: "The Modern Era and the 2026 FAR Rewrite",
+                sub: "Where the six pathways came from",
+              },
+              {
+                lessonId: "lifecycle-3",
+                label: "The Software Acquisition Pathway",
+                sub: "The pathway that works least like the others",
+              },
+            ],
+          },
         ],
         quiz: [
           {
@@ -541,7 +787,48 @@ export const modules: Module[] = [
               { left: 'Acquisition System', right: 'Procures and delivers the capability' },
               { left: 'DAWIA', right: 'Sets workforce training & certification standards' }
             ]
-          }
+          },
+          {
+            type: "drag_match",
+            question: "Match each pathway to what it is built for:",
+            options: [],
+            correct: 0,
+            explanation: "Choosing a pathway is a real decision, and defaulting to the one your office has always used is how software ends up in a process designed for aircraft.",
+            pairs: [
+              {
+                left: "Urgent capability",
+                right: "An urgent operational need, fielded in under two years",
+              },
+              {
+                left: "Middle tier",
+                right: "Rapid prototyping or fielding within five years",
+              },
+              {
+                left: "Software pathway",
+                right: "Continuous delivery with a minimum viable release",
+              },
+              {
+                left: "Major capability",
+                right: "Large complex systems with milestones and formal test",
+              },
+            ],
+            id: "q13",
+          },
+          {
+            type: "drag_order",
+            question: "Order what has to happen before a program can spend money on a new capability:",
+            options: [],
+            correct: 0,
+            explanation: "Three systems have to agree, and none of them reports to the others.",
+            orderedItems: [
+              "The requirements process validates the need",
+              "The service programs it into a future budget",
+              "Congress appropriates the money",
+              "The program office selects a pathway and builds the acquisition strategy",
+              "A contract is awarded and execution begins",
+            ],
+            id: "q14",
+          },
         ]
       },
       {
@@ -655,6 +942,37 @@ export const modules: Module[] = [
             heading: 'The Most Important Relationship You\'ll Have as a Contractor',
             body: 'It\'s not with the Contracting Officer. It\'s with the COR. The COR is your day-to-day technical interface, the person who writes your performance assessments (CPARS), and one of the most influential voices when the government decides whether to exercise your option year or re-compete the contract. Treat every interaction with your COR as a performance evaluation in progress.',
           },
+          {
+            type: "callout",
+            level: "advanced",
+            heading: "What Senior PMs Do Differently",
+            body: "They map the decision before the meeting: who must agree, in what order, and what each of them needs to say yes. And they build the relationship with the contracting officer before they need something from it, because the first conversation should not be a request.",
+          },
+          {
+            type: "highlight",
+            body: "One sentence to teach your team: **the org chart tells you who holds which authority, and the fastest way to get unstuck is to work out whose authority you are actually asking for before you ask anyone.**",
+          },
+          {
+            type: "related_lesson",
+            heading: "Build on This",
+            refs: [
+              {
+                lessonId: "foundations-4",
+                label: "Roles & Career Paths",
+                sub: "Where these people come from",
+              },
+              {
+                lessonId: "preaward-10",
+                label: "The PM and CO Partnership",
+                sub: "The relationship that decides your pace",
+              },
+              {
+                lessonId: "veteran-2",
+                label: "The Government Civilian Path",
+                sub: "How these jobs are filled",
+              },
+            ],
+          },
         ],
         quiz: [
           {
@@ -717,6 +1035,99 @@ export const modules: Module[] = [
             correct: 3,
             explanation: 'The PM reports to their PEO (Program Executive Officer), who reports to the SAE (Service Acquisition Executive). E.g., SAF/AQ for Air Force programs. For ACAT I programs, the SAE may report to the USD(A&S) at OSD. Congress oversees the overall system but does not directly supervise individual PMs.',
           },
+          {
+            question: "A milestone decision authority's level is set by what?",
+            options: [
+              "The contractor's size",
+              "The program's ACAT level",
+              "The appropriation used",
+              "The service secretary's preference",
+            ],
+            correct: 1,
+            explanation: "ACAT level determines which official approves passage through milestones.",
+            id: "q6",
+          },
+          {
+            question: "What does a program executive officer do that a program manager does not?",
+            options: [
+              "Sign contracts",
+              "Own a portfolio of programs and the trades between them",
+              "Write requirements",
+              "Perform surveillance",
+            ],
+            correct: 1,
+            explanation: "The PEO makes portfolio decisions; the PM runs one program inside that portfolio.",
+            id: "q7",
+          },
+          {
+            question: "Who writes the CPARS rating that follows a contractor for years?",
+            options: [
+              "The contracting officer with input from the program office, usually drafted by the COR",
+              "The contractor",
+              "DCMA alone",
+              "The PEO",
+            ],
+            correct: 0,
+            explanation: "This is why the day-to-day relationship with the COR matters more to a contractor than most realize.",
+            id: "q8",
+          },
+          {
+            question: "DCMA's role on a contract is best described as:",
+            options: [
+              "Awarding contracts",
+              "Administering contracts at the contractor's facility: surveillance, property, and often the ACO function",
+              "Writing requirements",
+              "Setting budgets",
+            ],
+            correct: 1,
+            explanation: "DCMA is often the government presence inside the plant, separate from the buying office.",
+            id: "q9",
+          },
+          {
+            question: "You need a scope change. Whose authority is that?",
+            options: ["The COR's", "The contracting officer's", "The PM's", "The PEO's"],
+            correct: 1,
+            explanation: "Scope, price, schedule and terms are all contracting officer authority, however sensible the change.",
+            id: "q10",
+          },
+          {
+            question: "Why does knowing the org chart save time?",
+            options: [
+              "It is required training",
+              "Because asking the wrong person for a decision costs weeks and produces a polite no",
+              "It determines your grade",
+              "It sets the budget",
+            ],
+            correct: 1,
+            explanation: "Mapping who must agree, and what each needs, is how experienced PMs move faster than the structure suggests.",
+            id: "q11",
+          },
+          {
+            type: "drag_match",
+            question: "Match each organization to its role:",
+            options: [],
+            correct: 0,
+            explanation: "These four show up on nearly every program, and confusing them is a common source of delay.",
+            pairs: [
+              {
+                left: "Program office",
+                right: "Runs the program: cost, schedule, performance",
+              },
+              {
+                left: "Contracting office",
+                right: "Awards and administers the contract",
+              },
+              {
+                left: "DCMA",
+                right: "Contract administration at the contractor's facility",
+              },
+              {
+                left: "DCAA",
+                right: "Audits contractor costs and accounting systems",
+              },
+            ],
+            id: "q12",
+          },
         ],
       },
       {
@@ -730,6 +1141,26 @@ export const modules: Module[] = [
       { term: 'FAC-PM', definition: 'Federal Acquisition Certification for Program and Project Managers.' },
       { term: 'PCO', definition: 'Procuring Contracting Officer. Has authority to enter into, administer, and terminate contracts.' },
       { term: 'COR', definition: 'Contracting Officer\'s Representative. The government\'s technical eyes and ears on a contract.' },
+      {
+        term: "DAWIA Certification",
+        definition: "The tiered credential for the DoD acquisition workforce by functional area. Required for the position and recognized in industry.",
+      },
+      {
+        term: "Functional Area",
+        definition: "The acquisition discipline a position belongs to: contracting, program management, engineering, life cycle logistics, business financial management and others.",
+      },
+      {
+        term: "Warrant",
+        definition: "The written authority allowing a contracting officer to bind the government, up to a stated dollar level.",
+      },
+      {
+        term: "Acquisition Workforce",
+        definition: "The roughly 180,000 DoD civilians and military members in designated acquisition positions.",
+      },
+      {
+        term: "Rotation",
+        definition: "A deliberate move between functions or organizations to build the breadth senior roles require.",
+      },
         ],
         content: [
       {
@@ -875,6 +1306,33 @@ export const modules: Module[] = [
       heading: 'The PM as Program Architect: Shaping the Acquisition Before It Starts',
       body: 'The most impactful PMs shape their programs before Milestone B. Not after. At the senior level, your job is acquisition strategy: contract type selection, source selection criteria weighting, EVMS thresholds, and data rights. These decisions, made 18-24 months before contract award, determine whether your program is executable. A CPIF with a 70/30 share ratio on a software program with unstable requirements will give the contractor every incentive to slow-roll risk mitigation. A FFRDC study that locks in requirements before the market is ready will waste a year. Senior PMs think about incentive structures, competitive dynamics, and industrial base health. Not just Gantt charts.',
         },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They pick assignments for what the assignment teaches rather than for the grade it carries, because breadth across two or three functions is what qualifies someone for the senior roles, and they keep their certifications current before they need them rather than during a promotion window.",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "veteran-2",
+              label: "The Government Civilian Path",
+              sub: "Series, hiring authorities and DAWIA",
+            },
+            {
+              lessonId: "veteran-3",
+              label: "The Contractor Path",
+              sub: "The same career from the industry side",
+            },
+            {
+              lessonId: "ops-3",
+              label: "Career Roadmap",
+              sub: "Progression once you are in",
+            },
+          ],
+        },
         ],
       quiz: [
       {
@@ -946,7 +1404,26 @@ export const modules: Module[] = [
         options: ['GS-5 to GS-7', 'GS-7 to GS-9', 'GS-11 to GS-12', 'GS-13 to GS-14'],
         correct: 1,
         explanation: "The Pathways Recent Graduates program typically offers positions at GS-7 to GS-9 for recent graduates (within 2 years of degree completion). This provides a structured entry into federal service with formal training, mentoring, and a clear pathway to full career positions."
-      }
+      },
+      {
+        question: "Which occupational series holds contracting officers?",
+        options: ["0343", "1102", "0346", "0801"],
+        correct: 1,
+        explanation: "1102 contract specialists become contracting officers once warranted.",
+        id: "q11",
+      },
+      {
+        question: "What does DAWIA certification require?",
+        options: [
+          "A master's degree",
+          "Specified training, experience in the functional area, and in some areas an education requirement, within a set period after entering the position",
+          "A PMP",
+          "A security clearance",
+        ],
+        correct: 1,
+        explanation: "It is paid for and on government time, and it produces a credential industry also recognizes.",
+        id: "q12",
+      },
         ]
       },
       {
@@ -964,6 +1441,10 @@ export const modules: Module[] = [
           { term: 'Ceiling Value', definition: 'The maximum total dollar amount the government can spend under a contract or IDIQ. The contractor is not guaranteed the ceiling. Only actual task orders place firm obligations.' },
           { term: 'Fair Opportunity', definition: 'The FAR 16.505 requirement that all awardees on a Multiple Award IDIQ receive a fair opportunity to compete for each task order. The default rule for all MA-IDIQ task orders.' },
           { term: 'Single Award vs. Multiple Award', definition: 'A Single Award IDIQ gives one contractor exclusive rights to all task orders. A Multiple Award IDIQ puts several contractors on the vehicle; each task order is then competed among them.' },
+          {
+            term: "Simplified Acquisition Threshold",
+            definition: "The dollar level below which lighter procedures apply and acquisitions are reserved for small business. Verify the current figure.",
+          },
         ],
         content: [
           {
@@ -1042,6 +1523,37 @@ export const modules: Module[] = [
             heading: 'For Government Personnel: Why This Matters to You',
             body: 'As a PM, budget analyst, or acquisition professional, understanding whether a requirement will be satisfied through a standalone contract or a task order shapes your acquisition timeline, your documentation requirements, and how much influence you have over the competitive field. A task order under an existing IDIQ can move in weeks. A new standalone contract can take 12–18 months. Know which tool you\'re working with before you plan your program timeline.',
           },
+          {
+            type: "callout",
+            level: "advanced",
+            heading: "What Senior PMs Do Differently",
+            body: "They pick the buying method from the requirement rather than from habit, and they ask the contracting officer which method is realistic given the office's workload before promising anyone a date.",
+          },
+          {
+            type: "highlight",
+            body: "One sentence to teach your team: **the government buys through a small number of recognizable methods, and knowing which one applies tells you the timeline, the competition rules and who decides, before you read a single clause.**",
+          },
+          {
+            type: "related_lesson",
+            heading: "Build on This",
+            refs: [
+              {
+                lessonId: "preaward-1",
+                label: "From Validated Need to Award",
+                sub: "The full pre-award timeline",
+              },
+              {
+                lessonId: "contracts-4",
+                label: "Contracts vs. Task Orders",
+                sub: "Buying through an existing vehicle",
+              },
+              {
+                lessonId: "history-2",
+                label: "CICA and the $435 Hammer",
+                sub: "Why competition is the default",
+              },
+            ],
+          },
         ],
         quiz: [
           {
@@ -1103,6 +1615,93 @@ export const modules: Module[] = [
             ],
             correct: 2,
             explanation: 'A Single Award IDIQ winner gets all task orders. No further competition required, but only one firm wins the vehicle. A Multiple Award IDIQ puts several firms on the contract, then each task order is competed among them under fair opportunity rules. More firms can participate in MA-IDIQs, but no firm is guaranteed any specific task order.',
+          },
+          {
+            question: "What is the default competition standard for federal procurement?",
+            options: [
+              "Two quotes",
+              "Full and open competition, with exceptions that must be justified in writing",
+              "Lowest price",
+              "Sole source with approval",
+            ],
+            correct: 1,
+            explanation: "CICA made it the requirement, and each of the seven exceptions carries a documented justification.",
+            id: "q6",
+          },
+          {
+            question: "Below the micro-purchase threshold, what applies?",
+            options: [
+              "Full source selection",
+              "A purchase can be made without competition, usually by government purchase card",
+              "Sealed bidding",
+              "A J&A",
+            ],
+            correct: 1,
+            explanation: "It moved an enormous volume of small transactions out of contracting offices entirely.",
+            id: "q7",
+          },
+          {
+            question: "What does buying a commercial product under FAR Part 12 change?",
+            options: [
+              "Nothing",
+              "A short clause list, streamlined format, and exemption from cost accounting standards and usually certified cost data",
+              "It requires more audit",
+              "It forbids competition",
+            ],
+            correct: 1,
+            explanation: "Price reasonableness comes from the market rather than from the contractor's costs.",
+            id: "q8",
+          },
+          {
+            question: "An office says a competitive award will take nine months. What is usually driving that?",
+            options: [
+              "Contractor delays",
+              "Acquisition planning, market research, requirements package quality and the contracting office's workload",
+              "Legal review only",
+              "Congressional approval",
+            ],
+            correct: 1,
+            explanation: "Most of the timeline is consumed before the solicitation is released.",
+            id: "q9",
+          },
+          {
+            question: "Which situation best fits sealed bidding?",
+            options: [
+              "Complex development",
+              "A well-defined requirement where price is the only real discriminator",
+              "Services with subjective quality",
+              "Research",
+            ],
+            correct: 1,
+            explanation: "Sealed bidding needs a specification precise enough that any responsive bid is equally acceptable.",
+            id: "q10",
+          },
+          {
+            question: "Why does the buying method matter to a program manager?",
+            options: [
+              "It does not; contracting decides",
+              "It sets the timeline, the competition rules and who decides, which drives every date you promise",
+              "It changes the requirement",
+              "It sets the contractor's price",
+            ],
+            correct: 1,
+            explanation: "Promising a fielding date without knowing the buying method is how programs acquire schedules they cannot keep.",
+            id: "q11",
+          },
+          {
+            type: "drag_order",
+            question: "Order a straightforward competitive buy:",
+            options: [],
+            correct: 0,
+            explanation: "Most of the elapsed time is in the first three steps, which is where a PM has the most influence.",
+            orderedItems: [
+              "Validate the requirement and get funding identified",
+              "Conduct market research and choose the acquisition strategy",
+              "Build the requirements package: work statement, estimate, evaluation plan",
+              "Release the solicitation and evaluate proposals",
+              "Award, debrief, and start performance",
+            ],
+            id: "q12",
           },
         ],
       },
@@ -1210,6 +1809,37 @@ export const modules: Module[] = [
             heading: 'The One Thing to Remember About the Lifecycle',
             body: 'Decisions made early in a program. During MSA, when the requirements are being set and the alternatives are being evaluated. Lock in 70–80% of the total program cost. The program office at MSA is typically small and underfunded. The program office at EMD is large and heavily resourced. But the cheaper, smarter investment is the thorough analysis early. Because every requirement that\'s poorly defined, every cost estimate that\'s optimistic, and every technology that isn\'t mature enough at Milestone B becomes an expensive problem to fix in EMD.',
           },
+          {
+            type: "callout",
+            level: "advanced",
+            heading: "What Senior PMs Do Differently",
+            body: "They treat each milestone as a genuine decision rather than a scheduled event, and they make the technology readiness argument honestly, because a program that enters development with immature technology reliably pays for it later and everyone in the room already knows it.",
+          },
+          {
+            type: "highlight",
+            body: "One sentence to teach your team: **the lifecycle is a sequence of commitments, and each milestone exists to stop a program from committing to production before it has learned whether the thing works.**",
+          },
+          {
+            type: "related_lesson",
+            heading: "Build on This",
+            refs: [
+              {
+                lessonId: "lifecycle-1",
+                label: "Sustainment and O&S Cost",
+                sub: "The phase that costs the most",
+              },
+              {
+                lessonId: "history-6",
+                label: "Programs That Failed and the Laws They Produced",
+                sub: "What happens when the sequence is skipped",
+              },
+              {
+                lessonId: "foundations-7",
+                label: "ACAT Levels",
+                sub: "Who approves each commitment",
+              },
+            ],
+          },
         ],
         quiz: [
           {
@@ -1271,6 +1901,88 @@ export const modules: Module[] = [
             ],
             correct: 2,
             explanation: 'Studies (including by RAND and CAPE) consistently show that 70–80% of a program\'s total life-cycle cost is locked in by the decisions made during MSA. What requirements are set, which alternative is chosen, and how mature the technology is. Changing requirements in EMD is 10–100x more expensive than getting them right during MSA. This is why early rigor, despite its lower visibility and funding, is the highest-value investment a program can make.',
+          },
+          {
+            question: "What is a milestone decision actually deciding?",
+            options: [
+              "Whether the contractor performed well",
+              "Whether the program has learned enough to commit to the next, more expensive phase",
+              "The budget for next year",
+              "The contract type",
+            ],
+            correct: 1,
+            explanation: "Each milestone is a commitment gate, which is why entering one with immature technology is the best predictor of cost growth.",
+            id: "q6",
+          },
+          {
+            question: "Which phase consumes the majority of a system's lifecycle cost?",
+            options: ["Technology maturation", "Development", "Production", "Operations and support"],
+            correct: 3,
+            explanation: "O&S is typically well over half, and it is largely locked in by decisions made during development.",
+            id: "q7",
+          },
+          {
+            question: "What does concurrency mean in acquisition, and why is it risky?",
+            options: [
+              "Running two programs at once; it splits attention",
+              "Overlapping development and production; problems found in test become retrofits on units already built",
+              "Parallel contracting actions; it confuses vendors",
+              "Simultaneous testing; it is efficient",
+            ],
+            correct: 1,
+            explanation: "Concurrency converts development discoveries into expensive rework across a fielded fleet.",
+            id: "q8",
+          },
+          {
+            question: "Why does the lifecycle view matter to a contractor, not just the government?",
+            options: [
+              "It does not",
+              "Because sustainment is where the recurring revenue is, and the data rights decided during development determine who can compete for it",
+              "It sets the fee",
+              "It determines the NAICS code",
+            ],
+            correct: 1,
+            explanation: "Development decisions shape a sustainment market that lasts decades.",
+            id: "q9",
+          },
+          {
+            question: "What is a technology readiness assessment for?",
+            options: [
+              "Grading the contractor",
+              "Establishing how mature the technology is before the program commits to developing around it",
+              "Setting the price",
+              "Selecting the pathway",
+            ],
+            correct: 1,
+            explanation: "It exists because low readiness at development start is the most reliable predictor of cost and schedule growth.",
+            id: "q10",
+          },
+          {
+            question: "An urgent operational need must be fielded in eighteen months. Which pathway fits?",
+            options: [
+              "Major capability acquisition",
+              "Urgent capability acquisition",
+              "Business systems",
+              "Major defense acquisition program",
+            ],
+            correct: 1,
+            explanation: "It is built to field in under two years, with the sustainment question deliberately deferred.",
+            id: "q11",
+          },
+          {
+            type: "drag_order",
+            question: "Order the lifecycle phases:",
+            options: [],
+            correct: 0,
+            explanation: "Each transition is a commitment, and the money committed rises sharply at each one.",
+            orderedItems: [
+              "Materiel solution analysis",
+              "Technology maturation and risk reduction",
+              "Engineering and manufacturing development",
+              "Production and deployment",
+              "Operations and support",
+            ],
+            id: "q12",
           },
         ],
       },
@@ -1369,6 +2081,31 @@ export const modules: Module[] = [
           level: 'advanced' as const,
           heading: 'Tailoring Acquisition: What Senior PMs Actually Do at Milestone B',
           body: 'The DoDI 5000 framework provides the default acquisition structure, but senior PMs know that almost everything can be tailored. At Milestone B, the MDA approves your Acquisition Program Baseline (APB), your contract strategy, and your tailoring decisions. Smart tailoring means: selecting the minimum oversight that still provides adequate risk visibility, adjusting milestone criteria to match your specific technology maturity, and requesting waivers for documentation requirements that add process burden without insight. The danger is tailoring away safeguards that exist for good reasons. ACAT I programs that waive IBR requirements or skip SEPs have consistently worse cost outcomes. Know which gates exist to protect the program. And which ones are just bureaucratic inertia.',
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **the ACAT level is not a label, it is a statement about who approves your program and how much oversight it carries, and it is set by dollars and by how much attention the capability attracts.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "lifecycle-8",
+              label: "Program Reviews and the Baseline",
+              sub: "What the oversight actually looks like",
+            },
+            {
+              lessonId: "history-6",
+              label: "Programs That Failed and the Laws They Produced",
+              sub: "Where Nunn-McCurdy came from",
+            },
+            {
+              lessonId: "finance-1",
+              label: "The PPBE Cycle",
+              sub: "How programs of this size get funded",
+            },
+          ],
         },
         ],
       quiz: [
@@ -1568,6 +2305,31 @@ export const modules: Module[] = [
       heading: 'The Legal Boundaries of Streamlined Acquisition: Where Senior PMs Get Burned',
       body: 'FAR Part 12 commercial item authority and OTAs are powerful tools, but senior PMs know the legal tripwires. Commercial item determinations require a market analysis demonstrating the item is sold to the general public in substantial quantities. Labeling something "commercial" without adequate justification creates GAO protest risk and audit exposure. For OTAs: the "significant non-traditional contractor involvement" requirement is frequently gamed but increasingly scrutinized. If your "non-traditional" partner is a JV with a traditional prime as the majority partner, a DoD IG audit will flag it. The OTA authority explicitly prohibits using them to circumvent the Clinger-Cohen Act or the Competition in Contracting Act for production. Know the statutory text, not just the guidance.',
         },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **an Other Transaction is a contract without the FAR, which means every protection a clause would normally give you has to be negotiated into the agreement, and the two that decide whether a prototype becomes a business are data rights and follow-on production.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "onramp-3",
+              label: "Other Transactions and Consortia",
+              sub: "The authority in depth, from a company's side",
+            },
+            {
+              lessonId: "onramp-4",
+              label: "DIU, AFWERX, and Commercial Solutions Openings",
+              sub: "Where most prototype OTs start",
+            },
+            {
+              lessonId: "history-7",
+              label: "The Modern Era",
+              sub: "Why the alternatives were built beside the main process",
+            },
+          ],
+        },
         ],
       quiz: [
       {
@@ -1757,6 +2519,37 @@ export const modules: Module[] = [
             type: 'lucas_note',
             body: `September 30th is a real thing. The government fiscal year ends on September 30, and the weeks before that date are chaos. Contracting offices are flooded with last-minute requests to obligate expiring O&M funds. Requirements get rushed, scopes get vague, and sometimes work gets bought that nobody really needs.\n\nAs a contractor, this is actually **opportunity**: if you're on the right vehicles and have a good relationship with your COR, you'll get called in August with real work. But the projects that get stood up in September often have the worst-defined SOWs and the most scope creep. Get clarity on what you're actually being asked to deliver before you say yes.`,
           },
+          {
+            type: "callout",
+            level: "advanced",
+            heading: "What Senior PMs Do Differently",
+            body: "They know the expiration date of every appropriation on their program and plan the obligation sequence around it, and they treat a potential Antideficiency Act violation as something to raise immediately rather than something to quietly resolve, because the reporting obligation is not discretionary.",
+          },
+          {
+            type: "highlight",
+            body: "One sentence to teach your team: **appropriated money has a color and a clock, so the question is never just how much you have, it is which appropriation it came from, what it may lawfully buy, and when it expires.**",
+          },
+          {
+            type: "related_lesson",
+            heading: "Build on This",
+            refs: [
+              {
+                lessonId: "finance-4",
+                label: "Color of Money by Service",
+                sub: "What each appropriation may buy",
+              },
+              {
+                lessonId: "finance-1",
+                label: "The PPBE Cycle",
+                sub: "Where the money comes from in the first place",
+              },
+              {
+                lessonId: "lifecycle-4",
+                label: "Contract Closeout",
+                sub: "What happens to money at the end",
+              },
+            ],
+          },
         ],
         quiz: [
           {
@@ -1818,6 +2611,99 @@ export const modules: Module[] = [
             ],
             correct: 2,
             explanation: 'O&M funds have a 1-year obligation period. Unobligated O&M funds expire at the end of the fiscal year (September 30) and cannot be used to obligate new contracts or orders. This is why the end of the fiscal year is an intense period of activity. Programs scramble to obligate funding before it expires.',
+          },
+          {
+            question: "What does the color of money mean?",
+            options: [
+              "The accounting software's labels",
+              "The appropriation a dollar came from, which limits what it may lawfully buy and how long it is available",
+              "The contractor's billing category",
+              "The classification level",
+            ],
+            correct: 1,
+            explanation: "Research, procurement and operations money each buy different things for different periods.",
+            id: "q6",
+          },
+          {
+            question: "Operations and maintenance money is generally available for how long?",
+            options: ["One year", "Two years", "Three years", "Five years"],
+            correct: 0,
+            explanation: "One-year money is what drives the September obligation pressure everyone notices.",
+            id: "q7",
+          },
+          {
+            question: "Using procurement money for a research task is:",
+            options: [
+              "Efficient",
+              "A purpose violation, and potentially an Antideficiency Act issue",
+              "Allowed with CO approval",
+              "Standard practice",
+            ],
+            correct: 1,
+            explanation: "Purpose, time and amount are the three limits, and violating purpose is the easiest one to do by accident.",
+            id: "q8",
+          },
+          {
+            question: "What is the practical difference between obligated and expended?",
+            options: [
+              "None",
+              "Obligated is money committed on a contract; expended is money actually paid out",
+              "Expended comes first",
+              "Obligated means spent",
+            ],
+            correct: 1,
+            explanation: "Leadership reads the gap between them as a signal about whether work is actually happening.",
+            id: "q9",
+          },
+          {
+            question: "Your program has unobligated one-year money in August. What is the risk?",
+            options: [
+              "None",
+              "It expires at the end of the fiscal year and is likely to be swept or become an argument for a future cut",
+              "It rolls over automatically",
+              "It converts to procurement funds",
+            ],
+            correct: 1,
+            explanation: "Unobligated balances invite marks and rescission, which is why an execution record matters.",
+            id: "q10",
+          },
+          {
+            question: "Who is accountable for an Antideficiency Act violation?",
+            options: [
+              "The contractor",
+              "The government officials involved, with reporting up to the President and Congress",
+              "The contracting officer only",
+              "Nobody, if it is corrected",
+            ],
+            correct: 1,
+            explanation: "The reporting obligation is statutory, which is why these are raised immediately rather than handled quietly.",
+            id: "q11",
+          },
+          {
+            type: "drag_match",
+            question: "Match each appropriation to what it buys:",
+            options: [],
+            correct: 0,
+            explanation: "Getting this wrong is a purpose violation, not a paperwork error.",
+            pairs: [
+              {
+                left: "RDT&E",
+                right: "Development, prototypes and testing",
+              },
+              {
+                left: "Procurement",
+                right: "Production units and their initial spares",
+              },
+              {
+                left: "O&M",
+                right: "Operating the force: services, sustainment, day-to-day costs",
+              },
+              {
+                left: "MILCON",
+                right: "Construction of facilities",
+              },
+            ],
+            id: "q12",
           },
         ],
       },
@@ -2377,6 +3263,37 @@ export const modules: Module[] = [
           heading: 'Anti-Deficiency Act Violations and How They Happen to Good PMs',
           body: 'The Anti-Deficiency Act (31 U.S.C. § 1341) prohibits obligating funds in excess of or in advance of appropriations. Violations are career-ending. They happen most often through: (1) continuing contract performance after a CR expires and before new appropriations are enacted without a proper Continuing Resolution Authority authorization; (2) using one appropriation to fund activities that belong to another ("purpose" violations); (3) obligating contracts before funds are available in USASpending. Senior PMs must build a personal funding calendar: when does each appropriation expire? When does the CR end? What is the period of availability for each line item? These are not comptroller problems. They are PM problems. The PM signs the obligation documents.',
         },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They check purpose, period and amount before committing to anything, and they involve the comptroller early rather than after the fact, because a funding question asked in advance is routine and the same question asked afterward is an investigation.",
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **every dollar carries a purpose, a period and an amount, and violating any one of the three is not a paperwork problem, it is a reportable violation with names attached.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "foundations-9",
+              label: "How DoD Money Works",
+              sub: "The basics of appropriations",
+            },
+            {
+              lessonId: "finance-1",
+              label: "The PPBE Cycle",
+              sub: "How the money arrives in the first place",
+            },
+            {
+              lessonId: "lifecycle-7",
+              label: "Options, Extensions, and Bridges",
+              sub: "Funding an option, and what happens if you miss",
+            },
+          ],
+        },
         ],
       quiz: [
           {
@@ -2448,7 +3365,31 @@ export const modules: Module[] = [
             options: ['97-0400 (O&M Defense-Wide)', '97-0400 (RDT&E Defense-Wide)', '17-1506 (Aircraft Procurement Navy)', '57-3600 (RDT&E Air Force)'],
             correct: 1,
             explanation: "DARPA, the Missile Defense Agency (MDA), and other defense-wide R&D activities are funded through RDT&E Defense-Wide appropriations (TAS 97-0603/0400 series). Each Service has its own RDT&E account (Air Force 3600, Army 2040, Navy 1319), but DARPA and other OSD-level agencies use the Defense-Wide account."
-          }
+          },
+          {
+            question: "A program uses O&M to buy an item that should have been procurement-funded. What is this?",
+            options: [
+              "An accounting adjustment",
+              "A purpose violation, potentially an Antideficiency Act issue",
+              "Standard practice under a CR",
+              "A reprogramming",
+            ],
+            correct: 1,
+            explanation: "Purpose violations are the easiest of the three limits to breach by accident and the hardest to unwind.",
+            id: "q11",
+          },
+          {
+            question: "Why does the expiration date of an appropriation matter to a program manager?",
+            options: [
+              "It does not; contracting tracks it",
+              "Because unobligated money expires and returns, and the staff work to obligate it takes weeks",
+              "It changes the contract type",
+              "It sets the fee",
+            ],
+            correct: 1,
+            explanation: "The obligation sequence has to be planned around expiration, not discovered at the end of the year.",
+            id: "q12",
+          },
         ]
       },
       {
@@ -2571,6 +3512,31 @@ export const modules: Module[] = [
           level: 'advanced' as const,
           heading: 'Should-Cost vs. Will-Cost: The Senior PM\'s Most Powerful Tool',
           body: 'Should-Cost analysis is a government-led deep dive into contractor cost structure to identify efficiencies. Not just to project what costs will be, but to drive them down. DoDI 5000.02 requires Should-Cost management on major programs. In practice, should-cost teams examine contractor labor mix (are they using senior engineers where journeymen would do?), overhead allocation (is G&A allocation methodology favorable to the program?), and make-buy decisions. The results feed should-cost targets. Negotiating positions for the next contract award. Senior PMs who run aggressive should-cost programs routinely achieve 10-15% cost reductions. The political challenge: your contractor will resist deeply, and your own program office staff (who work with the contractor daily) will resist disrupting the relationship. Push anyway.',
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **an estimate is a statement of what the work will cost given stated assumptions, so the assumptions are the estimate, and an estimate without them is a number somebody made up.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "preaward-5",
+              label: "The Independent Government Cost Estimate",
+              sub: "Building the government's own number",
+            },
+            {
+              lessonId: "finance-5",
+              label: "Estimate at Completion",
+              sub: "Re-estimating once work is underway",
+            },
+            {
+              lessonId: "history-6",
+              label: "Programs That Failed",
+              sub: "Why independent cost estimating exists",
+            },
+          ],
         },
         ],
       quiz: [
@@ -2697,6 +3663,18 @@ export const modules: Module[] = [
           { term: 'CPI', definition: 'Cost Performance Index. Efficiency of cost performance (EV/AC).' },
           { term: 'SPI', definition: 'Schedule Performance Index. Efficiency of schedule performance (EV/PV).' },
           { term: 'EAC', definition: 'Estimate at Completion. The projected total cost to complete the program.' },
+          {
+            term: "Control Account",
+            definition: "The point in the work breakdown where budget, schedule and responsibility meet. Performance is measured here.",
+          },
+          {
+            term: "Work Package",
+            definition: "The unit of work inside a control account, small enough to be estimated and measured discretely.",
+          },
+          {
+            term: "Level of Effort",
+            definition: "Work that earns value with the passage of time rather than by discrete accomplishment. Useful for support tasks, dangerous when overused.",
+          },
         ],
         content: [
           {
@@ -2820,6 +3798,31 @@ export const modules: Module[] = [
             level: 'advanced',
             heading: 'Reading Between the Formats',
             body: 'The Data module\'s IPMR lesson covers the report formats. The senior PM habit is cross-checking them: Format 1 variances against Format 5 explanations (does every big variance have a real narrative?), Format 3 baseline changes against MR and UB logs (where did the budget go?), and Format 6 milestone dates against the SPI story (does the schedule agree with the index?). Inconsistencies between formats are where the truth usually is.',
+          },
+          {
+            type: "highlight",
+            body: "One sentence to teach your team: **earned value compares work actually accomplished against work planned and money actually spent, so it answers how much of what you paid for you actually got, which no schedule or spend chart can tell you alone.**",
+          },
+          {
+            type: "related_lesson",
+            heading: "Build on This",
+            refs: [
+              {
+                lessonId: "data-3",
+                label: "EVM Acronym Deep Dive",
+                sub: "Every formula, worked on one program",
+              },
+              {
+                lessonId: "finance-5",
+                label: "Estimate at Completion",
+                sub: "Turning today's performance into a forecast",
+              },
+              {
+                lessonId: "business-1",
+                label: "Revenue Recognition II",
+                sub: "Why the contractor's EAC is also their revenue",
+              },
+            ],
           },
         ],
       quiz: [
@@ -3327,6 +4330,37 @@ export const modules: Module[] = [
           heading: 'Unallowable Costs, Direct Charging, and the DCAA Audit Trail',
           body: 'FAR Part 31 defines cost allowability. What contractors can bill to the government. Unallowable costs (entertainment, lobbying, certain IR&D that doesn\'t qualify, executive compensation above the cap) must be segregated and excluded from billings. DCAA\'s job is to verify this segregation. What senior PMs need to know: if DCAA finds unallowable costs billed to your contract, the contractor must repay them with interest. And the PM has an obligation to pursue collection. The more dangerous scenario is "direct charging" problems: a contractor billing costs directly to your contract that should be in indirect pools (inflating the direct cost base artificially). This is fraud when intentional. Look for anomalous direct labor charges. Senior executives billed at 100% direct to a single contract, or subcontractor pass-through markups that exceed the prime\'s normal margins.',
         },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They understand which parts of a competitor's rate structure are strategic rather than arithmetic, and they read a rate build-up looking for the pool definitions rather than the final number, because that is where the differences actually live.",
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **a wrap rate turns a salary into a billable rate by layering fringe, overhead, G&A and fee, so the same engineer costs the government roughly twice what the company pays them, and every part of that multiplier is negotiable somewhere.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "business-6",
+              label: "Unit Economics of a Billable Hour",
+              sub: "What the rate has to cover",
+            },
+            {
+              lessonId: "onramp-7",
+              label: "Pricing and Proposing as a Startup",
+              sub: "Building rates with no cost history",
+            },
+            {
+              lessonId: "finance-7",
+              label: "DCAA & DCMA Oversight",
+              sub: "Who verifies the pools",
+            },
+          ],
+        },
         ],
       quiz: [
           {
@@ -3548,6 +4582,37 @@ export const modules: Module[] = [
           heading: 'Withholding Payments and Disallowing Costs: When and How',
           body: 'Senior PMs have mechanisms to financially pressure non-performing contractors that junior PMs rarely use. For cost-type contracts, DCAA can recommend disapproval of incurred cost submissions. Triggering a withhold of up to 5% of billed costs pending resolution. For fixed-price contracts with performance milestones, you can withhold milestone payments when deliverables fail to meet contract requirements. The key: document the basis for the withhold in writing, citing specific contract clauses (FAR 52.232-7 for cost; the specific milestone clause for FP). Contractors will push back aggressively and threaten REAs. That\'s acceptable. What\'s not acceptable: using withholds as negotiating leverage for contract modifications (that\'s coercion). Withholds must be based on legitimate contract performance deficiencies, not as a tool to extract concessions.',
         },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They read the audit report for the findings that change a decision rather than for its tone, and they remember that an audit recommendation is advice to the contracting officer, so the productive conversation is about which findings the CO should act on and why.",
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **DCAA audits costs and DCMA administers contracts, and neither of them decides anything, because the contracting officer makes the determination and the auditors advise.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "compliance-6",
+              label: "TINA and Certified Cost or Pricing Data",
+              sub: "What the audit is testing against",
+            },
+            {
+              lessonId: "history-3",
+              label: "Truth in Negotiations, CAS and DCAA",
+              sub: "Why this apparatus exists at all",
+            },
+            {
+              lessonId: "onramp-6",
+              label: "Getting Contract-Ready",
+              sub: "What an adequate accounting system means",
+            },
+          ],
+        },
         ],
       quiz: [
           {
@@ -3761,6 +4826,37 @@ export const modules: Module[] = [
           {
             type: 'award_fee_pitfalls_visual' as any,
             heading: 'Six Ways PMs Leave Money on the Table',
+          },
+          {
+            type: "callout",
+            level: "advanced",
+            heading: "What Senior PMs Do Differently",
+            body: "They read the award fee determination plan at contract start rather than before the first evaluation, brief the government against its actual factors and weightings, and raise a coming bad period early, because a score nobody saw coming damages the relationship more than the score itself does.",
+          },
+          {
+            type: "highlight",
+            body: "One sentence to teach your team: **on a cost-plus-award-fee contract the government reimburses your costs either way, so your profit comes entirely from how you are scored, which makes every technical and schedule decision a financial one.**",
+          },
+          {
+            type: "related_lesson",
+            heading: "Build on This",
+            refs: [
+              {
+                lessonId: "business-1",
+                label: "Revenue Recognition II",
+                sub: "How award fee is booked before it is earned",
+              },
+              {
+                lessonId: "contracts-1",
+                label: "Contract Types",
+                sub: "Where CPAF sits among the alternatives",
+              },
+              {
+                lessonId: "finance-10",
+                label: "What Your CFO Sees",
+                sub: "What an award fee score does to the company",
+              },
+            ],
           },
         ],
         levels: {
@@ -4763,6 +5859,14 @@ export const modules: Module[] = [
             { term: 'Sources Sought / RFI', definition: 'Market research tools the government uses before writing an RFP. A Sources Sought asks who\'s out there and capable. An RFI (Request for Information) asks for more detail. Responding to these is how you shape requirements and get on the CO\'s (Contracting Officer\'s) radar. Before the competition opens.' },
             { term: 'CPARS', definition: 'Contractor Performance Assessment Reporting System. The government\'s permanent record of how well you performed on a contract. CPARS ratings are visible to source selection evaluators on future competitions. Past performance is your most portable competitive asset.' },
             { term: 'COR', definition: 'Contracting Officer\'s Representative. The government employee who monitors your contract performance day-to-day and writes your CPARS rating. The COR has no authority to change contract scope or price. Only the CO can do that. But the COR\'s assessments follow your firm to every future competition.' },
+            {
+              term: "Sources Sought Notice",
+              definition: "A market research announcement asking whether capable firms exist. Responding well shapes the acquisition; ignoring it means the strategy is set without you.",
+            },
+            {
+              term: "Acquisition Forecast",
+              definition: "An agency's published list of anticipated procurements for the coming year. Free, underused, and the cheapest pipeline input available.",
+            },
           ],
           content: [
             {
@@ -4856,6 +5960,90 @@ export const modules: Module[] = [
             heading: 'MAJCOM Contracting: Harder to Enter, Harder to Displace',
             body: 'For cleared firms with specialized capabilities, MAJCOM-level contracting represents some of the most defensible long-term work in defense. Requirements tend to be longer in duration. Five or more years is common. Less transparent to competitors, and harder to displace once performance is strong.\n\nThe entry cost is real: clearances, existing relationships, OCONUS capability for some. But the competitive density is far lower than in the enterprise services space.\n\nIf your firm has a specialization. Special operations support, intelligence, electronic warfare, airlift support. The MAJCOM contracting tier is where that specialization becomes a moat.',
             },
+            {
+              type: "text",
+              level: "intermediate",
+              heading: "Reading a Buying Office Before You Pursue It",
+              body: "Every contracting office has a personality that shows up in its award data, and twenty minutes in the public record tells you more than a month of meetings. Look at what it buys, in what size, on what vehicles, and from whom. An office whose awards are mostly task orders under three vehicles is telling you that getting on a vehicle matters more than writing a brilliant proposal. An office with a long tail of simplified acquisitions is reachable by a small firm directly. An office where the same five names take ninety percent of the dollars is telling you to be a subcontractor first. None of this requires a relationship to discover, and knowing it before your first meeting changes what you ask for in that meeting.",
+            },
+            {
+              type: "table",
+              level: "intermediate",
+              heading: "What the Award Data Tells You to Do",
+              headers: ["What you see in the data", "What it means", "The move"],
+              rows: [
+                [
+                  "Most dollars on a few vehicles",
+                  "Access is the constraint, not capability",
+                  "Get on the vehicle, or team with a holder",
+                ],
+                [
+                  "Many small simplified awards",
+                  "Direct entry is realistic",
+                  "Bid the small ones; build past performance",
+                ],
+                [
+                  "Heavy set-aside use",
+                  "The office is meeting socioeconomic goals",
+                  "Lead with your status; check the Rule of Two logic",
+                ],
+                [
+                  "One incumbent for years",
+                  "Either genuine lock-in or nobody else showed up",
+                  "Read the last J&A or sources sought response rate",
+                ],
+                [
+                  "Recent recompete losses by incumbents",
+                  "The office is willing to switch",
+                  "Worth a serious pursuit",
+                ],
+              ],
+            },
+            {
+              type: "text",
+              level: "intermediate",
+              heading: "The Sources Sought Response Nobody Writes Well",
+              body: "A sources sought notice is the government asking whether it can compete something, and often whether it can set it aside. The responses decide the acquisition strategy, and most of them are capability statements that answer a different question. What the contracting officer needs is specific: do you meet this requirement, have you done work of this type and size, under what contract and for whom, what is your business size under the stated NAICS, and what would you change about how the requirement is written. That last question is the one almost nobody answers, and it is the one that shapes the solicitation. A response that says \"we can do all of this\" is noise. A response that says \"we performed this scope at this scale for this customer, and the draft requirement's 24-hour response time will exclude firms without a local presence\" is a response that changes documents.",
+            },
+            {
+              type: "text",
+              level: "advanced",
+              heading: "The Three Tiers Buy Differently, So Pursue Them Differently",
+              body: "Installation-level contracting buys base support at a scale a small firm can win directly, using simplified procedures and set-asides, with decisions made by people you can meet. Enterprise contracting consolidates common requirements across an entire service, which means larger vehicles, longer cycles, and a competition for access rather than for individual awards. Major command contracting buys mission-specific capability, where the technical evaluation dominates and past performance in that exact domain is close to mandatory. A firm that treats these as one market wastes its business development budget. The sequence that works for most small firms is to earn past performance at the installation level, use it to get onto an enterprise vehicle, and only then pursue command work where the technical bar is high.",
+            },
+            {
+              type: "text",
+              level: "advanced",
+              heading: "Building the Customer Map and Keeping It Current",
+              body: "The artifact worth maintaining is a single page per target office: what it buys, the vehicles it uses, the incumbents and their contract end dates, the contracting officer and the program people, the last three sources sought notices it issued, and the recompetes coming in the next eighteen months. Every piece of that is public. The value is not in any one fact but in the refresh: reviewed quarterly, it tells you which pursuits to start now, because a recompete eighteen months out is one you can still shape and one six months out is usually already decided. Firms that win consistently are not better at proposals. They are earlier, and being early is a research habit rather than a relationship.",
+            },
+            {
+              type: "callout",
+              level: "advanced",
+              heading: "What Senior PMs Do Differently",
+              body: "They read an office's award data before asking for a meeting, and they pursue installation, enterprise and command work as three different markets. They answer sources sought notices with specifics and with a recommendation about the requirement itself. And they keep a one-page customer map per target office, refreshed quarterly, because being eighteen months early is what wins recompetes.",
+            },
+            {
+              type: "related_lesson",
+              heading: "Build on This",
+              refs: [
+                {
+                  lessonId: "preaward-3",
+                  label: "Market Research",
+                  sub: "What the government does with your response",
+                },
+                {
+                  lessonId: "capture-1",
+                  label: "The BD-to-Capture Lifecycle",
+                  sub: "Turning a customer map into a pipeline",
+                },
+                {
+                  lessonId: "smallbiz-7",
+                  label: "Winning as a Small Business",
+                  sub: "The machinery that produces awards",
+                },
+              ],
+            },
           ],
           quiz: [
             {
@@ -4918,6 +6106,107 @@ export const modules: Module[] = [
             correct: 1,
             explanation: 'FPDS-NG is the public record of every federal contract award above the micro-purchase threshold. It tells you who holds the incumbent contract, when it expires, how much they\'re being paid, and what vehicle it\'s on. Knowing incumbents and recompete timelines is the foundation of any serious capture plan.',
             },
+            {
+              question: "An office's awards are mostly task orders under three vehicles. What does that tell a firm trying to enter?",
+              options: [
+                "Proposal quality is the main constraint",
+                "Access is the constraint: get on a vehicle or team with a holder",
+                "The office prefers small business",
+                "Pricing is the deciding factor",
+              ],
+              correct: 1,
+              explanation: "Where the dollars flow through vehicles, competing for access matters more than competing for individual awards.",
+              id: "q6",
+            },
+            {
+              question: "What is the most valuable part of a sources sought response, and the part most firms omit?",
+              options: [
+                "The company history",
+                "Specific past work of the same type and size, plus what you would change about the draft requirement",
+                "Marketing materials",
+                "Pricing",
+              ],
+              correct: 1,
+              explanation: "Sources sought responses shape the acquisition strategy. Feedback on the requirement itself is what changes documents.",
+              id: "q7",
+            },
+            {
+              question: "Which sequence usually works for a small firm entering defense?",
+              options: [
+                "Command work first, then enterprise, then installation",
+                "Installation past performance, then an enterprise vehicle, then command work",
+                "Enterprise vehicles only",
+                "All three at once",
+              ],
+              correct: 1,
+              explanation: "Installation work is winnable directly and builds the past performance that access and technical competitions require.",
+              id: "q8",
+            },
+            {
+              type: "drag_match",
+              question: "Match each contracting tier to how it buys:",
+              options: [],
+              correct: 0,
+              explanation: "Treating the three tiers as one market is how business development budgets get wasted.",
+              pairs: [
+                {
+                  left: "Installation contracting",
+                  right: "Base support at a scale a small firm can win directly",
+                },
+                {
+                  left: "Enterprise contracting",
+                  right: "Consolidated requirements on large vehicles; compete for access",
+                },
+                {
+                  left: "Major command contracting",
+                  right: "Mission-specific capability where domain past performance dominates",
+                },
+                {
+                  left: "Sources sought notice",
+                  right: "The government asking whether it can compete or set aside the work",
+                },
+              ],
+              id: "q9",
+            },
+            {
+              type: "drag_order",
+              question: "Order the quarterly customer-map refresh:",
+              options: [],
+              correct: 0,
+              explanation: "All of it is public. The value is in the refresh cadence, not in any single fact.",
+              orderedItems: [
+                "Pull the office's awards for the last four quarters",
+                "List incumbents and their contract end dates",
+                "Note recompetes falling in the next eighteen months",
+                "Read every sources sought notice the office issued",
+                "Decide which pursuits start now, while they can still be shaped",
+              ],
+              id: "q10",
+            },
+            {
+              question: "Why is the acquisition forecast worth reading even though it is only a projection?",
+              options: [
+                "It guarantees the work",
+                "It is a free, early pipeline input that lets you start pursuits while they can still be shaped",
+                "It sets the price",
+                "It replaces market research",
+              ],
+              correct: 1,
+              explanation: "Being early is a research habit. A pursuit started eighteen months out can still influence the requirement.",
+              id: "q11",
+            },
+            {
+              question: "USASpending and SAM data show one incumbent holding an office's work for six years. What is the useful next question?",
+              options: [
+                "Whether the incumbent is well connected",
+                "Whether anyone else responded to the sources sought notices, and what the last justification said",
+                "What the incumbent charges",
+                "Who the contracting officer is",
+              ],
+              correct: 1,
+              explanation: "Lock-in and lack of interest look identical in award data. The response rate and the justification distinguish them.",
+              id: "q12",
+            },
           ],
         },
       {
@@ -4933,6 +6222,18 @@ export const modules: Module[] = [
       { term: 'Part IV — Representations and Instructions (Sections K-M)', definition: 'The solicitation-only sections that exist to run the competition: offeror certifications, proposal instructions, and evaluation criteria. Mostly gone from day-to-day contract administration once the contract is awarded.' },
       { term: 'Section B', definition: 'Supplies or Services and Prices/Costs. The CLIN-by-CLIN pricing table: what is being bought, at what price, and how much of that price is actually funded right now.' },
       { term: 'Solicitation vs. Contract', definition: 'A solicitation (RFP/RFQ) contains all thirteen UCF sections, including K, L, and M, because it has to run a competition. Once a contract is awarded, K/L/M have generally done their job; Sections A-J carry forward as the contract you actually administer.' },
+      {
+        term: "Incorporation by Reference",
+        definition: "Listing a clause by number and date rather than printing its text. The clause binds you exactly as if it were printed in full, which is why Section I deserves a read.",
+      },
+      {
+        term: "Order of Precedence",
+        definition: "The clause that resolves conflicts between parts of the contract when they disagree. Knowing the ranking settles arguments that would otherwise go to the CO.",
+      },
+      {
+        term: "Conformed Copy",
+        definition: "The contract with every modification incorporated into the base document. The only version worth working from once modifications start.",
+      },
         ],
         attachments: [
           {
@@ -5015,6 +6316,92 @@ export const modules: Module[] = [
         type: 'lucas_note',
         body: "This is exactly the kind of thing I mean when I talk about practicing the basics every day. Knowing the UCF cold isn't glamorous. Nobody gets promoted for reciting Section letters. But I've watched people burn real credibility in their first few weeks on a program because they didn't know where to look, they'd get asked \"what does Section H say about GFE\" and go silent, or cite a Section M evaluation factor as if it still mattered after award.\n\nThe people who look sharp in their first month aren't smarter. They just know their document cold, the same way an experienced operator knows their gear cold. When someone asks you a question about the contract, you shouldn't be searching, you should already know which of thirteen letters to open."
       },
+      {
+        type: "text",
+        level: "intermediate",
+        heading: "When Two Parts of the Contract Disagree",
+        body: "Contracts contradict themselves more often than people expect, usually because a statement of work written by engineers meets a schedule written by contracting and a specification attached from another program. The order of precedence clause decides which one wins. The standard ranking puts the schedule sections first, then representations and instructions, then other documents and attachments, with the clauses themselves in their own position depending on the format used. Verify the ranking in your own contract, because it is a clause and clauses vary. The practical value is in arguments: when the SOW says one thing and Section B's CLIN description says another, you are not negotiating from opinion. You are reading a rule that already decided it, and that turns a two-week dispute into a two-minute answer.",
+      },
+      {
+        type: "table",
+        level: "intermediate",
+        heading: "Where to Look First, by Question",
+        headers: ["Question", "Section", "What you will find"],
+        rows: [
+          ["What am I being paid, and for what unit", "B", "CLINs, quantities, prices, and which are funded"],
+          [
+            "What exactly must I deliver",
+            "C plus J",
+            "The statement of work, and the attachments it points to",
+          ],
+          ["When is it due, and where does it go", "F", "Delivery schedule and place of performance"],
+          [
+            "Who can accept it and how do I get paid",
+            "G",
+            "Contract administration data, invoicing instructions, ACRNs",
+          ],
+          [
+            "What is special about this program",
+            "H",
+            "Key personnel, property, conflicts, security, reporting",
+          ],
+          [
+            "What rules apply that I did not negotiate",
+            "I",
+            "FAR and DFARS clauses, mostly incorporated by reference",
+          ],
+          ["How will the proposal be judged", "L and M", "Instructions to offerors and the evaluation factors"],
+        ],
+      },
+      {
+        type: "text",
+        level: "intermediate",
+        heading: "Section I Is Not Boilerplate",
+        body: "Section I lists the clauses, usually by number and date rather than in full, and most people skip it because reading clause titles feels like reading a table of contents. Two things make it worth an hour. First, the clause list tells you what kind of contract you are actually in: the presence of cost accounting standards clauses, of a limitation of funds clause, of specific data rights clauses, of small business subcontracting requirements, each of which carries obligations that appear nowhere else in the document. Second, clauses are dated, and the date matters, because a clause revised in 2024 may say something materially different from the 2019 version your last contract used. Skim the list, pull the full text of anything unfamiliar, and pay particular attention to anything about data rights, funding limits, and reporting.",
+      },
+      {
+        type: "text",
+        level: "advanced",
+        heading: "Solicitation, Award, and the Sections That Vanish",
+        body: "The same skeleton serves two documents with different purposes. As a solicitation it contains Sections K, L and M: the representations offerors complete, the instructions for proposing, and the evaluation factors. At award those sections do not carry forward as contract terms in the usual sense. Section L was instructions for a competition that is over; Section M described how proposals would be evaluated. What survives is the schedule, the clauses, the attachments, and whatever of the proposal was expressly incorporated. That last phrase is the one to watch. If the award incorporates the winning technical proposal by reference, every promise in it is now a contract requirement, including the optimistic ones written by people who never expected to be held to the text. Check what was incorporated before you assume the SOW is the whole of your obligation.",
+      },
+      {
+        type: "text",
+        level: "advanced",
+        heading: "Living With Modifications",
+        body: "After a dozen modifications the working document is no longer the award. Each modification changes specific pages, and the honest version of the contract is the conformed copy, with every change incorporated in sequence. Programs that do not maintain one end up with three people working from three different versions, which is where disputes come from. Ask the contracting officer for a conformed copy after every few modifications, or maintain one yourself and have it confirmed. Alongside it, keep a modification log: number, date, what changed, whether it was bilateral or unilateral, and the dollar and schedule effect. When a claim or an audit arrives, that log is the narrative, and building it takes ten minutes per modification against hours of reconstruction later.",
+      },
+      {
+        type: "callout",
+        level: "advanced",
+        heading: "What Senior PMs Do Differently",
+        body: "They read the order of precedence clause before the first argument, so conflicts are settled by rule rather than by seniority. They spend an hour in Section I, because the clause list defines obligations that appear nowhere else. They check what of the proposal was incorporated at award. And they keep a conformed copy and a modification log, so the contract everyone is working from is the same one.",
+      },
+      {
+        type: "highlight",
+        body: "One sentence to teach your team: **every federal contract uses the same skeleton, so you can find what you need by section without reading the whole document, and the sections that decide arguments are the order of precedence clause, Section I, and whatever of the proposal was incorporated at award.**",
+      },
+      {
+        type: "related_lesson",
+        heading: "Build on This",
+        refs: [
+          {
+            lessonId: "contracts-11",
+            label: "Section H: Special Requirements",
+            sub: "The section that carries your program's specifics",
+          },
+          {
+            lessonId: "contracts-6",
+            label: "Modifications, REAs & Claims",
+            sub: "Keeping the conformed copy honest",
+          },
+          {
+            lessonId: "preaward-9",
+            label: "Building the Solicitation and the Evaluation Plan",
+            sub: "How L and M are written",
+          },
+        ],
+      },
         ],
         quiz: [
       {
@@ -5093,6 +6480,30 @@ export const modules: Module[] = [
           { left: 'Section H', right: 'Special Contract Requirements (key personnel, GFE, OCI)' },
           { left: 'Section M', right: 'Evaluation Factors for Award (the scoring rubric)' },
         ],
+      },
+      {
+        question: "The statement of work and the CLIN description in Section B contradict each other. What settles it?",
+        options: [
+          "Whichever was written first",
+          "The order of precedence clause in the contract",
+          "The contracting officer's preference",
+          "The contractor's interpretation",
+        ],
+        correct: 1,
+        explanation: "It is a clause, and it varies, so read your own. Knowing the ranking turns a two-week dispute into a two-minute answer.",
+        id: "q11",
+      },
+      {
+        question: "Why does Section I deserve an hour despite being mostly references?",
+        options: [
+          "It contains the price",
+          "The clause list defines obligations that appear nowhere else, and clause dates change what they require",
+          "It lists the deliverables",
+          "It is the longest section",
+        ],
+        correct: 1,
+        explanation: "Cost accounting, funding limits, data rights and subcontracting obligations all arrive through Section I.",
+        id: "q12",
       },
         ]
       },
@@ -5214,6 +6625,37 @@ export const modules: Module[] = [
         'The contractor, not the government, sets schedules, assigns specific personnel, and manages performance of its own employees|||If the government is approving contractor employee leave requests or setting their shift schedules, that is government behavior appropriate for a government employee, not a contractor.',
         'Watch for scope creep that quietly shifts a non-personal services contract into personal services territory|||A contract can start out properly structured and drift over time as the relationship gets comfortable and the COR starts treating a familiar contractor employee like one of the team. This drift is exactly what internal reviews and IG audits are trained to catch.',
       ],
+        },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They fight the contract type battle during acquisition planning, not after award, because once the type is in the solicitation the risk structure is locked for years and every later conversation is just managing the consequences of a decision somebody made in a planning document nobody read.",
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **the contract type is the risk allocation, so before you argue about anything else on a program, find out who eats the overrun and you will already know how both sides are going to behave.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "contracts-4",
+              label: "Contracts vs. Task Orders",
+              sub: "Where the type actually gets applied",
+            },
+            {
+              lessonId: "finance-8",
+              label: "Award Fee in Practice",
+              sub: "When your profit is a score, not a formula",
+            },
+            {
+              lessonId: "history-2",
+              label: "Cost Overruns and the Fixed-Price Swing",
+              sub: "Why the preference for FFP keeps coming back",
+            },
+          ],
         },
         ],
       quiz: [
@@ -5345,6 +6787,18 @@ export const modules: Module[] = [
       { term: 'LPTA', definition: 'Lowest Price Technically Acceptable. Award to the lowest priced proposal that meets minimum requirements.' },
       { term: 'Best Value', definition: 'Award to the proposal offering the best combination of technical merit and price.' },
       { term: 'Past Performance', definition: 'An evaluation factor assessing the offeror\'s track record on similar contracts.' },
+      {
+        term: "Section M",
+        definition: "The evaluation factors and their relative importance. The government must evaluate against exactly what this section says, and nothing it does not say.",
+      },
+      {
+        term: "Strength / Weakness / Deficiency",
+        definition: "The evaluator's vocabulary. A strength exceeds a requirement in a way that benefits the government; a deficiency is a failure to meet one, and is not curable without discussions.",
+      },
+      {
+        term: "Competitive Range",
+        definition: "The offerors the contracting officer determines are still in contention after initial evaluation. Only they receive discussions.",
+      },
         ],
         content: [
       {
@@ -5431,6 +6885,59 @@ export const modules: Module[] = [
       heading: 'Shaping the Solicitation: What Mid-Career PMs Can Control',
       body: 'By the time an RFP is released, the source selection outcome is largely determined by the evaluation criteria. Mid-career PMs who engage early in PWS/SOW development and Section M criteria weighting have the most influence. Push for evaluation factors that discriminate on the qualities that matter: management approach (how does the contractor plan to staff and manage the program?), cost realism (does their estimate reflect what the work actually costs?), and relevant past performance (not just any past performance). Weight price lower on high-complexity development work. The cheapest proposal is rarely the best value. The most common mistake: writing evaluation criteria so broad they discriminate on nothing, leading to a selection driven entirely by price.',
         },
+      {
+        type: "text",
+        level: "intermediate",
+        heading: "Tradeoff or LPTA: The Decision That Shapes Everything Else",
+        body: "The single most consequential choice in a source selection is whether better is worth paying for. Lowest price technically acceptable says no: define acceptable, then buy the cheapest thing that clears the bar. Tradeoff says yes, and then requires the government to document what it paid for and why. LPTA is the right answer when the requirement is well understood, the risk of poor performance is low, and there is no meaningful difference between an acceptable and an excellent solution, which describes a lot of commodity buying and very little development work. Statute and policy have narrowed LPTA's use for services in recent years precisely because it was being applied to work where the difference between acceptable and excellent is the difference between success and failure. Verify the current restrictions; the direction of travel has been consistently toward tradeoff for anything involving judgment.",
+      },
+      {
+        type: "table",
+        level: "intermediate",
+        heading: "What Each Approach Costs You",
+        headers: ["", "LPTA", "Tradeoff"],
+        rows: [
+          [
+            "Evaluation effort",
+            "Lower: pass or fail against stated standards",
+            "Higher: comparative judgments that must be documented",
+          ],
+          [
+            "Protest exposure",
+            "Lower, if acceptability criteria are objective",
+            "Higher: the tradeoff rationale is the usual protest ground",
+          ],
+          ["What you get", "The cheapest acceptable offer", "What you documented as worth the premium"],
+          [
+            "Where it fails",
+            "When acceptable is not good enough",
+            "When the rationale is a conclusion rather than an analysis",
+          ],
+          [
+            "Best fit",
+            "Commodities, well-defined services, repeat buys",
+            "Development, complex services, anything with real performance risk",
+          ],
+        ],
+      },
+      {
+        type: "text",
+        level: "intermediate",
+        heading: "Writing Section M Backward From the Decision",
+        body: "The discipline that makes evaluations clean is writing Section M first, then Section L, then checking that every instruction in L produces something M actually needs. Start from the decision: what would make one offeror genuinely better for this requirement? Those are your factors. Then ask what evidence would demonstrate it, and only that becomes an instruction to offerors. The failure mode is the opposite order: Section L asks for a management plan because the template has always asked for one, Section M says management will be evaluated, and evaluators are left grading an essay against nothing in particular. If you cannot describe what a strength looks like under a factor before the proposals arrive, you are not ready to release the solicitation.",
+      },
+      {
+        type: "list",
+        level: "intermediate",
+        heading: "What the PM Owes the Source Selection Team",
+        items: [
+          "Requirements that can be evaluated|||A requirement nobody can measure produces an evaluation nobody can defend.",
+          "Evaluators who are actually available|||Named, trained, and released from their day job for the duration. Part-time evaluators produce thin records.",
+          "A realistic independent estimate|||Cost realism analysis has nothing to anchor on without one.",
+          "Discipline about contact|||Once the solicitation is out, all communication goes through the contracting officer. No exceptions, including for the incumbent you talk to daily.",
+          "Patience with the record|||Every rating needs written reasoning tied to the stated factors. Rushing the documentation is how a good decision becomes a sustained protest.",
+        ],
+      },
         {
       type: 'callout' as const,
       level: 'advanced' as const,
@@ -5440,6 +6947,55 @@ export const modules: Module[] = [
       {
         type: 'lucas_note',
         body: `When I'm writing a proposal, I read Section M before I read anything else. Before the SOW, before Section C, before the instructions. Section M is the scoring rubric. It tells me exactly what the evaluator is going to grade me on.\n\nEverything else in the proposal is in service of Section M. If an evaluation factor says "management approach" is the second-highest weighted factor, my best writer goes on that section, not on the technical approach. If past performance is pass/fail, I don't spend 20 pages on it.\n\nMost proposals I've reviewed spend the most effort on what the team knows best, not on what the government is actually scoring. Read M first. Build your outline from M. Then fill it in.`,
+      },
+      {
+        type: "text",
+        level: "advanced",
+        heading: "Where Protests Are Actually Won",
+        body: "Read enough GAO decisions and the sustained protests cluster into a short list. The agency evaluated against something the solicitation did not say, or failed to evaluate something it did say. The evaluation record states a conclusion without the reasoning behind it, so nobody can tell whether the judgment was reasonable. Offerors were treated unequally: the same feature praised in one proposal and ignored in another. Discussions were not meaningful, meaning the agency identified a significant weakness and never told the offeror in the competitive range. Or the tradeoff decision asserts that a higher-rated offer is worth the premium without analyzing what the premium buys. Almost none of these are about judgment being wrong. They are about the record not showing that judgment was exercised consistently.",
+      },
+      {
+        type: "text",
+        level: "advanced",
+        heading: "Discussions, and the Trap of Being Helpful",
+        body: "Once a competitive range is established, discussions must be meaningful: each offeror must be told about deficiencies and significant weaknesses in its own proposal so it has a real chance to fix them. Two failures recur. The first is being too vague, hinting at a concern so obliquely that the offeror does not understand what to change, which is not meaningful. The second is being so specific with one offeror that you have effectively written their revision, while another gets a generic note, which is unequal treatment. The line that works in practice: identify the problem and its significance clearly, and stop short of prescribing the solution. Then check that every offeror in the range got the same depth of engagement, because an evaluator's natural helpfulness toward a familiar incumbent is exactly how unequal discussions happen without anyone intending it.",
+      },
+      {
+        type: "text",
+        level: "advanced",
+        heading: "The Debriefing Is Part of the Record",
+        body: "A debriefing is not a courtesy and it is not damage control. Done well it reduces protests, because most protests are filed by offerors who do not understand why they lost and suspect the worst. Done badly it creates them, by revealing an inconsistency or by saying something that contradicts the evaluation record. The rules are narrow: explain the agency's evaluation of the offeror's own proposal, the overall evaluated cost and technical rating of the winner, the rationale for award, and answer relevant questions. Do not discuss other offerors' proposals in detail, do not compare point by point, and do not improvise. Enhanced debriefing rules give offerors a chance to submit written questions in some cases, which also extends the protest clock, so the timing matters as much as the content. Verify current thresholds and timelines before you schedule one.",
+      },
+      {
+        type: "callout",
+        level: "advanced",
+        heading: "What Senior PMs Do Differently",
+        body: "They write Section M first and refuse to release a solicitation until they can describe what a strength looks like under each factor. They choose tradeoff or LPTA on the merits of the requirement rather than on the schedule. They read the evaluation record as a stranger would, asking whether the reasoning is visible. And they treat discussions and the debriefing as part of that record, not as conversations.",
+      },
+      {
+        type: "highlight",
+        body: "One sentence to teach your team: **the government must evaluate exactly what Section M says and nothing it does not, so almost every sustained protest is a gap between the solicitation, the evaluation and the written record rather than a difference of judgment.**",
+      },
+      {
+        type: "related_lesson",
+        heading: "Build on This",
+        refs: [
+          {
+            lessonId: "preaward-9",
+            label: "Building the Solicitation and the Evaluation Plan",
+            sub: "The government side, start to finish",
+          },
+          {
+            lessonId: "capture-4",
+            label: "Competing in Source Selection",
+            sub: "The same process from the offeror's chair",
+          },
+          {
+            lessonId: "history-2",
+            label: "CICA and the $435 Hammer",
+            sub: "Why full and open competition is the law",
+          },
+        ],
       },
         ],
       quiz: [
@@ -5512,7 +7068,34 @@ export const modules: Module[] = [
         options: ['The government\'s cost estimate', 'The evaluation criteria published in Section M of the RFP', 'The offeror\'s past performance database only', 'The program office\'s internal scoring matrix not shared with offerors'],
         correct: 1,
         explanation: "The SSEB evaluates every proposal exclusively against the criteria and standards stated in Section M of the RFP. Using unstated criteria or changing the evaluation standard mid-process is a violation of FAR Part 15 and the basis for a successful protest. Consistency and documentation are the SSEB's most important obligations."
-      }
+      },
+      {
+        question: "Which is the most common ground on which GAO sustains a protest?",
+        options: [
+          "The agency chose the wrong offeror",
+          "The evaluation did not match the stated criteria, or the record does not show the reasoning",
+          "The price was too high",
+          "The schedule was too short",
+        ],
+        correct: 1,
+        explanation: "Sustained protests are usually about consistency and documentation, not about whether the judgment was correct.",
+        id: "q11",
+      },
+      {
+        type: "drag_order",
+        question: "Order the steps that produce a defensible evaluation:",
+        options: [],
+        correct: 0,
+        explanation: "Section M is written first because it defines the decision; everything else exists to support it.",
+        orderedItems: [
+          "Define the decision: what would make one offeror genuinely better here",
+          "Write Section M factors and their relative importance",
+          "Write Section L to ask only for evidence Section M needs",
+          "Evaluate against the stated factors, documenting the reasoning for each rating",
+          "Make the tradeoff decision explicit: what the premium buys and why it is worth it",
+        ],
+        id: "q12",
+      },
         ]
       },
       {
@@ -5603,6 +7186,37 @@ export const modules: Module[] = [
       heading: 'Bridge Contracts and Option Exercise Discipline',
       body: `Two of the most common contracting failures senior PMs face: bridge contracts and missed option windows.\n\nBridge contracts: short-term extensions to maintain continuity between vehicles: are technically legal. But they signal poor acquisition planning, attract GAO scrutiny, and typically cost more because competition is waived. The real problem: the bridge becomes a habit. Some programs have been "on bridge" for five-plus years, paying a sole-source premium indefinitely.\n\nOption exercise discipline: options must be exercised before the expiration date: missed windows forfeit the option entirely and require a new full competition. Build a 90-day calendar trigger for every option on every task order you own. The J&A you'll need to write for a bridge contract after a missed option is a career embarrassment that documents your planning failure for the record.`,
         },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They track the ordering period end date and the remaining ceiling as standing program metrics rather than contracting trivia, because both of them fail quietly and both of them take six to twelve months of lead time to fix once you notice.",
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **the IDIQ sets the rules and the task order buys the work, so scope, ceiling and competition live at two different levels and confusing them is how programs end up with a protest or an unfunded requirement.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "contracts-5",
+              label: "GSA Vehicles: OASIS+ & AAS-D",
+              sub: "The government-wide version of the same structure",
+            },
+            {
+              lessonId: "contracts-7",
+              label: "IDIQs, GWACs & A&AS",
+              sub: "Choosing among vehicles",
+            },
+            {
+              lessonId: "contracts-6",
+              label: "Modifications, REAs & Claims",
+              sub: "Changing a task order after award",
+            },
+          ],
+        },
         ],
       quiz: [
       {
@@ -5674,7 +7288,31 @@ export const modules: Module[] = [
         options: ['Select whichever contractor most recently won an order to balance workload', 'Issue a TORFP providing all eligible pool members a fair opportunity to compete', 'Always select the lowest-priced contractor from the original competition', 'Get CO approval only if the order exceeds the simplified acquisition threshold'],
         correct: 1,
         explanation: "Under a MAC-IDIQ, the ordering officer must provide all pool members a fair opportunity to compete by issuing a TORFP. This maintains competition at the task order level and is the core benefit of the MAC-IDIQ structure. Bypassing fair opportunity without a valid FAR 16.505 exception is illegal."
-      }
+      },
+      {
+        question: "A task order is awarded three weeks before the IDIQ's ordering period ends, with a 24-month period of performance. What happens to the task order when the ordering period closes?",
+        options: [
+          "The task order terminates with the ordering period",
+          "The task order continues to its own end date; the ordering period only limits when new orders may be issued",
+          "The task order must be recompeted annually",
+          "The task order converts to a standalone contract",
+        ],
+        correct: 1,
+        explanation: "Ordering period governs issuing orders, not performing them. Orders properly issued inside the window run to their own completion dates, which is why end-of-period order placement is a normal and legitimate planning move.",
+        id: "q11",
+      },
+      {
+        question: "Why does a program manager need to watch the remaining ceiling on a MAC-IDIQ even when the program's own task order is fully funded?",
+        options: [
+          "Ceiling has no effect on an already-awarded order",
+          "Because ceiling is shared across all users of the vehicle, and an exhausted ceiling blocks future orders and modifications the program will need",
+          "Because ceiling determines the fee",
+          "Because ceiling resets each fiscal year",
+        ],
+        correct: 1,
+        explanation: "Ceiling is a shared, finite resource on the base vehicle. Your funded order is safe, but the follow-on work, the in-scope growth and the next option all need headroom that other programs are spending too.",
+        id: "q12",
+      },
         ]
       },
       {
@@ -5790,6 +7428,16 @@ export const modules: Module[] = [
         heading: 'Building Your Vehicle Portfolio Strategy',
         body: 'A mature defense contractor does not pursue every vehicle. It builds a deliberate portfolio aligned to its core capabilities, target agencies, and growth strategy. The right vehicle mix balances near-term revenue (agency-specific IDIQs where you have relationships) with long-term expansion (GWACs that open new agencies) and specialized positioning (set-aside vehicles that make use of socioeconomic certifications). Map every pursuit in your pipeline to a vehicle before you commit proposal resources.',
       },
+      {
+        type: "callout",
+        level: "advanced",
+        heading: "What Senior PMs Do Differently",
+        body: "They treat vehicle strategy as a portfolio decision with a real carrying cost, tracking on-ramp windows, bid volume and actual order capture per vehicle, and they walk away from vehicles that have produced no revenue rather than keeping them for the logo slide.",
+      },
+      {
+        type: "highlight",
+        body: "One sentence to teach your team: **winning a seat on a vehicle is not winning work, it is buying the right to compete for work, and companies that confuse the two build a portfolio of vehicles they never place an order against.**",
+      },
         ],
         quiz: [
       {
@@ -5864,6 +7512,78 @@ export const modules: Module[] = [
         correct: 1,
         explanation: 'OASIS+ (One Acquisition Solution for Integrated Services Plus) is GSA\'s flagship GWAC for complex professional services. Covering program management, management consulting, engineering, logistics, and scientific services. It replaced the legacy OASIS vehicle and includes both unrestricted and small business set-aside pools.',
       },
+      {
+        question: "A company holds positions on five MA-IDIQ vehicles but has captured orders on only one over three years. What does a mature capture leader conclude?",
+        options: [
+          "Hold all five; more vehicles always mean more opportunity",
+          "The portfolio has a carrying cost in bid and proposal spend and compliance overhead, and vehicles producing no orders should be re-evaluated or dropped",
+          "Vehicles never expire, so nothing needs to change",
+          "Protest the four that produced nothing",
+        ],
+        correct: 1,
+        explanation: "Each vehicle carries compliance, reporting and B&P cost. A vehicle that never converts to orders is a sunk logo, not an asset.",
+        id: "q7",
+      },
+      {
+        question: "Which of the five FAR 16.505 fair opportunity exceptions is most commonly used in practice for follow-on work?",
+        options: [
+          "The order is under the micro-purchase threshold",
+          "Only one awardee is capable of providing the supplies or services at the level of quality required because the work is a logical follow-on to an order already issued under the contract",
+          "The contracting officer prefers the incumbent",
+          "The order is funded with expiring money",
+        ],
+        correct: 1,
+        explanation: "Logical follow-on is a real exception with a documented justification requirement, not a convenience. Preference for the incumbent and expiring funds are never exceptions.",
+        id: "q8",
+      },
+      {
+        question: "A DoD program uses an OTA to prototype a capability. What is the most important thing the program manager must understand about that instrument?",
+        options: [
+          "It is a FAR contract with a shorter form",
+          "It is not a FAR contract, so the standard clause protections, dispute procedures and data rights defaults the PM is used to do not automatically apply",
+          "OTAs cannot be followed by production",
+          "OTAs require a GWAC",
+        ],
+        correct: 1,
+        explanation: "OTA flexibility cuts both ways. What you gain in speed you give up in the default protections that FAR clauses supply without anyone negotiating them.",
+        id: "q9",
+      },
+      {
+        question: "What is the practical difference between a single award IDIQ and a multiple award IDIQ from the contractor's revenue perspective?",
+        options: [
+          "No difference; both guarantee revenue",
+          "A single award IDIQ gives the holder every order within scope without further competition, while a multiple award vehicle only grants the right to compete for each order",
+          "Multiple award vehicles pay higher fee",
+          "Single award IDIQs have no ceiling",
+        ],
+        correct: 1,
+        explanation: "This is the central tradeoff. Single award concentrates revenue and reduces competition; multiple award preserves competition at the order level and makes forecasting much harder.",
+        id: "q10",
+      },
+      {
+        question: "Under which A&AS subcategory would ongoing engineering and technical support to a program office most commonly fall?",
+        options: [
+          "Management and professional support services",
+          "Studies, analyses and evaluations",
+          "Engineering and technical services",
+          "Personal services",
+        ],
+        correct: 2,
+        explanation: "FAR 37.2 separates the three A&AS categories, and the category shapes the OCI analysis and the personal services scrutiny the contract will attract.",
+        id: "q11",
+      },
+      {
+        question: "Why does A&AS work attract heightened organizational conflict of interest scrutiny?",
+        options: [
+          "Because it is always cost-type",
+          "Because advisors who help shape requirements or evaluate other contractors can gain unfair competitive advantage or impaired objectivity",
+          "Because A&AS contracts are always sole source",
+          "Because A&AS work is classified",
+        ],
+        correct: 1,
+        explanation: "Unequal access to information, biased ground rules and impaired objectivity are the three OCI flavors, and A&AS work can trigger all three at once.",
+        id: "q12",
+      },
         ],
       },
       {
@@ -5881,6 +7601,10 @@ export const modules: Module[] = [
       { term: 'Alliant 2', definition: 'GSA\'s large-scale IT GWAC for complex IT solutions, available to all federal agencies.' },
       { term: 'STARS III', definition: '8(a) STARS III. GSA\'s GWAC for small business IT services, including 8(a) and HUBZone set-asides.' },
       { term: 'Economy Act', definition: '31 U.S.C. § 1535. The statutory authority allowing federal agencies to request services or supplies from other federal agencies.' },
+      {
+        term: "Fair Opportunity",
+        definition: "The FAR 16.505 requirement that every holder of a multiple-award vehicle get a real chance to compete for an order above the threshold, with narrow documented exceptions.",
+      },
         ],
         content: [
       {
@@ -5977,6 +7701,37 @@ export const modules: Module[] = [
       level: 'advanced' as const,
       heading: 'MAC Vehicle Strategy: When to Use Which and Protest Risk Management',
       body: 'Senior acquisition professionals understand that MAC vehicle selection is itself a strategic decision. OASIS+ for complex professional services; ALLIANT 3 for IT services; SeaPort NxG for Navy; CIO-SP4 for HHS/civilian. The wrong vehicle creates protest risk: using a vehicle whose scope doesn\'t cover your requirement, or using a sole-source exception under a MAC vehicle when fair opportunity competition was required. The most legally dangerous pattern: steering task orders to preferred contractors by writing evaluation criteria tailored to a specific firm\'s past performance or unique capabilities. Experienced protesters know how to document this, and GAO has sustained numerous protests on exactly these grounds. Run your task order strategy through your legal team before release.',
+        },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They decide between self-service and assisted acquisition based on an honest assessment of their own contracting office's bandwidth and vehicle experience, and they make that call early, because switching to AAS-D after a failed self-service attempt costs more time than starting there would have.",
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **a GWAC buys you speed by pre-competing the vehicle, but it charges you scope discipline in return, because the one thing that will get your order overturned is work the base contract never covered.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "contracts-7",
+              label: "IDIQs, GWACs & A&AS",
+              sub: "How the vehicle families compare",
+            },
+            {
+              lessonId: "contracts-4",
+              label: "Contracts vs. Task Orders",
+              sub: "The two-level structure underneath every GWAC",
+            },
+            {
+              lessonId: "preaward-3",
+              label: "Market Research",
+              sub: "Proving the vehicle actually fits the requirement",
+            },
+          ],
         },
         ],
       quiz: [
@@ -6094,7 +7849,31 @@ export const modules: Module[] = [
         ],
         correct: 1,
         explanation: "An IAA (often in the form of a Reimbursable Work Order or Economy Act agreement) between the ordering agency and GSA establishes the terms for the assisted acquisition or GWAC use: including funding transfer, fee arrangements, roles and responsibilities, and performance expectations. It must be in place before task orders are placed under the assisted acquisition arrangement."
-      }
+      },
+      {
+        question: "A program office awards an OASIS+ task order that includes a significant hardware manufacturing component alongside the engineering services. What is the primary risk?",
+        options: [
+          "None; OASIS+ has no scope limits",
+          "A scope challenge, because OASIS+ covers professional and technical services and substantial manufacturing falls outside the base contract",
+          "The order will be too expensive",
+          "The order requires a new IAA",
+        ],
+        correct: 1,
+        explanation: "Out-of-scope orders are the most common GWAC finding. The remedy is usually painful: terminate and recompete the work under an appropriate vehicle.",
+        id: "q11",
+      },
+      {
+        question: "What does a program office give up when it uses AAS-D rather than running the OASIS+ order through its own contracting shop?",
+        options: [
+          "Nothing; AAS-D is free",
+          "A fee and some direct control over the acquisition timeline and approach, in exchange for GSA's contracting capacity and vehicle expertise",
+          "The ability to define requirements",
+          "Access to the OASIS+ vehicle",
+        ],
+        correct: 1,
+        explanation: "Assisted acquisition is a trade: GSA becomes the contracting office and charges for it, and the program keeps requirements ownership but not the schedule levers.",
+        id: "q12",
+      },
         ]
       },
       {
@@ -6366,6 +8145,33 @@ export const modules: Module[] = [
         title: 'The Big Picture',
         body: 'The interagency acquisition framework exists to save time and reduce duplication. GWACs like OASIS+ are the government\'s shared infrastructure for recurring service needs. Task orders, not the base IDIQ, are where the real work lives. TDLs are the day-to-day tool for directing that work, with real and hard limits on what they can authorize. Knowing the difference between what a COR can direct via TDL and what requires a CO-signed modification is the single most practically valuable piece of knowledge for any contractor PM or government COR working on these vehicles.',
       },
+      {
+        type: "callout",
+        level: "advanced",
+        heading: "What Senior PMs Do Differently",
+        body: "They keep a running TDL log with the SOW paragraph each one maps to, and they raise the borderline ones with the contracting officer while they are still cheap, because a year of small unlogged directions is how a program ends up arguing about scope with no record of who asked for what.",
+      },
+      {
+        type: "related_lesson",
+        heading: "Build on This",
+        refs: [
+          {
+            lessonId: "contracts-6",
+            label: "Modifications, REAs & Claims",
+            sub: "When direction crosses into a change",
+          },
+          {
+            lessonId: "contracts-5",
+            label: "GSA Vehicles: OASIS+ & AAS-D",
+            sub: "The vehicles where TDLs are the daily tool",
+          },
+          {
+            lessonId: "compliance-2",
+            label: "Unauthorized Commitments and Ratification",
+            sub: "Recovering from work nobody was authorized to direct",
+          },
+        ],
+      },
         ],
         quiz: [
       {
@@ -6472,6 +8278,54 @@ export const modules: Module[] = [
         correct: 2,
         explanation: 'When a requesting agency wants to use a GSA vehicle like OASIS+, they execute an Interagency Agreement (IAA) with GSA under the authority of the Economy Act. The IAA documents the scope of the requirement, transfers the funding, and establishes the terms of the interagency relationship. GSA (the servicing agency) then places the task order against OASIS+ on the requesting agency\'s behalf.',
       },
+      {
+        question: "A COR issues a TDL directing work that maps cleanly to a SOW paragraph but will take 400 more hours than planned within the existing funded ceiling. What is the correct contractor response?",
+        options: [
+          "Refuse; any hour increase requires a mod",
+          "Perform the work and log the TDL with its SOW mapping and hour impact, notifying the CO if the funded ceiling comes into question",
+          "Perform silently and absorb the hours",
+          "Submit a claim immediately",
+        ],
+        correct: 1,
+        explanation: "In-scope direction within funding is exactly what a TDL is for. The discipline is documentation and early notice on funding, not refusal.",
+        id: "q9",
+      },
+      {
+        question: "Why does the distinction between a task order and a delivery order matter less in practice than the distinction between in-scope and out-of-scope direction?",
+        options: [
+          "Because the two order types have different fee structures",
+          "Because services versus supplies is mostly a labeling convention, while the scope boundary determines whether work is paid for at all",
+          "Because delivery orders are not binding",
+          "Because task orders cannot be modified",
+        ],
+        correct: 1,
+        explanation: "Practitioners use the terms loosely. The scope boundary is the one that carries money and risk.",
+        id: "q10",
+      },
+      {
+        question: "A CLIN structure on a task order separates labor, travel and ODCs. Why does the program manager care?",
+        options: [
+          "It is only an accounting convention",
+          "Because funds are obligated and tracked per CLIN, so exhausting one CLIN can stop work even while others have money left",
+          "Because CLINs determine the contract type",
+          "Because CLINs set the fair opportunity threshold",
+        ],
+        correct: 1,
+        explanation: "Money is fungible in a budget conversation and emphatically not fungible across CLINs without a modification.",
+        id: "q11",
+      },
+      {
+        question: "What makes the Economy Act relevant to a program using a GWAC through another agency?",
+        options: [
+          "It sets the GWAC ceiling",
+          "It is the general authority letting one agency acquire on behalf of another, though many GWACs operate under their own specific statutory authority instead",
+          "It prohibits interagency acquisition",
+          "It governs TDLs",
+        ],
+        correct: 1,
+        explanation: "The Economy Act is the default authority. Several major GWACs carry independent authority, which is why the determination and findings requirements differ by vehicle.",
+        id: "q12",
+      },
         ],
       },
       {
@@ -6486,6 +8340,22 @@ export const modules: Module[] = [
       { term: 'SOW', definition: 'Statement of Work. Defines the technical requirements and work the contractor must perform.' },
       { term: 'PWS', definition: 'Performance Work Statement. Outcome-based work description focused on desired results, not methods.' },
       { term: 'Constructive Change', definition: 'An informal action by the government that changes contract scope without a formal contract modification.' },
+      {
+        term: "COR Delegation Letter",
+        definition: "The written appointment from the contracting officer stating exactly what the COR may and may not do. The COR's authority begins and ends with this document.",
+      },
+      {
+        term: "Unauthorized Commitment",
+        definition: "An agreement made by someone without contracting authority that the government may be obliged to pay for. Resolved, if at all, through ratification.",
+      },
+      {
+        term: "Ratification",
+        definition: "The after-the-fact approval of an unauthorized commitment by an official with authority to have made it. Slow, visible, and career-limiting for whoever caused it.",
+      },
+      {
+        term: "Quality Assurance Surveillance Plan (QASP)",
+        definition: "The document defining what the government will inspect, how often, and what standard counts as acceptable. The basis for every performance conversation on a services contract.",
+      },
         ],
         content: [
       {
@@ -6564,6 +8434,46 @@ export const modules: Module[] = [
       body: 'Mid-career PMs must direct their COR\'s oversight efforts to the highest-risk contract areas. Not just routine deliverable acceptance. Risk areas that warrant enhanced COR attention: (1) subcontractor performance (prime contractors often absorb subcontractor failures rather than escalating to the government, masking systemic problems); (2) key personnel substitutions (contractors routinely propose senior experts who disappear post-award. CORs must verify key personnel presence); (3) Government-Furnished Equipment (GFE) receipt and accountability; and (4) cybersecurity compliance under DFARS 252.204-7012. A COR who only reviews deliverables is missing 80% of performance risk. Build a COR surveillance plan that maps oversight activities to contract risk, not just to deliverable schedules.',
         },
         {
+          type: "text",
+          level: "intermediate",
+          heading: "What the Delegation Letter Actually Says",
+          body: "Every COR is appointed in writing, and that letter is the whole of their authority. It typically allows them to monitor performance, inspect and accept deliverables, review invoices and recommend payment, and maintain the contract file. It typically prohibits them from changing anything: no scope, no price, no schedule, no terms, no direction to perform work not in the contract. Most CORs have read it once. The ones who stay out of trouble keep it in the front of the contract file and reread it when something unusual comes up, because the moments that create problems never announce themselves. The contractor asks a small favor in a hallway. A quick email seems to settle a question. The test is simple: if what you are about to say would cost the contractor money or time to comply with, you are about to direct a change, and only the contracting officer can do that.",
+        },
+        {
+          type: "table",
+          level: "intermediate",
+          heading: "The Same Situation, Said Two Ways",
+          headers: ["Situation", "What creates a constructive change", "What to say instead"],
+          rows: [
+            [
+              "Deliverable is thin",
+              "\"Add a section on cybersecurity and resubmit\"",
+              "\"This does not appear to meet CDRL A003; I am rejecting it and notifying the CO\"",
+            ],
+            [
+              "Contractor asks for a small extra",
+              "\"Sure, go ahead\"",
+              "\"That is outside the current scope; send it to the CO as a request\"",
+            ],
+            [
+              "Schedule slipping",
+              "\"Work weekends to recover\"",
+              "\"The contract date stands; tell me your recovery plan and what you need from us\"",
+            ],
+            [
+              "Better approach exists",
+              "\"Do it this way instead\"",
+              "\"If that changes cost or schedule, it needs a modification; propose it to the CO\"",
+            ],
+          ],
+        },
+        {
+          type: "text",
+          level: "intermediate",
+          heading: "Surveillance That Produces Evidence",
+          body: "On a services contract the QASP is the difference between a performance conversation and an argument. It names what will be inspected, the method, the frequency, and the acceptable quality level. Good surveillance is sampled, documented at the time, and shared with the contractor as it happens. Bad surveillance is remembered at the end of the year and written into a CPARS rating the contractor has never heard about, which is how ratings get disputed and overturned. The discipline is small and continuous: a short record of each inspection with the date, what was checked, what was found, and whether it met the standard. Twelve months of that makes a rating defensible in an hour. Nothing makes a year of silence defensible at all.",
+        },
+        {
       type: 'callout' as const,
       level: 'advanced' as const,
       heading: 'Cure Notices, Show Cause, and Termination for Default: The Escalation Ladder',
@@ -6574,6 +8484,49 @@ export const modules: Module[] = [
         src: '/img-escalation-ladder.jpg',
         alt: 'Whiteboard diagram of the escalation ladder: Cure Notice, then Show Cause, then Termination, in increasing severity',
         caption: "Three rungs. Each one is harder to walk back than the last.",
+        },
+        {
+          type: "text",
+          level: "advanced",
+          heading: "The Escalation Ladder, and Getting On It Early",
+          body: "When performance genuinely fails, there is a defined path and each rung has a purpose. It starts informally: the COR documents the problem and raises it with the contractor's PM. Then formally: a letter of concern from the contracting officer, which is the first document that will matter later. Then a cure notice, which states the failure, gives a period to fix it, and is the required predicate for a termination for default on most contract types. A show cause notice follows if the cure period passes without resolution, inviting the contractor to explain why the contract should not be terminated. Termination for default is the end of the ladder and is rare, because it is hard to sustain if the record is thin and expensive if the government loses on appeal. The practical lesson is that the ladder only works if the early rungs were documented. A cure notice issued out of nowhere, with no prior written record, is a cure notice that will not survive.",
+        },
+        {
+          type: "text",
+          level: "advanced",
+          heading: "Government-Caused Delay and the Claim That Follows",
+          body: "Contract administration is not only about what the contractor owes. Late government furnished property, slow acceptance, a stop work order, delayed access to a facility or a system, or a decision the program office sat on for six weeks are all government-caused delays, and they produce requests for equitable adjustment. A senior PM tracks government obligations with the same discipline they apply to contractor deliverables, because the record of who caused what is built in real time or not at all. Keep the dates: when the property was promised and when it arrived, when a deliverable was submitted and when it was accepted, when a question was asked and when it was answered. When a claim arrives eighteen months later, that log is worth more than anyone's memory, and it is just as likely to protect the government as to support the contractor.",
+        },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They keep the delegation letter at the front of the file and apply one test before speaking: would this cost the contractor money or time to comply with? They document surveillance as it happens, so a CPARS rating takes an hour and survives a dispute. They get on the escalation ladder early and in writing. And they track the government's own obligations with dates, because a claim eighteen months out is decided by the log, not by memory.",
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **a COR monitors, inspects and documents but cannot change anything, so the test before you speak is whether what you are about to say would cost the contractor money or time, because that is a change and only the contracting officer can make one.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "contracts-6",
+              label: "Modifications, REAs & Claims",
+              sub: "What a constructive change turns into",
+            },
+            {
+              lessonId: "preaward-7",
+              label: "Services Acquisition",
+              sub: "Where the QASP comes from",
+            },
+            {
+              lessonId: "lifecycle-4",
+              label: "Contract Closeout",
+              sub: "What the file has to support at the end",
+            },
+          ],
         },
         ],
       quiz: [
@@ -6646,7 +8599,34 @@ export const modules: Module[] = [
         options: ['They determine the contractor\'s fee on the current contract', 'They become part of the contractor\'s official record and are used in future source selections', 'They trigger mandatory audits by DCAA', 'They are only used to document contractor failures'],
         correct: 1,
         explanation: "CPARS records are used in future source selections as the past performance evaluation factor. Both positive and negative assessments follow contractors for 3 years. CORs and PMs have a legal and ethical obligation to complete CPARS assessments accurately and on time: they are the government's institutional memory of contractor performance."
-      }
+      },
+      {
+        question: "A COR emails the contractor asking for an extra analysis section in a monthly report. What has probably just happened?",
+        options: [
+          "Good oversight",
+          "A constructive change, because compliance costs time or money and the COR cannot direct it",
+          "A CDRL rejection",
+          "A modification",
+        ],
+        correct: 1,
+        explanation: "If it would cost the contractor money or time to comply, it is direction, and only the contracting officer can give it.",
+        id: "q11",
+      },
+      {
+        type: "drag_order",
+        question: "Order the performance escalation ladder:",
+        options: [],
+        correct: 0,
+        explanation: "Each rung depends on the record built by the one before it. A cure notice with no prior documentation rarely survives.",
+        orderedItems: [
+          "COR documents the problem and raises it with the contractor's PM",
+          "Contracting officer issues a letter of concern",
+          "Cure notice stating the failure and the period to fix it",
+          "Show cause notice inviting the contractor to explain",
+          "Termination for default, if the record supports it",
+        ],
+        id: "q12",
+      },
         ]
       },
       {
@@ -6743,6 +8723,31 @@ export const modules: Module[] = [
       {
         type: 'lucas_note',
         body: `Simple rule I give every new contractor PM: if your COR asks you to do something that isn't in your Statement of Work, **stop**. Don't do it yet. Just say, "I want to make sure we're covered, can we get a mod?"\n\nNine times out of ten, the COR didn't realize it was out of scope. They're not trying to get free work, they just didn't check the SOW, and you'll get a quick mod and move on. It's the tenth time that matters: when the government comes back and says "we don't have funding for a mod," that tells you everything you need to know about whether you should be doing the work at all.\n\nWinning the contract was the starting line, not the finish line. Everything after that is execution, and execution without documentation is just volunteering.`,
+      },
+      {
+        type: "highlight",
+        body: "One sentence to teach your team: **if the government asks for something that is not in your statement of work, the answer is never yes and never no, it is 'let me get that in writing from the contracting officer,' because only the CO can change the contract and everyone else is just making suggestions you may not get paid for.**",
+      },
+      {
+        type: "related_lesson",
+        heading: "Build on This",
+        refs: [
+          {
+            lessonId: "contracts-9",
+            label: "MACs & Technical Direction Letters",
+            sub: "Direction that steers work versus direction that changes it",
+          },
+          {
+            lessonId: "contracts-12",
+            label: "Monthly Status Reports",
+            sub: "Where a constructive change gets documented in real time",
+          },
+          {
+            lessonId: "compliance-2",
+            label: "Unauthorized Commitments and Ratification",
+            sub: "What happens when the work was already done",
+          },
+        ],
       },
         ],
       quiz: [
@@ -6862,6 +8867,14 @@ export const modules: Module[] = [
             { term: 'TINA', definition: 'Truth in Negotiations Act. A separate, much higher threshold than the SAT: contractors on negotiated contracts over $10 million (raised from $2.5 million by the FY2026 NDAA, effective for contracts awarded after June 30, 2026) must disclose cost or pricing data and certify its accuracy. Violations can lead to price reduction and fraud exposure.' },
             { term: 'Place of Performance', definition: 'Section H often specifies where work must be performed. Government site, contractor facility, or both. Changes to place of performance typically require a modification.' },
             { term: 'Option Periods', definition: 'Section H details the government\'s rights to exercise options for additional periods of performance or quantities. The government is not required to exercise options. Understanding option mechanics is critical for program continuity planning.' },
+            {
+              term: "Mitigation Plan",
+              definition: "The document proposing how an organizational conflict will be neutralized: firewalls, divestiture, or exclusion from the affected competition. The contracting officer decides whether it works.",
+            },
+            {
+              term: "Substitution Notice",
+              definition: "The written request to replace named key personnel, usually requiring government consent and an equally qualified replacement.",
+            },
           ],
           attachments: [
             {
@@ -6909,6 +8922,102 @@ export const modules: Module[] = [
               options: ['You can claim breach of contract and seek damages', 'No right: the government is not obligated to exercise options', 'You can request the CO exercise the option under the Competition in Contracting Act', 'You are entitled to a termination for convenience settlement covering the full option value'],
               correct: 1,
               explanation: 'Options are unilateral rights held by the government. They are under no obligation to exercise them. This is a key risk in base-plus-options contract structures. Your company\'s revenue projections should account for the possibility that options are not exercised. Planning for option exercise is a business development and retention strategy, not a contractual entitlement.',
+            },
+            {
+              question: "A named key person is leaving in three weeks. When does the substitution notice go in?",
+              options: [
+                "After they leave, with the replacement's resume",
+                "Before they leave, with an equally qualified replacement proposed",
+                "At the next option exercise",
+                "Only if the government asks",
+              ],
+              correct: 1,
+              explanation: "Running with an unapproved substitute produces CPARS comments and, on some contracts, withheld payment.",
+              id: "q1",
+            },
+            {
+              question: "Which organizational conflict usually cannot be mitigated by a firewall?",
+              options: ["Unequal access to information", "Impaired objectivity", "Biased ground rules", "All can be firewalled"],
+              correct: 1,
+              explanation: "A firewall does not change the incentive to evaluate your own work favorably. Impaired objectivity often requires exclusion or divestiture.",
+              id: "q2",
+            },
+            {
+              question: "What does unusually heavy key personnel language in Section H usually tell you?",
+              options: [
+                "The contract is large",
+                "A previous contractor swapped the proposed team for cheaper staff",
+                "The work is classified",
+                "The customer is new",
+              ],
+              correct: 1,
+              explanation: "Section H reads as a record of what went wrong before, which is why it is the most informative section for anyone taking over mid-stream.",
+              id: "q3",
+            },
+            {
+              question: "What belongs in a Section H tracker?",
+              options: [
+                "Only the deliverables list",
+                "Each clause, what it requires, who owns it, when it recurs, and where the evidence lives",
+                "The contract price",
+                "The CDRL schedule only",
+              ],
+              correct: 1,
+              explanation: "Most Section H obligations take an hour a quarter. Missing one surfaces at option time, when leverage matters most.",
+              id: "q4",
+            },
+            {
+              type: "drag_match",
+              question: "Match each conflict type to its usual remedy:",
+              options: [],
+              correct: 0,
+              explanation: "The remedy depends on the type, and the cheapest conflict to manage is the one spotted before the pursuit.",
+              pairs: [
+                {
+                  left: "Unequal access to information",
+                  right: "Firewall and nondisclosure regime",
+                },
+                {
+                  left: "Impaired objectivity",
+                  right: "Often unmitigable; exclusion or divestiture",
+                },
+                {
+                  left: "Biased ground rules",
+                  right: "Exclusion from that specific competition",
+                },
+                {
+                  left: "Key personnel change",
+                  right: "Written substitution notice and government consent",
+                },
+              ],
+              id: "q5",
+            },
+            {
+              type: "drag_order",
+              question: "Order the first-week Section H routine on a new program:",
+              options: [],
+              correct: 0,
+              explanation: "Reading it twice is the point: once for the map, once for what it implies about the customer.",
+              orderedItems: [
+                "Read Section H end to end on day one",
+                "List every obligation with its owner and recurrence",
+                "Identify which ones are preconditions for option exercise",
+                "Read it again for what each unusual clause says about past problems",
+                "Put the recurring items on a calendar with evidence locations",
+              ],
+              id: "q6",
+            },
+            {
+              question: "A contract's Section H includes an unusual place-of-performance restriction. What does that most likely indicate?",
+              options: [
+                "A drafting error",
+                "That someone previously moved the work to a cheaper or offshore site and the customer reacted",
+                "A security requirement only",
+                "A cost-saving measure",
+              ],
+              correct: 1,
+              explanation: "Section H reads as a record of what went wrong before, which is why it repays a second read.",
+              id: "q7",
             },
           ],
           content: [
@@ -6975,6 +9084,61 @@ export const modules: Module[] = [
               type: 'lucas_note',
               body: 'I took over a program mid-execution once and the outgoing PM handed me a thick contract binder and said everything is running fine. Three weeks in I finally read Section H carefully and found a small business subcontracting plan with goals we had been missing for two quarters. Nobody had tracked it. We had to do an emergency replan and spent considerable time on a corrective action narrative to the CO. Read Section H before you trust that everything is fine.',
             },
+            {
+              type: "text",
+              level: "intermediate",
+              heading: "The Key Personnel Clause, and the Trap Inside It",
+              body: "Key personnel clauses name specific people, usually with resumes attached to the proposal, and require government consent before they are replaced. The trap is that the clause binds you the day the contract starts, while the proposal was written months earlier. People leave, get promoted, or were never really going to do this job. Two things prevent the problem. First, name as few people as the solicitation allows, because every name is a future consent request. Second, know the clause's actual terms: how much notice, what qualifies a replacement as equally qualified, and whether there is a grace period. The failure case is a program running for months with an unapproved substitute, which turns into a CPARS comment and, on a bad contract, a withheld payment. If someone named is leaving, the notice goes in before they do, not after.",
+            },
+            {
+              type: "text",
+              level: "intermediate",
+              heading: "Organizational Conflicts, Explained by What Actually Goes Wrong",
+              body: "The three types are easier to remember as three questions. Unequal access to information: have you seen something the competition has not, because of other work you do for this customer? Impaired objectivity: would this work require you to evaluate your own products or your own performance? Biased ground rules: did you help write the requirement you now want to bid on? Each has a different remedy. Unequal access is usually cured by a firewall and a nondisclosure regime. Impaired objectivity often cannot be mitigated at all, because no firewall fixes the incentive. Biased ground rules typically means exclusion from that specific competition. The practical point for a PM is timing: raise the question before the pursuit, not after the proposal, because the cheapest conflict to manage is the one you spotted early.",
+            },
+            {
+              type: "text",
+              level: "advanced",
+              heading: "The Section H Tracker, and Why It Pays for Itself",
+              body: "Section H is where a program's special obligations live, and they are the ones that get missed because they are not on anyone's deliverable list. Build a simple tracker on day one: every clause in Section H, what it requires, who owns it, when it is due or how often it recurs, and where the evidence lives. Typical entries are key personnel notifications, government property reporting, security and badging requirements, place of performance restrictions, data rights assertions, subcontracting plan reports, and option exercise preconditions. Most take an hour a quarter. Missing one is how a program discovers at option time that a required report was never submitted, and option exercise is exactly when a missed obligation costs the most leverage.",
+            },
+            {
+              type: "text",
+              level: "advanced",
+              heading: "Reading Section H for What the Government Was Worried About",
+              body: "Sections A through G are largely standard. Section H is where the government wrote down the specific things it feared on this program, which makes it the most informative section in the contract for anyone taking over mid-stream. Heavy key personnel language means a previous contractor swapped the proposed team for cheaper staff. Detailed property and accountability clauses mean something went missing. An unusual conflict provision means the last competition had a problem. A place of performance restriction means somebody tried to move the work offshore or to a cheaper site. Read it as history and you learn what the customer is sensitive about before you trip over it, which is worth more in the first month of a program than any briefing you will receive.",
+            },
+            {
+              type: "callout",
+              level: "advanced",
+              heading: "What Senior PMs Do Differently",
+              body: "They name as few key personnel as the solicitation allows and send substitution notices before the person leaves. They raise conflict questions before the pursuit, when the cheapest remedy is still available. They build a Section H tracker on day one. And they read Section H as a record of what went wrong on this program before, because that is exactly what it is.",
+            },
+            {
+              type: "highlight",
+              body: "One sentence to teach your team: **Sections A through G are the standard skeleton and Section H is where the government wrote down what it is specifically worried about on your program, which makes it both the easiest section to miss and the most informative one to read.**",
+            },
+            {
+              type: "related_lesson",
+              heading: "Build on This",
+              refs: [
+                {
+                  lessonId: "contracts-13",
+                  label: "The Uniform Contract Format",
+                  sub: "Where Section H sits in the whole",
+                },
+                {
+                  lessonId: "compliance-9",
+                  label: "Procurement Integrity and Ethics",
+                  sub: "The conflict rules in depth",
+                },
+                {
+                  lessonId: "lifecycle-7",
+                  label: "Options, Extensions, and Bridges",
+                  sub: "When a missed Section H obligation costs you",
+                },
+              ],
+            },
           ],
         },
       {
@@ -6991,6 +9155,14 @@ export const modules: Module[] = [
             { term: 'CDRL Submission Date', definition: 'The contractually required delivery date for each data item. Missing a CDRL submission is a contract performance issue. It can affect your CPARS rating and award fee score.' },
             { term: 'Distribution Statement', definition: 'A marking on technical data that controls who can receive and use it. Ranges from Statement A (unlimited) to Statement F (export controlled). Mis-marking data is a serious compliance failure.' },
             { term: 'Tailoring', definition: 'The process of modifying a DID to fit the specific needs of a program. Contracting officers can tailor DIDs to reduce reporting burden or add requirements. Always check if a DID has been tailored before preparing the deliverable.' },
+            {
+              term: "Approved as Noted",
+              definition: "A government response accepting a deliverable subject to changes. It is not a clean approval; the incorporated comments still have to be made and resubmitted per the CDRL.",
+            },
+            {
+              term: "Data Rights Legend",
+              definition: "The DFARS marking on a technical data deliverable that states the government's rights in it. Missing or wrong markings can forfeit protection.",
+            },
           ],
           attachments: [
             {
@@ -7150,6 +9322,16 @@ export const modules: Module[] = [
               { lessonId: 'contracts-6', label: 'Modifications, REAs & Claims', sub: 'When an informal deliverable request is really a change' },
             ],
           },
+          {
+            type: "callout",
+            level: "advanced",
+            heading: "What Senior PMs Do Differently",
+            body: "They review the draft CDRL during proposal and negotiate items down, because forty deliverables with monthly frequencies is a full-time position nobody priced, and the cheapest time to remove a report is before award.",
+          },
+          {
+            type: "highlight",
+            body: "One sentence to teach your team: **if it is not on the CDRL you are not required to deliver it, and if it is on the CDRL you are required to deliver it exactly as the tailored DID says, which makes Exhibit A a contract inside the contract.**",
+          },
           ],
         },
       {
@@ -7166,6 +9348,14 @@ export const modules: Module[] = [
             { term: 'Period of Performance', definition: 'The dates during which the contractor is authorized to perform work and incur costs. Each MSR reports on performance within the current PoP. Performance outside the PoP is unallowable.' },
             { term: 'Integrated Master Schedule', definition: 'IMS. The comprehensive, resource-loaded program schedule. The MSR references the IMS to show schedule status. Any slippage shown in the MSR should be traceable to the IMS.' },
             { term: 'Risk Reporting', definition: 'The section of the MSR that identifies current and emerging risks, their probability and impact, and the mitigation status. This becomes the government\'s early warning system. Omitting a known risk from the MSR is a transparency problem.' },
+            {
+              term: "Estimate at Completion (EAC)",
+              definition: "The forecast of total cost at the end of the work. In an MSR it is the number the reader trusts least and checks first.",
+            },
+            {
+              term: "Five-Minute Read Test",
+              definition: "The working assumption that the most senior reader gives the report five minutes, so the executive summary and the color status carry the entire message.",
+            },
           ],
           attachments: [
             {
@@ -7220,6 +9410,18 @@ export const modules: Module[] = [
           { id: 'q9', question: 'Which MSR sentence best preserves a future REA for government-directed out-of-scope work?', options: ['"The team supported additional analysis at the customer\'s request"', '"On the 12th the COR requested analysis outside SOW 3.2; the team performed it as directed, about 80 hours; an REA is being prepared"', '"Work continued on all tasks"', '"The customer was very satisfied with the extra support"'], correct: 1, explanation: 'Specific, dated, tied to the SOW paragraph, with hours and an explicit statement that an adjustment will be sought.' },
           { id: 'q10', question: 'On a program with EVM, why must the MSR and the IPMR variance narratives match?', options: ['The FAR requires identical text', 'They go to the same reader; inconsistent explanations destroy credibility', 'The MSR replaces the IPMR', 'They are audited by DCAA together'], correct: 1, explanation: 'Write the variance narrative once, in the IPMR, and reuse it. Cut both reports on the same status date.' },
           { id: 'q11', type: 'drag_order', question: 'Order the parts of the MSR a five-minute reader consumes:', options: [], correct: 0, explanation: 'Executive summary first, then the status colors, then one table of numbers. If the truth is not in those three, it is not read.', orderedItems: ['Executive summary', 'Red / yellow / green status scan', 'One table of key numbers', 'Detailed sections and appendices'] },
+          {
+            question: "An award fee board reads six consecutive MSRs. What pattern damages the score most?",
+            options: [
+              "Reporting a red status early",
+              "A risk that appears, silently disappears, and then returns as a realized issue",
+              "Using the same format each month",
+              "Reporting more detail than required",
+            ],
+            correct: 1,
+            explanation: "Reports are read in sequence. A risk that vanishes without a resolution narrative reads as either poor tracking or selective reporting, and both cost more than the original risk.",
+            id: "q12",
+          },
           ],
           content: [
             {
@@ -7330,6 +9532,16 @@ export const modules: Module[] = [
               { lessonId: 'contracts-6', label: 'Modifications, REAs & Claims', sub: 'Constructive changes and the REA the MSR supports' },
               { lessonId: 'data-4', label: 'Reading IPMR Reports', sub: 'Keeping the MSR consistent with the IPMR' },
             ],
+          },
+          {
+            type: "callout",
+            level: "advanced",
+            heading: "What Senior PMs Do Differently",
+            body: "They write each month's report knowing the award fee board will read twelve of them in a row, so risks appear before they become issues, variance narratives name a cause and a date, and nothing important ever shows up for the first time in the final month.",
+          },
+          {
+            type: "highlight",
+            body: "One sentence to teach your team: **the government reads your monthly status report to find out whether you know what is happening on your own program, so an honest red with a credible corrective action beats a comfortable green every single time.**",
           },
           ],
         },
@@ -8782,6 +10994,31 @@ export const modules: Module[] = [
       heading: 'IPMR as Legal Documentation: What Senior PMs Must Preserve',
       body: 'Senior PMs on large programs must understand that IPMR data is contractually required documentation and is discoverable in litigation. Format 5 narratives become exhibits in ASBCA cases. A contractor\'s written explanation that a variance is due to "government-caused delays" is the foundation of a future REA. The government PM\'s obligation: (1) preserve all IPMR submissions with receipt timestamps; (2) document government responses in writing. If you accepted an inadequate Format 5 narrative without objection, you may have waived your right to challenge the root cause later; (3) track OTB and reprogramming history. Baseline changes require formal government approval and must be documented with the approving official\'s name and date. Programs that lose IPMR archives lose their ability to reconstruct performance history in claims disputes.',
         },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **the IPMR is six views of the same program, and the value is never in one format, it is in whether Format 1's variances, Format 5's narratives and Format 6's schedule tell the same story.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "finance-2",
+              label: "Earned Value Management",
+              sub: "The measurement system the IPMR reports",
+            },
+            {
+              lessonId: "finance-5",
+              label: "Estimate at Completion",
+              sub: "Where the IPMR's forecast columns come from",
+            },
+            {
+              lessonId: "contracts-12",
+              label: "Monthly Status Reports",
+              sub: "The narrative report that must agree with the IPMR",
+            },
+          ],
+        },
       ],
       quiz: [
         {
@@ -8819,6 +11056,85 @@ export const modules: Module[] = [
           correct: 1,
           explanation: 'An OTB is a formal, government-approved action that resets the Performance Measurement Baseline when the current baseline is so unrealistic that EVM measurements have lost informational value. It requires SSA/PEO approval, a revised EAC, and a new Integrated Baseline Review (IBR). OTB does not change the contract price.',
         },
+        {
+          question: "Format 1 shows a $4M unfavorable cost variance concentrated in one WBS element, but Format 5 explains it in general terms about 'labor challenges.' What is the reviewer's correct next step?",
+          options: [
+            "Accept the narrative",
+            "Push for a root cause tied to that specific WBS element with a corrective action and a date, because a generic narrative on a concentrated variance means the cause has not been isolated",
+            "Request an Over Target Baseline",
+            "Reduce the fee",
+          ],
+          correct: 1,
+          explanation: "Format 5 exists to explain Format 1. A narrative that could apply to any program is a sign the analysis has not been done.",
+          id: "q6",
+        },
+        {
+          question: "Why does a reviewer cross-reference Format 4 against Format 1 variances?",
+          options: [
+            "Format 4 shows profit",
+            "Because staffing plans versus actuals often explain whether a cost variance is a rate problem, an efficiency problem, or simply work that has not been performed yet",
+            "Format 4 lists subcontractors",
+            "Format 4 sets the baseline",
+          ],
+          correct: 1,
+          explanation: "Headcount data separates 'we spent too much per hour' from 'we never staffed it,' and those two problems have completely different fixes.",
+          id: "q7",
+        },
+        {
+          question: "A task in Format 6 shows negative total float. What does that mean?",
+          options: [
+            "The task has slack remaining",
+            "The task is behind the point where it can still finish without delaying a constraint or the program finish date",
+            "The task is complete",
+            "The task is unfunded",
+          ],
+          correct: 1,
+          explanation: "Negative float is the schedule's way of saying the plan is already infeasible unless something is compressed.",
+          id: "q8",
+        },
+        {
+          question: "What is the strongest reason a government PM should be cautious about approving an Over Target Baseline?",
+          options: [
+            "It costs money to prepare",
+            "It resets the measurement baseline, so historical variance data loses comparability and the program's performance history effectively restarts",
+            "It requires a protest",
+            "It changes the contract type",
+          ],
+          correct: 1,
+          explanation: "An OTB can be the right call when the old baseline is meaningless, but it erases the trend line that would otherwise inform the forecast.",
+          id: "q9",
+        },
+        {
+          question: "Which IPMR format would you consult first to determine whether a variance is concentrated in one functional organization rather than one work element?",
+          options: ["Format 1", "Format 2", "Format 5", "Format 6"],
+          correct: 1,
+          explanation: "Format 1 is by work breakdown; Format 2 is by organization. Together they locate a problem in both dimensions.",
+          id: "q10",
+        },
+        {
+          question: "A program's undistributed budget has stayed at 12 percent of contract value for eight months. What does an experienced reviewer conclude?",
+          options: [
+            "Excellent planning discipline",
+            "Authorized work has not been planned into control accounts, so a meaningful share of the program is not actually being measured",
+            "The program is ahead of schedule",
+            "The contract needs an OTB",
+          ],
+          correct: 1,
+          explanation: "Undistributed budget is a parking lot. Work sitting there is not in any control account, which means nobody is earning or reporting value on it.",
+          id: "q11",
+        },
+        {
+          question: "Why does Format 5 matter in a later dispute even though it carries no numbers?",
+          options: [
+            "It does not; only the numbers matter",
+            "Because the narratives are contractually required, contemporaneous documentation of cause and corrective action, and they are discoverable",
+            "Because Format 5 sets the fee",
+            "Because Format 5 replaces the MSR",
+          ],
+          correct: 1,
+          explanation: "Contemporaneous written explanations carry unusual weight later, which is exactly why they should be written carefully the first time.",
+          id: "q12",
+        },
       ],
       keyTerms: [
         { term: 'IPMR', definition: 'Integrated Program Management Report. The primary monthly EVM data deliverable from contractors on DoD programs, replacing the older CPR and CFSR.' },
@@ -8828,6 +11144,18 @@ export const modules: Module[] = [
         { term: 'OTB', definition: 'Over Target Baseline. A formal government-approved action that resets the Performance Measurement Baseline when the current baseline is no longer achievable.' },
         { term: 'Total Float', definition: 'The amount of time a task can slip before it delays a downstream milestone or the contract completion. Negative total float means the task is already late.' },
         { term: 'VAC', definition: 'Variance at Completion. The difference between BAC and EAC. Negative VAC means the program is projected to overrun budget.' },
+        {
+          term: "Format 2",
+          definition: "IPMR data organized by the contractor's organizational breakdown structure rather than by work. It shows which functional organization is driving a variance.",
+        },
+        {
+          term: "Performance Measurement Baseline (PMB)",
+          definition: "The time-phased budget plan against which performance is measured. Changes to it are the first thing a reviewer checks.",
+        },
+        {
+          term: "Undistributed Budget",
+          definition: "Authorized work and budget not yet allocated to control accounts. A large or long-lived balance here is a warning sign about planning maturity.",
+        },
       ],
     },
       {
@@ -9545,6 +11873,22 @@ export const modules: Module[] = [
       { term: 'Opportunity Qualification', definition: 'The process of deciding whether to invest BD resources in pursuing an opportunity (gate review).' },
       { term: 'Incumbent', definition: 'The contractor currently performing work on a contract being re-competed.' },
       { term: 'Shaping', definition: 'Influencing the RFP requirements, scope, and evaluation criteria before the solicitation is released.' },
+      {
+        term: "Price to Win (PTW)",
+        definition: "An analysis of what price is likely to win given the competition and the evaluation scheme, built independently of what the work costs you.",
+      },
+      {
+        term: "Gate Review",
+        definition: "A structured decision point where leadership commits or withdraws B&P funding for a pursuit. Its value comes entirely from the willingness to say no.",
+      },
+      {
+        term: "Black Hat Review",
+        definition: "A session where your own team role-plays competitors to predict their strategy, pricing and themes, so your proposal can be built against them.",
+      },
+      {
+        term: "Pipeline Coverage Ratio",
+        definition: "Qualified pipeline value divided by the revenue target for a period. A healthy business carries several times its target to absorb normal loss rates.",
+      },
         ],
         content: [
       {
@@ -9879,6 +12223,37 @@ export const modules: Module[] = [
         'Incumbent contractor and contract number|||Knowing the incumbent tells you who you\'re displacing and lets you pull their past performance on USASpending.gov. The contract number lets you pull the exact award value, period, and modifications: critical for sizing your bid.',
       ],
         },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They enforce gate reviews with real kill authority and measure bid-to-win ratio rather than bid volume, because a team that never walks away is spreading a fixed B&P budget across pursuits it cannot win, and the cost shows up as thin proposals on the ones it could have.",
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **capture is won in the shaping window before the RFP drops, so a pursuit that starts when the solicitation posts is not a pursuit, it is a donation to your competitor's win rate.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "capture-2",
+              label: "Proposal Development & Win Strategy",
+              sub: "Turning a capture plan into a submitted proposal",
+            },
+            {
+              lessonId: "capture-3",
+              label: "Section L vs. Section M",
+              sub: "What the solicitation actually asks you to prove",
+            },
+            {
+              lessonId: "preaward-3",
+              label: "Market Research",
+              sub: "The same window from the government's side",
+            },
+          ],
+        },
         ],
       quiz: [
       {
@@ -9950,7 +12325,31 @@ export const modules: Module[] = [
         options: ['Generic statements about quality and past performance that apply to any proposal', 'Specific, customer-validated reasons why your solution best addresses THIS customer\'s most important needs', 'Primarily focused on price competitiveness', 'Developed after the RFP is released based on Section M criteria'],
         correct: 1,
         explanation: "Win themes must be specific to the customer and opportunity: generic themes like \"we are a quality company with excellent past performance\" are meaningless in a competitive environment. Effective win themes are customer-validated (you know this is what the customer cares about), tied to your discriminators (you can do this better than competitors), and ghost competitor weaknesses (they cannot match you here)."
-      }
+      },
+      {
+        question: "A capture manager has a 90 percent bid rate and a 12 percent win rate. What does a senior BD executive conclude?",
+        options: [
+          "The team is appropriately aggressive",
+          "The team is not qualifying, so B&P is being spread thin across pursuits that were never winnable and the winnable ones are underfunded",
+          "Win rate is irrelevant",
+          "The pipeline is too small",
+        ],
+        correct: 1,
+        explanation: "Bidding everything is the same as having no strategy. A disciplined shop bids less and wins a much higher fraction of what it bids.",
+        id: "q11",
+      },
+      {
+        question: "Why does incumbency create advantage that goes beyond relationships?",
+        options: [
+          "Incumbents are legally favored",
+          "Because the incumbent holds operational knowledge, recent relevant past performance on that exact work, and a cost basis nobody else can price against precisely",
+          "Incumbents get extra evaluation points",
+          "Incumbents write the RFP",
+        ],
+        correct: 1,
+        explanation: "The advantage is informational and evidentiary, not procedural, which is also why a complacent incumbent can lose it.",
+        id: "q12",
+      },
         ]
       },
       {
@@ -9967,6 +12366,14 @@ export const modules: Module[] = [
       { term: 'Best Value', definition: 'An acquisition approach where technical superiority can justify a higher price.' },
       { term: 'Outstanding', definition: 'Highest adjectival rating. Exceptional strengths, very low risk of unsuccessful performance.' },
       { term: 'Acceptable', definition: 'Meets requirements but has no strengths. Often a losing rating in competitive fields.' },
+      {
+        term: "Compliance Matrix",
+        definition: "The table mapping every Section L instruction and Section M factor to where in the proposal it is answered. Built before writing, not after.",
+      },
+      {
+        term: "Evaluation Notice",
+        definition: "The government's written question during discussions, identifying a weakness or seeking clarification. How you answer often decides the award.",
+      },
         ],
         content: [
       {
@@ -10090,10 +12497,98 @@ export const modules: Module[] = [
       body: 'Mid-career proposal managers build their proposal outline directly from Section L. Every instruction becomes a heading, every deliverable requirement becomes a checklist item. But the compliance matrix is the floor, not the ceiling. The government wrote Section L to describe the minimum information needed; it didn\'t write it to describe a winning proposal. After ensuring 100% Section L compliance, ask: what information would a SSEB evaluator want that Section L didn\'t require? Discriminating proposals add value beyond compliance. The most common mid-career error: a proposal that is perfectly compliant but says nothing that an Outstanding evaluator would score above Acceptable. Compliance is table stakes; evaluation excellence is the goal.',
         },
         {
+          type: "text",
+          level: "intermediate",
+          heading: "Read M First, Then L, Then Write to M",
+          body: "Section L tells you what to submit and Section M tells you how it will be scored, and most losing proposals are written in that order. Reversed, the work gets easier: read Section M to find what the government says it values and in what relative order, then read Section L as the delivery mechanism for that evidence. Where the two disagree, and they often do, the government is obliged to evaluate against M, but you still have to comply with L to be responsive. So you answer L's structure while making sure every M factor has a clearly labeled home. Evaluators score by factor with the solicitation open beside them. A proposal organized around the evaluation factors is one an evaluator can grade without hunting, and hunting is where scores get lost.",
+        },
+        {
+          type: "text",
+          level: "intermediate",
+          heading: "The Compliance Matrix Is the Outline",
+          body: "Before anyone writes a word, build a table with one row for every instruction in L and every factor and subfactor in M, and columns for where it is answered, who owns it, and what evidence supports it. Two things fall out of this immediately. First, the gaps: requirements with no owner, or factors with nothing but an assertion behind them. Second, the outline, because the matrix becomes the proposal's section structure. Teams that skip this write beautiful prose that misses a subfactor and take an unacceptable rating on something they could do in their sleep. The matrix also survives the inevitable late amendment: when the government changes Section L two weeks before submission, you update rows rather than reorganizing a finished document.",
+        },
+        {
+          type: "table",
+          level: "intermediate",
+          heading: "What Evaluators Reward, and What They Actually Do With It",
+          headers: ["In the proposal", "What the evaluator does", "How to earn the strength"],
+          rows: [
+            [
+              "Unsupported claim of expertise",
+              "Notes it, scores nothing",
+              "Name the program, the scope, the outcome, the customer",
+            ],
+            [
+              "Feature with no benefit stated",
+              "Neutral finding",
+              "State the benefit to this requirement, in their words",
+            ],
+            [
+              "Risk section listing generic risks",
+              "Neutral, sometimes a weakness",
+              "Name the two real risks and what you will do about them",
+            ],
+            [
+              "Past performance not relevant in size or scope",
+              "Discounted",
+              "Choose relevance over prestige; explain the similarity",
+            ],
+            [
+              "Staffing plan without named people",
+              "Weakness on many solicitations",
+              "Name who you can name; describe how you will fill the rest",
+            ],
+          ],
+        },
+        {
       type: 'callout' as const,
       level: 'advanced' as const,
       heading: 'Section M as a Negotiating Document: Shaping Evaluation Criteria Pre-RFP',
       body: 'Senior BD professionals know that the best time to influence Section M is before the RFP is released. Industry Days, RFIs, and pre-solicitation meetings are opportunities to educate the government program office on what evaluation criteria will produce the best outcome. If you have a capability that competitors lack. A proven management approach, unique past performance, specific technical solution. You want the evaluation criteria to reward it. This is legal and expected; government contracting officers solicit industry input on acquisition strategy specifically because they lack full market knowledge. The line: you can advocate for evaluation criteria that discriminate on merit. You cannot suggest criteria designed to exclude a specific competitor by name or criteria that only your company could meet.',
+        },
+        {
+          type: "text",
+          level: "advanced",
+          heading: "Answering an Evaluation Notice",
+          body: "When discussions open, the government sends written notices identifying weaknesses or seeking clarification. These are the highest-leverage pages you will write in the whole competition, and the common failure is defensiveness. An evaluation notice saying your staffing approach appears risky is not an invitation to explain why the evaluator misread it. It is the government telling you where you are losing. Answer in three parts: acknowledge the concern in the government's own words, state specifically what changed in the proposal, and point to the revised page. If the concern rests on a genuine misreading, say what was unclear and fix the text so it cannot be misread again. Never argue that the evaluator should have understood. They told you they did not, and they are the ones scoring.",
+        },
+        {
+          type: "text",
+          level: "advanced",
+          heading: "Price Realism, and the Bid That Wins the Evaluation and Loses the Program",
+          body: "On a best value competition the government may evaluate whether your price is realistic for the work proposed, and an unrealistically low price is a risk finding rather than a competitive advantage. It suggests you misunderstood the requirement or intend to staff it thinner than you described. The specific trap is the mismatch: a technical volume promising senior engineers and a price volume built on junior labor rates. Evaluators cross-read those volumes precisely to find that gap. The discipline is that the basis of estimate behind the price has to match the approach in the technical volume person for person, and if you decide to bid lean, the technical volume has to describe the leaner approach honestly rather than promising a team the price does not fund.",
+        },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They read Section M before Section L and organize the proposal around the evaluation factors. They build the compliance matrix before anyone writes, and use it as the outline. They answer evaluation notices by acknowledging, changing and pointing, never by arguing. And they make the price basis match the technical approach person for person, because evaluators cross-read the volumes looking for exactly that gap.",
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **Section M is what gets scored, so read it first, build the compliance matrix before anyone writes, and organize the proposal so an evaluator can grade each factor without hunting for the evidence.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "capture-4",
+              label: "Competing in Source Selection",
+              sub: "The rest of the competition",
+            },
+            {
+              lessonId: "contracts-2",
+              label: "Source Selection",
+              sub: "How the government runs the evaluation",
+            },
+            {
+              lessonId: "preaward-9",
+              label: "Building the Solicitation and the Evaluation Plan",
+              sub: "Who writes L and M, and how",
+            },
+          ],
         },
         ],
       quiz: [
@@ -10132,6 +12627,93 @@ export const modules: Module[] = [
         correct: 2,
         explanation: 'Winning proposals mirror Section M factor and sub-factor structure in section headers. This makes it easy for evaluators to find and credit strengths. Section L defines the container; Section M defines the content architecture.'
       },
+      {
+        question: "Section L and Section M conflict. What governs the evaluation?",
+        options: [
+          "Section L, because it is the instruction",
+          "Section M, because it states the evaluation factors, though you must still comply with L to be responsive",
+          "Whichever is longer",
+          "The contracting officer decides case by case",
+        ],
+        correct: 1,
+        explanation: "The agency must evaluate against the stated factors. You still follow L's structure so the proposal is responsive.",
+        id: "q6",
+      },
+      {
+        question: "An evaluation notice says your staffing approach appears risky. What is the right response?",
+        options: [
+          "Explain why the evaluator misread the proposal",
+          "Acknowledge the concern in their words, state what changed, and point to the revised page",
+          "Ignore it and rely on the technical score",
+          "Lower the price",
+        ],
+        correct: 1,
+        explanation: "An evaluation notice is the government telling you where you are losing. Arguing that they should have understood does not change the score.",
+        id: "q7",
+      },
+      {
+        question: "Why is an unrealistically low price a problem in a best value competition?",
+        options: [
+          "It is not; low price always helps",
+          "It is evaluated as risk, suggesting you misunderstood the requirement or will staff thinner than described",
+          "It triggers an audit",
+          "It is prohibited",
+        ],
+        correct: 1,
+        explanation: "Evaluators cross-read the technical and price volumes to find the mismatch between the team promised and the team funded.",
+        id: "q8",
+      },
+      {
+        type: "drag_order",
+        question: "Order the proposal build:",
+        options: [],
+        correct: 0,
+        explanation: "The matrix is the outline, which is why it comes before writing rather than after.",
+        orderedItems: [
+          "Read Section M for what is valued and in what order",
+          "Read Section L for the structure and submission rules",
+          "Build the compliance matrix covering every instruction and factor",
+          "Assign owners and identify the evidence behind each claim",
+          "Write to the factors, then check the matrix again before submission",
+        ],
+        id: "q9",
+      },
+      {
+        question: "Why organize a proposal around the evaluation factors rather than the company's preferred narrative?",
+        options: [
+          "It is required by the FAR",
+          "Evaluators score factor by factor with the solicitation open beside them, and hunting for evidence loses points",
+          "It makes the proposal shorter",
+          "It improves the price",
+        ],
+        correct: 1,
+        explanation: "A proposal an evaluator can grade without hunting is a proposal that gets credit for what it contains.",
+        id: "q10",
+      },
+      {
+        question: "What makes past performance count in an evaluation?",
+        options: [
+          "The prestige of the customer",
+          "Relevance in scope and size to this requirement, explained explicitly",
+          "Its recency alone",
+          "The dollar value alone",
+        ],
+        correct: 1,
+        explanation: "Relevance beats prestige. If the similarity is not explained, the evaluator is left to guess at it.",
+        id: "q11",
+      },
+      {
+        question: "A solicitation asks for a staffing plan and your proposal names no individuals. What is the likely result?",
+        options: [
+          "Neutral",
+          "A weakness on many solicitations; name who you can and describe how the rest will be filled",
+          "An automatic deficiency",
+          "A strength for flexibility",
+        ],
+        correct: 1,
+        explanation: "Unnamed staffing reads as risk unless the fill approach is concrete.",
+        id: "q12",
+      },
         ],
       },
     {
@@ -10146,6 +12728,22 @@ export const modules: Module[] = [
       { term: 'Win Theme', definition: 'A compelling, customer-specific message that explains why your solution best meets the customer\'s need.' },
       { term: 'APMP', definition: 'Association of Proposal Management Professionals. The industry organization for proposal professionals.' },
       { term: 'Executive Summary', definition: 'The first and most read section of a proposal. Must convey all win themes and discriminators concisely.' },
+      {
+        term: "Color Team",
+        definition: "A staged proposal review (Pink, Red, Gold, White Glove) with a defined purpose at each stage. Reviews without specific criteria produce opinions rather than improvements.",
+      },
+      {
+        term: "Strength",
+        definition: "An evaluated feature that exceeds a requirement in a way that benefits the government. Strengths, not compliance, are what raise a rating.",
+      },
+      {
+        term: "Section M",
+        definition: "The solicitation section stating the evaluation factors and their relative importance. It is the scoring rubric, and the proposal should be architected against it.",
+      },
+      {
+        term: "Storyboard",
+        definition: "A one-page plan for a proposal section written before the prose, capturing the theme, the proof points and the graphic. It is how you avoid rewriting the section three times.",
+      },
         ],
         content: [
       {
@@ -10418,6 +13016,37 @@ export const modules: Module[] = [
       heading: 'Win Strategy Architecture: From Theme to Section M Score',
       body: 'Senior capture professionals build win strategies backwards from Section M. For each evaluation factor, ask: what would an Outstanding/Blue rating require? Then work backwards to the proposal section: what text, graphics, and proof points substantiate that claim? Then work backwards to the solution: does our technical approach actually deliver what an Outstanding rating requires? If the answer is no, the problem is the solution. Not the proposal. This "Section M backwards" discipline exposes the gap between what the proposal team wants to claim and what the technical team can actually deliver. Close that gap before the proposal starts, not during the Red Team. The most elegant proposal for a mediocre solution still loses.',
         },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They build the win strategy backwards from Section M, asking what evidence an Outstanding rating on each factor would require, and they staff color reviews with people who have actually evaluated proposals rather than with whoever was free that week.",
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **proposals are scored, not read, so every section should make it trivially easy for an evaluator with fifty submissions and three weeks to find the evidence that you meet the requirement and check the box.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "capture-3",
+              label: "Section L vs. Section M",
+              sub: "Instructions versus the scoring criteria",
+            },
+            {
+              lessonId: "capture-4",
+              label: "Competing in Source Selection",
+              sub: "What the evaluators do with what you submit",
+            },
+            {
+              lessonId: "capture-1",
+              label: "The BD-to-Capture Lifecycle",
+              sub: "The capture work that should precede the writing",
+            },
+          ],
+        },
         ],
       quiz: [
       {
@@ -10489,7 +13118,31 @@ export const modules: Module[] = [
         options: ['Setting the Gold Team date as far from submission as possible', 'Working backward from the RFP due date to set Pink/Red/Gold review milestones with sufficient time to incorporate feedback', 'Scheduling all reviews in the week before submission', 'Setting the Price review after the Technical volumes are complete'],
         correct: 1,
         explanation: "Effective proposal scheduling works backward from the submission due date. Gold Team needs to complete 5-7 days before due date to allow final revisions and production. Red Team needs to complete with enough time to incorporate feedback. Pink Team needs to review an outline that allows substantive volume development afterward. Compressing the review cycle is the most common proposal management failure."
-      }
+      },
+      {
+        question: "A technical section is fully compliant with every requirement and receives an Acceptable rating with no strengths. Under a best value tradeoff, what does that mean?",
+        options: [
+          "The proposal is well positioned",
+          "Compliance alone cannot beat a competitor who offered evaluated strengths, so the proposal can only win on price",
+          "Strengths are not scored",
+          "The evaluation was flawed",
+        ],
+        correct: 1,
+        explanation: "Compliance is the entry fee. Under best value, the tradeoff is made on strengths, and a proposal without any has nothing to trade.",
+        id: "q11",
+      },
+      {
+        question: "What makes a Red Team review valuable rather than ceremonial?",
+        options: [
+          "Holding it as late as possible",
+          "Reviewers who score the draft against the actual Section M criteria as an evaluator would, rather than giving general writing feedback",
+          "Having the capture manager run it",
+          "Reviewing only the executive summary",
+        ],
+        correct: 1,
+        explanation: "A review is only as good as the rubric it uses. Scored against Section M by outside reviewers, it predicts the real evaluation; without that, it produces style notes.",
+        id: "q12",
+      },
         ]
       },
       {
@@ -10764,6 +13417,16 @@ export const modules: Module[] = [
               { lessonId: 'finance-8', label: 'CPAF, Burn Rate & Award Fee', sub: 'Why CPARS outlives the contract' },
             ],
           },
+          {
+            type: "callout",
+            level: "advanced",
+            heading: "What Senior PMs Do Differently",
+            body: "They treat every debrief, win or lose, as the highest-value competitive intelligence available, and they make the protest decision from the debrief record and the probability of a useful remedy rather than from how the loss felt.",
+          },
+          {
+            type: "highlight",
+            body: "One sentence to teach your team: **only strengths raise a rating, so a perfectly compliant proposal with no evaluated strengths is a proposal that can only win on price, no matter how well it is written.**",
+          },
       ],
       quiz: [
         {
@@ -10818,6 +13481,14 @@ export const modules: Module[] = [
         { term: 'FPR', definition: 'Final Proposal Revision. The revised proposal submitted by offerors after discussions are closed, which is the basis for final evaluation.' },
         { term: 'Competitive Range', definition: 'The set of proposals with a realistic chance of award. The CO may exclude proposals outside the competitive range before discussions.' },
         { term: 'SSP', definition: 'Source Selection Plan. The document approved by the SSA before solicitation release that defines evaluation factors, weights, rating scales, and the evaluation process.' },
+        {
+          term: "Cost Realism",
+          definition: "An evaluation of whether a cost proposal reflects what the work will actually cost. On cost-reimbursement competitions the government may adjust your proposed cost upward for evaluation.",
+        },
+        {
+          term: "Automatic Stay",
+          definition: "The suspension of contract performance triggered by a timely GAO protest. Timing is jurisdictional, which is why the debrief clock matters.",
+        },
       ],
     },
       {
@@ -10835,6 +13506,10 @@ export const modules: Module[] = [
       { term: 'DCAA', definition: 'Defense Contract Audit Agency. Conducts pre-award surveys, incurred cost audits, and forward pricing reviews. DCAA compliance gaps can kill contract awards or trigger costly remediation.' },
       { term: 'Recompete', definition: 'The process of re-competing an existing contract at expiration. Incumbents have advantages. But lose at higher rates than most contractors assume if they don\'t actively manage recompete risk.' },
       { term: 'Incurred Cost Audit', definition: 'DCAA audit of a contractor\'s actual costs incurred on cost-reimbursable contracts. Filed annually via the Incurred Cost Submission (ICS).' },
+      {
+        term: "Forward Pricing Rate Agreement (FPRA)",
+        definition: "A negotiated agreement on indirect rates used in future proposals. Having one removes a recurring source of pre-award audit delay.",
+      },
         ],
         content: [
       {
@@ -10916,6 +13591,37 @@ export const modules: Module[] = [
           ['Proposal', 'RFP release', 'Full proposal execution with incumbent advantage messaging, past performance narrative, continuous improvement story'],
         ],
       },
+      {
+        type: "callout",
+        level: "advanced",
+        heading: "What Senior PMs Do Differently",
+        body: "They start the recompete plan the week of award, tracking CPARS ratings, relationship health and scope drift for the whole period of performance, because the evidence that wins a recompete is accumulated over years and cannot be manufactured in the last six months.",
+      },
+      {
+        type: "highlight",
+        body: "One sentence to teach your team: **the most winnable opportunity in your portfolio is the contract you already hold, and the contractors who lose recompetes are almost always the ones who started planning for it in the final year instead of at award.**",
+      },
+      {
+        type: "related_lesson",
+        heading: "Build on This",
+        refs: [
+          {
+            lessonId: "capture-1",
+            label: "The BD-to-Capture Lifecycle",
+            sub: "The pipeline discipline mistake number one violates",
+          },
+          {
+            lessonId: "ops-4",
+            label: "Subcontractor Management",
+            sub: "The other relationship contractors underinvest in",
+          },
+          {
+            lessonId: "finance-7",
+            label: "DCAA & DCMA Oversight",
+            sub: "The compliance gaps that surface at award",
+          },
+        ],
+      },
         ],
         quiz: [
       {
@@ -10977,6 +13683,90 @@ export const modules: Module[] = [
         ],
         correct: 2,
         explanation: 'Recompete planning should begin at contract award. Not 12 months before expiration. The entire period of performance is recompete positioning time. CPARS narratives, performance documentation, competitive intelligence, and staffing continuity plans all need to be built over the life of the contract, not assembled in a last-minute rush before the RFP.',
+      },
+      {
+        question: "A contractor discovers during a pre-award survey that its timekeeping system does not meet DCAA requirements. What is the practical consequence?",
+        options: [
+          "A minor finding to fix later",
+          "The award can be delayed or lost, because an adequate accounting system is a prerequisite for a cost-reimbursement award, not a post-award improvement item",
+          "Only the fee is affected",
+          "Nothing; DCAA has no authority",
+        ],
+        correct: 1,
+        explanation: "Accounting system adequacy is a gate. Discovering the gap during the survey means the fix happens under deadline pressure, if there is time at all.",
+        id: "q6",
+      },
+      {
+        question: "A solicitation uses a PWS rather than a SOW. What does that change about how the proposal should be written?",
+        options: [
+          "Nothing; the response is the same",
+          "The proposal must propose an approach and measurable outcomes rather than restating prescribed tasks, because the PWS states the result required and leaves the method to the offeror",
+          "The proposal should be shorter",
+          "Price becomes the only factor",
+        ],
+        correct: 1,
+        explanation: "Restating a PWS back to the government is the classic tell that a bidder did not understand the acquisition, and evaluators read it that way.",
+        id: "q7",
+      },
+      {
+        question: "Why does a CPARS rating matter more to a contractor than most performance feedback?",
+        options: [
+          "It determines current contract fee",
+          "Because it is the government-wide record of past performance that future source selections will evaluate, and it persists for years",
+          "It is confidential",
+          "It sets the wrap rate",
+        ],
+        correct: 1,
+        explanation: "CPARS follows the company into every future competition. A bad rating unchallenged is a bad rating that gets read by evaluators who never met you.",
+        id: "q8",
+      },
+      {
+        question: "What is the most important reason to invest in the COR relationship rather than focusing only on the contracting officer?",
+        options: [
+          "The COR can modify the contract",
+          "The COR sees daily performance, writes the technical input to CPARS, and shapes the government's perception of the contractor long before the CO is involved",
+          "The COR sets the price",
+          "The CO has no authority",
+        ],
+        correct: 1,
+        explanation: "The CO holds the authority; the COR holds the narrative. Both matter, and contractors chronically underinvest in the second.",
+        id: "q9",
+      },
+      {
+        question: "A contractor's pipeline lists 40 opportunities with pWin assessments on three. What is the core problem?",
+        options: [
+          "The pipeline is too small",
+          "Without qualification, the list is a wish list rather than a pipeline, so B&P cannot be allocated rationally and forecasting is guesswork",
+          "Too many opportunities",
+          "pWin is unreliable",
+        ],
+        correct: 1,
+        explanation: "An unqualified pipeline cannot be prioritized, and a pipeline that cannot be prioritized cannot drive a bid decision.",
+        id: "q10",
+      },
+      {
+        question: "When should recompete planning formally begin on a five-year contract?",
+        options: [
+          "Six months before the period of performance ends",
+          "At award, because CPARS history, relationship investment and scope positioning accumulate across the whole period and cannot be created late",
+          "After the draft RFP posts",
+          "At the first option exercise",
+        ],
+        correct: 1,
+        explanation: "The recompete is decided by what happened during performance. Late planning can only present evidence that already exists.",
+        id: "q11",
+      },
+      {
+        question: "An incurred cost submission is filed late for two consecutive years. What is the likely effect?",
+        options: [
+          "None; the deadline is advisory",
+          "Increased audit scrutiny, potential withholding, and a compliance history that surfaces in future pre-award surveys",
+          "Automatic termination",
+          "A fee increase",
+        ],
+        correct: 1,
+        explanation: "Compliance history is cumulative and visible. Small recurring lapses become the reason a later award gets held up.",
+        id: "q12",
       },
         ],
       },
@@ -11168,6 +13958,33 @@ export const modules: Module[] = [
         heading: 'The Senior Executive Path',
         body: 'If you\'re thinking about SES (Senior Executive Service). The top of the civilian career ladder. You\'re playing a longer game, and the rules are different.\n\nFirst, some scale: there are roughly 7,000 SES members across the entire federal government. In defense acquisition, the most visible senior civilian positions are Program Executive Officers (PEOs). The officials who oversee portfolios of related programs. And Deputy Assistant Secretaries of Defense. These are the civilian equivalents of general officers. Getting there requires two decades of deliberate choices, not just accumulated time.\n\nHere\'s what the path actually requires:\n\n**Major Program Experience.** You need at least one tour as a PM or Deputy PM on a significant program. Ideally ACAT I or II. This is non-negotiable. You cannot credibly lead a PEO\'s office if you haven\'t personally managed a program through at least one major milestone review.\n\n**Joint Duty Assignment (JDA).** This is a cross-service or cross-agency assignment. For example, an Army acquisition officer spending a tour at a Navy command, or a civilian working at a joint combatant command. JDAs are required by law for senior civilian positions in the defense department. They\'re also genuinely valuable: working outside your home service gives you a network and a perspective that\'s rare.\n\n**Senior Service College.** Army War College, Naval War College, Air War College. The war colleges admit senior civilians alongside senior military officers. This is not optional for the SES track, and the curriculum isn\'t really the point. The relationships you build in that year. With future generals, admirals, and senior executives. Matter more than the coursework. Plan for this in your mid-40s.\n\n**Candidate Development Program (CDP).** Most military departments run CDPs for civilians who want to be considered for SES. These are competitive programs. Apply three to five years before you want the role. They involve developmental assignments, executive coaching, and formal assessment. If SES is your goal, identify the CDP in your organization and start positioning for it early.\n\nThe plain-English reality check: this path takes 20 or more years and requires deliberate choices starting from your first program assignment. Random assignments produce random careers. If you want to lead a major program office someday, that goal should inform which jobs you take at GS-12 and GS-13. Not just at GS-14 and GS-15. The people who make SES didn\'t stumble into it. They planned backward from where they wanted to be.',
       },
+      {
+        type: "callout",
+        level: "advanced",
+        heading: "What Senior PMs Do Differently",
+        body: "They plan the next role two moves ahead and take assignments for the experience gap they close rather than the title they carry, because at the senior level people are selected on the breadth of what they have actually run, not on time in grade.",
+      },
+      {
+        type: "related_lesson",
+        heading: "Build on This",
+        refs: [
+          {
+            lessonId: "ops-7",
+            label: "What Program Managers Actually Do",
+            sub: "What the job is before you decide you want it",
+          },
+          {
+            lessonId: "veteran-1",
+            label: "Translating Military Experience",
+            sub: "Entering the field from service",
+          },
+          {
+            lessonId: "ops-5",
+            label: "Common Mistakes New PMs Make",
+            sub: "The first-year failure modes",
+          },
+        ],
+      },
         ],
         quiz: [
       {
@@ -11300,6 +14117,30 @@ export const modules: Module[] = [
         correct: 1,
         explanation: 'The salary premium for transitioning from a GS-14 government role to a comparable senior contractor position is typically 25 to 50 percent in base salary. The tradeoff is real though: federal benefits, pension accrual, and job stability have genuine financial value. A government-to-contractor transition at GS-13 to GS-15 level makes financial sense for many professionals, but it should be a deliberate choice, not a reactive one.',
       },
+      {
+        question: "An engineer with deep technical expertise is offered a PM role. What is the most important question to ask before accepting?",
+        options: [
+          "What is the salary increase",
+          "Whether they want a job whose work is getting results through other people rather than doing the technical work themselves",
+          "How large the program is",
+          "Whether the program is ACAT I",
+        ],
+        correct: 1,
+        explanation: "The role is a change of profession, not a level. People who take it for the title usually discover that the part they were good at is now somebody else's job.",
+        id: "q11",
+      },
+      {
+        question: "Why is moving between government and contractor roles described as strategic rather than merely common?",
+        options: [
+          "It always increases pay",
+          "Because understanding how the other side makes decisions, prices work and absorbs risk is difficult to learn from outside, and that perspective compounds over a career",
+          "Because clearances transfer",
+          "Because it shortens the path to SES",
+        ],
+        correct: 1,
+        explanation: "Both sides negotiate constantly with people whose constraints they guess at. Having actually lived those constraints is the durable advantage.",
+        id: "q12",
+      },
         ],
       },
       {
@@ -11314,6 +14155,22 @@ export const modules: Module[] = [
       { term: 'MR', definition: 'Management Reserve. Budget set aside to address identified and unforeseen risks.' },
       { term: 'UB', definition: 'Undistributed Budget. Budget that has not yet been assigned to specific work packages.' },
       { term: 'Risk Burn-down', definition: 'Tracking risk probability and impact over time as mitigation actions are executed.' },
+      {
+        term: "Risk Review Board (RRB)",
+        definition: "The recurring forum where risks are added, re-scored, funded and retired. Its output should be decisions, not a status readout.",
+      },
+      {
+        term: "Mitigation Plan",
+        definition: "The funded, scheduled set of actions intended to lower a risk's probability or impact, with an owner and a date attached.",
+      },
+      {
+        term: "Risk Retirement",
+        definition: "The point at which a risk can no longer occur, because the triggering event has passed or the mitigation has closed it out. Retirement is what a burn-down chart measures.",
+      },
+      {
+        term: "Issue",
+        definition: "A risk that has occurred. It is no longer managed with probability and mitigation, but with corrective action and impact containment.",
+      },
         ],
         content: [
       {
@@ -11402,6 +14259,31 @@ export const modules: Module[] = [
       {
         type: 'lucas_note',
         body: `A risk register that nobody updates is just a paperwork exercise. I've been in program reviews where the risk register had the same 12 risks, same probability ratings, same mitigation notes: for four consecutive months. At that point it's a compliance artifact, not a management tool.\n\nThe real signal is this: if a risk has been "yellow: being monitored" for 90 days with no movement, one of two things is true. Either it's not actually a risk (close it), or nobody's working the mitigation (that's a problem). Push your team to update ratings with actual data: not gut feel, not comfort, data. "We did X, and it reduced the likelihood from 4 to 2 because Y." That's a risk update. Everything else is just keeping the chart warm.`,
+      },
+      {
+        type: "highlight",
+        body: "One sentence to teach your team: **a risk is something that has not happened yet and an issue is something that has, and the entire value of risk management lives in the gap between those two, because that gap is the only place you still have options.**",
+      },
+      {
+        type: "related_lesson",
+        heading: "Build on This",
+        refs: [
+          {
+            lessonId: "ops-5",
+            label: "Common Mistakes New PMs Make",
+            sub: "What happens when the register goes stale",
+          },
+          {
+            lessonId: "data-4",
+            label: "Reading IPMR Reports",
+            sub: "Where risk shows up in the performance data",
+          },
+          {
+            lessonId: "finance-5",
+            label: "Estimate at Completion",
+            sub: "Turning unretired risk into a credible forecast",
+          },
+        ],
       },
         ],
       quiz: [
@@ -11514,7 +14396,31 @@ export const modules: Module[] = [
         options: ['System Requirements Review (SRR)', 'In-Process Review (IPR)', 'Risk Management Review (RMR)', 'Program Management Review (PMR)'],
         correct: 2,
         explanation: "A Risk Management Review (RMR) is a dedicated program review focused specifically on the status of the risk register, burn-down progress, and adequacy of mitigation plans. Unlike PMRs which cover all program aspects, RMRs provide focused scrutiny on risk posture and are often held quarterly or before major milestone events."
-      }
+      },
+      {
+        question: "A program's risk register has shown the same twelve risks with the same scores for eight months. What does an experienced reviewer conclude?",
+        options: [
+          "The program is stable",
+          "The register is not being managed, since real programs retire risks and discover new ones continuously, and a static register means nobody is re-scoring or closing anything",
+          "The mitigations are working",
+          "Risk scores should never change",
+        ],
+        correct: 1,
+        explanation: "A healthy register churns. Static scores usually mean the board reads the list rather than working it.",
+        id: "q11",
+      },
+      {
+        question: "Why does spending Management Reserve require a documented decision rather than a simple transfer?",
+        options: [
+          "It is a legal requirement of the Antideficiency Act",
+          "Because MR sits outside the performance measurement baseline, so moving it in changes the baseline work is measured against and must be traceable to a specific realized risk",
+          "MR cannot be spent",
+          "Because MR belongs to the contracting officer",
+        ],
+        correct: 1,
+        explanation: "Undocumented MR consumption is indistinguishable from quietly rebaselining, which is why the trail matters more than the amount.",
+        id: "q12",
+      },
         ]
       },
       {
@@ -11529,6 +14435,22 @@ export const modules: Module[] = [
       { term: 'PEO', definition: 'Program Executive Officer. The management layer between the PM and the Service Acquisition Executive. Many PEO organizations are currently being reorganized into Portfolio Acquisition Executives (PAEs) under the FY2026 NDAA. See PAE below.' },
       { term: 'PAE', definition: 'Portfolio Acquisition Executive. A new role created by Section 1802 of the FY2026 NDAA. A PAE owns an entire capability portfolio cradle to grave, with authority to shift funding and adjust requirements across programs inside that portfolio. Every service is actively standing up PAEs and folding existing PEO organizations into them as of 2026. If your PEO just got a new title or a new org chart, this is why.' },
       { term: 'SAE', definition: 'Service Acquisition Executive. The senior acquisition official for each Military Department.' },
+      {
+        term: "Portfolio Acquisition Executive (PAE)",
+        definition: "A role created by Section 1802 of the FY2026 NDAA, giving a portfolio-level executive broader authority to move resources and requirements across programs.",
+      },
+      {
+        term: "Milestone Decision Authority (MDA)",
+        definition: "The official empowered to approve a program's passage through an acquisition milestone. Knowing who yours is, and what they care about, shapes every brief.",
+      },
+      {
+        term: "Legislative Affairs",
+        definition: "The office that owns all official communication with Congress. Program offices route through it rather than around it.",
+      },
+      {
+        term: "Integrated Product Team (IPT)",
+        definition: "A cross-functional team with the members needed to make a decision in the room. An IPT without decision authority is a status meeting.",
+      },
         ],
         content: [
       {
@@ -11591,6 +14513,37 @@ export const modules: Module[] = [
       level: 'advanced' as const,
       heading: 'Congressional Liaison: Protecting Your Program Through the Hill',
       body: 'Senior PMs on major programs interact with congressional staff, whether they realize it or not. The rules: (1) all congressional communications go through your legislative liaison office. Never independently contact a congressional office; (2) Congressional Budget Justification Books (CBJB) are your primary public narrative. Invest in them as carefully as you invest in milestone briefings, because Hill staffers read them; (3) Classified program briefs to HASC/SASC staff are opportunities to build program support. Use them; (4) if your program receives a congressional mark (reduction, add, or fence), understand what drove it. Usually either a performance concern that surfaced publicly or a constituent interest. Fix the performance concern; support the constituent interest where it aligns with program needs. Programs with strong Hill relationships consistently outperform programs that ignore Congress.',
+        },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They build relationships with the offices that can hurt their program long before they need anything from them, and they route every congressional contact through legislative affairs without exception, because one informal conversation with a staffer can become a program's worst week.",
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **the technically correct answer delivered badly to the wrong audience loses to the merely adequate answer delivered well, because programs are killed and saved by people who were never in the room when the analysis was done.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "ops-7",
+              label: "What Program Managers Actually Do",
+              sub: "Why this is most of the job",
+            },
+            {
+              lessonId: "contracts-12",
+              label: "Monthly Status Reports",
+              sub: "Stakeholder communication in written form",
+            },
+            {
+              lessonId: "foundations-9",
+              label: "How DoD Money Works",
+              sub: "Why the Hill is a stakeholder whether you like it or not",
+            },
+          ],
         },
         ],
       quiz: [
@@ -11713,7 +14666,31 @@ export const modules: Module[] = [
         ],
         correct: 1,
         explanation: "CAPE produces independent cost assessments that are almost always higher than program office estimates: and historical data shows CAPE is typically more accurate. This creates tension, but experienced PMs understand that engaging CAPE early and addressing their methodological concerns proactively is far better than being surprised at a milestone review."
-      }
+      },
+      {
+        question: "A congressional staffer calls a program manager directly asking for cost data on the program. What is the correct response?",
+        options: [
+          "Provide the data; it is a legitimate oversight request",
+          "Be courteous, provide nothing, and route the request immediately through legislative affairs, because all congressional communication goes through that channel",
+          "Refer them to the contractor",
+          "Decline and report the call as improper",
+        ],
+        correct: 1,
+        explanation: "The request may be entirely legitimate. The channel still matters, because an unofficial answer becomes the official record without anyone reviewing it.",
+        id: "q11",
+      },
+      {
+        question: "What is the purpose of the 1-3-5 briefing structure with a flag officer or SES audience?",
+        options: [
+          "To fill the allotted time",
+          "To deliver one core message with three supporting points in about five minutes, because senior decision-makers need the ask and the evidence before the detail",
+          "To avoid answering questions",
+          "To standardize slide templates",
+        ],
+        correct: 1,
+        explanation: "Executive attention is the scarce resource. Structuring for it is a courtesy that also happens to be how you get a decision.",
+        id: "q12",
+      },
         ]
       },
       {
@@ -11731,6 +14708,10 @@ export const modules: Module[] = [
       { term: 'Small Business Subcontracting Plan', definition: 'Required plan (FAR 52.219-9) for large contractors to maximize subcontracting to small businesses.' },
       { term: 'Termination for Cause (T for C)', definition: "A prime\'s termination of a subcontract due to the sub\'s material failure to perform. Only works if it was properly negotiated into the subcontract at signing." },
       { term: 'Termination for Convenience', definition: "The right to end a contract when the work is no longer needed, without a breach. Smart prime PMs make sure their right to terminate a sub for convenience mirrors the government\'s right to terminate them." },
+      {
+        term: "Novation Agreement",
+        definition: "The contractual instrument recognizing a successor in interest when a contractor is sold or merged. Without it, the government's contract is still with the original entity.",
+      },
         ],
         content: [
       {
@@ -11867,6 +14848,37 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           heading: 'Your Contractor Just Got Acquired. Now What?',
           body: 'Mergers happen, and when your prime gets bought, you can\'t just quietly keep working with the new parent company like nothing changed. Legally, nothing runs through the sub, and now nothing automatically runs through the new owner either, until the paperwork catches up. FAR 42.1200 requires a novation agreement: the government has to formally consent to hand the contract over to the successor company. Skip that step, and technically the new entity performing your contract is a violation, not just an awkward Monday. The process takes 60 to 180 days, and during that whole window the contractor is technically in breach even though everyone is showing up to work like normal. The fix is simple: the second you hear rumors of an acquisition, start the novation process and get legal involved immediately, don\'t wait for it to become official news. Also ask directly about retention plans for key personnel before the deal closes, because acquisitions are exactly when your best people start updating their resumes.',
         },
+        {
+          type: "callout",
+          level: "advanced",
+          heading: "What Senior PMs Do Differently",
+          body: "They build independent visibility into major subcontractor content rather than relying on what the prime chooses to report, and they know what happens contractually when a prime or a key sub is acquired, because a novation nobody planned for can stall a program for months.",
+        },
+        {
+          type: "highlight",
+          body: "One sentence to teach your team: **as the government you have no contractual relationship with the subcontractor, so everything you want from that tier you get through the prime, and confusing insight with oversight is how a program creates an unauthorized commitment it will spend a year unwinding.**",
+        },
+        {
+          type: "related_lesson",
+          heading: "Build on This",
+          refs: [
+            {
+              lessonId: "contracts-6",
+              label: "Modifications, REAs & Claims",
+              sub: "What happens when direction crosses the line",
+            },
+            {
+              lessonId: "smallbiz-3",
+              label: "Subcontracting Plans",
+              sub: "The small business obligations that flow down",
+            },
+            {
+              lessonId: "data-4",
+              label: "Reading IPMR Reports",
+              sub: "Seeing subcontractor performance in the data",
+            },
+          ],
+        },
         ],
       quiz: [
           {
@@ -11983,7 +14995,31 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             ],
             correct: 1,
             explanation: "Proactive subcontractor risk management means building visibility into the prime\'s oversight processes early: requiring sub performance briefings at monthly reviews, establishing leading indicators (technical progress, staffing levels, test results) before schedule slips become apparent, and including sub management quality in past performance evaluations. Waiting for IPMR data means problems are already 60-90 days old by the time you see them."
-          }
+          },
+          {
+            question: "A government PM learns a critical subcontractor is three months behind. What is the correct first action?",
+            options: [
+              "Call the subcontractor's program manager directly",
+              "Raise it with the prime and the contracting officer, because the government's remedy and its relationship both run through the prime",
+              "Issue a cure notice to the sub",
+              "Withhold payment from the sub",
+            ],
+            correct: 1,
+            explanation: "Direct direction to a sub creates privity problems and potential constructive changes. The prime is the accountable party and the correct channel.",
+            id: "q11",
+          },
+          {
+            question: "Why does a prime need government consent to subcontract above the threshold on a cost-type contract?",
+            options: [
+              "To set the subcontractor's fee",
+              "Because the government is reimbursing the cost, so it has an interest in whether the purchasing decision was sound and competitively placed",
+              "To assign the work directly",
+              "Because subcontracts are prohibited otherwise",
+            ],
+            correct: 1,
+            explanation: "On cost reimbursement the government carries the cost risk, so it gets a vote on how that money is committed downward.",
+            id: "q12",
+          },
         ]
       },
       {
@@ -12092,6 +15128,37 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             heading: 'The Day 1 Rule',
             body: 'Build your stakeholder communication plan on Day 1 of your assignment. Not after your first crisis. The political capital you need during a cost or schedule problem is built during the quiet periods, through consistent, honest, proactive communication. PMs who are known to their oversight community as straight shooters who surface problems early get treated very differently during difficult reviews than those who are strangers until something goes wrong.',
           },
+          {
+            type: "callout",
+            level: "advanced",
+            heading: "What Senior PMs Do Differently",
+            body: "They calculate their program's Nunn-McCurdy thresholds in actual dollars on day one and track distance to breach as a standing metric, because the breach is a statutory event with congressional consequences and nobody wants to learn their number during the month they cross it.",
+          },
+          {
+            type: "highlight",
+            body: "One sentence to teach your team: **every one of these mistakes is the same mistake, which is treating a management tool as a reporting obligation, and the schedule, the register and the requirements all rot the moment they exist to satisfy somebody else rather than to run the program.**",
+          },
+          {
+            type: "related_lesson",
+            heading: "Build on This",
+            refs: [
+              {
+                lessonId: "ops-1",
+                label: "Risk Management",
+                sub: "The register done as a management tool",
+              },
+              {
+                lessonId: "ops-2",
+                label: "Stakeholder Management & Communication",
+                sub: "Mistake five, in depth",
+              },
+              {
+                lessonId: "finance-2",
+                label: "Earned Value Management",
+                sub: "Reading the signals correctly",
+              },
+            ],
+          },
         ],
         quiz: [
           {
@@ -12153,6 +15220,90 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             ],
             correct: 1,
             explanation: 'New PMs typically wait until a problem is visible before engaging upward. By which point they have no accumulated political capital from proactive communication. The right approach: consistent, honest, proactive communication during quiet periods builds the trust and credibility that makes oversight bodies supportive rather than adversarial when real problems emerge.',
+          },
+          {
+            question: "An IMS shows every task on schedule, yet the PM senses the program is slipping. What is the most likely explanation?",
+            options: [
+              "The PM is mistaken",
+              "The schedule is not being maintained as a management tool, so tasks are marked complete without objective criteria and the critical path no longer reflects reality",
+              "The contractor is ahead",
+              "EVM data is wrong",
+            ],
+            correct: 1,
+            explanation: "A schedule maintained for reporting drifts toward looking good. Objective completion criteria and a real critical path are what make it predictive.",
+            id: "q6",
+          },
+          {
+            question: "A program's CPI has been 0.91, 0.89 and 0.87 over three periods. What does the trend indicate?",
+            options: [
+              "Performance is recovering",
+              "Cost efficiency is deteriorating steadily, and research on defense programs shows CPI rarely improves materially after the 20 percent completion point",
+              "The data is noisy and should be ignored",
+              "The baseline is wrong",
+            ],
+            correct: 1,
+            explanation: "The direction matters more than the value. A declining CPI past early completion is one of the most reliable predictors of a final overrun.",
+            id: "q7",
+          },
+          {
+            question: "Why is a KPP for which no test procedure can be written a serious problem rather than a documentation gap?",
+            options: [
+              "It delays the contract award",
+              "Because an untestable requirement cannot be verified, so neither side can prove the system met it and the dispute surfaces at the worst possible moment",
+              "It increases the fee",
+              "It requires a waiver",
+            ],
+            correct: 1,
+            explanation: "Requirements are the contractual foundation. One that cannot be measured is a disagreement scheduled for delivery.",
+            id: "q8",
+          },
+          {
+            question: "What distinguishes a significant Nunn-McCurdy breach from a critical one?",
+            options: [
+              "The number of programs affected",
+              "The magnitude of the unit cost growth against the baseline, with critical breaches triggering a certification requirement and potential program termination",
+              "The service branch involved",
+              "Whether Congress is notified",
+            ],
+            correct: 1,
+            explanation: "The thresholds are defined percentages against current and original baselines, and the critical tier carries the certification and termination consequences.",
+            id: "q9",
+          },
+          {
+            question: "A PM builds a stakeholder communication plan after the first major cost overrun becomes public. What did they get wrong?",
+            options: [
+              "Nothing; that is the natural trigger",
+              "Political capital has to be accumulated before it is needed, so relationships built during a crisis arrive too late to help with that crisis",
+              "They should have used email",
+              "They should have delegated it",
+            ],
+            correct: 1,
+            explanation: "Stakeholders decide how to react to bad news based on what they already think of you. That judgment is formed in quiet months.",
+            id: "q10",
+          },
+          {
+            question: "An SPI of 1.0 with a CPI of 0.85 most likely indicates what?",
+            options: [
+              "A healthy program",
+              "Schedule is being held by spending more than planned, which is common and unsustainable, and the schedule will eventually slip once the money runs out",
+              "Schedule data is wrong",
+              "The program is ahead of plan",
+            ],
+            correct: 1,
+            explanation: "Reading the indices together is the whole skill. On-schedule and over-cost usually means schedule is being bought.",
+            id: "q11",
+          },
+          {
+            question: "Why does an SPI near 1.0 become unreliable late in a program?",
+            options: [
+              "It is always unreliable",
+              "Because as work completes, earned value converges on the budget regardless of how late the remaining work is, so SPI drifts toward 1.0 even on a badly delayed program",
+              "Because CPI replaces it",
+              "Because the baseline resets",
+            ],
+            correct: 1,
+            explanation: "This is why experienced PMs read the critical path in the IMS rather than trusting SPI in the back half of a program.",
+            id: "q12",
           },
         ],
       },
@@ -12230,10 +15381,65 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             ],
           },
           {
+            type: "text",
+            level: "intermediate",
+            heading: "What a Maturity Level Actually Buys",
+            body: "A maturity rating is evidence that an organization does the same thing the same way whether or not the person who invented it is still there. At level two, projects are managed: requirements are tracked, commitments are visible, and the project does not depend on one person's memory. At level three, the organization has defined processes that projects tailor rather than reinvent, so a new program starts from something rather than from nothing. Levels four and five add quantitative management and continuous improvement, which matter mostly to organizations running many similar projects. For a customer, the practical value of a level three rating is predictability: a proposal that describes a process the organization actually uses, and a program whose performance does not collapse when a key person leaves.",
+          },
+          {
+            type: "text",
+            level: "intermediate",
+            heading: "Where Maturity Becomes Theater",
+            body: "The failure mode is real and worth naming. An organization pursues a rating for the proposal checkbox, builds a process asset library nobody uses, and trains everyone to say the right words during the appraisal window. The tell is a gap between the documented process and how work is actually done, which shows up as templates filled in retroactively, review meetings held without the artifacts they are supposed to review, and process metrics collected but never used in a decision. This is worse than no rating, because it adds cost without adding capability and it teaches the staff that compliance theater is what the organization rewards. When a customer's program is supported by a highly rated contractor whose program performance is nonetheless erratic, this is usually what is happening.",
+          },
+          {
             type: 'text',
             level: 'advanced',
             heading: 'CMMI Process Area Requirements at ML3',
             body: 'ML3 requires 17+ process areas to be institutionalized with defined, standardized processes. The most relevant to defense program management are: Requirements Management (REQM), Requirements Development (RD), Technical Solution (TS), Configuration Management (CM), Risk Management (RSKM), Project Planning (PP), Project Monitoring and Control (PMC), Supplier Agreement Management (SAM), and Integrated Project Management (IPM). When a program is struggling, correlate the symptoms to the relevant process areas. Then request DCMA review those specific PAs rather than the entire CMMI scope.',
+          },
+          {
+            type: "text",
+            level: "advanced",
+            heading: "Reading a Contractor's Maturity Claim",
+            body: "A maturity rating is granted to an organizational unit at a point in time, not to a company forever, and the scope of that unit is the first question. A level three rating held by a division in another state says little about the team that will run your program. Ask which organizational unit was appraised, when, by whom, and whether the projects sampled resemble yours in size and domain. Then ask the question that actually matters: show me the tailoring record for a project like mine. An organization with genuine process maturity can produce it immediately, because tailoring is a defined activity with a record. An organization with a certificate and little else will offer the process asset library instead, which is the difference between having a process and having a document about one.",
+          },
+          {
+            type: "text",
+            level: "advanced",
+            heading: "Process Maturity Against Speed",
+            body: "The standard objection is that process maturity slows delivery, and applied without judgment it does. The resolution is tailoring, which is a defined part of the model rather than a workaround: a small, low-risk effort is supposed to use a lighter version of the process, and the decision to tailor is itself documented. Organizations that do this well can show you two projects of different size running recognizably the same process at different weights. Organizations that do it badly apply the heavyweight version everywhere and then quietly bypass it under schedule pressure, which produces the worst outcome, cost without discipline. For a government PM evaluating an approach, the useful question is not how mature the contractor is but whether they can describe the tailoring they intend for your program and why it fits your risk.",
+          },
+          {
+            type: "callout",
+            level: "advanced",
+            heading: "What Senior PMs Do Differently",
+            body: "They ask which organizational unit was appraised, when, and whether the sampled projects resemble theirs. They ask to see a tailoring record rather than a process library, because one is evidence of practice and the other is evidence of documentation. And they judge process by whether it changes decisions, not by whether the artifacts exist.",
+          },
+          {
+            type: "highlight",
+            body: "One sentence to teach your team: **a maturity rating is evidence that an organization works the same way whether or not one person is there, so the question worth asking is not the level but whether they can show you how they tailored the process for a program like yours.**",
+          },
+          {
+            type: "related_lesson",
+            heading: "Build on This",
+            refs: [
+              {
+                lessonId: "ops-4",
+                label: "Subcontractor Management",
+                sub: "Judging a partner's actual practice",
+              },
+              {
+                lessonId: "contracts-3",
+                label: "Contract Administration & COR",
+                sub: "Surveillance that produces evidence",
+              },
+              {
+                lessonId: "lifecycle-2",
+                label: "Test and Evaluation",
+                sub: "Where process discipline shows up or does not",
+              },
+            ],
           },
         ],
         quiz: [
@@ -12302,6 +15508,107 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             correct: 2,
             explanation: 'DFARS 252.234-7002 links EVM and CMMI for software-intensive programs, requiring ML3+ or an approved plan to achieve it. This reflects DoD\'s recognition that EVM reliability depends on underlying process maturity.',
           },
+          {
+            question: "What does a level three maturity rating tell a customer, in practical terms?",
+            options: [
+              "The contractor will finish faster",
+              "The organization has defined processes projects tailor rather than reinvent, so performance does not depend on one person",
+              "Costs will be lower",
+              "Quality is guaranteed",
+            ],
+            correct: 1,
+            explanation: "The practical value is predictability and resilience to turnover, not speed or price.",
+            id: "q1",
+          },
+          {
+            question: "What is the clearest sign that a maturity rating is theater?",
+            options: [
+              "The rating is recent",
+              "A gap between the documented process and how work is done: retroactive templates, reviews without artifacts, metrics nobody uses",
+              "The organization is large",
+              "The appraiser was external",
+            ],
+            correct: 1,
+            explanation: "This adds cost without capability and teaches staff that compliance theater is what gets rewarded.",
+            id: "q2",
+          },
+          {
+            question: "A contractor claims a level three rating. What is the first question?",
+            options: [
+              "What was the score",
+              "Which organizational unit was appraised, when, and were the sampled projects like mine",
+              "How much did it cost",
+              "Who was the appraiser's employer",
+            ],
+            correct: 1,
+            explanation: "Ratings belong to an organizational unit at a point in time. A rating held elsewhere says little about the team running your program.",
+            id: "q3",
+          },
+          {
+            question: "What resolves the tension between process maturity and speed?",
+            options: [
+              "Skipping the process under schedule pressure",
+              "Tailoring: a defined, documented decision to run a lighter process for smaller or lower-risk work",
+              "Raising the maturity level",
+              "Adding more reviews",
+            ],
+            correct: 1,
+            explanation: "Tailoring is part of the model. Bypassing the process quietly produces cost without discipline, which is the worst of both.",
+            id: "q4",
+          },
+          {
+            type: "drag_match",
+            question: "Match each maturity level to what it means in practice:",
+            options: [],
+            correct: 0,
+            explanation: "Levels four and five matter most to organizations running many similar projects.",
+            pairs: [
+              {
+                left: "Level 2",
+                right: "Projects are managed; commitments and requirements are tracked",
+              },
+              {
+                left: "Level 3",
+                right: "Organization-wide defined processes that projects tailor",
+              },
+              {
+                left: "Level 4",
+                right: "Quantitative management using process data",
+              },
+              {
+                left: "Level 5",
+                right: "Continuous improvement driven by that data",
+              },
+            ],
+            id: "q5",
+          },
+          {
+            type: "drag_order",
+            question: "Order how to evaluate a contractor's process claim:",
+            options: [],
+            correct: 0,
+            explanation: "Evidence of practice beats evidence of documentation every time.",
+            orderedItems: [
+              "Ask which organizational unit was appraised and when",
+              "Ask whether the sampled projects resemble yours in size and domain",
+              "Ask for the tailoring record from a comparable project",
+              "Ask what process data has changed a decision in the last year",
+              "Judge the claim on practice, not on the certificate",
+            ],
+            id: "q6",
+          },
+          {
+            question: "Your contractor holds a level three rating but program performance is erratic. What is the most likely explanation?",
+            options: [
+              "The rating is fake",
+              "The appraised unit is not the team running your program, or the process is documented rather than practiced",
+              "Level three is meaningless",
+              "The program is too small",
+            ],
+            correct: 1,
+            explanation: "Ratings attach to an organizational unit at a point in time, and a gap between documented and actual practice is the common failure.",
+            id: "q7",
+          },
         ],
       },
       {
@@ -12352,6 +15659,10 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           {
             term: 'Award Fee',
             definition: 'On cost-plus contracts, the performance bonus the government can pay the contractor on top of base costs. It is earned, not guaranteed, based on government ratings across technical performance, cost control, schedule, and management. The PM\'s decisions directly affect how much award fee the company earns.',
+          },
+          {
+            term: "Command of Your Program",
+            definition: "Knowing your cost, schedule, risk and performance numbers and what is driving them before anyone asks. It comes from continuous engagement, not from preparing for the review.",
           },
         ],
         content: [
@@ -12450,6 +15761,33 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             level: 'advanced' as const,
             heading: 'The Longer Game',
             body: 'The PM who masters the transition typically does one thing differently from the ones who plateau: they stop thinking exclusively about their program and start thinking about their portfolio of relationships.\n\nEvery program review is a chance to build trust with leadership. Every problem surfaced early, with a recovery plan already in hand, is a deposit in that trust account. Every crisis managed with composure, clarity, and honest information is a career-defining moment, in the right direction.\n\nThe PMs who advance are not the ones with the cleanest programs. Defense programs are messy by nature. The requirements are hard, the timelines are compressed, the budgets are constrained, and the stakes are real. Clean programs are the exception. The PMs who advance are the ones whose leadership always felt informed. Always felt that problems were under control. Always felt that someone was driving.\n\nThat feeling, that the PM has command of the situation, is what you\'re building. It doesn\'t come from expertise. It comes from consistency: consistent reporting, consistent communication, consistent honesty about where the program stands. Over time, it becomes a reputation. And in this field, reputation is the whole game.',
+          },
+          {
+            type: "callout",
+            level: "advanced",
+            heading: "What Senior PMs Do Differently",
+            body: "They stop thinking exclusively about their own program and start thinking about the portfolio it sits in, because the decisions that determine a program's future are made at a level where somebody is comparing it to three others.",
+          },
+          {
+            type: "related_lesson",
+            heading: "Build on This",
+            refs: [
+              {
+                lessonId: "ops-3",
+                label: "Career Roadmap",
+                sub: "Deciding whether this is the job you want",
+              },
+              {
+                lessonId: "ops-1",
+                label: "Risk Management",
+                sub: "One of the four things you are always managing",
+              },
+              {
+                lessonId: "ops-2",
+                label: "Stakeholder Management & Communication",
+                sub: "The part of the job nobody warns you about",
+              },
+            ],
           },
         ],
         quiz: [
@@ -12556,6 +15894,54 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             ],
             correct: 1,
             explanation: 'Command of a program is not about expertise. It\'s about currency and clarity. The PM who walks into a program review knowing every number, who can answer questions that aren\'t on the slides, and who can say "we saw this coming and here are our options" is demonstrating command. That comes from consistent weekly engagement with cost, schedule, risk, and stakeholder data. Not from deep technical knowledge.',
+          },
+          {
+            question: "A new PM sees a technical problem she knows exactly how to solve from her engineering career. What should she do?",
+            options: [
+              "Solve it herself; it is the fastest path",
+              "Make sure the right person owns it with the resources and the decision authority to solve it, because a PM who does the technical work stops doing the PM work",
+              "Escalate it to the PEO",
+              "Direct the contractor's engineer personally",
+            ],
+            correct: 1,
+            explanation: "The pull back toward the work you were good at is the most common failure mode in the first year, and it leaves the actual PM job undone.",
+            id: "q9",
+          },
+          {
+            question: "What does earned value tell a PM that a budget report cannot?",
+            options: [
+              "How much money is left",
+              "How much of what was planned has actually been accomplished for the money spent, which is the only way to separate underspending from being behind",
+              "When invoices are due",
+              "The contractor's profit",
+            ],
+            correct: 1,
+            explanation: "Spend alone is ambiguous. Under budget can mean efficient or can mean nothing happened, and only earned value distinguishes them.",
+            id: "q10",
+          },
+          {
+            question: "Why does a CPARS rating matter to a contractor PM in a way that internal performance reviews do not?",
+            options: [
+              "It determines this year's bonus",
+              "Because it becomes the government-wide past performance record evaluated in future source selections, long after the program ends",
+              "It is confidential to the program office",
+              "It sets the award fee",
+            ],
+            correct: 1,
+            explanation: "CPARS outlives the contract and follows the company into competitions the PM will never see.",
+            id: "q11",
+          },
+          {
+            question: "A PM on a cost-plus contract notices burn rate is running ahead of plan. What is the right first move?",
+            options: [
+              "Wait for the next monthly report to confirm",
+              "Find out whether the extra spend bought extra progress, because burn ahead of plan with earned value ahead of plan is a different problem from burn ahead with no progress",
+              "Direct the contractor to slow spending",
+              "Request additional funding",
+            ],
+            correct: 1,
+            explanation: "Burn without context is not a signal. Paired with earned value it becomes either a schedule acceleration or the beginning of an overrun.",
+            id: "q12",
           },
         ],
       },
