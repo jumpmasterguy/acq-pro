@@ -84,6 +84,14 @@ def rich(text: str) -> str:
     return re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", out, flags=re.S)
 
 
+def bullet(raw) -> str:
+    """List items across the curriculum use the 'label|||description' convention."""
+    label, sep, desc = str(raw).partition("|||")
+    if sep:
+        return f"<li><strong>{rich(label)}</strong> {rich(desc)}</li>"
+    return f"<li>{rich(raw)}</li>"
+
+
 # ── Content blocks ───────────────────────────────────────────────────────────
 
 def render_block(b: dict) -> str:
@@ -114,24 +122,25 @@ def render_block(b: dict) -> str:
     if t == "list":
         items = []
         for raw in b.get("items", []) or []:
-            label, _, desc = str(raw).partition("|||")
-            if desc:
-                items.append(f"<li><strong>{rich(label)}</strong> {rich(desc)}</li>")
-            else:
-                items.append(f"<li>{rich(label)}</li>")
+            items.append(bullet(raw))
         body = f'<p>{rich(b["body"])}</p>' if b.get("body") else ""
         return f'{head_html}{body}<ul class="bullets">' + "".join(items) + "</ul>"
 
-    if t == "table":
+    if t in ("table", "table_visual"):
         headers = b.get("headers") or []
         rows = b.get("rows") or []
         thead = "".join(f"<th>{esc(h)}</th>" for h in headers)
         tbody = "".join(
             "<tr>" + "".join(f"<td>{rich(c)}</td>" for c in row) + "</tr>" for row in rows
         )
+        note = f'<p class="tnote">{rich(b["note"])}</p>' if b.get("note") else ""
+        if not headers and not rows:
+            # A few older lessons carry an empty visual placeholder immediately
+            # before the real table. Nothing to draw.
+            return head_html if b.get("note") else ""
         return (
             f"{head_html}<table><thead><tr>{thead}</tr></thead>"
-            f"<tbody>{tbody}</tbody></table>"
+            f"<tbody>{tbody}</tbody></table>{note}"
         )
 
     if t == "formula":
@@ -159,17 +168,35 @@ def render_block(b: dict) -> str:
         intro = f'<p>{rich(b["body"])}</p>' if b.get("body") else ""
         rows = []
         for it in b.get("expandableItems", []) or []:
-            inner = "".join(
-                f'<p class="exp-body">{rich(c.get("body", ""))}</p>'
-                for c in (it.get("content") or [])
-            )
+            inner = []
+            for c in (it.get("content") or []):
+                # Older modules nest a heading or title plus a bullet list here;
+                # newer ones just carry a body. Render whatever is present.
+                head = c.get("heading") or c.get("title")
+                if head:
+                    inner.append(f'<div class="exp-sub">{esc(head)}</div>')
+                if c.get("body"):
+                    inner.append(f'<p class="exp-body">{rich(c["body"])}</p>')
+                if c.get("items"):
+                    lis = "".join(bullet(x) for x in c["items"])
+                    inner.append(f'<ul class="bullets">{lis}</ul>')
+                if isinstance(c.get("grid"), list) and c["grid"]:
+                    cells = "".join(
+                        f'<li><strong>{esc(g.get("label", ""))}</strong> '
+                        f'{rich(g.get("value") or g.get("desc") or "")}</li>'
+                        for g in c["grid"] if isinstance(g, dict)
+                    )
+                    inner.append(f'<ul class="bullets">{cells}</ul>')
             badge = (f'<span class="exp-badge">{esc(it["badge"])}</span>'
                      if it.get("badge") else "")
+            sub = (f'<div class="exp-label-sub">{esc(it["sublabel"])}</div>'
+                   if it.get("sublabel") else "")
             rows.append(
                 '<div class="exp">'
                 f'<div class="exp-h">{esc(it.get("label", ""))}{badge}</div>'
+                + sub
                 + (f'<p class="exp-sum">{rich(it["summary"])}</p>' if it.get("summary") else "")
-                + inner + "</div>"
+                + "".join(inner) + "</div>"
             )
         return f'{head_html}{intro}<div class="exps">' + "".join(rows) + "</div>"
 
@@ -183,13 +210,55 @@ def render_block(b: dict) -> str:
             f'{esc(heading or "Build on this")}</div><ul>' + "".join(refs) + "</ul></div>"
         )
 
-    # Any block type this script does not model explicitly (the older modules
-    # use a long tail of bespoke visual blocks) still contributes its text.
-    bits = []
-    if heading:
-        bits.append(head_html)
-    if b.get("body"):
-        bits.append(f'<p>{rich(b["body"])}</p>')
+    if t == "two_col":
+        rows = "".join(
+            f'<tr><td><strong>{esc(r.get("label", ""))}</strong>'
+            + (f'<br><span class="tsub">{esc(r["badge"])}</span>' if r.get("badge") else "")
+            + f'</td><td>{rich(r.get("text", ""))}</td></tr>'
+            for r in (b.get("rows") or [])
+        )
+        return f"{head_html}<table class=\"twocol\"><tbody>{rows}</tbody></table>"
+
+    if t == "lesson_image":
+        cap = b.get("caption") or b.get("alt")
+        return f'<p class="figcap">{esc(cap)}</p>' if cap else ""
+
+    # Everything else is one of the bespoke visual blocks the app renders as a
+    # React component. In print they become their own text: the prose fields
+    # first, then whatever list payload they carry. Without this the PDFs
+    # silently dropped thousands of words that the lessons do contain.
+    bits = [head_html]
+    for key in ("sub", "body", "explanation"):
+        if b.get(key):
+            bits.append(f'<p>{rich(b[key])}</p>')
+
+    LABELS = ("label", "title", "phase", "name", "term", "oldTerm", "newTerm")
+    DESCS = ("desc", "text", "detail", "summary", "meaning", "formula",
+             "sublabel", "note", "value", "content")
+
+    def render_payload(seq) -> str:
+        out = []
+        for entry in seq:
+            if not isinstance(entry, dict):
+                out.append(bullet(entry))
+                continue
+            label = next((entry[k] for k in LABELS if entry.get(k)), "")
+            parts = [str(entry[k]) for k in DESCS if entry.get(k) and not isinstance(entry[k], (list, dict))]
+            line = f"<strong>{esc(label)}</strong> " if label else ""
+            line += rich(" — ".join(parts)) if parts else ""
+            nested = ""
+            for nk in ("steps", "items", "content"):
+                if isinstance(entry.get(nk), list) and entry[nk]:
+                    nested += f'<ul class="bullets">{render_payload(entry[nk])}</ul>'
+            out.append(f"<li>{line}{nested}</li>")
+        return "".join(out)
+
+    for key in ("items", "steps", "phases", "segments", "gauges", "stats"):
+        seq = b.get(key)
+        if isinstance(seq, list) and seq:
+            bits.append(f'<ul class="bullets">{render_payload(seq)}</ul>')
+    if b.get("note") and not b.get("explanation"):
+        bits.append(f'<p class="tnote">{rich(b["note"])}</p>')
     return "".join(bits)
 
 
@@ -203,6 +272,36 @@ def render_content(blocks: list) -> str:
                 out.append(f'<div class="tier"><span>{LEVEL_LABEL[level]}</span></div>')
         out.append(render_block(b))
     return "".join(out)
+
+
+def render_levels(levels: dict) -> tuple[str, list]:
+    """The alternative lesson shape: levels.{novice,intermediate,advanced}, each
+    with its own sections and quiz. One lesson uses it (finance-8) and the
+    generator used to skip it entirely, which is why that lesson printed as
+    three pages when it is in fact the longest in the curriculum."""
+    if not isinstance(levels, dict):
+        return "", []
+    out, quiz = [], []
+    for tier in ("novice", "intermediate", "advanced"):
+        data = levels.get(tier)
+        if not isinstance(data, dict):
+            continue
+        if tier in LEVEL_LABEL:
+            out.append(f'<div class="tier"><span>{LEVEL_LABEL[tier]}</span></div>')
+        for sec in data.get("sections") or []:
+            if sec.get("heading"):
+                out.append(f'<h3 class="sub">{esc(sec["heading"])}</h3>')
+            if sec.get("content"):
+                out.append(f'<p>{rich(sec["content"])}</p>')
+            if sec.get("items"):
+                lis = "".join(bullet(x) for x in sec["items"])
+                out.append(f'<ul class="bullets">{lis}</ul>')
+            for key in ("table", "rows"):
+                if isinstance(sec.get(key), list) and sec[key]:
+                    out.append(render_block({"type": "table", "headers": sec.get("headers") or [],
+                                             "rows": sec[key]}))
+        quiz.extend(data.get("quiz") or [])
+    return "".join(out), quiz
 
 
 # ── Key terms and quiz ───────────────────────────────────────────────────────
@@ -230,9 +329,7 @@ def render_quiz(quiz: list) -> str:
         head = f'<div class="q">{rich(q.get("question", ""))}</div>'
 
         if qt == "drag_order":
-            steps = "".join(
-                f"<li>{rich(s)}</li>" for s in (q.get("orderedItems") or [])
-            )
+            steps = "".join(bullet(s) for s in (q.get("orderedItems") or []))
             body = f'<div class="q-note">Correct order</div><ol class="order">{steps}</ol>'
         elif qt == "drag_match":
             pairs = "".join(
@@ -248,12 +345,16 @@ def render_quiz(quiz: list) -> str:
             opts = []
             correct = q.get("correct")
             for i, opt in enumerate(q.get("options") or []):
+                # Older modules attach a per-option rationale as 'option|||why'.
+                # In print that is worth keeping: it explains each distractor.
+                text, _, why = str(opt).partition("|||")
+                note = f'<div class="optwhy">{rich(why)}</div>' if why.strip() else ""
                 if i == correct:
                     opts.append(
-                        f'<div class="opt ok">&#10003; {LETTERS[i]}. {rich(opt)}</div>'
+                        f'<div class="opt ok">&#10003; {LETTERS[i]}. {rich(text)}</div>{note}'
                     )
                 else:
-                    opts.append(f'<div class="opt">{LETTERS[i]}. {rich(opt)}</div>')
+                    opts.append(f'<div class="opt">{LETTERS[i]}. {rich(text)}</div>{note}')
             body = "".join(opts)
 
         why = (
@@ -297,6 +398,7 @@ def build_html(mod: dict) -> str:
 
     body_parts = []
     for i, l in enumerate(lessons, 1):
+        levels_html, levels_quiz = render_levels(l.get("levels"))
         body_parts.append(
             f'<section class="lesson">'
             f'<div class="eyebrow">{esc(mod["title"]).upper()} &middot; LESSON {i}</div>'
@@ -305,8 +407,9 @@ def build_html(mod: dict) -> str:
             + (f'<div class="lede"><p>{rich(l["description"])}</p></div>'
                if l.get("description") else "")
             + render_content(l.get("content"))
+            + levels_html
             + render_key_terms(l.get("keyTerms"))
-            + render_quiz(l.get("quiz"))
+            + render_quiz((l.get("quiz") or []) + levels_quiz)
             + "</section>"
         )
 
@@ -451,6 +554,13 @@ tbody tr:nth-child(even) {{ background: {PANEL}; }}
 .exp-badge {{ font-family: "Liberation Sans", sans-serif; font-size: 7pt; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase;
   color: {MUTED}; background: {PANEL}; border: 0.5pt solid {RULE}; border-radius: 2pt; padding: 1pt 5pt; margin-left: 6pt; }}
 .exp-sum {{ font-size: 10pt; margin-bottom: 4pt; }}
+.exp-label-sub {{ font-family: "Liberation Sans", sans-serif; font-size: 8.5pt; color: {MUTED}; margin-bottom: 3pt; }}
+.exp-sub {{ font-family: "Liberation Sans", sans-serif; font-size: 9pt; font-weight: bold; color: {MUTED}; margin: 5pt 0 2pt; }}
+.tnote {{ font-size: 9.5pt; color: {MUTED}; font-style: italic; margin: -4pt 0 10pt; }}
+.tsub {{ font-family: "Liberation Sans", sans-serif; font-size: 8pt; color: {LIGHT}; }}
+.figcap {{ font-size: 9.5pt; color: {MUTED}; font-style: italic; margin: 6pt 0 10pt; }}
+table.twocol td {{ vertical-align: top; }}
+table.twocol td:first-child {{ width: 26%; }}
 .exp-body {{ font-size: 10pt; color: {MUTED}; margin-bottom: 3pt; }}
 
 .related {{ background: {PANEL}; border-radius: 3pt; padding: 9pt 12pt; margin: 12pt 0; page-break-inside: avoid; }}
@@ -472,6 +582,7 @@ tbody tr:nth-child(even) {{ background: {PANEL}; }}
 .q {{ font-family: "Liberation Sans", sans-serif; font-size: 10pt; font-weight: bold; color: {BODY}; margin-bottom: 7pt; }}
 .opt {{ font-size: 10pt; padding: 3pt 6pt; margin-bottom: 2pt; }}
 .opt.ok {{ background: {CORRECT_BG}; color: {CORRECT_FG}; font-weight: bold; }}
+.optwhy {{ font-size: 8.5pt; color: {LIGHT}; margin: 0 0 4pt 18pt; }}
 .q-note {{ font-family: "Liberation Sans", sans-serif; font-size: 7.5pt; font-weight: bold; letter-spacing: 0.08em;
   text-transform: uppercase; color: {LIGHT}; margin-bottom: 4pt; }}
 ol.order {{ margin: 0 0 6pt; padding-left: 16pt; }}
