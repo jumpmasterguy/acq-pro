@@ -20,6 +20,7 @@ default serif/sans on most Linux images and are what the originals used).
 from __future__ import annotations
 
 import argparse
+import base64
 import html
 import json
 import os
@@ -371,13 +372,15 @@ def render_quiz(quiz: list) -> str:
 
 # ── Page assembly ────────────────────────────────────────────────────────────
 
-LOGO_SVG = (
-    '<svg viewBox="0 0 48 48" width="44" height="44">'
-    '<path d="M24 8 L36.5 15 L36.5 33 L24 40 L11.5 33 L11.5 15 Z" fill="none" '
-    'stroke="#ffffff" stroke-width="2.2"/>'
-    '<circle cx="24" cy="24" r="5" fill="none" stroke="#ffffff" stroke-width="2.2"/>'
-    "</svg>"
-)
+# The brand icon, embedded as a data URI. WeasyPrint's SVG support mangles the
+# master (its gradients and drop-shadow filter render as stray artefacts), and
+# the mark must never be redrawn by hand, so read the master raster instead.
+# 62px at ~300dpi is ~194px, so the 256px master is the right source.
+_ICON_PNG = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                         "brand", "acqlerate-icon-256.png")
+with open(_ICON_PNG, "rb") as _fh:
+    LOGO_SVG = ('<img alt="" style="width:100%;height:100%;display:block" '
+                'src="data:image/png;base64,' + base64.b64encode(_fh.read()).decode() + '">')
 
 
 def build_html(mod: dict) -> str:
@@ -480,10 +483,7 @@ strong {{ font-weight: bold; }}
   page-break-after: always; position: relative;
 }}
 .cover-inner {{ position: absolute; left: 26mm; right: 26mm; top: 34%; }}
-.logo {{
-  width: 62px; height: 62px; border-radius: 16px; background: {TEAL};
-  padding: 9px 9px 5px 9px; margin-bottom: 16pt;
-}}
+.logo {{ width: 62px; height: 62px; margin-bottom: 16pt; }}
 .brand {{ font-family: "Liberation Sans", sans-serif; font-size: 13pt; letter-spacing: 0.22em; color: {GOLD}; margin-bottom: 26pt; }}
 .cover-mod {{ font-family: "Liberation Sans", sans-serif; font-size: 12pt; letter-spacing: 0.12em; color: {COVER_META}; margin-bottom: 6pt; }}
 .cover-t {{ font-family: "Liberation Sans", sans-serif; font-size: 34pt; font-weight: bold; color: #ffffff; line-height: 1.12; margin: 0 0 14pt; }}

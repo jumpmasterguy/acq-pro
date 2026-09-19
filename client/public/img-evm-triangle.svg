@@ -2,10 +2,76 @@
   <rect width="1300" height="460" fill="#F4F3EF"/>
 
   <g transform="translate(50,40)">
-    <rect x="0" y="0" width="48" height="48" rx="11" fill="#01696F"/>
-    <polygon points="24.0,7.0 38.72,15.5 38.72,32.5 24.0,41.0 9.28,32.5 9.28,15.5" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linejoin="round"/>
-    <polygon points="24.0,14.8 31.97,19.4 31.97,28.6 24.0,33.2 16.03,28.6 16.03,19.4" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linejoin="round"/>
-    <circle cx="24" cy="24" r="3.6" fill="#FFFFFF"/>
+    <svg x="0" y="0" width="48" height="48" viewBox="0 0 1024 1024">
+
+<defs>
+  <linearGradient id="tileBg" x1="0.288" y1="0.045" x2="0.712" y2="0.955">
+    <stop offset="0" stop-color="#0b868c"/>
+    <stop offset="0.47" stop-color="#01696f"/>
+    <stop offset="1" stop-color="#063c46"/>
+  </linearGradient>
+  <radialGradient id="bloom" gradientUnits="userSpaceOnUse"
+    cx="471.04" cy="307.2" r="798.72"
+    gradientTransform="matrix(1 0 0 0.8718 0 39.38)">
+    <stop offset="0" stop-color="#7ecfd6" stop-opacity="0.30"/>
+    <stop offset="0.75" stop-color="#7ecfd6" stop-opacity="0.06"/>
+    <stop offset="1" stop-color="#7ecfd6" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="0.44">
+    <stop offset="0" stop-color="#ffffff" stop-opacity="0.20"/>
+    <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="rim" x1="0" y1="0" x2="0" y2="0.30">
+    <stop offset="0" stop-color="#ffffff" stop-opacity="0.38"/>
+    <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="foot" x1="0" y1="0.62" x2="0" y2="1">
+    <stop offset="0" stop-color="#001418" stop-opacity="0"/>
+    <stop offset="1" stop-color="#001418" stop-opacity="0.40"/>
+  </linearGradient>
+  <clipPath id="tileClip"><rect width="1024" height="1024" rx="229.07" ry="229.07"/></clipPath>
+</defs>
+<g clip-path="url(#tileClip)">
+  <rect width="1024" height="1024" fill="url(#tileBg)"/>
+  <rect width="1024" height="1024" fill="url(#bloom)"/>
+  <rect width="1024" height="1024" fill="url(#sheen)"/>
+  <rect width="1024" height="1024" fill="url(#foot)"/>
+  <rect x="7" y="7" width="1010" height="1010" rx="222.07" ry="222.07"
+        fill="none" stroke="url(#rim)" stroke-width="14"/>
+<svg x="40.96" y="40.96" width="942.08" height="942.08" viewBox="0 0 200 200" overflow="visible">
+<defs>
+<linearGradient id="sgm" x1="0.12" y1="0.02" x2="0.86" y2="0.98">
+<stop offset="0" stop-color="#ffffff"></stop>
+<stop offset="0.34" stop-color="#f6fdfe"></stop>
+<stop offset="0.68" stop-color="#ddf2f5"></stop>
+<stop offset="1" stop-color="#a5d4db"></stop>
+</linearGradient>
+<linearGradient id="slm" x1="0.1" y1="0" x2="0.9" y2="1">
+<stop offset="0" stop-color="#5d9aa2"></stop>
+<stop offset="1" stop-color="#3d7c86"></stop>
+</linearGradient>
+<linearGradient id="shm" x1="0" y1="0" x2="0.75" y2="1">
+<stop offset="0" stop-color="#ffffff" stop-opacity="1"></stop>
+<stop offset="0.46" stop-color="#ffffff" stop-opacity="0.62"></stop>
+<stop offset="1" stop-color="#ffffff" stop-opacity="0.10"></stop>
+</linearGradient>
+<filter id="sdm" x="-35%" y="-35%" width="170%" height="170%">
+<feDropShadow dx="0.6" dy="4.6" stdDeviation="4.2" flood-color="#01262c" flood-opacity="0.52"></feDropShadow>
+</filter>
+</defs>
+<g filter="url(#sdm)">
+<g transform="translate(0.4,0.9)" fill="none" stroke="#023f47" stroke-linejoin="round" stroke-linecap="round" opacity="0.55"><polygon points="192.00,100.00 146.00,179.67 54.00,179.67 8.00,100.00 54.00,20.33 146.00,20.33" stroke-width="15.80"></polygon><polygon points="137.59,121.70 100.00,143.40 62.41,121.70 62.41,78.30 100.00,56.60 137.59,78.30" stroke-width="13.60"></polygon></g>
+<g transform="translate(1.8,2.3)" fill="none" stroke="url(#slm)" stroke-linejoin="round" stroke-linecap="round"><polygon points="192.00,100.00 146.00,179.67 54.00,179.67 8.00,100.00 54.00,20.33 146.00,20.33" stroke-width="13.0"></polygon><polygon points="137.59,121.70 100.00,143.40 62.41,121.70 62.41,78.30 100.00,56.60 137.59,78.30" stroke-width="11.0"></polygon></g>
+<g fill="none" stroke="url(#sgm)" stroke-linejoin="round" stroke-linecap="round"><polygon points="192.00,100.00 146.00,179.67 54.00,179.67 8.00,100.00 54.00,20.33 146.00,20.33" stroke-width="13.0"></polygon><polygon points="137.59,121.70 100.00,143.40 62.41,121.70 62.41,78.30 100.00,56.60 137.59,78.30" stroke-width="11.0"></polygon></g>
+<circle cx="100.4" cy="100.9" r="12.30" fill="#023f47" opacity="0.55"></circle>
+<circle cx="101.8" cy="102.3" r="11.0" fill="url(#slm)"></circle>
+<circle cx="100" cy="100" r="11.0" fill="url(#sgm)"></circle>
+<g transform="translate(-1.1,-1.7)" fill="none" stroke="url(#shm)" stroke-linejoin="round" stroke-linecap="round"><polygon points="192.00,100.00 146.00,179.67 54.00,179.67 8.00,100.00 54.00,20.33 146.00,20.33" stroke-width="4.94"></polygon><polygon points="137.59,121.70 100.00,143.40 62.41,121.70 62.41,78.30 100.00,56.60 137.59,78.30" stroke-width="4.18"></polygon></g>
+<circle cx="96.70" cy="96.04" r="4.84" fill="#ffffff" opacity="0.85"></circle>
+</g>
+</svg>
+</g>
+</svg>
     <text x="62" y="32" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#0D1B2A">Acq<tspan fill="#01696F">lerate</tspan></text>
   </g>
 

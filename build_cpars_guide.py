@@ -1,8 +1,10 @@
-ICON_SVG = '''<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="50,22 71.2,36 71.2,64 50,78 28.8,64 28.8,36" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
-          <polygon points="50,34 63.9,42 63.9,58 50,66 36.1,58 36.1,42" fill="none" stroke="white" stroke-width="5" stroke-linejoin="round" transform="rotate(30,50,50)"/>
-          <circle cx="50" cy="50" r="5" fill="white"/>
-        </svg>'''
+# The brand icon as a self-contained data URI. These guides are rendered from a
+# standalone HTML file, so an absolute /acqlerate-icon.svg URL would not resolve;
+# and the mark must never be redrawn by hand here — read the master raster.
+import base64 as _b64, pathlib as _pl
+_ICON_PNG = _pl.Path(__file__).parent / "brand" / "acqlerate-icon-256.png"
+ICON_SVG = ('<img alt="" style="width:100%;height:100%;display:block;border-radius:inherit" src="data:image/png;base64,'
+            + _b64.b64encode(_ICON_PNG.read_bytes()).decode() + '">')
 
 def header(page_num, title="CPARS Playbook"):
     return f'''<div class="header-bar">
