@@ -1276,7 +1276,7 @@ export async function sendReferralRewardEmail(to: string, username: string): Pro
 <body style="margin:0;padding:0;background:#060f1e;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
   <div style="max-width:560px;margin:0 auto;padding:40px 20px;">
     <div style="margin-bottom:28px;">
-      <span style="color:#fff;font-weight:800;font-size:1.1rem;">Acql<span style="color:#4FC3CB">erate</span></span>
+      <span style="color:#fff;font-weight:800;font-size:1.1rem;">Acq<span style="color:#4FC3CB">lerate</span></span>
     </div>
     <div style="background:#0d1a2e;border:1px solid #1e2f4a;border-radius:16px;padding:36px;margin-bottom:24px;">
       <div style="text-align:center;margin-bottom:24px;">
