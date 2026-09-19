@@ -35,39 +35,18 @@ export function AcqlerateLogo({
       style={{ gap }}
       aria-label="Acqlerate"
     >
-      {/* Icon mark */}
-      <svg
+      {/* Icon mark — renders the shipped brand asset rather than a hand-drawn
+          copy, so the sidebar mark can never drift from the favicon / app icon.
+          Decorative: the wrapper already carries aria-label="Acqlerate". */}
+      <img
+        src="/acqlerate-icon.svg"
         width={iconSize}
         height={iconSize}
-        viewBox="0 0 100 100"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
+        alt=""
         aria-hidden="true"
-        style={{ flexShrink: 0 }}
-      >
-        <rect width="100" height="100" rx="22" fill="#01696f" />
-        <g transform="translate(50,50)">
-          {/* Outer hexagon */}
-          <polygon
-            points="0,-28 24.2,-14 24.2,14 0,28 -24.2,14 -24.2,-14"
-            fill="none"
-            stroke="white"
-            strokeWidth="3.5"
-            strokeLinejoin="round"
-          />
-          {/* Inner rotated hexagon */}
-          <polygon
-            points="0,-16 13.9,-8 13.9,8 0,16 -13.9,8 -13.9,-8"
-            fill="none"
-            stroke="white"
-            strokeWidth="2.5"
-            strokeLinejoin="round"
-            transform="rotate(30)"
-          />
-          {/* Center dot */}
-          <circle cx="0" cy="0" r="3.5" fill="white" />
-        </g>
-      </svg>
+        draggable={false}
+        style={{ flexShrink: 0, display: "block" }}
+      />
 
       {/* Wordmark */}
       {showWordmark && (

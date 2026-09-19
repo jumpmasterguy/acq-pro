@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Matches the brand tile gradient (155deg #0b868c -> #01696f -> #063c46).
+     The flat @color/ic_launcher_background is kept as a fallback. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient
+        android:angle="315"
+        android:startColor="#0B868C"
+        android:centerColor="#01696F"
+        android:endColor="#063C46"
+        android:type="linear" />
+</shape>
