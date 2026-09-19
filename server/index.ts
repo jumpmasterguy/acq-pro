@@ -227,6 +227,8 @@ app.use((req, res, next) => {
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS xp INTEGER NOT NULL DEFAULT 0`,
         // Google OAuth column (nullable, unique)
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id TEXT`,
+        // Sign in with Apple column (nullable, unique)
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS apple_id TEXT`,
         // Make password_hash nullable for Google OAuth users
         `ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL`,
         // Onboarding / learning path profile
@@ -317,6 +319,9 @@ app.use((req, res, next) => {
       // Add unique index on google_id if not already present
       try {
         await schemaPool.query(`CREATE UNIQUE INDEX IF NOT EXISTS users_google_id_idx ON users (google_id) WHERE google_id IS NOT NULL`);
+      } catch (e: any) { /* index already exists */ }
+      try {
+        await schemaPool.query(`CREATE UNIQUE INDEX IF NOT EXISTS users_apple_id_idx ON users (apple_id) WHERE apple_id IS NOT NULL`);
       } catch (e: any) { /* index already exists */ }
       await schemaPool.end();
       log("Analytics + Google OAuth schema columns ensured", "db");

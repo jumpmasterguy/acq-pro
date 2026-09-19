@@ -18,6 +18,10 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   passwordHash: text("password_hash"),  // null for Google OAuth users
   googleId: text("google_id").unique(),  // null for local-auth users
+  // Apple's stable per-app user id (the identity token's `sub`). Null unless
+  // they signed in with Apple. Separate from googleId on purpose: one person
+  // can arrive by both routes and we link rather than duplicate.
+  appleId: text("apple_id").unique(),
   // Stripe
   stripeCustomerId: text("stripe_customer_id"),
   subscriptionStatus: text("subscription_status").notNull().default("free"), // 'free' | 'trialing' | 'active' | 'lifetime'
@@ -95,8 +99,17 @@ export const insertGoogleUserSchema = createInsertSchema(users).pick({
   lastName: true,
 });
 
+export const insertAppleUserSchema = createInsertSchema(users).pick({
+  username: true,
+  email: true,
+  appleId: true,
+  firstName: true,
+  lastName: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type InsertGoogleUser = z.infer<typeof insertGoogleUserSchema>;
+export type InsertAppleUser = z.infer<typeof insertAppleUserSchema>;
 export type User = typeof users.$inferSelect;
 
 // Registration schema (used in auth routes) — collects First/Last Name

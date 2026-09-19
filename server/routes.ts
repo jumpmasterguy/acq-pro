@@ -8,6 +8,7 @@ import fs from "fs";
 import { storage, getDisplayStreak } from "./storage";
 import { excludeInternalAccounts } from "./internalAccounts";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
+import { verifyAppleIdentityToken } from "./appleAuth";
 import { registerSchema, loginSchema, userProfileSchema, updateNameSchema } from "@shared/schema";
 import { hasPaidPlan, hasFullAccess } from "@shared/access";
 import { MODULE_CLPS } from "@shared/moduleClps";
@@ -380,6 +381,101 @@ export async function registerRoutes(
         return res.json({ message: "Account deleted" });
       });
     });
+  });
+
+  // ─── Sign in with Apple (native) ─────────────────────────────────────
+  //
+  // The app does the sign-in itself and posts us the identity token Apple
+  // issued. Unlike the Google flow there is no redirect, so nothing leaves the
+  // app and the session cookie lands in the app's own store.
+  //
+  // givenName/familyName are sent ONLY on a user's very first Apple sign-in.
+  // Apple never sends them again, so they are used when creating the account
+  // and ignored afterwards.
+  app.post("/api/auth/apple", async (req: Request, res: Response) => {
+    const identityToken = String(req.body?.identityToken ?? "");
+    if (!identityToken) return res.status(400).json({ message: "Missing identity token" });
+
+    let identity;
+    try {
+      identity = await verifyAppleIdentityToken(identityToken);
+    } catch (err: any) {
+      // Deliberately vague to the client: a forged, replayed or expired token
+      // all read the same from outside.
+      console.warn("[apple-auth] token rejected:", err.message);
+      return res.status(401).json({ message: "Apple sign-in could not be verified" });
+    }
+
+    try {
+      const givenName = String(req.body?.givenName ?? "").trim().slice(0, 50);
+      const familyName = String(req.body?.familyName ?? "").trim().slice(0, 50);
+      // Apple guarantees an email on first sign-in but not on later ones, and
+      // a user who revoked email sharing can come back with none at all. The
+      // apple_id is the identity; the address is only a convenience.
+      const email = identity.email ?? `${identity.appleId}@privaterelay.appleid.com`;
+      const displayName = [givenName, familyName].filter(Boolean).join(" ")
+        || email.split("@")[0];
+
+      const existing = await storage.getUserByAppleId(identity.appleId);
+      const user = await storage.upsertAppleUser({
+        appleId: identity.appleId,
+        email,
+        username: displayName,
+        firstName: givenName || null,
+        lastName: familyName || null,
+      } as any);
+
+      req.login(toPassportUser(user), async (loginErr) => {
+        if (loginErr) {
+          console.error("[apple-auth] req.login error:", loginErr);
+          return res.status(500).json({ message: "Session error" });
+        }
+        req.session.loginAt = new Date().toISOString();
+        try {
+          const current = await storage.getUser(user.id);
+          if (current) {
+            const isNewUser = (current.loginCount ?? 0) === 0;
+            await storage.updateUserAnalytics(user.id, {
+              lastLoginAt: new Date().toISOString(),
+              lastActiveAt: new Date().toISOString(),
+              loginCount: (current.loginCount ?? 0) + 1,
+            });
+            if (isNewUser && !existing) {
+              sendAdminNotification(current.email, current.username, 'apple').catch(() => {});
+            }
+          }
+        } catch (e) {
+          console.error('[analytics] apple login tracking error:', e);
+        }
+        if (identity.isPrivateEmail) {
+          // Worth knowing in the logs: mail to this address only lands if the
+          // sending domains are registered under Sign in with Apple for Email
+          // Communication in the developer account.
+          console.log(`[apple-auth] user ${user.id} is using a private relay address`);
+        }
+        return res.json({
+          id: user.id,
+          username: user.username,
+          firstName: (user as any).firstName ?? null,
+          lastName: (user as any).lastName ?? null,
+          email: user.email,
+          subscriptionStatus: user.subscriptionStatus,
+          trialEndsAt: (user as any).trialEndsAt ?? null,
+          completedLessons: user.completedLessons ?? [],
+          quizScores: user.quizScores ?? {},
+          isAdmin: isAdmin(req),
+          moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
+          moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
+          userProfile: (user as any).userProfile ?? null,
+          currentStreak: getDisplayStreak((user as any).currentStreak, (user as any).lastStreakDate),
+          longestStreak: (user as any).longestStreak ?? 0,
+          lastChallengeDate: (user as any).lastChallengeDate ?? null,
+        });
+      });
+    } catch (err: any) {
+      console.error("[apple-auth] sign-in failed:", err.message);
+      return res.status(500).json({ message: "Sign-in failed. Please try again." });
+    }
   });
 
   // ─── Password reset / set first password ─────────────────────────────

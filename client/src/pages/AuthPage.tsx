@@ -11,7 +11,18 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest, API_BASE } from "@/lib/queryClient";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { isNativeApp } from "@/lib/platform";
+import { isNativeApp, getPlatform } from "@/lib/platform";
+
+// Apple's wordmark for the Sign in with Apple button. Apple's Human Interface
+// Guidelines require their own mark and one of their approved labels, at their
+// corner radius and contrast — a hand-rolled button is a review finding.
+function AppleIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M17.05 12.53c-.02-2.2 1.8-3.26 1.88-3.31-1.02-1.5-2.61-1.71-3.18-1.73-1.35-.14-2.64.8-3.33.8-.69 0-1.75-.78-2.87-.76-1.48.02-2.84.86-3.6 2.18-1.53 2.66-.39 6.6 1.1 8.76.73 1.06 1.6 2.25 2.75 2.2 1.1-.04 1.52-.71 2.85-.71 1.33 0 1.71.71 2.87.69 1.19-.02 1.94-1.08 2.66-2.14.84-1.23 1.19-2.42 1.21-2.48-.03-.01-2.32-.89-2.34-3.5zM14.9 5.2c.61-.74 1.02-1.77.91-2.8-.88.04-1.94.59-2.57 1.32-.56.65-1.05 1.7-.92 2.7.98.08 1.98-.5 2.58-1.22z"/>
+    </svg>
+  );
+}
 
 // Official Google "G" SVG icon
 function GoogleIcon() {
@@ -171,6 +182,45 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
   const handleGoogleSignIn = () => {
     const base = API_BASE || "";
     window.location.href = `${base}/api/auth/google`;
+  };
+
+  // Sign in with Apple. Native only: iOS presents the sheet itself, so nothing
+  // leaves the app and the session cookie lands in the app's own store — the
+  // thing that made Google unusable here.
+  //
+  // givenName/familyName arrive ONLY on a user's first ever Apple sign-in.
+  // They go straight to the server on this call because there is no second
+  // chance to collect them.
+  const handleAppleSignIn = async () => {
+    setLoading(true);
+    try {
+      const { SignInWithApple } = await import("@capacitor-community/apple-sign-in");
+      const result = await SignInWithApple.authorize({
+        // Unused by the native sheet (it authenticates against the app's own
+        // bundle id) but required by the plugin's type.
+        clientId: "com.acqlerate.app",
+        redirectURI: "https://acqlerate.com/api/auth/apple",
+        scopes: "email name",
+      });
+      const r = result.response;
+      if (!r?.identityToken) throw new Error("Apple didn't return a sign-in token.");
+
+      const res = await apiRequest("POST", "/api/auth/apple", {
+        identityToken: r.identityToken,
+        givenName: r.givenName ?? "",
+        familyName: r.familyName ?? "",
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || "Apple sign-in failed.");
+      onAuthenticated(data);
+    } catch (err: any) {
+      // Cancelling the sheet throws too; that isn't an error worth shouting about.
+      const msg = String(err?.message ?? "");
+      if (!/cancel/i.test(msg) && err?.code !== "1001") {
+        toast({ title: "Apple sign-in failed", description: msg || "Please try again.", variant: "destructive" });
+      }
+    }
+    setLoading(false);
   };
 
   const loginForm = useForm<LoginValues>({
@@ -665,6 +715,30 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
                   session cookie in Safari's jar where the app can't see it. App
                   users sign in with email and password; "Forgot password" also
                   covers Google-created accounts, which have no password yet. */}
+              {getPlatform() === 'ios' && (
+                <>
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t border-border" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">or</span>
+                    </div>
+                  </div>
+
+                  <Button
+                    type="button"
+                    className="w-full h-11 gap-2.5 font-medium bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
+                    onClick={handleAppleSignIn}
+                    disabled={loading}
+                    data-testid="btn-apple-register"
+                  >
+                    <AppleIcon />
+                    Sign up with Apple
+                  </Button>
+                </>
+              )}
+
               {!isNativeApp() && (
                 <>
                   {/* Divider */}
@@ -780,6 +854,30 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
                   session cookie in Safari's jar where the app can't see it. App
                   users sign in with email and password; "Forgot password" also
                   covers Google-created accounts, which have no password yet. */}
+              {getPlatform() === 'ios' && (
+                <>
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t border-border" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">or</span>
+                    </div>
+                  </div>
+
+                  <Button
+                    type="button"
+                    className="w-full h-11 gap-2.5 font-medium bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
+                    onClick={handleAppleSignIn}
+                    disabled={loading}
+                    data-testid="btn-apple-login"
+                  >
+                    <AppleIcon />
+                    Sign in with Apple
+                  </Button>
+                </>
+              )}
+
               {!isNativeApp() && (
                 <>
                   {/* Divider */}

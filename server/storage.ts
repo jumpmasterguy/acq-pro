@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type InsertGoogleUser, users, emailLeads, type Lead, passwordResetTokens } from "@shared/schema";
+import { type User, type InsertUser, type InsertGoogleUser, type InsertAppleUser, users, emailLeads, type Lead, passwordResetTokens } from "@shared/schema";
 import { computeTrialEndsAt, hasFullAccess } from "@shared/access";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/node-postgres";
@@ -41,11 +41,13 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   getUserByGoogleId(googleId: string): Promise<User | undefined>;
+  getUserByAppleId(appleId: string): Promise<User | undefined>;
   getUserByStripeCustomerId(customerId: string): Promise<User | undefined>;
   getAllUsers(): Promise<User[]>;
   deleteUser(userId: string): Promise<void>;
   createUser(user: InsertUser): Promise<User>;
   upsertGoogleUser(data: InsertGoogleUser & { avatarUrl?: string }): Promise<User>;
+  upsertAppleUser(data: InsertAppleUser): Promise<User>;
   // My Account — editing name post-signup. Recomputes username to match
   // (see shared/schema.ts) so every existing reader of username stays correct.
   updateUserName(userId: string, firstName: string, lastName: string): Promise<User | undefined>;
@@ -150,6 +152,11 @@ export class DrizzleStorage implements IStorage {
 
   async getUserByGoogleId(googleId: string): Promise<User | undefined> {
     const result = await this.db.select().from(users).where(eq(users.googleId, googleId)).limit(1);
+    return result[0];
+  }
+
+  async getUserByAppleId(appleId: string): Promise<User | undefined> {
+    const result = await this.db.select().from(users).where(eq(users.appleId, appleId)).limit(1);
     return result[0];
   }
 
@@ -263,6 +270,57 @@ export class DrizzleStorage implements IStorage {
       .onConflictDoUpdate({
         target: users.username,
         set: { googleId: data.googleId },
+      })
+      .returning();
+    return result[0];
+  }
+
+  // Mirrors upsertGoogleUser. The name fields are only ever populated on a
+  // user's FIRST Apple sign-in — Apple sends them once and never again — so a
+  // returning user hits the appleId branch above and we must not overwrite
+  // what we already stored with the nulls a later sign-in carries.
+  async upsertAppleUser(data: InsertAppleUser): Promise<User> {
+    const byAppleId = await this.getUserByAppleId(data.appleId!);
+    if (byAppleId) return byAppleId;
+
+    // Same person arriving by a second route: link rather than duplicate.
+    // Note this cannot match when the user chose Hide My Email, because the
+    // relay address differs from the one on their existing account.
+    if (data.email) {
+      const byEmail = await this.getUserByEmail(data.email);
+      if (byEmail) {
+        const linked = await this.db
+          .update(users)
+          .set({ appleId: data.appleId })
+          .where(eq(users.id, byEmail.id))
+          .returning();
+        return linked[0];
+      }
+    }
+
+    const id = randomUUID();
+    const result = await this.db
+      .insert(users)
+      .values({
+        id,
+        username: data.username,
+        firstName: (data as any).firstName ?? null,
+        lastName: (data as any).lastName ?? null,
+        email: data.email,
+        appleId: data.appleId,
+        passwordHash: null,
+        stripeCustomerId: null,
+        subscriptionStatus: "trialing",
+        trialEndsAt: computeTrialEndsAt(),
+        subscriptionId: null,
+        completedLessons: [],
+        quizScores: {},
+        moduleSkillLevels: {},
+        moduleAssessmentScores: {},
+      })
+      .onConflictDoUpdate({
+        target: users.username,
+        set: { appleId: data.appleId },
       })
       .returning();
     return result[0];
@@ -735,6 +793,10 @@ export class MemStorage implements IStorage {
     return Array.from(this.users.values()).find((u) => u.googleId === googleId);
   }
 
+  async getUserByAppleId(appleId: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find((u) => u.appleId === appleId);
+  }
+
   async getUserByStripeCustomerId(customerId: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find((u) => u.stripeCustomerId === customerId);
   }
@@ -764,6 +826,46 @@ export class MemStorage implements IStorage {
       lastName: (data as any).lastName ?? null,
       email: data.email,
       googleId: data.googleId ?? null,
+      passwordHash: null,
+      stripeCustomerId: null,
+      subscriptionStatus: "trialing",
+      trialEndsAt: computeTrialEndsAt(),
+      subscriptionId: null,
+      completedLessons: [],
+      quizScores: {},
+      moduleSkillLevels: {},
+      moduleAssessmentScores: {},
+      lastLoginAt: null,
+      lastActiveAt: null,
+      loginCount: 0,
+      totalMinutesActive: 0,
+      loginHistory: [],
+      xp: 0,
+    } as any;
+    this.users.set(id, user);
+    return user;
+  }
+
+  async upsertAppleUser(data: InsertAppleUser): Promise<User> {
+    const byAppleId = await this.getUserByAppleId(data.appleId!);
+    if (byAppleId) return byAppleId;
+    if (data.email) {
+      const byEmail = await this.getUserByEmail(data.email);
+      if (byEmail) {
+        const updated = { ...byEmail, appleId: data.appleId ?? null };
+        this.users.set(byEmail.id, updated);
+        return updated;
+      }
+    }
+    const id = randomUUID();
+    const user: User = {
+      id,
+      username: data.username,
+      firstName: (data as any).firstName ?? null,
+      lastName: (data as any).lastName ?? null,
+      email: data.email,
+      appleId: data.appleId ?? null,
+      googleId: null,
       passwordHash: null,
       stripeCustomerId: null,
       subscriptionStatus: "trialing",

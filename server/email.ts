@@ -755,12 +755,14 @@ export async function sendOpsAlertEmail(subject: string, lines: string[]): Promi
 export async function sendAdminNotification(
   newUserEmail: string,
   newUserName: string,
-  method: 'email_password' | 'google'
+  method: 'email_password' | 'google' | 'apple'
 ): Promise<void> {
   const adminEmail = process.env.ADMIN_EMAILS || 'lucas.l.cruz.es@gmail.com';
   if (!resend) { console.log('[email] RESEND_API_KEY not set — skipping admin notification'); return; }
 
-  const methodLabel = method === 'google' ? 'Google OAuth' : 'Email / Password';
+  const methodLabel = method === 'google' ? 'Google OAuth'
+    : method === 'apple' ? 'Sign in with Apple'
+    : 'Email / Password';
   const now = new Date().toLocaleString('en-US', {
     timeZone: 'America/New_York',
     dateStyle: 'medium',
