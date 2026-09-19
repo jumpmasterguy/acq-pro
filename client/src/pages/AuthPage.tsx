@@ -554,6 +554,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
                   <Input
                     id="reg-first-name"
                     placeholder="Jane"
+                    autoComplete="given-name"
                     data-testid="input-first-name"
                     {...registerForm.register("firstName")}
                     className={registerForm.formState.errors.firstName ? "border-destructive" : ""}
@@ -567,6 +568,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
                   <Input
                     id="reg-last-name"
                     placeholder="Smith"
+                    autoComplete="family-name"
                     data-testid="input-last-name"
                     {...registerForm.register("lastName")}
                     className={registerForm.formState.errors.lastName ? "border-destructive" : ""}
@@ -583,6 +585,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
                   id="reg-email"
                   type="email"
                   placeholder="jane@example.com"
+                  autoComplete="email"
                   data-testid="input-email-register"
                   {...registerForm.register("email")}
                   className={registerForm.formState.errors.email ? "border-destructive" : ""}
@@ -599,6 +602,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
                     id="reg-password"
                     type={showPassword ? "text" : "password"}
                     placeholder="At least 8 characters"
+                    autoComplete="new-password"
                     data-testid="input-password-register"
                     {...registerForm.register("password")}
                     className={cn("pr-10", registerForm.formState.errors.password ? "border-destructive" : "")}
@@ -624,6 +628,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
                     id="reg-confirm"
                     type={showConfirm ? "text" : "password"}
                     placeholder="Repeat your password"
+                    autoComplete="new-password"
                     data-testid="input-confirm-password"
                     {...registerForm.register("confirmPassword")}
                     className={cn("pr-10", registerForm.formState.errors.confirmPassword ? "border-destructive" : "")}
@@ -712,6 +717,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
                   id="login-email"
                   type="email"
                   placeholder="jane@example.com"
+                  autoComplete="email"
                   data-testid="input-email-login"
                   {...loginForm.register("email")}
                   className={loginForm.formState.errors.email ? "border-destructive" : ""}
@@ -728,6 +734,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
                     id="login-password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Your password"
+                    autoComplete="current-password"
                     data-testid="input-password-login"
                     {...loginForm.register("password")}
                     className={cn("pr-10", loginForm.formState.errors.password ? "border-destructive" : "")}
