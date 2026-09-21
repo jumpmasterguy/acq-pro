@@ -6,7 +6,7 @@
 import type { ReactNode } from 'react';
 import { Zap } from 'lucide-react';
 import { modules } from '@/lib/curriculum';
-import { getModuleTheme } from '@/lib/moduleTheme';
+import { getModuleTheme, getModuleFamilyTheme } from '@/lib/moduleTheme';
 import { getModuleProgress } from '@/lib/progress';
 import { moduleClps } from '@shared/moduleClps';
 import { SkillLevelPill } from './ModulePieces';
@@ -130,7 +130,7 @@ export function ModuleStanding({
     <>
       <div className="flex flex-col gap-3">
         {modules.map((mod, i) => {
-          const theme = getModuleTheme(mod.color);
+          const theme = getModuleFamilyTheme(mod.id);
           const pct = getModuleProgress(mod.id, mod.lessons.map(l => l.id), completedLessons);
           return (
             <div key={mod.id} className="flex items-center gap-3">

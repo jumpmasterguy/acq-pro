@@ -10,7 +10,7 @@ import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calcul
 import { hasFullAccess, hasPaidPlan, trialDaysRemaining } from "@shared/access";
 import { isNativeApp, getPlatform } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
-import { getModuleTheme } from "@/lib/moduleTheme";
+import { getModuleTheme, getModuleFamilyTheme, getModuleFamily, type ModuleFamily } from "@/lib/moduleTheme";
 import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator, Flame } from "lucide-react";
 import { SIDEBAR_RESOURCES } from "@/lib/resources";
 import { FAR_TRANSLATOR, TOOLS_DIRECTORY } from "@/lib/toolsDirectory";
@@ -84,6 +84,15 @@ import CostTaskOrdersPage from "@/pages/cost/CostTaskOrdersPage";
 import CostTaskOrderDetailPage from "@/pages/cost/CostTaskOrderDetailPage";
 import { ModuleAssessment } from "@/components/ModuleAssessment";
 import OnboardingFlow from "@/components/OnboardingFlow";
+
+/** Sidebar accent classes per subject family. Static strings for Tailwind's JIT. */
+const FAMILY_SIDEBAR: Record<ModuleFamily, { dot: string; lessonHover: string; activeLesson: string; activeLessonText: string }> = {
+  foundations: { dot: 'bg-[#3D8FD1]', lessonHover: 'hover:bg-[#3D8FD1]/10', activeLesson: 'bg-[#3D8FD1]/15', activeLessonText: 'text-[#4A9AE0]' },
+  money:       { dot: 'bg-[#2E8B57]', lessonHover: 'hover:bg-[#2E8B57]/10', activeLesson: 'bg-[#2E8B57]/15', activeLessonText: 'text-[#41A56B]' },
+  contracts:   { dot: 'bg-[#5E3596]', lessonHover: 'hover:bg-[#5E3596]/10', activeLesson: 'bg-[#5E3596]/15', activeLessonText: 'text-[#8E63D6]' },
+  winning:     { dot: 'bg-[#D1571A]', lessonHover: 'hover:bg-[#D1571A]/10', activeLesson: 'bg-[#D1571A]/15', activeLessonText: 'text-[#DC7129]' },
+  program:     { dot: 'bg-[#B0327A]', lessonHover: 'hover:bg-[#B0327A]/10', activeLesson: 'bg-[#B0327A]/15', activeLessonText: 'text-[#D2519A]' },
+};
 import { apiRequest } from "@/lib/queryClient";
 
 // View types
@@ -755,7 +764,7 @@ function AppContent() {
   const lessonModuleHex = (() => {
     if (view.type !== 'lesson') return 'var(--acq-teal)';
     const parent = modules.find(m => m.lessons.some(l => l.id === (view as any).lessonId));
-    return parent ? getModuleTheme(parent.color).mobileHex : 'var(--acq-teal)';
+    return parent ? getModuleFamilyTheme(parent.id).mobileHex : 'var(--acq-teal)';
   })();
 
   // Drives the scroll-to-top reset on navigation.
@@ -1097,16 +1106,11 @@ function AppContent() {
               });
             };
 
-            // Module accent colors
-            const moduleColors: Record<string, { accent: string; dot: string; lessonHover: string; activeLesson: string; activeLessonText: string }> = {
-              foundations: { accent: '#3b82f6', dot: 'bg-blue-500',    lessonHover: 'hover:bg-blue-500/10',   activeLesson: 'bg-blue-500/15',   activeLessonText: 'text-blue-400' },
-              finance:     { accent: '#f59e0b', dot: 'bg-amber-400',   lessonHover: 'hover:bg-amber-400/10',  activeLesson: 'bg-amber-400/15',  activeLessonText: 'text-amber-400' },
-              contracts:   { accent: '#6366f1', dot: 'bg-indigo-400',  lessonHover: 'hover:bg-indigo-400/10', activeLesson: 'bg-indigo-400/15', activeLessonText: 'text-indigo-400' },
-              data:        { accent: '#14b8a6', dot: 'bg-teal-400',    lessonHover: 'hover:bg-teal-400/10',   activeLesson: 'bg-teal-400/15',   activeLessonText: 'text-teal-400' },
-              capture:     { accent: '#f97316', dot: 'bg-orange-400',  lessonHover: 'hover:bg-orange-400/10', activeLesson: 'bg-orange-400/15', activeLessonText: 'text-orange-400' },
-              operations:  { accent: '#8b5cf6', dot: 'bg-violet-400',  lessonHover: 'hover:bg-violet-400/10', activeLesson: 'bg-violet-400/15', activeLessonText: 'text-violet-400' },
-            };
-            const mc = moduleColors[mod.id] ?? moduleColors.foundations;
+            // Module accent comes from the subject family, so all 14 modules are
+            // covered and the sidebar agrees with every other surface. Classes are
+            // written out per family because Tailwind cannot build a class from a
+            // runtime string.
+            const mc = { accent: getModuleFamilyTheme(mod.id).hex, ...FAMILY_SIDEBAR[getModuleFamily(mod.id)] };
 
             return (
               <div key={mod.id}>

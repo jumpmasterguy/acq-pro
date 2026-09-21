@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { modules, getTotalLessons, getModuleTotalMinutes, formatDuration, parseDuration } from "@/lib/curriculum";
-import { getModuleTheme } from "@/lib/moduleTheme";
+import { getModuleTheme, getModuleFamilyTheme } from "@/lib/moduleTheme";
 import { getModuleProgress, getLevel, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
 import type { UserProgress } from "@/lib/progress";
 import type { UserProfile } from "@/pages/AuthPage";
@@ -273,7 +273,7 @@ function ModuleCard({
   const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
   const lessonIds = mod.lessons.map(l => l.id);
   const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
-  const theme = getModuleTheme(mod.color);
+  const theme = getModuleFamilyTheme(mod.id);
   const c = { border: theme.border, accent: theme.text, check: theme.text, progress: theme.progressBar, headerGrad: theme.headerGrad };
 
   const totalMins = getModuleTotalMinutes(mod.id);
@@ -766,11 +766,8 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
                   const isAccessible = FREE_MODULES.includes(result.moduleId) || progress.isPremium;
                   const isPreview = FREE_PREVIEW_LESSONS.includes(result.lessonId);
                   const canAccess = isAccessible || isPreview;
-                  const moduleColors: Record<string, string> = {
-                    foundations: '#3b82f6', finance: '#f59e0b', contracts: '#6366f1',
-                    data: '#14b8a6', capture: '#f97316', operations: '#8b5cf6',
-                  };
-                  const accentColor = moduleColors[result.moduleId] ?? '#01696f';
+                  // Family colour, so all 14 modules are covered rather than 6.
+                  const accentColor = getModuleFamilyTheme(result.moduleId).hex;
                   // Highlight matching terms
                   const matchedTerms = result.keyTerms.filter(t =>
                     t.toLowerCase().includes(searchQuery.toLowerCase())

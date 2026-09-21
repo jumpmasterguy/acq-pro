@@ -9,7 +9,7 @@ import { isNativeApp } from "@/lib/platform";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FREE_MODULES } from "@/lib/progress";
-import { getModuleTheme, moduleGradient } from "@/lib/moduleTheme";
+import { getModuleTheme, moduleGradient, getModuleFamilyTheme } from "@/lib/moduleTheme";
 import { formatClps, moduleClps } from "@shared/moduleClps";
 
 interface UpgradePageProps {
@@ -255,7 +255,7 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
           </h2>
           <div className="flex flex-col gap-2">
             {lockedModules.map(mod => {
-              const theme = getModuleTheme(mod.color);
+              const theme = getModuleFamilyTheme(mod.id);
               const seq = modules.findIndex(m => m.id === mod.id) + 1;
               const quizCount = mod.lessons.reduce((n, l) => n + (l.quiz?.length ?? 0), 0);
               return (

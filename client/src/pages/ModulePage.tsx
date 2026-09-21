@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { modules, type SkillLevel } from "@/lib/curriculum";
 import { getModuleProgress, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
 import { getTrackData, sortLessonsByTrack, type CareerTrackId } from "@/lib/careerTracks";
-import { getModuleTheme } from "@/lib/moduleTheme";
+import { getModuleTheme, getModuleFamilyTheme } from "@/lib/moduleTheme";
 import { apiRequest } from "@/lib/queryClient";
 import type { UserProgress } from "@/lib/progress";
 import { ArrowLeft, Clock, CheckCircle, Lock, ChevronRight, BookOpen, Trophy, Target, Award, Download, FileText, Headphones } from "lucide-react";
@@ -67,7 +67,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
   const canDownloadPdf = FREE_MODULES.includes(mod.id) || progress.isActuallyPaid;
   const canListenAudio = progress.isPremium;
   const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
-  const theme = getModuleTheme(mod.color);
+  const theme = getModuleFamilyTheme(mod.id);
   // Fires once per page visit, on the first play — not on every pause/resume
   // — so a listener replaying a section doesn't inflate the play count.
   const hasLoggedAudioPlay = useRef(false);
@@ -257,7 +257,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                 seq={i + 1}
                 state={state}
                 isLast={i === sortedLessons.length - 1}
-                moduleColor={mod.color}
+                moduleId={mod.id}
                 isFreePreview={isFreePreview && !isAccessible}
                 onOpen={() => (lessonLocked ? onUpgrade() : onSelectLesson(lesson.id))}
               />

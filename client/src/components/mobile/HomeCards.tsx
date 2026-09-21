@@ -5,7 +5,7 @@
 
 import { Play, ChevronRight, Zap } from 'lucide-react';
 import type { Module } from '@/lib/curriculum';
-import { getModuleTheme, moduleGradient } from '@/lib/moduleTheme';
+import { getModuleTheme, moduleGradient, getModuleFamilyTheme } from '@/lib/moduleTheme';
 import { formatDuration, getModuleTotalMinutes } from '@/lib/curriculum';
 
 // ── Greeting ────────────────────────────────────────────────────────────────
@@ -91,7 +91,7 @@ export function UpNextCard({
   modulePct: number;
   onContinue: () => void;
 }) {
-  const theme = getModuleTheme(module.color);
+  const theme = getModuleFamilyTheme(module.id);
 
   return (
     <button
@@ -360,7 +360,7 @@ export function ModuleCarousel({
         style={{ scrollSnapType: 'x mandatory' }}
       >
         {mods.map((m) => {
-          const theme = getModuleTheme(m.color);
+          const theme = getModuleFamilyTheme(m.id);
           const pct = pctOf(m);
           const locked = lockedOf(m);
           return (
