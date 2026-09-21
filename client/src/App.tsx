@@ -10,7 +10,8 @@ import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calcul
 import { hasFullAccess, hasPaidPlan, trialDaysRemaining } from "@shared/access";
 import { isNativeApp, getPlatform } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
-import { getModuleTheme, getModuleFamilyTheme, getModuleFamily, type ModuleFamily } from "@/lib/moduleTheme";
+import { getModuleTheme, getModuleFamilyTheme, getModuleFamily, FAMILY_LABEL, FAMILY_THEME, type ModuleFamily } from "@/lib/moduleTheme";
+import { moduleClps, formatClps, totalClps } from "@shared/moduleClps";
 import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator, Flame } from "lucide-react";
 import { SIDEBAR_RESOURCES } from "@/lib/resources";
 import { FAR_TRANSLATOR, TOOLS_DIRECTORY } from "@/lib/toolsDirectory";
@@ -103,7 +104,7 @@ type View =
   // Mobile-only screens. The desktop shell reaches modules through the
   // sidebar tree and resources through its collapsible sections, so these
   // two views exist to give the bottom tab bar a Learn and a Resources tab.
-  | { type: 'modules' }
+  | { type: 'modules'; family?: ModuleFamily }
   | { type: 'resources' }
   | { type: 'module'; moduleId: string; activeCareer?: string }
   | { type: 'lesson'; lessonId: string; activeCareer?: string }
@@ -727,7 +728,7 @@ function AppContent() {
       case 'dashboard':
         return { kind: 'logo' };
       case 'modules':
-        return { kind: 'title', title: 'Modules' };
+        return { kind: 'title', title: view.family ? FAMILY_LABEL[view.family] : 'Modules' };
       case 'resources':
         return { kind: 'title', title: 'Resources & tools' };
       case 'account':
@@ -837,6 +838,8 @@ function AppContent() {
               progress={progress}
               onSelectModule={(id) => setView({ type: 'module', moduleId: id })}
               onUpgrade={handleUpgrade}
+              family={view.family}
+              onSelectFamily={(f) => setView(f ? { type: 'modules', family: f } : { type: 'modules' })}
             />
           )}
           {view.type === 'resources' && (
@@ -950,7 +953,7 @@ function AppContent() {
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed left-0 top-0 h-full w-64 bg-sidebar text-sidebar-foreground border-r border-sidebar-border z-40 flex flex-col transition-transform duration-300 safe-top",
+        "fixed left-0 top-0 h-full w-72 bg-sidebar text-sidebar-foreground border-r border-sidebar-border z-40 flex flex-col transition-transform duration-300 safe-top",
         sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
       )}>
         {/* Logo — opens the real acqlerate.com marketing site in a new tab
@@ -972,383 +975,154 @@ function AppContent() {
           </button>
         </div>
 
-        {/* User + XP badge */}
-        <div className="px-4 py-3 border-b border-sidebar-border space-y-2">
-          <div className="flex items-center gap-2 px-1">
-            <div className="w-7 h-7 rounded-full bg-sidebar-primary/20 flex items-center justify-center flex-shrink-0">
-              <User className="w-3.5 h-3.5 text-sidebar-primary" />
-            </div>
-            <div className="min-w-0">
-              <div className="text-xs font-semibold text-sidebar-foreground truncate">{user.username}</div>
-              <div className="text-[10px] text-sidebar-foreground/50 truncate">{user.email}</div>
-            </div>
-            {isPremium && (
-              <span className="ml-auto flex-shrink-0 text-[9px] font-bold bg-sidebar-primary/20 text-sidebar-primary rounded-full px-1.5 py-0.5">PRO</span>
-            )}
-          </div>
-          <button
-            onClick={() => setShowLevels(true)}
-            className="w-full bg-sidebar-accent border border-sidebar-primary/25 rounded-lg px-3 py-2 flex items-center gap-2 hover:border-sidebar-primary/50 hover:shadow-sm transition-all cursor-pointer text-left"
-            data-testid="xp-level-card"
-          >
-            <Zap className="w-3.5 h-3.5 text-sidebar-primary flex-shrink-0 fill-sidebar-primary/20" />
-            <div className="flex-1 min-w-0">
-              <div className="text-[10px] text-sidebar-foreground/50">Level {currentLevel.level}</div>
-              <div className="text-xs font-bold text-sidebar-foreground">{currentLevel.title}</div>
-            </div>
-            <div className="flex flex-col items-end">
-              <div className="text-[10px] font-bold text-sidebar-primary">{xp} XP</div>
-              <div className="text-[9px] text-sidebar-foreground/40">{completedCount} done</div>
-            </div>
-          </button>
-
-          {/* Burn Rate Streak — Acqlerate's take on a daily streak. In real
-              acquisitions, burn rate is how fast a program spends its
-              funding; here it's how fast you're spending daily reps. Named
-              "...Streak" explicitly so it reads as a streak, not just a rate. */}
-          {streak.currentStreak > 0 ? (
-            <div
-              className="w-full flex items-center gap-2 rounded-lg px-3 py-1.5 bg-orange-500/10 border border-orange-500/30"
-              title="Burn Rate Streak: your consecutive days active. In acquisitions, burn rate tracks how fast a program spends its funding — here, it tracks how fast you're spending daily reps. Don't let it hit zero."
-              data-testid="burn-rate-badge"
-            >
-              <Flame className="w-3.5 h-3.5 text-orange-400 flex-shrink-0 fill-orange-400/30" />
-              <span className="text-xs font-bold text-orange-300 flex-1 truncate">
-                {streak.currentStreak}-day burn rate streak
-              </span>
-              {streak.currentStreak >= 7 && (
-                <span className="text-[9px] font-bold text-amber-400 flex-shrink-0">🏆 {streak.longestStreak}d best</span>
-              )}
-            </div>
-          ) : (
-            <button
-              onClick={() => { setView({ type: 'costTrackerIntro' }); setSidebarOpen(false); }}
-              className="w-full flex items-center gap-2 rounded-lg px-3 py-1.5 bg-primary/10 border border-primary/30 hover:bg-primary/15 hover:border-primary/50 transition-all text-left"
-              title="See how the Spend Plan Tracker keeps every funding mod and burn rate in one place."
-              data-testid="burn-rate-badge"
-            >
-              <Calculator className="w-3.5 h-3.5 text-primary flex-shrink-0" />
-              <span className="text-xs font-bold text-primary">Try our spend plan tracker</span>
-              <ChevronRight className="w-3.5 h-3.5 text-primary/60 flex-shrink-0 ml-auto" />
-            </button>
-          )}
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-          <button
-            onClick={() => { setView({ type: 'dashboard' }); setSidebarOpen(false); }}
-            className={cn(
-              "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all border",
-              view.type === 'dashboard'
-                ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
-                : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
-            )}
-            data-testid="nav-dashboard"
-          >
-            <LayoutDashboard className={cn("w-4 h-4", view.type === 'dashboard' && "text-sidebar-primary")} />
-            Dashboard
-          </button>
-
-          {isAdmin && (
-            <button
-              onClick={() => { setView({ type: 'admin' }); setSidebarOpen(false); }}
-              className={cn(
-                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all border",
-                view.type === 'admin'
-                  ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
-                  : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
-              )}
-              data-testid="nav-admin"
-            >
-              <ShieldCheck className={cn("w-4 h-4", view.type === 'admin' && "text-sidebar-primary")} />
-              Admin Panel
-            </button>
-          )}
-          {isAdmin && (
-            <button
-              onClick={() => { setView({ type: 'analytics' }); setSidebarOpen(false); }}
-              className={cn(
-                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all border",
-                view.type === 'analytics'
-                  ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
-                  : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
-              )}
-              data-testid="nav-analytics"
-            >
-              <BarChart3 className={cn("w-4 h-4", view.type === 'analytics' && "text-sidebar-primary")} />
-              Analytics
-            </button>
-          )}
-
-          <div className="text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/55 px-3 pt-3 pb-1.5">
-            Modules
-          </div>
-
-          {modules.map((mod) => {
-            const isModActive = view.type === 'module' && (view as any).moduleId === mod.id;
-            const activeLessonId = view.type === 'lesson' ? (view as any).lessonId : null;
-            const isLessonInMod = mod.lessons.some(l => l.id === activeLessonId);
-            const lessonIds = mod.lessons.map(l => l.id);
-            const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
-            const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
-            const hasPreview = mod.lessons.some(l => FREE_PREVIEW_LESSONS.includes(l.id));
-
-            // Auto-expand if a lesson in this module is active
-            const isExpanded = expandedModules.has(mod.id) || isLessonInMod || isModActive;
-
-            const toggleExpand = (e: React.MouseEvent) => {
-              e.stopPropagation();
-              setExpandedModules(prev => {
-                const next = new Set(prev);
-                if (next.has(mod.id)) next.delete(mod.id); else next.add(mod.id);
-                return next;
-              });
-            };
-
-            // Module accent comes from the subject family, so all 14 modules are
-            // covered and the sidebar agrees with every other surface. Classes are
-            // written out per family because Tailwind cannot build a class from a
-            // runtime string.
-            const mc = { accent: getModuleFamilyTheme(mod.id).hex, ...FAMILY_SIDEBAR[getModuleFamily(mod.id)] };
-
-            return (
-              <div key={mod.id}>
-                {/* Module header row */}
-                <div
-                  className={cn(
-                    "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all cursor-pointer select-none border",
-                    (isModActive || isLessonInMod)
-                      ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
-                      : "text-sidebar-foreground/85 border-sidebar-border hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground hover:-translate-y-px"
-                  )}
-                  style={(isModActive || isLessonInMod) ? { borderLeft: `3px solid ${mc.accent}` } : undefined}
-                  onClick={(e) => {
-                    setView({ type: 'module', moduleId: mod.id });
-                    setSidebarOpen(false);
-                    // Also expand
-                    setExpandedModules(prev => { const n = new Set(prev); n.add(mod.id); return n; });
-                  }}
-                  data-testid={`sidebar-${mod.id}`}
-                >
-                  <span className="text-sm flex-shrink-0">{mod.icon}</span>
-                  <span className="flex-1 text-left text-xs font-medium leading-tight">{mod.title}</span>
-                  {/* Progress / lock badge */}
-                  {!isAccessible && hasPreview ? (
-                    <span className="text-[10px] font-bold text-emerald-400 flex-shrink-0 bg-emerald-400/10 border border-emerald-400/30 rounded-full px-1.5 py-0.5">Free</span>
-                  ) : !isAccessible ? (
-                    <span className="text-[10px] text-sidebar-foreground/55 flex-shrink-0">🔒</span>
-                  ) : progressPct === 100 ? (
-                    <span className="text-[10px] flex-shrink-0 bg-green-500/15 border border-green-500/40 rounded-full w-4 h-4 flex items-center justify-center text-green-400">✓</span>
-                  ) : progressPct > 0 ? (
-                    <span
-                      className="text-[10px] font-bold flex-shrink-0 rounded-full px-1.5 py-0.5 border"
-                      style={{ color: mc.accent, borderColor: mc.accent + '55', backgroundColor: mc.accent + '15' }}
-                    >
-                      {progressPct}%
-                    </span>
-                  ) : null}
-                  {/* Chevron toggle */}
-                  <button
-                    onClick={toggleExpand}
-                    className="flex-shrink-0 text-sidebar-foreground/55 hover:text-sidebar-foreground transition-colors p-0.5 rounded"
-                    aria-label={isExpanded ? 'Collapse' : 'Expand'}
-                  >
-                    <ChevronDown className={cn("w-3 h-3 transition-transform duration-200", isExpanded && "rotate-180")} />
-                  </button>
-                </div>
-
-                {/* Lesson list */}
-                {isExpanded && (
-                  <div className="ml-3 mt-0.5 mb-1 border-l-2 pl-2.5 space-y-0.5" style={{ borderColor: mc.accent + '55' }}>
-                    {mod.lessons.map((lesson) => {
-                      const isActive = lesson.id === activeLessonId;
-                      const isDone = progress.completedLessons.has(lesson.id);
-                      const isPreview = FREE_PREVIEW_LESSONS.includes(lesson.id);
-                      const canAccess = isAccessible || isPreview;
-
-                      return (
-                        <button
-                          key={lesson.id}
-                          onClick={() => {
-                            if (!canAccess) { setView({ type: 'upgrade' }); setSidebarOpen(false); return; }
-                            setView({ type: 'lesson', lessonId: lesson.id });
-                            setSidebarOpen(false);
-                          }}
-                          className={cn(
-                            "w-full text-left text-[11px] px-2 py-1.5 rounded-md transition-colors flex items-center gap-1.5 leading-tight group",
-                            isActive
-                              ? mc.activeLesson + ' ' + mc.activeLessonText + ' font-semibold'
-                              : canAccess
-                                ? 'text-sidebar-foreground/85 ' + mc.lessonHover + ' hover:text-sidebar-foreground'
-                                : 'text-sidebar-foreground/45 cursor-default'
-                          )}
-                        >
-                          {/* Status dot */}
-                          <span className={cn(
-                            "w-1.5 h-1.5 rounded-full flex-shrink-0 transition-colors",
-                            isActive ? mc.dot
-                              : isDone ? 'bg-green-500'
-                              : 'bg-sidebar-foreground/40'
-                          )} />
-                          <span className="flex-1 truncate">{lesson.title}</span>
-                          {!canAccess && <span className="text-[9px] flex-shrink-0">🔒</span>}
-                          {isDone && !isActive && <span className="text-[9px] text-green-400 flex-shrink-0">✓</span>}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-
-          {/* Downloadable Resources */}
-          {SIDEBAR_RESOURCES.length > 0 && (
-            <div className="pt-3">
-              <button
-                onClick={() => setResourcesExpanded(v => !v)}
-                className={cn(
-                  "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all select-none border",
-                  resourcesExpanded
-                    ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border"
-                    : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
-                )}
-                data-testid="sidebar-resources-toggle"
-              >
-                <FolderOpen className="w-4 h-4 flex-shrink-0" />
-                <span className="flex-1 text-left text-xs font-medium">Resources</span>
-                <span className="text-[10px] text-sidebar-foreground/40">{SIDEBAR_RESOURCES.length}</span>
-                <ChevronDown className={cn("w-3.5 h-3.5 flex-shrink-0 transition-transform", resourcesExpanded && "rotate-180")} />
-              </button>
-              {resourcesExpanded && (
-                <div className="pl-2 pr-1 pt-1 space-y-1">
-                  {SIDEBAR_RESOURCES.map((res, ri) => {
-                    const locked = res.proOnly && !progress.isPremium;
-                    const commonClass = "flex items-start gap-2 px-3 py-2 rounded-lg transition-colors group";
-                    if (locked) {
-                      return (
-                        <button
-                          key={ri}
-                          onClick={() => { handleUpgrade(); setSidebarOpen(false); }}
-                          className={cn(commonClass, "w-full text-left text-sidebar-foreground/45 hover:bg-sidebar-accent hover:text-sidebar-foreground/70")}
-                          data-testid={`sidebar-resource-${ri}`}
-                        >
-                          <Lock className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 opacity-70" />
-                          <div className="flex-1 min-w-0">
-                            <div className="text-[11px] font-semibold leading-tight">{res.title}</div>
-                            <div className="text-[10.5px] leading-snug mt-0.5 opacity-80">{res.description}</div>
-                            <div className="text-[10px] font-bold text-primary mt-1">Unlock with Pro →</div>
-                          </div>
-                        </button>
-                      );
-                    }
-                    return (
-                      <a
-                        key={ri}
-                        href={res.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={cn(commonClass, "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground")}
-                        data-testid={`sidebar-resource-${ri}`}
-                      >
-                        <Download className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-primary opacity-80 group-hover:opacity-100" />
-                        <div className="flex-1 min-w-0">
-                          <div className="text-[11px] font-semibold leading-tight text-sidebar-foreground/90">{res.title}</div>
-                          <div className="text-[10.5px] text-sidebar-foreground/65 leading-snug mt-0.5">{res.description}</div>
-                        </div>
-                      </a>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Tools Directory */}
-          <div className="pt-1">
-            <button
-              onClick={() => setToolsExpanded(v => !v)}
-              className={cn(
-                "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all select-none border",
-                toolsExpanded
-                  ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border"
-                  : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
-              )}
-              data-testid="sidebar-tools-toggle"
-            >
-              <Wrench className="w-4 h-4 flex-shrink-0" />
-              <span className="flex-1 text-left text-xs font-medium">Tools</span>
-              <ChevronDown className={cn("w-3.5 h-3.5 flex-shrink-0 transition-transform", toolsExpanded && "rotate-180")} />
-            </button>
-            {toolsExpanded && (
-              <div className="pl-2 pr-1 pt-1 space-y-2 max-h-80 overflow-y-auto">
-                {/* FAR Translator — pinned, distinctly styled */}
-                <a
-                  href={FAR_TRANSLATOR.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-start gap-2 px-3 py-2.5 rounded-lg bg-primary/10 border border-primary/25 hover:bg-primary/15 transition-colors group"
-                  data-testid="sidebar-far-translator"
-                >
-                  <Sparkles className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-primary" />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-[11px] font-bold text-primary leading-tight">{FAR_TRANSLATOR.name}</div>
-                    <div className="text-[10px] text-sidebar-foreground/50 leading-tight mt-0.5">{FAR_TRANSLATOR.description}</div>
-                  </div>
-                </a>
-                {/* Cost & Burn Rate Tracker — pinned, internal page */}
+        {/* Navigation. Four destinations rather than a wall of fourteen modules.
+            The module tree nobody scanned now lives on My Path; the space it
+            freed carries what a learner actually wants permanently on screen:
+            where they are, whether the streak is alive, the five subject
+            families as a colour legend, and the next CLP certificate. */}
+        <nav className="flex-1 px-3 py-4 overflow-y-auto space-y-4">
+          <div className="space-y-1">
+            {([
+              { key: 'dashboard', label: 'Dashboard', Icon: LayoutDashboard, go: () => setView({ type: 'dashboard' }) },
+              { key: 'modules',   label: 'My Path',   Icon: BookOpen,        go: () => setView({ type: 'modules' }) },
+              { key: 'resources', label: 'Resources', Icon: FolderOpen,      go: () => setView({ type: 'resources' }) },
+              { key: 'account',   label: 'Account',   Icon: User,            go: () => setView({ type: 'account' }) },
+            ] as const).map(({ key, label, Icon, go }) => {
+              const active = view.type === key;
+              return (
                 <button
-                  onClick={() => setView({ type: 'costProjects' })}
-                  className="w-full flex items-start gap-2 px-3 py-2.5 rounded-lg bg-primary/10 border border-primary/25 hover:bg-primary/15 transition-colors group text-left"
-                  data-testid="sidebar-cost-tracker"
+                  key={key}
+                  onClick={() => { go(); setSidebarOpen(false); }}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all border",
+                    active
+                      ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
+                      : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
+                  )}
+                  data-testid={`nav-${key}`}
                 >
-                  <Calculator className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-primary" />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-[11px] font-bold text-primary leading-tight">Cost &amp; Burn Rate Tracker</div>
-                    <div className="text-[10px] text-sidebar-foreground/50 leading-tight mt-0.5">Track funding, mods, and spend across your projects — persists between visits.</div>
+                  <Icon className={cn("w-4 h-4", active && "text-sidebar-primary")} />
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Your progress */}
+          {(() => {
+            const nextLvl = ALL_LEVELS.find(l => l.threshold > xp);
+            const floor = ALL_LEVELS.filter(l => l.threshold <= xp).slice(-1)[0]?.threshold ?? 0;
+            const pct = nextLvl ? Math.max(2, Math.min(100, Math.round(((xp - floor) / (nextLvl.threshold - floor)) * 100))) : 100;
+            return (
+              <div className="pt-3 border-t border-sidebar-border space-y-1.5" data-testid="sidebar-progress">
+                <div className="text-[11px] font-bold uppercase tracking-widest text-sidebar-foreground/55 px-1">Your progress</div>
+                <button
+                  onClick={() => setShowLevels(true)}
+                  className="w-full text-left px-1 space-y-1.5 group"
+                  data-testid="xp-level-card"
+                >
+                  <div className="text-sm font-bold text-sidebar-foreground group-hover:text-sidebar-primary transition-colors">
+                    Lv {currentLevel.level} &middot; {currentLevel.title}
+                  </div>
+                  <div className="h-1.5 rounded-full bg-sidebar-foreground/10 overflow-hidden">
+                    <div className="h-full bg-sidebar-primary rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
+                  </div>
+                  <div className="text-xs text-sidebar-foreground/60">
+                    {nextLvl ? `${xp} / ${nextLvl.threshold} XP to ${nextLvl.title}` : `${xp} XP &middot; max level`}
                   </div>
                 </button>
-
-                {TOOLS_DIRECTORY.map((cat, ci) => (
-                  <div key={ci}>
-                    <div className="text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/35 px-3 pt-1.5 pb-1">
-                      {cat.title}
-                    </div>
-                    {cat.tools.map((tool, ti) => (
-                      <a
-                        key={ti}
-                        href={tool.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors group"
-                        data-testid={`sidebar-tool-${ci}-${ti}`}
-                      >
-                        <span className="text-[11px] font-medium leading-tight truncate">{tool.name}</span>
-                        <ExternalLink className="w-3 h-3 flex-shrink-0 opacity-0 group-hover:opacity-60" />
-                      </a>
-                    ))}
-                  </div>
-                ))}
-                <a
-                  href="/tools"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 px-3 py-2 mt-1 rounded-lg text-[11px] font-semibold text-primary hover:bg-primary/10 transition-colors"
-                >
-                  View full Tools page
-                  <ExternalLink className="w-3 h-3" />
-                </a>
+                <div className="flex items-center gap-1.5 px-1 pt-0.5">
+                  <Flame className={cn("w-3.5 h-3.5 flex-shrink-0", streak.currentStreak > 0 ? "text-orange-400 fill-orange-400/30" : "text-sidebar-foreground/30")} />
+                  <span className="text-[12px] text-sidebar-foreground/60 truncate">
+                    {streak.currentStreak > 0
+                      ? `${streak.currentStreak}-day streak`
+                      : 'Streak: start today'}
+                  </span>
+                </div>
               </div>
-            )}
+            );
+          })()}
+
+          {/* Jump to: doubles as the colour legend, which is how the family
+              system gets learned without anyone explaining it. */}
+          <div className="pt-3 border-t border-sidebar-border space-y-1" data-testid="family-legend">
+            <div className="text-[11px] font-bold uppercase tracking-widest text-sidebar-foreground/55 px-1 mb-1.5">Jump to</div>
+            {(['foundations', 'money', 'contracts', 'winning', 'program'] as ModuleFamily[]).map(fam => {
+              const inFam = modules.filter(m => getModuleFamily(m.id) === fam);
+              if (inFam.length === 0) return null;
+              return (
+                <button
+                  key={fam}
+                  onClick={() => { setView({ type: 'modules', family: fam }); setSidebarOpen(false); }}
+                  className="w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-left hover:bg-sidebar-accent transition-colors"
+                  style={{ borderLeft: `3px solid ${FAMILY_THEME[fam].hex}` }}
+                  data-testid={`family-${fam}`}
+                >
+                  <span className="text-[13px] leading-none flex-shrink-0">{inFam[0].icon}</span>
+                  <span className="text-[13px] text-sidebar-foreground/90 truncate flex-1">{FAMILY_LABEL[fam]}</span>
+                  <span className="text-[12px] tabular-nums text-sidebar-foreground/40 flex-shrink-0">{inFam.length}</span>
+                </button>
+              );
+            })}
           </div>
+
+          {/* CLP credit. This is why a DAWIA professional is paying: 80 points
+              every two years. Shown as the NEXT certificate rather than a
+              running total, because a total reads "0.0 of 43.8" on day one,
+              which is the same zero-state failure as a sleeping streak tile.
+              A reward four lessons out pulls; one forty hours out does not.
+              Figures derive from the curriculum, so this cannot drift. */}
+          {(() => {
+            const nextMod = modules.find(m => m.lessons.some(l => !progress.completedLessons.has(l.id)));
+            if (!nextMod) return null;
+            const done = nextMod.lessons.filter(l => progress.completedLessons.has(l.id)).length;
+            const left = nextMod.lessons.length - done;
+            const pct = Math.round((done / nextMod.lessons.length) * 100);
+            const earned = modules
+              .filter(m => m.lessons.every(l => progress.completedLessons.has(l.id)))
+              .reduce((sum, m) => sum + moduleClps(m.id), 0);
+            return (
+              <div className="rounded-lg px-3 py-2 bg-amber-500/[0.12] border border-amber-500/35 space-y-1.5" data-testid="clp-tracker">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[12px] leading-none">&#127891;</span>
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-amber-700 dark:text-amber-300">CLP credit</span>
+                  {earned > 0 && <span className="ml-auto text-xs font-bold text-amber-500">{formatClps(earned)} earned</span>}
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs leading-none flex-shrink-0">{nextMod.icon}</span>
+                  <span className="text-[13px] font-bold text-amber-900 dark:text-amber-50 truncate flex-1">{nextMod.title}</span>
+                  <span className="text-[13px] font-bold text-amber-500 flex-shrink-0">{moduleClps(nextMod.id).toFixed(1)}</span>
+                </div>
+                <div className="h-1 rounded-full bg-amber-900/15 dark:bg-amber-200/15 overflow-hidden">
+                  <div className="h-full bg-amber-500 rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
+                </div>
+                <div className="text-xs text-amber-800 dark:text-amber-200/90">
+                  {left} more {left === 1 ? 'lesson' : 'lessons'} to this certificate
+                </div>
+                <div className="text-xs text-amber-800/80 dark:text-amber-200/70">
+                  {formatClps(totalClps())} available &middot; 80 per 2-year cycle
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Spend plan tracker keeps its entry point, one line instead of a card. */}
+          <button
+            onClick={() => { setView({ type: 'costTrackerIntro' }); setSidebarOpen(false); }}
+            className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-sidebar-accent transition-colors text-left"
+            data-testid="burn-rate-badge"
+          >
+            <Calculator className="w-4 h-4 text-primary flex-shrink-0" />
+            <span className="text-[13px] font-semibold text-primary flex-1 truncate">Spend plan tracker</span>
+            <ChevronRight className="w-3.5 h-3.5 text-primary/50 flex-shrink-0" />
+          </button>
         </nav>
 
         {/* Bottom */}
         <div className="px-3 py-4 border-t border-sidebar-border space-y-1">
           {trialDaysLeft !== null && (
             <div
-              className="w-full px-3 py-1.5 rounded-lg text-[11px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 text-center"
+              className="w-full px-3 py-1.5 rounded-lg text-[13px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 text-center"
               data-testid="trial-days-remaining"
             >
               {trialDaysLeft === 0
@@ -1366,40 +1140,63 @@ function AppContent() {
               {trialDaysLeft !== null ? "Keep Full Access" : "Upgrade to Pro"}
             </button>
           )}
+          {/* Admin surfaces live behind the identity row rather than in a
+              learner's main nav, where platform-wide signup counts were the
+              second thing a paying customer read. */}
+          {isAdmin && (
+            <div className="flex items-center gap-3 px-3 pb-1">
+              <button
+                onClick={() => { setView({ type: 'admin' }); setSidebarOpen(false); }}
+                className="flex items-center gap-1.5 text-[12px] text-sidebar-foreground/40 hover:text-sidebar-foreground transition-colors"
+                data-testid="nav-admin"
+              >
+                <ShieldCheck className="w-3.5 h-3.5" /> Admin
+              </button>
+              <button
+                onClick={() => { setView({ type: 'analytics' }); setSidebarOpen(false); }}
+                className="flex items-center gap-1.5 text-[12px] text-sidebar-foreground/40 hover:text-sidebar-foreground transition-colors"
+                data-testid="nav-analytics"
+              >
+                <BarChart3 className="w-3.5 h-3.5" /> Analytics
+              </button>
+            </div>
+          )}
           <button
             onClick={() => { setView({ type: 'account' }); setSidebarOpen(false); }}
-            className={cn(
-              "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all border",
-              view.type === 'account'
-                ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
-                : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
-            )}
-            data-testid="nav-account"
+            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-sidebar-accent transition-colors text-left"
+            data-testid="sidebar-identity"
           >
-            <User className={cn("w-4 h-4", view.type === 'account' && "text-sidebar-primary")} />
-            My Account
+            <div className="w-8 h-8 rounded-full bg-sidebar-primary/20 flex items-center justify-center flex-shrink-0">
+              <User className="w-4 h-4 text-sidebar-primary" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-sm font-semibold text-sidebar-foreground truncate">{user.username}</div>
+              <div className="text-[12px] text-sidebar-foreground/45 truncate">
+                {isPremium ? 'Pro' : 'Free'}{isAdmin ? ' · Admin' : ''}
+              </div>
+            </div>
           </button>
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-sidebar-foreground/50 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
             data-testid="nav-signout"
           >
-            <LogOut className="w-3.5 h-3.5" />
+            <LogOut className="w-4 h-4" />
             Sign Out
           </button>
           <div className="flex gap-3 px-3 pt-2 pb-1">
-            <a href="/privacy" className="text-[10px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Privacy</a>
-            <a href="/terms" className="text-[10px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Terms</a>
+            <a href="/privacy" className="text-[12px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Privacy</a>
+            <a href="/terms" className="text-[12px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Terms</a>
             <PWAInstallLink />
           </div>
         </div>
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 md:ml-64 flex flex-col min-h-screen min-w-0 relative">
+      <div className="flex-1 md:ml-72 flex flex-col min-h-screen min-w-0 relative">
         {/* Background: soft radial glow only. The hex grid that used to sit
             here fought every card on top of it and dated the page. */}
-        <div aria-hidden="true" className="pointer-events-none fixed md:left-64 inset-y-0 right-0 z-0 overflow-hidden">
+        <div aria-hidden="true" className="pointer-events-none fixed md:left-72 inset-y-0 right-0 z-0 overflow-hidden">
           {/* Radial teal glow top-right */}
           <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full opacity-[0.07] dark:opacity-[0.12]" style={{background: 'radial-gradient(circle, #01696f 0%, transparent 70%)'}} />
           {/* Radial teal glow bottom-left */}

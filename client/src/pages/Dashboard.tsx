@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { modules, getTotalLessons, getModuleTotalMinutes, formatDuration, parseDuration } from "@/lib/curriculum";
-import { getModuleTheme, getModuleFamilyTheme } from "@/lib/moduleTheme";
+import { getModuleTheme, getModuleFamilyTheme, getModuleFamily, FAMILY_LABEL } from "@/lib/moduleTheme";
+import { formatClps, totalClps, moduleClps } from "@shared/moduleClps";
 import { getModuleProgress, getLevel, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
 import type { UserProgress } from "@/lib/progress";
 import type { UserProfile } from "@/pages/AuthPage";
@@ -274,7 +275,9 @@ function ModuleCard({
   const lessonIds = mod.lessons.map(l => l.id);
   const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
   const theme = getModuleFamilyTheme(mod.id);
-  const c = { border: theme.border, accent: theme.text, check: theme.text, progress: theme.progressBar, headerGrad: theme.headerGrad };
+  const familyLabel = FAMILY_LABEL[getModuleFamily(mod.id)];
+  const completedInMod = mod.lessons.filter(l => progress.completedLessons.has(l.id)).length;
+  const c = { border: theme.border, accent: theme.text, check: theme.text, progress: theme.progressBar, headerGrad: theme.headerGrad, bgTint: theme.bgTint, borderTint: theme.borderTint };
 
   const totalMins = getModuleTotalMinutes(mod.id);
 
@@ -298,105 +301,48 @@ function ModuleCard({
         isAccessible ? "hover:shadow-lg hover:-translate-y-0.5 cursor-pointer" : "opacity-70",
         isFirst ? "ring-2 ring-primary/30" : "",
       )}
+      style={{ borderTop: `3px solid ${theme.hex}` }}
       onClick={() => isAccessible ? onSelect() : onUpgrade()}
       data-testid={`module-${mod.id}`}
     >
-      {/* Gradient header */}
-      <div className={cn("px-5 py-4 border-b bg-gradient-to-r", c.headerGrad)}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 text-white text-xs font-bold tabular-nums border border-white/30">
-              {String(seqNum).padStart(2, '0')}
-            </span>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-lg leading-none">{mod.icon}</span>
-                <span className="font-bold text-white text-sm">{mod.title}</span>
-              </div>
-              <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                <span className="text-[11px] text-white/60 whitespace-nowrap">{mod.subtitle}</span>
-                <span className="text-white/30 text-[10px]">·</span>
-                <span className="text-[11px] text-white/80 font-medium whitespace-nowrap flex items-center gap-1">
-                  <Clock className="w-2.5 h-2.5" />
-                  {isCareerMode && trackMins !== totalMins
-                    ? <span>{formatDuration(trackMins)}<span className="text-white/50 font-normal"> / {formatDuration(totalMins)}</span></span>
-                    : <span>{formatDuration(totalMins)}</span>
-                  }
-                </span>
-                <span className="text-white/30 text-[10px]">·</span>
-                <span className="text-[11px] text-white/70 whitespace-nowrap">
-                  {isCareerMode && trackLessonCount !== mod.lessons.length
-                    ? <>{trackLessonCount}<span className="text-white/50"> / {mod.lessons.length}</span> lessons</>
-                    : <>{mod.lessons.length} lessons</>
-                  }
-                </span>
-              </div>
-            </div>
+      {/* One compact block. The lesson preview list and description moved off
+          the card: with 11 modules on a page they made the grid a wall of text
+          nobody scanned, and the module page shows both anyway. What stays is
+          what a learner picks by: which family, how far in, how long. */}
+      <div className="p-4">
+        <div className="flex items-center gap-3">
+          <span className={cn("inline-flex items-center justify-center w-10 h-10 rounded-xl text-lg flex-shrink-0 border", c.bgTint, c.borderTint)}>
+            {mod.icon}
+          </span>
+          <div className="min-w-0 flex-1 flex items-center gap-2">
+            <span className="text-[11px] font-bold tabular-nums text-muted-foreground/70">{String(seqNum).padStart(2, '0')}</span>
+            <span className={cn("text-[10px] font-bold uppercase tracking-wider truncate", c.accent)}>{familyLabel}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 flex-shrink-0">
             {isFirst && (
-              <span className="inline-flex items-center rounded-full bg-white/20 border border-white/30 px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-wide">
+              <span className="inline-flex items-center rounded-full bg-primary/10 border border-primary/25 px-2 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wide">
                 Start Here
               </span>
             )}
             {mod.free && (
-              <span className="inline-flex items-center rounded-full bg-emerald-400/20 border border-emerald-300/40 px-2 py-0.5 text-[10px] font-bold text-emerald-200 uppercase tracking-wide">
+              <span className="inline-flex items-center rounded-full bg-emerald-500/10 border border-emerald-500/25 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wide">
                 Free
               </span>
             )}
-            {!isAccessible && <Lock className="w-4 h-4 text-white/60" />}
+            {!isAccessible
+              ? <Lock className="w-3.5 h-3.5 text-muted-foreground/60" />
+              : <span className={cn("text-[10px] font-bold rounded-full px-2 py-0.5 tabular-nums", c.bgTint, c.accent)}>{progressPct}%</span>
+            }
           </div>
         </div>
-      </div>
 
-      {/* Body */}
-      <div className="p-5">
-        <p className="text-xs text-muted-foreground mb-4 leading-relaxed line-clamp-2">{mod.description}</p>
-
-        {/* Lesson list */}
-        <div className="space-y-1 mb-4">
-          {displayLessons.map(lesson => {
-            const done = progress.completedLessons.has(lesson.id);
-            return (
-              <div key={lesson.id} className="flex items-center gap-2.5">
-                {done
-                  ? <CheckCircle2 className={cn("w-3.5 h-3.5 flex-shrink-0", c.check)} />
-                  : <Circle className="w-3.5 h-3.5 flex-shrink-0 text-muted-foreground/40" />
-                }
-                <span className={cn("text-xs leading-snug truncate", done ? "text-muted-foreground line-through" : "text-foreground/80")}>
-                  {lesson.title}
-                </span>
-                <span className="ml-auto text-[10px] text-muted-foreground/50 flex-shrink-0">{lesson.duration}</span>
-              </div>
-            );
-          })}
-          {remainingInTrack > 0 && (
-            <div className={cn("text-[11px] font-medium mt-1 pl-6", c.accent)}>
-              + {remainingInTrack} more lesson{remainingInTrack > 1 ? 's' : ''}
-            </div>
-          )}
+        <div className="font-bold text-sm mt-3 leading-snug">{mod.title}</div>
+        <Progress value={isAccessible ? progressPct : 0} className={cn("h-1.5 mt-2.5", c.progress)} />
+        <div className="text-[11px] text-muted-foreground mt-2 flex items-center gap-1.5 flex-wrap">
+          <span className="tabular-nums">{completedInMod} of {mod.lessons.length} lessons</span>
+          <span className="text-muted-foreground/40">·</span>
+          <span className="flex items-center gap-1"><Clock className="w-2.5 h-2.5" />{formatDuration(totalMins)}</span>
         </div>
-
-        {/* Progress footer */}
-        <div className="border-t border-border pt-3 mt-3">
-          <div className="flex items-center justify-between mb-1.5">
-            <div className="flex items-center gap-1.5">
-              <BookOpen className={cn("w-3 h-3", c.accent)} />
-              <span className="text-xs text-muted-foreground">{mod.lessons.length} lessons</span>
-            </div>
-            <span className={cn("text-xs font-semibold", isAccessible && progressPct > 0 ? c.accent : 'text-muted-foreground')}>
-              {isAccessible ? (progressPct > 0 ? `${progressPct}% done` : 'Not started') : 'Locked'}
-            </span>
-          </div>
-          <Progress value={isAccessible ? progressPct : 0} className={cn("h-1.5", c.progress)} />
-        </div>
-
-        {isAccessible && (
-          <div className={cn("flex items-center gap-1 mt-3 text-xs font-medium", c.accent)}>
-            <span>{progressPct > 0 ? 'Continue' : 'Start module'}</span>
-            <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-          </div>
-        )}
       </div>
     </div>
   );
@@ -702,16 +648,24 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
   return (
     <div className="space-y-8">
 
-      {/* Welcome */}
+      {/* Welcome. The count and the bar live here now; level and XP moved to
+          the sidebar, so the top of the page is one line and the Continue card
+          is the only loud thing left. */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">
-          {username ? `Welcome back, ${username.split(' ')[0]}` : 'Welcome back'}
-        </h1>
-        <p className="text-muted-foreground text-sm mt-0.5">
-          {completedCount === 0
-            ? "Start your DoD acquisitions journey today."
-            : `You've completed ${completedCount} of ${totalLessons} lessons.`}
-        </p>
+        <div className="flex items-baseline justify-between gap-4 flex-wrap">
+          <h1 className="text-2xl font-bold tracking-tight">
+            {username ? `Welcome back, ${username.split(' ')[0]}` : 'Welcome back'}
+          </h1>
+          <p className="text-sm text-muted-foreground tabular-nums">
+            <span className="font-semibold text-foreground">{completedCount}</span> of {totalLessons} lessons complete
+          </p>
+        </div>
+        <div className="h-1 rounded-full bg-muted mt-2.5 max-w-xs overflow-hidden">
+          <div
+            className="h-full bg-primary rounded-full transition-all duration-700"
+            style={{ width: `${Math.max(completedCount > 0 ? 2 : 0, Math.round((completedCount / totalLessons) * 100))}%` }}
+          />
+        </div>
       </div>
 
       {/* Search bar */}
@@ -819,99 +773,44 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
         )}
       </div>
 
-      {/* Progress hero */}
-      {(() => {
-        const overallPct = Math.round((completedCount / totalLessons) * 100);
-        const ringSize = 76;
-        const strokeWidth = 7;
-        const radius = (ringSize - strokeWidth) / 2;
-        const circumference = 2 * Math.PI * radius;
-        const offset = circumference - (overallPct / 100) * circumference;
-        const adminStat = statsStrip.find(s => s.label === 'Total signups');
+
+      {/* Continue. The only card on the page, and the only thing carrying a
+          filled button, so there is exactly one obvious next click. It wears
+          its module's family colour rather than the brand teal: the button
+          belongs to the lesson, teal belongs to the app. */}
+      {nextLesson && (() => {
+        const famTheme = getModuleFamilyTheme(nextLesson.module.id);
+        const famLabel = FAMILY_LABEL[getModuleFamily(nextLesson.module.id)];
+        const lessonIdx = nextLesson.module.lessons.findIndex(l => l.id === nextLesson.lesson.id);
         return (
-          <div className="space-y-3">
-            <div className="relative overflow-hidden rounded-2xl p-5 sm:p-6 shadow-lg" style={{ background: 'linear-gradient(135deg, #0d2137 0%, #123047 55%, #0a1b2d 100%)' }}>
-              {/* Decorative glow */}
-              <div className="absolute -right-10 -top-16 w-56 h-56 rounded-full bg-primary/20 blur-3xl pointer-events-none" />
-              <div className="absolute -left-16 bottom-0 w-40 h-40 rounded-full bg-[#f5c842]/10 blur-3xl pointer-events-none" />
-
-              <div className="relative flex items-center justify-between gap-6 flex-wrap">
-                {/* Hero: overall progress ring */}
-                <div className="flex items-center gap-4">
-                  <div className="relative flex-shrink-0" style={{ width: ringSize, height: ringSize }}>
-                    <svg width={ringSize} height={ringSize} className="-rotate-90">
-                      <circle cx={ringSize / 2} cy={ringSize / 2} r={radius} fill="none" strokeWidth={strokeWidth} stroke="rgba(255,255,255,0.14)" />
-                      <circle
-                        cx={ringSize / 2} cy={ringSize / 2} r={radius} fill="none" strokeWidth={strokeWidth}
-                        strokeLinecap="round" stroke="#f5c842" className="transition-all duration-700"
-                        strokeDasharray={circumference} strokeDashoffset={offset}
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-xl font-bold tabular-nums text-white">{overallPct}%</span>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-bold text-white">Overall progress</div>
-                    <div className="text-xs text-white/60 mt-0.5">{totalLessons - completedCount} lessons remaining</div>
-                    <div className="flex items-center gap-1.5 mt-1.5">
-                      <div className="w-6 h-6 rounded-full bg-[#f5c842]/20 flex items-center justify-center">
-                        <Zap className="w-3.5 h-3.5 text-[#f5c842]" />
-                      </div>
-                      <span className="text-xs font-semibold text-white">Lv {levelInfo.level} · {levelInfo.title}</span>
-                      <span className="text-xs text-white/60">· {xp} XP</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Supporting stats */}
-                <div className="relative flex items-center gap-5 sm:gap-7">
-                  <div className="flex items-center gap-2.5">
-                    <CheckCircle2 className="w-5 h-5 text-primary" style={{ color: '#4ecdc4' }} />
-                    <div>
-                      <div className="text-lg font-bold tabular-nums leading-none text-white">{completedCount}<span className="text-xs text-white/50 font-normal">/{totalLessons}</span></div>
-                      <div className="text-[11px] text-white/60 mt-0.5">Lessons done</div>
-                    </div>
-                  </div>
-                  <div className="h-9 w-px bg-white/15" />
-                  <div className="flex items-center gap-2.5">
-                    <Target className="w-5 h-5" style={{ color: '#4ecdc4' }} />
-                    <div>
-                      <div className="text-lg font-bold tabular-nums leading-none text-white">{progress.isPremium ? modules.length : FREE_MODULES.length}<span className="text-xs text-white/50 font-normal">/{modules.length}</span></div>
-                      <div className="text-[11px] text-white/60 mt-0.5">Modules unlocked</div>
-                    </div>
-                  </div>
-                </div>
+          <div
+            className="bg-card border rounded-2xl p-5 flex items-center gap-4 flex-wrap shadow-sm"
+            style={{ borderLeftWidth: '3px', borderLeftColor: famTheme.hex }}
+            data-testid="continue-card"
+          >
+            <span className={cn("inline-flex items-center justify-center w-12 h-12 rounded-xl text-2xl flex-shrink-0 border", famTheme.bgTint, famTheme.borderTint)}>
+              {nextLesson.module.icon}
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className={cn("text-[10px] font-bold uppercase tracking-widest", famTheme.text)}>
+                Continue &middot; {famLabel}
+              </div>
+              <div className="font-bold text-lg mt-0.5 truncate">{nextLesson.lesson.title}</div>
+              <div className="text-sm text-muted-foreground mt-0.5">
+                {lessonIdx >= 0 ? `Lesson ${lessonIdx + 1} of ${nextLesson.module.lessons.length} · ` : ''}{nextLesson.lesson.duration}
               </div>
             </div>
+            <Button
+              onClick={() => onSelectModule(nextLesson.module.id, filterMode === 'career' ? activeCareer : undefined)}
+              data-testid="continue-lesson-btn"
+              className="flex-shrink-0 text-white hover:opacity-90"
+              style={{ backgroundColor: famTheme.hex }}
+            >
+              Continue <ChevronRight className="w-3.5 h-3.5 ml-1" />
+            </Button>
           </div>
         );
       })()}
-
-      {/* Continue Learning */}
-      {nextLesson && (
-        <div className="relative overflow-hidden bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/25 rounded-2xl p-5">
-          <div className="absolute right-4 top-0 bottom-0 flex items-center opacity-5 pointer-events-none select-none">
-            <span className="text-[120px] font-black text-primary">→</span>
-          </div>
-          <div className="relative">
-            <div className="text-[11px] font-bold text-primary uppercase tracking-widest mb-2 flex items-center gap-1.5">
-              <Clock className="w-3 h-3" /> Continue where you left off
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <div className="font-bold text-base">{nextLesson.lesson.title}</div>
-                <div className="text-sm text-muted-foreground mt-0.5">
-                  {nextLesson.module.title} · {nextLesson.lesson.duration}
-                </div>
-              </div>
-              <Button onClick={() => onSelectModule(nextLesson.module.id, filterMode === 'career' ? activeCareer : undefined)} data-testid="continue-lesson-btn">
-                Continue <ChevronRight className="w-3.5 h-3.5 ml-1" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ── Burn Rate Streak + Daily Challenge ─────────────────────────────────
           "Burn Rate Streak" is Acqlerate's acquisitions-flavored spin on a
@@ -919,62 +818,64 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
           program spends its funding. Here, it's how fast you're spending
           daily reps. "Streak" is spelled out in the label so it reads as a
           streak counter, not a rate. */}
-      <div className="grid sm:grid-cols-2 gap-3">
-        {/* Burn Rate Streak card */}
+      {/* Streak and daily challenge are habits, not headlines. As equal sized
+          cards they competed with Continue for the same glance; as two quiet
+          rows they stay one click away and the eye goes where it should. */}
+      <div className="rounded-2xl border border-border bg-card divide-y divide-border overflow-hidden">
+        {/* Burn Rate Streak */}
         <div
-          className="rounded-2xl border border-orange-500/25 bg-orange-500/[0.04] p-4 flex items-center gap-4"
+          className="flex items-center gap-3 px-4 py-3"
           title="In acquisitions, burn rate tracks how fast a program spends its funding. Here, it tracks how fast you're spending daily reps."
         >
-          <div className="text-4xl">{streak.currentStreak > 0 ? '🔥' : '🎯'}</div>
-          <div className="flex-1">
+          <span className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-sm flex-shrink-0">
+            {streak.currentStreak > 0 ? '🔥' : '🎯'}
+          </span>
+          <p className="text-sm min-w-0 flex-1">
             {streak.currentStreak > 0 ? (
               <>
-                <p className="text-xl font-black">{streak.currentStreak}-day burn rate streak</p>
-                <p className="text-xs text-muted-foreground">Personal best: {streak.longestStreak} day{streak.longestStreak !== 1 ? 's' : ''}</p>
+                <span className="font-semibold">{streak.currentStreak}-day burn rate streak</span>
+                <span className="text-muted-foreground"> · personal best {streak.longestStreak} day{streak.longestStreak !== 1 ? 's' : ''}</span>
               </>
             ) : (
               <>
-                <p className="text-xl font-black">Start your burn rate streak</p>
-                <p className="text-xs text-muted-foreground">
-                  One lesson today starts it{streak.longestStreak > 0 ? `. Your best is ${streak.longestStreak} day${streak.longestStreak !== 1 ? 's' : ''}` : ''}
-                </p>
+                <span className="font-semibold">Start your burn rate streak</span>
+                <span className="text-muted-foreground"> · one lesson today starts it{streak.longestStreak > 0 ? `, your best is ${streak.longestStreak} day${streak.longestStreak !== 1 ? 's' : ''}` : ''}</span>
               </>
             )}
-          </div>
+          </p>
           {streak.currentStreak >= 7 && (
-            <div className="text-xs font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 px-2 py-1 rounded-full">🏆 {streak.currentStreak}d</div>
+            <span className="text-[11px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-full flex-shrink-0">🏆 {streak.currentStreak}d</span>
           )}
         </div>
 
-        {/* Daily challenge card */}
-        <div className={`rounded-2xl border p-4 ${challengeSubmitted ? 'border-emerald-400/30 bg-emerald-500/5' : 'border-primary/30 bg-primary/5 cursor-pointer hover:bg-primary/10 transition-colors'}`}
-          onClick={() => !challengeSubmitted && setChallengeActive(true)}>
-          {challengeSubmitted && challengeResult ? (
-            <div className="flex items-center gap-3">
-              <div className="text-3xl">✅</div>
-              <div>
-                <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{challengeResult.message}</p>
-                <p className="text-xs text-muted-foreground">Score: {challengeResult.score}/5 · +{challengeResult.xpEarned} XP · Come back tomorrow</p>
-              </div>
-            </div>
-          ) : challengeSubmitted ? (
-            <div className="flex items-center gap-3">
-              <div className="text-3xl">✅</div>
-              <div>
-                <p className="text-sm font-bold">Today's challenge complete</p>
-                <p className="text-xs text-muted-foreground">Come back tomorrow for a new set</p>
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-center gap-3">
-              <div className="text-3xl">⚡</div>
-              <div className="flex-1">
-                <p className="text-sm font-bold text-primary">Today's Daily Challenge</p>
-                <p className="text-xs text-muted-foreground">5 questions · ~2 min · Earn up to 50 XP</p>
-              </div>
-              <div className="text-primary text-lg">→</div>
-            </div>
-          )}
+        {/* Daily challenge */}
+        <div
+          className={`flex items-center gap-3 px-4 py-3 ${challengeSubmitted ? '' : 'cursor-pointer hover:bg-muted/50 transition-colors'}`}
+          onClick={() => !challengeSubmitted && setChallengeActive(true)}
+          data-testid="daily-challenge-row"
+        >
+          <span className="w-7 h-7 rounded-lg bg-primary/10 border border-primary/25 flex items-center justify-center text-sm flex-shrink-0">
+            {challengeSubmitted ? '✅' : '⚡'}
+          </span>
+          <p className="text-sm min-w-0 flex-1">
+            {challengeSubmitted && challengeResult ? (
+              <>
+                <span className="font-semibold">{challengeResult.message}</span>
+                <span className="text-muted-foreground"> · {challengeResult.score}/5, +{challengeResult.xpEarned} XP, back tomorrow</span>
+              </>
+            ) : challengeSubmitted ? (
+              <>
+                <span className="font-semibold">Today's challenge complete</span>
+                <span className="text-muted-foreground"> · back tomorrow for a new set</span>
+              </>
+            ) : (
+              <>
+                <span className="font-semibold">Today's Daily Challenge</span>
+                <span className="text-muted-foreground"> · 5 questions, 2 min, up to 50 XP</span>
+              </>
+            )}
+          </p>
+          {!challengeSubmitted && <span className="text-muted-foreground flex-shrink-0">›</span>}
         </div>
       </div>
 
