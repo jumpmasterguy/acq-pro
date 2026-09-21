@@ -951,7 +951,7 @@ function AppContent() {
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed left-0 top-0 h-full w-64 bg-sidebar text-sidebar-foreground border-r border-sidebar-border z-40 flex flex-col transition-transform duration-300 safe-top",
+        "fixed left-0 top-0 h-full w-72 bg-sidebar text-sidebar-foreground border-r border-sidebar-border z-40 flex flex-col transition-transform duration-300 safe-top",
         sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
       )}>
         {/* Logo — opens the real acqlerate.com marketing site in a new tab
@@ -1013,25 +1013,25 @@ function AppContent() {
             const pct = nextLvl ? Math.max(2, Math.min(100, Math.round(((xp - floor) / (nextLvl.threshold - floor)) * 100))) : 100;
             return (
               <div className="pt-3 border-t border-sidebar-border space-y-1.5" data-testid="sidebar-progress">
-                <div className="text-[9px] font-bold uppercase tracking-widest text-sidebar-foreground/40 px-1">Your progress</div>
+                <div className="text-[11px] font-bold uppercase tracking-widest text-sidebar-foreground/55 px-1">Your progress</div>
                 <button
                   onClick={() => setShowLevels(true)}
                   className="w-full text-left px-1 space-y-1.5 group"
                   data-testid="xp-level-card"
                 >
-                  <div className="text-xs font-bold text-sidebar-foreground group-hover:text-sidebar-primary transition-colors">
+                  <div className="text-sm font-bold text-sidebar-foreground group-hover:text-sidebar-primary transition-colors">
                     Lv {currentLevel.level} &middot; {currentLevel.title}
                   </div>
                   <div className="h-1.5 rounded-full bg-sidebar-foreground/10 overflow-hidden">
                     <div className="h-full bg-sidebar-primary rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
                   </div>
-                  <div className="text-[9px] text-sidebar-foreground/45">
+                  <div className="text-xs text-sidebar-foreground/60">
                     {nextLvl ? `${xp} / ${nextLvl.threshold} XP to ${nextLvl.title}` : `${xp} XP &middot; max level`}
                   </div>
                 </button>
                 <div className="flex items-center gap-1.5 px-1 pt-0.5">
-                  <Flame className={cn("w-3 h-3 flex-shrink-0", streak.currentStreak > 0 ? "text-orange-400 fill-orange-400/30" : "text-sidebar-foreground/30")} />
-                  <span className="text-[10px] text-sidebar-foreground/60 truncate">
+                  <Flame className={cn("w-3.5 h-3.5 flex-shrink-0", streak.currentStreak > 0 ? "text-orange-400 fill-orange-400/30" : "text-sidebar-foreground/30")} />
+                  <span className="text-[12px] text-sidebar-foreground/60 truncate">
                     {streak.currentStreak > 0
                       ? `${streak.currentStreak}-day streak`
                       : 'Streak: start today'}
@@ -1044,7 +1044,7 @@ function AppContent() {
           {/* Jump to: doubles as the colour legend, which is how the family
               system gets learned without anyone explaining it. */}
           <div className="pt-3 border-t border-sidebar-border space-y-1" data-testid="family-legend">
-            <div className="text-[9px] font-bold uppercase tracking-widest text-sidebar-foreground/40 px-1 mb-1.5">Jump to</div>
+            <div className="text-[11px] font-bold uppercase tracking-widest text-sidebar-foreground/55 px-1 mb-1.5">Jump to</div>
             {(['foundations', 'money', 'contracts', 'winning', 'program'] as ModuleFamily[]).map(fam => {
               const inFam = modules.filter(m => getModuleFamily(m.id) === fam);
               if (inFam.length === 0) return null;
@@ -1052,13 +1052,13 @@ function AppContent() {
                 <button
                   key={fam}
                   onClick={() => { setView({ type: 'modules' }); setSidebarOpen(false); }}
-                  className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left hover:bg-sidebar-accent transition-colors"
+                  className="w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-left hover:bg-sidebar-accent transition-colors"
                   style={{ borderLeft: `3px solid ${FAMILY_THEME[fam].hex}` }}
                   data-testid={`family-${fam}`}
                 >
-                  <span className="text-[11px] leading-none flex-shrink-0">{inFam[0].icon}</span>
-                  <span className="text-[11px] text-sidebar-foreground/80 truncate flex-1">{FAMILY_LABEL[fam]}</span>
-                  <span className="text-[10px] tabular-nums text-sidebar-foreground/40 flex-shrink-0">{inFam.length}</span>
+                  <span className="text-[13px] leading-none flex-shrink-0">{inFam[0].icon}</span>
+                  <span className="text-[13px] text-sidebar-foreground/90 truncate flex-1">{FAMILY_LABEL[fam]}</span>
+                  <span className="text-[12px] tabular-nums text-sidebar-foreground/40 flex-shrink-0">{inFam.length}</span>
                 </button>
               );
             })}
@@ -1080,24 +1080,24 @@ function AppContent() {
               .filter(m => m.lessons.every(l => progress.completedLessons.has(l.id)))
               .reduce((sum, m) => sum + moduleClps(m.id), 0);
             return (
-              <div className="rounded-lg px-3 py-2 bg-amber-500/[0.07] border border-amber-500/25 space-y-1.5" data-testid="clp-tracker">
+              <div className="rounded-lg px-3 py-2 bg-amber-500/[0.12] border border-amber-500/35 space-y-1.5" data-testid="clp-tracker">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] leading-none">&#127891;</span>
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">CLP credit</span>
-                  {earned > 0 && <span className="ml-auto text-[9px] font-bold text-amber-500">{formatClps(earned)} earned</span>}
+                  <span className="text-[12px] leading-none">&#127891;</span>
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-amber-700 dark:text-amber-300">CLP credit</span>
+                  {earned > 0 && <span className="ml-auto text-xs font-bold text-amber-500">{formatClps(earned)} earned</span>}
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs leading-none flex-shrink-0">{nextMod.icon}</span>
-                  <span className="text-[11px] font-bold text-sidebar-foreground truncate flex-1">{nextMod.title}</span>
-                  <span className="text-[11px] font-bold text-amber-500 flex-shrink-0">{moduleClps(nextMod.id).toFixed(1)}</span>
+                  <span className="text-[13px] font-bold text-amber-900 dark:text-amber-50 truncate flex-1">{nextMod.title}</span>
+                  <span className="text-[13px] font-bold text-amber-500 flex-shrink-0">{moduleClps(nextMod.id).toFixed(1)}</span>
                 </div>
-                <div className="h-1 rounded-full bg-sidebar-foreground/10 overflow-hidden">
+                <div className="h-1 rounded-full bg-amber-900/15 dark:bg-amber-200/15 overflow-hidden">
                   <div className="h-full bg-amber-500 rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
                 </div>
-                <div className="text-[9px] text-sidebar-foreground/50">
+                <div className="text-xs text-amber-800 dark:text-amber-200/90">
                   {left} more {left === 1 ? 'lesson' : 'lessons'} to this certificate
                 </div>
-                <div className="text-[9px] text-sidebar-foreground/40">
+                <div className="text-xs text-amber-800/80 dark:text-amber-200/70">
                   {formatClps(totalClps())} available &middot; 80 per 2-year cycle
                 </div>
               </div>
@@ -1110,9 +1110,9 @@ function AppContent() {
             className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-sidebar-accent transition-colors text-left"
             data-testid="burn-rate-badge"
           >
-            <Calculator className="w-3.5 h-3.5 text-primary flex-shrink-0" />
-            <span className="text-[11px] font-semibold text-primary flex-1 truncate">Spend plan tracker</span>
-            <ChevronRight className="w-3 h-3 text-primary/50 flex-shrink-0" />
+            <Calculator className="w-4 h-4 text-primary flex-shrink-0" />
+            <span className="text-[13px] font-semibold text-primary flex-1 truncate">Spend plan tracker</span>
+            <ChevronRight className="w-3.5 h-3.5 text-primary/50 flex-shrink-0" />
           </button>
         </nav>
 
@@ -1120,7 +1120,7 @@ function AppContent() {
         <div className="px-3 py-4 border-t border-sidebar-border space-y-1">
           {trialDaysLeft !== null && (
             <div
-              className="w-full px-3 py-1.5 rounded-lg text-[11px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 text-center"
+              className="w-full px-3 py-1.5 rounded-lg text-[13px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 text-center"
               data-testid="trial-days-remaining"
             >
               {trialDaysLeft === 0
@@ -1145,17 +1145,17 @@ function AppContent() {
             <div className="flex items-center gap-3 px-3 pb-1">
               <button
                 onClick={() => { setView({ type: 'admin' }); setSidebarOpen(false); }}
-                className="flex items-center gap-1.5 text-[10px] text-sidebar-foreground/40 hover:text-sidebar-foreground transition-colors"
+                className="flex items-center gap-1.5 text-[12px] text-sidebar-foreground/40 hover:text-sidebar-foreground transition-colors"
                 data-testid="nav-admin"
               >
-                <ShieldCheck className="w-3 h-3" /> Admin
+                <ShieldCheck className="w-3.5 h-3.5" /> Admin
               </button>
               <button
                 onClick={() => { setView({ type: 'analytics' }); setSidebarOpen(false); }}
-                className="flex items-center gap-1.5 text-[10px] text-sidebar-foreground/40 hover:text-sidebar-foreground transition-colors"
+                className="flex items-center gap-1.5 text-[12px] text-sidebar-foreground/40 hover:text-sidebar-foreground transition-colors"
                 data-testid="nav-analytics"
               >
-                <BarChart3 className="w-3 h-3" /> Analytics
+                <BarChart3 className="w-3.5 h-3.5" /> Analytics
               </button>
             </div>
           )}
@@ -1164,37 +1164,37 @@ function AppContent() {
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-sidebar-accent transition-colors text-left"
             data-testid="sidebar-identity"
           >
-            <div className="w-7 h-7 rounded-full bg-sidebar-primary/20 flex items-center justify-center flex-shrink-0">
-              <User className="w-3.5 h-3.5 text-sidebar-primary" />
+            <div className="w-8 h-8 rounded-full bg-sidebar-primary/20 flex items-center justify-center flex-shrink-0">
+              <User className="w-4 h-4 text-sidebar-primary" />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="text-xs font-semibold text-sidebar-foreground truncate">{user.username}</div>
-              <div className="text-[10px] text-sidebar-foreground/45 truncate">
+              <div className="text-sm font-semibold text-sidebar-foreground truncate">{user.username}</div>
+              <div className="text-[12px] text-sidebar-foreground/45 truncate">
                 {isPremium ? 'Pro' : 'Free'}{isAdmin ? ' · Admin' : ''}
               </div>
             </div>
           </button>
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-sidebar-foreground/50 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
             data-testid="nav-signout"
           >
-            <LogOut className="w-3.5 h-3.5" />
+            <LogOut className="w-4 h-4" />
             Sign Out
           </button>
           <div className="flex gap-3 px-3 pt-2 pb-1">
-            <a href="/privacy" className="text-[10px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Privacy</a>
-            <a href="/terms" className="text-[10px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Terms</a>
+            <a href="/privacy" className="text-[12px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Privacy</a>
+            <a href="/terms" className="text-[12px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Terms</a>
             <PWAInstallLink />
           </div>
         </div>
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 md:ml-64 flex flex-col min-h-screen min-w-0 relative">
+      <div className="flex-1 md:ml-72 flex flex-col min-h-screen min-w-0 relative">
         {/* Background: soft radial glow only. The hex grid that used to sit
             here fought every card on top of it and dated the page. */}
-        <div aria-hidden="true" className="pointer-events-none fixed md:left-64 inset-y-0 right-0 z-0 overflow-hidden">
+        <div aria-hidden="true" className="pointer-events-none fixed md:left-72 inset-y-0 right-0 z-0 overflow-hidden">
           {/* Radial teal glow top-right */}
           <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full opacity-[0.07] dark:opacity-[0.12]" style={{background: 'radial-gradient(circle, #01696f 0%, transparent 70%)'}} />
           {/* Radial teal glow bottom-left */}
