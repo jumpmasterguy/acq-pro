@@ -392,7 +392,7 @@ export async function sendEmail4(to: string, username: string): Promise<void> {
     <div class="section-label">What unlocks with Pro</div>
     <ul class="checklist">
       <li>All 14 modules — Defense Finance, Contracting, Data Analytics, Capture Management, Program Ops, contractor business finance, small business, compliance, government pre-award, sustainment, the startup on-ramp, veteran transition, and acquisition history</li>
-      <li>120+ lessons with real DoD content — not textbook theory</li>
+      <li>122 lessons with real DoD content — not textbook theory</li>
       <li>Skill-level system: Novice → Intermediate → Advanced in every lesson</li>
       <li>Module gate assessments to validate what you've learned</li>
       <li>Career roadmap for USG and contractor tracks — with salary benchmarks</li>
@@ -402,7 +402,7 @@ export async function sendEmail4(to: string, username: string): Promise<void> {
 
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
       <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Start at $5.99/month — or get lifetime access for a one-time payment of $99. Either way, you're covered by a 30-day money-back guarantee.</p>
-      <a href="${APP_URL}/app#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Unlock All 6 Modules →</a>
+      <a href="${APP_URL}/app#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Unlock All 14 Modules →</a>
     </div>
 
     <p>Still working through Module 1? No rush. It'll be there when you're ready.</p>
@@ -543,7 +543,7 @@ export async function sendEmail7(to: string, username: string): Promise<void> {
 
     <ul class="checklist">
       <li>5 Pro modules — Defense Finance, Contracting, Data Analytics, Capture Management, Program Ops</li>
-      <li>120+ lessons built from real DoD programs, contracts, and career paths</li>
+      <li>122 lessons built from real DoD programs, contracts, and career paths</li>
       <li>Skill levels (Novice → Intermediate → Advanced) so the content grows with you</li>
       <li>Module gate assessments to validate what you've actually learned</li>
       <li>Full career roadmap — USG and contractor tracks, salary benchmarks, certification guidance</li>

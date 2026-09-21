@@ -17,7 +17,7 @@
 // Without acq:stat the panel falls back to read time / audience / month, so a post
 // published by the automated pipeline still gets a complete slide.
 
-import { readFileSync, writeFileSync, readdirSync, statSync } from "fs";
+import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "fs";
 import { join, dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
@@ -185,7 +185,136 @@ const nextSitemap = `<?xml version="1.0" encoding="UTF-8"?>
 const sitemapChanged = nextSitemap !== sitemap;
 if (sitemapChanged) writeFileSync(SITEMAP, nextSitemap);
 
+
+function htmlFiles(dir) {
+  const out = [];
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    if (e.name === "node_modules" || e.name.startsWith(".")) continue;
+    const full = join(dir, e.name);
+    if (e.isDirectory()) out.push(...htmlFiles(full));
+    else if (e.name.endsWith(".html")) out.push(full);
+  }
+  return out;
+}
+
+function sourceFiles(dir) {
+  const out = [];
+  if (!existsSync(dir)) return out;
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    if (e.name === "node_modules" || e.name.startsWith(".")) continue;
+    const full = join(dir, e.name);
+    if (e.isDirectory()) out.push(...sourceFiles(full));
+    // curriculum.ts is the source of truth; these two exist to describe the
+    // stale phrasings, so scanning them would flag their own patterns.
+    else if (/\.(ts|tsx|js|mjs|py)$/.test(e.name) &&
+             !["curriculum.ts", "sync-blog.mjs", "curriculum_counts.py"].includes(e.name))
+      out.push(full);
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+// 3. Module/lesson counts
+//
+// "N modules, M lessons" appears in published post CTAs, on the tools page and
+// in the app. It has gone stale twice: a July commit fixed "34+ lessons" to 42,
+// and by September the truth was 122 lessons across 14 modules while 34 posts,
+// the sign-in page and three generators still said six and 42.
+//
+// So the counts are derived here from curriculum.ts (same lesson-ID regex
+// validate-curriculum.js uses) and rewritten in the static HTML on every
+// build, which means published posts self-heal. Source files under client/src,
+// server/ and scripts/ are NOT rewritten (editing source during a build is a
+// bad habit); instead any stale figure there fails the build, so drift is
+// caught rather than shipped.
+// ---------------------------------------------------------------------------
+const NUM_WORDS = ["Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten",
+                   "Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen",
+                   "Eighteen","Nineteen","Twenty"];
+
+function curriculumCounts() {
+  const src = readFileSync(join(ROOT, "client", "src", "lib", "curriculum.ts"), "utf8");
+  const modules = (src.match(/^    id: '[a-z0-9-]+',$/gm) || []).length;
+  const lessons = (src.match(/\bid:\s*'[a-z]+-\d+[a-z]?'/g) || []).length;
+  if (!modules || !lessons) {
+    console.error("sync-blog: could not parse curriculum counts; refusing to rewrite anything");
+    process.exit(1);
+  }
+  return { modules, lessons, word: NUM_WORDS[modules] || String(modules) };
+}
+
+const CC = curriculumCounts();
+
+// Narrow, formulaic phrasings only. Each is emitted by a generator or was
+// copied from one, so these patterns cannot collide with prose that happens to
+// contain a number. Module 1's own "9 lessons" is deliberately untouched.
+function fixCounts(text) {
+  const w = CC.word, W = w.toLowerCase(), n = CC.modules, L = CC.lessons;
+  return text
+    // blog + article CTAs: "Start Free. Six Modules, 42 Lessons"
+    // "Start Free — Six Modules, 42 Lessons" and the "Start Free." variant.
+    // Normalised to a period on the way past: house style has no em dashes,
+    // and strip_em_dashes() in the generator only catches number-dash-number.
+    .replace(/Start Free\s*[.,—–-]?\s*(?:One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen|Fourteen|Fifteen|Sixteen|Seventeen|Eighteen|Nineteen|Twenty|\d+) Modules?, \d+\+? Lessons/g,
+             `Start Free. ${w} Modules, ${L} Lessons`)
+    // "Six modules. 34+ lessons." / "Fourteen modules. 122 lessons."
+    .replace(/\b(?:One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen|Fourteen|Fifteen|Sixteen|Seventeen|Eighteen|Nineteen|Twenty) modules\. \d+\+? lessons\./g,
+             `${w} modules. ${L} lessons.`)
+    // "All 6 modules — 42 lessons"
+    .replace(/\bAll \d+ modules (—|-) \d+\+? lessons/g, `All ${n} modules $1 ${L} lessons`)
+    // bare "all 6 modules" / "All 6 modules"
+    .replace(/\b(all|All) \d+ modules\b/g, (_, a) => `${a} ${n} modules`)
+    // prose "Six modules covering" / "six modules together"
+    .replace(/\b(One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen|Fourteen) (modules? (?:covering|together|and))/g,
+             (_, __, rest) => `${w} ${rest}`)
+    .replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen) (modules? (?:covering|together|and))/g,
+             (_, __, rest) => `${W} ${rest}`);
+}
+
+let countFixes = 0;
+for (const file of htmlFiles(join(ROOT, "client", "public"))) {
+  const before = readFileSync(file, "utf8");
+  const after = fixCounts(before);
+  if (after !== before) {
+    writeFileSync(file, after);
+    countFixes++;
+  }
+}
+
+// Fail the build on a stale figure in source we do not rewrite.
+const STALE = [
+  /Start Free[.,—-]?\s*(?:Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen) Modules/,
+  /\b(?:Six|six) modules\b(?! covering| together)/,
+  /\ball \d+ modules\b/i,
+  /\b\d+\+? in-depth lessons\b/,
+  /\b1[0-9]{2}\+ lessons\b/,
+];
+const sourceDirs = [join(ROOT, "client", "src"), join(ROOT, "server"),
+                    join(ROOT, "scripts"), join(ROOT, "content_strategy")];
+const stale = [];
+for (const dir of sourceDirs) {
+  for (const file of sourceFiles(dir)) {
+    const text = readFileSync(file, "utf8");
+    for (const re of STALE) {
+      const m = text.match(re);
+      if (!m) continue;
+      // a figure that already agrees with the curriculum is fine
+      if (m[0].includes(String(CC.modules)) || m[0].includes(String(CC.lessons))) continue;
+      stale.push(`${file.replace(ROOT + "/", "")}: ${m[0]}`);
+    }
+  }
+}
+if (stale.length) {
+  console.error(`\nsync-blog: stale module/lesson counts in source ` +
+                `(curriculum says ${CC.modules} modules, ${CC.lessons} lessons):`);
+  for (const s of [...new Set(stale)]) console.error(`  ${s}`);
+  console.error("Use the curriculum as the source: getTotalLessons()/modules.length in the " +
+                "client, scripts/curriculum_counts.py in the generators.");
+  process.exit(1);
+}
+
 console.log(
   `sync-blog: ${posts.length} posts · carousel → ${posts.slice(0, CAROUSEL_SIZE).map((p) => p.slug).join(", ")}` +
-  ` · landing.html ${landingChanged ? "updated" : "unchanged"} · sitemap.xml ${sitemapChanged ? "updated" : "unchanged"} (${kept.length + blogBlocks.length} URLs)`
+  ` · landing.html ${landingChanged ? "updated" : "unchanged"} · sitemap.xml ${sitemapChanged ? "updated" : "unchanged"} (${kept.length + blogBlocks.length} URLs)` +
+  ` · counts ${CC.modules} modules/${CC.lessons} lessons (${countFixes} file${countFixes === 1 ? "" : "s"} rewritten)`
 );

@@ -6,6 +6,10 @@ bottom CTA, footer. Updates blog index with all 20 post cards.
 """
 
 import json, re, subprocess
+import sys
+from pathlib import Path as _P
+sys.path.insert(0, str(_P(__file__).parent.parent / "scripts"))
+from curriculum_counts import counts as curriculum_counts
 from pathlib import Path
 from datetime import date
 
@@ -144,10 +148,11 @@ def sidebar_html(toc_items: str, module_key: str) -> str:
 
 
 def bottom_cta(module_key: str) -> str:
+    CC = curriculum_counts()
     mod = MODULES.get(module_key, MODULES["foundations"])
     return f"""    <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:16px;padding:32px;margin-top:48px;color:white;">
       <div style="font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;opacity:0.7;margin-bottom:8px">Master Defense Acquisitions</div>
-      <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:10px;color:white">Start Free — Six Modules, 34+ Lessons</h3>
+      <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:10px;color:white">Start Free — {CC["modules_word"]} Modules, {CC["lessons"]} Lessons</h3>
       <p style="font-size:0.95rem;opacity:0.9;margin-bottom:20px;line-height:1.6">Built for DoD program managers, contracting officers, and defense contractors. The <strong>{mod['title']}</strong> module covers everything in this guide — novice through advanced.</p>
       <a href="/app#/auth" style="display:inline-block;background:white;color:#01696F;font-weight:800;font-size:0.95rem;padding:12px 24px;border-radius:10px;text-decoration:none;margin-right:12px">Start Learning Free →</a>
       <a href="/app#/upgrade" style="display:inline-block;color:rgba(255,255,255,0.85);font-weight:600;font-size:0.9rem;padding:12px 0;text-decoration:none">See all modules →</a>

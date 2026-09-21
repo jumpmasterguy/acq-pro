@@ -4,6 +4,10 @@ Builds 3 product landing pages + publishes 3 comparison articles.
 Product pages are served at /products/{pack-slug} as static HTML.
 """
 import json, re, subprocess
+import sys
+from pathlib import Path as _P
+sys.path.insert(0, str(_P(__file__).parent.parent / "scripts"))
+from curriculum_counts import counts as curriculum_counts
 from pathlib import Path
 from datetime import date
 
@@ -245,6 +249,7 @@ def build_product_page(pack: dict) -> str:
 
 
 def publish_comparison_articles():
+    CC = curriculum_counts()
     """Publish the 3 comparison articles to the blog."""
     comparison_files = list(ARTICLES_DIR.glob("pillar-comparison-*.json"))
     published = []
@@ -315,7 +320,7 @@ def publish_comparison_articles():
     <!-- Bottom CTA -->
     <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:16px;padding:32px;margin-top:48px;color:white;">
       <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:10px;color:white">Start Learning DoD Acquisition — Free</h3>
-      <p style="font-size:0.95rem;opacity:0.9;margin-bottom:20px">Six modules. 34+ lessons. Novice through advanced. The <strong>{mod['title']}</strong> module covers everything in this guide.</p>
+      <p style="font-size:0.95rem;opacity:0.9;margin-bottom:20px">{CC["modules_word"]} modules. {CC["lessons"]} lessons. Novice through advanced. The <strong>{mod['title']}</strong> module covers everything in this guide.</p>
       <a href="/app#/auth" style="display:inline-block;background:white;color:#01696F;font-weight:800;font-size:0.95rem;padding:12px 24px;border-radius:10px;text-decoration:none;margin-right:12px">Start Free →</a>
       <a href="/app#/upgrade" style="display:inline-block;color:rgba(255,255,255,0.85);font-weight:600;font-size:0.9rem;padding:12px 0;text-decoration:none">See all modules →</a>
     </div>

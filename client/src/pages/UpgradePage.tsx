@@ -219,7 +219,7 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
             {[
               <>On a computer or in your browser, go to <strong>acqlerate.com</strong> and sign in with {userEmail}.</>,
               <>Choose Monthly Pro or Lifetime Pro. Both come with a 30-day money-back guarantee.</>,
-              <>Come back to the app. Sign out and back in and all 6 modules unlock.</>,
+              <>Come back to the app. Sign out and back in and all {modules.length} modules unlock.</>,
             ].map((text, i) => (
               <li key={i} className="flex gap-3 text-sm leading-[1.5]" style={{ color: 'var(--acq-text-body)' }}>
                 <span

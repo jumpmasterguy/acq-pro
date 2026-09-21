@@ -165,7 +165,7 @@ export function ModuleStanding({
 
       <p className="mt-3.5 text-xs leading-[1.5]" style={{ color: 'var(--acq-text-muted)' }}>
         Finish a module to unlock its Certificate of Completion. Self-report it as External Training
-        in your WarU portal. All six modules together are worth{' '}
+        in your WarU portal. All {modules.length} modules together are worth{' '}
         {modules.reduce((sum, m) => sum + moduleClps(m.id), 0).toFixed(1)} CLPs.
       </p>
     </>

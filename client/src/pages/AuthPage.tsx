@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getTotalLessons } from "@/lib/curriculum";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -100,7 +101,7 @@ interface AuthPageProps {
 }
 
 const highlights = [
-  { icon: BookOpen, label: "48 in-depth lessons" },
+  { icon: BookOpen, label: `${getTotalLessons()} in-depth lessons` },
   { icon: Zap, label: "XP tracking & gamification" },
   { icon: Award, label: "DoD Acquisitions expertise" },
   { icon: Lock, label: "Secure, private progress" },

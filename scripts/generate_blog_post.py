@@ -15,6 +15,7 @@ from pathlib import Path
 import urllib.request
 sys.path.insert(0, str(Path(__file__).parent))
 import diagram
+from curriculum_counts import counts as curriculum_counts
 from dupe_guard import check as dupe_check, nearest as dupe_nearest, DuplicateTopic
 
 
@@ -587,6 +588,10 @@ def assemble_post(title: str, deck: str, body_html: str, topic: dict,
     
     formatted_date = datetime.strptime(pub_date, "%Y-%m-%d").strftime("%B %Y")
     mod = MODULES.get(topic["module"], MODULES["foundations"])
+    # Module/lesson totals come from curriculum.ts, never a literal. These have
+    # gone stale twice; scripts/sync-blog.mjs also rewrites them in already
+    # published posts on every build.
+    CC = curriculum_counts()
     
     # Build the hard-required elements
     table_html = build_comparison_table(
@@ -724,7 +729,7 @@ def assemble_post(title: str, deck: str, body_html: str, topic: dict,
     <!-- Bottom CTA -->
     <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:16px;padding:32px;margin-top:48px;color:white;">
       <div style="font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;opacity:0.7;margin-bottom:8px">Master Defense Acquisitions</div>
-      <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:10px;color:white">Start Free. Six Modules, 42 Lessons</h3>
+      <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:10px;color:white">Start Free. {CC["modules_word"]} Modules, {CC["lessons"]} Lessons</h3>
       <p style="font-size:0.95rem;opacity:0.9;margin-bottom:20px;line-height:1.6">Built for DoD program managers, contracting officers, and defense contractors. Novice through advanced. The <strong>{mod['title']}</strong> module goes deep on everything covered in this post.</p>
       <a href="/app#/auth" style="display:inline-block;background:white;color:#01696F;font-weight:800;font-size:0.95rem;padding:12px 24px;border-radius:10px;text-decoration:none;margin-right:12px">Start Learning Free →</a>
       <a href="/app#/upgrade" style="display:inline-block;color:rgba(255,255,255,0.85);font-weight:600;font-size:0.9rem;padding:12px 0;text-decoration:none">See all modules →</a>
