@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { modules, getTotalLessons, getModuleTotalMinutes, formatDuration, parseDuration } from "@/lib/curriculum";
-import { getModuleTheme, getModuleFamilyTheme } from "@/lib/moduleTheme";
+import { getModuleTheme, getModuleFamilyTheme, getModuleFamily, FAMILY_LABEL } from "@/lib/moduleTheme";
+import { formatClps, totalClps, moduleClps } from "@shared/moduleClps";
 import { getModuleProgress, getLevel, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
 import type { UserProgress } from "@/lib/progress";
 import type { UserProfile } from "@/pages/AuthPage";
@@ -274,7 +275,8 @@ function ModuleCard({
   const lessonIds = mod.lessons.map(l => l.id);
   const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
   const theme = getModuleFamilyTheme(mod.id);
-  const c = { border: theme.border, accent: theme.text, check: theme.text, progress: theme.progressBar, headerGrad: theme.headerGrad };
+  const familyLabel = FAMILY_LABEL[getModuleFamily(mod.id)];
+  const c = { border: theme.border, accent: theme.text, check: theme.text, progress: theme.progressBar, headerGrad: theme.headerGrad, bgTint: theme.bgTint, borderTint: theme.borderTint };
 
   const totalMins = getModuleTotalMinutes(mod.id);
 
@@ -298,53 +300,58 @@ function ModuleCard({
         isAccessible ? "hover:shadow-lg hover:-translate-y-0.5 cursor-pointer" : "opacity-70",
         isFirst ? "ring-2 ring-primary/30" : "",
       )}
+      style={{ borderTop: `3px solid ${theme.hex}` }}
       onClick={() => isAccessible ? onSelect() : onUpgrade()}
       data-testid={`module-${mod.id}`}
     >
-      {/* Gradient header */}
-      <div className={cn("px-5 py-4 border-b bg-gradient-to-r", c.headerGrad)}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/20 text-white text-xs font-bold tabular-nums border border-white/30">
-              {String(seqNum).padStart(2, '0')}
+      {/* Header. The family colour lives in a thin top edge (on the card) and a
+          small icon tile, rather than a full bleed bar: with 11 modules on a
+          page, saturated headers stack into a wall of colour and stop reading
+          as identity. The module's own number used to appear twice, once in
+          the circle and again inside mod.subtitle, so the subtitle is dropped
+          and the family label takes its place. */}
+      <div className="px-5 py-4 border-b border-border/70">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className={cn("inline-flex items-center justify-center w-10 h-10 rounded-xl text-lg flex-shrink-0 border", c.bgTint, c.borderTint)}>
+              {mod.icon}
             </span>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <span className="text-lg leading-none">{mod.icon}</span>
-                <span className="font-bold text-white text-sm">{mod.title}</span>
+                <span className="text-[11px] font-bold tabular-nums text-muted-foreground/70">{String(seqNum).padStart(2, '0')}</span>
+                <span className={cn("text-[10px] font-bold uppercase tracking-wider", c.accent)}>{familyLabel}</span>
               </div>
-              <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                <span className="text-[11px] text-white/60 whitespace-nowrap">{mod.subtitle}</span>
-                <span className="text-white/30 text-[10px]">·</span>
-                <span className="text-[11px] text-white/80 font-medium whitespace-nowrap flex items-center gap-1">
+              <div className="font-bold text-sm mt-0.5 truncate">{mod.title}</div>
+              <div className="flex items-center gap-1.5 mt-0.5 flex-wrap text-[11px] text-muted-foreground">
+                <span className="whitespace-nowrap flex items-center gap-1">
                   <Clock className="w-2.5 h-2.5" />
                   {isCareerMode && trackMins !== totalMins
-                    ? <span>{formatDuration(trackMins)}<span className="text-white/50 font-normal"> / {formatDuration(totalMins)}</span></span>
+                    ? <span>{formatDuration(trackMins)}<span className="text-muted-foreground/60"> / {formatDuration(totalMins)}</span></span>
                     : <span>{formatDuration(totalMins)}</span>
                   }
                 </span>
-                <span className="text-white/30 text-[10px]">·</span>
-                <span className="text-[11px] text-white/70 whitespace-nowrap">
+                <span className="text-muted-foreground/40">·</span>
+                <span className="whitespace-nowrap">
                   {isCareerMode && trackLessonCount !== mod.lessons.length
-                    ? <>{trackLessonCount}<span className="text-white/50"> / {mod.lessons.length}</span> lessons</>
+                    ? <>{trackLessonCount}<span className="text-muted-foreground/60"> / {mod.lessons.length}</span> lessons</>
                     : <>{mod.lessons.length} lessons</>
                   }
                 </span>
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             {isFirst && (
-              <span className="inline-flex items-center rounded-full bg-white/20 border border-white/30 px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-wide">
+              <span className="inline-flex items-center rounded-full bg-primary/10 border border-primary/25 px-2 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wide">
                 Start Here
               </span>
             )}
             {mod.free && (
-              <span className="inline-flex items-center rounded-full bg-emerald-400/20 border border-emerald-300/40 px-2 py-0.5 text-[10px] font-bold text-emerald-200 uppercase tracking-wide">
+              <span className="inline-flex items-center rounded-full bg-emerald-500/10 border border-emerald-500/25 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wide">
                 Free
               </span>
             )}
-            {!isAccessible && <Lock className="w-4 h-4 text-white/60" />}
+            {!isAccessible && <Lock className="w-4 h-4 text-muted-foreground/60" />}
           </div>
         </div>
       </div>
@@ -830,6 +837,37 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
         const adminStat = statsStrip.find(s => s.label === 'Total signups');
         return (
           <div className="space-y-3">
+            {/* A brand new account has nothing to report, and a scoreboard reading
+                0%, 0 XP, 0 lessons tells a paying customer their first
+                impression is failure. Until the first lesson lands, the same
+                space looks forward instead: what is available, not what is
+                missing. */}
+            {completedCount === 0 ? (
+              <div className="rounded-2xl border border-border bg-card p-5">
+                <div className="flex items-center justify-between gap-5 flex-wrap">
+                  <div className="min-w-0">
+                    <div className="text-sm font-bold">Your path ahead</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">
+                      Finish Module 1 and your first Certificate of Completion is worth {formatClps(moduleClps('foundations'))} CLPs.
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-6 flex-wrap">
+                    <div>
+                      <div className="text-lg font-bold tabular-nums leading-none">{totalLessons}</div>
+                      <div className="text-[11px] text-muted-foreground mt-0.5">Lessons ahead</div>
+                    </div>
+                    <div>
+                      <div className="text-lg font-bold tabular-nums leading-none">{formatClps(totalClps())}</div>
+                      <div className="text-[11px] text-muted-foreground mt-0.5">CLPs available</div>
+                    </div>
+                    <div>
+                      <div className="text-lg font-bold tabular-nums leading-none">{progress.isPremium ? modules.length : FREE_MODULES.length}<span className="text-xs text-muted-foreground font-normal">/{modules.length}</span></div>
+                      <div className="text-[11px] text-muted-foreground mt-0.5">Modules unlocked</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
             <div className="relative overflow-hidden rounded-2xl p-5 sm:p-6 shadow-lg" style={{ background: 'linear-gradient(135deg, #0d2137 0%, #123047 55%, #0a1b2d 100%)' }}>
               {/* Decorative glow */}
               <div className="absolute -right-10 -top-16 w-56 h-56 rounded-full bg-primary/20 blur-3xl pointer-events-none" />
@@ -884,6 +922,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
                 </div>
               </div>
             </div>
+            )}
           </div>
         );
       })()}
@@ -919,62 +958,64 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
           program spends its funding. Here, it's how fast you're spending
           daily reps. "Streak" is spelled out in the label so it reads as a
           streak counter, not a rate. */}
-      <div className="grid sm:grid-cols-2 gap-3">
-        {/* Burn Rate Streak card */}
+      {/* Streak and daily challenge are habits, not headlines. As equal sized
+          cards they competed with Continue for the same glance; as two quiet
+          rows they stay one click away and the eye goes where it should. */}
+      <div className="rounded-2xl border border-border bg-card divide-y divide-border overflow-hidden">
+        {/* Burn Rate Streak */}
         <div
-          className="rounded-2xl border border-orange-500/25 bg-orange-500/[0.04] p-4 flex items-center gap-4"
+          className="flex items-center gap-3 px-4 py-3"
           title="In acquisitions, burn rate tracks how fast a program spends its funding. Here, it tracks how fast you're spending daily reps."
         >
-          <div className="text-4xl">{streak.currentStreak > 0 ? '🔥' : '🎯'}</div>
-          <div className="flex-1">
+          <span className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-sm flex-shrink-0">
+            {streak.currentStreak > 0 ? '🔥' : '🎯'}
+          </span>
+          <p className="text-sm min-w-0 flex-1">
             {streak.currentStreak > 0 ? (
               <>
-                <p className="text-xl font-black">{streak.currentStreak}-day burn rate streak</p>
-                <p className="text-xs text-muted-foreground">Personal best: {streak.longestStreak} day{streak.longestStreak !== 1 ? 's' : ''}</p>
+                <span className="font-semibold">{streak.currentStreak}-day burn rate streak</span>
+                <span className="text-muted-foreground"> · personal best {streak.longestStreak} day{streak.longestStreak !== 1 ? 's' : ''}</span>
               </>
             ) : (
               <>
-                <p className="text-xl font-black">Start your burn rate streak</p>
-                <p className="text-xs text-muted-foreground">
-                  One lesson today starts it{streak.longestStreak > 0 ? `. Your best is ${streak.longestStreak} day${streak.longestStreak !== 1 ? 's' : ''}` : ''}
-                </p>
+                <span className="font-semibold">Start your burn rate streak</span>
+                <span className="text-muted-foreground"> · one lesson today starts it{streak.longestStreak > 0 ? `, your best is ${streak.longestStreak} day${streak.longestStreak !== 1 ? 's' : ''}` : ''}</span>
               </>
             )}
-          </div>
+          </p>
           {streak.currentStreak >= 7 && (
-            <div className="text-xs font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 px-2 py-1 rounded-full">🏆 {streak.currentStreak}d</div>
+            <span className="text-[11px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-full flex-shrink-0">🏆 {streak.currentStreak}d</span>
           )}
         </div>
 
-        {/* Daily challenge card */}
-        <div className={`rounded-2xl border p-4 ${challengeSubmitted ? 'border-emerald-400/30 bg-emerald-500/5' : 'border-primary/30 bg-primary/5 cursor-pointer hover:bg-primary/10 transition-colors'}`}
-          onClick={() => !challengeSubmitted && setChallengeActive(true)}>
-          {challengeSubmitted && challengeResult ? (
-            <div className="flex items-center gap-3">
-              <div className="text-3xl">✅</div>
-              <div>
-                <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{challengeResult.message}</p>
-                <p className="text-xs text-muted-foreground">Score: {challengeResult.score}/5 · +{challengeResult.xpEarned} XP · Come back tomorrow</p>
-              </div>
-            </div>
-          ) : challengeSubmitted ? (
-            <div className="flex items-center gap-3">
-              <div className="text-3xl">✅</div>
-              <div>
-                <p className="text-sm font-bold">Today's challenge complete</p>
-                <p className="text-xs text-muted-foreground">Come back tomorrow for a new set</p>
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-center gap-3">
-              <div className="text-3xl">⚡</div>
-              <div className="flex-1">
-                <p className="text-sm font-bold text-primary">Today's Daily Challenge</p>
-                <p className="text-xs text-muted-foreground">5 questions · ~2 min · Earn up to 50 XP</p>
-              </div>
-              <div className="text-primary text-lg">→</div>
-            </div>
-          )}
+        {/* Daily challenge */}
+        <div
+          className={`flex items-center gap-3 px-4 py-3 ${challengeSubmitted ? '' : 'cursor-pointer hover:bg-muted/50 transition-colors'}`}
+          onClick={() => !challengeSubmitted && setChallengeActive(true)}
+          data-testid="daily-challenge-row"
+        >
+          <span className="w-7 h-7 rounded-lg bg-primary/10 border border-primary/25 flex items-center justify-center text-sm flex-shrink-0">
+            {challengeSubmitted ? '✅' : '⚡'}
+          </span>
+          <p className="text-sm min-w-0 flex-1">
+            {challengeSubmitted && challengeResult ? (
+              <>
+                <span className="font-semibold">{challengeResult.message}</span>
+                <span className="text-muted-foreground"> · {challengeResult.score}/5, +{challengeResult.xpEarned} XP, back tomorrow</span>
+              </>
+            ) : challengeSubmitted ? (
+              <>
+                <span className="font-semibold">Today's challenge complete</span>
+                <span className="text-muted-foreground"> · back tomorrow for a new set</span>
+              </>
+            ) : (
+              <>
+                <span className="font-semibold">Today's Daily Challenge</span>
+                <span className="text-muted-foreground"> · 5 questions, 2 min, up to 50 XP</span>
+              </>
+            )}
+          </p>
+          {!challengeSubmitted && <span className="text-muted-foreground flex-shrink-0">›</span>}
         </div>
       </div>
 

@@ -11,6 +11,7 @@ import { hasFullAccess, hasPaidPlan, trialDaysRemaining } from "@shared/access";
 import { isNativeApp, getPlatform } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
 import { getModuleTheme, getModuleFamilyTheme, getModuleFamily, type ModuleFamily } from "@/lib/moduleTheme";
+import { moduleClps, formatClps, totalClps } from "@shared/moduleClps";
 import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator, Flame } from "lucide-react";
 import { SIDEBAR_RESOURCES } from "@/lib/resources";
 import { FAR_TRANSLATOR, TOOLS_DIRECTORY } from "@/lib/toolsDirectory";
@@ -1001,6 +1002,47 @@ function AppContent() {
               <div className="text-[9px] text-sidebar-foreground/40">{completedCount} done</div>
             </div>
           </button>
+
+          {/* CLP credit. This is why a DAWIA professional is paying: 80 points
+              every two years, and the curriculum carries a large share of them.
+              Shown as the NEXT certificate rather than a running total, because
+              a total reads "0.0 of 43.8" on day one, which is the same zero
+              state failure as a sleeping streak tile. A reward four lessons out
+              pulls; one forty hours out does not. Figures derive from the
+              curriculum, so this cannot drift. */}
+          {(() => {
+            const nextMod = modules.find(m => m.lessons.some(l => !progress.completedLessons.has(l.id)));
+            if (!nextMod) return null;
+            const done = nextMod.lessons.filter(l => progress.completedLessons.has(l.id)).length;
+            const left = nextMod.lessons.length - done;
+            const pct = Math.round((done / nextMod.lessons.length) * 100);
+            const earned = modules
+              .filter(m => m.lessons.every(l => progress.completedLessons.has(l.id)))
+              .reduce((sum, m) => sum + moduleClps(m.id), 0);
+            return (
+              <div className="w-full rounded-lg px-3 py-2 bg-amber-500/[0.07] border border-amber-500/25 space-y-1.5" data-testid="clp-tracker">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] leading-none">&#127891;</span>
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">CLP credit</span>
+                  {earned > 0 && <span className="ml-auto text-[9px] font-bold text-amber-500">{formatClps(earned)} earned</span>}
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs leading-none flex-shrink-0">{nextMod.icon}</span>
+                  <span className="text-[11px] font-bold text-sidebar-foreground truncate flex-1">{nextMod.title}</span>
+                  <span className="text-[11px] font-bold text-amber-500 flex-shrink-0">{formatClps(moduleClps(nextMod.id))}</span>
+                </div>
+                <div className="h-1 rounded-full bg-sidebar-foreground/10 overflow-hidden">
+                  <div className="h-full bg-amber-500 rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
+                </div>
+                <div className="text-[9px] text-sidebar-foreground/50">
+                  {left} more {left === 1 ? 'lesson' : 'lessons'} to this certificate
+                </div>
+                <div className="text-[9px] text-sidebar-foreground/40">
+                  {formatClps(totalClps())} available &middot; 80 per 2-year cycle
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Burn Rate Streak — Acqlerate's take on a daily streak. In real
               acquisitions, burn rate is how fast a program spends its
