@@ -104,7 +104,7 @@ type View =
   // Mobile-only screens. The desktop shell reaches modules through the
   // sidebar tree and resources through its collapsible sections, so these
   // two views exist to give the bottom tab bar a Learn and a Resources tab.
-  | { type: 'modules' }
+  | { type: 'modules'; family?: ModuleFamily }
   | { type: 'resources' }
   | { type: 'module'; moduleId: string; activeCareer?: string }
   | { type: 'lesson'; lessonId: string; activeCareer?: string }
@@ -728,7 +728,7 @@ function AppContent() {
       case 'dashboard':
         return { kind: 'logo' };
       case 'modules':
-        return { kind: 'title', title: 'Modules' };
+        return { kind: 'title', title: view.family ? FAMILY_LABEL[view.family] : 'Modules' };
       case 'resources':
         return { kind: 'title', title: 'Resources & tools' };
       case 'account':
@@ -838,6 +838,8 @@ function AppContent() {
               progress={progress}
               onSelectModule={(id) => setView({ type: 'module', moduleId: id })}
               onUpgrade={handleUpgrade}
+              family={view.family}
+              onSelectFamily={(f) => setView(f ? { type: 'modules', family: f } : { type: 'modules' })}
             />
           )}
           {view.type === 'resources' && (
@@ -1051,7 +1053,7 @@ function AppContent() {
               return (
                 <button
                   key={fam}
-                  onClick={() => { setView({ type: 'modules' }); setSidebarOpen(false); }}
+                  onClick={() => { setView({ type: 'modules', family: fam }); setSidebarOpen(false); }}
                   className="w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-left hover:bg-sidebar-accent transition-colors"
                   style={{ borderLeft: `3px solid ${FAMILY_THEME[fam].hex}` }}
                   data-testid={`family-${fam}`}
