@@ -1393,21 +1393,13 @@ function AppContent() {
 
       {/* Main content */}
       <div className="flex-1 md:ml-64 flex flex-col min-h-screen min-w-0 relative">
-        {/* Background: hex grid + radial glow */}
+        {/* Background: soft radial glow only. The hex grid that used to sit
+            here fought every card on top of it and dated the page. */}
         <div aria-hidden="true" className="pointer-events-none fixed md:left-64 inset-y-0 right-0 z-0 overflow-hidden">
           {/* Radial teal glow top-right */}
           <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full opacity-[0.07] dark:opacity-[0.12]" style={{background: 'radial-gradient(circle, #01696f 0%, transparent 70%)'}} />
           {/* Radial teal glow bottom-left */}
           <div className="absolute -bottom-32 -left-16 w-[400px] h-[400px] rounded-full opacity-[0.05] dark:opacity-[0.08]" style={{background: 'radial-gradient(circle, #01696f 0%, transparent 70%)'}} />
-          {/* Hex grid overlay */}
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 opacity-[0.06] dark:opacity-[0.05]">
-            <defs>
-              <pattern id="hex-bg" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse">
-                <polygon points="30,3 57,18 57,34 30,49 3,34 3,18" fill="none" stroke="#01696f" strokeWidth="1.2" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#hex-bg)" />
-          </svg>
         </div>
         {/* Top Bar */}
         <header className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-20 flex items-center justify-between px-4 md:px-6 safe-top" style={{minHeight: '3.5rem'}}>

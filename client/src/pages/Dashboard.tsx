@@ -446,6 +446,8 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
+  // Search starts collapsed so the fold belongs to Continue, not to an empty input.
+  const [searchOpen, setSearchOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const [challenge, setChallenge] = useState<{ questions: any[], date: string } | null>(null);
   const isMobile = useIsMobile();
@@ -714,7 +716,21 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
 
       {/* Search bar */}
       <div ref={searchRef} className="relative">
-        <div className={`flex items-center gap-3 bg-card border rounded-2xl px-4 py-3 shadow-sm transition-all duration-200 ${
+        {!searchOpen && (
+          <button
+            type="button"
+            onClick={() => setSearchOpen(true)}
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground border border-border bg-card/60 rounded-full px-3.5 py-1.5 transition-colors"
+            aria-label="Search lessons and terms"
+            data-testid="search-open"
+          >
+            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+            </svg>
+            <span>Search lessons and terms</span>
+          </button>
+        )}
+        <div className={`${searchOpen ? 'flex' : 'hidden'} items-center gap-3 bg-card border rounded-2xl px-4 py-3 shadow-sm transition-all duration-200 ${
           searchFocused ? 'border-primary/60 shadow-md' : 'border-border'
         }`}>
           <svg className="w-4 h-4 text-muted-foreground flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -726,10 +742,11 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             onFocus={() => setSearchFocused(true)}
+            autoFocus={searchOpen}
             className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground/60 min-w-0"
           />
           {searchQuery && (
-            <button onClick={() => { setSearchQuery(''); setSearchFocused(false); }} className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0">
+            <button onClick={() => { setSearchQuery(''); setSearchFocused(false); setSearchOpen(false); }} className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
             </button>
           )}
@@ -870,22 +887,6 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
                 </div>
               </div>
             </div>
-            {adminStat && (
-              <div>
-                <div className="flex items-center gap-2 mb-1.5 px-0.5">
-                  <div className="h-px flex-1 bg-border" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-violet-500/70">Admin view · platform-wide, not your progress</span>
-                  <div className="h-px flex-1 bg-border" />
-                </div>
-                <div className="bg-violet-500/5 border border-violet-500/20 rounded-xl p-3.5 flex items-center gap-4">
-                  <div className="flex items-center gap-2">{adminStat.icon}<span className="text-xl font-bold tabular-nums">{adminStat.value}</span></div>
-                  <div>
-                    <div className="text-xs font-medium text-foreground/80">{adminStat.label}</div>
-                    <div className="text-[10px] text-muted-foreground">{adminStat.sub}</div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         );
       })()}
@@ -927,10 +928,21 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
           className="rounded-2xl border border-orange-500/25 bg-orange-500/[0.04] p-4 flex items-center gap-4"
           title="In acquisitions, burn rate tracks how fast a program spends its funding. Here, it tracks how fast you're spending daily reps."
         >
-          <div className="text-4xl">{streak.currentStreak > 0 ? '🔥' : '💤'}</div>
+          <div className="text-4xl">{streak.currentStreak > 0 ? '🔥' : '🎯'}</div>
           <div className="flex-1">
-            <p className="text-xl font-black">{streak.currentStreak}-day burn rate streak</p>
-            <p className="text-xs text-muted-foreground">Personal best: {streak.longestStreak} day{streak.longestStreak !== 1 ? 's' : ''}</p>
+            {streak.currentStreak > 0 ? (
+              <>
+                <p className="text-xl font-black">{streak.currentStreak}-day burn rate streak</p>
+                <p className="text-xs text-muted-foreground">Personal best: {streak.longestStreak} day{streak.longestStreak !== 1 ? 's' : ''}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-xl font-black">Start your burn rate streak</p>
+                <p className="text-xs text-muted-foreground">
+                  One lesson today starts it{streak.longestStreak > 0 ? `. Your best is ${streak.longestStreak} day${streak.longestStreak !== 1 ? 's' : ''}` : ''}
+                </p>
+              </>
+            )}
           </div>
           {streak.currentStreak >= 7 && (
             <div className="text-xs font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 px-2 py-1 rounded-full">🏆 {streak.currentStreak}d</div>
