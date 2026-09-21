@@ -7,3 +7,6 @@ dist/
 __pycache__/
 *.pyc
 *.patch
+
+# Staged for manual deletion (large originals, never commit)
+_to_delete/

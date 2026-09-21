@@ -2449,6 +2449,14 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       data:        'module-4-data-analytics.m4a',
       capture:     'module-5-capture-bd.m4a',
       operations:  'module-6-operations-leadership.m4a',
+      business:    'module-7-business-of-defense-contracting.m4a',
+      smallbiz:    'module-8-small-business.m4a',
+      compliance:  'module-9-compliance-stack.m4a',
+      preaward:    'module-10-government-pre-award.m4a',
+      lifecycle:   'module-11-beyond-award.m4a',
+      onramp:      'module-12-startup-on-ramp.m4a',
+      veteran:     'module-13-veteran-transition.m4a',
+      history:     'module-14-why-the-rules-exist.m4a',
     };
 
     const filename = AUDIO_FILES[moduleId];
