@@ -276,6 +276,14 @@ function ModuleCard({
   const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
   const theme = getModuleFamilyTheme(mod.id);
   const familyLabel = FAMILY_LABEL[getModuleFamily(mod.id)];
+  // Two different numbers live on this card depending on the view, and they are
+  // not interchangeable. In a career path, seqNum is the module's position in
+  // THAT path, which is ordered for learning and differs per track. Everywhere
+  // else (module page subtitle, Modules list, Upgrade page, mobile account) a
+  // module is identified by its permanent slot in the curriculum. Showing a
+  // bare number meant Program Operations read "11" on the Contractor PM path
+  // and "Module 06" one click later. Both are right; neither said which it was.
+  const catalogNum = modules.findIndex(m => m.id === mod.id) + 1;
   const completedInMod = mod.lessons.filter(l => progress.completedLessons.has(l.id)).length;
   const c = { border: theme.border, accent: theme.text, check: theme.text, progress: theme.progressBar, headerGrad: theme.headerGrad, bgTint: theme.bgTint, borderTint: theme.borderTint };
 
@@ -315,7 +323,9 @@ function ModuleCard({
             {mod.icon}
           </span>
           <div className="min-w-0 flex-1 flex items-center gap-2">
-            <span className="text-[11px] font-bold tabular-nums text-muted-foreground/70">{String(seqNum).padStart(2, '0')}</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider tabular-nums text-muted-foreground/70 flex-shrink-0">
+              {isCareerMode ? 'Step' : 'Module'} {String(isCareerMode ? seqNum : catalogNum).padStart(2, '0')}
+            </span>
             <span className={cn("text-[10px] font-bold uppercase tracking-wider truncate", c.accent)}>{familyLabel}</span>
           </div>
           <div className="flex items-center gap-1.5 flex-shrink-0">
