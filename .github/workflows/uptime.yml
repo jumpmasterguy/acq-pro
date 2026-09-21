@@ -1,0 +1,111 @@
+name: Uptime monitor
+
+# Checks acqlerate.com every 5 minutes from GitHub's servers.
+# Runs outside Railway on purpose: if Railway itself goes down,
+# this still runs and can tell you.
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:        # lets you run it by hand from the Actions tab
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check the site
+        id: check
+        run: |
+          set +e
+
+          FAILURES=""
+
+          probe () {
+            local name="$1"
+            local url="$2"
+            local expect="$3"
+
+            # -sS quiet but show errors, -L follow redirects, 20s ceiling
+            local code
+            code=$(curl -sS -L -o /tmp/body.txt -w "%{http_code}" --max-time 20 "$url")
+            local curl_exit=$?
+
+            if [ $curl_exit -ne 0 ]; then
+              FAILURES="${FAILURES}\n- ${name} (${url}): connection failed, curl exit ${curl_exit}"
+              return
+            fi
+
+            if [ "$code" != "200" ]; then
+              FAILURES="${FAILURES}\n- ${name} (${url}): returned HTTP ${code}, expected 200"
+              return
+            fi
+
+            if [ -n "$expect" ] && ! grep -q "$expect" /tmp/body.txt; then
+              FAILURES="${FAILURES}\n- ${name} (${url}): returned 200 but the page content looks wrong"
+              return
+            fi
+
+            echo "OK  ${name} (${code})"
+          }
+
+          run_all () {
+            FAILURES=""
+            probe "Health endpoint" "https://acqlerate.com/api/health" '"status":"ok"'
+            probe "Homepage"        "https://acqlerate.com/"          "Acqlerate"
+            probe "App shell"       "https://acqlerate.com/app"       "<div id=\"root\">"
+            probe "Blog index"      "https://acqlerate.com/blog"      "Acqlerate"
+          }
+
+          # First pass
+          run_all
+
+          # A single blip is not an outage. If anything failed, wait and retry once.
+          if [ -n "$FAILURES" ]; then
+            echo "First pass failed, waiting 30s and retrying..."
+            sleep 30
+            run_all
+          fi
+
+          if [ -n "$FAILURES" ]; then
+            echo "CONFIRMED FAILURE"
+            # Hand the details to the next step
+            {
+              echo "failures<<EOF"
+              echo -e "$FAILURES"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+            echo "down=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "down=false" >> "$GITHUB_OUTPUT"
+          echo "All checks passed."
+
+      - name: Email the alert
+        if: steps.check.outputs.down == 'true'
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          FAILURES: ${{ steps.check.outputs.failures }}
+        run: |
+          BODY=$(cat <<EOF
+          {
+            "from": "Acqlerate Monitor <alerts@acqlerate.com>",
+            "to": ["lucas@acqlerate.com"],
+            "subject": "Acqlerate is DOWN",
+            "text": "Checks failed twice, 30 seconds apart.\n\n${FAILURES}\n\nChecked from GitHub Actions at $(date -u '+%Y-%m-%d %H:%M UTC').\n\nRailway dashboard: https://railway.app\nWorkflow run: https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          }
+          EOF
+          )
+
+          curl -sS -X POST "https://api.resend.com/emails" \
+            -H "Authorization: Bearer ${RESEND_API_KEY}" \
+            -H "Content-Type: application/json" \
+            -d "$BODY"
+
+      - name: Fail the run so GitHub also notifies
+        if: steps.check.outputs.down == 'true'
+        run: |
+          echo "Site checks failed. See the alert email for details."
+          exit 1
