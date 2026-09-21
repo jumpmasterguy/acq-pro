@@ -848,7 +848,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
                   <div className="min-w-0">
                     <div className="text-sm font-bold">Your path ahead</div>
                     <div className="text-xs text-muted-foreground mt-0.5">
-                      Finish Module 1 and your first Certificate of Completion is worth {formatClps(moduleClps('foundations'))} CLPs.
+                      Finish Module 1 and your first Certificate of Completion is worth {formatClps(moduleClps('foundations'))}.
                     </div>
                   </div>
                   <div className="flex items-center gap-6 flex-wrap">
@@ -857,7 +857,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
                       <div className="text-[11px] text-muted-foreground mt-0.5">Lessons ahead</div>
                     </div>
                     <div>
-                      <div className="text-lg font-bold tabular-nums leading-none">{formatClps(totalClps())}</div>
+                      <div className="text-lg font-bold tabular-nums leading-none">{totalClps().toFixed(1)}</div>
                       <div className="text-[11px] text-muted-foreground mt-0.5">CLPs available</div>
                     </div>
                     <div>
