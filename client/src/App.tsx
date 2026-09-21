@@ -10,7 +10,7 @@ import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calcul
 import { hasFullAccess, hasPaidPlan, trialDaysRemaining } from "@shared/access";
 import { isNativeApp, getPlatform } from "@/lib/platform";
 import { modules } from "@/lib/curriculum";
-import { getModuleTheme } from "@/lib/moduleTheme";
+import { getModuleTheme, getModuleFamilyTheme, getModuleFamily, type ModuleFamily } from "@/lib/moduleTheme";
 import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator, Flame } from "lucide-react";
 import { SIDEBAR_RESOURCES } from "@/lib/resources";
 import { FAR_TRANSLATOR, TOOLS_DIRECTORY } from "@/lib/toolsDirectory";
@@ -84,6 +84,15 @@ import CostTaskOrdersPage from "@/pages/cost/CostTaskOrdersPage";
 import CostTaskOrderDetailPage from "@/pages/cost/CostTaskOrderDetailPage";
 import { ModuleAssessment } from "@/components/ModuleAssessment";
 import OnboardingFlow from "@/components/OnboardingFlow";
+
+/** Sidebar accent classes per subject family. Static strings for Tailwind's JIT. */
+const FAMILY_SIDEBAR: Record<ModuleFamily, { dot: string; lessonHover: string; activeLesson: string; activeLessonText: string }> = {
+  foundations: { dot: 'bg-[#3D8FD1]', lessonHover: 'hover:bg-[#3D8FD1]/10', activeLesson: 'bg-[#3D8FD1]/15', activeLessonText: 'text-[#4A9AE0]' },
+  money:       { dot: 'bg-[#2E8B57]', lessonHover: 'hover:bg-[#2E8B57]/10', activeLesson: 'bg-[#2E8B57]/15', activeLessonText: 'text-[#41A56B]' },
+  contracts:   { dot: 'bg-[#5E3596]', lessonHover: 'hover:bg-[#5E3596]/10', activeLesson: 'bg-[#5E3596]/15', activeLessonText: 'text-[#8E63D6]' },
+  winning:     { dot: 'bg-[#D1571A]', lessonHover: 'hover:bg-[#D1571A]/10', activeLesson: 'bg-[#D1571A]/15', activeLessonText: 'text-[#DC7129]' },
+  program:     { dot: 'bg-[#B0327A]', lessonHover: 'hover:bg-[#B0327A]/10', activeLesson: 'bg-[#B0327A]/15', activeLessonText: 'text-[#D2519A]' },
+};
 import { apiRequest } from "@/lib/queryClient";
 
 // View types
@@ -755,7 +764,7 @@ function AppContent() {
   const lessonModuleHex = (() => {
     if (view.type !== 'lesson') return 'var(--acq-teal)';
     const parent = modules.find(m => m.lessons.some(l => l.id === (view as any).lessonId));
-    return parent ? getModuleTheme(parent.color).mobileHex : 'var(--acq-teal)';
+    return parent ? getModuleFamilyTheme(parent.id).mobileHex : 'var(--acq-teal)';
   })();
 
   // Drives the scroll-to-top reset on navigation.
@@ -1097,16 +1106,11 @@ function AppContent() {
               });
             };
 
-            // Module accent colors
-            const moduleColors: Record<string, { accent: string; dot: string; lessonHover: string; activeLesson: string; activeLessonText: string }> = {
-              foundations: { accent: '#3b82f6', dot: 'bg-blue-500',    lessonHover: 'hover:bg-blue-500/10',   activeLesson: 'bg-blue-500/15',   activeLessonText: 'text-blue-400' },
-              finance:     { accent: '#f59e0b', dot: 'bg-amber-400',   lessonHover: 'hover:bg-amber-400/10',  activeLesson: 'bg-amber-400/15',  activeLessonText: 'text-amber-400' },
-              contracts:   { accent: '#6366f1', dot: 'bg-indigo-400',  lessonHover: 'hover:bg-indigo-400/10', activeLesson: 'bg-indigo-400/15', activeLessonText: 'text-indigo-400' },
-              data:        { accent: '#14b8a6', dot: 'bg-teal-400',    lessonHover: 'hover:bg-teal-400/10',   activeLesson: 'bg-teal-400/15',   activeLessonText: 'text-teal-400' },
-              capture:     { accent: '#f97316', dot: 'bg-orange-400',  lessonHover: 'hover:bg-orange-400/10', activeLesson: 'bg-orange-400/15', activeLessonText: 'text-orange-400' },
-              operations:  { accent: '#8b5cf6', dot: 'bg-violet-400',  lessonHover: 'hover:bg-violet-400/10', activeLesson: 'bg-violet-400/15', activeLessonText: 'text-violet-400' },
-            };
-            const mc = moduleColors[mod.id] ?? moduleColors.foundations;
+            // Module accent comes from the subject family, so all 14 modules are
+            // covered and the sidebar agrees with every other surface. Classes are
+            // written out per family because Tailwind cannot build a class from a
+            // runtime string.
+            const mc = { accent: getModuleFamilyTheme(mod.id).hex, ...FAMILY_SIDEBAR[getModuleFamily(mod.id)] };
 
             return (
               <div key={mod.id}>
@@ -1393,21 +1397,13 @@ function AppContent() {
 
       {/* Main content */}
       <div className="flex-1 md:ml-64 flex flex-col min-h-screen min-w-0 relative">
-        {/* Background: hex grid + radial glow */}
+        {/* Background: soft radial glow only. The hex grid that used to sit
+            here fought every card on top of it and dated the page. */}
         <div aria-hidden="true" className="pointer-events-none fixed md:left-64 inset-y-0 right-0 z-0 overflow-hidden">
           {/* Radial teal glow top-right */}
           <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full opacity-[0.07] dark:opacity-[0.12]" style={{background: 'radial-gradient(circle, #01696f 0%, transparent 70%)'}} />
           {/* Radial teal glow bottom-left */}
           <div className="absolute -bottom-32 -left-16 w-[400px] h-[400px] rounded-full opacity-[0.05] dark:opacity-[0.08]" style={{background: 'radial-gradient(circle, #01696f 0%, transparent 70%)'}} />
-          {/* Hex grid overlay */}
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 opacity-[0.06] dark:opacity-[0.05]">
-            <defs>
-              <pattern id="hex-bg" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse">
-                <polygon points="30,3 57,18 57,34 30,49 3,34 3,18" fill="none" stroke="#01696f" strokeWidth="1.2" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#hex-bg)" />
-          </svg>
         </div>
         {/* Top Bar */}
         <header className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-20 flex items-center justify-between px-4 md:px-6 safe-top" style={{minHeight: '3.5rem'}}>

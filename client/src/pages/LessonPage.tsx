@@ -2,7 +2,7 @@ import { useState, useRef, useMemo } from "react";
 import { AcronymText } from "@/components/AcronymText";
 import { getTrackData, type CareerTrackId } from "@/lib/careerTracks";
 import { modules, type Lesson, type LessonContent, type KeyTerm, type Module, type QuizQuestion, type SkillLevel, type ExpandableItem } from "@/lib/curriculum";
-import { getModuleTheme } from "@/lib/moduleTheme";
+import { getModuleTheme, getModuleFamilyTheme } from "@/lib/moduleTheme";
 import type { UserProgress } from "@/lib/progress";
 import {
   ArrowLeft, ChevronRight, CheckCircle, BookOpen, AlertTriangle,
@@ -590,7 +590,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
   const [openTerm, setOpenTerm] = useState<KeyTerm | null>(null);
   // This module's brand color — used to give the plain content blocks
   // (text/list/table) below some visual identity instead of flat gray/white.
-  const theme = getModuleTheme(mod.color);
+  const theme = getModuleFamilyTheme(mod.id);
 
   // Content filtering: show blocks with no level (universal) + blocks at/below viewLevel
   const levelOrder: Record<SkillLevel, number> = { novice: 0, intermediate: 1, advanced: 2 };

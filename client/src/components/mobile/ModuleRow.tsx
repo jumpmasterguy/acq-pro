@@ -4,7 +4,7 @@
 
 import type { Module } from '@/lib/curriculum';
 import { formatDuration, getModuleTotalMinutes } from '@/lib/curriculum';
-import { getModuleTheme, moduleGradient } from '@/lib/moduleTheme';
+import { getModuleTheme, moduleGradient, getModuleFamilyTheme } from '@/lib/moduleTheme';
 import { formatClps, moduleClps } from '@shared/moduleClps';
 
 export function ModuleRow({
@@ -20,7 +20,7 @@ export function ModuleRow({
   locked: boolean;
   onOpen: () => void;
 }) {
-  const theme = getModuleTheme(mod.color);
+  const theme = getModuleFamilyTheme(mod.id);
 
   // Locked wins over progress — a locked module shouldn't advertise a percent.
   const status = locked

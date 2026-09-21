@@ -7,7 +7,7 @@
 import type { ReactNode } from 'react';
 import { Clock, BookOpen, ChevronRight } from 'lucide-react';
 import type { Lesson } from '@/lib/curriculum';
-import { getModuleTheme, moduleTint, type ModuleTheme } from '@/lib/moduleTheme';
+import { getModuleTheme, moduleTint, type ModuleTheme, getModuleFamilyTheme } from '@/lib/moduleTheme';
 
 // ── Skill level pill ────────────────────────────────────────────────────────
 
@@ -105,7 +105,7 @@ export function LessonRow({
   seq,
   state,
   isLast,
-  moduleColor,
+  moduleId,
   isFreePreview,
   onOpen,
 }: {
@@ -113,11 +113,11 @@ export function LessonRow({
   seq: number;
   state: LessonState;
   isLast: boolean;
-  moduleColor: string;
+  moduleId: string;
   isFreePreview: boolean;
   onOpen: () => void;
 }) {
-  const theme = getModuleTheme(moduleColor);
+  const theme = getModuleFamilyTheme(moduleId);
 
   const railBg =
     state === 'done'
