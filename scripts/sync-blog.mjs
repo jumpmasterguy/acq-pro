@@ -207,7 +207,8 @@ function sourceFiles(dir) {
     // curriculum.ts is the source of truth; these two exist to describe the
     // stale phrasings, so scanning them would flag their own patterns.
     else if (/\.(ts|tsx|js|mjs|py)$/.test(e.name) &&
-             !["curriculum.ts", "sync-blog.mjs", "curriculum_counts.py"].includes(e.name))
+             !["curriculum.ts", "sync-blog.mjs", "curriculum_counts.py",
+               "gen-module-clps.mjs", "moduleClps.ts"].includes(e.name))
       out.push(full);
   }
   return out;

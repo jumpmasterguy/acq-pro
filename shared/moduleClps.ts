@@ -11,19 +11,27 @@
  * 1 CLP = 1 hour of instruction, per DAU CLP policy.
  */
 
+import { GENERATED_MODULE_CLPS } from "./moduleClps.generated";
+
 export interface ModuleClp {
   title: string;
   clps: number;
 }
 
-export const MODULE_CLPS: Record<string, ModuleClp> = {
-  foundations: { title: 'DoD Acquisitions Foundations', clps: 1.5 },
-  finance: { title: 'Defense Finance & Budgeting', clps: 3.8 },
-  contracts: { title: 'Defense Contracting Fundamentals', clps: 3.0 },
-  data: { title: 'Data Analytics for Program Managers', clps: 1.3 },
-  capture: { title: 'Capture Management & Business Development', clps: 1.6 },
-  operations: { title: 'Program Operations & Leadership', clps: 1.5 },
-};
+/**
+ * Every module's CLPs, derived from lesson durations in curriculum.ts by
+ * scripts/gen-module-clps.mjs and regenerated at the top of every build.
+ *
+ * This used to be a hand-written literal covering only the original six
+ * modules (12.7 CLPs). The curriculum reached fourteen, nothing updated this,
+ * and because the certificate route below 404s on a module it cannot find, a
+ * user who completed any of the eight newer modules got "Module not found"
+ * when they clicked Download Certificate of Completion.
+ *
+ * To change a module's CLPs, change its lesson durations. Do not edit numbers
+ * here or in the generated file.
+ */
+export const MODULE_CLPS: Record<string, ModuleClp> = GENERATED_MODULE_CLPS;
 
 /** CLPs for one module, 0 if unknown. */
 export function moduleClps(moduleId: string): number {

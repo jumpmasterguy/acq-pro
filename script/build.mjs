@@ -6,6 +6,9 @@ try { rmSync("dist", { recursive: true, force: true }); } catch(e) {}
 
 console.log("Node version:", process.version);
 
+console.log("Generating module CLPs from the curriculum...");
+execSync("node scripts/gen-module-clps.mjs", { stdio: "inherit" });
+
 console.log("Syncing blog-derived files (homepage carousel, sitemap)...");
 execSync("node scripts/sync-blog.mjs", { stdio: "inherit" });
 
