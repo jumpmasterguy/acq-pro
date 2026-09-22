@@ -37,6 +37,8 @@ export function getDisplayStreak(currentStreak: number | null | undefined, lastS
 // ─── Interface ─────────────────────────────────────────────────────────────
 
 export interface IStorage {
+  /** Cheapest possible round trip to the real datastore. Throws if it can't. */
+  ping(): Promise<void>;
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
@@ -133,6 +135,10 @@ export class DrizzleStorage implements IStorage {
         : false,
     });
     this.db = drizzle(pool);
+  }
+
+  async ping(): Promise<void> {
+    await this.db.execute(sql`SELECT 1`);
   }
 
   async getUser(id: string): Promise<User | undefined> {
@@ -774,6 +780,10 @@ export class MemStorage implements IStorage {
 
   constructor() {
     this.users = new Map();
+  }
+
+  async ping(): Promise<void> {
+    // In-memory: nothing to reach, so nothing can be unreachable.
   }
 
   async getUser(id: string): Promise<User | undefined> {

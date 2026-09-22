@@ -53,6 +53,10 @@ jobs:
           run_all () {
             FAILURES=""
             probe "Health endpoint" "https://acqlerate.com/api/health" '"status":"ok"'
+            # The one that can actually fail. Everything else here is a static
+            # file, so all four used to pass with Postgres flat on its back.
+            # This makes a real query and 503s when the database is unreachable.
+            probe "Database"        "https://acqlerate.com/api/health/deep" '"database":"ok"'
             probe "Homepage"        "https://acqlerate.com/"          "Acqlerate"
             probe "App shell"       "https://acqlerate.com/app"       "<div id=\"root\">"
             probe "Blog index"      "https://acqlerate.com/blog"      "Acqlerate"

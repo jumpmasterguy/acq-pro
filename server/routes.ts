@@ -91,9 +91,41 @@ export async function registerRoutes(
   // Setup passport + sessions (async — creates session table in PostgreSQL)
   await setupAuth(app);
 
-  // Health check — Railway uses this to confirm the app is alive
+  // ─── Health checks ───────────────────────────────────────────────────
+  //
+  // Two of them, deliberately, because they answer different questions.
+  //
+  // /api/health is liveness: is the process up and serving? Railway polls this
+  // (railway.toml healthcheckPath) and restarts the container when it fails,
+  // so it must NOT depend on the database. If it did, a brief Postgres blip
+  // during boot would fail the healthcheck, Railway would restart, and the
+  // restart would hit the same blip - a deploy loop triggered by something
+  // that would have healed on its own.
   app.get("/api/health", (_req, res) => {
     res.json({ status: "ok" });
+  });
+
+  // /api/health/deep is readiness: can the app actually do its job? It makes a
+  // real round trip to Postgres. Nothing restarts on this failing - it exists
+  // so the uptime monitor can tell the difference between "the site is up" and
+  // "the site is up and working".
+  //
+  // This gap was real: every page the monitor checked (/, /app, /blog) is a
+  // static file, and /api/health returned ok without touching anything, so a
+  // dead database showed up as four green checks and no alert.
+  app.get("/api/health/deep", async (_req, res) => {
+    const started = Date.now();
+    try {
+      await storage.ping();
+      return res.json({ status: "ok", database: "ok", ms: Date.now() - started });
+    } catch (err: any) {
+      console.error("[health] database unreachable:", err.message);
+      return res.status(503).json({
+        status: "degraded",
+        database: "unreachable",
+        ms: Date.now() - started,
+      });
+    }
   });
 
   // ─── Auth Routes ───────────────────────────────────────────────────
