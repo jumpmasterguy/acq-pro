@@ -19,6 +19,7 @@ import { isNativeApp } from "@/lib/platform";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { MobileHome } from "@/components/mobile/MobileHome";
 import { getActiveTrack } from "@/lib/careerTracks";
+import { CareerPath } from "@/components/CareerPath";
 import { DailyChallengeSheet } from "@/components/mobile/DailyChallengeSheet";
 import { WeeklyBrief } from "@/components/WeeklyBrief";
 
@@ -1031,21 +1032,36 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
             {primaryModuleOrder.length} module{primaryModuleOrder.length !== 1 ? 's' : ''}
           </span>
         </div>
-        <div className="grid md:grid-cols-2 gap-5">
-          {primaryModuleOrder.map((mod, i) => (
-            <ModuleCard
-              key={mod.id}
-              mod={mod}
-              seqNum={i + 1}
-              isFirst={i === 0}
-              progress={progress}
-              onSelect={() => onSelectModule(mod.id, filterMode === 'career' ? activeCareer : undefined)}
-              onUpgrade={onUpgrade}
-              primaryLessons={primaryLessonSetForModule[mod.id] ?? []}
-              isCareerMode={filterMode === 'career'}
-            />
-          ))}
-        </div>
+        {/* A career track is an ordered route with a finish line, so it renders
+            as a path. A subject group is a browsable set with no inherent
+            order, so it stays a grid: a path would invent a sequence that
+            does not exist. */}
+        {filterMode === 'career' ? (
+          <CareerPath
+            mods={primaryModuleOrder}
+            progress={progress}
+            trackId={activeCareer}
+            primaryLessonSetForModule={primaryLessonSetForModule}
+            onSelectModule={(id) => onSelectModule(id, activeCareer)}
+            onUpgrade={onUpgrade}
+          />
+        ) : (
+          <div className="grid md:grid-cols-2 gap-5">
+            {primaryModuleOrder.map((mod, i) => (
+              <ModuleCard
+                key={mod.id}
+                mod={mod}
+                seqNum={i + 1}
+                isFirst={i === 0}
+                progress={progress}
+                onSelect={() => onSelectModule(mod.id, undefined)}
+                onUpgrade={onUpgrade}
+                primaryLessons={primaryLessonSetForModule[mod.id] ?? []}
+                isCareerMode={false}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ── Bonus Modules ─────────────────────────────────────────────────── */}
