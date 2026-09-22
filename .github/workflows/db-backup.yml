@@ -155,8 +155,17 @@ jobs:
           TABLES: ${{ steps.dump.outputs.tables }}
         run: |
           set -euo pipefail
+
+          # Python builds the JSON (it has to base64 the attachment) but curl
+          # makes the request.
+          #
+          # urllib was blocked before it ever reached Resend: the response was
+          # "error code: 1010", which is Cloudflare's, not Resend's - the edge
+          # refusing a client by its signature, and Python-urllib/3.x is one it
+          # refuses. The uptime monitor has always talked to this same API
+          # happily because it uses curl, so use curl here too.
           python3 - <<'PY'
-          import base64, json, os, urllib.request
+          import base64, json, os
 
           enc   = os.environ["ENCFILE"]
           stamp = os.environ["STAMP"]
@@ -169,44 +178,44 @@ jobs:
           body = {
               "from": "Acqlerate Backups <alerts@acqlerate.com>",
               "to": ["lucas@acqlerate.com"],
-              "subject": f"Acqlerate database backup — {stamp}",
+              "subject": f"Acqlerate database backup - {stamp}",
               "text": (
                   f"Encrypted backup of the production database.\n\n"
                   f"Date:    {stamp}\n"
-                  f"Size:    {mb:.1f} MB encrypted\n"
+                  f"Size:    {mb:.2f} MB encrypted\n"
                   f"Tables:  {os.environ['TABLES']} with data\n\n"
                   "AES-256, opens with the passphrase in your password manager.\n\n"
                   "To restore:\n"
                   f"  gpg --decrypt --batch --passphrase '<passphrase>' {enc} > restore.dump\n"
                   "  pg_restore --clean --if-exists --no-owner --dbname '<a NON-production database>' restore.dump\n\n"
+                  "pg_restore must be version 18 or newer. If yours is older:\n"
+                  "  docker run --rm -v \"$PWD:/w\" -e U='<target url>' postgres:18 \\\n"
+                  "    sh -c 'pg_restore --clean --if-exists --no-owner --dbname \"$U\" /w/restore.dump'\n\n"
                   "Keep this email. Deleting it deletes the backup."
               ),
               "attachments": [{"filename": enc, "content": payload}],
           }
 
-          req = urllib.request.Request(
-              "https://api.resend.com/emails",
-              data=json.dumps(body).encode(),
-              headers={
-                  "Authorization": "Bearer " + os.environ["RESEND_API_KEY"],
-                  "Content-Type": "application/json",
-              },
-          )
-
-          # Resend explains its refusals in the response body. urlopen raises on
-          # any non-2xx and discards that body, which turned the first failure
-          # into a bare "HTTP Error 403: Forbidden" and a guessing game. Print
-          # what it actually said.
-          try:
-              with urllib.request.urlopen(req) as resp:
-                  print("Resend responded", resp.status, resp.read().decode()[:500])
-          except urllib.error.HTTPError as err:
-              detail = err.read().decode(errors="replace")
-              print(f"Resend refused the send: HTTP {err.code}")
-              print(f"Response body: {detail}")
-              print(f"Attachment was {mb:.1f} MB (base64 {len(payload)} chars)")
-              raise SystemExit(1)
+          with open("payload.json", "w") as fh:
+              json.dump(body, fh)
+          print(f"Payload built: {os.path.getsize('payload.json')} bytes")
           PY
+
+          CODE=$(curl -sS -o response.txt -w "%{http_code}" \
+            -X POST "https://api.resend.com/emails" \
+            -H "Authorization: Bearer ${RESEND_API_KEY}" \
+            -H "Content-Type: application/json" \
+            --data-binary @payload.json)
+
+          rm -f payload.json      # holds the whole backup; don't leave it lying around
+
+          echo "Resend responded ${CODE}"
+          if [ "$CODE" != "200" ]; then
+            echo "Send refused. Response body:"
+            cat response.txt
+            exit 1
+          fi
+          cat response.txt
 
       - name: Say so if any of that failed
         if: failure()
