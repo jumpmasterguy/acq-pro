@@ -192,8 +192,20 @@ jobs:
                   "Content-Type": "application/json",
               },
           )
-          with urllib.request.urlopen(req) as resp:
-              print("Resend responded", resp.status)
+
+          # Resend explains its refusals in the response body. urlopen raises on
+          # any non-2xx and discards that body, which turned the first failure
+          # into a bare "HTTP Error 403: Forbidden" and a guessing game. Print
+          # what it actually said.
+          try:
+              with urllib.request.urlopen(req) as resp:
+                  print("Resend responded", resp.status, resp.read().decode()[:500])
+          except urllib.error.HTTPError as err:
+              detail = err.read().decode(errors="replace")
+              print(f"Resend refused the send: HTTP {err.code}")
+              print(f"Response body: {detail}")
+              print(f"Attachment was {mb:.1f} MB (base64 {len(payload)} chars)")
+              raise SystemExit(1)
           PY
 
       - name: Say so if any of that failed
