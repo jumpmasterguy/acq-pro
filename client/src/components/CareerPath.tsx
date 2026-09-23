@@ -177,14 +177,52 @@ export function CareerPath({
   groups.forEach((group, gi) => {
     const isFinalLeg = gi === groups.length - 1;
 
+    // The leg banner. A solid brand-teal band, deliberately louder than a step
+    // and a different colour from every family, so it reads as "new stage of
+    // the route" rather than a gap in the line. Teal banner, family-coloured
+    // steps, gold gate, navy finish: each layer has its own colour.
+    const legMinutes = group.mods.reduce((a, m) => a + m.trackMinutes, 0);
+    const legDone = group.mods.filter(m => m.pct >= 100).length;
+    const legComplete = legDone === group.mods.length;
     rows.push(
-      <div key={`leghead-${gi}`} className="flex items-center gap-3 pt-6 pb-2" style={{ paddingLeft: SPINE + 12 }}>
-        <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-primary">Leg {gi + 1}</span>
-        <span className="text-[15px] font-bold tracking-tight">{group.leg.name}</span>
-        <span className="flex-1 h-px bg-border" />
-        <span className="text-[11px] text-muted-foreground tabular-nums">
-          {group.mods.length} module{group.mods.length !== 1 ? 's' : ''}
-        </span>
+      <div
+        key={`leghead-${gi}`}
+        className={cn('rounded-2xl px-4 py-4 md:px-5 text-white shadow-sm', gi === 0 ? 'mt-1 mb-3' : 'mt-8 mb-3')}
+        style={{ background: 'linear-gradient(135deg, #01696F 0%, #0A7C83 100%)' }}
+        data-testid={`path-leg-${gi}`}
+      >
+        <div className="flex items-center gap-3 md:gap-4">
+          <div
+            className="flex-shrink-0 w-11 h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center text-[20px] md:text-[22px] font-extrabold tabular-nums"
+            style={{ background: 'rgba(255,255,255,0.16)', border: '1.5px solid rgba(255,255,255,0.35)' }}
+            aria-hidden="true"
+          >
+            {legComplete ? (
+              <svg viewBox="0 0 16 16" width={20} height={20} focusable="false">
+                <path d="M3 8.5 L6.5 12 L13 4.5" fill="none" stroke="#F5C842" strokeWidth={2.6} strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            ) : gi + 1}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.14em]" style={{ color: 'rgba(255,255,255,0.72)' }}>
+              Leg {gi + 1} of {groups.length}
+            </div>
+            <div className="text-[18px] md:text-[21px] font-extrabold leading-tight tracking-tight">{group.leg.name}</div>
+            <div className="text-[12px] mt-0.5 tabular-nums" style={{ color: 'rgba(255,255,255,0.8)' }}>
+              {group.mods.length} module{group.mods.length !== 1 ? 's' : ''}
+              {' · '}{formatDuration(legMinutes)}
+              {' · '}{clpsOf(legMinutes)} CLPs
+            </div>
+          </div>
+          <span
+            className="hidden sm:inline-flex flex-shrink-0 items-center rounded-full px-3 py-1 text-[11px] font-bold tabular-nums"
+            style={legComplete
+              ? { background: '#F5C842', color: '#3D2B00' }
+              : { background: 'rgba(255,255,255,0.16)', color: '#fff' }}
+          >
+            {legComplete ? 'Leg complete' : `${legDone} of ${group.mods.length} done`}
+          </span>
+        </div>
       </div>,
     );
 
