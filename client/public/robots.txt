@@ -1,11 +1,22 @@
+# Specific rules first so first-match and longest-match parsers agree.
 User-agent: *
-Allow: /
-Allow: /blog/
-Allow: /blog
-Allow: /teams
-Allow: /pay-guide
 Disallow: /app
 Allow: /api/stats
 Disallow: /api/
+Allow: /
+
+# Link-preview bots: allowed to read /app so shared links show the brand card.
+# Search engines stay blocked from /app by the group above.
+User-agent: LinkedInBot
+User-agent: facebookexternalhit
+User-agent: Facebot
+User-agent: Twitterbot
+User-agent: Slackbot
+User-agent: Slackbot-LinkExpanding
+User-agent: Discordbot
+User-agent: WhatsApp
+User-agent: TelegramBot
+Disallow: /api/
+Allow: /
 
 Sitemap: https://acqlerate.com/sitemap.xml
