@@ -19,6 +19,9 @@
  * checkpoint is the finish tile.
  */
 
+import { modules, type Module } from './curriculum';
+import { getTrackData, type CareerTrackId } from './careerTracks';
+
 export type PathLeg = {
   /** Short name for the leg, e.g. "Follow the money". */
   name: string;
@@ -182,4 +185,38 @@ export function splitIntoLegs<T extends { id: string }>(
     else out.push({ leg: path.legs[path.legs.length - 1], mods: rest });
   }
   return out.filter(g => g.mods.length > 0);
+}
+
+/**
+ * Module order used to lay a track out as a path. Same order the dashboard
+ * uses for its career grid, so a module sits at the same step in both places.
+ */
+const PATH_MODULE_ORDER = [
+  'foundations', 'finance', 'business', 'contracts', 'data', 'preaward', 'capture',
+  'smallbiz', 'onramp', 'compliance', 'lifecycle', 'veteran', 'history', 'operations',
+];
+
+/**
+ * The modules on a track, in path order, plus which of each module's lessons
+ * belong to the track. A module is on the path when at least one of its
+ * lessons is in the track's primaryLessons.
+ *
+ * Reads the canonical track data in careerTracks.ts, the same list the module
+ * page uses to order lessons, so the path and the module page agree on which
+ * lessons count.
+ */
+export function getTrackModules(trackId: CareerTrackId): {
+  mods: Module[];
+  lessonsByModule: Record<string, string[]>;
+} {
+  const track = getTrackData(trackId);
+  const primary = new Set(track?.primaryLessons ?? []);
+  const mods = PATH_MODULE_ORDER
+    .map(id => modules.find(m => m.id === id))
+    .filter((m): m is Module => !!m && m.lessons.some(l => primary.has(l.id)));
+  const lessonsByModule: Record<string, string[]> = {};
+  for (const m of mods) {
+    lessonsByModule[m.id] = m.lessons.filter(l => primary.has(l.id)).map(l => l.id);
+  }
+  return { mods, lessonsByModule };
 }

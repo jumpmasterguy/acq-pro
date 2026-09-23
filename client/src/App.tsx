@@ -68,7 +68,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Dashboard from "@/pages/Dashboard";
 import ModulePage from "@/pages/ModulePage";
-import ModulesPage from "@/pages/ModulesPage";
+import ModulesPage, { type ModulesPageMode } from "@/pages/ModulesPage";
 import ResourcesPage from "@/pages/ResourcesPage";
 import LessonPage from "@/pages/LessonPage";
 import UpgradePage from "@/pages/UpgradePage";
@@ -104,7 +104,7 @@ type View =
   // Mobile-only screens. The desktop shell reaches modules through the
   // sidebar tree and resources through its collapsible sections, so these
   // two views exist to give the bottom tab bar a Learn and a Resources tab.
-  | { type: 'modules'; family?: ModuleFamily }
+  | { type: 'modules'; family?: ModuleFamily; mode?: ModulesPageMode }
   | { type: 'resources' }
   | { type: 'module'; moduleId: string; activeCareer?: string }
   | { type: 'lesson'; lessonId: string; activeCareer?: string }
@@ -728,7 +728,7 @@ function AppContent() {
       case 'dashboard':
         return { kind: 'logo' };
       case 'modules':
-        return { kind: 'title', title: view.family ? FAMILY_LABEL[view.family] : 'Modules' };
+        return { kind: 'title', title: view.family ? FAMILY_LABEL[view.family] : view.mode === 'subject' ? 'All modules' : 'My Path' };
       case 'resources':
         return { kind: 'title', title: 'Resources & tools' };
       case 'account':
@@ -790,7 +790,7 @@ function AppContent() {
               firstName={authState.status === 'authenticated' ? authState.user.firstName : null}
               lastName={authState.status === 'authenticated' ? authState.user.lastName : null}
               lastStreakDate={authState.status === 'authenticated' ? authState.user.lastStreakDate ?? null : null}
-              onOpenModules={() => setView({ type: 'modules' })}
+              onOpenModules={() => setView({ type: 'modules', mode: 'subject' })}
               onOpenAccount={() => setView({ type: 'account' })}
             />
           )}
@@ -836,10 +836,13 @@ function AppContent() {
           {view.type === 'modules' && (
             <ModulesPage
               progress={progress}
-              onSelectModule={(id) => setView({ type: 'module', moduleId: id })}
+              onSelectModule={handleSelectModule}
               onUpgrade={handleUpgrade}
               family={view.family}
-              onSelectFamily={(f) => setView(f ? { type: 'modules', family: f } : { type: 'modules' })}
+              onSelectFamily={(f) => setView(f ? { type: 'modules', family: f } : { type: 'modules', mode: 'subject' })}
+              mode={view.mode}
+              onSelectMode={(m) => setView(m === 'subject' ? { type: 'modules', mode: 'subject' } : { type: 'modules' })}
+              onOpenAccount={() => setView({ type: 'account' })}
             />
           )}
           {view.type === 'resources' && (
