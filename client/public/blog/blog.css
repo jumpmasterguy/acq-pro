@@ -338,6 +338,9 @@ footer {
 
 /* Responsive */
 @media (max-width: 768px) {
+  .post-main, .post-sidebar, .post-body { min-width: 0; max-width: 100%; }
+  .comparison-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
+  .comparison-table td, .comparison-table th { min-width: 96px; }
   .post-layout { grid-template-columns: 1fr; padding: 24px 1.25rem 60px; }
   .post-sidebar { position: static; }
   .posts-grid { grid-template-columns: 1fr; padding: 32px 0; }
