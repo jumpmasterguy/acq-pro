@@ -229,6 +229,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://acqlerate.com/blog/dau-vs-acqlerate-acquisition-training</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://acqlerate.com/blog/the-silent-killer-of-your-defense-proposal-the-section-l-vs-section-m-mismatch</loc>
     <lastmod>2026-03-15</lastmod>
     <changefreq>monthly</changefreq>
@@ -237,12 +243,6 @@
   <url>
     <loc>https://acqlerate.com/blog/cpars-ratings-guide</loc>
     <lastmod>2026-03-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://acqlerate.com/blog/dau-vs-acqlerate-acquisition-training</loc>
-    <lastmod>2026-03-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
