@@ -190,6 +190,53 @@ TOPIC_POOL_NEWS = [
     },
 ]
 
+# Search-demand pool, added 23 Sep 2026 from Google Search Console (Jun–Sep 2026).
+#
+# The queries that actually surface the site are training-buyer queries, not
+# explainer topics: "acquisition training courses" (79 impressions), "dau
+# training" (36), "free acquisition training courses" (34), "dawia
+# certification cost" (21), "dau coursera" (17), "pdu strategic & business"
+# (16). Most already have a post (best-dod-acquisition-training-courses-2026,
+# dau-vs-acqlerate, pmp-pdus, far-vs-dfars) sitting on page 2, so the fix for
+# those is to REFRESH the existing post, not write a competitor; dupe_guard
+# will block any attempt. The topics below are the buyer queries with no post
+# at all. Saturday runs take these first, then fall back to the educational
+# pool. Scores against the live blog are noted. (A "1102 training path" topic
+# was tried and dropped: 0.31 against best-dod-acquisition-training-courses.)
+
+TOPIC_POOL_DEMAND = [
+    {
+        "search": "DAWIA back to basics credential cost foundational practitioner advanced levels workforce requirements",
+        "angle": "What DAWIA actually costs, who has to hold it, and what industry staff can do instead",
+        "badge": "Career", "audience": "USG & Contractor",
+        "module": "foundations",
+        "table_type": "comparison",
+        "table_title": "DAWIA at Each Level: Who, What, How Long",  # 0.27
+        "table_headers": ["Level", "Who Must Hold It", "What It Takes", "Cost to You"],
+        "table_rows": [
+            ["Foundational", "New government acquisition workforce members", "DAU credential courses plus on-the-job time", "Free for government employees, paid time"],
+            ["Practitioner", "Journeyman government positions", "More coursework, experience requirement", "Free, but months of calendar time"],
+            ["Advanced", "Senior and key leadership positions", "Advanced credentials and years of experience", "Free, competitive to get a slot"],
+            ["Contractor staff", "Nobody, DAWIA is for the government workforce", "Cannot be certified, can take much of the same content", "DAU public content is free, private courses are paid"],
+        ],
+    },
+    {
+        "search": "defense acquisition training for industry contractors DAU public access iCatalog limits alternatives 2026",
+        "angle": "Defense acquisition training for contractors: what DAU will and will not teach industry, and where the gaps get filled",
+        "badge": "Career", "audience": "Contractor",
+        "module": "foundations",
+        "table_type": "comparison",
+        "table_title": "Where Contractors Can Actually Learn This",  # 0.20
+        "table_headers": ["Source", "Open to Industry?", "What It Covers Well", "What It Leaves Out"],
+        "table_rows": [
+            ["DAU public courses", "Yes, self-paced", "Government process, policy, terminology", "The contractor side of every transaction"],
+            ["DAU classroom and credentials", "Mostly no", "Deep government practice", "Not available to you"],
+            ["Trade associations (NCMA, NDIA)", "Yes, membership", "Contracting practice, networking", "Program management and finance depth"],
+            ["Short-lesson platforms like Acqlerate", "Yes", "Both sides, in plain English, on your schedule", "Formal government certification"],
+        ],
+    },
+]
+
 TOPIC_POOL_EDUCATIONAL = [
     {
         "search": "termination for convenience versus default settlement proposal recovery costs FAR 49",
@@ -906,9 +953,15 @@ def main() -> int:
     # published, which is how it produced a 4th Section L/M post on 13 Sep and
     # a 4th cost-plus post on 19 Sep. Walking (rather than failing on the first
     # near-miss) means a false positive costs a different post, not no post.
+    #
+    # Saturdays try the search-demand pool first, in order (these are the
+    # queries Search Console shows people actually typing), then rotate
+    # through the educational pool as before.
+    candidates = [pool[(week + o) % len(pool)] for o in range(len(pool))]
+    if not is_tuesday:
+        candidates = list(TOPIC_POOL_DEMAND) + candidates
     topic, skipped = None, []
-    for offset in range(len(pool)):
-        cand = pool[(week + offset) % len(pool)]
+    for cand in candidates:
         score, slug, _ = dupe_nearest(BLOG_DIR, cand["angle"], cand.get("search", ""))
         if score < DUPE_THRESHOLD:
             topic = cand
