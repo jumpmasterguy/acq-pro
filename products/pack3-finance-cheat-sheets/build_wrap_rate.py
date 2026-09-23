@@ -1,13 +1,28 @@
 """
 FILE 4: wrap-rate-breakdown.xlsx
-Wrap rate calculator, comparison, and instructions — 3 sheets
+Wrap rate calculator, comparison, and instructions: 3 sheets.
+
+Run from anywhere:  python3 client/public/products/pack3-finance-cheat-sheets/build_wrap_rate.py
+Writes the workbook to BOTH twin folders (client/public/products/... and products/...).
+Then recalculate so formula cells carry cached values for previewers.
+
+Brand header uses brand/acqlerate-lockup-light.png (icon + Acq/lerate wordmark),
+rendered by scripts/pack3/make_lockup_png.py. Never type the brand as text in caps.
 """
+from pathlib import Path
 import openpyxl
 from openpyxl.styles import (
     Font, PatternFill, Alignment, Border, Side, Protection
 )
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.properties import PageSetupProperties
+from openpyxl.drawing.image import Image as XLImage
+
+HERE = Path(__file__).resolve().parent
+ROOT = next(p for p in HERE.parents if (p / "brand" / "acqlerate-lockup-light.png").exists())
+LOCKUP = ROOT / "brand" / "acqlerate-lockup-light.png"
+EDITION = "September 2026 Edition"
+FOOTER = f"Acqlerate Finance Cheat Sheets  ·  acqlerate.com  ·  {EDITION}  ·  Free to share unaltered. Educational reference, not official DoD guidance."
 
 wb = openpyxl.Workbook()
 
@@ -38,7 +53,6 @@ fill_result = PatternFill("solid", fgColor=LIGHT_TEAL)
 # ── Fonts ──
 font_title = Font(name="Calibri", size=16, bold=True, color=WHITE)
 font_subtitle = Font(name="Calibri", size=9, color="B0C4DE")
-font_brand = Font(name="Calibri", size=12, bold=True, color="4DA8AE")
 font_section = Font(name="Calibri", size=11, bold=True, color=WHITE)
 font_header = Font(name="Calibri", size=9, bold=True, color=WHITE)
 font_body = Font(name="Calibri", size=10, color=DARK_GRAY)
@@ -83,6 +97,37 @@ def apply_fill(ws, row, c1, c2, fill):
     for c in range(c1, c2+1):
         ws.cell(row=row, column=c).fill = fill
 
+
+def brand_header(ws, title, subtitle, last_col, note=None):
+    """Light header matching the newer packs: lockup, navy title, grey subtitle,
+    thin teal rule. Content starts on row 6."""
+    img = XLImage(str(LOCKUP))
+    img.height = 26
+    img.width = round(26 * 538 / 128)
+    ws.add_image(img, "B1")
+    ws.row_dimensions[1].height = 24
+    last = get_column_letter(last_col)
+    ws.merge_cells(f"B2:{last}2")
+    ws["B2"].value = title
+    ws["B2"].font = Font(name="Calibri", size=16, bold=True, color="0F172A")
+    ws["B2"].alignment = Alignment(horizontal="left", vertical="center")
+    ws.row_dimensions[2].height = 26
+    if note:
+        prev = get_column_letter(last_col - 1)
+        ws.merge_cells(f"B3:{prev}3")
+        ws.cell(row=3, column=last_col).value = note
+        ws.cell(row=3, column=last_col).font = Font(name="Calibri", size=8, italic=True, color=INPUT_BLUE)
+        ws.cell(row=3, column=last_col).alignment = Alignment(horizontal="right", vertical="center")
+    else:
+        ws.merge_cells(f"B3:{last}3")
+    ws["B3"].value = subtitle
+    ws["B3"].font = Font(name="Calibri", size=10, color="475569")
+    ws["B3"].alignment = Alignment(horizontal="left", vertical="center")
+    ws.row_dimensions[3].height = 16
+    apply_fill(ws, 4, 2, last_col, fill_teal)
+    ws.row_dimensions[4].height = 3
+    ws.row_dimensions[5].height = 8
+
 # ═══════════════════════════════════════════════════
 # SHEET 1: WRAP RATE CALCULATOR
 # ═══════════════════════════════════════════════════
@@ -105,32 +150,13 @@ widths = {'A': 2, 'B': 32, 'C': 16, 'D': 28, 'E': 16, 'F': 3}
 for c, w in widths.items():
     ws1.column_dimensions[c].width = w
 
-# ── Title Bar ──
-r = 1
-apply_fill(ws1, r, 1, 6, fill_navy)
-ws1.merge_cells("B1:D1")
-ws1["B1"].value = "Wrap Rate Calculator"
-ws1["B1"].font = font_title
-ws1["B1"].alignment = Alignment(horizontal="left", vertical="center")
-ws1.merge_cells("E1:F1")
-ws1["E1"].value = "ACQLERATE"
-ws1["E1"].font = font_brand
-ws1["E1"].alignment = Alignment(horizontal="right", vertical="center")
-ws1.row_dimensions[1].height = 30
-
-r = 2
-apply_fill(ws1, r, 1, 6, fill_navy)
-ws1.merge_cells("B2:D2")
-ws1["B2"].value = "Defense Contractor Rate Buildup — Defense Acquisitions Academy"
-ws1["B2"].font = font_subtitle
-ws1.merge_cells("E2:F2")
-ws1["E2"].value = "Blue text = inputs you can change"
-ws1["E2"].font = Font(name="Calibri", size=8, italic=True, color="B0C4DE")
-ws1["E2"].alignment = Alignment(horizontal="right", vertical="center")
-ws1.row_dimensions[2].height = 16
+# ── Header ──
+brand_header(ws1, "Wrap Rate Calculator",
+             "Defense contractor rate build-up: from base pay to the hourly rate the government pays",
+             5)
 
 # ── INPUT SECTION ──
-r = 4
+r = 6
 ws1.merge_cells(f"B{r}:E{r}")
 ws1.cell(row=r, column=2).value = "INPUT ASSUMPTIONS"
 ws1.cell(row=r, column=2).font = font_section
@@ -139,7 +165,7 @@ ws1.cell(row=r, column=2).alignment = ac
 apply_fill(ws1, r, 2, 5, fill_teal)
 ws1.row_dimensions[r].height = 22
 
-r = 5
+r = 7
 # Headers for input section
 for col, hdr in [(2, "Input"), (3, "Value"), (4, "Description")]:
     cell = ws1.cell(row=r, column=col)
@@ -151,14 +177,14 @@ ws1.row_dimensions[r].height = 18
 
 # Input rows with example values
 inputs = [
-    ("Base Hourly Rate", 65, "$#,##0.00", "Direct labor hourly rate (loaded into labor category)"),
+    ("Base Hourly Rate", 65, "$#,##0.00", "Direct labor hourly rate: what the employee is paid per hour"),
     ("Fringe Benefit Rate %", 0.30, "0.0%", "FICA, health insurance, 401k, PTO, workers comp"),
     ("Overhead Rate %", 0.45, "0.0%", "Indirect costs: mgmt, facilities, IT, HR (applied to DL + Fringe)"),
     ("G&A Rate %", 0.12, "0.0%", "General & Administrative: exec, legal, finance (applied to Total Cost Input)"),
     ("Fee / Profit %", 0.08, "0.0%", "Contractor profit margin (negotiated; varies by contract type)"),
 ]
 
-r = 6
+r = 8
 input_rows = {}
 for label, value, fmt, desc in inputs:
     ws1.cell(row=r, column=2).value = label
@@ -191,7 +217,7 @@ fee_pct = f"C{input_rows['Fee / Profit %']}"
 # ── OUTPUT / BUILDUP SECTION ──
 r += 1
 ws1.merge_cells(f"B{r}:E{r}")
-ws1.cell(row=r, column=2).value = "RATE BUILDUP (All formulas — change inputs above to recalculate)"
+ws1.cell(row=r, column=2).value = "RATE BUILD-UP (all formulas: change the inputs above to recalculate)"
 ws1.cell(row=r, column=2).font = font_section
 ws1.cell(row=r, column=2).fill = fill_navy
 ws1.cell(row=r, column=2).alignment = ac
@@ -328,7 +354,7 @@ cell.border = Border(
 )
 
 ws1.merge_cells(f"D{r}:E{r}")
-ws1.cell(row=r, column=4).value = "Fully Loaded Rate ÷ Base Rate (how many times base the govt pays)"
+ws1.cell(row=r, column=4).value = "Fully loaded rate ÷ base rate: how many times base pay the government pays"
 ws1.cell(row=r, column=4).font = font_note
 ws1.cell(row=r, column=4).alignment = al
 ws1.row_dimensions[r].height = 28
@@ -343,7 +369,7 @@ ws1.row_dimensions[r].height = 16
 r += 1
 
 ws1.merge_cells(f"B{r}:E{r}")
-ws1.cell(row=r, column=2).value = "© 2026 Acqlerate — Defense Acquisitions Academy  |  acqlerate.com"
+ws1.cell(row=r, column=2).value = FOOTER
 ws1.cell(row=r, column=2).font = font_footer
 ws1.cell(row=r, column=2).alignment = ac
 ws1.print_area = f"A1:F{r}"
@@ -363,32 +389,17 @@ ws2.page_margins.right = 0.4
 ws2.page_margins.top = 0.4
 ws2.page_margins.bottom = 0.4
 
-widths2 = {'A': 2, 'B': 22, 'C': 13, 'D': 13, 'E': 13, 'F': 11, 'G': 14, 'H': 36}
+widths2 = {'A': 2, 'B': 34, 'C': 11, 'D': 11, 'E': 11, 'F': 12, 'G': 13, 'H': 46}
 for c, w in widths2.items():
     ws2.column_dimensions[c].width = w
 
-# Title
-r = 1
-apply_fill(ws2, r, 1, 8, fill_navy)
-ws2.merge_cells("B1:F1")
-ws2["B1"].value = "Wrap Rate Comparison by Contractor Type"
-ws2["B1"].font = font_title
-ws2["B1"].alignment = Alignment(horizontal="left", vertical="center")
-ws2.merge_cells("G1:H1")
-ws2["G1"].value = "ACQLERATE"
-ws2["G1"].font = font_brand
-ws2["G1"].alignment = Alignment(horizontal="right", vertical="center")
-ws2.row_dimensions[1].height = 30
-
-r = 2
-apply_fill(ws2, r, 1, 8, fill_navy)
-ws2.merge_cells("B2:H2")
-ws2["B2"].value = "Typical rates across defense industry segments — Defense Acquisitions Academy"
-ws2["B2"].font = font_subtitle
-ws2.row_dimensions[2].height = 16
+# Header
+brand_header(ws2, "Wrap Rate Comparison by Contractor Type",
+             "Typical ranges by type of business unit, built in the calculator's order so any row can be typed into the Wrap Rate Calculator tab",
+             8)
 
 # Table headers
-r = 4
+r = 6
 comp_headers = ["Contractor Type", "Typical Fringe", "Typical OH", "Typical G&A", "Typical Fee", "Typical\nWrap Rate", "Notes"]
 comp_cols = list(range(2, 9))
 for i, (hdr, col) in enumerate(zip(comp_headers, comp_cols)):
@@ -400,23 +411,45 @@ for i, (hdr, col) in enumerate(zip(comp_headers, comp_cols)):
     cell.border = thin
 ws2.row_dimensions[r].height = 28
 
-# Data
-comp_data = [
-    ("Large Prime\n(LM, RTX, NGC, BA, GD)", "32-38%", "50-70%", "10-15%", "8-10%", "2.8x – 3.5x",
-     "Highest overhead due to IRAD, facilities, compliance infrastructure. DCAA-audited rates. Competitive on large ACAT I/II programs."),
-    ("Mid-Size Defense\n(SAIC, Leidos, Booz Allen, CACI)", "28-35%", "40-55%", "10-14%", "7-10%", "2.3x – 2.9x",
-     "Sweet spot for professional services. Lower OH than primes. Strong in A&AS, SETA, IT contracts."),
-    ("Small Business\n(8(a), SDVOSB, HUBZone)", "22-30%", "30-45%", "8-15%", "8-15%", "1.9x – 2.5x",
-     "Lower OH but potentially higher G&A (smaller base). Fee can be higher on sole-source. May lack DCAA-approved rates initially."),
-    ("Specialty / Niche\n(Cleared professionals, cyber)", "30-38%", "45-65%", "10-16%", "8-12%", "2.5x – 3.2x",
-     "High fringe due to cleared workforce retention. Premium for specialized skills. Cyber and SIGINT talent commands premium."),
-    ("OCONUS / Deployed\n(Overseas operations)", "35-45%", "55-80%", "12-18%", "8-12%", "3.0x – 4.0x",
-     "Hazard/hardship differentials, LOGCAP support costs, security, housing, R&R travel. OCONUS uplift can be 1.3-1.8x CONUS rates."),
-    ("FFRDC / UARC\n(MITRE, IDA, Lincoln Labs)", "35-40%", "55-75%", "12-16%", "0% (non-profit)", "2.4x – 3.0x",
-     "No fee (non-profit). High OH reflects IRAD equivalent, facilities. Exempt from some cost principles. Sole-source authority."),
+# Data. Ranges are (low, high) percent. The wrap column is computed from them,
+# in the calculator's order, so a row can never contradict itself again.
+comp_rows = [
+    ("Large Prime: services business unit\n(mission support, often on government sites)", (28, 34), (10, 30), (8, 12), (6, 9),
+     "Staff often sit on government sites, so overhead is light. The same parent company can run a systems division at nearly double this multiplier."),
+    ("Large Prime: engineering or systems unit\n(development, integration, C2, sensors)", (30, 38), (50, 80), (10, 14), (8, 10),
+     "Engineering overhead carries labs, facilities, tools and IRAD at contractor sites. Each business unit negotiates its own forward pricing rates."),
+    ("Services Integrator\n(large professional services firms)", (28, 35), (20, 40), (8, 12), (6, 9),
+     "Scale spreads indirect costs thinly. Most quote separate on-site and off-site rates; on-site is lower."),
+    ("Mid-Tier Contractor\n($100M to $1B, often grown out of set-asides)", (26, 34), (25, 45), (10, 15), (7, 10),
+     "Less scale than an integrator, so G&A runs higher. The squeeze point when a firm outgrows small-business status."),
+    ("Small Business\n(8(a), SDVOSB, HUBZone, WOSB)", (20, 30), (15, 40), (8, 18), (7, 12),
+     "Lean overhead, but a small base can push G&A up. Many use one combined indirect rate. May lack DCAA-reviewed rates at first."),
+    ("Cleared Specialty\n(cyber, SIGINT, cleared engineers)", (30, 38), (30, 55), (10, 14), (8, 12),
+     "The talent premium shows up mostly in the base salary, not the multiplier. Clearance processing, SCIF space and retention sit in overhead."),
+    ("OCONUS / Deployed\n(overseas support)", (35, 45), (55, 80), (12, 18), (8, 12),
+     "Hazard, danger and post pay, housing, security and R&R travel. Much of it is priced as separate direct costs, so compare total cost per person."),
+    ("FFRDC / UARC\n(nonprofit research centers)", (30, 40), (50, 75), (10, 16), (0, 3),
+     "Nonprofit, so fee is small and based on need (DFARS 215.404-75). High overhead covers labs and research infrastructure."),
 ]
 
-r = 5
+
+def _wrap(f, o, g, e):
+    return (1 + f / 100) * (1 + o / 100) * (1 + g / 100) * (1 + e / 100)
+
+
+def _pct(rng):
+    return f"{rng[0]}–{rng[1]}%"
+
+
+comp_data = []
+for ctype, fr, oh, ga, fee, notes in comp_rows:
+    lo = _wrap(fr[0], oh[0], ga[0], fee[0])
+    hi = _wrap(fr[1], oh[1], ga[1], fee[1])
+    wrap = f"{round(lo + 1e-9, 1):.1f}x – {round(hi + 1e-9, 1):.1f}x"
+    fee_txt = _pct(fee) + (" (need-based)" if fee[0] == 0 else "")
+    comp_data.append((ctype, _pct(fr), _pct(oh), _pct(ga), fee_txt, wrap, notes))
+
+r = 7
 for i, (ctype, fringe, oh, ga, fee, wrap, notes) in enumerate(comp_data):
     alt = fill_light_teal if i % 2 == 0 else fill_white
     vals = [ctype, fringe, oh, ga, fee, wrap, notes]
@@ -434,20 +467,41 @@ for i, (ctype, fringe, oh, ga, fee, wrap, notes) in enumerate(comp_data):
         else:
             cell.font = font_body_sm
             cell.alignment = ac
-    ws2.row_dimensions[r].height = 50
+    ws2.row_dimensions[r].height = 42
     r += 1
 
-# Additional note
+# Reading notes
+ws2_notes = [
+    ("HOW TO READ THIS TABLE",
+     "Rates build up in the calculator's order: fringe on direct labor, overhead on labor plus fringe, G&A on total cost input, fee on total cost. "
+     "The wrap rate column multiplies the four ranges together at their low and high ends (rounded), and includes fee. Many companies quote a wrap without fee, "
+     "fold fringe into overhead, or use one combined indirect rate, so compare structures before comparing numbers."),
+    ("ONE COMPANY, MANY WRAP RATES",
+     "A large prime is not one rate. Each business unit and site has its own overhead pools and its own forward pricing rate agreement, and corporate G&A "
+     "is allocated to each (CAS 403, CAS 410). At one large prime, a services business unit ran about 1.7x while a C2 systems division under the same "
+     "parent ran about 2.9x. Always ask which business unit and which site a rate comes from."),
+    ("ON-SITE VS OFF-SITE",
+     "Work on a government site usually carries a lower overhead rate, because the government supplies the desk, the building and the utilities. "
+     "Expect a services contractor to price both. Factory-floor production labor usually wraps higher still, because manufacturing overhead carries the plant and equipment."),
+    ("VERIFY",
+     "These are typical ranges, not any company's rates. DCAA advises against comparing indirect rates between organizations at the rate level. "
+     "For a real proposal, check the contractor's current FPRA or FPRR."),
+]
 r += 1
-ws2.merge_cells(f"B{r}:H{r}")
-ws2.cell(row=r, column=2).value = "NOTE: Rates vary significantly by region, contract vehicle, and cost accounting structure. Always verify against contractor's most recent FPRA/FPRR. DCAA Forward Pricing Rate Agreements are the gold standard."
-ws2.cell(row=r, column=2).font = Font(name="Calibri", size=8, italic=True, bold=True, color=TEAL)
-ws2.cell(row=r, column=2).alignment = al
-ws2.row_dimensions[r].height = 24
+for head, text in ws2_notes:
+    ws2.cell(row=r, column=2).value = head
+    ws2.cell(row=r, column=2).font = Font(name="Calibri", size=8, bold=True, color=TEAL)
+    ws2.cell(row=r, column=2).alignment = al_top
+    ws2.merge_cells(f"C{r}:H{r}")
+    ws2.cell(row=r, column=3).value = text
+    ws2.cell(row=r, column=3).font = Font(name="Calibri", size=8, color=DARK_GRAY)
+    ws2.cell(row=r, column=3).alignment = al_top
+    ws2.row_dimensions[r].height = 34
+    r += 1
 
 r += 1
 ws2.merge_cells(f"B{r}:H{r}")
-ws2.cell(row=r, column=2).value = "© 2026 Acqlerate — Defense Acquisitions Academy  |  acqlerate.com"
+ws2.cell(row=r, column=2).value = FOOTER
 ws2.cell(row=r, column=2).font = font_footer
 ws2.cell(row=r, column=2).alignment = ac
 ws2.print_area = f"A1:H{r}"
@@ -467,21 +521,9 @@ widths3 = {'A': 2, 'B': 4, 'C': 80, 'D': 2}
 for c, w in widths3.items():
     ws3.column_dimensions[c].width = w
 
-# Title
-r = 1
-apply_fill(ws3, r, 1, 4, fill_navy)
-ws3.merge_cells("B1:C1")
-ws3["B1"].value = "Understanding Wrap Rates in Defense Contracting"
-ws3["B1"].font = font_title
-ws3["B1"].alignment = Alignment(horizontal="left", vertical="center")
-ws3.row_dimensions[1].height = 30
-
-r = 2
-apply_fill(ws3, r, 1, 4, fill_navy)
-ws3.merge_cells("B2:C2")
-ws3["B2"].value = "Acqlerate — Defense Acquisitions Academy"
-ws3["B2"].font = font_subtitle
-ws3.row_dimensions[2].height = 16
+# Header
+brand_header(ws3, "Understanding Wrap Rates in Defense Contracting",
+             "What the multiplier means, how the government checks it, and how to read it in a source selection", 3)
 
 # Content sections
 sections = [
@@ -490,38 +532,38 @@ sections = [
         "",
         "Why it matters to acquisition professionals:",
         "  ▸ It determines the true cost of every labor hour on your contract",
-        "  ▸ A $65/hr engineer may cost the government $155-200/hr fully loaded",
+        "  ▸ A $65/hr engineer may cost the government anywhere from about $105 to $200/hr fully loaded, depending on the business unit and work site",
         "  ▸ Understanding wrap rates is essential for cost realism analysis in source selection",
         "  ▸ Wrap rate differences between competitors explain most of the price spread in professional services",
         "  ▸ Unrealistically low wrap rates signal an unrealistic proposal (buying in)",
     ]),
-    ("HOW DCAA VALIDATES RATES", [
-        "The Defense Contract Audit Agency (DCAA) validates contractor indirect rates through several mechanisms:",
+    ("HOW THE GOVERNMENT CHECKS RATES", [
+        "DCAA audits contractor rates and DCMA's administrative contracting officer (ACO) negotiates them. The main mechanisms:",
         "",
-        "  ▸ FPRA (Forward Pricing Rate Agreement) — A written agreement between the contractor and the government establishing billing rates for a future period. Gold standard — means rates are pre-negotiated and DCAA-approved.",
-        "  ▸ FPRR (Forward Pricing Rate Recommendation) — When no FPRA exists, DCAA issues a recommendation for rates to use in negotiations. Less authoritative than FPRA.",
-        "  ▸ Incurred Cost Audits — Annual audit of actual indirect rates vs. provisional billing rates. Determines final rates and any required adjustments.",
-        "  ▸ CAS Compliance — Cost Accounting Standards (CAS 401-420) require consistency in how costs are estimated, accumulated, and reported.",
+        "  ▸ FPRA (Forward Pricing Rate Agreement): a written agreement between the contractor and the ACO on the indirect rates to use in pricing proposals for a future period. The gold standard.",
+        "  ▸ FPRR (Forward Pricing Rate Recommendation): when there is no FPRA, the ACO recommends rates for negotiators to use, informed by DCAA's audit. Less binding than an FPRA.",
+        "  ▸ Incurred cost audits: DCAA compares each year's actual indirect rates with the provisional billing rates. The result sets final rates and any adjustments.",
+        "  ▸ CAS compliance: the Cost Accounting Standards (CAS 401 to 420) require consistency in how costs are estimated, accumulated and reported.",
         "",
-        "Key point: If a contractor does NOT have a DCAA-audited rate structure, require them to provide their rate buildup with supporting documentation. Provisional rates may apply.",
+        "Key point: if a contractor has no audited rate structure, ask for its rate build-up with supporting documentation. Provisional rates may apply.",
     ]),
     ("WHAT 'UNCOMPETITIVE WRAP RATES' MEANS IN SOURCE SELECTION", [
         "During source selection, evaluators performing cost realism analysis should examine wrap rates to ensure:",
         "",
         "  ▸ Rates are consistent with the contractor's FPRA/FPRR (if available)",
-        "  ▸ Rates are within industry norms for the contractor's size and type",
+        "  ▸ Rates are within norms for the same kind of business unit and the same work site (on-site or off-site), not just the same company size",
         "  ▸ Rates adequately cover the contractor's real cost of doing business",
         "  ▸ Unusually LOW rates may indicate buy-in pricing (contractor plans to raise rates later)",
         "  ▸ Unusually HIGH rates may indicate over-staffing or inefficiency",
         "",
         "Red flags in wrap rate analysis:",
-        "  ▸ Wrap rate <1.8x for a mid-size contractor (likely unsustainable)",
-        "  ▸ Overhead rate declining year-over-year without explanation",
-        "  ▸ Fringe rate below 25% (may indicate inadequate employee benefits / high turnover risk)",
-        "  ▸ G&A rate >20% (indicates potential cost structure problems)",
+        "  ▸ A wrap rate below about 1.5x on off-site work, fee included (hard to sustain)",
+        "  ▸ Overhead rate falling year over year with no explanation",
+        "  ▸ Fringe far below the company's own history (benefit cuts can mean turnover)",
+        "  ▸ G&A above 20% (worth a question about the cost structure)",
     ]),
     ("HOW TO CHECK IF A COMPETITOR'S PRICING IS OVER-LEVELED", [
-        "Over-leveling occurs when a contractor proposes senior/expert labor for work that could be done by junior staff — a common pricing tactic:",
+        "Over-leveling is proposing senior labor for work junior staff could do. It is a common pricing tactic:",
         "",
         "  ▸ Compare proposed labor categories against the PWS/SOW task complexity",
         "  ▸ Check if the proposed labor mix matches industry norms for similar work",
@@ -532,20 +574,21 @@ sections = [
         "Tip: Request detailed labor category descriptions with minimum qualifications. Map each category to specific PWS tasks. If Level IV engineers are proposed for Level II work, that's over-leveling.",
     ]),
     ("KEY REGULATORY REFERENCES", [
-        "  ▸ FAR 31.201 — Composition of total cost (direct + indirect + fee)",
-        "  ▸ FAR 31.203 — Indirect costs — principles for allocating indirect costs",
-        "  ▸ FAR 31.205 — Selected costs — allowable vs. unallowable cost elements",
-        "  ▸ FAR 15.404-1(d) — Cost realism analysis requirements",
-        "  ▸ CAS 401 — Consistency in estimating, accumulating, and reporting costs",
-        "  ▸ CAS 402 — Consistency in allocating costs incurred for the same purpose",
-        "  ▸ CAS 410 — Allocation of business unit G&A expenses",
-        "  ▸ CAS 418 — Allocation of direct and indirect costs",
-        "  ▸ DFARS 215.404-71 — Weighted Guidelines for profit/fee determination",
-        "  ▸ DCAM (DCAA Contract Audit Manual) — Chapter 6: Incurred Costs; Chapter 9: Forward Pricing",
+        "  ▸ FAR 31.201: composition of total cost",
+        "  ▸ FAR 31.203: indirect costs and how to allocate them",
+        "  ▸ FAR 31.205: selected costs, allowable and unallowable",
+        "  ▸ FAR 15.404-1(d): cost realism analysis",
+        "  ▸ CAS 401: consistency in estimating, accumulating and reporting costs",
+        "  ▸ CAS 402: consistency in allocating costs incurred for the same purpose",
+        "  ▸ CAS 403: allocating home office (corporate) expenses to business units",
+        "  ▸ CAS 410: allocating business unit G&A",
+        "  ▸ CAS 418: allocating direct and indirect costs",
+        "  ▸ DFARS 215.404-71: weighted guidelines for profit and fee",
+        "  ▸ DCAA Contract Audit Manual: chapter 6 (incurred costs), chapter 9 (cost estimates and price proposals)",
     ]),
 ]
 
-r = 4
+r = 6
 for title, lines in sections:
     ws3.merge_cells(f"B{r}:C{r}")
     ws3.cell(row=r, column=2).value = title
@@ -565,29 +608,30 @@ for title, lines in sections:
             cell.value = line
             cell.font = font_inst_body
             cell.alignment = al_top
-            ws3.row_dimensions[r].height = 16 if len(line) < 80 else 28
+            ws3.row_dimensions[r].height = 14 * (1 + (len(line) - 1) // 88) + 2
         elif line.endswith(":"):
             cell.value = line
             cell.font = font_inst_bold
-            cell.alignment = al
-            ws3.row_dimensions[r].height = 16
+            cell.alignment = al_top
+            ws3.row_dimensions[r].height = 14 * (1 + (len(line) - 1) // 84) + 3
         else:
             cell.value = line
             cell.font = font_inst_body
             cell.alignment = al_top
-            ws3.row_dimensions[r].height = 16 if len(line) < 80 else 28
+            ws3.row_dimensions[r].height = 14 * (1 + (len(line) - 1) // 88) + 2
         r += 1
     r += 1  # Gap between sections
 
 # Footer
 ws3.merge_cells(f"B{r}:C{r}")
-ws3.cell(row=r, column=2).value = "© 2026 Acqlerate — Defense Acquisitions Academy  |  acqlerate.com  |  For educational use — not legal or financial advice"
+ws3.cell(row=r, column=2).value = FOOTER
 ws3.cell(row=r, column=2).font = font_footer
 ws3.cell(row=r, column=2).alignment = ac
 
 ws3.print_area = f"A1:D{r}"
 
 # ── Save ──
-output = "/home/user/workspace/acq-pro/products/pack3-finance-cheat-sheets/wrap-rate-breakdown.xlsx"
-wb.save(output)
-print(f"Saved: {output}")
+for out_dir in (ROOT / "client/public/products/pack3-finance-cheat-sheets", ROOT / "products/pack3-finance-cheat-sheets"):
+    output = out_dir / "wrap-rate-breakdown.xlsx"
+    wb.save(output)
+    print(f"Saved: {output}")

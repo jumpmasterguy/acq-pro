@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Color of Money Decision Tree</title>
+<style>{{CSS}}
+.cols { display: grid; grid-template-columns: 6.35in 1fr; gap: 0.2in; margin-top: 2px; }
+.flow { display: grid; grid-template-columns: 3.05in 0.5in 1fr; row-gap: 0; align-items: stretch; }
+.start { grid-column: 1; justify-self: start; background: var(--navy); color: #fff; font-weight: 700; font-size: 9.5pt;
+  padding: 6px 14px; border-radius: 99px; margin-bottom: 0; }
+.down { grid-column: 1; height: 17px; position: relative; }
+.down::before { content: ""; position: absolute; left: 22px; top: 0; bottom: 3px; border-left: 2px solid #94A3B8; }
+.down::after { content: ""; position: absolute; left: 18px; bottom: 0; border: 5px solid transparent; border-top: 6px solid #94A3B8; border-bottom: 0; }
+.down span { position: absolute; left: 32px; top: 2px; font-size: 7pt; font-weight: 700; color: var(--faint); letter-spacing: .08em; }
+.q { grid-column: 1; border: 1.5px solid var(--navy); border-radius: 8px; padding: 7px 10px; background: #fff; display: flex; gap: 8px; align-items: flex-start; }
+.q .n { flex: none; width: 18px; height: 18px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 8pt; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+.q .t { font-size: 8.8pt; font-weight: 600; color: var(--navy); line-height: 1.3; }
+.q .t small { display: block; font-weight: 400; color: var(--muted); font-size: 7.4pt; margin-top: 2px; }
+.yes { grid-column: 2; position: relative; }
+.yes::before { content: ""; position: absolute; left: 3px; right: 8px; top: 50%; border-top: 2px solid var(--navy); }
+.yes::after { content: ""; position: absolute; right: 2px; top: calc(50% - 5px); border: 5px solid transparent; border-left: 7px solid var(--navy); border-right: 0; }
+.yes span { position: absolute; left: 0; right: 0; top: calc(50% - 13px); text-align: center; font-size: 7pt; font-weight: 700; color: var(--navy); letter-spacing: .08em; }
+.a { grid-column: 3; border-radius: 8px; padding: 6px 10px; color: #fff; display: flex; flex-direction: column; justify-content: center; }
+.a .nm { font-size: 11pt; font-weight: 700; line-height: 1.1; }
+.a .yr { font-size: 7.6pt; font-weight: 600; opacity: .95; margin-top: 1px; }
+.a .ds { font-size: 7.2pt; opacity: .92; margin-top: 2px; line-height: 1.28; }
+.a.else { grid-column: 1 / span 3; flex-direction: row; align-items: center; gap: 12px; }
+.mil { background: var(--orange); } .rdte { background: var(--purple); } .con { background: var(--magenta); }
+.proc { background: var(--green); } .om { background: var(--blue); }
+.tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-top: 4px; }
+.tiers div { background: rgba(255,255,255,.16); border-radius: 4px; padding: 2px 4px; font-size: 6.9pt; line-height: 1.22; }
+.tiers b { color: #fff; display: block; font-size: 7.6pt; }
+.side .card { margin-bottom: 8px; }
+.side h2 { font-size: 10.5pt; }
+.rule { display: grid; grid-template-columns: 58px 1fr; gap: 6px; padding: 4px 0; border-bottom: 1px solid var(--rule); font-size: 7.6pt; line-height: 1.3; }
+.rule:last-child { border-bottom: none; }
+.rule b { font-size: 8.4pt; }
+.rule .cite { color: var(--faint); font-size: 6.8pt; }
+.traps li { font-size: 7.6pt; line-height: 1.3; margin-bottom: 3px; }
+/* page 2 */
+.ref td { font-size: 7.5pt; padding: 3.5px 6px; line-height: 1.3; }
+.rd td { font-size: 7.4pt; padding: 2.6px 5px; line-height: 1.25; }
+.rd td.k { font-size: 7.8pt; }
+.ref td.k { font-size: 8.4pt; }
+.chip { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+.two { display: grid; grid-template-columns: 1.12fr 1fr; gap: 12px; margin-top: 8px; align-items: start; }
+.th-strip { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.th-strip .card { padding: 5px 8px; }
+.big { font-size: 13.5pt; font-weight: 700; color: var(--navy); letter-spacing: -.01em; line-height: 1.05; }
+.lbl { font-size: 7.4pt; color: var(--muted); line-height: 1.28; margin-top: 2px; }
+.cite { font-size: 6.6pt; color: var(--faint); margin-top: 3px; }
+</style></head>
+<body>
+
+<!-- ═════════════ PAGE 1: THE TREE ═════════════ -->
+<section class="page landscape">
+  <div class="watermark"></div>
+  <div class="masthead">
+    <div>
+      <div class="lockup"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+      <h1 style="margin-top:8px;font-size:20pt">Color of Money Decision Tree</h1>
+      <p class="lede" style="font-size:9.5pt">Which appropriation pays for it? Ask the questions in order and stop at the first yes.</p>
+    </div>
+    <div class="meta">
+      <div class="eyebrow" style="margin-bottom:3px">Finance Cheat Sheet</div>
+      <b>{{EDITION}} edition</b><br>Page 1 of 2: the tree<br>Page 2: periods, thresholds, RDT&amp;E codes
+    </div>
+  </div>
+  <div class="topline"></div>
+
+  <div class="cols">
+    <div class="flow">
+      <div class="start">What are you paying for?</div>
+      <div class="down"></div>
+
+      <div class="q"><div class="n">1</div><div class="t">Pay and allowances for uniformed military members?<small>Base pay, BAH, BAS, bonuses, PCS moves.</small></div></div>
+      <div class="yes"><span>YES</span></div>
+      <div class="a mil"><div class="nm">MILPERS</div><div class="yr">1 year to obligate</div></div>
+      <div class="down"><span>NO</span></div>
+
+      <div class="q"><div class="n">2</div><div class="t">Developing, prototyping or testing something not yet in production?<small>Includes developmental and operational test. Cost does not matter here: a $40K test fixture for development is still RDT&amp;E.</small></div></div>
+      <div class="yes"><span>YES</span></div>
+      <div class="a rdte"><div class="nm">RDT&amp;E</div><div class="yr">2 years to obligate</div><div class="ds">Pick the budget activity, 6.1 to 6.8 (page 2).</div></div>
+      <div class="down"><span>NO</span></div>
+
+      <div class="q"><div class="n">3</div><div class="t">Construction: building, converting, extending or altering real property, or buying land?<small>Fixing an existing facility (sustainment, restoration, modernization) is O&amp;M, not construction.</small></div></div>
+      <div class="yes"><span>YES</span></div>
+      <div class="a con"><div class="nm">MILCON or O&amp;M, by total project cost</div>
+        <div class="tiers">
+          <div><b>≤ $4M</b>O&amp;M may fund it</div>
+          <div><b>≤ $9M</b>Unspecified minor MILCON</div>
+          <div><b>&gt; $9M</b>MILCON line item Congress names</div>
+        </div>
+        <div class="yr" style="margin-top:3px">MILCON: 5 years to obligate</div></div>
+      <div class="down"><span>NO</span></div>
+
+      <div class="q"><div class="n">4</div><div class="t">An investment item: a system or end item over $350K per unit, or a centrally managed, asset-controlled item?<small>Judge the whole system's unit cost, not each part. Splitting a buy to get under $350K is a purpose violation.</small></div></div>
+      <div class="yes"><span>YES</span></div>
+      <div class="a proc"><div class="nm">Procurement</div><div class="yr">3 years to obligate (Shipbuilding: 5)</div><div class="ds">Budgeted to full funding: the whole usable end item in one year.</div></div>
+      <div class="down"><span>NO</span></div>
+
+      <div class="a om else"><div><div class="nm">O&amp;M</div><div class="yr">1 year to obligate</div></div>
+        <div class="ds" style="font-size:7.8pt">The default for running the force: most civilian pay, travel, training, supplies, services, maintenance and repair, and equipment at or under $350K per unit.</div></div>
+    </div>
+
+    <div class="side">
+      <div class="card soft">
+        <h2>Three rules behind every answer</h2>
+        <div class="rule"><b>Purpose</b><div>Spend it only on what Congress appropriated it for.<div class="cite">31 U.S.C. §1301(a)</div></div></div>
+        <div class="rule"><b>Time</b><div>The need must arise while the money is available (bona fide need). Severable services may run up to 12 months from award.<div class="cite">31 U.S.C. §1502; 10 U.S.C. §3133</div></div></div>
+        <div class="rule"><b>Amount</b><div>Never obligate more than is available, or before it is available.<div class="cite">Antideficiency Act, 31 U.S.C. §§1341, 1517</div></div></div>
+      </div>
+      <div class="card warn">
+        <h2>Get it wrong and it is personal</h2>
+        <p style="font-size:7.6pt;line-height:1.32">A purpose or time error becomes an Antideficiency Act violation when the right money was not there to fix it. Violations are reported to the President and Congress, and the responsible person faces discipline. Knowing and willful violations carry up to a $5,000 fine and 2 years.</p>
+        <div class="cite">31 U.S.C. §§1349, 1350, 1351</div>
+      </div>
+      <div class="card">
+        <h2>Common traps</h2>
+        <ul class="traps">
+          <li>Splitting one system into sub-$350K buys to use O&amp;M.</li>
+          <li>Using this year's O&amp;M for next year's supplies.</li>
+          <li>Doing development work with O&amp;M because it was on hand.</li>
+          <li>Calling an addition or conversion a "repair".</li>
+        </ul>
+        <p class="small muted" style="margin-top:4px">Special cases exist: working capital funds, lab revitalization, software pilots. When unsure, ask your resource manager before you obligate.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="lockup small"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+    <div class="sources">Thresholds: $350K expense/investment, DoD Appropriations Act 2023 §8039 and later acts; $4M and $9M, 10 U.S.C. §2805. Free to share unaltered. Not official DoD guidance.</div>
+    <div class="pg">acqlerate.com · 1/2</div>
+  </div>
+</section>
+
+<!-- ═════════════ PAGE 2: THE REFERENCE ═════════════ -->
+<section class="page landscape">
+  <div class="watermark"></div>
+  <div class="masthead">
+    <div>
+      <div class="lockup"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+      <h1 style="margin-top:6px;font-size:16pt">Color of Money: Quick Reference</h1>
+    </div>
+    <div class="meta"><div class="eyebrow" style="margin-bottom:3px">Finance Cheat Sheet</div><b>{{EDITION}} edition</b><br>Page 2 of 2</div>
+  </div>
+  <div class="topline"></div>
+
+  <table class="ref">
+    <tr><th style="width:1.15in">Appropriation</th><th style="width:0.8in">Time to obligate</th><th style="width:0.95in">Funding policy</th><th>Pays for</th><th>Does not pay for</th><th style="width:1.35in">Example</th></tr>
+    <tr><td class="k"><span class="chip" style="background:var(--blue)"></span>O&amp;M</td><td>1 year</td><td>Annual</td><td>Most civilian pay, travel, training, supplies, services, maintenance and repair, equipment ≤ $350K</td><td>Investment items over $350K, development and test, military pay, construction over $4M</td><td>Depot repair, TDY travel, IT help desk</td></tr>
+    <tr><td class="k"><span class="chip" style="background:var(--orange)"></span>MILPERS</td><td>1 year</td><td>Annual</td><td>Military pay and allowances, PCS moves, bonuses, separation pay</td><td>Civilian pay, contractors, equipment</td><td>Monthly active-duty pay</td></tr>
+    <tr><td class="k"><span class="chip" style="background:var(--purple)"></span>RDT&amp;E</td><td>2 years</td><td>Incremental: fund the year's work</td><td>Research, prototypes, development, developmental and operational test, upgrades still in development</td><td>Production quantities, routine operations</td><td>EMD contract, prototype demo</td></tr>
+    <tr><td class="k"><span class="chip" style="background:var(--green)"></span>Procurement</td><td>3 years<br><span class="muted">Shipbuilding: 5</span></td><td>Full funding: a whole usable end item</td><td>Systems and end items over $350K, centrally managed items, initial spares, modification kits</td><td>Development and test, operating costs</td><td>Production lot, vehicle buy</td></tr>
+    <tr><td class="k"><span class="chip" style="background:var(--magenta)"></span>MILCON</td><td>5 years</td><td>Full funding</td><td>Construction projects over $4M, land acquisition</td><td>Repair of existing facilities, equipment, operating costs</td><td>New hangar, barracks</td></tr>
+    <tr><td class="k"><span class="chip" style="background:#94A3B8"></span>Working capital fund</td><td>No-year, revolving</td><td>Customers reimburse</td><td>Business-like support: depot maintenance, supply, transportation. Customers pay with their own appropriation</td><td>Direct mission costs outside the fund's charter</td><td>DLA supply buy</td></tr>
+  </table>
+
+  <div class="two">
+    <div class="card">
+      <h2>RDT&amp;E budget activities</h2>
+      <table class="rd">
+        <tr><th style="width:0.4in">Code</th><th style="width:2.2in">Name</th><th>In plain English</th></tr>
+        <tr><td class="k">6.1</td><td>Basic Research</td><td>New knowledge, no specific system in mind</td></tr>
+        <tr><td class="k">6.2</td><td>Applied Research</td><td>Aim that knowledge at a military problem</td></tr>
+        <tr><td class="k">6.3</td><td>Advanced Technology Development</td><td>Prove it in a relevant environment</td></tr>
+        <tr><td class="k">6.4</td><td>Advanced Component Development and Prototypes</td><td>Prototype the system concept</td></tr>
+        <tr><td class="k">6.5</td><td>System Development and Demonstration</td><td>Engineering and manufacturing development</td></tr>
+        <tr><td class="k">6.6</td><td>RDT&amp;E Management Support</td><td>Test ranges, labs, R&amp;D support</td></tr>
+        <tr><td class="k">6.7</td><td>Operational Systems Development</td><td>Upgrades to systems already fielded</td></tr>
+        <tr><td class="k">6.8</td><td>Software and Digital Technology Pilot Programs</td><td>One software line for its whole life</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="th-strip">
+    <div class="card"><div class="big">$350K</div><div class="lbl">Expense/investment line. Over it, an end item is Procurement.</div><div class="cite">DoD Approps Act 2023 §8039, carried forward</div></div>
+    <div class="card"><div class="big">$4M</div><div class="lbl">The most O&amp;M can spend on one minor construction project.</div><div class="cite">10 U.S.C. §2805(c)</div></div>
+    <div class="card"><div class="big">$9M</div><div class="lbl">Ceiling for unspecified minor MILCON. Above it, Congress names the project.</div><div class="cite">10 U.S.C. §2805(a)</div></div>
+    <div class="card"><div class="big">12 months</div><div class="lbl">Longest a severable service can run on one year's O&amp;M.</div><div class="cite">10 U.S.C. §3133</div></div>
+  </div>
+
+      <div class="card soft" style="margin-top:7px;padding:7px 10px">
+        <h2>After the money expires</h2>
+        <p style="font-size:7.5pt">When its time to obligate runs out, money is <b>expired</b>. For 5 more years it can only adjust obligations made while it was current, such as in-scope cost growth on an existing contract. Then it <b>cancels</b>.</p>
+        <div class="cite">31 U.S.C. §§1552, 1553</div>
+      </div>
+      <div class="card teal" style="margin-top:7px;padding:7px 10px">
+        <h2>Not the same $350K</h2>
+        <p style="font-size:7.5pt">The <b>simplified acquisition threshold</b> is also $350K (FAC 2025-06, Oct 1, 2025). It decides <i>how you buy</i>. The <b>expense/investment threshold</b> decides <i>which money you use</i>. Same number, different rules.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="lockup small"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+    <div class="sources">Sources: DoD 7000.14-R, FMR Vol. 2A ch. 1; 31 U.S.C. §§1301, 1341, 1502, 1552; 10 U.S.C. §§2805, 3133. Thresholds change; check the current appropriations act. Free to share unaltered.</div>
+    <div class="pg">acqlerate.com · 2/2</div>
+  </div>
+</section>
+</body></html>

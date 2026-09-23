@@ -36,7 +36,7 @@ const PACKS = [
     description:
       "4 print-ready reference tools: PPBE Cycle One-Pager, Color of Money Decision Tree, EVM Formulas Quick Reference, Wrap Rate Calculator. Instant download.",
     amount: 1200, // $12.00
-    files: "ppbe-cycle-one-pager.xlsx,color-of-money-decision-tree.xlsx,evm-formulas-quick-reference.xlsx,wrap-rate-breakdown.xlsx",
+    files: "ppbe-cycle-one-pager.pdf,color-of-money-decision-tree.pdf,evm-formulas-quick-reference.pdf,wrap-rate-breakdown.xlsx",
   },
 ];
 

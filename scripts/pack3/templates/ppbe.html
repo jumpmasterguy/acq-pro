@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>The PPBE Cycle on One Page</title>
+<style>{{CSS}}
+.chart { margin-top: 2px; }
+.chart svg { display: block; }
+.keyline { display: flex; gap: 14px; align-items: center; font-size: 7.2pt; color: var(--muted); margin: 4px 0 8px; }
+.keyline .d { display: inline-block; width: 8px; height: 8px; background: var(--navy); transform: rotate(45deg); margin-right: 5px; }
+.keyline .h { display: inline-block; width: 18px; height: 8px; margin-right: 5px; border-radius: 2px;
+  background: repeating-linear-gradient(45deg, #D1571A 0 2px, #FBE3D6 2px 5px); }
+.keyline .t { display: inline-block; width: 0; height: 10px; border-left: 1.6px dashed var(--red); margin-right: 5px; }
+.grid3 { display: grid; grid-template-columns: 1.08fr 1fr 0.95fr; gap: 10px; }
+.grid3 .card { padding: 9px 10px; }
+.grid3 td { font-size: 7.7pt; padding: 3.5px 5px; line-height: 1.32; }
+.grid3 h2 { font-size: 10.5pt; margin-bottom: 3px; }
+.grid3 th { padding: 3px 5px; }
+.phase { display: inline-block; width: 7px; height: 7px; border-radius: 2px; margin-right: 4px; vertical-align: 0; }
+.now td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; }
+.pm li { font-size: 7.8pt; margin-bottom: 4px; line-height: 1.34; }
+.reform { margin-top: 4px; font-size: 6.8pt; line-height: 1.3; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 5px; }
+</style></head>
+<body>
+<section class="page landscape">
+  <div class="watermark"></div>
+
+  <div class="masthead">
+    <div>
+      <div class="lockup"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+      <h1 style="margin-top:8px;font-size:20pt">The PPBE Cycle on One Page</h1>
+      <p class="lede" style="font-size:9.5pt">How a defense dollar goes from strategy to spent. Follow one budget, FY{{FY}}, from first planning meeting to last day on contract.</p>
+    </div>
+    <div class="meta">
+      <div class="eyebrow" style="margin-bottom:3px">Finance Cheat Sheet</div>
+      <b>{{EDITION}} edition</b><br>
+      Dates shown are typical.<br>Real cycles slip, most in<br>transition and CR years.
+    </div>
+  </div>
+  <div class="topline"></div>
+
+  <div class="chart">{{GANTT}}</div>
+  <div class="keyline">
+    <span><span class="d"></span>Milestone</span>
+    <span><span class="h"></span>Continuing resolution: common, not planned</span>
+    <span><span class="t"></span>Today ({{EDITION}})</span>
+    <span style="margin-left:auto">After its period ends, money is <b>expired</b>: 5 more years for adjustments to existing obligations only, then it cancels.</span>
+  </div>
+
+  <div class="grid3">
+    <div class="card soft">
+      <h2>Right now: four budgets at once</h2>
+      <table class="now">
+        <tr><th style="width:52px">Budget</th><th>Where it is in {{EDITION}}</th></tr>
+        <tr><td>FY{{FYm2}}</td><td><span class="phase" style="background:var(--magenta)"></span><b>Execution.</b> One-year O&amp;M money expires Sep 30. Multi-year FY{{FYm2}} money keeps going.</td></tr>
+        <tr><td>FY{{FYm1}}</td><td><span class="phase" style="background:var(--orange)"></span><b>Congress.</b> Starts Oct 1. With no appropriation, a CR holds most programs near last year's rate.</td></tr>
+        <tr><td>FY{{FY}}</td><td><span class="phase" style="background:var(--green)"></span><b>Program and budget review.</b> POM and BES are in. RMDs this fall, President's Budget in February.</td></tr>
+        <tr><td>FY{{FYp1}}</td><td><span class="phase" style="background:var(--blue)"></span><b>Planning starts.</b> Guidance for the POM the Services build next year.</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Who owns each phase</h2>
+      <table>
+        <tr><th>Phase</th><th>Lead</th><th>What comes out</th></tr>
+        <tr><td class="k"><span class="phase" style="background:var(--blue)"></span>Planning</td><td>OUSD(P), Joint Staff</td><td>DPG, fiscal guidance</td></tr>
+        <tr><td class="k"><span class="phase" style="background:var(--green)"></span>Programming</td><td>Services, CAPE</td><td>POM, a 5-year plan; RMDs</td></tr>
+        <tr><td class="k"><span class="phase" style="background:var(--purple)"></span>Budgeting</td><td>OUSD(C), OMB</td><td>BES, RMDs, President's Budget</td></tr>
+        <tr><td class="k"><span class="phase" style="background:var(--orange)"></span>Enactment</td><td>Congress</td><td>NDAA authorizes; appropriations fund</td></tr>
+        <tr><td class="k"><span class="phase" style="background:var(--magenta)"></span>Execution</td><td>Programs, comptrollers</td><td>Obligations, spending, reprogramming</td></tr>
+      </table>
+    </div>
+
+    <div class="card teal">
+      <h2>What it means for a PM</h2>
+      <ul class="pm">
+        <li><b>Two years of lead time.</b> Money you need in FY{{FY}} had to be in the POM built in {{FYm2}}. A late requirement waits a cycle or competes for reprogramming.</li>
+        <li><b>Fight in the programming window.</b> Spring and summer of the POM year is when priorities move. In execution you manage what you got.</li>
+        <li><b>Under a CR:</b> no new starts and no production-rate increases unless Congress grants an exception.</li>
+        <li><b>Obligate early.</b> One-year money not on contract by Sep 30 is gone for new work.</li>
+      </ul>
+      <div class="reform"><b>Reform watch.</b> The Commission on PPBE Reform (final report, March 2024) called for more flexibility, and DoD has since asked for higher reprogramming limits and some two-year O&amp;M. Check the current appropriations act for what Congress actually enacted.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="lockup small"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+    <div class="sources">Sources: 31 U.S.C. §1105(a) (budget due the first Monday in February); CRS R47178, DoD PPBE overview; DoD 7000.14-R, FMR. Free to share unaltered. Not official DoD guidance.</div>
+    <div class="pg">acqlerate.com</div>
+  </div>
+</section>
+</body></html>

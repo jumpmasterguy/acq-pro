@@ -77,11 +77,21 @@ const PACK_FILES: Record<string, string[]> = {
   ],
   "finance-cheat-sheets": [
     "pack-guide.pdf",
-    "ppbe-cycle-one-pager.xlsx",
-    "color-of-money-decision-tree.xlsx",
-    "evm-formulas-quick-reference.xlsx",
+    "ppbe-cycle-one-pager.pdf",
+    "color-of-money-decision-tree.pdf",
+    "evm-formulas-quick-reference.pdf",
     "wrap-rate-breakdown.xlsx",
   ],
+};
+
+// Pack files that changed format. Three finance cheat sheets moved from .xlsx
+// to watermarked .pdf in Sept 2026 (scripts/pack3/build_pack3_pdfs.py). Old
+// links in emails, bookmarks and search results redirect to the new file
+// instead of breaking.
+const MOVED_PACK_FILES: Record<string, string> = {
+  "ppbe-cycle-one-pager.xlsx": "ppbe-cycle-one-pager.pdf",
+  "color-of-money-decision-tree.xlsx": "color-of-money-decision-tree.pdf",
+  "evm-formulas-quick-reference.xlsx": "evm-formulas-quick-reference.pdf",
 };
 
 export async function registerRoutes(
@@ -1249,8 +1259,18 @@ export async function registerRoutes(
   });
 
   // GET /api/packs/download/:token/:filename — secure file download
+  // The free pack's files are public; an old direct link to a moved file
+  // redirects to its replacement. Registered before express.static.
+  app.get("/products/pack3-finance-cheat-sheets/:filename", (req: Request, res: Response, next) => {
+    const moved = MOVED_PACK_FILES[req.params.filename as string];
+    if (!moved) return next();
+    return res.redirect(301, `/products/pack3-finance-cheat-sheets/${moved}`);
+  });
+
   app.get("/api/packs/download/:token/:filename", async (req: Request, res: Response) => {
     const { token, filename } = req.params;
+    const moved = MOVED_PACK_FILES[filename as string];
+    if (moved) return res.redirect(301, `/api/packs/download/${token}/${moved}`);
     const purchase = await storage.getPurchaseByToken(token);
     if (!purchase) return res.status(404).json({ message: "Download link not found" });
 

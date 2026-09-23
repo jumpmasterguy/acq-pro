@@ -67,31 +67,31 @@ export const SIDEBAR_RESOURCES: SidebarResource[] = [
   // Defense Finance Cheat Sheets — free for everyone (lead magnet, not a paid
   // pack). Print-ready reference cards; the paid packs are the working tools.
   {
-    title: 'Cheat Sheet: Color of Money Decision Tree',
-    description: 'Which appropriation to use, obligation periods, and what each color can not buy',
-    url: '/products/pack3-finance-cheat-sheets/color-of-money-decision-tree.xlsx',
+    title: 'Cheat Sheet: Color of Money Decision Tree (PDF)',
+    description: 'Four questions that pick the right appropriation, plus periods, thresholds and RDT&E codes',
+    url: '/products/pack3-finance-cheat-sheets/color-of-money-decision-tree.pdf',
+    lessonId: 'finance-4',
+    proOnly: false,
+  },
+  {
+    title: 'Cheat Sheet: EVM Formulas Quick Reference (PDF)',
+    description: 'CV, SV, CPI, SPI, TCPI, four EAC methods, how to read them, and a worked example',
+    url: '/products/pack3-finance-cheat-sheets/evm-formulas-quick-reference.pdf',
+    lessonId: 'finance-2',
+    proOnly: false,
+  },
+  {
+    title: 'Cheat Sheet: PPBE Cycle on One Page (PDF)',
+    description: 'One budget followed from planning to execution on a timeline, with who owns each phase',
+    url: '/products/pack3-finance-cheat-sheets/ppbe-cycle-one-pager.pdf',
     lessonId: 'finance-1',
     proOnly: false,
   },
   {
-    title: 'Cheat Sheet: EVM Formulas Quick Reference',
-    description: 'CV, SV, CPI, SPI, TCPI and all four EAC methods on one printable page',
-    url: '/products/pack3-finance-cheat-sheets/evm-formulas-quick-reference.xlsx',
-    lessonId: 'finance-8',
-    proOnly: false,
-  },
-  {
-    title: 'Cheat Sheet: PPBE Cycle One-Pager',
-    description: 'All four phases, who owns each, key outputs, and milestone dates',
-    url: '/products/pack3-finance-cheat-sheets/ppbe-cycle-one-pager.xlsx',
-    lessonId: 'finance-1',
-    proOnly: false,
-  },
-  {
-    title: 'Cheat Sheet: Wrap Rate Breakdown',
-    description: 'Live rate build-up calculator plus typical wrap rates by contractor type',
+    title: 'Cheat Sheet: Wrap Rate Calculator (Excel)',
+    description: 'Live rate build-up calculator plus typical wrap rates by contractor type and business unit',
     url: '/products/pack3-finance-cheat-sheets/wrap-rate-breakdown.xlsx',
-    lessonId: 'finance-8',
+    lessonId: 'finance-6',
     proOnly: false,
   },
 ];

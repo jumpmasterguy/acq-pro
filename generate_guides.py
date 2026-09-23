@@ -1280,12 +1280,7 @@ if __name__ == "__main__":
         pack2_story,
     )
 
-    print("Building Pack 3: Defense Finance Cheat Sheets...")
-    build_pdf(
-        f"{base}/pack3-finance-cheat-sheets/pack-guide.pdf",
-        "Defense Finance Cheat Sheets",
-        "4 tools that make defense money make sense — finally",
-        pack3_story,
-    )
-
-    print("\nAll 3 PDFs generated successfully!")
+    # Pack 3's guide is no longer built here. Since Sept 2026 it comes from
+    # scripts/pack3/build_pack3_pdfs.py with the three cheat-sheet PDFs, so
+    # running this file would overwrite it with the old edition.
+    print("\nPack 1 and 2 guides generated. Pack 3: run scripts/pack3/build_pack3_pdfs.py")

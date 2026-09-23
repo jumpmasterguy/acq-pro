@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>EVM Formulas Quick Reference</title>
+<style>{{CSS}}
+.row { display: grid; gap: 10px; }
+.sec { margin-top: 11px; }
+.sec > h2 { display: flex; align-items: center; gap: 7px; }
+.sec > h2 .num { width: 17px; height: 17px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 8pt; display: inline-flex; align-items: center; justify-content: center; }
+.three { grid-template-columns: 3.35in 1fr; align-items: stretch; }
+.vals .v { display: grid; grid-template-columns: 34px 1fr; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--rule); }
+.vals .v:last-child { border-bottom: none; }
+.tag { font-weight: 700; font-size: 10.5pt; line-height: 1.1; }
+.vals .v .d { font-size: 8pt; line-height: 1.3; }
+.vals .v .d .aka { color: var(--faint); font-size: 7.2pt; }
+.f { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--navy); white-space: nowrap; font-size: 8.6pt; }
+.good { color: #1F7A4D; font-weight: 600; }
+.bad  { color: var(--red); font-weight: 600; }
+.formulas td { font-size: 8pt; padding: 4px 6px; }
+.formulas td.k { font-size: 8.4pt; }
+.eac td { font-size: 7.9pt; padding: 4.5px 6px; }
+.callout { border-left: 3px solid var(--teal); background: var(--teal-soft); padding: 7px 10px; border-radius: 0 6px 6px 0; font-size: 8pt; line-height: 1.34; }
+.lights td { font-size: 8pt; }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+.two { grid-template-columns: 1fr 1fr; }
+.terms { display: grid; grid-template-columns: 1fr 1fr; column-gap: 14px; }
+.terms div { font-size: 7.3pt; padding: 2px 0; border-bottom: 1px solid var(--rule); line-height: 1.3; }
+.terms b { display: inline-block; min-width: 44px; }
+</style></head>
+<body>
+
+<!-- ═════════════ PAGE 1: THE FORMULAS ═════════════ -->
+<section class="page portrait">
+  <div class="watermark"></div>
+  <div class="masthead">
+    <div>
+      <div class="lockup"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+      <h1 style="margin-top:8px;font-size:21pt">EVM Formulas Quick Reference</h1>
+      <p class="lede" style="font-size:9.5pt">The numbers behind every program review, and how to read them.</p>
+    </div>
+    <div class="meta"><div class="eyebrow" style="margin-bottom:3px">Finance Cheat Sheet</div><b>{{EDITION}} edition</b><br>Pin it next to your desk</div>
+  </div>
+  <div class="topline"></div>
+
+  <div class="sec" style="margin-top:4px">
+    <h2><span class="num">1</span>The three numbers everything comes from</h2>
+    <div class="row three">
+      <div class="card" style="padding:6px 8px">
+        <svg viewBox="0 0 320 196" width="100%" font-family="General Sans, Arial, sans-serif">
+          <!-- axes -->
+          <line x1="34" y1="170" x2="312" y2="170" stroke="#0F172A" stroke-width="1.2"/>
+          <line x1="34" y1="12" x2="34" y2="170" stroke="#0F172A" stroke-width="1.2"/>
+          <text x="312" y="184" text-anchor="end" font-size="8" fill="#64748B">Time</text>
+          <text x="10" y="92" font-size="8" fill="#64748B" transform="rotate(-90 10 92)" text-anchor="middle">Cumulative $</text>
+          <!-- BAC and EAC lines -->
+          <line x1="34" y1="44" x2="312" y2="44" stroke="#94A3B8" stroke-dasharray="3 3"/>
+          <text x="38" y="40" font-size="7.6" font-weight="700" fill="#475569">BAC</text>
+          <line x1="34" y1="24" x2="312" y2="24" stroke="#B42318" stroke-dasharray="3 3" opacity=".7"/>
+          <text x="38" y="20" font-size="7.6" font-weight="700" fill="#B42318">EAC</text>
+          <!-- PV (planned) full S-curve to BAC -->
+          <path d="M34,170 C95,166 120,120 160,96 S230,50 262,44" fill="none" stroke="#3D8FD1" stroke-width="2.4"/>
+          <!-- AC to time now, then EAC projection -->
+          <path d="M34,170 C85,162 115,110 172,80" fill="none" stroke="#B42318" stroke-width="2.4"/>
+          <path d="M172,80 C212,58 258,34 300,24" fill="none" stroke="#B42318" stroke-width="1.8" stroke-dasharray="4 3"/>
+          <!-- EV to time now -->
+          <path d="M34,170 C95,167 125,136 172,118" fill="none" stroke="#2E8B57" stroke-width="2.4"/>
+          <!-- time now -->
+          <line x1="172" y1="12" x2="172" y2="170" stroke="#0F172A" stroke-dasharray="2 2"/>
+          <text x="172" y="182" text-anchor="middle" font-size="7.6" font-weight="700" fill="#0F172A">Time now</text>
+          <!-- CV and SV brackets -->
+          <line x1="180" y1="80" x2="180" y2="118" stroke="#B42318" stroke-width="1.3"/>
+          <line x1="177" y1="80" x2="183" y2="80" stroke="#B42318"/><line x1="177" y1="118" x2="183" y2="118" stroke="#B42318"/>
+          <text x="186" y="103" font-size="7.8" font-weight="700" fill="#B42318">CV</text>
+          <line x1="164" y1="90" x2="164" y2="118" stroke="#3D8FD1" stroke-width="1.3"/>
+          <line x1="161" y1="90" x2="167" y2="90" stroke="#3D8FD1"/><line x1="161" y1="118" x2="167" y2="118" stroke="#3D8FD1"/>
+          <text x="156" y="112" text-anchor="end" font-size="7.8" font-weight="700" fill="#3D8FD1">SV</text>
+          <!-- labels -->
+          <text x="230" y="70" font-size="8" font-weight="700" fill="#3D8FD1">PV</text>
+          <text x="128" y="160" font-size="8" font-weight="700" fill="#2E8B57">EV</text>
+          <text x="86" y="124" font-size="8" font-weight="700" fill="#B42318">AC</text>
+        </svg>
+        <p class="small muted" style="margin:0 2px">This program is over budget (AC above EV) and behind schedule (EV below PV). SV is measured in dollars, not days.</p>
+      </div>
+      <div class="card vals">
+        <div class="v"><div class="tag" style="color:var(--blue)">PV</div><div class="d"><b>Planned value.</b> Budget for the work scheduled to be done by now.<br><span class="aka">Also BCWS, budgeted cost of work scheduled</span></div></div>
+        <div class="v"><div class="tag" style="color:var(--green)">EV</div><div class="d"><b>Earned value.</b> Budget for the work actually done by now. The only number that measures progress.<br><span class="aka">Also BCWP, budgeted cost of work performed</span></div></div>
+        <div class="v"><div class="tag" style="color:var(--red)">AC</div><div class="d"><b>Actual cost.</b> What that work actually cost.<br><span class="aka">Also ACWP, actual cost of work performed</span></div></div>
+        <div class="v"><div class="tag">BAC</div><div class="d"><b>Budget at completion.</b> The whole planned budget: PV at the finish line.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2><span class="num">2</span>Variances and indices</h2>
+    <table class="formulas">
+      <tr><th style="width:1.55in">Metric</th><th style="width:1.2in">Formula</th><th>Good</th><th>Bad</th><th>Say it out loud</th></tr>
+      <tr><td class="k">Cost variance (CV)</td><td class="f">EV − AC</td><td class="good">+ under budget</td><td class="bad">− over budget</td><td>How much the work done has cost more or less than its budget</td></tr>
+      <tr><td class="k">Schedule variance (SV)</td><td class="f">EV − PV</td><td class="good">+ ahead</td><td class="bad">− behind</td><td>Dollars' worth of work ahead of or behind plan</td></tr>
+      <tr><td class="k">Cost performance index (CPI)</td><td class="f">EV ÷ AC</td><td class="good">&gt; 1.00</td><td class="bad">&lt; 1.00</td><td>Work you get for each dollar. 0.90 means 90 cents of work per dollar</td></tr>
+      <tr><td class="k">Schedule performance index (SPI)</td><td class="f">EV ÷ PV</td><td class="good">&gt; 1.00</td><td class="bad">&lt; 1.00</td><td>Share of the planned work that got done</td></tr>
+      <tr><td class="k">Variance at completion (VAC)</td><td class="f">BAC − EAC</td><td class="good">+ underrun</td><td class="bad">− overrun</td><td>How far over or under budget it will finish</td></tr>
+      <tr><td class="k">Percent variances</td><td class="f">CV ÷ EV, SV ÷ PV</td><td colspan="3">Use these to compare work packages of different sizes</td></tr>
+    </table>
+  </div>
+
+  <div class="sec">
+    <h2><span class="num">3</span>Estimate at completion (EAC): four ways, one range</h2>
+    <table class="eac">
+      <tr><th style="width:1.2in">Method</th><th style="width:1.75in">Formula</th><th>Assumes</th><th style="width:1.5in">Use it as</th></tr>
+      <tr><td class="k">CPI method</td><td class="f">BAC ÷ CPI</td><td>Cost efficiency so far continues</td><td><b>Usually the floor.</b> Overruns rarely finish below it</td></tr>
+      <tr><td class="k">Composite</td><td class="f">AC + (BAC − EV) ÷ (CPI × SPI)</td><td>Being behind schedule will also cost money</td><td><b>Usually the ceiling</b></td></tr>
+      <tr><td class="k">Budget rate</td><td class="f">AC + (BAC − EV)</td><td>The rest of the work goes exactly to plan</td><td>Only when the cause was truly one-time</td></tr>
+      <tr><td class="k">Bottom-up</td><td class="f">AC + new ETC</td><td>A fresh estimate of the remaining work</td><td>Test it against the range above</td></tr>
+    </table>
+    <p class="small muted" style="margin-top:4px">Estimate to complete: <span class="f">ETC = EAC − AC</span>. A contractor's own EAC is often called the LRE, latest revised estimate.</p>
+  </div>
+
+  <div class="sec">
+    <h2><span class="num">4</span>To-complete performance index (TCPI)</h2>
+    <div class="row two">
+      <div class="card">
+        <p><span class="f">TCPI<sub>BAC</sub> = (BAC − EV) ÷ (BAC − AC)</span></p>
+        <p class="small" style="margin:0">Efficiency the remaining work needs to finish <b>on budget</b>.</p>
+        <p style="margin-top:6px"><span class="f">TCPI<sub>EAC</sub> = (BAC − EV) ÷ (EAC − AC)</span></p>
+        <p class="small" style="margin:0">Efficiency needed to finish at the <b>current EAC</b>.</p>
+      </div>
+      <div class="callout">
+        <b>The reality check.</b> Compare TCPI<sub>BAC</sub> with the CPI you have actually been getting. If TCPI is 0.05 to 0.10 or more above it, the plan is betting on a turnaround that almost never comes. Ask for a new EAC.
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="lockup small"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+    <div class="sources">Sources: EIA-748; DoD EVMS Interpretation Guide; DAU EVM resources. Free to share unaltered. Not official DoD guidance.</div>
+    <div class="pg">acqlerate.com · 1/2</div>
+  </div>
+</section>
+
+<!-- ═════════════ PAGE 2: READING IT ═════════════ -->
+<section class="page portrait">
+  <div class="watermark"></div>
+  <div class="masthead">
+    <div>
+      <div class="lockup"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+      <h1 style="margin-top:6px;font-size:16pt">Reading EVM Like a Program Manager</h1>
+    </div>
+    <div class="meta"><div class="eyebrow" style="margin-bottom:3px">Finance Cheat Sheet</div><b>{{EDITION}} edition</b><br>Page 2 of 2</div>
+  </div>
+  <div class="topline"></div>
+
+  <div class="row two" style="align-items:start">
+    <div class="card">
+      <h2>What CPI and SPI are telling you</h2>
+      <table class="lights">
+        <tr><th style="width:0.95in">Index</th><th style="width:0.8in">Signal</th><th>Do this</th></tr>
+        <tr><td class="k"><span class="dot" style="background:#2E8B57"></span>0.95 and up</td><td>Normal noise</td><td>Keep watching the trend</td></tr>
+        <tr><td class="k"><span class="dot" style="background:#D9A21B"></span>0.90 to 0.94</td><td>Drifting</td><td>Find the cause in the control accounts</td></tr>
+        <tr><td class="k"><span class="dot" style="background:#B42318"></span>Below 0.90</td><td>Real trouble</td><td>Corrective action; revisit the EAC</td></tr>
+      </table>
+      <p class="small muted" style="margin-top:5px">A common convention, not a rule. Your contract's variance thresholds decide what must be explained.</p>
+    </div>
+    <div class="callout" style="padding:9px 11px">
+      <b>The 20 percent rule.</b> Once a contract is about 20 percent complete, cumulative CPI rarely improves by more than 10 percent, and it usually gets worse. An early overrun is a forecast, not a blip.
+      <div style="margin-top:7px"><b>SPI fades.</b> As work finishes, EV catches up to PV, so SPI drifts back to 1.00 even on a late program. Late in a contract, read the schedule's critical path, not SPI.</div>
+    </div>
+  </div>
+
+  <div class="row two" style="align-items:start;margin-top:8px">
+    <div class="card">
+      <h2>Where the data comes from: the IPMDAR</h2>
+      <p style="font-size:7.8pt">The Integrated Program Management Data and Analysis Report replaced the CPR (Formats 1 to 5) and the IPMR. It arrives as data, in three parts:</p>
+      <table>
+        <tr><td class="k">CPD</td><td>Contract Performance Dataset: time-phased cost and hours</td></tr>
+        <tr><td class="k">SPD</td><td>Schedule Performance Dataset: the IMS</td></tr>
+        <tr><td class="k">PNR</td><td>Performance Narrative Report: variance explanations</td></tr>
+      </table>
+      <p class="small muted" style="margin-top:4px">DID DI-MGMT-81861, current revision D (March 2026). The old "Format 1" WBS view can still be produced from the CPD.</p>
+    </div>
+    <div class="card">
+      <h2>When DoD requires EVM</h2>
+      <table>
+        <tr><th>Cost or incentive contract value</th><th>Requirement</th></tr>
+        <tr><td class="k">$50M and up</td><td>EVMS that complies with EIA-748 <span class="muted">(was $20M)</span></td></tr>
+        <tr><td class="k">$100M and up</td><td>DCMA-validated EVMS <span class="muted">(was $50M)</span></td></tr>
+      </table>
+      <p class="small muted" style="margin-top:4px">FY2025 NDAA §823, applied by DFARS class deviation 2026-O0011, effective Feb 1, 2026. Firm-fixed-price contracts are normally exempt. Contracts with EVM get an Integrated Baseline Review soon after award.</p>
+    </div>
+  </div>
+
+  <div class="card warn" style="margin-top:8px;padding:7px 11px">
+    <h2>A different tripwire: Nunn-McCurdy</h2>
+    <p style="font-size:8pt;margin:0">CPI measures one contract. Nunn-McCurdy measures a major program's <b>unit cost</b> against its Acquisition Program Baseline. <b>Significant breach:</b> 15 percent over the current baseline or 30 percent over the original. <b>Critical breach:</b> 25 percent over current or 50 percent over original, which forces a formal review and, unless the program is certified, termination. <span class="muted">10 U.S.C. §§4371–4377</span></p>
+  </div>
+
+  <div class="card" style="margin-top:8px;padding:7px 11px">
+    <h2>Words you will hear in the review</h2>
+    <div class="terms">
+      <div><b>PMB</b> Performance measurement baseline: the time-phased budget EV is measured against</div>
+      <div><b>CBB</b> Contract budget base: negotiated cost plus authorized, unpriced work</div>
+      <div><b>MR</b> Management reserve: budget held back for in-scope surprises, outside the PMB</div>
+      <div><b>UB</b> Undistributed budget: in the PMB but not yet assigned to a control account</div>
+      <div><b>CA</b> Control account: where scope, schedule and budget meet; owned by a CAM</div>
+      <div><b>WP</b> Work package: the detailed task where EV is actually earned</div>
+      <div><b>IBR</b> Integrated baseline review: joint check that the baseline is realistic</div>
+      <div><b>OTB / OTS</b> Over target baseline or schedule: a formal re-plan when the PMB is no longer achievable</div>
+    </div>
+  </div>
+
+  <div class="card teal" style="border:none;margin-top:8px;padding:7px 11px">
+    <h2>Try it: a worked example</h2>
+    <p style="font-size:8pt;margin-bottom:5px">A $10M contract. At month 12 the plan said $4.0M of work (PV). The team finished $3.6M of it (EV) and spent $4.2M (AC).</p>
+    <table class="formulas">
+      <tr><td class="f">CV = 3.6 − 4.2 = −$0.6M</td><td class="f">SV = 3.6 − 4.0 = −$0.4M</td><td class="f">CPI = 3.6 ÷ 4.2 = 0.86</td><td class="f">SPI = 3.6 ÷ 4.0 = 0.90</td></tr>
+      <tr><td class="f">EAC (CPI) = 10 ÷ 0.86 = $11.7M</td><td class="f" colspan="2">EAC (composite) = 4.2 + 6.4 ÷ (0.86 × 0.90) = $12.5M</td><td class="f">TCPI = 6.4 ÷ 5.8 = 1.10</td></tr>
+    </table>
+    <p style="font-size:8pt;margin:5px 0 0"><b>Read it:</b> expect $11.7M to $12.5M, not $10M. Finishing on budget would take 1.10 efficiency from a team running at 0.86, so plan for the overrun now.</p>
+  </div>
+
+  <div class="footer">
+    <div class="lockup small"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+    <div class="sources">Sources: DFARS 234.2 and class deviation 2026-O0011; FY2025 NDAA §823; DI-MGMT-81861; 10 U.S.C. ch. 325. Free to share unaltered. Not official DoD guidance.</div>
+    <div class="pg">acqlerate.com · 2/2</div>
+  </div>
+</section>
+</body></html>
