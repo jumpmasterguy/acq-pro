@@ -2707,6 +2707,387 @@ export const modules: Module[] = [
           },
         ],
       },
+      {
+        id: 'foundations-10',
+        title: "The Revolutionary FAR Overhaul: Working While the Rulebook Is Rewritten",
+        duration: '22 min',
+        description: "The FAR is being rewritten part by part while everyone keeps buying and selling under it. What the Revolutionary FAR Overhaul is, how deviations and formal rulemaking fit together, what actually changed for contractors and program offices, the free resources WarU and GSA built to help, and the habits that keep you out of trouble during the transition.",
+        keyTerms: [
+          {
+            term: "Revolutionary FAR Overhaul (RFO)",
+            definition: "The government-wide rewrite of the Federal Acquisition Regulation launched by Executive Order 14275 in April 2025. The goal is a FAR that keeps only what statute requires or what genuinely helps the system work, with the rest moved into non-binding guidance or removed.",
+          },
+          {
+            term: "Executive Order 14275",
+            definition: "\"Restoring Common Sense to Federal Procurement,\" signed April 2025. It directed the FAR Council to cut the FAR back to statutory and essential requirements. The legal starting gun for the RFO.",
+          },
+          {
+            term: "Model Deviation",
+            definition: "Revised text for a FAR part published by the FAR Council during Phase 1. It is a template, not a rule: nothing changes for an agency until that agency adopts it.",
+          },
+          {
+            term: "Class Deviation",
+            definition: "An agency's formal decision to follow text other than the published FAR for a whole category of acquisitions. During the RFO, class deviations are how agencies switched on the rewritten parts before final rules exist.",
+          },
+          {
+            term: "Proposed Rule",
+            definition: "Phase 2 of the RFO. The rewritten text published in the Federal Register for public comment before it becomes the permanent FAR. Twelve proposed rules in four sets are planned.",
+          },
+          {
+            term: "FAR Companion",
+            definition: "A non-regulatory guide issued alongside the rewritten FAR to help contracting officers use their discretion. It carries advice that used to live in regulation. Helpful, but not binding on anyone.",
+          },
+          {
+            term: "Practitioner Album",
+            definition: "A per-part resource on Acquisition.gov with a summary of what changed, a line-out showing what was removed, and practical tools and examples. Built for government staff; very useful for contractors trying to understand what changed.",
+          },
+          {
+            term: "WarU",
+            definition: "Warfighting Acquisition University, the new name (November 2025) of the Defense Acquisition University. Runs the RFO Learning Cycle, including courses, workshops, and weekly webinars.",
+          },
+          {
+            term: "Clause Matrix",
+            definition: "A contractor's working list of every clause in a contract or solicitation, which version it is, and what it requires. During the RFO it is how you keep old-numbered and new-numbered clauses straight.",
+          },
+          {
+            term: "Flowdown",
+            definition: "A clause the prime contract requires the prime to pass down into its subcontracts. When clauses are renumbered or rewritten, flowdowns have to be updated too, or the sub is working under the wrong rules.",
+          },
+        ],
+        content: [
+          {
+            type: "text",
+            heading: "The Plane Is Being Rebuilt in Flight",
+            body: "The Federal Acquisition Regulation is roughly two thousand pages of rules for how the government buys things. In April 2025, Executive Order 14275 told the FAR Council to cut it back to what the law actually requires, plus whatever genuinely makes the system work better. That effort is called the Revolutionary FAR Overhaul, or RFO, and it is the first top-to-bottom rewrite since the FAR was created in 1984.\n\nHere is the part that makes it tricky. Nobody stopped buying while this happens. Contracts are being awarded every day, under a rulebook that is being edited while you read it. So the practical skill this lesson teaches is not memorizing the new FAR. It is knowing which version of the rules applies to the contract in front of you, and where to check.",
+          },
+          {
+            type: "list",
+            heading: "The Two Phases in Plain English",
+            items: [
+              "Phase 1: rewrite and switch on (2025 into early 2026)|||The FAR Council published new text for each FAR part as a model deviation. Each agency then decided whether and when to adopt it through its own class deviation. So for a while, two agencies buying the same thing could be using two different versions of the same FAR part.",
+              "Phase 2: make it permanent (2026)|||The rewritten parts go through normal notice-and-comment rulemaking, in twelve proposed rules released in four sets. The first set came out June 23, 2026. The second set came out September 18, 2026, with comments due October 19, 2026. Two more sets follow, then final rules.",
+              "Alongside both: move advice out of regulation|||Much of what used to be regulatory text became non-binding guidance, mainly the FAR Companion and the per-part Practitioner Albums. The rule got shorter. The advice did not disappear, it just stopped being mandatory.",
+            ],
+          },
+          {
+            type: "table",
+            heading: "Where Things Stand (Verify Before You Rely On It)",
+            headers: ["Piece", "What It Is", "Status as of September 2026"],
+            rows: [
+              [
+                "FAR model deviations",
+                "Rewritten text for each part",
+                "Issued for essentially every part during 2025",
+              ],
+              [
+                "DoD (Department of War) class deviations",
+                "DoD's adoption of the rewritten FAR plus a parallel DFARS rewrite",
+                "Most effective February 1, 2026, covering FAR Parts 1 to 50 and 52",
+              ],
+              [
+                "Proposed rules, set 1",
+                "Parts 1, 2, 3, 4, 5, 6, 7, 10, 18, 24, 26, 29, 33, 37, 39, 40, 41, 49, 53",
+                "Published June 23, 2026; comment period closed July 23",
+              ],
+              [
+                "Proposed rules, set 2",
+                "Parts 8, 12, 13, 14, 15, 16, 17, 27, 28, 35, 36, 38, 44, 47, 51, and related Part 52 clauses",
+                "Published September 18, 2026; comments due October 19, 2026",
+              ],
+              ["Proposed rules, sets 3 and 4", "The remaining parts", "Still to come"],
+              [
+                "FAR Companion",
+                "Non-binding guidance on using discretion",
+                "Version 2.0 released October 2025; a living document",
+              ],
+            ],
+          },
+          {
+            type: "callout",
+            heading: "What a Rewrite Cannot Touch",
+            body: "The FAR implements laws. A rewrite can delete regulatory text no statute requires, but it cannot repeal the statutes themselves. Competition requirements, truth in negotiations, cost accounting standards, procurement integrity, the False Claims Act, the small business programs, domestic preference and labor standards all survive, because Congress wrote them. So the shape of the system after the overhaul is the same shape. What shrinks is the layer of process piled on top. That is also the fastest way to sort your own knowledge: the purpose of a rule is durable, its paragraph number is not.",
+          },
+          {
+            type: "text",
+            heading: "The Single Most Useful Question",
+            body: "Before you rely on any clause number, threshold, or procedure, ask one question: which version of the FAR governs this solicitation? The answer is usually decided by the date the solicitation was issued and by whether the buying agency had adopted the RFO deviation for that part by then. For DoD work, most of the rewritten FAR and DFARS took effect February 1, 2026, so a DoD solicitation issued after that date will generally carry the new text and the new clause numbers. A contract awarded before it generally keeps the clauses it was awarded with until a modification changes them.\n\nIf the solicitation does not make this obvious, ask during the question period. It is a legitimate question, it goes on the record, and it protects everyone.",
+          },
+          {
+            type: "table",
+            heading: "Changes a Contractor Will Actually Notice",
+            headers: ["Area", "What Changed", "Why It Matters to You"],
+            rows: [
+              [
+                "Cybersecurity and security clauses",
+                "Moved from FAR 52.204 into a new Part 40 and 52.240 series. Basic safeguarding (formerly 52.204-21) is now 52.240-93. On the DoD side, DFARS 252.204-7019 was deleted and 7020 became 252.240-7997",
+                "Your compliance matrix, your SSP references, and your subcontract flowdowns may all cite numbers that no longer exist in new solicitations",
+              ],
+              [
+                "Small business Rule of Two",
+                "Kept, but contracting officers are no longer required to prefer socioeconomic set-asides over plain small business set-asides",
+                "Your status still matters, but the ranking among 8(a), HUBZone, SDVOSB and WOSB is no longer automatic",
+              ],
+              [
+                "Set-asides on orders under multiple-award contracts",
+                "Discretionary rather than required, and the decision is not protestable",
+                "Holding a spot on a vehicle is less of a guarantee of set-aside orders than it used to be",
+              ],
+              [
+                "Size rerepresentation on orders",
+                "The RFO text removes order-level rerepresentation, but SBA's own regulations still allow it",
+                "A known conflict. Watch for guidance and do what the specific order asks",
+              ],
+              [
+                "SAM representations",
+                "More moved to entity-level representations in SAM rather than repeated in each solicitation",
+                "Your annual SAM certifications carry even more weight. Read every one",
+              ],
+              [
+                "Terminations",
+                "Proposed rule shortens timelines, including inventory schedules and settlement proposals",
+                "If you get terminated, the clock is tighter than the one you learned",
+              ],
+            ],
+          },
+          {
+            type: "highlight",
+            body: "One sentence to teach your team: **during the FAR overhaul, the purpose of a rule is stable and its number is not, so before you cite anything, check which version of the FAR governs that specific solicitation.**",
+          },
+          {
+            type: "text",
+            level: "intermediate",
+            heading: "How to Read a Solicitation During the Transition",
+            body: "Start with Section I, the clause list, because that is where the version question gets answered. A solicitation under the RFO will cite clauses like 52.240-93 and 252.240-7997. One issued before the switch will cite 52.204-21 and 252.204-7020. A solicitation that mixes the two usually means someone copied a template. That is worth a question, not an assumption.\n\nThen check the representations. Because more now lives at the entity level in SAM, the solicitation may ask for less than you expect, and your SAM record is doing the work instead. Finally, read Section L and M with fresh eyes. The rewritten Parts 12, 13 and 15 encourage faster, simpler competitions, so evaluation schemes, page limits and debriefing practices may look different from the last proposal you wrote for the same customer.",
+          },
+          {
+            type: "list",
+            level: "intermediate",
+            heading: "Rebuild Your Clause Matrix in One Afternoon",
+            items: [
+              "List every clause in each active contract|||By number, title and date. The date matters more than it used to.",
+              "Mark which regime each contract is under|||Pre-RFO text, RFO deviation text, or a mix introduced by modification.",
+              "Map old numbers to new ones|||Use the Practitioner Album for each part; the line-out shows what moved and what was deleted.",
+              "Check every flowdown|||Your subcontracts must carry the version your prime contract carries, not the one you used last year.",
+              "Put a date on it|||Write down when you checked. In this period, a matrix without a date is a guess.",
+            ],
+          },
+          {
+            type: "text",
+            level: "intermediate",
+            heading: "The Free Resources, and Which Ones Are Worth Your Time",
+            body: "The government built an unusual amount of free help for this, organized by WarU as the RFO Learning Cycle: awareness, knowledge, application, and feedback. For most people, three pieces do most of the work. The Practitioner Albums on Acquisition.gov give you, part by part, what changed and a line-out of what was removed, which is the fastest way to update your mental model. The FAR Companion explains how contracting officers are being encouraged to use their new discretion, which tells a contractor what the buyer across the table has been told. And WarU's ACQ 0330, Guide to the Revolutionary FAR Overhaul, released in August 2026, is a solid foundation course.\n\nBeyond those, there are one-day RFO workshops, FAR Forward Open Office Hours run by the Federal Acquisition Institute and GSA, a weekly CONNECT Live webinar on Thursdays, a side-by-side comparison tool, and a community of practice. Most of it is open to industry. Some training in WarU's learning platform needs a government account.",
+          },
+          {
+            type: "text",
+            level: "intermediate",
+            heading: "The Program Office Side",
+            body: "If you are a government PM, the overhaul mostly shows up as more discretion for your contracting officer and less text telling them what to do. That is good news for speed and demands more from the partnership, because a decision that used to be dictated by regulation is now a judgment call someone has to make and document. Ask your contracting office which RFO deviations it has adopted, read the Practitioner Album for the parts your acquisition leans on, and expect market research, evaluation schemes and small business decisions to look a little different than the template your predecessor left you.",
+          },
+          {
+            type: "text",
+            level: "advanced",
+            heading: "Discretion Cuts Both Ways",
+            body: "The central idea of the RFO is that fewer rules plus more trained judgment produces faster, better buying. Reasonable people debate how that plays out. Supporters point to shorter timelines and less box-checking. Critics point out that where a rule used to require something, such as a particular small business set-aside at the order level, discretion now allows the opposite, and some of those decisions are no longer protestable. For a contractor, the practical consequence is that relationships and market research matter more, because the contracting officer's judgment matters more. For the government, it means documenting the reasoning behind discretionary choices, because the rule is no longer there to point to.",
+          },
+          {
+            type: "text",
+            level: "advanced",
+            heading: "Where Regulation and Statute or Other Agencies Disagree",
+            body: "A rewrite of this size produces seams. The clearest example right now is small business: the RFO Part 19 text removes order-level size rerepresentation and lets some 8(a) follow-on work move to other programs, while SBA's own regulations still say something different. Until the final rules and SBA's regulations line up, practitioners are working across a gap. The professional response is not to pick the answer you like. It is to follow what the specific solicitation requires, raise the conflict in writing when it affects you, and keep the record.",
+          },
+          {
+            type: "text",
+            level: "advanced",
+            heading: "Commenting Is Part of the Job Now",
+            body: "The proposed rules are genuinely open for comment, and the FAR Council and SBA's Office of Advocacy have both asked for input from small businesses in particular. A comment that says \"this change will cost my company X for this concrete reason\" carries more weight than a general objection. If a proposed change touches how you win or perform work, the comment window is the cheapest influence you will ever have over the rules you will live under for the next decade. The second set's window closes October 19, 2026.",
+          },
+          {
+            type: "callout",
+            level: "advanced",
+            heading: "What Senior PMs Do Differently",
+            body: "They keep a dated clause matrix for every contract and refresh it when a new deviation or rule lands. They ask the version question in writing during the question period instead of assuming. They read the Practitioner Album for the parts their program depends on before the next solicitation, not after it drops. They update flowdowns the same week the prime contract changes. And they treat the comment periods as part of the job, because the rules being written this year will govern their contracts for a long time.",
+          },
+          {
+            type: "related_lesson",
+            heading: "Build on This",
+            refs: [
+              {
+                lessonId: "history-7",
+                label: "The Modern Era and the 2026 FAR Rewrite",
+                sub: "Why the overhaul happened and what came before it",
+              },
+              {
+                lessonId: "contracts-13",
+                label: "The Uniform Contract Format",
+                sub: "Reading Section I and the clause list",
+              },
+              {
+                lessonId: "smallbiz-2",
+                label: "The Set-Aside Programs",
+                sub: "How the Rule of Two works, before and after",
+              },
+            ],
+          },
+        ],
+        quiz: [
+          {
+            id: "q1",
+            question: "What did Executive Order 14275 direct?",
+            options: [
+              "Replace the FAR with the DFARS",
+              "Cut the FAR back to what statute requires and what genuinely helps the system work",
+              "Freeze all new contract awards during the rewrite",
+              "Move acquisition authority to GSA",
+            ],
+            correct: 1,
+            explanation: "The goal is a shorter FAR that keeps statutory and essential requirements, with advice moved into non-binding guidance.",
+          },
+          {
+            id: "q2",
+            question: "During Phase 1, what did a model deviation do on its own?",
+            options: [
+              "Changed the rules for every agency immediately",
+              "Nothing, until an agency adopted it through its own class deviation",
+              "Repealed the old FAR part",
+              "Replaced the DFARS",
+            ],
+            correct: 1,
+            explanation: "Model deviations were templates. Each agency switched them on separately, which is why adoption was staggered.",
+          },
+          {
+            id: "q3",
+            question: "For most DoD acquisitions, when did the rewritten FAR and DFARS text take effect?",
+            options: ["April 2025", "February 1, 2026", "October 1, 2026", "Only after final rules are published"],
+            correct: 1,
+            explanation: "DoD's class deviations took effect February 1, 2026 for most parts, with a few parts on nearby dates. Always verify for the part you care about.",
+          },
+          {
+            id: "q4",
+            question: "Which question should you answer before relying on any clause number or threshold?",
+            options: [
+              "What did my last contract say?",
+              "Which version of the FAR governs this specific solicitation?",
+              "What does the FAR Companion recommend?",
+              "What is the current fiscal year?",
+            ],
+            correct: 1,
+            explanation: "The version is usually decided by the solicitation date and the agency's adoption of the deviation. Ask during the question period if it is unclear.",
+          },
+          {
+            id: "q5",
+            question: "What can the FAR rewrite not change?",
+            options: [
+              "Clause numbering",
+              "The statutes the FAR implements, such as competition requirements, TINA, and the small business programs",
+              "How long the FAR is",
+              "Which guidance is non-binding",
+            ],
+            correct: 1,
+            explanation: "Regulation implements law. The rewrite can remove non-statutory text but cannot repeal what Congress wrote.",
+          },
+          {
+            id: "q6",
+            question: "What is the FAR Companion?",
+            options: [
+              "A binding supplement like the DFARS",
+              "Non-binding guidance that helps contracting officers use their discretion",
+              "A contractor certification",
+              "A proposal template",
+            ],
+            correct: 1,
+            explanation: "Much advice moved out of regulation into the Companion. It is useful for understanding what the buyer has been told, but it binds no one.",
+          },
+          {
+            id: "q7",
+            question: "A new DoD solicitation cites 52.240-93. What is that?",
+            options: [
+              "A new small business clause",
+              "Basic safeguarding of contractor information systems, formerly 52.204-21",
+              "A termination clause",
+              "A typo",
+            ],
+            correct: 1,
+            explanation: "Security and cybersecurity clauses moved into the 52.240 series. Update your compliance matrix and flowdowns to match.",
+          },
+          {
+            id: "q8",
+            question: "Under the RFO, how do set-asides work for orders under multiple-award contracts?",
+            options: [
+              "Every order must be set aside when the Rule of Two is met",
+              "Setting aside an order is discretionary and the decision is not protestable",
+              "Set-asides are banned on orders",
+              "Only 8(a) firms can receive set-aside orders",
+            ],
+            correct: 1,
+            explanation: "Holding a vehicle position is less of a guarantee of set-aside orders than it used to be, which makes relationships and market presence matter more.",
+          },
+          {
+            id: "q9",
+            question: "The RFO text removes order-level size rerepresentation, but SBA's regulations still allow it. What should a contractor do?",
+            options: [
+              "Ignore SBA",
+              "Refuse to rerepresent on principle",
+              "Follow what the specific order requires, raise the conflict in writing if it affects you, and keep the record",
+              "Stop bidding on orders",
+            ],
+            correct: 2,
+            explanation: "Where the rewrite and another agency's rules disagree, follow the solicitation, document the issue, and watch for guidance.",
+          },
+          {
+            id: "q10",
+            question: "Why should a small contractor consider commenting on a proposed rule?",
+            options: [
+              "It is mandatory",
+              "A specific, concrete comment is the cheapest influence available over rules that will govern its contracts for years",
+              "Comments are anonymous and have no effect",
+              "To get a set-aside",
+            ],
+            correct: 1,
+            explanation: "The FAR Council and SBA's Office of Advocacy have asked small businesses for input. Concrete cost impacts carry the most weight.",
+          },
+          {
+            id: "q11",
+            type: "drag_order",
+            question: "Order the RFO from start to finish:",
+            options: [],
+            correct: 0,
+            explanation: "Executive order, model deviations, agency adoption, proposed rules for comment, then final rules.",
+            orderedItems: [
+              "Executive Order 14275 directs the rewrite",
+              "FAR Council publishes model deviation text for each part",
+              "Agencies adopt the text through their own class deviations",
+              "Proposed rules are published for public comment",
+              "Final rules make the rewritten FAR permanent",
+            ],
+          },
+          {
+            id: "q12",
+            type: "drag_match",
+            question: "Match the resource to what it gives you:",
+            options: [],
+            correct: 0,
+            explanation: "Albums show what changed, the Companion shows how to use discretion, WarU teaches, and the clause matrix keeps your own contracts straight.",
+            pairs: [
+              {
+                left: "Practitioner Album",
+                right: "What changed in a FAR part, with a line-out of removed text",
+              },
+              {
+                left: "FAR Companion",
+                right: "Non-binding advice on exercising discretion",
+              },
+              {
+                left: "ACQ 0330 at WarU",
+                right: "A foundational course on the overhaul",
+              },
+              {
+                left: "Clause matrix",
+                right: "Your dated record of which clause versions govern each contract",
+              },
+            ],
+          },
+        ],
+      },
     ],
     assessment: [
       {
@@ -17731,7 +18112,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           { term: 'Employee-Based Standard', definition: 'A size standard expressed as a headcount. Used for most manufacturing and some other NAICS codes. Employees are averaged over the preceding 24 months, counting all full-time, part-time, and temporary staff.' },
           { term: 'Self-Certification', definition: 'For plain small business status, a company certifies its own size in SAM and on each offer. There is no SBA review in advance; the certification is checked only if protested or audited.' },
           { term: 'Date of Size Determination', definition: 'Size is determined as of the date the company submits its initial offer including price. Growing large after that date does not change eligibility for that award.' },
-          { term: 'Recertification', definition: 'Re-stating size status at required events: before the end of the fifth year of a long-term contract, on each option thereafter, after a merger or acquisition, and when a task order CO requests it.' },
+          { term: 'Recertification', definition: 'Re-stating size status at required events: before the end of the fifth year of a long-term contract, on each option thereafter, after a merger or acquisition, and, under the older rules, when a task order CO requests it (the FAR overhaul removed order-level rerepresentation while SBA regulations still allow it, so follow what the specific order asks).' },
           { term: 'Affiliation', definition: 'The rule that adds the receipts or employees of companies that control or are controlled by you to your own size. Covered in its own lesson; it is the most common reason a company that looks small is not.' },
           { term: 'SAM', definition: 'The System for Award Management. Where a company registers to do business with the government and where its size and socioeconomic representations are recorded.' },
           { term: 'Table of Size Standards', definition: 'The SBA document listing every NAICS code and its size standard. Updated periodically for inflation and industry reviews. The current table controls, not last year\'s.' },
@@ -17784,7 +18165,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             items: [
               'Long-term contracts, year five|||Within 120 days before the end of the fifth year of a contract longer than five years (and on each option after that), the contractor must recertify. If it is now large, the agency can no longer count the contract toward small business goals and may choose not to exercise the option.',
               'Merger, acquisition, or sale|||Within 30 days of a transaction that changes ownership or control, the contractor must recertify. This is the trigger behind the "set-aside cliff" in the Business module.',
-              'Task orders under a set-aside vehicle|||The CO may require recertification for a specific order. Under many multiple-award set-aside vehicles, status is checked at the order level.',
+              'Task orders under a set-aside vehicle|||Under the older rules the CO could require recertification for a specific order. The FAR overhaul Part 19 text removes order-level rerepresentation, but SBA regulations still permit it, so follow what each order asks and watch for guidance.',
               'Novation|||When contracts transfer to a new owner, the successor recertifies.',
             ],
           },
@@ -19236,7 +19617,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             type: 'text',
             level: 'advanced',
             heading: 'Set-Asides on Multiple-Award Vehicles',
-            body: 'On multiple-award contracts, the set-aside question recurs at the order level. Agencies may set aside orders for small business under a full-and-open vehicle if small holders exist, may reserve a number of awards for small businesses when the vehicle is competed, or may establish a small business track within the vehicle. Each approach has rules about how the Rule of Two applies at the order level and whether it is mandatory or discretionary. Government PMs planning to use a vehicle should ask the specialist how small business participation will work at the order level before choosing the vehicle, because the answer differs by vehicle and by agency policy.',
+            body: 'On multiple-award contracts, the set-aside question recurs at the order level. Agencies may set aside orders for small business under a full-and-open vehicle if small holders exist, may reserve a number of awards for small businesses when the vehicle is competed, or may establish a small business track within the vehicle. Each approach has rules about how the Rule of Two applies at the order level and whether it is mandatory or discretionary. Under the FAR overhaul Part 19 text, setting aside an order under a multiple-award contract is discretionary and the decision is not protestable. Government PMs planning to use a vehicle should ask the specialist how small business participation will work at the order level before choosing the vehicle, because the answer differs by vehicle and by agency policy.',
           },
           {
             type: 'expandable_list',
@@ -19321,7 +19702,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           { term: 'DFARS 252.204-7012', definition: 'The clause requiring contractors that handle covered defense information to implement NIST SP 800-171, report cyber incidents to DoD within 72 hours, and flow the requirement down to subcontractors. In DoD contracts since 2017.' },
           { term: 'NIST SP 800-171', definition: 'The federal standard listing 110 security requirements for protecting Controlled Unclassified Information in non-federal systems. The technical basis for both 7012 and CMMC Level 2.' },
           { term: 'CMMC', definition: 'Cybersecurity Maturity Model Certification. The DoD program that replaces self-attestation with verified assessment at three levels, written into contracts through DFARS 252.204-7021 and a phased rollout.' },
-          { term: 'SPRS Score', definition: 'The Supplier Performance Risk System score: a self-assessment against the 110 NIST requirements, scored from -203 to 110, that contractors must post before award under DFARS 252.204-7019/7020.' },
+          { term: 'SPRS Score', definition: 'The Supplier Performance Risk System score: a self-assessment against the 110 NIST requirements, scored from -203 to 110, that contractors must post before award. Under the FAR overhaul, DFARS 252.204-7019 was deleted and 7020 renumbered 252.240-7997, with the posting requirement now running through CMMC; verify the current clause.' },
           { term: 'System Security Plan (SSP)', definition: 'The document describing how each NIST requirement is implemented in the contractor\'s environment. Required for 7012 and central to any CMMC assessment.' },
           { term: 'POA&M', definition: 'Plan of Action and Milestones: the list of requirements not yet met, with dates. CMMC limits which requirements may be open on a POA&M and requires closure within 180 days.' },
           { term: 'C3PAO', definition: 'CMMC Third-Party Assessment Organization. Accredited firms that conduct Level 2 certification assessments. Their capacity is a scheduling constraint for the whole industry.' },
@@ -19350,7 +19731,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             heading: 'CMMC Levels',
             headers: ['Level', 'Applies when the contract involves', 'Requirements', 'Who assesses', 'How often'],
             rows: [
-              ['Level 1', 'Federal Contract Information only', '15 basic safeguarding requirements (from FAR 52.204-21)', 'Annual self-assessment, with senior official affirmation', 'Annually'],
+              ['Level 1', 'Federal Contract Information only', '15 basic safeguarding requirements (FAR 52.204-21, renumbered 52.240-93 under the FAR overhaul)', 'Annual self-assessment, with senior official affirmation', 'Annually'],
               ['Level 2', 'Controlled Unclassified Information', 'All 110 NIST SP 800-171 requirements', 'Third-party (C3PAO) certification for most contracts; self-assessment permitted for a subset DoD designates', 'Certification every three years; affirmation annually'],
               ['Level 3', 'CUI on the most sensitive programs', 'Level 2 plus a selected set of NIST SP 800-172 enhanced requirements', 'Government assessment by DIBCAC', 'Every three years; affirmation annually'],
             ],
@@ -19495,7 +19876,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             heading: 'The Three Tiers',
             headers: ['Tier', 'What it is', 'Who decides', 'What it triggers', 'Where it may live'],
             rows: [
-              ['Federal Contract Information', 'Non-public information provided by or generated for the government under contract', 'By definition; nearly every contract has some', 'FAR 52.204-21 basic safeguarding (15 requirements); CMMC Level 1', 'Any reasonably protected system'],
+              ['Federal Contract Information', 'Non-public information provided by or generated for the government under contract', 'By definition; nearly every contract has some', 'FAR 52.204-21 (now 52.240-93 in solicitations under the FAR overhaul) basic safeguarding (15 requirements); CMMC Level 1', 'Any reasonably protected system'],
               ['Controlled Unclassified Information', 'Unclassified information a law, regulation, or policy requires to be protected; categories in the CUI Registry', 'The government originator marks it; the contract identifies it', 'DFARS 7012, NIST SP 800-171, CMMC Level 2 or 3, incident reporting', 'Systems meeting 800-171; clouds at FedRAMP Moderate equivalent'],
               ['Classified', 'Confidential, Secret, Top Secret under EO 13526', 'An original classification authority; contract DD 254 specifies', 'Facility clearance, personnel clearances, NISPOM, DCSA oversight', 'Accredited classified systems and spaces only'],
             ],
@@ -19609,7 +19990,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           },
         ],
         quiz: [
-          { id: 'q1', question: 'Which tier of information is present on nearly every government contract and triggers the FAR\'s 15 basic safeguards?', options: ['Classified', 'CUI', 'Federal Contract Information', 'Export-controlled data'], correct: 2, explanation: 'FCI is non-public information provided or generated under contract. It triggers FAR 52.204-21 and CMMC Level 1.' },
+          { id: 'q1', question: 'Which tier of information is present on nearly every government contract and triggers the FAR\'s 15 basic safeguards?', options: ['Classified', 'CUI', 'Federal Contract Information', 'Export-controlled data'], correct: 2, explanation: 'FCI is non-public information provided or generated under contract. It triggers the basic safeguarding clause (52.204-21, renumbered 52.240-93 under the FAR overhaul) and CMMC Level 1.' },
           { id: 'q2', question: 'What defines whether information is CUI?', options: ['The contractor\'s judgment', 'A law, regulation, or government-wide policy requiring protection, with categories listed in the CUI Registry', 'The dollar value of the contract', 'Whether it is marked "proprietary"'], correct: 1, explanation: 'CUI is defined by the CUI Registry maintained by the National Archives, not by the contractor or the contract value.' },
           { id: 'q3', question: 'A contractor produces engineering drawings for a weapon system under contract. Are those drawings CUI?', options: ['No; only government-provided information is CUI', 'Yes; contractor-generated Controlled Technical Information is CUI and must be marked and protected', 'Only if the government marks them later', 'Only if they are classified'], correct: 1, explanation: 'CTI generated under the contract inherits the controls the moment it exists.' },
           { id: 'q4', question: 'Under what program is classified information handled?', options: ['The CUI program and 800-171', 'The National Industrial Security Program (NISPOM), with facility and personnel clearances', 'CMMC Level 2', 'FedRAMP'], correct: 1, explanation: 'Classified follows the NISPOM and DCSA oversight, not the CUI rules.' },
@@ -22113,7 +22494,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
               'Ordering period and ceiling|||The order must be placed within the vehicle\'s ordering period and within its ceiling. Vehicles nearing expiration or ceiling produce orders that cannot be exercised.',
               'Contract type allowed|||The vehicle specifies which types its orders may use. A vehicle that allows only FFP cannot support a cost-type order.',
               'Interagency determination|||Using another agency\'s vehicle requires a written determination that it is in the government\'s interest and within scope, and, for assisted acquisitions, an agreement with the servicing agency.',
-              'Small business at the order level|||The Rule of Two may apply at the order level for some vehicles; the small business specialist coordinates.',
+              'Small business at the order level|||Under the FAR overhaul, setting aside an order under a multiple-award contract is discretionary rather than required, and not protestable; the small business specialist coordinates.',
             ],
           },
           {
@@ -27091,7 +27472,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             type: 'text',
             level: 'intermediate',
             heading: 'The FAR Overhaul: What Is Happening',
-            body: 'Beginning in 2025, the government undertook a comprehensive rewrite of the Federal Acquisition Regulation with a stated aim of removing text not required by statute, shortening and restructuring parts, and reducing government-unique requirements. The mechanics matter for practitioners: rather than waiting for complete rulemaking, agencies issued deviations implementing revised text, so that in a transition period the operative requirement for a given acquisition may be a deviation rather than the published FAR part. Part numbering, clause numbers, and thresholds are in motion. For anyone learning acquisition during this period, the discipline is straightforward: learn the concepts and the purposes, which are stable, and verify every clause citation, threshold, and part reference against the current text or the applicable deviation before relying on it in a document. This course flags that verification wherever a specific number or clause appears.',
+            body: 'Beginning in 2025, the government undertook a comprehensive rewrite of the Federal Acquisition Regulation with a stated aim of removing text not required by statute, shortening and restructuring parts, and reducing government-unique requirements. The mechanics matter for practitioners: rather than waiting for complete rulemaking, agencies issued deviations implementing revised text, so that in a transition period the operative requirement for a given acquisition may be a deviation rather than the published FAR part. Part numbering, clause numbers, and thresholds are in motion. For anyone learning acquisition during this period, the discipline is straightforward: learn the concepts and the purposes, which are stable, and verify every clause citation, threshold, and part reference against the current text or the applicable deviation before relying on it in a document. This course flags that verification wherever a specific number or clause appears. As of September 2026 the overhaul has moved into formal rulemaking: twelve proposed rules in four sets, the first published June 23 and the second September 18, 2026. The Foundations lesson on the Revolutionary FAR Overhaul covers how to work through the transition.',
           },
           {
             type: 'text',
@@ -27153,6 +27534,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             heading: 'Build on This',
             refs: [
               { lessonId: 'foundations-2', label: 'The DoD Acquisition System Overview', sub: 'The pathways in practice' },
+              { lessonId: 'foundations-10', label: 'The Revolutionary FAR Overhaul', sub: 'Working while the rulebook is rewritten' },
               { lessonId: 'lifecycle-3', label: 'The Software Acquisition Pathway and Agile', sub: 'The template pathway in detail' },
               { lessonId: 'onramp-5', label: 'Crossing the Valley of Death', sub: 'Why the budget process is the binding constraint' },
             ],

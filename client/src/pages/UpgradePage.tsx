@@ -31,7 +31,7 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
   const { toast } = useToast();
 
   const freeFeatures = [
-    "Module 1: Foundations (full access, 9 lessons)",
+    "Module 1: Foundations (full access, 10 lessons)",
     "1 free preview lesson in every other module",
     "Progress tracking",
     "Key terms & glossary",

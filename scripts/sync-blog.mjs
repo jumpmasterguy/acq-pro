@@ -269,7 +269,13 @@ function fixCounts(text) {
     .replace(/\b(One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen|Fourteen) (modules? (?:covering|together|and))/g,
              (_, __, rest) => `${w} ${rest}`)
     .replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen) (modules? (?:covering|together|and))/g,
-             (_, __, rest) => `${W} ${rest}`);
+             (_, __, rest) => `${W} ${rest}`)
+    // Any three-digit lesson figure is a curriculum total ("14 modules, 122
+    // lessons", "all 122 lessons", "(122 lessons)"). Module-level figures are
+    // one or two digits, so Module 1's own lesson count is never touched.
+    // Added Sep 2026 after a 122 -> 123 bump slipped past the module-keyed
+    // patterns above on the PDU page.
+    .replace(/\b1\d{2}(\+?) (lessons|Lessons)\b/g, (_, plus, word) => `${L}${plus} ${word}`);
 }
 
 let countFixes = 0;
@@ -288,7 +294,7 @@ const STALE = [
   /\b(?:Six|six) modules\b(?! covering| together)/,
   /\ball \d+ modules\b/i,
   /\b\d+\+? in-depth lessons\b/,
-  /\b1[0-9]{2}\+ lessons\b/,
+  /\b1[0-9]{2}\+? lessons\b/,
 ];
 const sourceDirs = [join(ROOT, "client", "src"), join(ROOT, "server"),
                     join(ROOT, "scripts"), join(ROOT, "content_strategy")];
@@ -297,11 +303,13 @@ for (const dir of sourceDirs) {
   for (const file of sourceFiles(dir)) {
     const text = readFileSync(file, "utf8");
     for (const re of STALE) {
-      const m = text.match(re);
-      if (!m) continue;
-      // a figure that already agrees with the curriculum is fine
-      if (m[0].includes(String(CC.modules)) || m[0].includes(String(CC.lessons))) continue;
-      stale.push(`${file.replace(ROOT + "/", "")}: ${m[0]}`);
+      // Every match, not just the first: a file can hold a correct figure
+      // followed by a stale one (server/email.ts did, Sep 2026).
+      for (const m of text.matchAll(new RegExp(re.source, re.flags.includes("g") ? re.flags : re.flags + "g"))) {
+        // a figure that already agrees with the curriculum is fine
+        if (m[0].includes(String(CC.modules)) || m[0].includes(String(CC.lessons))) continue;
+        stale.push(`${file.replace(ROOT + "/", "")}: ${m[0]}`);
+      }
     }
   }
 }
