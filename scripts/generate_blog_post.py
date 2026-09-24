@@ -33,7 +33,7 @@ REPO_ROOT      = Path(__file__).parent.parent
 MODULES = {
     "foundations": {
         "title": "DoD Acquisitions Foundations",
-        "desc":  "Start here — the complete overview of how DoD buys things, from FAR to program office.",
+        "desc":  "Start here: the complete overview of how DoD buys things, from FAR to program office.",
     },
     "finance": {
         "title": "Defense Finance & Budgeting",
@@ -453,12 +453,12 @@ def build_email_capture_block(form_id: str, success_id: str, source: str) -> str
 <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:14px;padding:28px 32px;margin:40px 0;color:white;">
   <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;opacity:0.7;margin-bottom:6px">Free Starter Kit</div>
   <h3 style="font-size:1.1rem;font-weight:800;margin:0 0 8px;color:white">Get the Acqlerate Acquisition Starter Kit (Free)</h3>
-  <p style="font-size:0.9rem;opacity:0.9;margin:0 0 18px;line-height:1.5">Key terms, ACAT levels, career roadmaps, and the 5 most common acquisition mistakes. Tailored to your role — USG, contractor, or career changer.</p>
+  <p style="font-size:0.9rem;opacity:0.9;margin:0 0 18px;line-height:1.5">Key terms, ACAT levels, career roadmaps, and the 5 most common acquisition mistakes. Tailored to your role: USG, contractor, or career changer.</p>
   <form id="{form_id}" onsubmit="submitSidebarLead(event,'{form_id}','{success_id}')" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
     <input type="email" placeholder="your@email.com" required style="padding:10px 14px;border:none;border-radius:8px;font-size:0.9rem;font-family:inherit;width:240px;max-width:100%;outline:none;color:#1A1A1A" />
     <button type="submit" style="background:white;color:#01696F;border:none;cursor:pointer;font-size:0.9rem;font-weight:800;padding:10px 20px;border-radius:8px;font-family:inherit;white-space:nowrap">Send It Free →</button>
   </form>
-  <div id="{success_id}" style="font-size:0.875rem;font-weight:700;color:rgba(255,255,255,0.9);display:none;margin-top:10px">✓ Check your inbox — it's on its way.</div>
+  <div id="{success_id}" style="font-size:0.875rem;font-weight:700;color:rgba(255,255,255,0.9);display:none;margin-top:10px">✓ Check your inbox. It's on its way.</div>
 </div>
 """
 
@@ -519,7 +519,7 @@ def generate_article_body(topic: dict, research: str, pub_date: str) -> tuple:
         else "Include a practical template table readers can copy and use (use <table class='comparison-table'>)."
     )
     
-    prompt = f"""You are a senior writer for Acqlerate — a defense acquisitions education platform at acqlerate.com.
+    prompt = f"""You are a senior writer for Acqlerate, a defense acquisitions education platform at acqlerate.com.
 
 Write a blog post about: {topic['angle']}
 
@@ -533,11 +533,17 @@ REQUIREMENTS:
 1. Title: Compelling and specific (under 85 chars). Return it on line 1 as plain text, no formatting.
 2. Deck: 1-sentence subtitle (under 160 chars). Return it on line 2 as plain text.  
 3. Body: Start on line 3. Use <h2> section headers, <p> paragraphs, <ul>/<li> for bullets.
+   The body MUST open with a TL;DR callout, before any intro sentence, in exactly this shape:
+   <div class="callout"><p><strong>TL;DR.</strong> One plain sentence with the answer (a light joke is welcome here).</p>
+   <ul>
+   <li><strong>Who you are or your situation?</strong> What to do or know, in one or two short sentences.</li>
+   </ul></div>
+   3 to 4 bullets. Only facts that appear later in the post. Searchers want the answer first.
 4. {table_instruction}
 5. Include at least one <div class="callout"><p>...</p></div> with a key insight.
 6. 4-6 sections. Total 800-1200 words of body text.
-7. DO NOT include a "Start free at acqlerate.com" section — that will be added programmatically.
-8. DO NOT use <h1> tags — the title is added separately.
+7. DO NOT include a "Start free at acqlerate.com" section. That will be added programmatically.
+8. DO NOT use <h1> tags. The title is added separately.
 9. VOICE. Write like a knowledgeable colleague explaining something important over coffee.
    Warm, conversational, with real personality and light humor throughout. Acqlerate has a voice;
    it is not a government training portal. Humor stays workplace-appropriate, never silly.
@@ -620,7 +626,7 @@ def build_sidebar_capture(form_id: str, success_id: str) -> str:
     return f"""
     <div class="sidebar-capture" style="margin-top:24px;background:var(--gold-bg);border:1.5px solid #F0D060;border-radius:12px;padding:20px">
       <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold);margin-bottom:6px">Free Resource</div>
-      <p style="font-size:0.85rem;color:var(--text);margin:0 0 12px;line-height:1.5">Acquisition Starter Kit, tailored to your role. Key terms, career paths, the 5 biggest mistakes.</p>
+      <p style="font-size:0.85rem;color:var(--text);margin:0 0 12px;line-height:1.5">Acquisition Starter Kit: key terms, career paths, and the 5 biggest mistakes. Tailored to your role.</p>
       <form id="{form_id}" onsubmit="submitSidebarLead(event,'{form_id}','{success_id}')" style="display:flex;flex-direction:column;gap:8px">
         <input type="email" placeholder="your@email.com" required style="padding:9px 12px;border:1.5px solid #E0C050;border-radius:7px;font-size:0.85rem;font-family:inherit;outline:none" />
         <button type="submit" style="background:var(--gold);color:white;border:none;cursor:pointer;font-size:0.85rem;font-weight:700;padding:9px;border-radius:7px;font-family:inherit">Get Starter Kit →</button>
@@ -687,10 +693,20 @@ def assemble_post(title: str, deck: str, body_html: str, topic: dict,
         )
     
     # Build table of contents
-    h2s = re.findall(r'<h2>(.*?)</h2>', body_html)
+    # Give each section heading an id so the sidebar links actually jump to it
+    toc_entries = []
+    def _anchor(m):
+        text = re.sub(r'<[^>]+>', '', m.group(1))
+        hid = re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')[:60].strip('-') or 'section'
+        base, k = hid, 2
+        while hid in [e[0] for e in toc_entries]:
+            hid = f"{base}-{k}"; k += 1
+        toc_entries.append((hid, text))
+        return f'<h2 id="{hid}">{m.group(1)}</h2>'
+    body_html = re.sub(r'<h2>(.*?)</h2>', _anchor, body_html)
     toc_items = "\n".join(
-        f'        <li style="font-size:0.8rem;margin-bottom:5px"><a href="#" style="color:var(--teal)">{h}</a></li>'
-        for h in h2s[:6]
+        f'        <li style="font-size:0.8rem;margin-bottom:5px"><a href="#{hid}" style="color:var(--teal)">{h}</a></li>'
+        for hid, h in toc_entries[:6]
     )
     
     html = f"""<!DOCTYPE html>

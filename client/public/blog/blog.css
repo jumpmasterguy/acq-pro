@@ -170,7 +170,11 @@ nav {
   gap: 48px;
   align-items: start;
 }
-.post-main {}
+.post-main, .post-body { min-width: 0; }
+/* Wide tables scroll inside this wrapper instead of pushing the sidebar off-screen */
+.table-scroll { overflow-x: auto; max-width: 100%; -webkit-overflow-scrolling: touch; }
+.table-scroll .comparison-table { margin: 0; min-width: 640px; }
+.table-scroll { margin: 24px 0; }
 .post-sidebar { position: sticky; top: 80px; }
 
 /* Breadcrumb */
@@ -202,6 +206,7 @@ nav {
 }
 
 /* Post body */
+.post-body h2 { scroll-margin-top: 90px; }
 .post-body h2 {
   font-size: 1.35rem; font-weight: 800; color: var(--text);
   margin: 40px 0 14px; letter-spacing: -0.02em;

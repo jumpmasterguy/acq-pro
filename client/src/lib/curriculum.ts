@@ -541,9 +541,9 @@ export const modules: Module[] = [
             heading: "Acquisition Program Categories",
             headers: ['Category', 'Threshold', 'Oversight Level'],
             rows: [
-              ['ACAT I', 'RDT&E > $480M or Procurement > $2.79B', 'Milestone Decision Authority: USD(A&S)'],
+              ['ACAT I', 'RDT&E > $1B or Procurement > $4.5B (FY2024 dollars)', 'Milestone Decision Authority: USD(A&S)'],
               ['ACAT IA', 'IT: > $300M total', 'MDA: ASD(NII) or CIO'],
-              ['ACAT II', 'RDT&E > $185M or Procurement > $835M', 'MDA: Component (Secretary level)'],
+              ['ACAT II', 'RDT&E > $200M or Procurement > $920M (FY2020 dollars)', 'MDA: Component (Secretary level)'],
               ['ACAT III', 'Below ACAT II thresholds', 'MDA: Program Executive Officer'],
             ]
           },
@@ -699,10 +699,10 @@ export const modules: Module[] = [
           },
           {
             id: 'q2',
-            question: "An ACAT I program has RDT&E costs projected at $520 million. Which authority serves as the Milestone Decision Authority?",
+            question: "An ACAT I program has RDT&E costs projected at $1.2 billion. Which authority serves as the Milestone Decision Authority?",
             options: ['Program Executive Officer', 'Service Secretary', 'Under Secretary of Defense (Acquisition & Sustainment)', 'Comptroller General'],
             correct: 2,
-            explanation: "ACAT I programs: those exceeding $480M in RDT&E or $2.79B in procurement: have the Under Secretary of Defense for Acquisition & Sustainment (USD(A&S)) as the Milestone Decision Authority."
+            explanation: "ACAT I programs (more than $1B in RDT&E or $4.5B in procurement) have the Under Secretary of Defense for Acquisition & Sustainment (USD(A&S)) as the Milestone Decision Authority."
           },
           {
             id: 'q3',
@@ -727,10 +727,10 @@ export const modules: Module[] = [
           },
           {
             id: 'q6',
-            question: "An ACAT II program has total procurement costs of $900 million. Who serves as the Milestone Decision Authority?",
+            question: "An ACAT II program has total procurement costs of $1.5 billion. Who serves as the Milestone Decision Authority?",
             options: ['USD(A&S)', 'Component Acquisition Executive (e.g., ASA(ALT) for Army)', 'Program Executive Officer', 'Defense Acquisition Board'],
             correct: 1,
-            explanation: "ACAT II programs (RDT&E > $185M or procurement > $835M) have the Component Acquisition Executive: such as the Assistant Secretary of the Army for Acquisition, Logistics, and Technology: as the MDA, not USD(A&S)."
+            explanation: "ACAT II programs (RDT&E > $200M or procurement > $920M, below the ACAT I line) have the Component Acquisition Executive, such as the Assistant Secretary of the Army for Acquisition, Logistics, and Technology, as the MDA, not USD(A&S)."
           },
           {
             id: 'q7',
@@ -1993,8 +1993,8 @@ export const modules: Module[] = [
         description: 'Master ACAT levels, milestone decision authority, tailoring, and how program categorization drives oversight, reporting, and your day-to-day responsibilities as a PM.',
         keyTerms: [
           { term: 'ACAT', definition: 'Acquisition Category. A classification system that determines the level of oversight, reporting, and milestone decision authority for a DoD acquisition program. Higher ACAT = more oversight.' },
-          { term: 'ACAT I', definition: 'Major Defense Acquisition Program. Total cost > $480M (RDT&E) or $2.79B (procurement). MDA is USD(A&S) or a designated Service Acquisition Executive (SAE). Highest oversight.' },
-          { term: 'ACAT II', definition: 'Major System. Total cost > $185M (RDT&E) or $835M (procurement). MDA is the DoD Component Acquisition Executive (CAE). Significant but less oversight than ACAT I.' },
+          { term: 'ACAT I', definition: 'Major Defense Acquisition Program. Total cost > $1B (RDT&E) or $4.5B (procurement), in FY2024 dollars. MDA is USD(A&S) or a designated Service Acquisition Executive (SAE). Highest oversight.' },
+          { term: 'ACAT II', definition: 'Major System. Total cost > $200M (RDT&E) or $920M (procurement), in FY2020 dollars. MDA is the DoD Component Acquisition Executive (CAE). Significant but less oversight than ACAT I.' },
           { term: 'ACAT III', definition: 'Below ACAT I/II thresholds. MDA is designated by the CAE, typically a Program Executive Officer (PEO) or head of contracting activity. Streamlined oversight.' },
           { term: 'ACAT IV', definition: 'Services and non-major acquisitions managed below ACAT III threshold. Component manages with minimal centralized oversight.' },
           { term: 'MDA', definition: 'Milestone Decision Authority. The individual with authority to approve milestones, authorize program entry into lifecycle phases, and certify programs. Varies by ACAT level.' },
@@ -2017,17 +2017,17 @@ export const modules: Module[] = [
           {
             type: 'lesson_image',
             src: '/img-acat-levels.jpg',
-            alt: 'Whiteboard diagram showing ACAT I through ACAT IV as descending boxes, with oversight decreasing from ACAT I (highest, $2.79B+, USD(A&S)) down to ACAT IV (lowest, services, local approval)',
+            alt: 'Whiteboard diagram showing ACAT I through ACAT IV as descending boxes, with oversight decreasing from ACAT I (highest, $4.5B+ procurement, USD(A&S)) down to ACAT IV (lowest, services, local approval)',
             caption: "Same idea as a staircase: the higher the ACAT level, the more oversight comes with it.",
           },
           {
             type: 'table_visual' as any,
             heading: 'ACAT Levels: Thresholds, MDA, and Key Requirements',
-            headers: ['ACAT', 'Cost Threshold (2024)', 'MDA', 'Key Requirements', 'Reporting'],
+            headers: ['ACAT', 'Cost Threshold', 'MDA', 'Key Requirements', 'Reporting'],
             rows: [
-              ['ACAT ID', 'RDT&E > $480M or Procurement > $2.79B; OR designated by USD(A&S)', 'USD(A&S) or designated SAE', 'Full DoDI 5000 compliance; ICE required; full documentation', 'SAR to Congress; unit cost reporting; CAPE ICE'],
+              ['ACAT ID', 'RDT&E > $1B or Procurement > $4.5B (FY2024 dollars); OR designated by USD(A&S)', 'USD(A&S) or designated SAE', 'Full DoDI 5000 compliance; ICE required; full documentation', 'SAR to Congress; unit cost reporting; CAPE ICE'],
               ['ACAT IC', 'Same thresholds as ACAT ID', 'Component Acquisition Executive (CAE) / SAE', 'Same as ACAT ID minus OSD-level milestone approval', 'SAR; CAPE ICE optional but often requested'],
-              ['ACAT II', 'RDT&E > $185M or Procurement > $835M', 'CAE (ASA(ALT), ASN(RDA), SAF/AQ)', 'Component-level ICE; DoDI 5000 compliance with tailoring', 'Component-level reporting; no mandatory SAR'],
+              ['ACAT II', 'RDT&E > $200M or Procurement > $920M', 'CAE (ASA(ALT), ASN(RDA), SAF/AQ)', 'Component-level ICE; DoDI 5000 compliance with tailoring', 'Component-level reporting; no mandatory SAR'],
               ['ACAT III', 'Below ACAT I/II; designated by CAE', 'PEO or designated official', 'Significant tailoring available; streamlined documentation', 'Program office reporting only'],
               ['ACAT IV', 'Non-major services/acquisitions', 'Head of contracting activity', 'Minimum oversight; acquisition plan required', 'Internal only'],
             ],
@@ -2119,9 +2119,9 @@ export const modules: Module[] = [
           {
             id: 'q2',
             question: 'The current ACAT I threshold for Research, Development, Test and Evaluation (RDT&E) is approximately:',
-            options: ['$100M', '$185M', '$480M', '$2.79B'],
+            options: ['$200M', '$480M', '$1B', '$4.5B'],
             correct: 2,
-            explanation: 'Programs with RDT&E costs exceeding approximately $480M (or procurement costs exceeding $2.79B) are classified ACAT I. These thresholds are adjusted periodically for inflation. Programs below $185M RDT&E / $835M procurement are typically ACAT III.',
+            explanation: 'Programs with RDT&E costs above $1B (or procurement above $4.5B), in FY2024 dollars, are ACAT I. Congress raised these from about $525M and $3.1B in December 2025, so older slides show smaller numbers. $480M was the line before that. Programs below $200M RDT&E and $920M procurement are typically ACAT III.',
           },
           {
             id: 'q3',
@@ -3107,9 +3107,9 @@ export const modules: Module[] = [
       {
         id: 'a3',
         question: "ACAT I programs are characterized by which threshold (as of current DoD policy)?",
-        options: ['RDT&E > $100M or Procurement > $500M', 'RDT&E > $480M or Procurement > $2.79B', 'RDT&E > $185M or Procurement > $835M', 'Any program designated by the Secretary of Defense only'],
+        options: ['RDT&E > $100M or Procurement > $500M', 'RDT&E > $1B or Procurement > $4.5B', 'RDT&E > $200M or Procurement > $920M', 'Any program designated by the Secretary of Defense only'],
         correct: 1,
-        explanation: "ACAT I (MDAPs) meet the threshold of RDT&E costs exceeding $480M or procurement costs exceeding $2.79B (FY2020 constant dollars), OR are designated by the USD(A&S) due to special interest. ACAT II uses the $185M/$835M thresholds."
+        explanation: "ACAT I (MDAPs) meet the threshold of RDT&E costs exceeding $1B or procurement costs exceeding $4.5B (FY2024 constant dollars, set by Congress in December 2025), OR are designated by the USD(A&S) due to special interest. ACAT II uses the $200M/$920M thresholds."
       },
       {
         id: 'a4',
@@ -18272,7 +18272,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           { term: 'SDVOSB', definition: 'Service-Disabled Veteran-Owned Small Business. At least 51% unconditionally owned and controlled by one or more service-disabled veterans. Certified by SBA since 2023 (VetCert).' },
           { term: 'WOSB / EDWOSB', definition: 'Women-Owned Small Business, and Economically Disadvantaged WOSB. At least 51% owned and controlled by women; EDWOSB adds personal net worth and income limits. Certified by SBA or an approved third party.' },
           { term: 'Sole Source', definition: 'An award without competition. Each socioeconomic program allows sole-source awards below a dollar threshold when the CO cannot expect two eligible offerors; 8(a) sole source is the most widely used.' },
-          { term: 'Statutory Goals', definition: 'Government-wide targets: 23% of prime contract dollars to small business, with sub-goals for SDB (raised by policy in recent years), WOSB (5%), HUBZone (3%), and SDVOSB (3%, raised to 5% by executive policy). Agencies are graded on them.' },
+          { term: 'Statutory Goals', definition: 'Government-wide targets: 23% of prime contract dollars to small business, with sub-goals for SDB (raised by policy in recent years), WOSB (5%), HUBZone (3%), and SDVOSB (5%, raised from 3% by the FY2024 NDAA). Agencies are graded on them.' },
           { term: 'Small Disadvantaged Business (SDB)', definition: 'A small business at least 51% owned and controlled by socially and economically disadvantaged individuals. 8(a) firms are SDBs; SDB status can also be self-certified for goaling purposes.' },
           { term: 'Simplified Acquisition Threshold (SAT)', definition: 'The dollar level below which simplified procedures apply. Acquisitions between the micro-purchase threshold and the SAT are automatically reserved for small business. The threshold is adjusted for inflation periodically; verify the current figure.' },
         ],
