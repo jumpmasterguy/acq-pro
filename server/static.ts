@@ -129,6 +129,8 @@ export function serveStatic(app: Express) {
     'the-dods-workforce-gap-your-call-to-a-critical-career': 'dods-1102-shortage-your-gateway-to-a-high-impact-career',
     'otas-in-2026-what-the-15b-surge-means-for-your-defense-business': 'dods-ota-surge-in-2026-what-defense-contractors-need-to-know-now',
     'acat-levels-explained': 'acat-levels-your-programs-blueprint-for-oversight-and-management',
+    // Old Section L vs M slug, still in Google's index (GSC 404 report, 22 Sep 2026).
+    'section-l-vs-section-m-proposal': 'the-silent-killer-of-your-defense-proposal-the-section-l-vs-section-m-mismatch',
   };
 
   app.get("/blog/:slug", (req: Request, res: Response) => {
