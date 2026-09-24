@@ -48,6 +48,21 @@ export function trialDaysRemaining(user: TrialFields | null | undefined): number
   return Math.max(0, Math.ceil(ms / (1000 * 60 * 60 * 24)));
 }
 
+/**
+ * Buying a paid template pack includes 30 days of full access (the product
+ * pages promise it). Granted by the Stripe webhook when the buyer already has
+ * an account, or at signup when a matching purchase exists for their email.
+ */
+export const PACK_BONUS_DAYS = 30;
+/** How long after buying a pack a new signup still gets the bonus. */
+export const PACK_BONUS_CLAIM_WINDOW_DAYS = 90;
+/** Paid packs that carry the bonus (the free finance pack does not). */
+export const PACK_BONUS_PACKS = ["pm-essentials", "proposal-toolkit", "cpars-playbook"];
+
+export function computePackBonusEndsAt(from: Date = new Date()): string {
+  return new Date(from.getTime() + PACK_BONUS_DAYS * 24 * 60 * 60 * 1000).toISOString();
+}
+
 /** ISO timestamp for "now + TRIAL_DAYS" — set on every new signup. */
 export function computeTrialEndsAt(from: Date = new Date()): string {
   return new Date(from.getTime() + TRIAL_DAYS * 24 * 60 * 60 * 1000).toISOString();

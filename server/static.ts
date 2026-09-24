@@ -157,6 +157,11 @@ export function serveStatic(app: Express) {
     return sendNoCache(res, path.resolve(distPath, "blog", "index.html"));
   });
 
+  // Every template pack's license note points buyers to acqlerate.com/team.
+  // The team page lives at /teams, so send the shorter URL there instead of
+  // letting it fall through to the app. /team/success is registered above.
+  app.get(["/team", "/team/"], (_req: Request, res: Response) => res.redirect(301, "/teams"));
+
   // Static informational pages
   const staticPages = ['terms', 'privacy', 'teams', 'sitemap', 'pay-guide', 'tools', 'why'];
   staticPages.forEach(page => {

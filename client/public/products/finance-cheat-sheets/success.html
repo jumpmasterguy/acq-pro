@@ -41,13 +41,13 @@
     <div id="fileList" style="text-align:left;border:1px solid #E5E7EB;border-radius:12px;overflow:hidden;margin-bottom:32px"></div>
     
     <div style="background:#F9FAFB;border-radius:12px;padding:20px;text-align:center;margin-bottom:24px">
-      <p style="font-size:0.9rem;color:#374151;margin:0 0 12px">These links are yours — bookmark this page or save your download URLs. Each link stays valid indefinitely.</p>
+      <p style="font-size:0.9rem;color:#374151;margin:0" id="savedNote">These links are yours and never expire. Bookmark this page to come back to them.</p>
     </div>
     
     <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:14px;padding:24px;color:white">
-      <p style="font-weight:700;margin:0 0 8px;color:white">Put these templates to use faster</p>
-      <p style="font-size:0.875rem;opacity:0.9;margin:0 0 16px">Acqlerate's modules explain every concept behind these templates — free to start.</p>
-      <a href="/app#/auth" style="display:inline-block;background:white;color:#01696F;font-weight:800;padding:10px 24px;border-radius:8px;text-decoration:none;font-size:0.9rem">Start Learning Free →</a>
+      <p style="font-weight:700;margin:0 0 8px;color:white" id="ctaTitle">Put these templates to use faster</p>
+      <p style="font-size:0.875rem;opacity:0.9;margin:0 0 16px" id="ctaText">Acqlerate's modules explain every concept behind these templates. Free to start.</p>
+      <a href="/app#/auth" id="ctaBtn" style="display:inline-block;background:white;color:#01696F;font-weight:800;padding:10px 24px;border-radius:8px;text-decoration:none;font-size:0.9rem">Start Learning Free →</a>
     </div>
   </div>
   
@@ -85,9 +85,35 @@ async function loadDownloads(retries = 0) {
   } catch { showError(); }
 }
 
+function esc(t) { return String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+// 30 days of Pro come with every paid pack (server/packBonus.ts).
+function showBonus(data) {
+  const title = document.getElementById('ctaTitle');
+  const text = document.getElementById('ctaText');
+  const btn = document.getElementById('ctaBtn');
+  if (data.bonus === 'granted') {
+    title.textContent = 'Your 30 days of Acqlerate Pro are on';
+    text.textContent = 'Every module is unlocked on your account. The Start Here tab in your pack tells you which lesson goes with each tool.';
+    btn.textContent = 'Open Acqlerate →'; btn.href = '/app';
+  } else if (data.bonus === 'on-signup') {
+    title.textContent = 'Your pack includes 30 days of Acqlerate Pro';
+    text.innerHTML = 'Create a free account with <strong>' + esc(data.email) + '</strong> and every module unlocks for 30 days. No card, nothing renews.';
+    btn.textContent = 'Create Your Account →'; btn.href = '/app#/auth';
+  } else if (data.bonus === 'already-paid') {
+    title.textContent = 'Every lesson behind these tools is open for you';
+    text.textContent = 'You already have full access. The Start Here tab in your pack tells you which lesson goes with each tool.';
+    btn.textContent = 'Open Acqlerate →'; btn.href = '/app';
+  }
+}
+
 function showSuccess(data) {
   document.getElementById('loading').style.display = 'none';
   document.getElementById('success').style.display = 'block';
+  if (data.email) {
+    document.getElementById('savedNote').innerHTML = 'We also emailed these links to <strong>' + esc(data.email) + '</strong>. They never expire.';
+  }
+  showBonus(data);
   
   const list = document.getElementById('fileList');
   list.innerHTML = data.downloadLinks.map(f => `

@@ -465,6 +465,7 @@ function startDripScheduler() {
           user.registeredAt,
           user.sentEmailDays,
           user.subscriptionStatus,
+          user.trialEndsAt,
         );
         if (updated.length !== user.sentEmailDays.length) {
           await storage.updateSentEmailDays(user.id, updated);

@@ -17,6 +17,7 @@
     gtag('js', new Date());
     gtag('config', 'G-SW42SFY999');
   </script>
+  <style>@media (max-width: 640px) { .pack-hero { grid-template-columns: 1fr !important; gap: 20px !important; } }</style>
 </head>
 <body>
 <nav>
@@ -41,7 +42,7 @@
   <div class="breadcrumb" style="margin-bottom:24px"><a href="/blog">Blog</a><span>›</span><a href="/blog">Resources</a><span>›</span><span>Template Packs</span></div>
 
   <!-- Header -->
-  <div style="display:grid;grid-template-columns:1fr auto;gap:32px;align-items:start;margin-bottom:40px">
+  <div class="pack-hero" style="display:grid;grid-template-columns:1fr auto;gap:32px;align-items:start;margin-bottom:40px">
     <div>
       <span style="background:#01696F;color:white;font-size:0.7rem;font-weight:800;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.06em">Most Complete</span>
       <h1 style="font-size:2rem;font-weight:800;margin:12px 0 8px;line-height:1.2;color:#0D1B2A">GovCon Proposal Toolkit</h1>
@@ -50,9 +51,8 @@
     </div>
     <!-- Pricing box -->
     <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:16px;padding:28px 24px;color:white;text-align:center;min-width:200px;flex-shrink:0">
-      <div style="font-size:0.75rem;opacity:0.7;text-decoration:line-through;margin-bottom:2px">$39</div>
       <div style="font-size:3rem;font-weight:900;line-height:1">$34</div>
-      <div style="font-size:0.8rem;opacity:0.8;margin-bottom:20px">Instant download</div>
+      <div style="font-size:0.8rem;opacity:0.8;margin-bottom:20px">Instant download<br>+ 30 days of Pro free</div>
       <button onclick="buyPack('proposal-toolkit')" style="display:block;width:100%;background:white;color:#01696F;font-weight:800;font-size:0.95rem;padding:12px;border-radius:10px;border:none;cursor:pointer;margin-bottom:10px" id="buyBtn">Get This Pack →</button>
       <div style="font-size:0.75rem;opacity:0.7">Secured by Stripe · 30-day guarantee</div>
     </div>
@@ -60,12 +60,12 @@
 
   <!-- Description -->
   <div style="background:#F9FAFB;border-radius:14px;padding:24px 28px;margin-bottom:32px">
-    <p style="font-size:1rem;line-height:1.7;color:#374151;margin:0">Most defense proposals lose because of process failures, not content. This toolkit enforces the discipline that wins: Section L/M alignment, win theme clarity, past performance completeness, pricing compliance. Used by capture managers at major defense contractors.</p>
+    <p style="font-size:1rem;line-height:1.7;color:#374151;margin:0">Most defense proposals lose because of process failures, not content. This toolkit enforces the discipline that wins: Section L/M alignment, win theme clarity, past performance completeness, pricing compliance.</p>
   </div>
 
   <!-- Files included -->
-  <h2 style="font-size:1.1rem;font-weight:800;margin-bottom:4px">What's Included (5 Files)</h2>
-  <p style="font-size:0.85rem;color:#9CA3AF;margin-bottom:0">All files work in Microsoft Excel and PowerPoint. Instant download after purchase.</p>
+  <h2 style="font-size:1.1rem;font-weight:800;margin-bottom:4px">What's Included (6 Files, 5 Tools)</h2>
+  <p style="font-size:0.85rem;color:#9CA3AF;margin-bottom:0">Five Excel workbooks and one guide. Instant download after purchase.</p>
   <div style="border:1px solid var(--border,#E5E7EB);border-radius:12px;padding:0 16px;margin:16px 0 32px">
       <div style="display:flex;align-items:flex-start;gap:14px;padding:16px;border-bottom:1px solid var(--border, #E5E7EB);background:linear-gradient(90deg,#f0f9fa 0%,#fff 100%);border-radius:8px;margin-bottom:4px">
         <div style="width:36px;height:36px;background:#01696F;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;font-size:0.9rem;color:white">★</div>
@@ -113,10 +113,10 @@
       </div>
   </div>
 
-  <!-- Testimonial -->
-  <div style="background:var(--teal-light,#E6F2F3);border-left:4px solid var(--teal,#01696F);border-radius:0 12px 12px 0;padding:20px 24px;margin-bottom:32px">
-    <p style="font-size:1rem;font-style:italic;color:#374151;margin:0 0 8px;line-height:1.6">"The Section L/M decoder changed how our whole team writes proposals. We stopped writing to L and started scoring on M."</p>
-    <div style="font-size:0.8rem;font-weight:600;color:#6B7280">— Capture Manager, Mid-size defense contractor</div>
+  <!-- Bonus: 30 days of Pro (granted by the Stripe webhook, see grantPackBonus) -->
+  <div style="background:#FFF8E6;border:1px solid #F2D58A;border-radius:14px;padding:20px 24px;margin-bottom:32px">
+    <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#B7791F;margin-bottom:6px">Included: 30 days of Acqlerate Pro</div>
+    <p style="font-size:0.95rem;color:#374151;margin:0;line-height:1.6">Every tool in this pack is taught in a lesson (Capture Management &amp; Business Development). Your purchase unlocks every module for 30 days, so you can open the lesson right next to the tool. Sign in or sign up with the email you buy with. No card, nothing renews.</p>
   </div>
 
   <!-- Module CTA -->
@@ -144,7 +144,7 @@
   <!-- Bottom CTA -->
   <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:16px;padding:40px;text-align:center;color:white">
     <h2 style="font-size:1.5rem;font-weight:800;margin:0 0 10px;color:white">GovCon Proposal Toolkit</h2>
-    <p style="font-size:1rem;opacity:0.9;margin:0 0 24px">5 professional templates · Instant download · 30-day guarantee</p>
+    <p style="font-size:1rem;opacity:0.9;margin:0 0 24px">6 files, 5 tools · 30 days of Pro included · 30-day guarantee</p>
     <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
       <div>
         <div style="font-size:2.5rem;font-weight:900;line-height:1">$34</div>

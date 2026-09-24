@@ -31,7 +31,7 @@ export function unsubscribeUrl(email: string): string {
 
 // ─── Shared HTML shell ────────────────────────────────────
 
-function emailShell(preheader: string, body: string, recipientEmail?: string): string {
+function emailShell(preheader: string, body: string, recipientEmail?: string, footerNote = "You're receiving this because you created an account at Acqlerate."): string {
   const unsubLink = recipientEmail
     ? ` &nbsp;·&nbsp; <a href="${unsubscribeUrl(recipientEmail)}" style="color:#94a3b8;text-decoration:underline">Unsubscribe</a>`
     : "";
@@ -48,7 +48,7 @@ function emailShell(preheader: string, body: string, recipientEmail?: string): s
 </div>
 <div style="padding:36px 48px">${body}</div>
 <div style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:22px 48px;text-align:center">
-<p style="font-size:12px;color:#94a3b8;margin:0;line-height:1.7">You're receiving this because you created an account at Acqlerate.<br/><a href="${APP_URL}" style="color:#01696f;text-decoration:none">acqlerate.com</a> &nbsp;·&nbsp; Defense Acquisitions Academy${unsubLink}</p>
+<p style="font-size:12px;color:#94a3b8;margin:0;line-height:1.7">${footerNote}<br/><a href="${APP_URL}" style="color:#01696f;text-decoration:none">acqlerate.com</a> &nbsp;·&nbsp; Defense Acquisitions Academy${unsubLink}</p>
 </div>
 </div>
 </body></html>`;
@@ -1139,17 +1139,18 @@ export async function sendEmail7New(to: string, username: string): Promise<void>
   console.log(`[email] Email 7 new (day 21) sent to ${to}`);
 }
 
-// ─── Trial ending (Day 14) — only sent to users still on an active trial ───
+// ─── Trial ending (day 14, or later for template-pack buyers) — only sent to
+// users still on an active trial ───
 // Everyone else (already free-tier-only, already paid) never gets this one.
 
 export async function sendTrialEndingEmail(to: string, username: string): Promise<void> {
   if (!resend) return;
   const body = `
     <div class="greeting">Hey ${username} —</div>
-    <p>Your 14-day full-access trial wraps up today.</p>
+    <p>Your full-access trial wraps up today.</p>
     <p>Here's exactly what that means: you keep permanent free access to <strong>Foundations (all 10 lessons)</strong> and the first lesson of every other module. Everything else — the rest of Finance, Contracts, Data & Analytics, Capture & BD, Operations, plus the full AI Study Assistant — goes back behind the paywall unless you upgrade.</p>
     <div class="highlight-box">
-      <p>If the last two weeks were useful, staying in is <strong>$5.99/month</strong> — or <strong>$99 once, for good</strong> if you'd rather not think about it again.</p>
+      <p>If the last few weeks were useful, staying in is <strong>$5.99/month</strong> — or <strong>$99 once, for good</strong> if you'd rather not think about it again.</p>
     </div>
     <p>Nothing you've completed is lost either way. Your progress, XP, and streak are all still there.</p>
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
@@ -1160,7 +1161,7 @@ export async function sendTrialEndingEmail(to: string, username: string): Promis
   await resend.emails.send({
     from: FROM, to, replyTo: "hello@acqlerate.com",
     subject: "Your trial ends today",
-    html: emailShell("Your 14-day trial is up. Here's what stays free and what to do if you want to keep the rest.", body, to),
+    html: emailShell("Your trial is up. Here's what stays free and what to do if you want to keep the rest.", body, to),
   });
   console.log(`[email] Trial-ending (day 14) sent to ${to}`);
 }
@@ -1232,7 +1233,8 @@ export async function processDripEmails(
   username: string,
   registeredAt: string,
   sentEmailDays: number[],
-  subscriptionStatus?: string
+  subscriptionStatus?: string,
+  trialEndsAt?: string | null
 ): Promise<number[]> {
   const regDate = new Date(registeredAt);
   const now = new Date();
@@ -1240,18 +1242,26 @@ export async function processDripEmails(
 
   const updated = [...sentEmailDays];
 
+  // The trial-ending email goes out on the day the trial actually ends: day 14
+  // for a normal signup, later for a template-pack buyer (30-day bonus, see
+  // server/packBonus.ts). Its sentEmailDays marker stays 14 whatever day it
+  // fires, so anyone who already had it is not emailed twice.
+  const DAY_MS = 1000 * 60 * 60 * 24;
+  const trialLength = trialEndsAt ? Math.round((new Date(trialEndsAt).getTime() - regDate.getTime()) / DAY_MS) : NaN;
+  const trialDay = Number.isFinite(trialLength) ? Math.max(1, trialLength) : 14;
+  const base = EMAIL_SEQUENCE.map(e => ({ ...e, key: e.day }));
   const sequence = subscriptionStatus === 'trialing'
-    ? [...EMAIL_SEQUENCE, { day: 14, fn: sendTrialEndingEmail }].sort((a, b) => a.day - b.day)
-    : EMAIL_SEQUENCE;
+    ? [...base, { day: trialDay, key: 14, fn: sendTrialEndingEmail }].sort((a, b) => a.day - b.day)
+    : base;
 
   // Only send the SINGLE earliest overdue email per call, not the whole backlog.
   // If a user is behind (e.g. after downtime), they catch up one email per
   // scheduler run instead of getting every missed email jammed in at once.
-  for (const { day, fn } of sequence) {
-    if (daysSinceReg >= day && !updated.includes(day)) {
+  for (const { day, key, fn } of sequence) {
+    if (daysSinceReg >= day && !updated.includes(key)) {
       try {
         await fn(to, username);
-        updated.push(day);
+        updated.push(key);
       } catch (err) {
         console.error(`[email] Failed drip email day=${day} to=${to}:`, err);
       }
@@ -1294,4 +1304,63 @@ export async function sendReferralRewardEmail(to: string, username: string): Pro
   </div>
 </body></html>`,
   });
+}
+
+// ── Template pack: buyer delivery email ─────────────────────────────────────
+// Sent from the Stripe webhook once per purchase. The success page is not
+// enough on its own: close the tab and the links were gone. Download links
+// carry the purchase's token and never expire. Transactional, so no
+// unsubscribe link. Never throws.
+export interface PackPurchaseEmail {
+  to: string;
+  packName: string;                                   // "PM Essentials", "CPARS Playbook"
+  files: Array<{ name: string; url: string }>;
+  bonus: "granted" | "on-signup" | "already-paid";    // see server/packBonus.ts
+}
+
+export async function sendPackPurchaseEmail(p: PackPurchaseEmail): Promise<void> {
+  if (!resend) { console.error("[email] RESEND_API_KEY not set, could not send pack delivery email"); return; }
+  const fileRows = p.files.map(f => `
+      <tr>
+        <td style="padding:12px 0;border-bottom:1px solid #e2e8f0;font-size:15px;color:#0d2137;font-weight:600">${esc(f.name)}</td>
+        <td align="right" style="padding:12px 0;border-bottom:1px solid #e2e8f0"><a href="${f.url}" style="color:#01696f;font-weight:700;font-size:14px;text-decoration:none">Download &rarr;</a></td>
+      </tr>`).join("");
+
+  const btn = (href: string, label: string) =>
+    `<a href="${href}" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">${label}</a>`;
+
+  const bonus = p.bonus === "already-paid"
+    ? `<p>You already have full access to Acqlerate, so every lesson these tools point to is open for you.</p>`
+    : p.bonus === "granted"
+      ? `<div style="background:#fff8e6;border:1px solid #f2d58a;border-radius:10px;padding:18px 22px;margin:0 0 24px">
+           <p style="margin:0 0 8px;font-weight:800;color:#0d2137">Your 30 days of Acqlerate Pro are on.</p>
+           <p style="margin:0 0 16px;color:#374151">Every module is unlocked on your account for the next 30 days. The Start Here tab in your pack tells you which lesson goes with each tool.</p>
+           ${btn(`${APP_URL}/app`, "Open Acqlerate &rarr;")}
+         </div>`
+      : `<div style="background:#fff8e6;border:1px solid #f2d58a;border-radius:10px;padding:18px 22px;margin:0 0 24px">
+           <p style="margin:0 0 8px;font-weight:800;color:#0d2137">Your pack includes 30 days of Acqlerate Pro.</p>
+           <p style="margin:0 0 16px;color:#374151">Create a free account with this email address (${esc(p.to)}) and every module unlocks for 30 days. No card, nothing renews.</p>
+           ${btn(`${APP_URL}/app#/auth`, "Create your account &rarr;")}
+         </div>`;
+
+  const body = `
+    <div style="font-size:18px;font-weight:700;color:#0d2137;margin:0 0 16px">Thanks for your purchase.</div>
+    <p>Here are your ${esc(p.packName)} files. The links never expire, so keep this email.</p>
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin:8px 0 28px">${fileRows}</table>
+    <p style="margin:0 0 24px;color:#374151">Start with the Pack Guide. It walks you through every tool in the order you'll use them.</p>
+    ${bonus}
+    <p>Questions or something not working? Just reply to this email.</p>
+    <p style="font-size:14px;color:#0d2137;font-weight:700;margin-top:4px">Lucas</p>
+  `;
+  try {
+    await resend.emails.send({
+      from: FROM, to: p.to, replyTo: "hello@acqlerate.com",
+      subject: `Your ${p.packName} downloads`,
+      html: emailShell(p.bonus === "already-paid" ? `Your ${p.packName} files.` : `Your ${p.packName} files, plus 30 days of Acqlerate Pro.`, body, undefined,
+        "You're receiving this because you bought a template pack from Acqlerate."),
+    });
+    console.log(`[email] Pack delivery (${p.packName}) sent to ${p.to}`);
+  } catch (err: any) {
+    console.error(`[email] Pack delivery email failed for ${p.to}:`, err?.message);
+  }
 }

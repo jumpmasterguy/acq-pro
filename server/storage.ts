@@ -1,5 +1,5 @@
 import { type User, type InsertUser, type InsertGoogleUser, type InsertAppleUser, users, emailLeads, type Lead, passwordResetTokens } from "@shared/schema";
-import { computeTrialEndsAt, hasFullAccess } from "@shared/access";
+import { computeTrialEndsAt, computePackBonusEndsAt, hasFullAccess, PACK_BONUS_PACKS, PACK_BONUS_CLAIM_WINDOW_DAYS } from "@shared/access";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { eq, sql } from "drizzle-orm";
@@ -42,6 +42,8 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
+  // Case-insensitive match. Signups keep the email as typed; Stripe may not.
+  getUserByEmailInsensitive(email: string): Promise<User | undefined>;
   getUserByGoogleId(googleId: string): Promise<User | undefined>;
   getUserByAppleId(appleId: string): Promise<User | undefined>;
   getUserByStripeCustomerId(customerId: string): Promise<User | undefined>;
@@ -114,8 +116,10 @@ export interface IStorage {
   getPurchaseBySessionId(sessionId: string): Promise<Purchase | undefined>;
   getPurchaseByToken(token: string): Promise<Purchase | undefined>;
   incrementDownloadCount(purchaseId: string): Promise<void>;
-  getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[]; subscriptionStatus: string }>>;
+  getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[]; subscriptionStatus: string; trialEndsAt: string | null }>>;
   updateSentEmailDays(userId: string, days: number[]): Promise<void>;
+  // Template-pack bonus: put a user on a full-access trial ending at trialEndsAt.
+  setTrialEndsAt(userId: string, trialEndsAt: string): Promise<User | undefined>;
   // Email unsubscribes (marketing/newsletter/drip opt-out)
   isUnsubscribed(email: string): Promise<boolean>;
   setUnsubscribed(email: string): Promise<void>;
@@ -153,6 +157,11 @@ export class DrizzleStorage implements IStorage {
 
   async getUserByEmail(email: string): Promise<User | undefined> {
     const result = await this.db.select().from(users).where(eq(users.email, email)).limit(1);
+    return result[0];
+  }
+
+  async getUserByEmailInsensitive(email: string): Promise<User | undefined> {
+    const result = await this.db.select().from(users).where(sql`lower(${users.email}) = lower(${email})`).limit(1);
     return result[0];
   }
 
@@ -266,7 +275,7 @@ export class DrizzleStorage implements IStorage {
         passwordHash: null,
         stripeCustomerId: null,
         subscriptionStatus: "trialing",
-        trialEndsAt: computeTrialEndsAt(),
+        trialEndsAt: await this.initialTrialEndsAt(data.email),
         subscriptionId: null,
         completedLessons: [],
         quizScores: {},
@@ -317,7 +326,7 @@ export class DrizzleStorage implements IStorage {
         passwordHash: null,
         stripeCustomerId: null,
         subscriptionStatus: "trialing",
-        trialEndsAt: computeTrialEndsAt(),
+        trialEndsAt: await this.initialTrialEndsAt(data.email),
         subscriptionId: null,
         completedLessons: [],
         quizScores: {},
@@ -341,7 +350,7 @@ export class DrizzleStorage implements IStorage {
         ...insertUser,
         stripeCustomerId: null,
         subscriptionStatus: "trialing",
-        trialEndsAt: computeTrialEndsAt(),
+        trialEndsAt: await this.initialTrialEndsAt(insertUser.email),
         subscriptionId: null,
         completedLessons: [],
         quizScores: {},
@@ -678,6 +687,26 @@ export class DrizzleStorage implements IStorage {
   }
 
   // ── Template pack purchases ──────────────────────────────────────────────
+  // These queries use raw pg, which returns snake_case columns
+  // (download_token, user_id). The rest of the code reads the camelCase
+  // Purchase type, so map every row. Without this the success page built its
+  // download links from an undefined token and every link 404'd.
+  private rowToPurchase(r: any): Purchase | undefined {
+    if (!r) return undefined;
+    return {
+      id: r.id,
+      userId: r.user_id ?? null,
+      email: r.email,
+      pack: r.pack,
+      stripeSessionId: r.stripe_session_id,
+      stripePaymentIntent: r.stripe_payment_intent ?? null,
+      amountPaid: r.amount_paid,
+      downloadToken: r.download_token,
+      downloadCount: r.download_count,
+      createdAt: r.created_at,
+    } as Purchase;
+  }
+
   async savePurchase(data: { userId?: string; email: string; pack: string; stripeSessionId: string; stripePaymentIntent: string; amountPaid: number; downloadToken: string; }): Promise<Purchase> {
     const { Pool } = require('pg');
     const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
@@ -689,7 +718,7 @@ export class DrizzleStorage implements IStorage {
       [data.userId || null, data.email, data.pack, data.stripeSessionId, data.stripePaymentIntent, data.amountPaid, data.downloadToken]
     );
     await pool.end();
-    return res.rows[0] as Purchase;
+    return this.rowToPurchase(res.rows[0]) as Purchase;
   }
 
   async getPurchaseBySessionId(sessionId: string): Promise<Purchase | undefined> {
@@ -697,7 +726,7 @@ export class DrizzleStorage implements IStorage {
     const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
     const res = await pool.query('SELECT * FROM purchases WHERE stripe_session_id = $1 LIMIT 1', [sessionId]);
     await pool.end();
-    return res.rows[0] as Purchase | undefined;
+    return this.rowToPurchase(res.rows[0]);
   }
 
   async getPurchaseByToken(token: string): Promise<Purchase | undefined> {
@@ -705,7 +734,7 @@ export class DrizzleStorage implements IStorage {
     const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
     const res = await pool.query('SELECT * FROM purchases WHERE download_token = $1 LIMIT 1', [token]);
     await pool.end();
-    return res.rows[0] as Purchase | undefined;
+    return this.rowToPurchase(res.rows[0]);
   }
 
   async incrementDownloadCount(purchaseId: string): Promise<void> {
@@ -715,7 +744,7 @@ export class DrizzleStorage implements IStorage {
     await pool.end();
   }
 
-  async getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[]; subscriptionStatus: string }>> {
+  async getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[]; subscriptionStatus: string; trialEndsAt: string | null }>> {
     const rows = await this.db.select({
       id: users.id,
       email: users.email,
@@ -723,6 +752,7 @@ export class DrizzleStorage implements IStorage {
       registeredAt: users.registeredAt,
       sentEmailDays: users.sentEmailDays,
       subscriptionStatus: users.subscriptionStatus,
+      trialEndsAt: users.trialEndsAt,
     }).from(users);
     return rows.map(r => ({
       ...r,
@@ -732,6 +762,40 @@ export class DrizzleStorage implements IStorage {
 
   async updateSentEmailDays(userId: string, days: number[]): Promise<void> {
     await this.db.update(users).set({ sentEmailDays: days }).where(eq(users.id, userId));
+  }
+
+  async setTrialEndsAt(userId: string, trialEndsAt: string): Promise<User | undefined> {
+    const result = await this.db
+      .update(users)
+      .set({ subscriptionStatus: "trialing", trialEndsAt })
+      .where(eq(users.id, userId))
+      .returning();
+    return result[0];
+  }
+
+  // Trial length for a brand-new account. Normally TRIAL_DAYS; 30 days when
+  // this email bought a paid template pack recently (the pack pages promise
+  // "30 days of Pro"). Never throws: a lookup failure falls back to the normal
+  // trial so signup always works.
+  private async initialTrialEndsAt(email?: string | null): Promise<string> {
+    const standard = computeTrialEndsAt();
+    if (!email) return standard;
+    try {
+      const res: any = await this.db.execute(sql`
+        SELECT 1 FROM purchases
+        WHERE lower(email) = lower(${email})
+          AND pack IN (${sql.join(PACK_BONUS_PACKS.map(p => sql`${p}`), sql`, `)})
+          AND created_at::timestamptz >= now() - make_interval(days => ${PACK_BONUS_CLAIM_WINDOW_DAYS})
+        LIMIT 1`);
+      const rows = Array.isArray(res) ? res : res?.rows;
+      if (rows && rows.length > 0) {
+        console.log(`[pack-bonus] ${email} bought a pack; starting with ${computePackBonusEndsAt()} trial end`);
+        return computePackBonusEndsAt();
+      }
+    } catch (err: any) {
+      console.error("[pack-bonus] purchase lookup at signup failed:", err?.message);
+    }
+    return standard;
   }
 
   // ── Email unsubscribes ─────────────────────────────────────────────────
@@ -798,6 +862,11 @@ export class MemStorage implements IStorage {
   async getUserByEmail(email: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find((u) => u.email === email);
   }
+  async getUserByEmailInsensitive(email: string): Promise<User | undefined> {
+    const e = email.trim().toLowerCase();
+    return Array.from(this.users.values()).find(u => (u.email || "").toLowerCase() === e);
+  }
+
 
   async getUserByGoogleId(googleId: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find((u) => u.googleId === googleId);
@@ -1205,7 +1274,7 @@ export class MemStorage implements IStorage {
   async getPurchaseByToken(_: string): Promise<Purchase | undefined> { return undefined; }
   async incrementDownloadCount(_: string): Promise<void> {}
 
-  async getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[]; subscriptionStatus: string }>> {
+  async getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[]; subscriptionStatus: string; trialEndsAt: string | null }>> {
     return Array.from(this.users.values()).map(u => ({
       id: u.id,
       email: u.email,
@@ -1213,12 +1282,21 @@ export class MemStorage implements IStorage {
       registeredAt: u.registeredAt ?? new Date().toISOString(),
       sentEmailDays: Array.isArray(u.sentEmailDays) ? (u.sentEmailDays as number[]) : [],
       subscriptionStatus: (u as any).subscriptionStatus ?? 'free',
+      trialEndsAt: (u as any).trialEndsAt ?? null,
     }));
   }
 
   async updateSentEmailDays(userId: string, days: number[]): Promise<void> {
     const user = this.users.get(userId);
     if (user) this.users.set(userId, { ...user, sentEmailDays: days });
+  }
+
+  async setTrialEndsAt(userId: string, trialEndsAt: string): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const updated = { ...user, subscriptionStatus: "trialing", trialEndsAt };
+    this.users.set(userId, updated);
+    return updated;
   }
 
   private unsubscribed = new Set<string>();

@@ -10,9 +10,10 @@ import { excludeInternalAccounts } from "./internalAccounts";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { verifyAppleIdentityToken } from "./appleAuth";
 import { registerSchema, loginSchema, userProfileSchema, updateNameSchema } from "@shared/schema";
-import { hasPaidPlan, hasFullAccess } from "@shared/access";
+import { hasPaidPlan, hasFullAccess, PACK_BONUS_PACKS } from "@shared/access";
+import { grantPackBonus, packBonusStatus } from "./packBonus";
 import { MODULE_CLPS } from "@shared/moduleClps";
-import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken, sendPurchaseAdminAlert, sendSubscriptionCancelledAdminAlert, sendPasswordResetEmail } from "./email";
+import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken, sendPurchaseAdminAlert, sendSubscriptionCancelledAdminAlert, sendPasswordResetEmail, sendPackPurchaseEmail } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 import { costTrackerStorage } from "./costTrackerStorage";
 import { reportCheckoutFailure } from "./stripeHealth";
@@ -57,7 +58,8 @@ const PACK_FILES: Record<string, string[]> = {
     "pm-essentials-workbook.xlsx",
     "pm-briefing-deck.pptx",
     // Legacy files kept so download links issued before the Sept 2026
-    // rebuild keep working. Not listed on the product page.
+    // rebuild keep working. Not listed on the product page, the success
+    // page or the delivery email (see PACK_LEGACY_FILES).
     "rfp-compliance-matrix.xlsx",
     "risk-register.xlsx",
     "igce-calculator.xlsx",
@@ -83,6 +85,43 @@ const PACK_FILES: Record<string, string[]> = {
     "wrap-rate-breakdown.xlsx",
   ],
 };
+
+// Files still downloadable with an old token but no longer part of the pack.
+// Hidden from the success page and the delivery email so a buyer sees what
+// the product page lists, not files the Pack Guide says were retired.
+const PACK_LEGACY_FILES: Record<string, string[]> = {
+  "pm-essentials": ["rfp-compliance-matrix.xlsx", "risk-register.xlsx", "igce-calculator.xlsx", "stakeholder-raci.xlsx"],
+};
+
+function currentPackFiles(pack: string): string[] {
+  const legacy = PACK_LEGACY_FILES[pack] || [];
+  return (PACK_FILES[pack] || []).filter(f => !legacy.includes(f));
+}
+
+// Short names for the delivery email subject and body.
+const PACK_DISPLAY_NAMES: Record<string, string> = {
+  "pm-essentials":        "PM Essentials",
+  "proposal-toolkit":     "GovCon Proposal Toolkit",
+  "cpars-playbook":       "CPARS Playbook",
+  "finance-cheat-sheets": "Finance Cheat Sheets",
+};
+
+const PACK_FILE_LABELS: Record<string, string> = {
+  "pack-guide.pdf":                  "Pack Guide (PDF, read first)",
+  "pm-essentials-workbook.xlsx":     "PM Essentials Workbook (Excel)",
+  "pm-briefing-deck.pptx":           "PM Briefing Deck (PowerPoint)",
+  "cpars-playbook.xlsx":             "CPARS Playbook Workbook (Excel)",
+  "proposal-compliance-matrix.xlsx": "Proposal Compliance Matrix (Excel)",
+  "section-lm-decoder.xlsx":         "Section L/M Decoder + Phrase Library (Excel)",
+  "win-theme-development.xlsx":      "Win Theme Development (Excel)",
+  "past-performance-template.xlsx":  "Past Performance Write-Up Template (Excel)",
+  "pricing-volume-checklist.xlsx":   "Pricing Checklist + Cost Realism Self-Check (Excel)",
+};
+
+function packFileLabel(f: string): string {
+  return PACK_FILE_LABELS[f]
+    || f.replace(/-/g, " ").replace(/\.xlsx$/, " (Excel)").replace(/\.pptx$/, " (PowerPoint)").replace(/\.pdf$/, " (PDF)");
+}
 
 // Pack files that changed format. Three finance cheat sheets moved from .xlsx
 // to watermarked .pdf in Sept 2026 (scripts/pack3/build_pack3_pdfs.py). Old
@@ -1025,7 +1064,7 @@ export async function registerRoutes(
               if (pack) {
                 const downloadToken = crypto.randomBytes(32).toString("hex");
                 const email = session.customer_details?.email || session.customer_email || "";
-                await storage.savePurchase({
+                const saved = await storage.savePurchase({
                   userId: userId || undefined,
                   email,
                   pack,
@@ -1045,6 +1084,28 @@ export async function registerRoutes(
                   stripeCustomerId: (session.customer as string) || undefined,
                   stripePaymentIntentId: (session.payment_intent as string) || undefined,
                 });
+
+                // Buyer delivery email + the 30-day Pro bonus the pack pages
+                // promise. Only on the first delivery of this event: a Stripe
+                // retry hits ON CONFLICT DO NOTHING, so `saved` is empty.
+                if (saved && email) {
+                  const bonus = PACK_BONUS_PACKS.includes(pack)
+                    ? await grantPackBonus(email, userId || undefined).catch((err: any) => {
+                        console.error(`[pack-bonus] grant failed for ${email}:`, err?.message);
+                        return "on-signup" as const;
+                      })
+                    : "already-paid" as const;
+                  const origin = process.env.APP_URL || "https://acqlerate.com";
+                  await sendPackPurchaseEmail({
+                    to: email,
+                    packName: PACK_DISPLAY_NAMES[pack] || pack,
+                    files: currentPackFiles(pack).map(f => ({
+                      name: packFileLabel(f),
+                      url: `${origin}/api/packs/download/${downloadToken}/${f}`,
+                    })),
+                    bonus,
+                  });
+                }
               }
             } else if (purchaseType === "team_purchase") {
               // Team Pack — save purchase record + alert admin to manually provision seats.
@@ -1246,13 +1307,16 @@ export async function registerRoutes(
       if (!purchase) {
         return res.json({ status: "pending", message: "Processing your purchase..." });
       }
-      const files = PACK_FILES[purchase.pack] || [];
+      const files = currentPackFiles(purchase.pack);
       const downloadLinks = files.map(f => ({
         filename: f,
-        name: f.replace(/-/g, " ").replace(/\.xlsx$/, " (Excel)").replace(/\.pptx$/, " (PowerPoint)"),
+        name: packFileLabel(f),
         url: `/api/packs/download/${purchase.downloadToken}/${f}`,
       }));
-      return res.json({ status: "complete", pack: purchase.pack, email: purchase.email, downloadLinks });
+      const bonus = PACK_BONUS_PACKS.includes(purchase.pack)
+        ? await packBonusStatus(purchase.email, purchase.userId || undefined).catch(() => "on-signup")
+        : null;
+      return res.json({ status: "complete", pack: purchase.pack, email: purchase.email, downloadLinks, bonus });
     } catch (err: any) {
       return res.status(500).json({ message: "Internal server error" });
     }
@@ -2411,7 +2475,8 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
           user.username,
           user.registeredAt,
           user.sentEmailDays,
-          user.subscriptionStatus
+          user.subscriptionStatus,
+          user.trialEndsAt
         );
         if (updated.length !== user.sentEmailDays.length) {
           await storage.updateSentEmailDays(user.id, updated);
