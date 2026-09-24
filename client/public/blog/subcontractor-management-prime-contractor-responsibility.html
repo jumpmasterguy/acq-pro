@@ -15,7 +15,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://acqlerate.com/og-image.jpg" />
   <meta property="article:published_time" content="2026-05-23" />
-  <meta property="article:modified_time" content="2026-05-23" />
+  <meta property="article:modified_time" content="2026-09-24" />
   <link rel="canonical" href="https://acqlerate.com/blog/subcontractor-management-prime-contractor-responsibility" />
   <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg" />
@@ -38,7 +38,7 @@
     "author": { "@type": "Person", "name": "Lucas Cruz" },
     "publisher": { "@type": "Organization", "@id": "https://acqlerate.com/#organization", "name": "Acqlerate", "url": "https://acqlerate.com" },
     "datePublished": "2026-05-23",
-    "dateModified": "2026-05-23",
+    "dateModified": "2026-09-24",
     "url": "https://acqlerate.com/blog/subcontractor-management-prime-contractor-responsibility"
   }
   </script>
@@ -75,7 +75,7 @@
 
 <p><strong>The prime contractor is accountable to the government for all work on the contract, including everything done by subcontractors.</strong></p>
 
-<p>Full stop. No exceptions. The government has no privity of contract with your subs. They don't know your subs, they didn't negotiate with your subs, and they have no obligation to deal with your subs when something goes wrong. You, the prime, signed the contract. You own the outcome.</p>
+<p>Full stop. The government has no privity of contract with your subs. Your proposal may have named them, and the contracting officer may even have consented to the subcontract, but that consent doesn't relieve you of responsibility for performing the contract (<a href="https://www.acquisition.gov/far/52.244-2">FAR 52.244-2</a>). The government didn't sign with your subs, and it has no obligation to deal with them when something goes wrong. You, the prime, signed the contract. You own the outcome.</p>
 
 <p>That's not just a legal technicality. It's the operating reality that should drive every decision you make about how you structure, monitor, and manage your subcontractor relationships.</p>
 
@@ -90,7 +90,7 @@
 
 <p>When your subcontractor performs poorly (misses a milestone, delivers a deficient product, fails a security check), the government's remedy is against you. They can issue a cure notice to you. They can assess liquidated damages against you. They can document your performance in <a href="/blog/cpars-ratings-guide">CPARS</a>, which reflects on you, not the sub. They can terminate for default: your contract, not the sub's subcontract.</p>
 
-<p>Some PMs think: "We'll just put the blame on the sub." That doesn't work. Your CPARS narrative might say "performance challenges were attributable to a subcontractor," but the adjectival rating (Satisfactory, Marginal, Unsatisfactory) goes on your record. The source selection board at your next competition doesn't see "the sub was at fault." They see your rating.</p>
+<p>Some PMs think: "We'll just put the blame on the sub." That doesn't work. Your CPARS narrative might say "performance challenges were attributable to a subcontractor," but the rating (Exceptional, Very Good, Satisfactory, Marginal or Unsatisfactory, under <a href="https://www.acquisition.gov/far/42.1503">FAR 42.1503</a>) goes on your record. The source selection board at your next competition doesn't see "the sub was at fault." They see your rating.</p>
 
 <h2 id="flowdown-clauses-the-legal-bridge-from-prime-to-sub">Flowdown Clauses: The Legal Bridge from Prime to Sub</h2>
 
@@ -110,28 +110,29 @@
   </thead>
   <tbody>
     <tr>
-      <td><strong>Mandatory (all subcontracts)</strong></td>
-      <td>FAR 52.222-26 (Equal Opportunity), FAR 52.222-21 (Prohibition on Segregated Facilities), Drug-Free Workplace</td>
-      <td>Must be included regardless of dollar value</td>
+      <td><strong>Mandatory (nearly all subcontracts)</strong></td>
+      <td><a href="https://www.acquisition.gov/far/52.222-50">FAR 52.222-50</a> (Combating Trafficking in Persons), <a href="https://www.acquisition.gov/far/52.204-25">FAR 52.204-25</a> (ban on certain Chinese telecom and video equipment), FAR 52.204-21 (Basic Safeguarding of Covered Contractor Information Systems, when the sub will hold Federal Contract Information)</td>
+      <td>Included regardless of dollar value (52.204-21 has a narrow exception for off-the-shelf commercial items)</td>
     </tr>
     <tr>
       <td><strong>Mandatory above thresholds</strong></td>
-      <td>FAR 52.204-21 (Basic Safeguarding of CUI), DFARS 252.204-7012 (Cyber: CMMC requirements), Davis-Bacon (construction over $2K), Service Contract Act</td>
+      <td>Small business subcontracting plans (under <a href="https://www.acquisition.gov/far/52.219-9">FAR 52.219-9</a>, large-business subs over $900K that will subcontract further must adopt their own), certified cost or pricing data for subcontracts over the TINA threshold, Davis-Bacon (construction over $2K), Service Contract Labor Standards (services over $2,500)</td>
       <td>Required when the dollar value or work type meets the threshold</td>
     </tr>
     <tr>
       <td><strong>Situational / program-specific</strong></td>
-      <td>Export control requirements (ITAR, EAR), security classification requirements, government property clauses, quality system requirements</td>
-      <td>Required when the work involves the covered area (classified, export-controlled, GFP, etc.)</td>
+      <td><a href="https://www.acquisition.gov/dfars/252.204-7012-safeguarding-covered-defense-information-and-cyber-incident-reporting.">DFARS 252.204-7012</a> (safeguarding CUI, NIST SP 800-171), DFARS 252.204-7021 (CMMC), export control requirements (ITAR, EAR), security classification requirements, government property clauses, quality system requirements</td>
+      <td>Required when the work involves the covered area (CUI or FCI, classified, export-controlled, GFP, etc.), with no dollar threshold</td>
     </tr>
     <tr>
-      <td><strong>CPARS-related obligations</strong></td>
-      <td>Performance reporting requirements, right to audit, access to records</td>
-      <td>Required when the subcontract value and type trigger FAR 42.15 reporting thresholds</td>
+      <td><strong>Audit and records access</strong></td>
+      <td>FAR 52.215-2 (Audit and Records, Negotiation): the government's right to examine the sub's records</td>
+      <td>Required in subcontracts over the simplified acquisition threshold ($350K) that are cost-type, incentive, time-and-materials or labor-hour, or that need certified cost or pricing data</td>
     </tr>
   </tbody>
 </table>
 
+<p>Two cautions on any flowdown list, including this one. First, older checklists often lead with FAR 52.222-26 (Equal Opportunity). The executive order behind it, EO 11246, was <a href="https://www.federalregister.gov/documents/2025/01/31/2025-02097/ending-illegal-discrimination-and-restoring-merit-based-opportunity">revoked in January 2025</a>, so don't copy it forward on autopilot. Second, since DoD moved most solicitations to the rewritten FAR text by class deviation on 1 February 2026, some clause numbers have changed. Work from the clause list in your actual prime contract.</p>
 <p>Failing to flow down required clauses is a contract compliance issue. In a <a href="/blog/dcaa-vs-dcma-difference">DCMA</a> review or CPARS evaluation, missing flowdowns can be cited as a management deficiency, which can drag down your rating. More practically: if your sub violates an obligation you were supposed to flow down, you may be held responsible for the violation.</p>
 
 <p>The right practice: have a contract administrator review every new subcontract to confirm required flowdowns are included. Don't leave it to judgment calls in the field.</p>
@@ -164,7 +165,7 @@
 <p>The sub proposed a cleared, certified team. What showed up was a team of newer employees learning on the job. This happens more often than people want to admit. If your proposal cited specific personnel qualifications, the government will hold you to them, and if there's a compliance review, they'll ask for proof. Verify sub staffing at kickoff and monitor it throughout performance.</p>
 
 <h3>Cybersecurity and CMMC Compliance Gaps</h3>
-<p><a href="/blog/cmmc-in-2026-the-compliance-clock-is-ticking-are-you-ready-2026-07-07">CMMC</a> requirements flow down to subs who handle Controlled Unclassified Information (CUI). A sub who isn't compliant isn't just a compliance risk for them. It's a risk to your contract and potentially a disqualifying issue for re-competition. Know your subs' compliance status. Don't assume they've handled it.</p>
+<p><a href="/blog/cmmc-in-2026-the-compliance-clock-is-ticking-are-you-ready-2026-07-07">CMMC</a> requirements flow down to subs who will process, store or transmit Federal Contract Information (FCI) or Controlled Unclassified Information (CUI), and before you award the subcontract you have to confirm the sub has a current CMMC status at the right level (<a href="https://www.acquisition.gov/dfars/252.204-7021-contractor-compliance-cybersecurity-maturity-model-certification-level-requirements.">DFARS 252.204-7021</a>). As of September 2026 that means Phase 1 self-assessments, plus the DFARS 252.204-7012 safeguarding rules. Phase 2, third-party certification, was <a href="https://www.crowell.com/en/insights/client-alerts/department-of-war-immediately-suspends-cmmc-phase-ii-requirements-launches-60-day-reform-review">suspended on 13 July 2026</a> pending a review, and no new date has been announced. A sub who isn't compliant isn't just a compliance risk for them. It's a risk to your contract and potentially a disqualifying issue for re-competition. Know your subs' compliance status. Don't assume they've handled it.</p>
 
 <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:14px;padding:28px 32px;margin:40px 0;color:white;">
   <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;opacity:0.7;margin-bottom:6px">Free Starter Kit</div>
@@ -187,22 +188,22 @@
 
 <p><strong>Take corrective action and document it.</strong> When a sub misses a milestone, document the cure notice or written direction you issued. Show that you enforced your subcontract, not just that you complained about the sub. The government's evaluators want to see that you had management control over your team.</p>
 
-<p><strong>Respond to the draft CPARS if sub performance is cited.</strong> You have 14 days to respond to a draft CPARS evaluation before it's finalized. If the narrative attributes performance failures to a sub, respond with specific evidence of how you managed the situation, what you directed the sub to do, and what corrective actions were taken. Your response becomes part of the permanent record.</p>
+<p><strong>Respond to the CPARS evaluation if sub performance is cited.</strong> You get up to 14 calendar days from notice to submit comments on an evaluation (<a href="https://www.acquisition.gov/far/42.1503">FAR 42.1503</a>). If the narrative attributes performance failures to a sub, respond with specific evidence of how you managed the situation, what you directed the sub to do, and what corrective actions were taken. Your response becomes part of the permanent record.</p>
 
 <h2 id="the-small-business-subcontracting-plan-obligation">The Small Business Subcontracting Plan Obligation</h2>
 
-<p>Many contracts over the simplified acquisition threshold ($250K), and virtually all large contracts, require a Small Business Subcontracting Plan under FAR 19.704. This plan commits you to specific percentage goals for small business utilization across categories: small business, small disadvantaged business, woman-owned, veteran-owned, HUBZone, and service-disabled veteran-owned.</p>
+<p>If you're a large business and your contract is expected to exceed $900,000 ($2 million for construction), you generally need a Small Business Subcontracting Plan (<a href="https://www.acquisition.gov/far/19.702">FAR 19.702</a>). Small business primes are exempt. The plan commits you to percentage goals for subcontracting with small businesses across categories: small business, small disadvantaged business, woman-owned, veteran-owned, HUBZone, and service-disabled veteran-owned.</p>
 
-<p>The CPARS evaluation area for "Small Business Utilization" checks whether you hit these goals. If you don't, you need to explain why. A consistent pattern of missing SB goals without a good explanation is a CPARS mark that follows you into your next competition, particularly on contracts where the government is evaluating small business commitment as a factor.</p>
+<p>The CPARS evaluation area for "Small Business Subcontracting" looks at whether you met these goals. If you don't, you need to explain why. A consistent pattern of missing SB goals without a good explanation is a CPARS mark that follows you into your next competition, particularly on contracts where the government is evaluating small business commitment as a factor.</p>
 
 <p>As the PM, you should know your plan goals and track them quarterly. Don't find out you missed them at the end of the year when it's too late to do anything about it.</p>
 
     </div><!-- end post-body -->
 
     <div class="post-cta-block">
-      <h3>The Defense Contracting Fundamentals module at Acqlerate covers prime-sub relationships, flowdown requirements, CPARS management, and how to navigate the COR relationship in plain English.</h3>
-      <p style="font-size:0.9rem;color:rgba(255,255,255,0.75);margin:0 0 20px">Lesson: <strong>Subcontract Management & Flowdowns</strong> (Defense Contracting Module)</p>
-      <a href="/app#/lesson/contracts-5" class="btn-primary-large">Open This Lesson →</a>
+      <h3>The Program Operations &amp; Leadership module at Acqlerate covers subcontractor management: what you can and can't do with a sub, what to lock in before you sign them, and how to catch a problem early, in plain English.</h3>
+      <p style="font-size:0.9rem;color:rgba(255,255,255,0.75);margin:0 0 20px">Lesson: <strong>Subcontractor Management</strong> (Program Operations &amp; Leadership Module)</p>
+      <a href="/app#/lesson/ops-4" class="btn-primary-large">Open This Lesson →</a>
       <a href="/app#/auth" style="display:inline-block;margin-left:12px;font-size:0.875rem;color:rgba(255,255,255,0.65);text-decoration:underline">Or start with a free account first</a>
     </div>
 

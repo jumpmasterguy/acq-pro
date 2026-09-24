@@ -18,7 +18,7 @@
   <meta name="acq:stat" content="75%|Mandatory Notice Line" />
   <meta name="acq:stat" content="CLIN|Your Itemized Receipt" />
   <meta property="article:published_time" content="2026-09-13" />
-  <meta property="article:modified_time" content="2026-09-13" />
+  <meta property="article:modified_time" content="2026-09-24" />
   <link rel="canonical" href="https://acqlerate.com/blog/contract-funding-page-guide" />
   <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg" />
@@ -41,7 +41,7 @@
     "author": { "@type": "Organization", "@id": "https://acqlerate.com/#organization", "name": "Acqlerate" },
     "publisher": { "@type": "Organization", "@id": "https://acqlerate.com/#organization", "name": "Acqlerate", "url": "https://acqlerate.com" },
     "datePublished": "2026-09-13",
-    "dateModified": "2026-09-13",
+    "dateModified": "2026-09-24",
     "url": "https://acqlerate.com/blog/contract-funding-page-guide"
   }
   </script>
@@ -76,7 +76,7 @@
 <div class="callout"><p><strong>TL;DR.</strong> Every contract has two funding numbers: the ceiling (the most it could ever be worth) and the obligated amount (what you can spend now). The ceiling is the dream salary; obligated is the paycheck that cleared.</p>
 <ul>
 <li><strong>New to this?</strong> Each CLIN has its own funding and can't cover another CLIN's shortfall. The ACRN tags which pot of money it came from.</li>
-<li><strong>Contractor PM?</strong> On cost-reimbursement work, FAR 52.232-22 requires written notice to the Contracting Officer at 75% of obligated funds. Miss it and your company may eat the overage.</li>
+<li><strong>Contractor PM?</strong> On incrementally funded cost-reimbursement work, FAR 52.232-22 requires written notice to the Contracting Officer when you expect to pass 75% of the funds allotted so far within the next 60 days. Work past the allotted amount and your company may eat the overage.</li>
 <li><strong>Government PM?</strong> Incremental funding can run out before the calendar does. Track obligated funds weekly, not the ceiling.</li>
 </ul></div>
 
@@ -86,7 +86,7 @@
 <p>Here's the problem with that approach. Your bank sends you a decline notice. Your contract does not. If you run out of obligated funding and nobody caught it, you find out by working for free, and then having a very awkward conversation about whether anyone's getting reimbursed for it.</p>
 
 <h2 id="the-two-numbers-that-actually-matter">The Two Numbers That Actually Matter</h2>
-<p>Every contract has two funding numbers, and mixing them up is one of the most common (and most expensive) mistakes a PM can make.</p>
+<p>Every contract has two funding numbers, and mixing them up is a common and expensive mistake for a PM to make.</p>
 <ul>
 <li><strong>The ceiling</strong> is the maximum value the contract could ever reach. It's aspirational. It's the "if everything goes perfectly and every option gets exercised" number.</li>
 <li><strong>The obligated amount</strong> is the actual money currently committed and available to spend right now. This is your real balance.</li>
@@ -108,7 +108,7 @@
     <tr><td>Contract Ceiling</td><td>Maximum possible value if fully exercised</td><td>Use for long-range planning only, never for burn tracking</td></tr>
     <tr><td>Obligated Amount</td><td>Actual funds currently committed and spendable</td><td>Track weekly, this is your real budget</td></tr>
     <tr><td>CLIN Funding</td><td>Obligated amount broken down by line item</td><td>Bill only against the CLIN the work belongs to</td></tr>
-    <tr><td>75% Threshold</td><td>The point where notification becomes mandatory (see below)</td><td>Set an internal alert well before you hit it</td></tr>
+    <tr><td>75% Threshold</td><td>The point where written notice becomes mandatory on incrementally funded cost-type work (see below)</td><td>Set an internal alert well before you hit it</td></tr>
   </tbody>
 </table>
 
@@ -124,22 +124,22 @@
 </div>
 
 <h2 id="the-75-rule-nobody-tells-you-about-until-it-s-too-late">The 75% Rule Nobody Tells You About Until It's Too Late</h2>
-<p>If you're on a cost-reimbursement contract, the Limitation of Funds clause (FAR 52.232-22) puts a real obligation on you: once you've spent 75% of the obligated amount, you have to notify the Contracting Officer in writing. Not a heads-up in a status meeting. Written notice.</p>
-<p>Miss that notification and things get ugly fast. If you keep working past the obligated amount without sending it, you can lose your legal protection to get paid for the overage, meaning the company eats the cost, not the government. Think of it like an overdraft protection you have to manually opt into, except opting in late doesn't just cost you a $35 fee, it can cost you weeks of unrecoverable labor.</p>
+<p>If you're on an incrementally funded cost-reimbursement contract, the Limitation of Funds clause (<a href="https://www.acquisition.gov/far/52.232-22">FAR 52.232-22</a>) puts a real obligation on you: you have to notify the Contracting Officer in writing whenever you expect that the costs you'll incur in the next 60 days, added to everything you've already incurred, will pass 75% of the funds allotted to the contract. Not a heads-up in a status meeting. Written notice. The clause number is the same in the FAR overhaul text DoD now uses.</p>
+<p>Miss that notification and things get ugly fast. Under the same clause, the government is not obligated to reimburse costs above the amount allotted to the contract, and only the Contracting Officer can raise that amount. The notice is what gives the government time to add money. Keep working past the allotted amount without it, and the company can end up eating the cost, not the government. Think of it like an overdraft protection you have to manually opt into, except opting in late doesn't just cost you a $35 fee, it can cost you weeks of unrecoverable labor.</p>
 
 <h2 id="where-we-cover-this-in-the-lessons">Where We Cover This in the Lessons</h2>
-<p><strong>Lesson 2-4, Obligated vs. Funded Ceiling</strong>, in the Defense Finance & Budgeting module, walks through exactly how to read a funding page, track the right number, and set up your own early-warning system before you're anywhere near 75%. It's built around the same "ceiling vs. obligated" confusion that trips up even experienced PMs, because the terminology is designed to sound interchangeable when it absolutely is not.</p>
-<p>We put it plainly in that lesson: your contract has two funding numbers. The ceiling is theoretical. The obligated amount is real. Track obligated. Hit 75%? Send the notification immediately, in writing, no exceptions.</p>
+<p><strong>Estimate at Completion (EAC)</strong>, a lesson in the Defense Finance & Budgeting module, walks through why a contract ceiling is not the same as the money that is actually funded and available to spend, how to read a funding page, and how to spot a shortfall before you're anywhere near 75%. It's built around the same "ceiling vs. obligated" confusion that trips up even experienced PMs, because the terminology is designed to sound interchangeable when it absolutely is not.</p>
+<p>The short version: your contract has two funding numbers. The ceiling is theoretical. The obligated amount is real. Track obligated. On cost-type work, the moment you can see 75% coming within 60 days, send the notice, in writing, no exceptions.</p>
 
 <div style="border:2px solid var(--teal);border-radius:14px;padding:24px 28px;margin:40px 0;background:var(--teal-light, #E6F2F3);">
   <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal);margin-bottom:6px">Learn More on Acqlerate</div>
-  <h3 style="font-size:1.05rem;font-weight:800;color:#0D1B2A;margin:0 0 8px">Lesson 2-4: Obligated vs. Funded Ceiling</h3>
+  <h3 style="font-size:1.05rem;font-weight:800;color:#0D1B2A;margin:0 0 8px">Lesson: Estimate at Completion (EAC)</h3>
   <p style="font-size:0.9rem;color:#374151;margin:0 0 16px;line-height:1.5">Part of the Defense Finance & Budgeting module. Covers incremental funding, the Limitation of Funds clause, and the funding number that actually matters.</p>
   <a href="/app#/auth" style="display:inline-block;background:var(--teal, #01696F);color:white;font-weight:800;font-size:0.875rem;padding:10px 20px;border-radius:8px;text-decoration:none">Start This Lesson Free →</a>
 </div>
 
 <h2 id="what-this-actually-looks-like-on-a-real-funding-page">What This Actually Looks Like on a Real Funding Page</h2>
-<p>All of this is a lot less abstract once you see an actual funding page. Here's a simplified, fully fictional example built for an IT-Services implementation task order, showing exactly what you'd be looking at: CLINs broken out by type, the ACRN tying each one to its funding, and the Price vs. Funded Amount columns sitting right next to each other.</p>
+<p>All of this is a lot less abstract once you see an actual funding page. <strong>For example (hypothetical):</strong> here's a simplified, fully fictional funding page for an IT services implementation task order, showing exactly what you'd be looking at: CLINs broken out by type, the ACRN tying each one to its funding, and the Price vs. Funded Amount columns sitting right next to each other.</p>
 
 <table class="comparison-table">
   <thead><tr><th>CLIN</th><th>Type &amp; Purpose</th><th>Qty</th><th>Unit Price</th><th>Firm Price</th><th>Funded Amount</th><th>ACRN</th></tr></thead>
@@ -150,14 +150,14 @@
     <tr><td>0004<sup>*</sup></td><td>Labor (FFP), Option Year Sustainment Support (illustrative, incrementally funded)</td><td>12 mo</td><td>$45,833.33</td><td>$550,000.00</td><td>$412,500.00</td><td>AB</td></tr>
   </tbody>
 </table>
-<p style="font-size:0.8rem;color:#6B7280;margin-top:-8px">*CLIN 0004 is added here for illustration, not part of the original example, to show what a partially funded line looks like.</p>
+<p style="font-size:0.8rem;color:#6B7280;margin-top:-8px">*CLIN 0004 is an illustrative, incrementally funded line added to show what a partially funded CLIN looks like.</p>
 
 <p>A few things worth noticing right away:</p>
 <ul>
 <li><strong>Each CLIN has its own purpose.</strong> CLIN 0001 and 0002 are both labor, but they're split out because they cover different roles (Program Management vs. Systems Integration Analyst). CLIN 0003 is travel. Splitting them this way keeps each cost category separately trackable and separately billable.</li>
 <li><strong>The ACRN is your funding source tag.</strong> CLINs 0001 through 0003 all carry ACRN "AA," meaning they draw from the same funding line. CLIN 0004 carries "AB," a different ACRN, likely a separate funding action or a different fiscal year's money entirely.</li>
 <li><strong>Firm Price and Funded Amount usually match on fully funded CLINs.</strong> Look at CLINs 0001 through 0003: Firm Price and Funded Amount are identical. That means the full value of the work was obligated up front, nothing incremental here.</li>
-<li><strong>They don't have to match, and that's the part people miss.</strong> CLIN 0004 shows a Firm Price of $550,000 but a Funded Amount of only $412,500, exactly 75% of the total. That's not a rounding coincidence in this example: it's the same FAR 52.232-22 notification threshold from earlier in this post. The remaining $137,500 requires a future funding modification before you can bill against it. Keep performing past your funded amount on a CLIN like this, and you're working ahead of your money.</li>
+<li><strong>They don't have to match, and that's the part people miss.</strong> CLIN 0004 shows a Firm Price of $550,000 but a Funded Amount of only $412,500, or 75% of the total. The 75% is just this example's number: the government has allotted part of the price so far, and the remaining $137,500 needs a future funding modification before you can bill against it. Because this is a fixed-price line, the 75% notice from earlier in this post (a cost-reimbursement rule) isn't the one that applies. DoD's clause for incrementally funded fixed-price lines, <a href="https://www.acquisition.gov/dfars/252.232-7007-limitation-government%E2%80%99s-obligation.">DFARS 252.232-7007</a> (Limitation of Government's Obligation), has its own rule: tell the CO in writing at least 90 days before the work reaches about 85% of the funds allotted. Keep performing past your funded amount on a CLIN like this, and you're working ahead of your money.</li>
 </ul>
 
 <h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
@@ -176,7 +176,7 @@ No. The ceiling is just the maximum the contract could ever be worth. Plenty of 
     <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:16px;padding:32px;margin-top:48px;color:white;">
       <div style="font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;opacity:0.7;margin-bottom:8px">Master Defense Acquisitions</div>
       <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:10px;color:white">Start Free. Fourteen Modules, 123 Lessons</h3>
-      <p style="font-size:0.95rem;opacity:0.9;margin-bottom:20px;line-height:1.6">Built for DoD program managers, contracting officers, and defense contractors. Novice through advanced. Lesson 2-4 goes deep on everything covered in this post.</p>
+      <p style="font-size:0.95rem;opacity:0.9;margin-bottom:20px;line-height:1.6">Built for DoD program managers, contracting officers, and defense contractors. Novice through advanced. The Defense Finance &amp; Budgeting module goes deep on everything covered in this post.</p>
       <a href="/app#/auth" style="display:inline-block;background:white;color:#01696F;font-weight:800;font-size:0.95rem;padding:12px 24px;border-radius:10px;text-decoration:none;margin-right:12px">Start Learning Free →</a>
       <a href="/app#/upgrade" style="display:inline-block;color:rgba(255,255,255,0.85);font-weight:600;font-size:0.9rem;padding:12px 0;text-decoration:none">See all modules →</a>
     </div>
@@ -218,7 +218,7 @@ No. The ceiling is just the maximum the contract could ever be worth. Plenty of 
     <!-- Sidebar module link -->
     <div style="background:var(--teal-light,#E6F2F3);border:1.5px solid var(--teal,#01696F);border-radius:12px;padding:20px;margin-top:20px">
       <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--teal);margin-bottom:6px">Relevant Lesson</div>
-      <p style="font-size:0.85rem;font-weight:700;color:#0D1B2A;margin:0 0 6px">Lesson 2-4: Obligated vs. Funded Ceiling</p>
+      <p style="font-size:0.85rem;font-weight:700;color:#0D1B2A;margin:0 0 6px">Estimate at Completion (EAC)</p>
       <p style="font-size:0.8rem;color:#374151;margin:0 0 14px;line-height:1.4">Defense Finance & Budgeting module. The funding number that actually matters, and when you're legally required to speak up.</p>
       <a href="/app#/auth" style="display:block;text-align:center;background:var(--teal,#01696F);color:white;font-weight:700;font-size:0.875rem;padding:9px 14px;border-radius:8px;text-decoration:none">Open This Lesson →</a>
     </div>

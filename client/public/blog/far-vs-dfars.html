@@ -15,7 +15,7 @@
   <meta property="og:description" content="FAR and DFARS govern every defense contract. Here's how they work, what the key clauses are, and what you actually need to know." />
   <meta property="og:url" content="https://acqlerate.com/blog/far-vs-dfars" />
   <meta property="article:published_time" content="2026-01-21" />
-  <meta property="article:modified_time" content="2026-01-21" />
+  <meta property="article:modified_time" content="2026-09-24" />
   <link rel="canonical" href="https://acqlerate.com/blog/far-vs-dfars" />
     <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg" />
@@ -38,7 +38,7 @@
     "author": { "@type": "Organization", "@id": "https://acqlerate.com/#organization", "name": "Acqlerate" },
     "publisher": { "@type": "Organization", "@id": "https://acqlerate.com/#organization", "name": "Acqlerate", "url": "https://acqlerate.com" },
     "datePublished": "2026-01-21",
-    "dateModified": "2026-01-21",
+    "dateModified": "2026-09-24",
     "url": "https://acqlerate.com/blog/far-vs-dfars"
   }
   </script>
@@ -72,18 +72,18 @@
     <div class="post-body">
 
       <h2 id="the-short-version">The Short Version</h2>
-      <p>The <strong>FAR (Federal Acquisition Regulation)</strong> is the master rulebook for all U.S. federal government purchasing. Every federal agency (DoD, DHS, NASA, the VA) must follow the FAR when buying goods and services. It governs everything from how requirements are competed to how contracts are administered to how disputes are resolved.</p>
+      <p>The <strong>FAR (Federal Acquisition Regulation)</strong> is the master rulebook for all U.S. federal government purchasing. Executive branch agencies (DoD, DHS, NASA, the VA and most others) follow the FAR when buying goods and services. It governs everything from how requirements are competed to how contracts are administered to how disputes are resolved.</p>
       <p>The <strong>DFARS (Defense Federal Acquisition Regulation Supplement)</strong> is a DoD-specific layer on top of the FAR. It doesn't replace the FAR. It adds to it. Where the FAR is silent or has been supplemented by DoD policy, the DFARS fills in the gaps with defense-specific rules: unique cybersecurity requirements, cost accounting rules for defense contracts, special clauses for classified programs, and more.</p>
-      <p>When you're doing business with a defense agency, both apply simultaneously. Where they conflict, the DFARS generally takes precedence.</p>
+      <p>When you're doing business with a defense agency, both apply simultaneously. The DFARS isn't supposed to conflict with the FAR (<a href="https://www.acquisition.gov/far/1.304">FAR 1.304(b)</a>). Where DoD needs a different rule, because a statute requires it or through an approved FAR deviation, the <a href="https://www.acquisition.gov/dfars/part-201-federal-acquisition-regulations-system">DFARS</a> spells out the DoD rule, and that's the one you follow on DoD contracts.</p>
 
       <table class="comparison-table">
         <thead><tr><th>Factor</th><th>FAR</th><th>DFARS</th></tr></thead>
         <tbody>
           <tr><td>Full Name</td><td>Federal Acquisition Regulation</td><td>Defense Federal Acquisition Regulation Supplement</td></tr>
-          <tr><td>CFR Location</td><td>Title 48, Chapters 1–2</td><td>Title 48, Chapter 2</td></tr>
+          <tr><td>CFR Location</td><td>Title 48, Chapter 1</td><td>Title 48, Chapter 2</td></tr>
           <tr><td>Applies To</td><td>All federal agencies and their contractors</td><td>DoD agencies and DoD contractors only</td></tr>
           <tr><td>Relationship</td><td>Primary: governs all federal procurement</td><td>Supplemental: adds to or modifies FAR for DoD</td></tr>
-          <tr><td>Managed By</td><td>FAR Council (GSA, DoD, NASA)</td><td>DoD (DAU / OUSD A&amp;S)</td></tr>
+          <tr><td>Managed By</td><td>FAR Council (DoD, GSA and NASA, with OFPP)</td><td>DoD: the Defense Acquisition Regulations (DAR) Council, under OUSD(A&amp;S)'s Defense Pricing, Contracting, and Acquisition Policy office</td></tr>
           <tr><td>Key Focus Areas</td><td>Competition, contract types, pricing, disputes, socioeconomic programs</td><td>Cybersecurity (CMMC), cost accounting, IP rights, special access programs</td></tr>
         </tbody>
       </table>
@@ -91,6 +91,9 @@
       <h2 id="how-clauses-work-the-mechanics">How Clauses Work: The Mechanics</h2>
       <p>A defense contract is not just a statement of work and a price. It contains dozens (sometimes hundreds) of clauses that define the rights, obligations, and compliance requirements for both parties. These clauses come from the FAR and DFARS and are either incorporated by reference (a citation to the clause number and title) or full text.</p>
       <p>FAR clauses are numbered in the 52.XXX range. DFARS clauses are numbered in the 252.XXX range. When you see "252.204-7012" in a contract, that's a DFARS clause: specifically, the Safeguarding Covered Defense Information clause that mandates specific cybersecurity controls.</p>
+      <div class="callout">
+        <p><strong>2026 numbering note:</strong> Both books are being rewritten under the Revolutionary FAR Overhaul. DoD moved most solicitations to the rewritten FAR and DFARS text through <a href="https://www.acq.osd.mil/dpap/dars/dfars_far_overhaul_class_deviations.html">class deviations</a> on 1 February 2026, and formal FAR rulemaking is still under way. The FAR clauses in this post kept their numbers, but some others moved: FAR 52.204-21, for example, is 52.240-93 in the overhauled text. When a clause number in an older contract doesn't match what you find online, check the overhaul version.</p>
+      </div>
 
       <div class="callout">
         <p><strong>Important:</strong> Many DFARS clauses include "flow-down" requirements: the prime contractor is required to include them in subcontracts. If you're a subcontractor to a defense prime, certain DFARS clauses flow to you even though you don't have a direct contract with the government.</p>
@@ -100,17 +103,17 @@
       <ul>
         <li><strong>FAR 52.212-4</strong>: Contract Terms and Conditions, Commercial Products and Services. The standard commercial contract clause. If you're selling commercial items to the government, this clause governs your relationship.</li>
         <li><strong>FAR 52.215-2</strong>: Audit and Records, Negotiation. Gives the government the right to audit your books on cost-reimbursable contracts. Triggers DCAA audit authority.</li>
-        <li><strong>FAR 52.222-26</strong>: Equal Opportunity. Required on most contracts over $10,000. Prohibits discrimination in employment.</li>
+        <li><strong>FAR 52.222-26</strong>: Equal Opportunity. You'll still find it in older contracts, where it applied to most contracts over $10,000. Executive Order 14173 (January 2025) revoked Executive Order 11246, the order behind this clause, and the <a href="https://www.acquisition.gov/far-overhaul/far-part-deviation-guide/far-overhaul-part-22">overhauled FAR Part 22</a> now shows that subpart (22.8) as reserved, so don't expect it in new contracts.</li>
         <li><strong>FAR 52.243-1</strong>: Changes. Gives the government the right to direct changes to the work within the contract's scope. The contractor has the right to an equitable adjustment in price and schedule.</li>
         <li><strong>FAR 52.249-8</strong>: Default. Defines the government's right to terminate a contract if the contractor fails to deliver on time or fails to perform.</li>
       </ul>
 
       <h2 id="dfars-clauses-that-actually-affect-you-day-to-day">DFARS Clauses That Actually Affect You Day-to-Day</h2>
       <ul>
-        <li><strong>DFARS 252.204-7012</strong>: Safeguarding Covered Defense Information. Requires contractors who receive or generate Controlled Unclassified Information (CUI) to implement NIST SP 800-171 cybersecurity controls and report cyber incidents within 72 hours. This is the foundation of CMMC (Cybersecurity Maturity Model Certification) requirements.</li>
-        <li><strong>DFARS 252.215-7004</strong>: Excessive Pass-Through Charges. Prohibits a contractor from adding profit/overhead to work performed entirely by a subcontractor without adding meaningful value. Directly impacts teaming and subcontracting strategies.</li>
-        <li><strong>DFARS 252.225-7001</strong>: Buy American / Balance of Payments. Requires that most defense end items be domestically manufactured. Critical for hardware procurement and supply chain decisions.</li>
-        <li><strong>DFARS 252.244-7001</strong>: Contractor Purchasing System Administration. Requires primes on cost-reimbursable contracts to maintain a government-approved purchasing system. DCMA audits this.</li>
+        <li><strong><a href="https://www.acquisition.gov/dfars/252.204-7012-safeguarding-covered-defense-information-and-cyber-incident-reporting.">DFARS 252.204-7012</a></strong>: Safeguarding Covered Defense Information. Requires contractors who receive or generate Controlled Unclassified Information (CUI) to implement NIST SP 800-171 cybersecurity controls and report cyber incidents within 72 hours. This is the foundation of CMMC (Cybersecurity Maturity Model Certification) requirements. CMMC Phase 1 self-assessments have appeared in solicitations since 10 November 2025; Phase 2 third-party certification was <a href="https://www.crowell.com/en/insights/client-alerts/department-of-war-immediately-suspends-cmmc-phase-ii-requirements-launches-60-day-reform-review">suspended on 13 July 2026</a>, and no new date has been announced.</li>
+        <li><strong><a href="https://www.acquisition.gov/far/52.215-23">FAR 52.215-23</a></strong>: Limitations on Pass-Through Charges. A FAR clause, but DoD applies it more widely. It bars excessive indirect costs and profit on work a subcontractor performs when you add no or negligible value. On DoD contracts it can reach fixed-price as well as cost-type work above the certified cost or pricing data threshold. Directly impacts teaming and subcontracting strategies.</li>
+        <li><strong><a href="https://www.acquisition.gov/dfars/252.225-7001-buy-american-and-balance-payments-program.">DFARS 252.225-7001</a></strong>: Buy American and Balance of Payments Program. Requires you to deliver domestic end products unless your offer listed qualifying country or other foreign end products. A manufactured item counts as domestic when it's made in the U.S. and meets the domestic content threshold (65% for 2024–2028, rising to 75% in 2029). Critical for hardware procurement and supply chain decisions.</li>
+        <li><strong><a href="https://www.acquisition.gov/dfars/252.244-7001-contractor-purchasing-system-administration.">DFARS 252.244-7001</a></strong>: Contractor Purchasing System Administration. When it's in your contract (common on cost-type and other negotiated work), you must maintain an acceptable purchasing system. DCMA typically runs the Contractor Purchasing System Review (CPSR), and a disapproved system can lead to withheld payments.</li>
         <li><strong>DFARS 252.246-7008</strong>: Sources of Electronic Parts. Requires contractors to buy electronic parts through trusted suppliers to prevent counterfeit components from entering defense systems.</li>
       </ul>
 
@@ -118,9 +121,9 @@
         <thead><tr><th>Clause</th><th>What It Requires</th><th>Why It Matters</th></tr></thead>
         <tbody>
           <tr><td>DFARS 252.204-7012</td><td>NIST 800-171 controls, 72-hr incident reporting</td><td>Foundation of CMMC; can disqualify you from DoD work if non-compliant</td></tr>
-          <tr><td>DFARS 252.215-7004</td><td>Limits pass-through profit on subcontracted work</td><td>Affects how you price teaming arrangements</td></tr>
-          <tr><td>DFARS 252.225-7001</td><td>Domestic manufacture for most end items</td><td>Supply chain design and foreign sourcing limitations</td></tr>
-          <tr><td>DFARS 252.244-7001</td><td>Approved purchasing system for primes</td><td>DCMA audits; can halt payments if disapproved</td></tr>
+          <tr><td>FAR 52.215-23</td><td>Limits pass-through charges on subcontracted work</td><td>Affects how you price teaming arrangements</td></tr>
+          <tr><td>DFARS 252.225-7001</td><td>Domestic end products unless an exception applies</td><td>Supply chain design and foreign sourcing limitations</td></tr>
+          <tr><td>DFARS 252.244-7001</td><td>Acceptable purchasing system</td><td>DCMA reviews; payments can be withheld if disapproved</td></tr>
           <tr><td>FAR 52.243-1</td><td>Government can direct changes within scope</td><td>Right to equitable adjustment; protects you when scope expands</td></tr>
         </tbody>
       </table>
@@ -133,7 +136,7 @@
         <li><strong>AFFARS</strong>: Air Force Federal Acquisition Regulation Supplement</li>
         <li><strong>SOFARS</strong>: Special Operations Forces Acquisition Regulation Supplement</li>
       </ul>
-      <p>If you're doing significant work with a specific service, the relevant supplement matters. AFFARS, for example, has specific procedures for <a href="/blog/source-selection-process-dod">source selection</a> and contractor responsibility determinations that affect how Air Force source selections are conducted.</p>
+      <p>If you're doing significant work with a specific service, the relevant supplement matters. AFARS, for example, has its own <a href="/blog/source-selection-process-dod">source selection</a> subpart (<a href="https://www.acquisition.gov/afars/subpart-5115.3-source-selection">AFARS 5115.3</a>) that shapes how Army source selections are conducted.</p>
 
       <div class="callout gold">
         <p><strong>Practical tip:</strong> You don't need to memorize the FAR and DFARS. Nobody does. What matters is knowing <em>how to find</em> the right clause quickly and understanding the regulatory structure well enough to know where to look. The Acquisition.gov website has the full text of both, with clause-level search. In your first year, keeping the table of contents bookmarked is more valuable than memorizing individual clauses.</p>
