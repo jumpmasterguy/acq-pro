@@ -131,15 +131,15 @@ welcome = f'''<div class="page content">
     <p>This guide walks you through every tab: what it does, why it matters, and how to use it. Start with the Dashboard so you can see where everything lands, then work the tabs in the order below.</p>
     <div class="callout">
       <div class="callout-label">What's Updated in This Edition</div>
-      <p style="margin-bottom:8px">Reflects FAC 2025-06 (effective Oct 1, 2025) and the CMMC rollout through Phase 2 (effective Nov 10, 2026).</p>
+      <p style="margin-bottom:8px">Reflects FAC 2025-06 (effective Oct 1, 2025), the FY26 NDAA, and CMMC as of late September 2026.</p>
       <ul class="tight">
         <li>Simplified Acquisition Threshold (SAT) updated to $350,000 (FAC 2025-06, effective Oct 1, 2025)</li>
         <li>Micro-Purchase Threshold (MPT) updated to $15,000</li>
-        <li>TINA / certified cost &amp; pricing data threshold: $2.5M</li>
+        <li>TINA / certified cost &amp; pricing data: $10M on DoD contracts entered into after June 30, 2026 (FY26 NDAA sec. 1804); $2.5M otherwise</li>
         <li>Competition J&amp;A approval threshold: $900,000</li>
-        <li>CMMC Phase 1 (effective Nov 10, 2025): CMMC clauses now appear in new contracts; self-assessment accepted for Level 2</li>
-        <li>CMMC Phase 2 (effective Nov 10, 2026, two months out as of this edition): C3PAO third-party assessment required for Level 2. If your subcontractor base isn't assessed yet, start now</li>
-        <li>Risk Register updated with CMMC compliance as a program risk consideration</li>
+        <li>EVM at $50M, validated EVMS at $100M (DFARS class deviation 2026-O0011, Feb 1, 2026)</li>
+        <li>CMMC Phase 1 (since Nov 10, 2025): CMMC clauses in new contracts; self-assessments posted in SPRS</li>
+        <li>CMMC Phase 2 (C3PAO certification for Level 2) suspended July 13, 2026, with no new date. Risk Register R-006 and R-016 rewritten to match</li>
         <li>September 2026 rebuild: IGCE Calculator and RFP Compliance Matrix retired from this pack; Program Dashboard, First 90 Days Checklist, and Spend Plan added; all tools consolidated into one workbook</li>
       </ul>
     </div>
@@ -250,14 +250,14 @@ tool4 = f'''<div class="page content">
     <p>A register of sixteen pre-loaded DoD program risks with probability, impact, mitigation, and contingency written, and a 5 by 5 map that plots every risk by ID so you can see where they cluster.</p>
     <div class="callout"><div class="callout-label">The Analogy</div><p>A weather forecast. You cannot stop the storm, but you can see it coming, and the map shows you where it will hit hardest.</p></div>
     <h4 class="sub">Why It Matters</h4>
-    <p>A blank risk register is a test of what you already know. This one is a checklist of what experienced PMs worry about: Nunn-McCurdy breach, continuing resolution impact, CMMC Phase 2, requirements creep, key personnel loss. You will delete some and rescore the rest, but you will not start from a blank page wondering what you forgot.</p>
+    <p>A blank risk register is a test of what you already know. This one is a checklist of what experienced PMs worry about: Nunn-McCurdy breach, continuing resolution impact, CMMC status, requirements creep, key personnel loss. You will delete some and rescore the rest, but you will not start from a blank page wondering what you forgot.</p>
     <h4 class="sub">What's Inside</h4>
     <ul class="tight">
       <li>Sixteen risks across Technical, Schedule, Cost, External, and Programmatic categories, each with a written mitigation and contingency.</li>
       <li>Probability times Impact scoring with automatic HIGH / MEDIUM / LOW, color-scaled.</li>
       <li>Summary counts by level, category, and status, which the Dashboard reads.</li>
       <li>Risk Map: a static scoring key plus a "Where Your Risks Land" grid that lists risk IDs in the right cell. Print it for the weekly review.</li>
-      <li>CMMC Phase 2 (C3PAO assessment required for Level 2, effective November 10, 2026) is pre-loaded as R-016. If your program handles CUI and your subcontractors are not assessed, score it HIGH and act now.</li>
+      <li>CMMC is pre-loaded twice: R-006 for the rules changing mid-contract (Phase 2 C3PAO assessments were suspended July 2026) and R-016 for subcontractors whose SPRS status is not current. If your program handles CUI and a sub is not current, score R-016 HIGH.</li>
     </ul>
     <h4 class="sub">How to Use It</h4>
     <div class="step"><div class="step-num">1</div><div class="step-body"><b>Keep the sixteen</b><span>Delete only what genuinely does not apply. Most of these apply to most programs.</span></div></div>

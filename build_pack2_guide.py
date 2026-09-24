@@ -108,13 +108,13 @@ welcome=f"""<div class="page content">{header(2)}<div class="body-area"><h2 clas
 <p>Here is the uncomfortable truth about government proposals: the best proposals don't win because of great writing. They win because the team understood the customer's priorities before the RFP dropped and organized the response to address every evaluation criterion directly.</p>
 <p>Most losing proposals aren't bad. They're incomplete, disorganized, or slightly off-target. They miss a requirement in Section L. They don't connect their technical approach to the evaluation factors in Section M. They scatter their win themes across 200 pages without reinforcing a clear message. They price below what their own technical volume requires, and the cost analyst adjusts it back up.</p>
 <p>This toolkit gives you five tools that address each of those failure points. They won't write your proposal for you, but they will make sure nothing falls through the cracks, your message is clear, and your pricing volume doesn't sink an otherwise strong submission.</p>
-<div class="callout"><div class="callout-label">What's Updated in This Edition</div><p style="margin-bottom:8px">Reflects FAC 2025-06 (effective Oct 1, 2025) and the CMMC rollout through Phase 2 (effective Nov 10, 2026).</p><ul class="tight">
+<div class="callout"><div class="callout-label">What's Updated in This Edition</div><p style="margin-bottom:8px">Reflects FAC 2025-06 (effective Oct 1, 2025), the FY26 NDAA, and CMMC as of late September 2026.</p><ul class="tight">
 <li>Section L/M Decoder: new Phrase Decoder tab with 32 common Section L and M phrases translated into what the evaluator actually wants, what to do, and the mistake people make</li>
 <li>Pricing Volume Checklist: CLIN pricing table replaced by a Cost Realism Self-Check, the 22 questions a DoD cost/price analyst asks under FAR 15.404-1(d), with a readiness verdict</li>
 <li>Compliance Matrix: page budget by volume and percent complete added. Page limits were tracked but never totaled</li>
 <li>Win Theme Tracker: every weighted evaluation factor with zero themes mapped to it now flags GAP</li>
 <li>Past Performance: recency check against the FAR 15.305 window (Current, AGING over 3 years, STALE over 5 years)</li>
-<li>Thresholds: SAT $350,000, MPT $15,000, Competition J&amp;A $900,000 (FAC 2025-06); TINA $2.5M. DUNS references replaced by UEI throughout</li></ul></div></div>{FOOTER}</div>"""
+<li>Thresholds: SAT $350,000, MPT $15,000, J&amp;A $900,000, subcontracting plan $900,000 (FAC 2025-06); TINA $10M on DoD contracts after June 30, 2026, $2.5M otherwise. CMMC Phase 2 C3PAO assessments suspended July 2026. DUNS replaced by UEI</li></ul></div></div>{FOOTER}</div>"""
 
 timeline=f"""<div class="page content">{header(3)}<div class="body-area"><h2 class="section-title">Proposal Timeline &amp; Quick Start</h2>
 <p>The best proposal teams work backwards from the submission deadline. Here is when each tool comes into play. Read this first, then flip to each tool's page.</p>
