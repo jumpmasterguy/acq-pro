@@ -1803,12 +1803,18 @@ export async function registerRoutes(
     }
   });
 
-  // GET /api/stats/seo — Search Console totals for the month. Needs CRON_SECRET.
+  // GET /api/stats/seo — Search Console totals for the month. Needs a key.
   //
   // Feeds the founder review dashboard's "Google clicks" row via the weekly
-  // ledger task. Send the secret as "Authorization: Bearer <CRON_SECRET>"
-  // (preferred, keeps it out of URLs) or ?secret=<CRON_SECRET> like
-  // /api/cron/drip. Optional ?month=YYYY-MM for a past month; default is the
+  // ledger task. Two keys open it:
+  //   - CRON_SECRET, the same key as /api/cron/drip.
+  //   - STATS_SECRET, a read-only key for the weekly ledger task. That task
+  //     fetches with WebFetch, which can't send headers, so its key has to
+  //     sit in the URL and in the task's prompt. Giving it its own key means
+  //     the one that can email every user (CRON_SECRET) never goes there,
+  //     and rotating CRON_SECRET doesn't break the task.
+  // Send the key as "Authorization: Bearer <key>" (keeps it out of URLs) or
+  // ?secret=<key>. Optional ?month=YYYY-MM for a past month; default is the
   // current month to date, Pacific Time, matching the Search Console UI.
   //
   // Returns { month, startDate, endDate, clicks, impressions, position,
@@ -1816,12 +1822,15 @@ export async function registerRoutes(
   // pull for that month with stale: true and an error string. See
   // server/searchConsole.ts for the env vars and the service-account setup.
   app.get("/api/stats/seo", async (req: Request, res: Response) => {
-    const secret = process.env.CRON_SECRET;
     const auth = req.headers.authorization;
     const given = auth?.startsWith("Bearer ") ? auth.slice(7)
       : typeof req.query.secret === "string" ? req.query.secret : "";
-    const a = Buffer.from(given), b = Buffer.from(secret ?? "");
-    if (!secret || a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+    const matches = (key: string | undefined) => {
+      if (!key) return false; // an unset key never matches
+      const a = Buffer.from(given), b = Buffer.from(key);
+      return a.length === b.length && crypto.timingSafeEqual(a, b);
+    };
+    if (!matches(process.env.CRON_SECRET) && !matches(process.env.STATS_SECRET)) {
       return res.status(401).json({ message: "Unauthorized" });
     }
     res.set("Cache-Control", "no-store");
