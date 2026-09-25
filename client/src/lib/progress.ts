@@ -37,9 +37,11 @@ export const calculateXP = (
 
 /**
  * Career ladders. Government learners climb the GS scale to SES; people on
- * the industry side climb the titles their own company uses. The XP at each
- * rung is identical across ladders, so a level means the same effort on
- * every track and the leaderboards stay fair. Only the names change.
+ * the industry side climb the titles their own company uses. Every ladder
+ * starts at 0 and tops out at 5,000 XP, so the summit is the same effort on
+ * every track; the government ladder has one more rung on the way (GS-15),
+ * because that is how the GS scale actually runs. Leaderboards rank XP, not
+ * levels, so the extra rung changes nothing about fairness.
  *
  * The level road draws one space per 100 XP — about one lesson — so the top
  * rung, at 5,000, is fifty spaces from the start.
@@ -56,44 +58,48 @@ export interface CareerLevel {
 
 export type LadderId = 'government' | 'industry_pm' | 'industry_bd';
 
-const THRESHOLDS = [0, 200, 500, 1000, 1800, 3000, 5000];
-const rungs = (defs: Array<[string, string, string]>): CareerLevel[] =>
-  defs.map(([title, short, desc], i) => ({
+const TOP_XP = 5000;
+/** Rungs as [XP to reach, title, road label, description]. */
+const rungs = (defs: Array<[number, string, string, string]>): CareerLevel[] =>
+  defs.map(([threshold, title, short, desc], i) => ({
     level: i + 1,
     title,
     short,
-    threshold: THRESHOLDS[i],
-    nextXP: THRESHOLDS[i + 1] ?? 9999,
+    threshold,
+    nextXP: defs[i + 1]?.[0] ?? 9999,
     desc,
   }));
 
 export const LADDERS: Record<LadderId, CareerLevel[]> = {
   government: rungs([
-    ['Acquisition Trainee', 'Start', 'Just getting started. Learning the landscape.'],
-    ['GS-9 Analyst', 'GS-9', 'Building foundational knowledge. You know the players and the process.'],
-    ['GS-11 Professional', 'GS-11', 'Solid understanding of contracts, finance basics, and acquisition vehicles.'],
-    ['GS-12 Specialist', 'GS-12', 'Deep functional knowledge. You can navigate a program review without a cheat sheet.'],
-    ['GS-13 Senior Manager', 'GS-13', 'Multi-domain fluency. Source selection, EVM, modifications — you handle it.'],
-    ['GS-14 Program Manager', 'GS-14', 'Senior PM territory. Leading programs, coaching others, managing the enterprise.'],
-    ['SES-Level Executive', 'SES', 'The full picture — strategy, policy, leadership, and acquisition mastery.'],
+    [0,      'Acquisition Trainee', 'Start', 'Just getting started. Learning the landscape.'],
+    [200,    'GS-9 Analyst', 'GS-9', 'Building foundational knowledge. You know the players and the process.'],
+    [500,    'GS-11 Professional', 'GS-11', 'Solid understanding of contracts, finance basics, and acquisition vehicles.'],
+    [1000,   'GS-12 Specialist', 'GS-12', 'Deep functional knowledge. You can navigate a program review without a cheat sheet.'],
+    [1800,   'GS-13 Senior Manager', 'GS-13', 'Multi-domain fluency. Source selection, EVM, modifications — you handle it.'],
+    [3000,   'GS-14 Program Manager', 'GS-14', 'Senior PM territory. Leading programs, coaching others, managing the enterprise.'],
+    [4000,   'GS-15 Senior Program Manager', 'GS-15', 'Major programs and the teams behind them. You brief the PEO and defend the budget.'],
+    [TOP_XP, 'SES-Level Executive', 'SES', 'The full picture — strategy, policy, leadership, and acquisition mastery.'],
   ]),
+  // "PjM" on the road, not "PM": in this world PM usually means Program
+  // Manager, and this ladder has both.
   industry_pm: rungs([
-    ['Project Coordinator', 'Start', 'Learning how a defense contract actually runs, from kickoff to the first invoice.'],
-    ['Junior Project Manager', 'Jr PM', 'You know the contract type, the CDRLs, and who the COR is.'],
-    ['Project Manager', 'PM', 'Running a task order: budget, schedule, staffing, and the monthly status report.'],
-    ['Senior Project Manager', 'Sr PM', 'Several task orders, subcontractors, and an EAC you can defend line by line.'],
-    ['Program Manager', 'Program Mgr', 'Owning a program: the P&L, the CPARS, and the customer relationship.'],
-    ['Director of Programs', 'Director', 'A portfolio of programs, the PMs who run them, and the recompetes.'],
-    ['Vice President', 'VP', 'Strategy, growth, and the whole contract portfolio. Where the business decisions get made.'],
+    [0,      'Project Coordinator', 'Start', 'Learning how a defense contract actually runs, from kickoff to the first invoice.'],
+    [200,    'Junior Project Manager', 'Jr PjM', 'You know the contract type, the CDRLs, and who the COR is.'],
+    [500,    'Project Manager', 'PjM', 'Running a task order: budget, schedule, staffing, and the monthly status report.'],
+    [1000,   'Senior Project Manager', 'Sr PjM', 'Several task orders, subcontractors, and an EAC you can defend line by line.'],
+    [1800,   'Program Manager', 'Program Mgr', 'Owning a program: the P&L, the CPARS, and the customer relationship.'],
+    [3000,   'Director of Programs', 'Director', 'A portfolio of programs, the managers who run them, and the recompetes.'],
+    [TOP_XP, 'Vice President', 'VP', 'Strategy, growth, and the whole contract portfolio. Where the business decisions get made.'],
   ]),
   industry_bd: rungs([
-    ['BD Coordinator', 'Start', 'Learning the pipeline, SAM.gov, and how an opportunity becomes a bid.'],
-    ['Capture Analyst', 'Analyst', 'Researching customers, competitors, and the acquisition strategy behind a buy.'],
-    ['Capture Manager', 'Capture Mgr', 'Owning a pursuit from qualification through proposal submission.'],
-    ['Senior Capture Manager', 'Sr Capture', 'Must-win pursuits, teaming agreements, and price-to-win.'],
-    ['Director of Capture', 'Director', 'The whole pipeline, the capture team, and the bid/no-bid calls.'],
-    ['Senior Director of BD', 'Sr Director', 'Market strategy across customers, agencies, and contract vehicles.'],
-    ['VP of Business Development', 'VP', 'Growth targets, the M&A pipeline, and how the company is positioned to win.'],
+    [0,      'BD Coordinator', 'Start', 'Learning the pipeline, SAM.gov, and how an opportunity becomes a bid.'],
+    [200,    'Capture Analyst', 'Analyst', 'Researching customers, competitors, and the acquisition strategy behind a buy.'],
+    [500,    'Capture Manager', 'Capture Mgr', 'Owning a pursuit from qualification through proposal submission.'],
+    [1000,   'Senior Capture Manager', 'Sr Capture', 'Must-win pursuits, teaming agreements, and price-to-win.'],
+    [1800,   'Director of Capture', 'Director', 'The whole pipeline, the capture team, and the bid/no-bid calls.'],
+    [3000,   'Senior Director of BD', 'Sr Director', 'Market strategy across customers, agencies, and contract vehicles.'],
+    [TOP_XP, 'VP of Business Development', 'VP', 'Growth targets, the M&A pipeline, and how the company is positioned to win.'],
   ]),
 };
 
@@ -116,7 +122,7 @@ export function ladderIdFor(track?: string | null): LadderId {
 
 export const ladderFor = (track?: string | null): CareerLevel[] => LADDERS[ladderIdFor(track)];
 
-/** Kept for code that only needs thresholds, which every ladder shares. */
+/** Kept for code that only needs the top of the road, which every ladder shares. */
 export const LEVELS = LADDERS.government;
 
 export const getLevel = (xp: number, track?: string | null): CareerLevel => {
