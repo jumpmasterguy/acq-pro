@@ -354,9 +354,14 @@ export function ModuleCarousel({
         </button>
       </div>
 
-      {/* Bleeds into the screen's 16px gutter so tiles run to the edge */}
+      {/* Bleeds into the screen's 16px gutter so tiles run to the edge as you
+          scroll. scroll-pl-4 is what keeps the FIRST tile lined up with every
+          other card on the screen: scroll snapping aligns to the scrollport's
+          border edge and ignores padding, so mandatory snap was pulling the row
+          16px left on load and parking tile one hard against the screen edge.
+          scroll-padding-left tells snapping where the content actually starts. */}
       <div
-        className="acq-scroll -mx-4 mt-3 flex gap-3 overflow-x-auto px-4"
+        className="acq-scroll -mx-4 mt-3 flex gap-3 overflow-x-auto px-4 scroll-pl-4"
         style={{ scrollSnapType: 'x mandatory' }}
       >
         {mods.map((m) => {
