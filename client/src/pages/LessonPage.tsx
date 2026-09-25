@@ -1,5 +1,6 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { AcronymText } from "@/components/AcronymText";
+import { MobileTableCards, FormulaBlock } from "@/components/lesson/LessonBlocks";
 import { getTrackData, type CareerTrackId } from "@/lib/careerTracks";
 import { modules, type Lesson, type LessonContent, type KeyTerm, type Module, type QuizQuestion, type SkillLevel, type ExpandableItem } from "@/lib/curriculum";
 import { getModuleTheme, getModuleFamilyTheme } from "@/lib/moduleTheme";
@@ -304,9 +305,49 @@ function ExpandableBulletItem({
   );
 }
 
+/**
+ * Deterministic scramble for drag-order questions, seeded by the question id
+ * so it is stable across re-renders and identical on every device.
+ *
+ * These questions used to start in the CORRECT order — pressing submit
+ * without touching anything scored full marks. Never returns the original
+ * order when there are two or more items.
+ */
+export function scrambleOrder(items: string[], seed: string): string[] {
+  if (items.length < 2) return [...items];
+  let h = 2166136261;
+  for (let k = 0; k < seed.length; k++) h = Math.imul(h ^ seed.charCodeAt(k), 16777619);
+  const rand = () => {
+    h = Math.imul(h ^ (h >>> 15), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    return ((h ^= h >>> 16) >>> 0) / 4294967296;
+  };
+  const out = [...items];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  if (out.every((v, i) => v === items[i])) out.push(out.shift()!);
+  return out;
+}
+
 function DragOrderQuestion({ question, submitted, onOrderChange, currentOrder }: DragOrderProps) {
+  const isMobile = useIsMobile();
   const items = question.orderedItems ?? [];
-  const order = currentOrder.length > 0 ? currentOrder : items;
+  const scrambled = useMemo(() => scrambleOrder(items, question.id), [question.id, items.join('|')]);
+  // Nothing recorded yet: a fresh attempt shows the scramble; a revisit of an
+  // already-scored lesson (submitted, no answer in memory) shows the key.
+  const order = currentOrder.length > 0 ? currentOrder : (submitted ? items : scrambled);
+
+  // Put the scramble into the parent's state, so what is scored is what is
+  // on screen even if the learner submits without moving anything.
+  useEffect(() => {
+    if (!submitted && currentOrder.length === 0 && items.length > 0) {
+      onOrderChange(question.id, scrambled);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submitted, currentOrder.length, question.id]);
+
   const dragIdx = useRef<number | null>(null);
   const dragOverIdx = useRef<number | null>(null);
 
@@ -326,36 +367,50 @@ function DragOrderQuestion({ question, submitted, onOrderChange, currentOrder }:
     onOrderChange(question.id, newOrder);
   };
 
+  // Arrow buttons: the way to reorder with a finger. HTML drag-and-drop does
+  // not fire from touch in the app's webview, so drag alone left phone users
+  // unable to answer these at all.
+  const move = (idx: number, dir: -1 | 1) => {
+    const to = idx + dir;
+    if (to < 0 || to >= order.length) return;
+    const next = [...order];
+    [next[idx], next[to]] = [next[to], next[idx]];
+    onOrderChange(question.id, next);
+  };
+
   const getItemStatus = (item: string, idx: number) => {
     if (!submitted) return 'default';
     return items[idx] === item ? 'correct' : 'wrong';
   };
 
   return (
-    <div className="space-y-2 ml-8">
+    <div className="space-y-2 sm:ml-8">
       <p className="text-xs text-muted-foreground mb-3 flex items-center gap-1.5">
-        <GripVertical className="w-3.5 h-3.5" />
-        {submitted ? 'Final order:' : 'Drag to reorder — put them in the correct sequence'}
+        <GripVertical className="w-3.5 h-3.5 flex-shrink-0" />
+        {submitted
+          ? 'Final order:'
+          : isMobile
+            ? 'Use the arrows to put them in the right order'
+            : 'Drag, or use the arrows, to put them in the right order'}
       </p>
       {order.map((item, idx) => {
         const status = getItemStatus(item, idx);
         return (
           <div
             key={item}
-            draggable={!submitted}
+            draggable={!submitted && !isMobile}
             onDragStart={() => handleDragStart(idx)}
             onDragOver={(e) => handleDragOver(e, idx)}
             onDrop={handleDrop}
             className={cn(
-              "flex items-center gap-3 px-4 py-3 rounded-lg border text-sm transition-all",
-              !submitted && "cursor-grab active:cursor-grabbing hover:border-primary/50 hover:bg-primary/5",
+              "flex items-center gap-3 pl-3 pr-1.5 py-2 rounded-lg border text-sm transition-all",
+              !submitted && !isMobile && "cursor-grab active:cursor-grabbing hover:border-primary/50 hover:bg-primary/5",
               submitted && status === 'correct' && "border-green-400 bg-green-50 dark:bg-green-950/40 text-green-800 dark:text-green-300",
               submitted && status === 'wrong' && "border-red-400 bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300",
               !submitted && "border-border bg-background"
             )}
             data-testid={`drag-order-item-${idx}`}
           >
-            {!submitted && <GripVertical className="w-4 h-4 text-muted-foreground flex-shrink-0" />}
             {submitted && (
               <span className={cn(
                 "w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0",
@@ -367,7 +422,31 @@ function DragOrderQuestion({ question, submitted, onOrderChange, currentOrder }:
             <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center flex-shrink-0">
               {idx + 1}
             </span>
-            <span className="flex-1">{item}</span>
+            <span className="flex-1 py-1">{item}</span>
+            {!submitted && (
+              <span className="flex flex-shrink-0 flex-col">
+                <button
+                  type="button"
+                  onClick={() => move(idx, -1)}
+                  disabled={idx === 0}
+                  aria-label={`Move "${item}" up`}
+                  className="flex h-8 w-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted active:bg-muted disabled:opacity-25"
+                  data-testid={`drag-order-up-${idx}`}
+                >
+                  <ChevronUp className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => move(idx, 1)}
+                  disabled={idx === order.length - 1}
+                  aria-label={`Move "${item}" down`}
+                  className="flex h-8 w-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted active:bg-muted disabled:opacity-25"
+                  data-testid={`drag-order-down-${idx}`}
+                >
+                  <ChevronDown className="h-4 w-4" />
+                </button>
+              </span>
+            )}
           </div>
         );
       })}
@@ -393,6 +472,7 @@ interface DragMatchProps {
 }
 
 function DragMatchQuestion({ question, submitted, onMatchChange, currentMatches }: DragMatchProps) {
+  const isMobile = useIsMobile();
   const pairs = question.pairs ?? [];
   const leftItems = pairs.map(p => p.left);
   // Stable shuffle: rotate by 1 so answers aren't in the same order as left items
@@ -403,20 +483,31 @@ function DragMatchQuestion({ question, submitted, onMatchChange, currentMatches 
     })()
   ).current;
 
-  const [draggingValue, setDraggingValue] = useState<string | null>(null);
+  // Tap an answer to pick it up, tap a slot to put it down. HTML drag-and-drop
+  // does not fire from touch in the app's webview, so drag alone left phone
+  // users unable to answer these. Dragging still works with a mouse.
+  const [selected, setSelected] = useState<string | null>(null);
 
-  const handleDragStart = (value: string) => setDraggingValue(value);
-  const handleDragEnd = () => setDraggingValue(null);
+  const place = (leftKey: string, value: string) => {
+    onMatchChange(question.id, { ...currentMatches, [leftKey]: value });
+    setSelected(null);
+  };
+  const clear = (leftKey: string) => {
+    const next = { ...currentMatches };
+    delete next[leftKey];
+    onMatchChange(question.id, next);
+  };
+
+  const handleSlotTap = (leftKey: string) => {
+    if (submitted) return;
+    if (selected) place(leftKey, selected);
+    else if (currentMatches[leftKey]) clear(leftKey);   // tap a filled slot to send it back
+  };
 
   const handleDropOnLeft = (e: React.DragEvent, leftKey: string) => {
     e.preventDefault();
-    if (!draggingValue) return;
-    const newMatches = { ...currentMatches, [leftKey]: draggingValue };
-    onMatchChange(question.id, newMatches);
-    setDraggingValue(null);
+    if (selected) place(leftKey, selected);
   };
-
-  const handleDragOverLeft = (e: React.DragEvent) => e.preventDefault();
 
   // Unmatched right items
   const matchedRightValues = Object.values(currentMatches);
@@ -431,56 +522,73 @@ function DragMatchQuestion({ question, submitted, onMatchChange, currentMatches 
   };
 
   return (
-    <div className="space-y-4 ml-8">
+    <div className="space-y-4 sm:ml-8">
       <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-        <ArrowRight className="w-3.5 h-3.5" />
-        {submitted ? 'Results:' : 'Drag items from the right bank and drop them onto their matching left item'}
+        <ArrowRight className="w-3.5 h-3.5 flex-shrink-0" />
+        {submitted
+          ? 'Results:'
+          : selected
+            ? 'Now tap the term it matches'
+            : isMobile
+              ? 'Tap an answer, then tap the term it matches'
+              : 'Click an answer, then the term it matches — or drag it'}
       </p>
 
-      {/* Right bank (draggable pool) */}
+      {/* Answer bank */}
       {!submitted && (
         <div className="flex flex-wrap gap-2 p-3 bg-muted/30 rounded-lg border border-border min-h-[48px]">
           {unmatchedRight.length === 0 ? (
-            <span className="text-xs text-muted-foreground italic">All items placed — submit or rearrange</span>
-          ) : unmatchedRight.map(val => (
-            <div
-              key={val}
-              draggable
-              onDragStart={() => handleDragStart(val)}
-              onDragEnd={handleDragEnd}
-              className={cn(
-                "px-3 py-1.5 bg-primary/10 border border-primary/30 rounded-full text-xs font-medium cursor-grab active:cursor-grabbing text-primary transition-all hover:bg-primary/20 select-none",
-                draggingValue === val && "opacity-50"
-              )}
-              data-testid={`match-right-${val}`}
-            >
-              {val}
-            </div>
-          ))}
+            <span className="text-xs text-muted-foreground italic">All placed. Tap a filled slot to take one back.</span>
+          ) : unmatchedRight.map(val => {
+            const isSel = selected === val;
+            return (
+              <button
+                type="button"
+                key={val}
+                draggable={!isMobile}
+                onDragStart={() => setSelected(val)}
+                onClick={() => setSelected(isSel ? null : val)}
+                aria-pressed={isSel}
+                className={cn(
+                  "px-3 py-2 rounded-2xl border text-left text-[13px] font-medium leading-snug transition-all select-none",
+                  isSel
+                    ? "bg-primary text-primary-foreground border-primary shadow-md ring-2 ring-primary/30"
+                    : "bg-primary/10 border-primary/30 text-primary hover:bg-primary/20",
+                  !isMobile && "cursor-grab active:cursor-grabbing"
+                )}
+                data-testid={`match-right-${val}`}
+              >
+                {val}
+              </button>
+            );
+          })}
         </div>
       )}
 
-      {/* Left items with drop zones */}
-      <div className="space-y-2">
+      {/* Terms, each with its slot. Stacked on phones so the slot gets the full width. */}
+      <div className="space-y-3 sm:space-y-2">
         {leftItems.map((leftKey) => {
           const status = getMatchStatus(leftKey);
           const matched = currentMatches[leftKey];
           const correctPair = pairs.find(p => p.left === leftKey);
+          const awaiting = !submitted && !!selected;
 
           return (
-            <div key={leftKey} className="flex items-center gap-3">
-              {/* Left label */}
-              <div className="flex-shrink-0 w-48 px-3 py-2.5 bg-card border border-border rounded-lg text-sm font-medium">
+            <div key={leftKey} className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-3">
+              <div className="text-sm font-semibold sm:flex-shrink-0 sm:w-48 sm:px-3 sm:py-2.5 sm:bg-card sm:border sm:border-border sm:rounded-lg sm:font-medium">
                 {leftKey}
               </div>
-              <ArrowRight className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
-              {/* Drop zone */}
-              <div
+              <ArrowRight className="hidden sm:block w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+              <button
+                type="button"
+                disabled={submitted}
+                onClick={() => handleSlotTap(leftKey)}
                 onDrop={(e) => handleDropOnLeft(e, leftKey)}
-                onDragOver={handleDragOverLeft}
+                onDragOver={(e) => e.preventDefault()}
                 className={cn(
-                  "flex-1 min-h-[40px] px-3 py-2 rounded-lg border text-sm transition-all flex items-center",
-                  !submitted && !matched && "border-dashed border-border/60 bg-muted/20 text-muted-foreground/50",
+                  "w-full sm:flex-1 min-h-[44px] px-3 py-2 rounded-lg border text-left text-sm transition-all flex items-center",
+                  !submitted && !matched && !awaiting && "border-dashed border-border bg-muted/20 text-muted-foreground",
+                  !submitted && !matched && awaiting && "border-dashed border-primary bg-primary/5 text-primary",
                   !submitted && matched && "border-primary/40 bg-primary/5 text-primary font-medium",
                   submitted && status === 'correct' && "border-green-400 bg-green-50 dark:bg-green-950/40 text-green-800 dark:text-green-300",
                   submitted && status === 'wrong' && "border-red-400 bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300",
@@ -489,30 +597,21 @@ function DragMatchQuestion({ question, submitted, onMatchChange, currentMatches 
                 data-testid={`match-drop-${leftKey}`}
               >
                 {matched ? (
-                  <span className="flex items-center gap-2">
+                  <span className="flex flex-1 items-start gap-2">
                     {submitted && status === 'correct' && <span className="text-green-500 font-bold">✓</span>}
                     {submitted && status === 'wrong' && <span className="text-red-500 font-bold">✗</span>}
-                    {matched}
-                    {submitted && status === 'wrong' && (
-                      <span className="text-green-600 dark:text-green-400 text-xs ml-1">→ {correctPair?.right}</span>
-                    )}
+                    <span className="flex-1">
+                      {matched}
+                      {submitted && status === 'wrong' && (
+                        <span className="block text-green-700 dark:text-green-400 text-xs mt-0.5">Correct: {correctPair?.right}</span>
+                      )}
+                    </span>
+                    {!submitted && <X className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 opacity-60" aria-label="Take back" />}
                   </span>
                 ) : (
-                  <span className="text-xs">{submitted ? 'Not answered' : 'Drop here'}</span>
+                  <span className="text-xs">{submitted ? 'Not answered' : awaiting ? 'Tap to place here' : 'Empty'}</span>
                 )}
-              </div>
-              {/* Allow removing a placed item by clicking it (not submitted) */}
-              {!submitted && matched && (
-                <button
-                  className="text-xs text-muted-foreground hover:text-destructive transition-colors"
-                  onClick={() => {
-                    const newMatches = { ...currentMatches };
-                    delete newMatches[leftKey];
-                    onMatchChange(question.id, newMatches);
-                  }}
-                  title="Remove match"
-                >✕</button>
-              )}
+              </button>
             </div>
           );
         })}
@@ -636,7 +735,8 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
       if (qType === 'multiple_choice') {
         if (quizAnswers[q.id] === q.correct) correct++;
       } else if (qType === 'drag_order') {
-        const userOrder = dragOrders[q.id] ?? q.orderedItems ?? [];
+        // Unset means untouched, and untouched means the scramble on screen.
+        const userOrder = dragOrders[q.id] ?? scrambleOrder(q.orderedItems ?? [], q.id);
         const correctOrder = q.orderedItems ?? [];
         if (JSON.stringify(userOrder) === JSON.stringify(correctOrder)) correct++;
       } else if (qType === 'drag_match') {
@@ -784,7 +884,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     <p className="font-medium text-sm leading-relaxed">{question.question}</p>
                   </div>
 
-                  <div className="space-y-2 ml-8">
+                  <div className="space-y-2 sm:ml-8">
                     {question.options.map((option, oi) => {
                       const isSelected = quizAnswers[question.id] === oi;
                       const isTheCorrect = question.correct === oi;
@@ -824,7 +924,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
                   {quizSubmitted && (
                     <div className={cn(
-                      "ml-8 rounded-lg p-3 text-xs leading-relaxed border",
+                      "sm:ml-8 rounded-lg p-3 text-xs leading-relaxed border",
                       qzIsCorrect
                         ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-900 text-green-800 dark:text-green-300"
                         : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300"
@@ -839,7 +939,9 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
             // ── Drag Order ──
             if (qzType === 'drag_order') {
-              const qzUserOrder = dragOrders[question.id] ?? question.orderedItems ?? [];
+              // Empty until the question mounts and records its scramble; passing the
+              // answer key here is what made these questions start pre-solved.
+              const qzUserOrder = dragOrders[question.id] ?? [];
               const qzCorrectOrder = question.orderedItems ?? [];
               const qzIsCorrectOrder = quizSubmitted && JSON.stringify(qzUserOrder) === JSON.stringify(qzCorrectOrder);
 
@@ -852,7 +954,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     <div>
                       <p className="font-medium text-sm leading-relaxed">{question.question}</p>
                       <span className="inline-flex items-center gap-1 mt-1 text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                        <GripVertical className="w-2.5 h-2.5" /> Drag to Order
+                        <GripVertical className="w-2.5 h-2.5" /> Put in Order
                       </span>
                     </div>
                   </div>
@@ -866,7 +968,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
                   {quizSubmitted && (
                     <div className={cn(
-                      "ml-8 rounded-lg p-3 text-xs leading-relaxed border",
+                      "sm:ml-8 rounded-lg p-3 text-xs leading-relaxed border",
                       qzIsCorrectOrder
                         ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-900 text-green-800 dark:text-green-300"
                         : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300"
@@ -894,7 +996,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     <div>
                       <p className="font-medium text-sm leading-relaxed">{question.question}</p>
                       <span className="inline-flex items-center gap-1 mt-1 text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                        <ArrowRight className="w-2.5 h-2.5" /> Drag to Match
+                        <ArrowRight className="w-2.5 h-2.5" /> Match Up
                       </span>
                     </div>
                   </div>
@@ -908,7 +1010,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
                   {quizSubmitted && (
                     <div className={cn(
-                      "ml-8 rounded-lg p-3 text-xs leading-relaxed border",
+                      "sm:ml-8 rounded-lg p-3 text-xs leading-relaxed border",
                       qzAllCorrect
                         ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-900 text-green-800 dark:text-green-300"
                         : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300"
@@ -1089,6 +1191,19 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             if (block.type === 'table') {
+              // Phones get one card per row — a 3-to-5 column table cannot fit
+              // 390px without crushing a column to a letter wide.
+              if (isMobile) {
+                return (
+                  <MobileTableCards
+                    key={i}
+                    heading={block.heading}
+                    headers={block.headers}
+                    rows={block.rows}
+                    accentHex={theme.hex}
+                  />
+                );
+              }
               return (
                 <div key={i} className={cn("bg-card border rounded-xl overflow-hidden", theme.border)}>
                   {block.heading && (
@@ -1129,6 +1244,18 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             // ── table_visual: clean card-style table (replaces raw table type) ──
             if (block.type === 'table_visual') {
               const b = block as any;
+              if (isMobile) {
+                return (
+                  <MobileTableCards
+                    key={i}
+                    heading={b.heading}
+                    headers={b.headers}
+                    rows={b.rows}
+                    accentHex={theme.hex}
+                    explanation={b.explanation}
+                  />
+                );
+              }
               return (
                 <div key={i} className="space-y-2">
                   {b.heading && <h3 className="font-bold text-sm">{b.heading}</h3>}
@@ -2310,7 +2437,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                       </div>
                     ))}
                   </div>
-                  <p className="text-xs text-muted-foreground">All five steps_c must be satisfied. Weakness in any one step can trigger an Agent reclassification during an audit.</p>
+                  <p className="text-xs text-muted-foreground">All five steps must be satisfied. Weakness in any one step can trigger an Agent reclassification during an audit.</p>
                 </div>
               );
             }
@@ -2574,17 +2701,13 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
 
             if (block.type === 'formula') {
               return (
-                <div key={i} className="bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-                  {block.heading && <h3 className="font-semibold text-sm mb-3">{block.heading}</h3>}
-                  {block.formula && (
-                    <pre className="font-mono text-sm bg-slate-900 dark:bg-slate-950 text-green-400 rounded-lg p-4 overflow-x-auto mb-3 whitespace-pre-wrap">
-                      {block.formula}
-                    </pre>
-                  )}
-                  {block.explanation && (
-                    <p className="text-xs text-muted-foreground leading-relaxed">{block.explanation}</p>
-                  )}
-                </div>
+                <FormulaBlock
+                  key={i}
+                  heading={block.heading}
+                  formula={block.formula}
+                  explanation={block.explanation}
+                  accentHex={theme.hex}
+                />
               );
             }
 
@@ -2687,7 +2810,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             // ── lucas_note: personal aside ───────────────────────────────────
             if (block.type === 'lucas_note') {
               return (
-                <div key={i} className="bg-[#0d2137] border-2 border-primary/60 rounded-xl overflow-hidden">
+                <div key={i} className="acq-on-dark bg-[#0d2137] border-2 border-primary/60 rounded-xl overflow-hidden">
                   <div className="h-[3px] bg-gradient-to-r from-[#f5c842] via-primary to-[#f5c842]" />
                   <div className="p-5">
                     <div className="flex items-center gap-2 mb-3">
@@ -2704,8 +2827,8 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                       </p>
                     ))}
                     <div className="flex items-center gap-2 mt-4">
-                      <div className="h-px flex-1 bg-primary/20" />
-                      <span className="text-[10px] text-primary/50 italic">— Lucas, Acqlerate</span>
+                      <div className="h-px flex-1 bg-slate-600/50" />
+                      <span className="text-[11px] text-slate-400 italic">— Lucas, Acqlerate</span>
                     </div>
                   </div>
                 </div>

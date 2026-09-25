@@ -348,10 +348,17 @@
     overflow-x: hidden;
   }
   /* Belt-and-suspenders: guarantee no text content can force horizontal
-     overflow, regardless of any container width miscalculation upstream. */
+     overflow, regardless of any container width miscalculation upstream.
+
+     overflow-wrap ONLY. This used to also set `word-break: break-word`, which
+     looks like the same thing and is not: it lets the browser count every
+     letter as a legal break point when sizing boxes, so a table column or a
+     flex item beside a fixed-width sibling could shrink to one character wide
+     and print "Gov / ern / men / t" down the screen. overflow-wrap alone still
+     breaks a word that would genuinely overflow, but never lets a box shrink
+     narrower than its longest word. */
   h1, h2, h3, h4, h5, h6, p, span, a, li, td, th, button, label {
     overflow-wrap: break-word;
-    word-break: break-word;
   }
 
   /* Sticky headers must sit BELOW the notch/Dynamic Island */
@@ -566,6 +573,11 @@
    handoff. */
 .acq-lesson-body { display: flex; flex-direction: column; gap: 18px; }
 .acq-lesson-body p { font-size: 16px; line-height: 1.65; color: var(--acq-text-body); }
+/* The rule above recolors every paragraph to the body text color, which is
+   right on the light cards and wrong on the few blocks with a fixed dark
+   background — it painted near-black text onto the navy "From Lucas" note.
+   Blocks that sit on a dark surface in both themes carry .acq-on-dark. */
+.acq-lesson-body .acq-on-dark p { color: #e2e8f0; }
 .acq-lesson-body li { font-size: 15px; line-height: 1.6; }
 .acq-lesson-body h2 { font-size: 18px; letter-spacing: -0.01em; color: var(--acq-text-heading); }
 .acq-lesson-body h3 { font-size: 16px; color: var(--acq-text-heading); }
