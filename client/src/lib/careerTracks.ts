@@ -3,7 +3,7 @@
  * Shared between Dashboard (filter bar) and ModulePage (lesson ordering).
  */
 
-import { getAllLessons, parseDuration } from "./curriculum";
+import { getAllLessons, parseDuration } from "./curriculumMeta";
 
 export type CareerTrackId = 'usg_pm' | 'contractor_pm' | 'contracting_officer' | 'capture_bd';
 

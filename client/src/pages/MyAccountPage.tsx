@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { hasPaidPlan, trialDaysRemaining } from "@shared/access";
 import { CAREER_TRACK_DATA, getTrackStats, type CareerTrackId } from "@/lib/careerTracks";
-import { formatDuration } from "@/lib/curriculum";
+import { formatDuration } from "@/lib/curriculumMeta";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { isNativeApp } from "@/lib/platform";

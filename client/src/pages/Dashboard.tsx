@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { modules, getTotalLessons, getModuleTotalMinutes, formatDuration, parseDuration } from "@/lib/curriculum";
+import { modules, getTotalLessons, getModuleTotalMinutes, formatDuration, parseDuration } from "@/lib/curriculumMeta";
 import { getModuleTheme, getModuleFamilyTheme, getModuleFamily, FAMILY_LABEL } from "@/lib/moduleTheme";
 import { formatClps, totalClps, moduleClps } from "@shared/moduleClps";
 import { getModuleProgress, getLevel, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
@@ -441,7 +441,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
           moduleTitle: mod.title,
           moduleIcon: mod.icon,
           description: lesson.description ?? '',
-          keyTerms: (lesson.keyTerms ?? []).map((t: any) => typeof t === 'string' ? t : t.term ?? ''),
+          keyTerms: lesson.terms,
         });
       });
     });

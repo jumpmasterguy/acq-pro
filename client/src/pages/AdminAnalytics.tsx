@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { ArrowLeft, TrendingUp, Users, BookOpen, DollarSign, Percent, BarChart3, RefreshCw, ExternalLink, Download, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { modules } from "@/lib/curriculum";
+import { modules } from "@/lib/curriculumMeta";
 
 interface AdminAnalyticsProps {
   onBack: () => void;

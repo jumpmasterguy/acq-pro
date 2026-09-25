@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getTotalLessons } from "@/lib/curriculum";
+import { getTotalLessons } from "@/lib/curriculumMeta";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";

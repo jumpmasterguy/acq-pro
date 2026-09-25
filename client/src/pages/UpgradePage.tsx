@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { modules, getTotalLessons } from "@/lib/curriculum";
+import { modules, getTotalLessons } from "@/lib/curriculumMeta";
 import { ArrowLeft, CheckCircle, Shield, Award, Zap, Lock, CreditCard, ExternalLink, Globe, Star, RotateCcw, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -257,7 +257,7 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
             {lockedModules.map(mod => {
               const theme = getModuleFamilyTheme(mod.id);
               const seq = modules.findIndex(m => m.id === mod.id) + 1;
-              const quizCount = mod.lessons.reduce((n, l) => n + (l.quiz?.length ?? 0), 0);
+              const quizCount = mod.lessons.reduce((n, l) => n + l.quizCount, 0);
               return (
                 <div
                   key={mod.id}
@@ -529,7 +529,7 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
               <div>
                 <div className="font-semibold text-sm">{mod.title}</div>
                 <div className="text-xs text-muted-foreground mt-0.5">
-                  {mod.lessons.length} lessons · {mod.lessons.reduce((sum, l) => sum + (l.quiz?.length ?? 0), 0)} quiz questions
+                  {mod.lessons.length} lessons · {mod.lessons.reduce((sum, l) => sum + l.quizCount, 0)} quiz questions
                 </div>
               </div>
             </div>

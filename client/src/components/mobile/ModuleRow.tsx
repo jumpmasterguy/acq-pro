@@ -2,8 +2,8 @@
  * A module row on the Modules list: seq tile, title, meta, progress, status.
  */
 
-import type { Module } from '@/lib/curriculum';
-import { formatDuration, getModuleTotalMinutes } from '@/lib/curriculum';
+import type { ModuleMeta } from '@/lib/curriculumMeta';
+import { formatDuration, getModuleTotalMinutes } from '@/lib/curriculumMeta';
 import { getModuleTheme, moduleGradient, getModuleFamilyTheme } from '@/lib/moduleTheme';
 import { formatClps, moduleClps } from '@shared/moduleClps';
 
@@ -14,7 +14,7 @@ export function ModuleRow({
   locked,
   onOpen,
 }: {
-  module: Module;
+  module: ModuleMeta;
   seq: number;
   pct: number;
   locked: boolean;

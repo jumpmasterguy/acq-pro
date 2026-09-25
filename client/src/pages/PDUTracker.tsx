@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { modules, getAllLessons } from "@/lib/curriculum";
+import { modules, getAllLessons } from "@/lib/curriculumMeta";
 import { ArrowLeft, ExternalLink, Award, Clock, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

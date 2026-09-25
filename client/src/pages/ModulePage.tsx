@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { modules, type SkillLevel } from "@/lib/curriculum";
+import { modules, type SkillLevel } from "@/lib/curriculumMeta";
 import { getModuleProgress, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
 import { getTrackData, sortLessonsByTrack, type CareerTrackId } from "@/lib/careerTracks";
 import { getModuleTheme, getModuleFamilyTheme } from "@/lib/moduleTheme";
@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { isNativeApp } from "@/lib/platform";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { moduleGradient } from "@/lib/moduleTheme";
-import { getTotalLessons } from "@/lib/curriculum";
+import { getTotalLessons } from "@/lib/curriculumMeta";
 import { formatClps, moduleClps } from "@shared/moduleClps";
 import { SkillLevelPill, ResourceRow, LessonRow } from "@/components/mobile/ModulePieces";
 
@@ -132,7 +132,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
 
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <SkillLevelPill level={unlockedLevel} onDark />
-                {mod.assessment?.length ? (
+                {mod.assessmentCount ? (
                   <button
                     type="button"
                     onClick={onOpenAssessment}
@@ -365,7 +365,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                   </a>
                 )}
                 {/* Skill level badge + assessment button */}
-                {mod.assessment?.length ? (
+                {mod.assessmentCount ? (
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 border border-white/25 px-2.5 py-1 text-xs font-bold text-white">
                       {unlockedLevel === 'advanced'
@@ -509,8 +509,8 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                 const isCompleted = progress.completedLessons.has(lesson.id);
                 const isFreePreview = FREE_PREVIEW_LESSONS.includes(lesson.id);
                 const isLocked = !isAccessible && !isFreePreview;
-                const hasQuiz = (lesson.quiz?.length ?? 0) > 0;
-                const termCount = lesson.keyTerms?.length ?? 0;
+                const hasQuiz = lesson.quizCount > 0;
+                const termCount = lesson.termCount;
 
                 return (
                   <React.Fragment key={lesson.id}>
@@ -606,7 +606,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                         {/* Quiz */}
                         {hasQuiz && (
                           <span className="inline-flex items-center gap-1 text-[11px] font-medium bg-muted/60 text-muted-foreground rounded-full px-2 py-0.5">
-                            ✦ {lesson.quiz!.length} quiz
+                            ✦ {lesson.quizCount} quiz
                           </span>
                         )}
                         {/* Free preview badge */}

@@ -19,7 +19,7 @@
  * checkpoint is the finish tile.
  */
 
-import { modules, type Module } from './curriculum';
+import { modules, type ModuleMeta } from './curriculumMeta';
 import { getTrackData, type CareerTrackId } from './careerTracks';
 
 export type PathLeg = {
@@ -206,14 +206,14 @@ const PATH_MODULE_ORDER = [
  * lessons count.
  */
 export function getTrackModules(trackId: CareerTrackId): {
-  mods: Module[];
+  mods: ModuleMeta[];
   lessonsByModule: Record<string, string[]>;
 } {
   const track = getTrackData(trackId);
   const primary = new Set(track?.primaryLessons ?? []);
   const mods = PATH_MODULE_ORDER
     .map(id => modules.find(m => m.id === id))
-    .filter((m): m is Module => !!m && m.lessons.some(l => primary.has(l.id)));
+    .filter((m): m is ModuleMeta => !!m && m.lessons.some(l => primary.has(l.id)));
   const lessonsByModule: Record<string, string[]> = {};
   for (const m of mods) {
     lessonsByModule[m.id] = m.lessons.filter(l => primary.has(l.id)).map(l => l.id);

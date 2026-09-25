@@ -20,8 +20,8 @@
 import { useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { Lock } from 'lucide-react';
-import type { Module } from '@/lib/curriculum';
-import { formatDuration, parseDuration } from '@/lib/curriculum';
+import type { ModuleMeta } from '@/lib/curriculumMeta';
+import { formatDuration, parseDuration } from '@/lib/curriculumMeta';
 import { getModuleFamilyTheme, getModuleFamily, FAMILY_LABEL } from '@/lib/moduleTheme';
 import { getModuleProgress, FREE_MODULES } from '@/lib/progress';
 import type { UserProgress } from '@/lib/progress';
@@ -49,7 +49,7 @@ function clpsOf(minutes: number): string {
 }
 
 type Step = {
-  mod: Module;
+  mod: ModuleMeta;
   idx: number;            // 0-based position in the track
   pct: number;
   locked: boolean;
@@ -119,7 +119,7 @@ function Spine({ x, r, hex, filled, ring, children }: {
 export function CareerPath({
   mods, progress, trackId, primaryLessonSetForModule, onSelectModule, onUpgrade,
 }: {
-  mods: Module[];
+  mods: ModuleMeta[];
   progress: UserProgress;
   trackId: string;
   primaryLessonSetForModule: Record<string, string[]>;

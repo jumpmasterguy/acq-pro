@@ -9,8 +9,8 @@
  */
 
 import { useMemo } from 'react';
-import type { Module } from '@/lib/curriculum';
-import { modules as allModules, getTotalLessons } from '@/lib/curriculum';
+import type { ModuleMeta } from '@/lib/curriculumMeta';
+import { modules as allModules, getTotalLessons } from '@/lib/curriculumMeta';
 import { FREE_MODULES, getModuleProgress } from '@/lib/progress';
 import { getTrackData, sortLessonsByTrack, type CareerTrackId } from '@/lib/careerTracks';
 import {
@@ -55,9 +55,9 @@ export function MobileHome({
   onOpenChallenge,
   onUpgrade,
 }: MobileHomeProps) {
-  const seqOf = (m: Module) => allModules.findIndex(x => x.id === m.id) + 1;
-  const isLocked = (m: Module) => !isPremium && !FREE_MODULES.includes(m.id) && !m.free;
-  const pctOf = (m: Module) =>
+  const seqOf = (m: ModuleMeta) => allModules.findIndex(x => x.id === m.id) + 1;
+  const isLocked = (m: ModuleMeta) => !isPremium && !FREE_MODULES.includes(m.id) && !m.free;
+  const pctOf = (m: ModuleMeta) =>
     getModuleProgress(m.id, m.lessons.map(l => l.id), completedLessons);
 
   const trackData = getTrackData(track);

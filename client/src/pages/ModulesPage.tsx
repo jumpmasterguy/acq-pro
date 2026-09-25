@@ -15,7 +15,7 @@
  */
 
 import type { ReactNode } from 'react';
-import { modules, getTotalLessons } from '@/lib/curriculum';
+import { modules, getTotalLessons } from '@/lib/curriculumMeta';
 import { FREE_MODULES, getModuleProgress, type UserProgress } from '@/lib/progress';
 import { totalClps } from '@shared/moduleClps';
 import { getModuleFamily, FAMILY_LABEL, FAMILY_THEME, type ModuleFamily } from '@/lib/moduleTheme';

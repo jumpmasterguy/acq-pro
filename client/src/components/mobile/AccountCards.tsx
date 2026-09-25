@@ -5,7 +5,7 @@
 
 import type { ReactNode } from 'react';
 import { Zap } from 'lucide-react';
-import { modules } from '@/lib/curriculum';
+import { modules } from '@/lib/curriculumMeta';
 import { getModuleTheme, getModuleFamilyTheme } from '@/lib/moduleTheme';
 import { getModuleProgress } from '@/lib/progress';
 import { moduleClps } from '@shared/moduleClps';

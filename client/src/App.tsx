@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, Component } from "react";
+import { useState, useEffect, useCallback, useRef, Component, lazy, Suspense } from "react";
 import type { ReactNode } from "react";
 import { Router } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
@@ -9,10 +9,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calculateXP } from "@/lib/progress";
 import { hasFullAccess, hasPaidPlan, trialDaysRemaining } from "@shared/access";
 import { isNativeApp, getPlatform } from "@/lib/platform";
-import { modules } from "@/lib/curriculum";
+import { modules, prefetchCurriculum } from "@/lib/curriculumMeta";
 import { getModuleTheme, getModuleFamilyTheme, getModuleFamily, FAMILY_LABEL, FAMILY_THEME, type ModuleFamily } from "@/lib/moduleTheme";
 import { moduleClps, formatClps, totalClps } from "@shared/moduleClps";
-import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator, Flame } from "lucide-react";
+import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator, Flame, Loader2 } from "lucide-react";
 import { SIDEBAR_RESOURCES } from "@/lib/resources";
 import { FAR_TRANSLATOR, TOOLS_DIRECTORY } from "@/lib/toolsDirectory";
 import { AcqlerateLogo } from "@/components/AcqlerateLogo";
@@ -21,12 +21,35 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { MobileShell, type MobileTab, type MobileHeader } from "@/components/mobile/MobileShell";
 
 // ── Error Boundary — catches render crashes and shows a recovery UI ─────────
+// Pages are loaded on demand now, which introduces a failure the app did not
+// have before: a deploy while someone is mid-session replaces every file with a
+// new content-hashed name, so their next click asks for a page that no longer
+// exists at that URL. The browser reports it as a failed dynamic import.
+//
+// Re-rendering cannot fix that — the URL is gone for good. Reloading can, since
+// it fetches a fresh index.html with the new names. The sessionStorage flag
+// keeps one bad load from becoming a reload loop if the cause is something else.
+const CHUNK_RELOAD_KEY = 'acq:chunk-reloaded';
+
+function isChunkLoadError(error: Error): boolean {
+  const msg = `${error?.name ?? ''} ${error?.message ?? ''}`;
+  return /dynamically imported module|Importing a module script failed|ChunkLoadError|Loading chunk .* failed|error loading dynamically/i.test(msg);
+}
+
 class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   constructor(props: { children: ReactNode }) {
     super(props);
     this.state = { error: null };
   }
   static getDerivedStateFromError(error: Error) { return { error }; }
+  componentDidCatch(error: Error) {
+    if (!isChunkLoadError(error)) return;
+    try {
+      if (sessionStorage.getItem(CHUNK_RELOAD_KEY)) return;
+      sessionStorage.setItem(CHUNK_RELOAD_KEY, '1');
+    } catch { /* private mode: reload once and accept the small loop risk */ }
+    window.location.reload();
+  }
   render() {
     if (this.state.error) {
       return (
@@ -70,21 +93,37 @@ import Dashboard from "@/pages/Dashboard";
 import ModulePage from "@/pages/ModulePage";
 import ModulesPage, { type ModulesPageMode } from "@/pages/ModulesPage";
 import ResourcesPage from "@/pages/ResourcesPage";
-import LessonPage from "@/pages/LessonPage";
 import UpgradePage from "@/pages/UpgradePage";
 import MyAccountPage from "@/pages/MyAccountPage";
 import AuthPage, { type AuthUser, type SkillLevel, type UserProfile } from "@/pages/AuthPage";
-import AdminPage from "@/pages/AdminPage";
-import AdminAnalytics from "@/pages/AdminAnalytics";
-import PDUTracker from "@/pages/PDUTracker";
-import CostTrackerIntroPage from "@/pages/cost/CostTrackerIntroPage";
-import CostProjectsPage from "@/pages/cost/CostProjectsPage";
-import CostProjectDetailPage from "@/pages/cost/CostProjectDetailPage";
-import CostRatesPage from "@/pages/cost/CostRatesPage";
-import CostTaskOrdersPage from "@/pages/cost/CostTaskOrdersPage";
-import CostTaskOrderDetailPage from "@/pages/cost/CostTaskOrderDetailPage";
-import { ModuleAssessment } from "@/components/ModuleAssessment";
+import { LazyModuleAssessment } from "@/components/LazyModuleAssessment";
 import OnboardingFlow from "@/components/OnboardingFlow";
+
+// ── Pages loaded on demand ─────────────────────────────────────────────────
+//
+// These are either big or rarely opened, and keeping them out of the first
+// download is most of why the app now starts in a quarter of the bytes it did.
+//
+//   LessonPage   the second-largest file in the app, and it pulls in the full
+//                curriculum — which is the 3 MB the split was really about.
+//   AdminPage    two people will ever open these.
+//   AdminAnalytics
+//   PDUTracker   useful, but not on anyone's first visit.
+//   Cost*        a whole sub-application most learners never touch.
+//
+// Everything reachable in the first few clicks — dashboard, modules, lessons
+// list, upgrade, account — stays in the main bundle on purpose, so the common
+// path never waits on a second request.
+const LessonPage = lazy(() => import("@/pages/LessonPage"));
+const AdminPage = lazy(() => import("@/pages/AdminPage"));
+const AdminAnalytics = lazy(() => import("@/pages/AdminAnalytics"));
+const PDUTracker = lazy(() => import("@/pages/PDUTracker"));
+const CostTrackerIntroPage = lazy(() => import("@/pages/cost/CostTrackerIntroPage"));
+const CostProjectsPage = lazy(() => import("@/pages/cost/CostProjectsPage"));
+const CostProjectDetailPage = lazy(() => import("@/pages/cost/CostProjectDetailPage"));
+const CostRatesPage = lazy(() => import("@/pages/cost/CostRatesPage"));
+const CostTaskOrdersPage = lazy(() => import("@/pages/cost/CostTaskOrdersPage"));
+const CostTaskOrderDetailPage = lazy(() => import("@/pages/cost/CostTaskOrderDetailPage"));
 
 /** Sidebar accent classes per subject family. Static strings for Tailwind's JIT. */
 const FAMILY_SIDEBAR: Record<ModuleFamily, { dot: string; lessonHover: string; activeLesson: string; activeLessonText: string }> = {
@@ -156,8 +195,11 @@ function loadSavedView(): View | null {
     if (!valid.includes(parsed.type)) return null;
     // Validate lesson ID still exists in curriculum
     if (parsed.type === 'lesson') {
-      const { modules: allMods } = require('@/lib/curriculum');
-      const exists = allMods.some((m: any) => m.lessons.some((l: any) => l.id === (parsed as any).lessonId));
+      // This used to call require(), which does not exist in the bundled app —
+      // it threw every time, the catch below swallowed it, and "resume where
+      // you left off" silently never worked. `modules` is already imported at
+      // the top of this file, and the lesson IDs live in the light index.
+      const exists = modules.some(m => m.lessons.some(l => l.id === (parsed as any).lessonId));
       if (!exists) return { type: 'dashboard' };
     }
     return parsed;
@@ -192,6 +234,19 @@ function parseHashView(): View | null {
   if (hash.startsWith('#/dashboard')) return { type: 'dashboard' };
   if (hash.startsWith('#/cost')) return { type: 'costTrackerIntro' };
   return null;
+}
+
+/**
+ * Shown while a lazily-loaded page fetches its code. Deliberately plain: the
+ * pages behind it are a few hundred milliseconds away at worst, and a busy
+ * skeleton that flashes and vanishes reads as jank rather than progress.
+ */
+function PageLoading() {
+  return (
+    <div className="flex min-h-[40vh] items-center justify-center">
+      <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+    </div>
+  );
 }
 
 function AppContent() {
@@ -255,6 +310,30 @@ function AppContent() {
   const [resourcesExpanded, setResourcesExpanded] = useState(false);
   const [toolsExpanded, setToolsExpanded] = useState(false);
   const [authState, setAuthState] = useState<AuthState>({ status: 'loading' });
+
+  // The app rendered, so whatever the last reload was for is behind us. Give
+  // the next deploy a fresh reload budget.
+  useEffect(() => {
+    try { sessionStorage.removeItem(CHUNK_RELOAD_KEY); } catch {}
+  }, []);
+
+  // Once someone is signed in they are going to open a lesson, so pull the
+  // lesson bodies down in the background while they read the dashboard. This
+  // is the whole point of splitting them out: the cost is paid during idle
+  // time instead of in front of the first screen. requestIdleCallback keeps
+  // it off the critical path; Safari does not have it, hence the timeout.
+  const signedIn = authState.status === 'authenticated';
+  useEffect(() => {
+    if (!signedIn) return;
+    const go = () => { prefetchCurriculum(); };
+    const ric = (window as any).requestIdleCallback;
+    if (typeof ric === 'function') {
+      const id = ric(go, { timeout: 4000 });
+      return () => (window as any).cancelIdleCallback?.(id);
+    }
+    const t = setTimeout(go, 1500);
+    return () => clearTimeout(t);
+  }, [signedIn]);
   // Set when the server ends a session for inactivity (server/auth.ts idle
   // timeout) and the client notices via a 401 on the next heartbeat — shown
   // on the login screen so it doesn't look like an unexplained sign-out.
@@ -942,7 +1021,7 @@ function AppContent() {
         onScrollProgress={view.type === 'lesson' ? setReadPct : undefined}
         readingBar={view.type === 'lesson' ? { pct: readPct, color: lessonModuleHex } : null}
       >
-        <ErrorBoundary>{pageContent}</ErrorBoundary>
+        <ErrorBoundary><Suspense fallback={<PageLoading />}>{pageContent}</Suspense></ErrorBoundary>
       </MobileShell>
     ) : (
     <div className="min-h-screen bg-background flex">
@@ -1235,7 +1314,7 @@ function AppContent() {
 
         {/* Page Content */}
         <main className="flex-1 min-w-0 p-4 md:p-6 max-w-6xl mx-auto w-full relative z-10">
-        <ErrorBoundary>{pageContent}</ErrorBoundary>
+        <ErrorBoundary><Suspense fallback={<PageLoading />}>{pageContent}</Suspense></ErrorBoundary>
         </main>
       </div>
     </div>
@@ -1244,12 +1323,12 @@ function AppContent() {
     {/* Module Assessment Modal */}
     {assessmentModuleId && authState.status === 'authenticated' && (() => {
       const assessMod = modules.find(m => m.id === assessmentModuleId);
-      if (!assessMod || !assessMod.assessment?.length) return null;
+      if (!assessMod || !assessMod.assessmentCount) return null;
       const skillLevels = authState.user.moduleSkillLevels ?? {};
       const currentLevel = (skillLevels[assessmentModuleId] as SkillLevel) ?? 'novice';
       return (
-        <ModuleAssessment
-          module={assessMod}
+        <LazyModuleAssessment
+          moduleId={assessmentModuleId}
           currentLevel={currentLevel}
           onClose={() => setAssessmentModuleId(null)}
           onLevelUnlocked={(moduleId, newLevel) => {

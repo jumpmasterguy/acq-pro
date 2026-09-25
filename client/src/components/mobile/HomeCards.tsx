@@ -4,9 +4,9 @@
  */
 
 import { Play, ChevronRight, Zap } from 'lucide-react';
-import type { Module } from '@/lib/curriculum';
+import type { ModuleMeta } from '@/lib/curriculumMeta';
 import { getModuleTheme, moduleGradient, getModuleFamilyTheme } from '@/lib/moduleTheme';
-import { formatDuration, getModuleTotalMinutes } from '@/lib/curriculum';
+import { formatDuration, getModuleTotalMinutes } from '@/lib/curriculumMeta';
 
 // ── Greeting ────────────────────────────────────────────────────────────────
 
@@ -83,7 +83,7 @@ export function UpNextCard({
   modulePct,
   onContinue,
 }: {
-  module: Module;
+  module: ModuleMeta;
   lessonTitle: string;
   lessonIndex: number;
   lessonCount: number;
@@ -325,11 +325,11 @@ export function ModuleCarousel({
   doneLessons,
   totalLessons,
 }: {
-  modules: Module[];
-  seqOf: (m: Module) => number;
-  pctOf: (m: Module) => number;
-  lockedOf: (m: Module) => boolean;
-  onOpen: (m: Module) => void;
+  modules: ModuleMeta[];
+  seqOf: (m: ModuleMeta) => number;
+  pctOf: (m: ModuleMeta) => number;
+  lockedOf: (m: ModuleMeta) => boolean;
+  onOpen: (m: ModuleMeta) => void;
   onSeeAll: () => void;
   doneLessons: number;
   totalLessons: number;

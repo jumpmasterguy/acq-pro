@@ -5,7 +5,7 @@
 
 import { useEffect } from 'react';
 import { CheckCircle2, ChevronRight } from 'lucide-react';
-import type { KeyTerm } from '@/lib/curriculum';
+import type { KeyTerm } from '@/lib/curriculumMeta';
 import { cn } from '@/lib/utils';
 
 // ── Key term sheet ──────────────────────────────────────────────────────────
