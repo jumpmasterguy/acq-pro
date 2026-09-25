@@ -313,6 +313,21 @@ app.use((req, res, next) => {
           )
         `);
       } catch (e: any) { /* table already exists */ }
+      // Last good Search Console pull per month, for /api/stats/seo
+      // (server/searchConsole.ts) to fall back on when Google is unreachable.
+      try {
+        await schemaPool.query(`
+          CREATE TABLE IF NOT EXISTS seo_stats_pulls (
+            month TEXT PRIMARY KEY,
+            start_date TEXT NOT NULL,
+            end_date TEXT NOT NULL,
+            clicks INTEGER NOT NULL,
+            impressions INTEGER NOT NULL,
+            avg_position DOUBLE PRECISION,
+            pulled_at TEXT NOT NULL
+          )
+        `);
+      } catch (e: any) { /* table already exists */ }
       for (const stmt of schemaCols) {
         try { await schemaPool.query(stmt); } catch (e: any) { /* column already exists or already nullable */ }
       }

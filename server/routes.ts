@@ -17,6 +17,7 @@ import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNoti
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 import { costTrackerStorage } from "./costTrackerStorage";
 import { reportCheckoutFailure } from "./stripeHealth";
+import { getSeoStats } from "./searchConsole";
 import { sendOpsAlertEmail } from "./email";
 import { dailyChallengeQuestionBank } from "./dailyChallengeQuestions";
 import {
@@ -1800,6 +1801,33 @@ export async function registerRoutes(
       console.error("[stats] failed", err);
       res.status(500).json({ error: "stats_unavailable" });
     }
+  });
+
+  // GET /api/stats/seo — Search Console totals for the month. Needs CRON_SECRET.
+  //
+  // Feeds the founder review dashboard's "Google clicks" row via the weekly
+  // ledger task. Send the secret as "Authorization: Bearer <CRON_SECRET>"
+  // (preferred, keeps it out of URLs) or ?secret=<CRON_SECRET> like
+  // /api/cron/drip. Optional ?month=YYYY-MM for a past month; default is the
+  // current month to date, Pacific Time, matching the Search Console UI.
+  //
+  // Returns { month, startDate, endDate, clicks, impressions, position,
+  // lastSuccessfulPullAt, stale }. If Google fails, it returns the last good
+  // pull for that month with stale: true and an error string. See
+  // server/searchConsole.ts for the env vars and the service-account setup.
+  app.get("/api/stats/seo", async (req: Request, res: Response) => {
+    const secret = process.env.CRON_SECRET;
+    const auth = req.headers.authorization;
+    const given = auth?.startsWith("Bearer ") ? auth.slice(7)
+      : typeof req.query.secret === "string" ? req.query.secret : "";
+    const a = Buffer.from(given), b = Buffer.from(secret ?? "");
+    if (!secret || a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    res.set("Cache-Control", "no-store");
+    const month = typeof req.query.month === "string" ? req.query.month : undefined;
+    const { status, body } = await getSeoStats(month);
+    res.status(status).json(body);
   });
 
   // ─── Admin Analytics ─────────────────────────────────────────────────────
