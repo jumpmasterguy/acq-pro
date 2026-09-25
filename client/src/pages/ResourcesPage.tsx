@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { Download, Lock, Sparkles, ExternalLink } from 'lucide-react';
 import { SIDEBAR_RESOURCES } from '@/lib/resources';
 import { FAR_TRANSLATOR, TOOLS_DIRECTORY } from '@/lib/toolsDirectory';
+import { isNativeApp } from '@/lib/platform';
 import { cn } from '@/lib/utils';
 
 interface ResourcesPageProps {
@@ -125,7 +126,7 @@ export default function ResourcesPage({ isPremium, onUpgrade }: ResourcesPagePro
               deliberately not here — it's six pages of dense tables with no
               mobile layout, so it stays desktop-only for now. */}
           <a
-            href={FAR_TRANSLATOR.url}
+            href={isNativeApp() ? FAR_TRANSLATOR.url.replace('#', '?app=1#') : FAR_TRANSLATOR.url}
             target="_blank"
             rel="noopener noreferrer"
             className="acq-press flex items-start gap-3 rounded-[14px] p-3.5"

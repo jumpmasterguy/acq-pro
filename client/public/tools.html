@@ -15,7 +15,7 @@
     });
   </script>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Free Acquisition Tools & Resources — Acqlerate</title>
   <meta name="description" content="Free acquisition tools for KOs, program managers, and defense contractors — organized by role, with plain-English guides on how to actually use them." />
   <link rel="canonical" href="https://acqlerate.com/tools" />
@@ -89,7 +89,28 @@
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       padding: 0 2rem;
+      /* Clear the status bar / notch. Zero in a desktop browser. */
+      padding-top: env(safe-area-inset-top);
     }
+    body {
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+    .nav-actions a { white-space: nowrap; }
+
+    /* Inside the Acqlerate app: the visitor is already signed in, so the
+       marketing header gives way to a way back into the app. Toggled by the
+       script at the end of <body>. */
+    .app-back {
+      display: none; align-items: center; gap: 6px;
+      color: var(--teal); font-weight: 700; font-size: 0.95rem;
+      text-decoration: none; padding: 8px 4px;
+    }
+    html.in-app .app-back { display: inline-flex; }
+    html.in-app .nav-logo,
+    html.in-app .nav-actions,
+    html.in-app .bottom-cta,
+    html.in-app .signup-only { display: none !important; }
     .nav-inner {
       max-width: 1100px; margin: 0 auto;
       display: flex; align-items: center; justify-content: space-between;
@@ -161,7 +182,7 @@
 
     /* ─── FILTER TABS ─── */
     .filter-bar {
-      position: sticky; top: 60px; z-index: 100;
+      position: sticky; top: calc(60px + env(safe-area-inset-top)); z-index: 100;
       background: rgba(255,255,255,0.97);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
@@ -392,8 +413,18 @@
       .tools-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
-      nav { padding: 0 1rem; }
+      nav { padding: env(safe-area-inset-top) 1rem 0; }
+      /* Four buttons do not fit a phone. Keep the two that convert. */
+      .nav-actions { gap: 8px; }
+      .nav-actions .nav-ghost-sm,
+      .nav-actions .nav-blog-pill { display: none; }
+      .nav-actions .btn-ghost { padding: 7px 12px; }
+      .nav-actions .btn-primary { padding: 9px 14px; }
+    }
+    @media (max-width: 360px) {
       .nav-actions .btn-ghost { display: none; }
+    }
+    @media (max-width: 640px) {
       .hero { padding: 52px 1.25rem 48px; }
       .content-wrap { padding: 36px 1.25rem 60px; }
       .cat-section { margin-bottom: 48px; }
@@ -408,6 +439,7 @@
 <!-- NAV -->
 <nav>
   <div class="nav-inner">
+    <a href="/app" class="app-back" id="app-back">&#8249; Back to Acqlerate</a>
     <a href="/" class="nav-logo">
       <div class="nav-logo-icon">
         <img src="/acqlerate-icon.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit">
@@ -419,8 +451,8 @@
       <a href="/blog" class="nav-blog-pill">
         Blog <span class="nav-blog-badge">FREE</span>
       </a>
-      <a href="https://app.acqlerate.com/sign-in" class="btn-ghost">Sign In</a>
-      <a href="https://app.acqlerate.com/sign-up" class="btn-primary">Start Free →</a>
+      <a href="/app#/auth?mode=login" class="btn-ghost">Sign In</a>
+      <a href="/app#/auth" class="btn-primary">Start Free →</a>
     </div>
   </div>
 </nav>
@@ -549,7 +581,7 @@ if (window.location.hash === '#far-translator') {
         </div>
         <div class="tool-actions">
           <a href="https://sam.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
-          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Contracts Module →</a>
+          <a href="/app#/module/contracts" class="tool-learn">Learn in Contracts Module →</a>
         </div>
       </div>
 
@@ -602,7 +634,7 @@ if (window.location.hash === '#far-translator') {
         </div>
         <div class="tool-actions">
           <a href="https://sam.gov/search/opportunities" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
-          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Capture Module →</a>
+          <a href="/app#/module/capture" class="tool-learn">Learn in Capture Module →</a>
         </div>
       </div>
 
@@ -622,7 +654,7 @@ if (window.location.hash === '#far-translator') {
         </div>
         <div class="tool-actions">
           <a href="https://usaspending.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
-          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Capture + Finance →</a>
+          <a href="/app#/module/capture" class="tool-learn">Learn in Capture + Finance →</a>
         </div>
       </div>
 
@@ -696,7 +728,7 @@ if (window.location.hash === '#far-translator') {
         </div>
         <div class="tool-actions">
           <a href="https://calc.gsa.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
-          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Finance Module →</a>
+          <a href="/app#/module/finance" class="tool-learn">Learn in Finance Module →</a>
         </div>
       </div>
 
@@ -717,7 +749,7 @@ if (window.location.hash === '#far-translator') {
         </div>
         <div class="tool-actions">
           <a href="https://www.bls.gov/oes/" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
-          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Finance Module →</a>
+          <a href="/app#/module/finance" class="tool-learn">Learn in Finance Module →</a>
         </div>
       </div>
 
@@ -771,7 +803,7 @@ if (window.location.hash === '#far-translator') {
         </div>
         <div class="tool-actions">
           <a href="https://www.ecfr.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
-          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Contracts Module →</a>
+          <a href="/app#/module/contracts" class="tool-learn">Learn in Contracts Module →</a>
         </div>
       </div>
 
@@ -881,7 +913,7 @@ if (window.location.hash === '#far-translator') {
         </div>
         <div class="tool-actions">
           <a href="https://usaspending.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
-          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Capture Module →</a>
+          <a href="/app#/module/capture" class="tool-learn">Learn in Capture Module →</a>
         </div>
       </div>
 
@@ -1014,7 +1046,7 @@ if (window.location.hash === '#far-translator') {
           <span class="role-badge all">All Roles</span>
         </div>
         <div class="tool-actions">
-          <a href="https://app.acqlerate.com/sign-up" class="tool-link" style="background: var(--teal); color: white; border-color: var(--teal);">Start Free →</a>
+          <a href="/app#/auth" class="tool-link signup-only" style="background: var(--teal); color: white; border-color: var(--teal);">Start Free →</a>
         </div>
       </div>
 
@@ -1109,7 +1141,7 @@ if (window.location.hash === '#far-translator') {
   <h2>The tools are only as powerful as the person using them.</h2>
   <p>Acqlerate teaches you the acquisition system in plain English — so when you pick up these tools, you know exactly what you're doing with them.</p>
   <div class="bottom-cta-btns">
-    <a href="https://app.acqlerate.com/sign-up" class="btn-teal-lg">Start Learning Free →</a>
+    <a href="/app#/auth" class="btn-teal-lg">Start Learning Free →</a>
     <a href="/blog" class="btn-ghost-lg">Browse the Blog</a>
   </div>
 </section>
@@ -1122,7 +1154,7 @@ if (window.location.hash === '#far-translator') {
       <a href="/">Home</a>
       <a href="/tools">Tools</a>
       <a href="/blog">Blog</a>
-      <a href="https://app.acqlerate.com/sign-up">Start Free</a>
+      <a href="/app#/auth" class="signup-only">Start Free</a>
       <a href="/privacy.html">Privacy</a>
       <a href="/terms.html">Terms</a>
     </div>
@@ -1189,5 +1221,24 @@ if (window.location.hash === '#far-translator') {
   })();
 </script>
 
+<script>
+  (function () {
+    var inApp = false;
+    try { inApp = localStorage.getItem('acq:native') === '1'; } catch (e) {}
+    if (/[?&]app=1\b/.test(location.search)) inApp = true;
+    try { if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) inApp = true; } catch (e) {}
+    if (!inApp) return;
+    document.documentElement.classList.add('in-app');
+    // Back to wherever in the app they came from; straight to the app if
+    // they arrived some other way.
+    var back = document.getElementById('app-back');
+    if (back) back.addEventListener('click', function (e) {
+      if (document.referrer.indexOf(location.origin + '/app') === 0 && history.length > 1) {
+        e.preventDefault();
+        history.back();
+      }
+    });
+  })();
+</script>
 </body>
 </html>

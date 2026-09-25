@@ -1,6 +1,16 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
+import { isNativeApp } from "./lib/platform";
+
+// The static pages on this site (tools.html and friends) are plain HTML and
+// cannot import isNativeApp(). This flag is how they know they are open inside
+// the app: tools.html swaps its marketing header for a "Back to Acqlerate"
+// link when it sees it. The app's storage is its own, never the phone
+// browser's, so a website visitor never has it set.
+try {
+  if (isNativeApp()) localStorage.setItem("acq:native", "1");
+} catch { /* storage unavailable: tools.html falls back to ?app=1 */ }
 
 if (!window.location.hash) {
   window.location.hash = "#/";
