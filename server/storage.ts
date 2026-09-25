@@ -1,6 +1,8 @@
 import { type User, type InsertUser, type InsertGoogleUser, type InsertAppleUser, users, emailLeads, type Lead, passwordResetTokens } from "@shared/schema";
 import { computeTrialEndsAt, computePackBonusEndsAt, hasFullAccess, PACK_BONUS_PACKS, PACK_BONUS_CLAIM_WINDOW_DAYS } from "@shared/access";
 import { randomUUID } from "crypto";
+import { weekRollPatch } from "@shared/xp";
+import type { LeaderboardRow } from "./leaderboard";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { eq, sql } from "drizzle-orm";
 import { Pool } from "pg";
@@ -67,8 +69,13 @@ export interface IStorage {
   updateUserProgress(
     userId: string,
     completedLessons: string[],
-    quizScores: Record<string, number>
+    quizScores: Record<string, number>,
+    /** Written in the same update, e.g. the week's starting XP (weekRollPatch). */
+    extra?: Record<string, unknown>
   ): Promise<User | undefined>;
+  /** Everyone's leaderboard inputs, in one read. See server/leaderboard.ts. */
+  getLeaderboardRows(): Promise<LeaderboardRow[]>;
+  setLeaderboardHidden(userId: string, hidden: boolean): Promise<User | undefined>;
   updateUserPassword(userId: string, passwordHash: string): Promise<User | undefined>;
   // Password reset / first-password tokens. Callers pass the SHA-256 of the
   // token, never the token itself.
@@ -390,11 +397,44 @@ export class DrizzleStorage implements IStorage {
   async updateUserProgress(
     userId: string,
     completedLessons: string[],
-    quizScores: Record<string, number>
+    quizScores: Record<string, number>,
+    extra: Record<string, unknown> = {}
   ): Promise<User | undefined> {
     const result = await this.db
       .update(users)
-      .set({ completedLessons, quizScores })
+      .set({ completedLessons, quizScores, ...extra } as any)
+      .where(eq(users.id, userId))
+      .returning();
+    return result[0];
+  }
+
+  async getLeaderboardRows(): Promise<LeaderboardRow[]> {
+    // Only the columns the boards need — never email, never anything else.
+    const rows = await this.db
+      .select({
+        id: users.id,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        completedLessons: users.completedLessons,
+        quizScores: users.quizScores,
+        challengeHistory: users.challengeHistory,
+        briefsRead: users.briefsRead,
+        currentStreak: users.currentStreak,
+        lastStreakDate: users.lastStreakDate,
+        xpWeekOf: users.xpWeekOf,
+        xpWeekStartXp: users.xpWeekStartXp,
+        leaderboardHidden: users.leaderboardHidden,
+        email: users.email,
+        isAdmin: users.isAdmin,
+      })
+      .from(users);
+    return rows as LeaderboardRow[];
+  }
+
+  async setLeaderboardHidden(userId: string, hidden: boolean): Promise<User | undefined> {
+    const result = await this.db
+      .update(users)
+      .set({ leaderboardHidden: hidden } as any)
       .where(eq(users.id, userId))
       .returning();
     return result[0];
@@ -618,12 +658,14 @@ export class DrizzleStorage implements IStorage {
     // Already completed today — no-op. `awarded: false` lets the route tell
     // the client the truth instead of claiming fresh XP was just earned.
     if ((user as any).lastChallengeDate === todayStr) return { user, awarded: false };
+    // Before the push below: it mutates the array inside `user`.
+    const weekRoll = weekRollPatch(user as any);
     const history = ((user as any).challengeHistory ?? []) as any[];
     history.push({ date: todayStr, score, xpEarned });
     const newXp = (user.xp ?? 0) + xpEarned;
     const result = await this.db
       .update(users)
-      .set({ lastChallengeDate: todayStr, challengeHistory: history, xp: newXp } as any)
+      .set({ lastChallengeDate: todayStr, challengeHistory: history, xp: newXp, ...weekRoll } as any)
       .where(eq(users.id, userId))
       .returning();
     await this.updateUserStreak(userId);
@@ -651,11 +693,12 @@ export class DrizzleStorage implements IStorage {
     if (already) {
       return { user, awarded: false, briefsRead: entries.map(e => e.id) };
     }
+    const weekRoll = weekRollPatch(user as any);
     entries.push({ id: briefId, date: new Date().toISOString().slice(0, 10), score, xpEarned });
     const newXp = (user.xp ?? 0) + xpEarned;
     const result = await this.db
       .update(users)
-      .set({ briefsRead: entries, xp: newXp } as any)
+      .set({ briefsRead: entries, xp: newXp, ...weekRoll } as any)
       .where(eq(users.id, userId))
       .returning();
     // Reading a brief is real activity, so it keeps the burn-rate streak alive
@@ -1006,11 +1049,39 @@ export class MemStorage implements IStorage {
   async updateUserProgress(
     userId: string,
     completedLessons: string[],
-    quizScores: Record<string, number>
+    quizScores: Record<string, number>,
+    extra: Record<string, unknown> = {}
   ): Promise<User | undefined> {
     const user = this.users.get(userId);
     if (!user) return undefined;
-    const updated = { ...user, completedLessons, quizScores };
+    const updated = { ...user, completedLessons, quizScores, ...extra } as User;
+    this.users.set(userId, updated);
+    return updated;
+  }
+
+  async getLeaderboardRows(): Promise<LeaderboardRow[]> {
+    return Array.from(this.users.values()).map((u: any) => ({
+      id: u.id,
+      firstName: u.firstName ?? null,
+      lastName: u.lastName ?? null,
+      completedLessons: u.completedLessons ?? [],
+      quizScores: u.quizScores ?? {},
+      challengeHistory: u.challengeHistory ?? [],
+      briefsRead: u.briefsRead ?? [],
+      currentStreak: u.currentStreak ?? 0,
+      lastStreakDate: u.lastStreakDate ?? null,
+      xpWeekOf: u.xpWeekOf ?? null,
+      xpWeekStartXp: u.xpWeekStartXp ?? 0,
+      leaderboardHidden: u.leaderboardHidden ?? false,
+      email: u.email ?? null,
+      isAdmin: u.isAdmin ?? false,
+    }));
+  }
+
+  async setLeaderboardHidden(userId: string, hidden: boolean): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const updated = { ...user, leaderboardHidden: hidden } as User;
     this.users.set(userId, updated);
     return updated;
   }
@@ -1140,8 +1211,9 @@ export class MemStorage implements IStorage {
     if (entries.some(e => e?.id === briefId)) {
       return { user, awarded: false, briefsRead: entries.map(e => e.id) };
     }
+    const weekRoll = weekRollPatch(user as any);
     entries.push({ id: briefId, date: new Date().toISOString().slice(0, 10), score, xpEarned });
-    const updated = { ...user, briefsRead: entries, xp: (user.xp ?? 0) + xpEarned } as any;
+    const updated = { ...user, briefsRead: entries, xp: (user.xp ?? 0) + xpEarned, ...weekRoll } as any;
     this.users.set(userId, updated);
     return { user: updated, awarded: true, briefsRead: entries.map(e => e.id) };
   }
@@ -1240,13 +1312,15 @@ export class MemStorage implements IStorage {
     const todayStr = new Date().toISOString().slice(0, 10);
     if ((user as any).lastChallengeDate === todayStr) return { user, awarded: false };
 
-    const history = ((user as any).challengeHistory ?? []) as any[];
+    const weekRoll = weekRollPatch(user as any);
+    const history = [...(((user as any).challengeHistory ?? []) as any[])];
     history.push({ date: todayStr, score, xpEarned });
     const withChallenge = {
       ...user,
       lastChallengeDate: todayStr,
       challengeHistory: history,
       xp: (user.xp ?? 0) + xpEarned,
+      ...weekRoll,
     } as User;
     this.users.set(userId, withChallenge);
 

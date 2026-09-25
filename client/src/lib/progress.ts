@@ -1,3 +1,4 @@
+import { xpFromParts } from '@shared/xp';
 // Progress management using React state (no localStorage)
 export interface UserProgress {
   completedLessons: Set<string>;
@@ -28,36 +29,32 @@ export const calculateXP = (
   quizScores: Record<string, number>,
   dailyChallengeXP: number = 0,
   briefsXP: number = 0
-) => {
-  let xp = completedLessons.size * 100;
-  Object.values(quizScores).forEach(score => {
-    xp += Math.floor(score / 10);
-  });
-  xp += dailyChallengeXP;
-  // Acquisition This Week brief XP, tracked server-side per brief. Folded in
-  // here for the same reason as the Daily Challenge: it is earned outside the
-  // lesson/quiz formula, so without this line the user never sees it.
-  xp += briefsXP;
-  return xp;
-};
+) =>
+  // Shared with the server so the leaderboards and the learner's own screen
+  // can never disagree. Daily Challenge and brief XP are earned outside the
+  // lesson/quiz formula, so they are passed in as totals.
+  xpFromParts(completedLessons.size, quizScores, dailyChallengeXP, briefsXP);
 
-export const getLevel = (xp: number): { level: number; title: string; nextXP: number } => {
-  const levels = [
-    { level: 1, title: 'Acquisition Trainee', threshold: 0, nextXP: 200 },
-    { level: 2, title: 'GS-9 Analyst', threshold: 200, nextXP: 500 },
-    { level: 3, title: 'GS-11 Professional', threshold: 500, nextXP: 1000 },
-    { level: 4, title: 'GS-12 Specialist', threshold: 1000, nextXP: 1800 },
-    { level: 5, title: 'GS-13 Senior Manager', threshold: 1800, nextXP: 3000 },
-    { level: 6, title: 'GS-14 Program Manager', threshold: 3000, nextXP: 5000 },
-    { level: 7, title: 'SES-Level Executive', threshold: 5000, nextXP: 9999 },
-  ];
+/**
+ * The career ladder. `threshold` is the XP at which each level begins.
+ * The level road draws one space per 100 XP — about one lesson — so SES,
+ * at 5,000, is fifty spaces from the start.
+ */
+export const LEVELS = [
+  { level: 1, title: 'Acquisition Trainee', threshold: 0, nextXP: 200, desc: 'Just getting started. Learning the landscape.' },
+  { level: 2, title: 'GS-9 Analyst', threshold: 200, nextXP: 500, desc: 'Building foundational knowledge. You know the players and the process.' },
+  { level: 3, title: 'GS-11 Professional', threshold: 500, nextXP: 1000, desc: 'Solid understanding of contracts, finance basics, and acquisition vehicles.' },
+  { level: 4, title: 'GS-12 Specialist', threshold: 1000, nextXP: 1800, desc: 'Deep functional knowledge. You can navigate a program review without a cheat sheet.' },
+  { level: 5, title: 'GS-13 Senior Manager', threshold: 1800, nextXP: 3000, desc: 'Multi-domain fluency. Source selection, EVM, modifications — you handle it.' },
+  { level: 6, title: 'GS-14 Program Manager', threshold: 3000, nextXP: 5000, desc: 'Senior PM territory. Leading programs, coaching others, managing the enterprise.' },
+  { level: 7, title: 'SES-Level Executive', threshold: 5000, nextXP: 9999, desc: 'The full picture — strategy, policy, leadership, and acquisition mastery.' },
+] as const;
 
-  for (let i = levels.length - 1; i >= 0; i--) {
-    if (xp >= levels[i].threshold) {
-      return levels[i];
-    }
+export const getLevel = (xp: number): { level: number; title: string; nextXP: number; threshold: number; desc: string } => {
+  for (let i = LEVELS.length - 1; i >= 0; i--) {
+    if (xp >= LEVELS[i].threshold) return LEVELS[i];
   }
-  return levels[0];
+  return LEVELS[0];
 };
 
 export const getModuleProgress = (

@@ -20,6 +20,8 @@ import { reportCheckoutFailure } from "./stripeHealth";
 import { getSeoStats } from "./searchConsole";
 import { sendOpsAlertEmail } from "./email";
 import { dailyChallengeQuestionBank } from "./dailyChallengeQuestions";
+import { buildLeaderboards, type LeaderboardRow } from "./leaderboard";
+import { weekRollPatch } from "@shared/xp";
 import {
   summarizeProject, aggregateSummaries, createProjectSchema, createFundingModSchema,
   createCostEntrySchema, updateRatesSchema, createTaskOrderSchema, setProjectTaskOrderSchema,
@@ -710,7 +712,11 @@ export async function registerRoutes(
       }
     }
 
-    const updated = await storage.updateUserProgress(userId, completedLessons, newScores);
+    // Recorded from the user as they were BEFORE this lesson or score, so the
+    // XP it earns counts toward this week's leaderboard.
+    const updated = await storage.updateUserProgress(
+      userId, completedLessons, newScores, weekRollPatch(currentUser as any),
+    );
     if (!updated) {
       return res.status(500).json({ message: "Failed to save progress" });
     }
@@ -1652,6 +1658,52 @@ export async function registerRoutes(
       console.error('[briefs/complete] error:', err);
       return res.status(500).json({ message: 'Failed to record brief' });
     }
+  });
+
+  // ─── Leaderboards ─────────────────────────────────────────────────────────
+  // One read of every user's leaderboard inputs, shared across viewers for a
+  // minute. Boards are weekly, so a minute's staleness is invisible, and it
+  // keeps a busy Monday morning from turning into a full-table scan per tap.
+  let leaderboardCache: { at: number; rows: LeaderboardRow[] } | null = null;
+  const LEADERBOARD_TTL_MS = 60_000;
+
+  app.get("/api/leaderboard", requireAuth as any, async (req: Request, res: Response) => {
+    try {
+      if (!leaderboardCache || Date.now() - leaderboardCache.at > LEADERBOARD_TTL_MS) {
+        leaderboardCache = { at: Date.now(), rows: await storage.getLeaderboardRows() };
+      }
+      // The viewer's own row is read fresh, so their own number moves the
+      // moment they finish a lesson even while everyone else's is cached.
+      const me = await storage.getUser(req.user!.id);
+      const rows = leaderboardCache.rows.filter(r => r.id !== req.user!.id);
+      if (me) {
+        const m = me as any;
+        rows.push({
+          id: m.id, firstName: m.firstName ?? null, lastName: m.lastName ?? null,
+          completedLessons: m.completedLessons ?? [], quizScores: m.quizScores ?? {},
+          challengeHistory: m.challengeHistory ?? [], briefsRead: m.briefsRead ?? [],
+          currentStreak: m.currentStreak ?? 0, lastStreakDate: m.lastStreakDate ?? null,
+          xpWeekOf: m.xpWeekOf ?? null, xpWeekStartXp: m.xpWeekStartXp ?? 0,
+          leaderboardHidden: m.leaderboardHidden ?? false,
+          email: m.email ?? null, isAdmin: m.isAdmin ?? false,
+        });
+      }
+      return res.json(buildLeaderboards(rows, req.user!.id));
+    } catch (err: any) {
+      console.error("[leaderboard] error:", err);
+      return res.status(500).json({ message: "Failed to load leaderboards" });
+    }
+  });
+
+  // POST /api/leaderboard/visibility — Body: { hidden: boolean }
+  app.post("/api/leaderboard/visibility", requireAuth as any, async (req: Request, res: Response) => {
+    const { hidden } = req.body as { hidden?: unknown };
+    if (typeof hidden !== "boolean") return res.status(400).json({ message: "hidden must be true or false" });
+    const updated = await storage.setLeaderboardHidden(req.user!.id, hidden);
+    if (!updated) return res.status(404).json({ message: "User not found" });
+    (req.user as any).leaderboardHidden = hidden;
+    leaderboardCache = null; // hiding should take effect for everyone at once
+    return res.json({ hidden });
   });
 
   // ─── Activity Tracking ────────────────────────────────────────────────────

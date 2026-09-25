@@ -9,6 +9,7 @@
  */
 
 import { useMemo } from 'react';
+import { LeaderboardCard } from '@/components/Leaderboard';
 import type { ModuleMeta } from '@/lib/curriculumMeta';
 import { modules as allModules, getTotalLessons } from '@/lib/curriculumMeta';
 import { FREE_MODULES, getModuleProgress } from '@/lib/progress';
@@ -126,6 +127,8 @@ export function MobileHome({
         xpEarned={challenge.xpEarned}
         onOpen={onOpenChallenge}
       />
+
+      <LeaderboardCard />
 
       <ModuleCarousel
         modules={allModules}

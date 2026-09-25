@@ -1,5 +1,7 @@
 import { useState, useEffect, type ReactNode } from "react";
-import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap, Trash2, AlertTriangle, Award, LogOut, Moon, Gift } from "lucide-react";
+import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap, Trash2, AlertTriangle, Award, LogOut, Moon, Gift, Trophy } from "lucide-react";
+import { LevelRoadSheet } from "@/components/LevelRoad";
+import { LeaderboardVisibilityRow } from "@/components/Leaderboard";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription,
@@ -36,15 +38,6 @@ interface MyAccountPageProps {
   themeMode?: 'light' | 'dark' | 'system';
   onThemeChange?: (mode: 'light' | 'dark' | 'system') => void;
 }
-
-/**
- * XP at which each level begins — the lower bound getLevel() checks against.
- * Needed to draw the progress bar as "how far through this level", rather
- * than "how far from zero".
- */
-const LEVEL_FLOOR: Record<number, number> = {
-  1: 0, 2: 200, 3: 500, 4: 1000, 5: 1800, 6: 3000, 7: 5000,
-};
 
 // Same localStorage key + default Dashboard.tsx already uses for the career
 // filter bar — the path switcher here is a second way to change the same
@@ -83,6 +76,7 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
   const [referral, setReferral] = useState<{ referralCode: string; referralCount: number; rewardsEarned: number; referralLink: string; nextRewardAt: number } | null>(null);
   const [referralCopied, setReferralCopied] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [showRoad, setShowRoad] = useState(false);
   const [deleteText, setDeleteText] = useState("");
   const [deleting, setDeleting] = useState(false);
   const [activeCareer, setActiveCareer] = useState<CareerTrackId>(() => {
@@ -188,7 +182,9 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
   if (isMobile) {
     const level = getLevel(xp);
     const nextLevel = getLevel(level.nextXP);
-    const levelFloor = LEVEL_FLOOR[level.level] ?? 0;
+    // Where this level starts, so the bar shows progress through the level,
+    // not from zero. From the shared table in lib/progress.ts.
+    const levelFloor = level.threshold;
     const span = Math.max(1, level.nextXP - levelFloor);
     const levelPct = Math.min(100, Math.round(((xp - levelFloor) / span) * 100));
 
@@ -204,7 +200,9 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
           lessonsDone={completedLessons.size}
           dayStreak={streak}
           clpsEarned={earnedClps(completedLessons)}
+          onOpenRoad={() => setShowRoad(true)}
         />
+        {showRoad && <LevelRoadSheet xp={xp} onClose={() => setShowRoad(false)} />}
 
         <AccountSection icon={Award} title="Module standing">
           <ModuleStanding
@@ -326,6 +324,10 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
 
         {/* Theme — not in the handoff, but the mobile top bar has no toggle and
             the app otherwise follows the OS with no way to override it. */}
+        <AccountSection icon={Trophy} title="Leaderboards">
+          <LeaderboardVisibilityRow />
+        </AccountSection>
+
         <AccountSection icon={Moon} title="Appearance">
           <div className="flex gap-2">
             {(['light', 'dark', 'system'] as const).map(mode => (
@@ -495,6 +497,10 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
             </Button>
           )}
         </div>
+      </Section>
+
+      <Section icon={Trophy} title="Leaderboards">
+        <LeaderboardVisibilityRow />
       </Section>
 
       {/* Referrals */}

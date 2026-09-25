@@ -6,7 +6,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calculateXP } from "@/lib/progress";
+import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calculateXP, LEVELS } from "@/lib/progress";
 import { hasFullAccess, hasPaidPlan, trialDaysRemaining } from "@shared/access";
 import { isNativeApp, getPlatform } from "@/lib/platform";
 import { modules, prefetchCurriculum } from "@/lib/curriculumMeta";
@@ -97,6 +97,7 @@ import UpgradePage from "@/pages/UpgradePage";
 import MyAccountPage from "@/pages/MyAccountPage";
 import AuthPage, { type AuthUser, type SkillLevel, type UserProfile } from "@/pages/AuthPage";
 import { LazyModuleAssessment } from "@/components/LazyModuleAssessment";
+import { LevelRoadSheet } from "@/components/LevelRoad";
 import OnboardingFlow from "@/components/OnboardingFlow";
 
 // ── Pages loaded on demand ─────────────────────────────────────────────────
@@ -795,15 +796,8 @@ function AppContent() {
   const xp = progress.xp;
   const completedCount = completedLessons.size;
 
-  const ALL_LEVELS = [
-    { level: 1, title: 'Acquisition Trainee',    threshold: 0,    nextXP: 200,  desc: 'Just getting started. Learning the landscape.' },
-    { level: 2, title: 'GS-9 Analyst',           threshold: 200,  nextXP: 500,  desc: 'Building foundational knowledge. You know the players and the process.' },
-    { level: 3, title: 'GS-11 Professional',      threshold: 500,  nextXP: 1000, desc: 'Solid understanding of contracts, finance basics, and acquisition vehicles.' },
-    { level: 4, title: 'GS-12 Specialist',        threshold: 1000, nextXP: 1800, desc: 'Deep functional knowledge. You can navigate a program review without a cheat sheet.' },
-    { level: 5, title: 'GS-13 Senior Manager',    threshold: 1800, nextXP: 3000, desc: 'Multi-domain fluency. Source selection, EVM, modifications — you handle it.' },
-    { level: 6, title: 'GS-14 Program Manager',   threshold: 3000, nextXP: 5000, desc: 'Senior PM territory. Leading programs, coaching others, managing the enterprise.' },
-    { level: 7, title: 'SES-Level Executive',     threshold: 5000, nextXP: 9999, desc: 'The full picture — strategy, policy, leadership, and acquisition mastery.' },
-  ];
+  // One level table for the whole app: client/src/lib/progress.ts.
+  const ALL_LEVELS = LEVELS;
   const currentLevel = getLevel(xp);
 
   // ── Mobile shell wiring ───────────────────────────────────────────────────
@@ -1369,113 +1363,8 @@ function AppContent() {
     {/* PWA install prompt */}
     <InstallPrompt />
 
-    {/* ── Level Progression Modal ── */}
-    {showLevels && (
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-        onClick={() => setShowLevels(false)}
-      >
-        <div
-          className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
-          onClick={e => e.stopPropagation()}
-        >
-          {/* Header */}
-          <div className="bg-gradient-to-r from-primary/20 to-primary/5 border-b border-border px-6 py-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1">Your Progression</div>
-                <h2 className="text-lg font-bold text-foreground">Acqlerate Career Levels</h2>
-              </div>
-              <button onClick={() => setShowLevels(false)} className="text-muted-foreground hover:text-foreground transition-colors">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            {/* Current XP progress to next level */}
-            {(() => {
-              const nextLevel = ALL_LEVELS.find(l => l.threshold > xp);
-              const xpToNext = nextLevel ? nextLevel.threshold - xp : 0;
-              const progress = nextLevel
-                ? ((xp - currentLevel.threshold) / (nextLevel.threshold - currentLevel.threshold)) * 100
-                : 100;
-              return (
-                <div className="mt-4">
-                  <div className="flex justify-between text-xs text-muted-foreground mb-1.5">
-                    <span className="font-semibold text-foreground">{currentLevel.title}</span>
-                    <span>{nextLevel ? `${xpToNext} XP to Level ${nextLevel.level}` : 'Max level reached'}</span>
-                  </div>
-                  <div className="h-2 bg-muted rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary rounded-full transition-all duration-500"
-                      style={{ width: `${Math.min(100, progress)}%` }}
-                    />
-                  </div>
-                  <div className="text-[10px] text-muted-foreground mt-1">{xp} XP earned</div>
-                </div>
-              );
-            })()}
-          </div>
-
-          {/* Level list */}
-          <div className="p-4 space-y-2 max-h-[60vh] overflow-y-auto">
-            {ALL_LEVELS.map((lvl) => {
-              const isCurrentLevel = lvl.level === currentLevel.level;
-              const isUnlocked = xp >= lvl.threshold;
-              const isNext = !isUnlocked && ALL_LEVELS.find(l => xp >= l.threshold)?.level === lvl.level - 1;
-              return (
-                <div
-                  key={lvl.level}
-                  className={cn(
-                    "flex items-start gap-3 rounded-xl px-4 py-3 border transition-all",
-                    isCurrentLevel
-                      ? "bg-primary/10 border-primary/40 ring-1 ring-primary/30"
-                      : isUnlocked
-                      ? "bg-muted/30 border-transparent"
-                      : "opacity-50 border-transparent"
-                  )}
-                >
-                  {/* Level number badge */}
-                  <div className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5",
-                    isCurrentLevel ? "bg-primary text-primary-foreground"
-                    : isUnlocked ? "bg-muted text-muted-foreground"
-                    : "bg-muted/50 text-muted-foreground/50"
-                  )}>
-                    {isUnlocked ? lvl.level : <Lock className="w-3 h-3" />}
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className={cn(
-                        "text-sm font-bold",
-                        isCurrentLevel ? "text-primary" : isUnlocked ? "text-foreground" : "text-muted-foreground"
-                      )}>
-                        {lvl.title}
-                      </span>
-                      {isCurrentLevel && (
-                        <span className="text-[9px] font-bold bg-primary/20 text-primary rounded-full px-2 py-0.5 uppercase tracking-wide">You are here</span>
-                      )}
-                      {isNext && (
-                        <span className="text-[9px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 rounded-full px-2 py-0.5 uppercase tracking-wide">Next</span>
-                      )}
-                    </div>
-                    <div className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{lvl.desc}</div>
-                    <div className="text-[10px] text-muted-foreground/60 mt-1">
-                      {lvl.threshold === 0 ? 'Starting level' : `Unlocks at ${lvl.threshold} XP`}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="px-6 py-4 border-t border-border bg-muted/20">
-            <p className="text-[11px] text-muted-foreground text-center">
-              Complete lessons and quizzes to earn XP. Each lesson = 10 XP. Perfect quiz score = bonus 5 XP.
-            </p>
-          </div>
-        </div>
-      </div>
-    )}
+    {/* ── Level road ── the same board the Account screen opens on phones. */}
+    {showLevels && <LevelRoadSheet xp={xp} onClose={() => setShowLevels(false)} />}
   </ErrorBoundary>
   );
 }

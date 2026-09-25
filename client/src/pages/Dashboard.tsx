@@ -20,6 +20,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { MobileHome } from "@/components/mobile/MobileHome";
 import { getActiveTrack } from "@/lib/careerTracks";
 import { DailyChallengeSheet } from "@/components/mobile/DailyChallengeSheet";
+import { LeaderboardQuietRow } from "@/components/Leaderboard";
 import { WeeklyBrief } from "@/components/WeeklyBrief";
 
 interface DashboardProps {
@@ -887,6 +888,9 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
           </p>
           {!challengeSubmitted && <span className="text-muted-foreground flex-shrink-0">›</span>}
         </div>
+
+        {/* Leaderboards */}
+        <LeaderboardQuietRow />
       </div>
 
       {/* ── Acquisition This Week ──────────────────────────────────────────

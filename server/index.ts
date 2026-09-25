@@ -245,6 +245,10 @@ app.use((req, res, next) => {
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS current_streak INTEGER NOT NULL DEFAULT 0`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS longest_streak INTEGER NOT NULL DEFAULT 0`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_streak_date TEXT`,
+        // Leaderboards: start-of-week XP snapshot + opt-out (shared/xp.ts)
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS xp_week_of TEXT`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS xp_week_start_xp INTEGER NOT NULL DEFAULT 0`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS leaderboard_hidden BOOLEAN NOT NULL DEFAULT FALSE`,
         // Daily challenge tracking
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_challenge_date TEXT`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS challenge_history JSONB NOT NULL DEFAULT '[]'::JSONB`,

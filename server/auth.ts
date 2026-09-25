@@ -56,6 +56,7 @@ declare global {
       lastStreakDate: string | null;
       dailyChallengeXP: number;
       briefsXP: number;
+      leaderboardHidden: boolean;
     }
   }
 }
@@ -323,6 +324,7 @@ export function toPassportUser(user: User): Express.User {
       (sum, entry) => sum + (entry?.xpEarned ?? 0),
       0
     ),
+    leaderboardHidden: (user as any).leaderboardHidden ?? false,
   };
 }
 

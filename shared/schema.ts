@@ -58,6 +58,13 @@ export const users = pgTable("users", {
   currentStreak: integer("current_streak").notNull().default(0),
   longestStreak: integer("longest_streak").notNull().default(0),
   lastStreakDate: text("last_streak_date"),  // YYYY-MM-DD of last activity
+  // Leaderboards. The week's starting XP is recorded by the first XP-earning
+  // action of each week (see weekRollPatch in shared/xp.ts), so weekly XP is
+  // just "XP now minus this". Monday UTC, YYYY-MM-DD.
+  xpWeekOf: text("xp_week_of"),
+  xpWeekStartXp: integer("xp_week_start_xp").notNull().default(0),
+  // On by default, shown as "First L."; the learner can hide from Account.
+  leaderboardHidden: boolean("leaderboard_hidden").notNull().default(false),
   // Daily challenge tracking
   lastChallengeDate: text("last_challenge_date"), // YYYY-MM-DD of last completed challenge
   challengeHistory: jsonb("challenge_history").notNull().default(sql`'[]'::jsonb`), // [{date, score, xpEarned}]
