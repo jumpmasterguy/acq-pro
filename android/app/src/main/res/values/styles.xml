@@ -16,7 +16,22 @@
     </style>
 
 
+    <!--
+      Launch screen. ONE stage, on every Android version.
+
+      This used to show two: Android 12+ always draws its own launch screen
+      with the app icon, and then this theme's old full-screen splash.png
+      (the Capacitor template default) took over with the same hexagon at a
+      much smaller size until the site loaded. Big icon, small icon, app.
+
+      Now there is only the system screen, fed our teal and our icon, and
+      MainActivity holds it until the page has actually loaded. The icon is
+      the launcher foreground, so it is the exact size the system used
+      anyway. core-splashscreen draws the same thing on Android 7 to 11.
+    -->
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-        <item name="android:background">@drawable/splash</item>
+        <item name="windowSplashScreenBackground">@color/ic_launcher_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
     </style>
 </resources>
