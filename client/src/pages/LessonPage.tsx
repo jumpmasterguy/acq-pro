@@ -1,6 +1,7 @@
 import { useState, useRef, useMemo, useEffect } from "react";
 import { AcronymText } from "@/components/AcronymText";
 import { MobileTableCards, FormulaBlock } from "@/components/lesson/LessonBlocks";
+import { useDocumentViewer } from "@/components/DocumentViewerProvider";
 import { getTrackData, type CareerTrackId } from "@/lib/careerTracks";
 import { modules, type Lesson, type LessonContent, type KeyTerm, type Module, type QuizQuestion, type SkillLevel, type ExpandableItem } from "@/lib/curriculum";
 import { getModuleTheme, getModuleFamilyTheme } from "@/lib/moduleTheme";
@@ -624,6 +625,7 @@ function DragMatchQuestion({ question, submitted, onMatchChange, currentMatches 
 
 export default function LessonPage({ lessonId, progress, onBack, onComplete, onNextLesson, unlockedLevel = 'novice', onOpenAssessment, isLifetime = false, activeCareer }: LessonPageProps) {
   const isMobile = useIsMobile();
+  const { openDocument } = useDocumentViewer();
   const trackData = getTrackData((activeCareer as CareerTrackId) ?? null);
   const [activeTab, setActiveTab] = useState<Tab>('lesson');
   // MC answers: questionId → optionIndex
@@ -3311,17 +3313,20 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             {lesson.attachments.map((att, ai) => {
               const fileLabel = /\.xlsx?$/i.test(att.url) ? 'Excel' : /\.docx?$/i.test(att.url) ? 'Word' : 'PDF';
               return (
-              <a
+              <button
+                type="button"
                 key={ai}
-                href={att.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                onClick={() => openDocument({ url: att.url, title: att.title })}
                 className="inline-flex items-center gap-1.5 bg-white text-primary font-bold text-xs px-3.5 py-2 rounded-lg hover:bg-white/90 transition-colors flex-shrink-0"
                 data-testid={`banner-download-${ai}`}
               >
-                <Download className="w-3.5 h-3.5" />
-                {lesson.attachments!.length === 1 ? `Download ${fileLabel}` : `Download ${ai + 1}`}
-              </a>
+                {fileLabel === 'PDF' ? <FileText className="w-3.5 h-3.5" /> : <Download className="w-3.5 h-3.5" />}
+                {/* PDFs open in the in-app viewer (with its own Download);
+                    Excel and Word go straight to save / share. */}
+                {lesson.attachments!.length === 1
+                  ? (fileLabel === 'PDF' ? 'View PDF' : `Get ${fileLabel} file`)
+                  : (fileLabel === 'PDF' ? `View ${ai + 1}` : `Get file ${ai + 1}`)}
+              </button>
               );
             })}
           </div>
@@ -3545,15 +3550,14 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                   <div key={ai} className="rounded-xl border border-border bg-muted/10 p-4">
                     <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
                       <h3 className="text-sm font-semibold text-foreground">{att.title}</h3>
-                      <a
-                        href={att.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        type="button"
+                        onClick={() => openDocument({ url: att.url, title: att.title })}
                         className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
                       >
-                        <Download className="w-3.5 h-3.5" />
+                        <FileText className="w-3.5 h-3.5" />
                         View full PDF
-                      </a>
+                      </button>
                     </div>
                     <div className="space-y-4">
                       {att.images.map((img, imgI) => (

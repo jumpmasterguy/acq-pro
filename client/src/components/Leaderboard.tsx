@@ -23,10 +23,23 @@ import { Switch } from '@/components/ui/switch';
 
 const QUERY_KEY = ['/api/leaderboard'];
 
+/** A response that isn't shaped like a leaderboard is an error, not data:
+ *  the home card must never crash the home screen over it. */
+function isLeaderboard(d: any): d is LeaderboardResponse {
+  return !!d && typeof d === 'object' && !!d.boards
+    && (['week', 'streak', 'quiz'] as const).every(k => Array.isArray(d.boards[k]?.top));
+}
+
 export function useLeaderboard(enabled = true) {
   return useQuery<LeaderboardResponse>({
     queryKey: QUERY_KEY,
     enabled,
+    queryFn: async () => {
+      const res = await apiRequest('GET', '/api/leaderboard');
+      const body = await res.json();
+      if (!isLeaderboard(body)) throw new Error('Unexpected leaderboard response');
+      return body;
+    },
     // Boards move slowly (weekly), but your own number should update when
     // you come back from a lesson, so refetch on mount once a minute old.
     staleTime: 60_000,

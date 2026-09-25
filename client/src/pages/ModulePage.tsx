@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { isNativeApp } from "@/lib/platform";
+import { useDocumentViewer } from "@/components/DocumentViewerProvider";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { moduleGradient } from "@/lib/moduleTheme";
 import { getTotalLessons } from "@/lib/curriculumMeta";
@@ -43,6 +44,7 @@ interface ModulePageProps {
 }
 
 export default function ModulePage({ moduleId, progress, onBack, onSelectLesson, onUpgrade, unlockedLevel = 'novice', onOpenAssessment, activeCareer }: ModulePageProps) {
+  const { openDocument } = useDocumentViewer();
   const isMobile = useIsMobile();
   const mod = modules.find(m => m.id === moduleId);
   if (!mod) return null;
@@ -169,15 +171,16 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
           locked={!canDownloadPdf}
           action={
             canDownloadPdf && mod.pdfUrl ? (
-              <a
-                href={mod.pdfUrl}
+              <button
+                type="button"
+                onClick={() => openDocument({ url: mod.pdfUrl!, title: `Lesson Book: ${mod.title}` })}
                 className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-bold text-white"
                 style={{ background: theme.mobileHex }}
                 data-testid="module-pdf-download"
               >
-                <Download className="h-3 w-3" strokeWidth={2} />
-                Download PDF
-              </a>
+                <FileText className="h-3 w-3" strokeWidth={2} />
+                View PDF
+              </button>
             ) : (
               <button
                 type="button"
@@ -418,15 +421,14 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
             <p className="text-sm font-semibold">Lesson Book</p>
             <p className="text-xs text-muted-foreground mb-2">The full module as a printable PDF.</p>
             {canDownloadPdf && mod.pdfUrl ? (
-              <a
-                href={mod.pdfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => openDocument({ url: mod.pdfUrl!, title: `Lesson Book: ${mod.title}` })}
                 className={cn('inline-flex items-center gap-1.5 text-xs font-semibold hover:underline', theme.text)}
                 data-testid="download-lesson-book"
               >
-                <Download className="w-3.5 h-3.5" /> Download PDF
-              </a>
+                <FileText className="w-3.5 h-3.5" /> View PDF
+              </button>
             ) : (
               <button
                 onClick={onUpgrade}

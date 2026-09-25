@@ -99,6 +99,7 @@ import MyAccountPage from "@/pages/MyAccountPage";
 import AuthPage, { type AuthUser, type SkillLevel, type UserProfile } from "@/pages/AuthPage";
 import { LazyModuleAssessment } from "@/components/LazyModuleAssessment";
 import { LevelRoadSheet } from "@/components/LevelRoad";
+import { DocumentViewerProvider } from "@/components/DocumentViewerProvider";
 import OnboardingFlow from "@/components/OnboardingFlow";
 
 // ── Pages loaded on demand ─────────────────────────────────────────────────
@@ -1378,7 +1379,9 @@ function App() {
       <TooltipProvider>
         <Toaster />
         <Router hook={useHashLocation}>
-          <AppContent />
+          <DocumentViewerProvider>
+            <AppContent />
+          </DocumentViewerProvider>
         </Router>
       </TooltipProvider>
     </QueryClientProvider>

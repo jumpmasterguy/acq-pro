@@ -6,7 +6,9 @@
  */
 
 import { useState } from 'react';
-import { Download, Lock, Sparkles, ExternalLink } from 'lucide-react';
+import { Lock, Sparkles, ExternalLink, FileText, FileSpreadsheet } from 'lucide-react';
+import { useDocumentViewer } from '@/components/DocumentViewerProvider';
+import { docKind } from '@/lib/documents';
 import { SIDEBAR_RESOURCES } from '@/lib/resources';
 import { FAR_TRANSLATOR, TOOLS_DIRECTORY } from '@/lib/toolsDirectory';
 import { isNativeApp } from '@/lib/platform';
@@ -21,6 +23,7 @@ type Tab = 'resources' | 'tools';
 
 export default function ResourcesPage({ isPremium, onUpgrade }: ResourcesPageProps) {
   const [tab, setTab] = useState<Tab>('resources');
+  const { openDocument } = useDocumentViewer();
 
   return (
     <div className="flex flex-col gap-3.5 px-4 pb-8 pt-4" data-testid="resources-page">
@@ -66,13 +69,15 @@ export default function ResourcesPage({ isPremium, onUpgrade }: ResourcesPagePro
               // Same rule the desktop sidebar uses: a trialing user still gets
               // these. (Looser than the Lesson Book's isActuallyPaid gate.)
               const locked = !!res.proOnly && !isPremium;
-              const Wrapper = locked ? 'button' : 'a';
+              // PDFs open in the in-app viewer; spreadsheets can't be previewed
+              // well on a phone, so they go straight to save / share.
+              const kind = docKind(res.url);
+              const viewable = kind === 'pdf';
               return (
-                <Wrapper
+                <button
                   key={i}
-                  {...(locked
-                    ? { type: 'button' as const, onClick: onUpgrade }
-                    : { href: res.url, target: '_blank', rel: 'noopener noreferrer' })}
+                  type="button"
+                  onClick={locked ? onUpgrade : () => openDocument({ url: res.url, title: res.title })}
                   className="acq-press flex w-full items-start gap-3 rounded-[14px] p-3.5 text-left"
                   style={{
                     background: 'var(--acq-surface-card)',
@@ -91,8 +96,10 @@ export default function ResourcesPage({ isPremium, onUpgrade }: ResourcesPagePro
                   >
                     {locked ? (
                       <Lock className="h-4 w-4" strokeWidth={2} />
+                    ) : viewable ? (
+                      <FileText className="h-4 w-4" strokeWidth={2} />
                     ) : (
-                      <Download className="h-4 w-4" strokeWidth={2} />
+                      <FileSpreadsheet className="h-4 w-4" strokeWidth={2} />
                     )}
                   </span>
                   <span className="min-w-0 flex-1">
@@ -112,10 +119,10 @@ export default function ResourcesPage({ isPremium, onUpgrade }: ResourcesPagePro
                       className="mt-1.5 block text-xs font-bold"
                       style={{ color: locked ? 'var(--acq-text-muted)' : 'var(--acq-text-brand)' }}
                     >
-                      {locked ? 'Unlock with Pro →' : 'Download'}
+                      {locked ? 'Unlock with Pro →' : viewable ? 'View PDF' : isNativeApp() ? 'Save Excel file' : 'Download Excel file'}
                     </span>
                   </span>
-                </Wrapper>
+                </button>
               );
             })}
           </div>
