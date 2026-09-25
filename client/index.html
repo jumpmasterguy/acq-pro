@@ -4,6 +4,51 @@
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- ── In-app launch continuation ──────────────────────────────────────
+         The native launch screen hands over to this page, and this page's
+         first job is to look EXACTLY like it — same teal, same artwork, same
+         size and position — until the app knows whether you are signed in.
+         Before, the handover showed a 40px logo and a spinner on beige: a
+         second, smaller icon between launch and sign-in.
+
+         Android: the launcher foreground, drawn in a 288px box, which is
+         how Android draws windowSplashScreenAnimatedIcon (styles.xml).
+         iOS: the launch storyboard's image, cover-fit, which is what its
+         scaleAspectFill image view does.
+
+         Only ever shown inside the app. A website visitor never matches. -->
+    <style>
+      #boot-splash { display: none; }
+      html.native-boot, html.native-boot body { background: #01696F; }
+      html.native-boot #boot-splash {
+        display: block; position: fixed; inset: 0; z-index: 2147483000;
+        background: #01696F; transition: opacity 220ms ease-out;
+      }
+      #boot-splash.leaving { opacity: 0; }
+      #boot-splash .android {
+        position: absolute; left: 50%; top: 50%;
+        width: 288px; height: 288px; margin: -144px 0 0 -144px;
+      }
+      #boot-splash .ios {
+        position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      }
+    </style>
+    <script>
+      (function () {
+        var ua = navigator.userAgent || '';
+        // Any one of three signals: the tag the app adds to its user agent
+        // (capacitor.config.ts appendUserAgent), the flag main.tsx stores on
+        // every native launch, or Capacitor's bridge if it is already here.
+        var inApp = /AcqlerateApp/.test(ua);
+        try { inApp = inApp || localStorage.getItem('acq:native') === '1'; } catch (e) {}
+        try { inApp = inApp || !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()); } catch (e) {}
+        if (!inApp) return;
+        var root = document.documentElement;
+        root.classList.add('native-boot');
+        root.setAttribute('data-boot', /Android/i.test(ua) ? 'android' : 'ios');
+      })();
+    </script>
     <title>Acqlerate — Defense Acquisitions Academy</title>
 
     <!-- Google Analytics 4 -->
@@ -67,6 +112,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fira+Code:wght@300..700&family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Oxanium:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   </head>
   <body>
+    <div id="boot-splash" aria-hidden="true"></div>
+    <script>
+      (function () {
+        var root = document.documentElement;
+        if (!root.classList.contains('native-boot')) return;
+        // A real <img>, not a CSS background: the page's load event waits for
+        // it, and Android keeps the native launch screen up until that event
+        // (MainActivity), so the artwork is always painted before handover.
+        var img = document.createElement('img');
+        var android = root.getAttribute('data-boot') === 'android';
+        img.className = android ? 'android' : 'ios';
+        img.src = android ? '/launch/android-mark.png' : '/launch/ios-splash.png';
+        img.alt = '';
+        document.getElementById('boot-splash').appendChild(img);
+        // Failsafe: if the app never starts, do not hide its error behind this.
+        window.setTimeout(function () {
+          var el = document.getElementById('boot-splash');
+          if (el) el.remove();
+          root.classList.remove('native-boot');
+        }, 10000);
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

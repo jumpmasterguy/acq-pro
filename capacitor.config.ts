@@ -4,6 +4,10 @@ const config: CapacitorConfig = {
   appId: 'com.acqlerate.app',
   appName: 'Acqlerate',
   webDir: 'dist/public',
+  // Lets index.html recognise the app before any JavaScript has run, so its
+  // launch continuation (see index.html #boot-splash) is right even on the
+  // very first launch after install. Appended, not replaced.
+  appendUserAgent: 'AcqlerateApp',
   server: {
     // The native shell is a thin wrapper: it loads the deployed site rather
     // than its own bundled copy, and API_BASE is empty so every /api call

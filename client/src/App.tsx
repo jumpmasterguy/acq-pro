@@ -311,6 +311,22 @@ function AppContent() {
   const [toolsExpanded, setToolsExpanded] = useState(false);
   const [authState, setAuthState] = useState<AuthState>({ status: 'loading' });
 
+  // In the app, index.html covers the screen with an exact copy of the native
+  // launch screen until we know where to send you. Fade it the moment the
+  // session check resolves, straight onto sign-in or home, so there is one
+  // launch image and never a second, smaller one in between.
+  useEffect(() => {
+    if (authState.status === 'loading') return;
+    const el = document.getElementById('boot-splash');
+    if (!el) return;
+    el.classList.add('leaving');
+    const t = setTimeout(() => {
+      el.remove();
+      document.documentElement.classList.remove('native-boot');
+    }, 240);
+    return () => clearTimeout(t);
+  }, [authState.status]);
+
   // The app rendered, so whatever the last reload was for is behind us. Give
   // the next deploy a fresh reload budget.
   useEffect(() => {
