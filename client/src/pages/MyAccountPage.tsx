@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { hasPaidPlan, trialDaysRemaining } from "@shared/access";
-import { CAREER_TRACK_DATA, getTrackStats, type CareerTrackId } from "@/lib/careerTracks";
+import { CAREER_TRACK_DATA, getTrackStats, setActiveTrack, type CareerTrackId } from "@/lib/careerTracks";
 import { formatDuration } from "@/lib/curriculumMeta";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -143,7 +143,7 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
   const handleSelectPath = (id: CareerTrackId) => {
     if (id === activeCareer) return;
     setActiveCareer(id);
-    try { localStorage.setItem(ACTIVE_CAREER_KEY, id); } catch {}
+    setActiveTrack(id); // also tells the sidebar, whose level title depends on the track
     const track = CAREER_TRACK_DATA.find(t => t.id === id);
     toast({ title: `Switched to ${track?.label ?? id}`, description: "Your Dashboard will reorder lessons to match on your next visit." });
   };
@@ -180,8 +180,9 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
 
   // ── Mobile Account ────────────────────────────────────────────────────────
   if (isMobile) {
-    const level = getLevel(xp);
-    const nextLevel = getLevel(level.nextXP);
+    // Titles follow the chosen path: GS scale for government, industry titles otherwise.
+    const level = getLevel(xp, activeCareer);
+    const nextLevel = getLevel(level.nextXP, activeCareer);
     // Where this level starts, so the bar shows progress through the level,
     // not from zero. From the shared table in lib/progress.ts.
     const levelFloor = level.threshold;
@@ -202,7 +203,7 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
           clpsEarned={earnedClps(completedLessons)}
           onOpenRoad={() => setShowRoad(true)}
         />
-        {showRoad && <LevelRoadSheet xp={xp} onClose={() => setShowRoad(false)} />}
+        {showRoad && <LevelRoadSheet xp={xp} track={activeCareer} onClose={() => setShowRoad(false)} />}
 
         <AccountSection icon={Award} title="Module standing">
           <ModuleStanding

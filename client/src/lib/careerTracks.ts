@@ -3,6 +3,7 @@
  * Shared between Dashboard (filter bar) and ModulePage (lesson ordering).
  */
 
+import { useEffect, useState } from "react";
 import { getAllLessons, parseDuration } from "./curriculumMeta";
 
 export type CareerTrackId = 'usg_pm' | 'contractor_pm' | 'contracting_officer' | 'capture_bd';
@@ -223,6 +224,26 @@ export function getActiveTrack(): CareerTrackId {
 
 export function setActiveTrack(id: CareerTrackId): void {
   try { localStorage.setItem(ACTIVE_CAREER_KEY, id); } catch {}
+  // Level titles depend on the track (GS ladder vs. industry titles), and the
+  // sidebar is already on screen when Account changes it. Tell it.
+  try { window.dispatchEvent(new CustomEvent(TRACK_CHANGED_EVENT, { detail: id })); } catch {}
+}
+
+export const TRACK_CHANGED_EVENT = 'acq:track-changed';
+
+/** The active track, kept current if it changes while the screen is open. */
+export function useActiveTrack(): CareerTrackId {
+  const [track, setTrack] = useState<CareerTrackId>(() => getActiveTrack());
+  useEffect(() => {
+    const onChange = () => setTrack(getActiveTrack());
+    window.addEventListener(TRACK_CHANGED_EVENT, onChange);
+    window.addEventListener('storage', onChange); // another tab
+    return () => {
+      window.removeEventListener(TRACK_CHANGED_EVENT, onChange);
+      window.removeEventListener('storage', onChange);
+    };
+  }, []);
+  return track;
 }
 
 /**

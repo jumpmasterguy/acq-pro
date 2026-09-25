@@ -3,7 +3,8 @@
  *
  * One space per 100 XP, which is about one lesson, so the distance on the
  * board is honest: SES at 5,000 XP is fifty spaces from the start, and the
- * gap from GS-13 to GS-14 really is longer than from GS-9 to GS-11. Spaces
+ * gap between the top two rungs really is longer than between the first two.
+ * Titles come from the learner's ladder (GS scale or industry titles). Spaces
  * behind you are filled in candy colours, spaces ahead are empty outlines,
  * and each career level is a landmark on the road.
  *
@@ -13,7 +14,7 @@
 
 import { useEffect, useMemo, useRef } from 'react';
 import { Check, Lock } from 'lucide-react';
-import { LEVELS, getLevel } from '@/lib/progress';
+import { LEVELS, getLevel, ladderFor } from '@/lib/progress';
 import { Sheet } from '@/components/mobile/Sheet';
 
 const XP_PER_SPACE = 100;
@@ -34,10 +35,6 @@ const H = TOP + (ROWS - 1) * DY + BOTTOM;
 const ROAD = 34;
 
 const CANDY = ['#EF4444', '#F59E0B', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899'];
-
-const SHORT: Record<number, string> = {
-  1: 'Start', 2: 'GS-9', 3: 'GS-11', 4: 'GS-12', 5: 'GS-13', 6: 'GS-14', 7: 'SES',
-};
 
 function spacePos(k: number) {
   const row = Math.floor(k / COLS);
@@ -63,12 +60,14 @@ function roadPath(last: number): string {
   return d;
 }
 
-export function LevelRoad({ xp }: { xp: number }) {
+export function LevelRoad({ xp, track }: { xp: number; track?: string | null }) {
+  // Every ladder shares thresholds, so geometry is the same; only names differ.
+  const ladder = ladderFor(track);
   const here = Math.min(LAST_SPACE, Math.floor(Math.max(0, xp) / XP_PER_SPACE));
   const tokenRef = useRef<SVGGElement>(null);
   const landmarks = useMemo(
-    () => new Map(LEVELS.map(l => [l.threshold / XP_PER_SPACE, l])),
-    [],
+    () => new Map(ladder.map(l => [l.threshold / XP_PER_SPACE, l])),
+    [ladder],
   );
 
   // Open with the learner's own space in view rather than at the start line.
@@ -76,7 +75,7 @@ export function LevelRoad({ xp }: { xp: number }) {
     tokenRef.current?.scrollIntoView({ block: 'center' });
   }, []);
 
-  const current = getLevel(xp);
+  const current = getLevel(xp, track);
 
   return (
     <svg
@@ -117,7 +116,7 @@ export function LevelRoad({ xp }: { xp: number }) {
       })}
 
       {/* Career landmarks. */}
-      {LEVELS.map(l => {
+      {ladder.map(l => {
         const k = l.threshold / XP_PER_SPACE;
         const { x, y, col } = spacePos(k);
         const reached = xp >= l.threshold;
@@ -143,7 +142,7 @@ export function LevelRoad({ xp }: { xp: number }) {
             <text x={isTop ? x : lx} y={isTop ? y - 32 : y + (isStart ? 36 : 34)} textAnchor="middle"
               fontSize={11} fontWeight={800} letterSpacing={0.4}
               style={{ fill: reached ? 'var(--acq-text-heading)' : 'var(--acq-text-muted)' }}>
-              {SHORT[l.level]}
+              {l.short}
             </text>
           </g>
         );
@@ -169,16 +168,18 @@ export function LevelRoad({ xp }: { xp: number }) {
   );
 }
 
-export function LevelRoadSheet({ xp, onClose }: { xp: number; onClose: () => void }) {
-  const current = getLevel(xp);
-  const next = LEVELS.find(l => l.threshold > xp);
+export function LevelRoadSheet({ xp, track, onClose }: { xp: number; track?: string | null; onClose: () => void }) {
+  const ladder = ladderFor(track);
+  const top = ladder[ladder.length - 1];
+  const current = getLevel(xp, track);
+  const next = ladder.find(l => l.threshold > xp);
   const floor = current.threshold;
   const pct = next ? Math.round(((xp - floor) / (next.threshold - floor)) * 100) : 100;
 
   return (
     <Sheet
-      title={<><span aria-hidden="true">🛣️</span> Your road to SES</>}
-      label="Your road to SES"
+      title={<><span aria-hidden="true">🛣️</span> Your road to {top.short}</>}
+      label={`Your road to ${top.short}`}
       subtitle="Each space is 100 XP, about one lesson"
       onClose={onClose}
       testId="level-road-sheet"
@@ -200,11 +201,11 @@ export function LevelRoadSheet({ xp, onClose }: { xp: number; onClose: () => voi
       </div>
 
       <div className="px-2 py-3">
-        <LevelRoad xp={xp} />
+        <LevelRoad xp={xp} track={track} />
       </div>
 
       <ol className="space-y-1 px-4 pb-5">
-        {[...LEVELS].reverse().map(l => {
+        {[...ladder].reverse().map(l => {
           const reached = xp >= l.threshold;
           const isCurrent = l.level === current.level;
           return (

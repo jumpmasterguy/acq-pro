@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 import { isNativeApp } from "@/lib/platform";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { MobileHome } from "@/components/mobile/MobileHome";
-import { getActiveTrack } from "@/lib/careerTracks";
+import { getActiveTrack, useActiveTrack } from "@/lib/careerTracks";
 import { DailyChallengeSheet } from "@/components/mobile/DailyChallengeSheet";
 import { LeaderboardQuietRow } from "@/components/Leaderboard";
 import { WeeklyBrief } from "@/components/WeeklyBrief";
@@ -384,7 +384,8 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
   // here — this local recompute used to leave out Daily Challenge XP
   // entirely, so it never showed up in this page's "XP earned" stat.
   const xp = progress.xp;
-  const levelInfo = getLevel(xp);
+  const liveTrack = useActiveTrack();
+  const levelInfo = getLevel(xp, liveTrack);
 
   // Streak + daily challenge state
   const [streak, setStreak] = useState({ currentStreak: 0, longestStreak: 0, alreadyCompleted: false, date: '' });

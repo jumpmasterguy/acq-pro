@@ -6,9 +6,10 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calculateXP, LEVELS } from "@/lib/progress";
+import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calculateXP, ladderFor } from "@/lib/progress";
 import { hasFullAccess, hasPaidPlan, trialDaysRemaining } from "@shared/access";
 import { isNativeApp, getPlatform } from "@/lib/platform";
+import { useActiveTrack } from "@/lib/careerTracks";
 import { modules, prefetchCurriculum } from "@/lib/curriculumMeta";
 import { getModuleTheme, getModuleFamilyTheme, getModuleFamily, FAMILY_LABEL, FAMILY_THEME, type ModuleFamily } from "@/lib/moduleTheme";
 import { moduleClps, formatClps, totalClps } from "@shared/moduleClps";
@@ -311,6 +312,8 @@ function AppContent() {
   const [resourcesExpanded, setResourcesExpanded] = useState(false);
   const [toolsExpanded, setToolsExpanded] = useState(false);
   const [authState, setAuthState] = useState<AuthState>({ status: 'loading' });
+  // Level titles depend on the career track (GS scale vs. industry titles).
+  const activeTrack = useActiveTrack();
 
   // In the app, index.html covers the screen with an exact copy of the native
   // launch screen until we know where to send you. Fade it the moment the
@@ -796,9 +799,9 @@ function AppContent() {
   const xp = progress.xp;
   const completedCount = completedLessons.size;
 
-  // One level table for the whole app: client/src/lib/progress.ts.
-  const ALL_LEVELS = LEVELS;
-  const currentLevel = getLevel(xp);
+  // One set of ladders for the whole app: client/src/lib/progress.ts.
+  const ALL_LEVELS = ladderFor(activeTrack);
+  const currentLevel = getLevel(xp, activeTrack);
 
   // ── Mobile shell wiring ───────────────────────────────────────────────────
   // Admin, Analytics, PDU and the Cost Tracker have no home in the four-tab
@@ -1364,7 +1367,7 @@ function AppContent() {
     <InstallPrompt />
 
     {/* ── Level road ── the same board the Account screen opens on phones. */}
-    {showLevels && <LevelRoadSheet xp={xp} onClose={() => setShowLevels(false)} />}
+    {showLevels && <LevelRoadSheet xp={xp} track={activeTrack} onClose={() => setShowLevels(false)} />}
   </ErrorBoundary>
   );
 }
