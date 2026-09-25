@@ -108,7 +108,15 @@ const highlights = [
 ];
 
 export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: AuthPageProps) {
-  const [tab, setTab] = useState<"login" | "register">(notice ? "login" : "register");
+  // The web lands here from marketing, where most arrivals are strangers, so
+  // Create Account is the right default there. In the app it is the opposite:
+  // someone who has installed it almost always already has an account, and
+  // making every returning user tap past a signup form is a tax on the people
+  // who use it most. New installs pay one tap instead, which is the cheaper
+  // trade.
+  const [tab, setTab] = useState<"login" | "register">(
+    notice || isNativeApp() ? "login" : "register",
+  );
   const [referralCode, setReferralCode] = useState<string>("");
 
   // 'auth' is the normal sign-in/register pair. 'forgot' asks for an email,
