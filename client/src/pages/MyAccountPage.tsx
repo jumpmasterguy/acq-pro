@@ -1,5 +1,6 @@
 import { useState, useEffect, type ReactNode } from "react";
-import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap, Trash2, AlertTriangle, Award, LogOut, Moon, Gift, Trophy } from "lucide-react";
+import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap, Trash2, AlertTriangle, Award, LogOut, Moon, Gift, Trophy, MessageCircleHeart } from "lucide-react";
+import { ContactUs } from "@/components/ContactUs";
 import { LevelRoadSheet } from "@/components/LevelRoad";
 import { LeaderboardVisibilityRow } from "@/components/Leaderboard";
 import { Button } from "@/components/ui/button";
@@ -329,6 +330,10 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
           <LeaderboardVisibilityRow />
         </AccountSection>
 
+        <AccountSection icon={MessageCircleHeart} title="Talk to a human">
+          <ContactUs />
+        </AccountSection>
+
         <AccountSection icon={Moon} title="Appearance">
           <div className="flex gap-2">
             {(['light', 'dark', 'system'] as const).map(mode => (
@@ -541,6 +546,10 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
       )}
 
       {/* Danger zone */}
+      <Section icon={MessageCircleHeart} title="Talk to a human">
+        <ContactUs />
+      </Section>
+
       <Section icon={AlertTriangle} title="Delete Account">
         <p className="text-sm text-muted-foreground mb-3">
           Permanently deletes your account, progress, streaks and XP.
