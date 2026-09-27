@@ -3,148 +3,293 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Privacy Policy — Acqlerate</title>
-  <meta name="description" content="Acqlerate Privacy Policy — how we collect, use, and protect your data." />
+  <title>Privacy Policy | Acqlerate</title>
+  <meta name="description" content="Acqlerate Privacy Policy: what we collect, why, who helps us run the platform, and the controls you have." />
   <meta name="robots" content="noindex" />
+  <link rel="canonical" href="https://acqlerate.com/privacy" />
   <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F7F6F2; color: #1A1A1A; line-height: 1.7; }
-    nav { background: #0C2340; padding: 16px 2rem; display: flex; align-items: center; justify-content: space-between; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F7F6F2; color: #1A1A1A; line-height: 1.7; overflow-wrap: break-word; }
+    nav { background: #0C2340; padding: 16px 2rem; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     nav a.logo { font-size: 1.1rem; font-weight: 800; color: white; text-decoration: none; letter-spacing: -0.02em; }
     nav a.logo span { color: #4FC3CB; }
-    nav a.back { font-size: 0.85rem; color: rgba(255,255,255,0.6); text-decoration: none; }
+    nav a.back { font-size: 0.85rem; color: rgba(255,255,255,0.7); text-decoration: none; padding: 8px 0; }
     nav a.back:hover { color: white; }
-    .container { max-width: 720px; margin: 0 auto; padding: 56px 2rem 80px; }
-    .page-header { margin-bottom: 40px; padding-bottom: 28px; border-bottom: 2px solid #E5E7EB; }
+    .container { max-width: 760px; margin: 0 auto; padding: 56px 2rem 80px; }
+    .page-header { margin-bottom: 32px; padding-bottom: 28px; border-bottom: 2px solid #E5E7EB; }
     .page-header h1 { font-size: 1.75rem; font-weight: 800; color: #0C2340; letter-spacing: -0.025em; margin-bottom: 8px; }
-    .page-header p { font-size: 0.9rem; color: #6B7280; }
+    .page-header p { font-size: 0.95rem; color: #4B5563; }
     .effective { display: inline-block; background: #E6F2F3; color: #01696F; font-size: 0.78rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; }
-    h2 { font-size: 1.1rem; font-weight: 800; color: #0C2340; margin: 36px 0 12px; }
-    h3 { font-size: 0.95rem; font-weight: 700; color: #0C2340; margin: 20px 0 8px; }
+    h2 { font-size: 1.15rem; font-weight: 800; color: #0C2340; margin: 44px 0 12px; scroll-margin-top: 16px; }
+    h3 { font-size: 0.98rem; font-weight: 700; color: #0C2340; margin: 24px 0 8px; }
     p { font-size: 0.95rem; color: #374151; margin-bottom: 14px; }
     ul { font-size: 0.95rem; color: #374151; margin: 0 0 14px 20px; }
     ul li { margin-bottom: 6px; }
-    .callout { background: #E6F2F3; border-left: 4px solid #01696F; border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 24px 0; font-size: 0.9rem; color: #374151; }
+    a { color: #01696F; }
+    strong { color: #1F2937; }
+    .callout { background: #E6F2F3; border-left: 4px solid #01696F; border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 24px 0; font-size: 0.92rem; color: #374151; }
     .callout strong { color: #01696F; }
-    .data-table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.875rem; }
+    .callout.warn { background: #FFF8E1; border-left-color: #C8972A; }
+    .callout.warn strong { color: #8A6414; }
+    .callout ul { margin-top: 6px; margin-bottom: 0; }
+    .toc { background: white; border: 1px solid #E5E7EB; border-radius: 10px; padding: 16px 20px; margin: 0 0 8px; }
+    .toc p { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6B7280; margin-bottom: 8px; }
+    .toc ol { font-size: 0.9rem; margin-left: 20px; columns: 2; column-gap: 28px; }
+    .toc li { margin-bottom: 4px; break-inside: avoid; }
+    .toc a { text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .data-table { width: 100%; border-collapse: collapse; margin: 12px 0 24px; font-size: 0.875rem; background: white; border-radius: 8px; overflow: hidden; }
     .data-table th { text-align: left; background: #0C2340; color: white; padding: 10px 14px; font-weight: 700; }
     .data-table td { padding: 10px 14px; border-bottom: 1px solid #E5E7EB; color: #374151; vertical-align: top; }
     .data-table tr:nth-child(even) td { background: #F9FAFB; }
-    a { color: #01696F; }
-    footer-note { display: block; font-size: 0.8rem; color: #9CA3AF; margin-top: 48px; padding-top: 24px; border-top: 1px solid #E5E7EB; }
+    .data-table td:first-child { font-weight: 600; color: #1F2937; width: 30%; }
+    .footer-note { font-size: 0.8rem; color: #6B7280; margin-top: 56px; padding-top: 24px; border-top: 1px solid #E5E7EB; }
+    @media (max-width: 640px) {
+      nav { padding: 14px 16px; }
+      .container { padding: 36px 16px 64px; }
+      .page-header h1 { font-size: 1.5rem; }
+      .toc ol { columns: 1; }
+      /* Tables become stacked cards so nothing scrolls sideways on a phone. */
+      .data-table, .data-table tbody, .data-table tr, .data-table td { display: block; width: 100%; }
+      .data-table thead { display: none; }
+      .data-table tr { border-bottom: 1px solid #E5E7EB; padding: 10px 14px; }
+      .data-table tr:nth-child(even) td { background: transparent; }
+      .data-table tr:nth-child(even) { background: #F9FAFB; }
+      .data-table td { border: 0; padding: 2px 0; }
+      .data-table td:first-child { width: 100%; margin-bottom: 2px; }
+      .data-table td[data-label]:not(:first-child)::before { content: attr(data-label) ": "; font-weight: 600; color: #6B7280; }
+    }
   </style>
 </head>
 <body>
 <nav>
   <a href="/" class="logo">Acq<span>lerate</span></a>
-  <a href="/" class="back">← Back to home</a>
+  <a href="/" class="back">&larr; Back to home</a>
 </nav>
 
-<div class="container">
+<main class="container">
   <div class="page-header">
-    <span class="effective">Effective April 6, 2026</span>
+    <span class="effective">Effective September 27, 2026</span>
     <h1>Privacy Policy</h1>
-    <p>We know that people in the defense acquisition space take data seriously. This policy explains exactly what we collect, why we collect it, and what we don't do with it. No legal fog. Questions: <a href="mailto:hello@acqlerate.com">hello@acqlerate.com</a></p>
+    <p>People in defense acquisition take data seriously, so we tried to write this the way we'd want it written for us: what we collect, why, who else touches it, and how to make us delete it. No legal fog. Questions go to <a href="mailto:hello@acqlerate.com">hello@acqlerate.com</a>.</p>
   </div>
 
   <div class="callout">
-    <strong>The short version:</strong> We collect what we need to run the platform. We don't sell your data. We don't share it with third parties except the services listed below that help us operate. We don't store sensitive government or program information — we're an education platform, not a data broker.
+    <strong>The short version</strong>
+    <ul>
+      <li>We collect what it takes to run your account, track your progress, and take payments. That's it.</li>
+      <li>We don't sell your data, and we don't use ad networks or ad tracking.</li>
+      <li>A handful of service providers help us run things (hosting, payments, email, sign-in, AI). They're all listed below.</li>
+      <li>You can delete your account yourself, any time, from My Account. It takes about ten seconds.</li>
+      <li>Please don't put classified information, CUI, or sensitive program data anywhere on Acqlerate.</li>
+    </ul>
   </div>
 
-  <h2>1. What we collect and why</h2>
+  <div class="toc" role="navigation" aria-label="Contents">
+    <p>On this page</p>
+    <ol>
+      <li><a href="#who">Who's responsible for your data</a></li>
+      <li><a href="#collect">What we collect and why</a></li>
+      <li><a href="#tools">What you type into our tools</a></li>
+      <li><a href="#others-see">What other learners can see</a></li>
+      <li><a href="#not-collect">What we don't collect</a></li>
+      <li><a href="#providers">Who helps us run Acqlerate</a></li>
+      <li><a href="#where">Where your data lives</a></li>
+      <li><a href="#cookies">Cookies and similar storage</a></li>
+      <li><a href="#emails">Emails we send</a></li>
+      <li><a href="#retention">How long we keep things</a></li>
+      <li><a href="#rights">Your rights and controls</a></li>
+      <li><a href="#legal-basis">Our legal reasons (for EU and UK users)</a></li>
+      <li><a href="#security">Security</a></li>
+      <li><a href="#children">Children</a></li>
+      <li><a href="#changes">Changes to this policy</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ol>
+  </div>
 
-  <h3>Account information</h3>
+  <h2 id="who">1. Who's responsible for your data</h2>
+  <p>Acqlerate (acqlerate.com and the Acqlerate mobile apps) is run by <strong>Lucas Cruz</strong>, an individual based in Spain. In privacy-law terms, that makes Lucas the "controller" of your personal data. When this policy says "we," it means Acqlerate and the person running it.</p>
+  <p>Contact for anything privacy-related: <a href="mailto:hello@acqlerate.com">hello@acqlerate.com</a>.</p>
+
+  <h2 id="collect">2. What we collect and why</h2>
+
+  <h3>Your account</h3>
   <table class="data-table">
-    <thead><tr><th>Data</th><th>Why we collect it</th><th>How long we keep it</th></tr></thead>
+    <thead><tr><th>What</th><th>Why we use it</th></tr></thead>
     <tbody>
-      <tr><td>Email address</td><td>Account login, receipts, course updates</td><td>Until you delete your account</td></tr>
-      <tr><td>Display name / username</td><td>Personalization, certificates of completion</td><td>Until you delete your account</td></tr>
-      <tr><td>Password (hashed)</td><td>Authentication — we never store plaintext passwords</td><td>Until you delete your account</td></tr>
-      <tr><td>Google OAuth profile</td><td>If you sign in with Google: name and email only</td><td>Until you delete your account</td></tr>
+      <tr><td>First and last name</td><td data-label="Why">To set up your account, address you properly, and print on your certificates of completion.</td></tr>
+      <tr><td>Email address</td><td data-label="Why">To sign you in, send receipts and account emails, and (unless you opt out) send lesson emails.</td></tr>
+      <tr><td>Password</td><td data-label="Why">To sign you in. We only ever store a scrambled version (a bcrypt hash). We can't read your password, and neither can anyone who gets hold of our database.</td></tr>
+      <tr><td>Google sign-in</td><td data-label="Why">If you choose "Sign in with Google," we keep your name, email, and Google account ID. That's all we keep (Google also offers a profile photo link, which we ignore).</td></tr>
+      <tr><td>Apple sign-in</td><td data-label="Why">If you choose "Sign in with Apple," Apple shares an Apple account ID, your email (which can be a private relay address if you pick "Hide My Email"), and your name the first time only.</td></tr>
+      <tr><td>Your onboarding answers</td><td data-label="Why">Your role (for example DoD employee, contractor, career changer, or student), experience level, and goal. We use these to put the right lessons in front of you first.</td></tr>
     </tbody>
   </table>
 
-  <h3>Learning activity</h3>
+  <h3>Your learning activity</h3>
   <table class="data-table">
-    <thead><tr><th>Data</th><th>Why we collect it</th><th>How long we keep it</th></tr></thead>
+    <thead><tr><th>What</th><th>Why we use it</th></tr></thead>
     <tbody>
-      <tr><td>Lesson completions</td><td>Track your progress, generate certificates</td><td>Until you delete your account</td></tr>
-      <tr><td>Quiz scores</td><td>Track your progress, unlock skill levels</td><td>Until you delete your account</td></tr>
-      <tr><td>XP and level</td><td>Gamification and progress display</td><td>Until you delete your account</td></tr>
-      <tr><td>Learning path / role selection</td><td>Personalize module order and content</td><td>Until you delete or update it</td></tr>
+      <tr><td>Progress</td><td data-label="Why">Lessons completed, quiz and module assessment scores, skill levels, and certificates earned. This is how the platform remembers where you are.</td></tr>
+      <tr><td>Game stuff</td><td data-label="Why">XP, levels, streaks, daily challenge results, weekly briefs you've completed, and which audio episodes you've played. This powers streaks, levels, and leaderboards.</td></tr>
+      <tr><td>Usage and sessions</td><td data-label="Why">When you sign in, when you were last active, how long your sessions last (we keep your last 100), and total minutes with Acqlerate open on your screen. We use this to sign you out when you've been away, and to see which parts of the course actually hold people's attention so we can improve the rest.</td></tr>
+      <tr><td>AI assistant usage count</td><td data-label="Why">How many AI requests you've made today, so we can apply the daily limit for your plan. We don't store your AI questions or answers.</td></tr>
+      <tr><td>Referrals</td><td data-label="Why">Your referral code, the code you signed up with (if any), and how many people joined through your link, so we can give out referral rewards.</td></tr>
     </tbody>
   </table>
 
-  <h3>Payment information</h3>
-  <p>Payments are processed entirely by <strong>Stripe</strong>. Acqlerate never sees, stores, or handles your credit card number, CVC, or billing details. We store only:</p>
+  <h3>Payments</h3>
+  <p>Payments are handled entirely by <strong>Stripe</strong>. Your card number, CVC, and billing details go straight to Stripe and never touch our servers. What we keep:</p>
   <ul>
-    <li>Your Stripe Customer ID (a reference number, not payment data)</li>
-    <li>Your subscription status (free, monthly, lifetime)</li>
-    <li>Purchase type (subscription or one-time pack)</li>
+    <li>Your Stripe customer ID and subscription ID (reference numbers, not payment data)</li>
+    <li>Your plan status (free, trial, monthly, lifetime)</li>
+    <li>For template pack and Team Pack purchases: the email you bought with, what you bought, the amount, the date, Stripe's reference numbers, and a private download link with a count of how many times it's been used</li>
   </ul>
 
-  <h3>Email leads (landing page)</h3>
-  <p>If you submit your email on our landing page to receive a free starter kit, we store your email address and the source of the submission (e.g., "landing page form"). We use this to send you the kit and occasional relevant updates. You can unsubscribe at any time.</p>
+  <h3>If you sign up for our free starter kit or emails</h3>
+  <p>If you give us your email on a landing page or pop-up, we store the address and where you signed up (for example "landing page"). We use it to send what you asked for, plus occasional updates. Every one of those emails has an unsubscribe link.</p>
+
+  <h3>When you email us</h3>
+  <p>If you write to us, we keep your message and our reply so we can help you and have a record of what we agreed.</p>
+
+  <h3>Notifications to us</h3>
+  <p>When someone signs up, joins the email list, buys something, cancels, or deletes their account, we get an email notification with their name and email address so we can say hello, help, or follow up. These land in our Google inbox.</p>
+
+  <h3>Technical data</h3>
+  <p>Like every website, our hosting and network providers see your IP address and basic browser and device info when you load a page. That's how the internet delivers the page to you, and it's also how we block brute-force login attempts and spam (for example, limiting how many times one address can try to log in). This shows up in short-lived server logs. We don't save your IP address to your account.</p>
 
   <h3>Analytics</h3>
-  <p>We use <strong>Google Analytics 4 (GA4)</strong> to understand aggregate traffic — which pages are visited, how people navigate the site. GA4 data is anonymized. We do not use advertising-based tracking or behavioral retargeting.</p>
+  <p>We use <strong>Google Analytics 4</strong> to count visits and see which pages people use. It tells us things like "40 people read the CPARS lesson page this week," along with rough location (country or city) and device type. It also counts a few key moments: a lesson being completed (with the quiz score), and someone signing up, logging in, or starting checkout. We don't send Google your name, email, or account ID, so none of this is tied to you, and we don't use Google Analytics for advertising. You can opt out with <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google's opt-out add-on</a> or any tracker blocker.</p>
 
-  <h2>2. What we do NOT collect</h2>
+  <h2 id="tools">3. What you type into our tools</h2>
+
+  <h3>Cost &amp; Burn Rate Tracker</h3>
+  <p>If you use the tracker, we store what you enter: task order and project names and codes, funding modifications (CLIN, SLIN, ACRN, amounts, dates, descriptions), cost entries, and your indirect rates (fringe, overhead, G&amp;A, fee). We store it only so the tracker can show it back to you.</p>
+  <ul>
+    <li>It's private to your account. Other users can't see it.</li>
+    <li>We don't analyze it, use it for anything else, or share it with anyone.</li>
+    <li>"Deleting" a project in the tracker hides it (archives it). Everything you've ever entered is permanently erased when you delete your account.</li>
+  </ul>
+
+  <h3>AI Study Assistant and FAR translator</h3>
+  <p>When you use an AI feature, we send the lesson text (and, for the FAR translator, whatever clause number or text you type) to <strong>Google's Gemini API</strong> to write the answer. We don't send your name, email, or account details with it, and we don't store the conversation. Under the Google API terms that apply to us, Google doesn't use this text to improve its products. It may keep it for a limited time to detect abuse.</p>
+
+  <div class="callout warn">
+    <strong>DoD and contractor users, please read:</strong> Acqlerate is a commercial education platform, not an accredited government system. Don't enter classified information, Controlled Unclassified Information (CUI), export-controlled data, source selection information, or company-proprietary numbers anywhere on Acqlerate, including the tracker and the AI features. Use made-up or publicly available figures for practice.
+  </div>
+
+  <h2 id="others-see">4. What other learners can see</h2>
+  <p><strong>Leaderboards.</strong> Signed-in learners can see leaderboards that show your first name and last initial (for example "Maria G."), your XP, your streak, and your Daily Challenge scores. Never your email or full last name. Don't want to be on it? Turn it off any time in <strong>My Account</strong>.</p>
+  <p><strong>Certificates.</strong> Your certificates show the name on your account (edit it in My Account), the module, and the date. They're only shared if you share them.</p>
+
+  <h2 id="not-collect">5. What we don't collect</h2>
   <ul>
     <li>Your security clearance level or status</li>
     <li>Your military rank, unit, or command</li>
-    <li>Your employer or contractor affiliation (unless you tell us)</li>
-    <li>Any classified or controlled unclassified information (CUI) — don't put it here</li>
-    <li>Your government PIV card, CAC, or ID information</li>
-    <li>IP addresses stored against your identity</li>
+    <li>Your employer's name (unless you tell us, for example in an email or a Team Pack purchase)</li>
+    <li>Your CAC, PIV card, or any government ID</li>
+    <li>Your precise location</li>
+    <li>Anything from your phone's contacts, photos, camera, or microphone</li>
   </ul>
+  <p>We also don't sell or rent your personal information, don't "share" it for targeted advertising, and don't use it to make automated decisions that have legal or similarly significant effects on you.</p>
 
-  <div class="callout">
-    <strong>DoD users:</strong> Acqlerate is a commercial education platform. Do not enter classified information, CUI, or sensitive program data into any field on this platform. Use only unclassified, publicly available information when interacting with the AI study assistant or any other feature.
-  </div>
-
-  <h2>3. Third-party services we use</h2>
+  <h2 id="providers">6. Who helps us run Acqlerate</h2>
+  <p>We're a one-person operation, so we rely on a few established providers. Each one only gets what it needs to do its job, and each is bound by its own data protection terms.</p>
   <table class="data-table">
-    <thead><tr><th>Service</th><th>What they process</th><th>Privacy policy</th></tr></thead>
+    <thead><tr><th>Provider</th><th>What they do for us</th><th>Their privacy policy</th></tr></thead>
     <tbody>
-      <tr><td><strong>Stripe</strong></td><td>Payment processing — card data never reaches Acqlerate</td><td><a href="https://stripe.com/privacy" target="_blank">stripe.com/privacy</a></td></tr>
-      <tr><td><strong>Google OAuth</strong></td><td>Authentication only — name and email if you choose "Sign in with Google"</td><td><a href="https://policies.google.com/privacy" target="_blank">policies.google.com/privacy</a></td></tr>
-      <tr><td><strong>Google Analytics</strong></td><td>Anonymized site analytics — no personal identifiers</td><td><a href="https://policies.google.com/privacy" target="_blank">policies.google.com/privacy</a></td></tr>
-      <tr><td><strong>Resend</strong></td><td>Transactional email delivery (receipts, starter kits, account emails)</td><td><a href="https://resend.com/privacy" target="_blank">resend.com/privacy</a></td></tr>
-      <tr><td><strong>Railway</strong></td><td>Cloud hosting — servers where your data is stored and processed</td><td><a href="https://railway.app/legal/privacy" target="_blank">railway.app/legal/privacy</a></td></tr>
+      <tr><td>Railway</td><td data-label="Role">Hosts our servers and database (in the Netherlands, EU).</td><td data-label="Policy"><a href="https://railway.com/legal/privacy" target="_blank" rel="noopener">railway.com</a></td></tr>
+      <tr><td>Cloudflare</td><td data-label="Role">Delivers the site quickly and protects it from attacks.</td><td data-label="Policy"><a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">cloudflare.com</a></td></tr>
+      <tr><td>Stripe</td><td data-label="Role">Processes payments and subscriptions.</td><td data-label="Policy"><a href="https://stripe.com/privacy" target="_blank" rel="noopener">stripe.com</a></td></tr>
+      <tr><td>Resend</td><td data-label="Role">Sends our emails (receipts, account emails, lesson emails, starter kits).</td><td data-label="Policy"><a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener">resend.com</a></td></tr>
+      <tr><td>Google</td><td data-label="Role">Google sign-in (if you use it), Google Analytics, the Gemini API for AI features, Google Fonts (which loads our typefaces, so Google sees your IP address), and Gmail / Google Workspace, where our inbox and notifications live.</td><td data-label="Policy"><a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com</a></td></tr>
+      <tr><td>Apple</td><td data-label="Role">Sign in with Apple (if you use it) and app distribution.</td><td data-label="Policy"><a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener">apple.com</a></td></tr>
     </tbody>
   </table>
-  <p>We do not use advertising networks, data brokers, or behavioral tracking platforms. We do not sell, rent, or trade your personal information to any third party.</p>
+  <p>We may also share information if the law requires it (for example a valid court order), to protect someone's safety, or if Acqlerate is ever sold or merged. In that last case the new owner would have to honor this policy, and we'd tell you before your data became subject to a different one.</p>
 
-  <h2>4. Cookies and session data</h2>
-  <p>We use a single session cookie to keep you logged in. It is a functional cookie — the platform cannot work without it. We do not use advertising cookies, tracking pixels, or cross-site cookies. Google Analytics uses its own cookies per Google's policy; you can opt out via <a href="https://tools.google.com/dlpage/gaoptout" target="_blank">Google's opt-out tool</a>.</p>
+  <h2 id="where">7. Where your data lives</h2>
+  <p>Our servers and database are in the European Union (the Netherlands). Some of the providers above are US companies and may process data in the United States. When that happens, the transfer is covered by the EU-US Data Privacy Framework or the European Commission's Standard Contractual Clauses, which are the legal tools EU law provides for this.</p>
 
-  <h2>5. Data storage and security</h2>
-  <p>Your data is stored on servers hosted by Railway in the United States. Passwords are hashed using bcrypt before storage — we cannot read your password. Access to the database is restricted to authorized systems only.</p>
-  <p>We use HTTPS for all connections. We do not transmit unencrypted personal data. That said, no system is perfectly secure — if you discover a security issue, please email us immediately at <a href="mailto:hello@acqlerate.com">hello@acqlerate.com</a>.</p>
-
-  <h2>6. Your rights</h2>
-  <p>You can:</p>
+  <h2 id="cookies">8. Cookies and similar storage</h2>
   <ul>
-    <li><strong>Access your data</strong> — email us and we'll send you everything we have on your account within 30 days.</li>
-    <li><strong>Delete your account</strong> — email us at <a href="mailto:hello@acqlerate.com">hello@acqlerate.com</a> with the subject "Delete my account." We'll remove your personal data within 30 days, retaining only anonymized records needed for accounting.</li>
-    <li><strong>Correct your data</strong> — update your display name and email in account settings, or email us.</li>
-    <li><strong>Unsubscribe from marketing emails</strong> — every marketing email includes an unsubscribe link. Transactional emails (receipts, password resets) cannot be opted out of.</li>
+    <li><strong>Sign-in cookie.</strong> One cookie keeps you logged in. The site can't work without it. It lasts up to 30 days, and you're signed out automatically once you've been away for 30 minutes (tab closed or in the background).</li>
+    <li><strong>Theme cookie.</strong> If you pick light or dark mode, a small cookie remembers it for a year.</li>
+    <li><strong>Google Analytics cookies.</strong> Used to count visits, as described above. Opt out with <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google's add-on</a>, a tracker blocker, or your browser's cookie settings.</li>
+    <li><strong>Stripe.</strong> When you check out, Stripe's own page sets cookies it needs to prevent fraud.</li>
+    <li><strong>Your device's local storage.</strong> Small settings like "I've already seen the tour" or your lesson filter. These stay on your device and aren't sent to us.</li>
+  </ul>
+  <p>No advertising cookies, no tracking pixels, no cross-site tracking.</p>
+
+  <h2 id="emails">9. Emails we send</h2>
+  <ul>
+    <li><strong>Account emails</strong> (welcome, password resets, purchase and download emails, and important notices about your account or these policies). These are part of running your account, so they still arrive if you unsubscribe from everything else. Stripe emails your payment receipts directly.</li>
+    <li><strong>Lesson emails, reminders, and newsletters.</strong> A short series after you sign up, a heads-up before your free trial ends, and occasional updates. One click on "Unsubscribe" in any of them stops all of these. We keep a record of unsubscribed addresses so we never accidentally email you again.</li>
   </ul>
 
-  <h2>7. Children's privacy</h2>
-  <p>Acqlerate is designed for working professionals. We do not knowingly collect data from anyone under 18. If you believe we have received data from someone under 18, contact us and we will delete it immediately.</p>
+  <h2 id="retention">10. How long we keep things</h2>
+  <table class="data-table">
+    <thead><tr><th>What</th><th>How long</th></tr></thead>
+    <tbody>
+      <tr><td>Account, progress, and tracker data</td><td data-label="Kept">Until you delete your account.</td></tr>
+      <tr><td>Session history</td><td data-label="Kept">Your most recent 100 sessions. Older ones drop off automatically.</td></tr>
+      <tr><td>Purchase records</td><td data-label="Kept">As long as tax and accounting law requires (up to 6 years in Spain), even after you delete your account.</td></tr>
+      <tr><td>Starter kit / email list sign-ups</td><td data-label="Kept">Until you delete your account or ask us to remove you. Unsubscribing stops every email right away.</td></tr>
+      <tr><td>Unsubscribe list</td><td data-label="Kept">Kept, so your opt-out is always honored.</td></tr>
+      <tr><td>Password reset links</td><td data-label="Kept">Expire after an hour. Deleted with your account.</td></tr>
+      <tr><td>Server logs</td><td data-label="Kept">A few weeks at most.</td></tr>
+      <tr><td>Support emails</td><td data-label="Kept">As long as needed to help you and keep a record of what we agreed.</td></tr>
+      <tr><td>Notification emails to us</td><td data-label="Kept">They can stay in our inbox after you delete your account. Ask and we'll delete them.</td></tr>
+    </tbody>
+  </table>
+  <p>Deleted data can linger in our hosting provider's backups for a short time before it's overwritten.</p>
 
-  <h2>8. Changes to this policy</h2>
-  <p>If we make material changes, we'll notify you by email and update the effective date above. Continued use of Acqlerate after notice constitutes acceptance.</p>
+  <h2 id="rights">11. Your rights and controls</h2>
+  <h3>Do it yourself, right now</h3>
+  <ul>
+    <li><strong>Change your name:</strong> My Account.</li>
+    <li><strong>Hide from leaderboards:</strong> My Account.</li>
+    <li><strong>Stop marketing emails:</strong> the Unsubscribe link in any of them.</li>
+    <li><strong>Delete your account:</strong> My Account, on the website or in the app. This permanently deletes your account, progress, tracker data, and email-list sign-up, and cancels any monthly subscription. Purchase records stay for tax reasons, as noted above.</li>
+  </ul>
+  <h3>Ask us</h3>
+  <p>Email <a href="mailto:hello@acqlerate.com">hello@acqlerate.com</a> and we'll respond within one month (usually much faster). You can ask us to:</p>
+  <ul>
+    <li><strong>Access</strong> the data we hold about you, or get a <strong>copy</strong> in a portable format</li>
+    <li><strong>Correct</strong> something, including changing your email address</li>
+    <li><strong>Delete</strong> your data</li>
+    <li><strong>Restrict</strong> or <strong>object</strong> to how we use it</li>
+    <li><strong>Withdraw consent</strong> you've given us</li>
+  </ul>
+  <p>We may ask you to confirm the request from the email on your account, so we don't hand your data to someone pretending to be you. These rights come from the EU's GDPR, but we honor them for everyone, wherever you live.</p>
+  <p>If you're unhappy with how we've handled your data, you can complain to a data protection authority. In Spain that's the <a href="https://www.aepd.es" target="_blank" rel="noopener">Agencia Española de Protección de Datos (AEPD)</a>, or you can go to the authority where you live. We'd appreciate the chance to fix it first, though.</p>
 
-  <h2>9. Contact</h2>
-  <p>Privacy questions or data requests: <a href="mailto:hello@acqlerate.com">hello@acqlerate.com</a></p>
-  <p>We're a small team and we respond promptly.</p>
+  <h2 id="legal-basis">12. Our legal reasons (for EU and UK users)</h2>
+  <p>European law asks us to name the legal reason for each thing we do with your data. Here they are in plain English:</p>
+  <ul>
+    <li><strong>To give you what you signed up for</strong> (performance of a contract): your account, progress, the tracker, AI features, certificates, leaderboards, payments, and account emails.</li>
+    <li><strong>Legitimate interests</strong> (things a reasonable user would expect, balanced against your rights): keeping the platform secure, usage and session data, site analytics, and lesson emails to people who already have an account. You can object to any of these, and unsubscribing stops the emails.</li>
+    <li><strong>Consent:</strong> starter kit and newsletter sign-ups from people without an account. You can withdraw it any time with the Unsubscribe link.</li>
+    <li><strong>Legal obligation:</strong> keeping purchase records for tax purposes.</li>
+  </ul>
 
-  <footer-note>© 2026 Acqlerate. All rights reserved. · <a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Service</a></footer-note>
-</div>
+  <h2 id="security">13. Security</h2>
+  <p>Every connection uses HTTPS. Passwords are hashed with bcrypt. Password reset links are single-use, expire after an hour, and only a hash of each link is stored. Accounts are signed out after 30 minutes away, and login attempts are rate-limited. Other learners can never see your private data. Only the site administrator can view account records, and only to run the service and help you. Database access is limited to the systems that run Acqlerate.</p>
+  <p>No system is perfect. If you find a security problem, please email <a href="mailto:hello@acqlerate.com">hello@acqlerate.com</a> right away. If a breach ever puts your data at risk, we'll tell you and the relevant authorities as the law requires.</p>
+
+  <h2 id="children">14. Children</h2>
+  <p>Acqlerate is built for working professionals and you must be 18 or older to use it. We don't knowingly collect data from anyone under 18. If you think we have, tell us and we'll delete it.</p>
+
+  <h2 id="changes">15. Changes to this policy</h2>
+  <p>When this policy changes, we update the date at the top. If a change is significant (for example a new kind of data or a new use for it), we'll email account holders before it takes effect.</p>
+
+  <h2 id="contact">16. Contact</h2>
+  <p>Privacy questions or requests: <a href="mailto:hello@acqlerate.com">hello@acqlerate.com</a>. A real person reads every message.</p>
+
+  <p class="footer-note">&copy; 2026 Acqlerate &middot; <a href="/privacy">Privacy Policy</a> &middot; <a href="/terms">Terms of Service</a> &middot; Previous version effective April 6, 2026</p>
+</main>
 </body>
 </html>

@@ -196,8 +196,12 @@ app.use((req, res, next) => {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      // Only error bodies are logged. Success bodies carry personal data
+      // (/api/auth/me returns email, name and progress; admin routes return
+      // every user), and the Privacy Policy says server logs don't hold that.
+      // Error bodies are short messages like "Invalid email or password".
+      if (capturedJsonResponse && res.statusCode >= 400) {
+        logLine += ` :: ${JSON.stringify(capturedJsonResponse).slice(0, 300)}`;
       }
 
       log(logLine);

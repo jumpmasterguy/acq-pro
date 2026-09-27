@@ -192,6 +192,24 @@ export class DrizzleStorage implements IStorage {
   }
 
   async deleteUser(userId: string): Promise<void> {
+    // Rows that only exist because of this account go with it, so the Privacy
+    // Policy's promise holds. Each cleanup is best-effort: a failure is logged
+    // but never blocks deleting the account itself. Kept on purpose: purchase
+    // rows (tax/accounting records) and the unsubscribe list (so an opt-out
+    // is still honored if the address ever comes back).
+    const [row] = await this.db.select({ email: users.email }).from(users).where(eq(users.id, userId));
+    try {
+      await this.db.delete(passwordResetTokens).where(eq(passwordResetTokens.userId, userId));
+    } catch (err) {
+      console.error(`[account-delete] reset-token cleanup failed for ${userId}:`, err);
+    }
+    if (row?.email) {
+      try {
+        await this.db.delete(emailLeads).where(sql`lower(${emailLeads.email}) = lower(${row.email})`);
+      } catch (err) {
+        console.error(`[account-delete] lead cleanup failed for ${userId}:`, err);
+      }
+    }
     await this.db.delete(users).where(eq(users.id, userId));
   }
 

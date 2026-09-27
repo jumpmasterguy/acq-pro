@@ -44,7 +44,9 @@ const TOP_N = 10;
 export function displayName(first: string | null, last: string | null): string {
   const f = (first ?? "").trim();
   const l = (last ?? "").trim();
-  if (!f) return "Acqlerate learner";
+  // Older Google accounts were backfilled with first_name = their email
+  // (username was the email, with no space to split on). Never show it.
+  if (!f || f.includes("@")) return "Acqlerate learner";
   const cap = f.charAt(0).toUpperCase() + f.slice(1);
   return l ? `${cap} ${l.charAt(0).toUpperCase()}.` : cap;
 }

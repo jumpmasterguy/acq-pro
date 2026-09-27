@@ -441,6 +441,14 @@ export async function registerRoutes(
       billingNote = "lifetime purchase (no recurring billing)";
     }
 
+    // Tracker data lives in its own tables. Best-effort, logged, never blocks
+    // the account deletion itself.
+    try {
+      await costTrackerStorage.deleteAllForUser(userId);
+    } catch (err: any) {
+      console.error(`[account-delete] cost tracker cleanup failed for ${email}:`, err);
+    }
+
     try {
       await storage.deleteUser(userId);
     } catch (err: any) {
@@ -457,6 +465,7 @@ export async function registerRoutes(
       `Billing: ${billingNote}`,
       user.stripeCustomerId ? `Stripe customer: https://dashboard.stripe.com/customers/${user.stripeCustomerId}` : "",
       `Time (UTC): ${new Date().toISOString()}`,
+      `To finish (Privacy Policy promise): if this address is a contact in Resend, remove it there too.`,
     ].filter(Boolean)).catch(() => {});
 
     req.logout(() => {
@@ -1520,8 +1529,25 @@ export async function registerRoutes(
     if (userId === req.user!.id) return res.status(400).json({ message: "Cannot delete your own account" });
     const user = await storage.getUser(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
+    // Same order as self-service deletion: stop billing first, so a user who
+    // asks us by email to delete them can't keep getting charged.
+    let billingNote = "";
+    if (stripe && user.subscriptionId && user.subscriptionStatus === "active" && user.subscriptionId.startsWith("sub_")) {
+      try {
+        await stripe.subscriptions.cancel(user.subscriptionId);
+        billingNote = " (monthly subscription cancelled in Stripe)";
+      } catch (err: any) {
+        billingNote = ` (FAILED to cancel ${user.subscriptionId}: cancel it manually in Stripe)`;
+        console.error(`[admin-delete] ${user.email}${billingNote}`, err?.message ?? err);
+      }
+    }
+    try {
+      await costTrackerStorage.deleteAllForUser(String(userId));
+    } catch (err: any) {
+      console.error(`[admin-delete] cost tracker cleanup failed for ${user.email}:`, err);
+    }
     await storage.deleteUser(userId);
-    return res.json({ message: `${user.email} deleted` });
+    return res.json({ message: `${user.email} deleted${billingNote}` });
   });
 
   // ─── Daily Challenge ──────────────────────────────────────────────────
@@ -2703,8 +2729,17 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
     const path = await import('path');
     const execFileAsync = promisify(execFile);
 
+    // Prefer First + Last. Google sign-ups have username = their email, which
+    // used to get printed on the certificate; never print an email address.
+    const u = user as any;
+    const fullName = `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim();
+    const certName =
+      (fullName && !fullName.includes('@')) ? fullName
+      : (user.username && !user.username.includes('@')) ? user.username
+      : 'Defense Professional';
+
     const payload = JSON.stringify({
-      name: user.username || 'Defense Professional',
+      name: certName,
       module_id: moduleId,
       module_title: mod.title,
       clps: mod.clps,
