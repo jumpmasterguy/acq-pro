@@ -357,6 +357,26 @@ def _api(payload: dict) -> dict:
         return json.loads(resp.read())
 
 
+def _api_streamed(payload: dict) -> dict:
+    """Same as _api, but streamed.
+
+    A web-search request can sit silent for minutes while Claude searches.
+    Without streaming, no bytes flow in that time and the connection gets
+    dropped ("Remote end closed connection without response"), which is why
+    every run from Sep 2026 fell back to writing without web research.
+    Streaming keeps data flowing. Uses the official SDK when installed
+    (the workflow installs it); otherwise falls back to the plain call.
+    """
+    try:
+        import anthropic
+    except ImportError:
+        return _api(payload)
+    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY, max_retries=2)
+    with client.messages.stream(**payload) as stream:
+        final = stream.get_final_message()
+    return final.model_dump(mode="json", exclude_none=True)
+
+
 def _text_of(result: dict) -> str:
     return "".join(b.get("text", "") for b in result.get("content", []) if b.get("type") == "text")
 
@@ -382,8 +402,9 @@ def claude_research(prompt: str) -> str:
     collected, searches = [], 0
     try:
         for _ in range(5):
-            result = _api({"model": CLAUDE_MODEL, "max_tokens": 8192,
-                           "messages": messages, "tools": tools})
+            payload = {"model": CLAUDE_MODEL, "max_tokens": 8192,
+                       "messages": messages, "tools": tools}
+            result = _api_streamed(payload)
             searches += (result.get("usage", {}).get("server_tool_use", {})
                                 .get("web_search_requests", 0))
             collected.append(_text_of(result))
@@ -903,15 +924,27 @@ def git_push(slug: str, title: str) -> bool:
         # In GitHub Actions, actions/checkout has already put an Authorization
         # header on the remote. Adding a second one makes git send two, and
         # GitHub rejects the push with 400 Duplicate header. Just push normally.
+        #
+        # A run takes several minutes, and other commits can land on main in
+        # that time (27 Sep 2026: two video commits did, and the push was
+        # rejected, losing the post). So pull those in with a rebase and try
+        # again. The bot only touches blog files, so the rebase is clean.
         if os.environ.get("GITHUB_ACTIONS") == "true":
-            result = subprocess.run(["git", "push", "origin", "HEAD:main"],
-                                    cwd=REPO_ROOT, capture_output=True)
-            if result.returncode != 0:
+            for attempt in range(1, 4):
+                result = subprocess.run(["git", "push", "origin", "HEAD:main"],
+                                        cwd=REPO_ROOT, capture_output=True)
+                if result.returncode == 0:
+                    print(f"Push succeeded (Actions credentials, attempt {attempt})")
+                    return True
                 err = result.stderr.decode() if result.stderr else ""
-                print(f"Push failed: {err}")
-                raise subprocess.CalledProcessError(result.returncode, "git push", stderr=result.stderr)
-            print("Push succeeded (Actions credentials)")
-            return True
+                print(f"Push attempt {attempt} rejected: {err.strip().splitlines()[0] if err.strip() else ''}")
+                pull = subprocess.run(["git", "pull", "--rebase", "origin", "main"],
+                                      cwd=REPO_ROOT, capture_output=True)
+                if pull.returncode != 0:
+                    subprocess.run(["git", "rebase", "--abort"], cwd=REPO_ROOT, capture_output=True)
+                    raise subprocess.CalledProcessError(pull.returncode, "git pull --rebase", stderr=pull.stderr)
+                print("Pulled newer commits from main, retrying push")
+            raise subprocess.CalledProcessError(1, "git push", stderr=result.stderr)
 
         # Local runs: fall back to an explicit token
         import shutil

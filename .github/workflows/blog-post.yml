@@ -42,7 +42,9 @@ jobs:
 
       - name: Generate a new post
         if: steps.drafts.outputs.published != 'yes'
-        run: python3 scripts/generate_blog_post.py
+        run: |
+          pip install --quiet anthropic
+          python3 scripts/generate_blog_post.py
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
