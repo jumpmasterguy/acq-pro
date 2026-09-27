@@ -37,6 +37,8 @@ jobs:
             git worktree add -q --detach /tmp/va
             cd /tmp/va && git checkout -q --orphan video-assets && git rm -rq . && cd -
           fi
+          # keep the branch to audio only: drop anything that isn't vo/
+          find /tmp/va -mindepth 1 -maxdepth 1 ! -name .git ! -name vo -exec rm -rf {} +
           rm -rf "/tmp/va/vo/${{ inputs.script }}"
           mkdir -p /tmp/va/vo
           cp -r "/tmp/vo/${{ inputs.script }}" "/tmp/va/vo/${{ inputs.script }}"
