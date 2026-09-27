@@ -1,0 +1,142 @@
+// Referral program (Terms §9): every 2 new accounts created through someone's
+// link earns them a year of Pro.
+//
+// What "a year of Pro" means depends on what the referrer already has:
+//   - Free or trial: access to every module for 365 days, stacked on top of
+//     any trial/pack time they still have. Uses the same trial clock as the
+//     14-day trial and the pack bonus, so it expires on read (hasFullAccess)
+//     and nothing permanent is written.
+//   - Monthly Pro (a real Stripe subscription): 12 months of the monthly price
+//     as a Stripe customer credit, so their next 12 invoices cost nothing.
+//     Their subscription id and status are never touched.
+//   - Lifetime, or comped Pro with no Stripe subscription: nothing to add.
+//     The referral still counts and they get a thank-you.
+//
+// The old code set everyone to status 'active' with a fake subscription id and
+// no expiry. That made the reward permanent, demoted Lifetime users to the
+// Monthly AI cap, and overwrote a Monthly subscriber's real Stripe id (so they
+// kept being billed and account deletion couldn't cancel them).
+
+import type Stripe from "stripe";
+import type { User } from "@shared/schema";
+import { storage } from "./storage";
+import { sendOpsAlertEmail, sendReferralRewardEmail } from "./email";
+
+export const REFERRAL_REWARD_DAYS = 365;
+const DAY_MS = 24 * 60 * 60 * 1000;
+// sentEmailDays marker for the trial-ending email (see processDripEmails and
+// server/packBonus.ts): cleared so the reminder goes out at the new end date.
+const TRIAL_ENDING_EMAIL_KEY = 14;
+const FALLBACK_MONTHLY_CENTS = 599;
+
+export type ProYearKind = "extended" | "stripe-credit" | "already-unlimited" | "needs-manual";
+export interface ProYearResult {
+  kind: ProYearKind;
+  /** New access end date, for "extended". */
+  until?: string;
+  /** Credit applied in cents, for "stripe-credit". */
+  creditCents?: number;
+  /** What went wrong, for "needs-manual". */
+  note?: string;
+}
+
+/** Referral codes are generated as A-Z/0-9 (storage.generateReferralCode). */
+export function cleanReferralCode(raw: unknown): string {
+  if (typeof raw !== "string") return "";
+  return raw.replace(/[^A-Za-z0-9]/g, "").slice(0, 20).toUpperCase();
+}
+
+async function monthlyPriceCents(stripe: Stripe): Promise<number> {
+  const priceId = process.env.STRIPE_PRICE_ID_MONTHLY;
+  if (!priceId) return FALLBACK_MONTHLY_CENTS;
+  try {
+    const price = await stripe.prices.retrieve(priceId);
+    return price.unit_amount ?? FALLBACK_MONTHLY_CENTS;
+  } catch {
+    return FALLBACK_MONTHLY_CENTS;
+  }
+}
+
+/**
+ * Give one user a year of Pro, in whatever form fits their plan (see top of
+ * file). Used by referral rewards and by the admin "grant 1 year" button.
+ */
+export async function grantProYear(user: User, stripe: Stripe | null, reason: string): Promise<ProYearResult> {
+  const status = user.subscriptionStatus;
+
+  if (status === "lifetime") return { kind: "already-unlimited" };
+
+  if (status === "active") {
+    const subId = user.subscriptionId ?? "";
+    if (!subId.startsWith("sub_")) return { kind: "already-unlimited" }; // comped, no billing to cover
+    if (!stripe || !user.stripeCustomerId) {
+      return { kind: "needs-manual", note: "Monthly subscriber but Stripe isn't configured or there's no customer id" };
+    }
+    try {
+      const creditCents = (await monthlyPriceCents(stripe)) * 12;
+      await stripe.customers.createBalanceTransaction(user.stripeCustomerId, {
+        amount: -creditCents, // negative = credit toward future invoices
+        currency: "usd",
+        description: `${reason}: 1 year of Acqlerate Pro`,
+      });
+      return { kind: "stripe-credit", creditCents };
+    } catch (err: any) {
+      return { kind: "needs-manual", note: `Stripe credit failed: ${err?.message ?? err}` };
+    }
+  }
+
+  // Free, or trialing (normal trial or pack bonus). Stack on remaining time.
+  const now = Date.now();
+  const currentEnd = status === "trialing" && user.trialEndsAt ? new Date(user.trialEndsAt).getTime() : 0;
+  const until = new Date(Math.max(now, currentEnd) + REFERRAL_REWARD_DAYS * DAY_MS).toISOString();
+  await storage.setTrialEndsAt(user.id, until);
+  const sent = Array.isArray(user.sentEmailDays) ? (user.sentEmailDays as number[]) : [];
+  if (sent.includes(TRIAL_ENDING_EMAIL_KEY)) {
+    await storage.updateSentEmailDays(user.id, sent.filter((d) => d !== TRIAL_ENDING_EMAIL_KEY));
+  }
+  return { kind: "extended", until };
+}
+
+/**
+ * Credit a brand-new account's referral code. Call once, right after the
+ * account is created (email, Google or Apple). Never throws.
+ */
+export async function applySignupReferral(newUser: User, rawCode: unknown, stripe: Stripe | null): Promise<void> {
+  const code = cleanReferralCode(rawCode);
+  if (!code) return;
+  try {
+    const s = storage as any;
+    const referrer: User | undefined = await s.getUserByReferralCode(code);
+    if (!referrer || referrer.id === newUser.id) return;
+
+    const fresh: User | undefined = await storage.getUser(newUser.id);
+    if (!fresh || (fresh as any).referredBy) return; // already credited once
+    await s.updateUserFields(newUser.id, { referredBy: (referrer as any).referralCode ?? code });
+
+    const { rewarded, referrer: counted } = await s.recordReferral(code);
+    console.log(`[referral] ${newUser.email} joined via ${code}${rewarded ? " (reward earned)" : ""}`);
+    if (!rewarded || !counted) return;
+
+    const result = await grantProYear(counted, stripe, "Referral reward");
+    console.log(`[referral] reward for ${counted.email}: ${result.kind}${result.until ? ` until ${result.until}` : ""}`);
+
+    const firstName = ((counted as any).firstName as string | null) ?? null;
+    if (result.kind !== "needs-manual") {
+      sendReferralRewardEmail(counted.email, firstName, result).catch(() => {});
+    }
+    if (result.kind === "stripe-credit" || result.kind === "needs-manual") {
+      sendOpsAlertEmail(
+        result.kind === "needs-manual" ? `⚠️ Referral reward needs a hand: ${counted.email}` : `🎁 Referral credit applied: ${counted.email}`,
+        [
+          `Referrer: ${counted.email} (plan: ${counted.subscriptionStatus})`,
+          `New signup that triggered it: ${newUser.email}`,
+          result.creditCents ? `Stripe credit: $${(result.creditCents / 100).toFixed(2)} (12 months of Monthly Pro)` : "",
+          result.note ? `Problem: ${result.note}` : "",
+          counted.stripeCustomerId ? `Stripe customer: https://dashboard.stripe.com/customers/${counted.stripeCustomerId}` : "",
+        ].filter(Boolean),
+      ).catch(() => {});
+    }
+  } catch (err) {
+    console.error(`[referral] failed to apply ${code} for ${newUser.email}:`, err);
+  }
+}

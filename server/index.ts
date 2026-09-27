@@ -38,7 +38,7 @@ app.use(
           "'self'",
           "'unsafe-inline'",          // React dev + inline GA4 snippet
           "https://js.stripe.com",
-          "https://www.googletagmanager.com",
+          "https://*.googletagmanager.com",
           "https://accounts.google.com",
         ],
         frameSrc: [
@@ -52,7 +52,12 @@ app.use(
           "https://api.stripe.com",
           "https://checkout.stripe.com",
           "https://generativelanguage.googleapis.com",
-          "https://www.google-analytics.com",
+          // GA4 (only loaded with consent, see client/public/consent.js). GA4
+          // also posts to region1.google-analytics.com and analytics.google.com,
+          // which the old single-host entry blocked. Google's recommended set:
+          "https://*.google-analytics.com",
+          "https://*.analytics.google.com",
+          "https://*.googletagmanager.com",
           "https://accounts.google.com",
         ],
         imgSrc: ["'self'", "data:", "https:"],

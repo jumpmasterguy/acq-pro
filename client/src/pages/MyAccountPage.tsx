@@ -381,6 +381,15 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
           Delete account
         </button>
 
+        {/* Privacy links. The app has no sidebar footer on phones, and the
+            stores expect the privacy policy to be reachable in-app. Cookie
+            settings opens the consent choice (public/consent.js). */}
+        <div className="flex justify-center gap-5 pb-2 text-xs" style={{ color: 'var(--acq-text-muted)' }}>
+          <a href="/privacy" className="hover:underline">Privacy</a>
+          <a href="/terms" className="hover:underline">Terms</a>
+          <button type="button" data-acq-cookie-settings className="hover:underline">Cookie settings</button>
+        </div>
+
         {deleteDialog}
       </div>
     );

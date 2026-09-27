@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { isNativeApp } from "./lib/platform";
+import { captureReferralFromUrl } from "./lib/referral";
 
 // The static pages on this site (tools.html and friends) are plain HTML and
 // cannot import isNativeApp(). This flag is how they know they are open inside
@@ -11,6 +12,9 @@ import { isNativeApp } from "./lib/platform";
 try {
   if (isNativeApp()) localStorage.setItem("acq:native", "1");
 } catch { /* storage unavailable: tools.html falls back to ?app=1 */ }
+
+// Before any routing touches the URL: keep a ?ref= code from a shared link.
+captureReferralFromUrl();
 
 if (!window.location.hash) {
   window.location.hash = "#/";

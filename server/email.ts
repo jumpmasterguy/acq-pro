@@ -1274,14 +1274,40 @@ export async function processDripEmails(
 }
 
 // ── Referral Reward Email ─────────────────────────────────────────────────────
-export async function sendReferralRewardEmail(to: string, username: string): Promise<void> {
-  const name = username?.split('@')[0] || 'there';
+// Referral reward. `result` says what the reward actually was, because a year
+// of Pro means different things by plan (see server/referrals.ts).
+export async function sendReferralRewardEmail(
+  to: string,
+  firstName: string | null,
+  result: { kind: "extended" | "stripe-credit" | "already-unlimited" | "needs-manual"; until?: string; creditCents?: number },
+): Promise<void> {
+  const name = (firstName || "").trim() && !(firstName || "").includes("@") ? (firstName as string).trim() : "there";
+  const untilText = result.until
+    ? new Date(result.until).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })
+    : "";
+  const copy = result.kind === "stripe-credit"
+    ? {
+        subject: "You earned a year of Acqlerate Pro",
+        headline: "Your next 12 months are on us.",
+        body: `We've added a $${((result.creditCents ?? 0) / 100).toFixed(2)} credit to your account, which covers your next 12 monthly payments. Nothing to do on your end. Your plan carries on exactly as it is, you just won't be charged for a year.`,
+      }
+    : result.kind === "already-unlimited"
+    ? {
+        subject: "Thanks for spreading the word",
+        headline: "Two more people joined because of you.",
+        body: "You already have full, permanent access, so there's nothing to add to your account. But it genuinely helps, and we noticed. Thank you.",
+      }
+    : {
+        subject: "You earned a year of Acqlerate Pro",
+        headline: "You just earned a year of Pro.",
+        body: `Your account is already upgraded: every module, every lesson, the audio Debriefs, and the AI study assistant${untilText ? `, through ${untilText}` : " for the next year"}. No card needed.`,
+      };
   await resend.emails.send({
     from: 'Lucas Cruz | Acqlerate <hello@acqlerate.com>',
     to,
     bcc: ['lucas.l.cruz.es@gmail.com'],
     reply_to: 'hello@acqlerate.com',
-    subject: "You earned it — 1 year of Acqlerate Pro on us",
+    subject: copy.subject,
     html: `<!DOCTYPE html>
 <html><head><meta charset="UTF-8"></head>
 <body style="margin:0;padding:0;background:#060f1e;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
@@ -1293,11 +1319,11 @@ export async function sendReferralRewardEmail(to: string, username: string): Pro
       <div style="text-align:center;margin-bottom:24px;">
         <div style="font-size:3rem;">🎉</div>
       </div>
-      <h1 style="color:#fff;font-size:1.5rem;font-weight:800;margin:0 0 16px;text-align:center;">You just earned 1 year of Pro.</h1>
-      <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.8;margin:0 0 16px;">Hey ${name} — two people signed up through your referral link. That means you've earned a full year of Acqlerate Pro, on us.</p>
-      <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.8;margin:0 0 24px;">Your account has already been upgraded. Full access to all ${COURSE_TOTALS.modules} modules, ${COURSE_TOTALS.lessons} lessons, unlimited AI study assistant, and everything we add going forward — for a year.</p>
+      <h1 style="color:#fff;font-size:1.5rem;font-weight:800;margin:0 0 16px;text-align:center;">${copy.headline}</h1>
+      <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.8;margin:0 0 16px;">Hey ${name}, two people signed up through your referral link.</p>
+      <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.8;margin:0 0 24px;">${copy.body}</p>
       <div style="background:#01696f22;border:1px solid #01696f44;border-radius:12px;padding:16px 20px;margin-bottom:24px;">
-        <p style="color:#4FC3CB;font-size:0.85rem;margin:0;font-weight:600;">Keep sharing your link — every 2 new signups earns another year of Pro.</p>
+        <p style="color:#4FC3CB;font-size:0.85rem;margin:0;font-weight:600;">Keep sharing your link (it's in My Account). Every 2 new signups earns another year.</p>
       </div>
       <a href="https://acqlerate.com/app" style="display:inline-block;background:#01696f;color:#fff;text-decoration:none;padding:14px 28px;border-radius:10px;font-weight:700;font-size:0.95rem;">Go to Acqlerate →</a>
     </div>

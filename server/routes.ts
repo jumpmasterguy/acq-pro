@@ -19,6 +19,7 @@ import { costTrackerStorage } from "./costTrackerStorage";
 import { reportCheckoutFailure } from "./stripeHealth";
 import { getSeoStats } from "./searchConsole";
 import { sendOpsAlertEmail } from "./email";
+import { applySignupReferral, cleanReferralCode, grantProYear } from "./referrals";
 import { dailyChallengeQuestionBank } from "./dailyChallengeQuestions";
 import { buildLeaderboards, type LeaderboardRow } from "./leaderboard";
 import { weekRollPatch } from "@shared/xp";
@@ -203,22 +204,15 @@ export async function registerRoutes(
 
     // Hash password and create user
     const passwordHash = await hashPassword(password);
-    const referredBy = (req.body.referralCode as string) || null;
     const user = await storage.createUser({ username, firstName, lastName, email, passwordHash });
 
     // Generate and save referral code for new user
     const referralCode = storage.generateReferralCode(email);
-    await storage.updateUserFields(user.id, { referralCode, referredBy });
+    await storage.updateUserFields(user.id, { referralCode });
 
-    // If referred, record the referral and potentially reward the referrer
-    if (referredBy) {
-      const { rewarded, referrer } = await storage.recordReferral(referredBy);
-      if (rewarded && referrer) {
-        // Notify referrer they earned a year of pro
-        const { sendReferralRewardEmail } = await import('./email.js') as any;
-        sendReferralRewardEmail?.(referrer.email, referrer.username).catch(() => {});
-      }
-    }
+    // Credit whoever referred them (and reward the referrer every 2 signups).
+    // Awaited so it's done before the response, but it never throws.
+    await applySignupReferral(user, req.body?.referralCode, stripe);
 
     // Send welcome email + admin notification (non-blocking)
     sendWelcomeEmail(user.email, user.username).catch(() => {});
@@ -535,6 +529,7 @@ export async function registerRoutes(
             });
             if (isNewUser && !existing) {
               sendAdminNotification(current.email, current.username, 'apple').catch(() => {});
+              await applySignupReferral(current, req.body?.referralCode, stripe);
             }
           }
         } catch (e) {
@@ -655,7 +650,12 @@ export async function registerRoutes(
     if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
       return res.status(503).json({ message: "Google OAuth is not configured" });
     }
-    passport.authenticate("google", { scope: ["profile", "email"] })(req, res, next);
+    // A referral code rides through Google in the OAuth `state` parameter and
+    // comes back on the callback. (The session can't carry it: passport
+    // regenerates the session at login and drops everything in it. No state
+    // store is configured, so passport-oauth2 passes a string state through.)
+    const ref = cleanReferralCode(req.query.ref);
+    passport.authenticate("google", { scope: ["profile", "email"], ...(ref ? { state: `ref:${ref}` } : {}) } as any)(req, res, next);
   });
 
   // Google OAuth callback — redirect to app after login
@@ -680,6 +680,8 @@ export async function registerRoutes(
             // Notify admin only on first Google login (new account)
             if (isNewUser) {
               sendAdminNotification(currentUser.email, currentUser.username, 'google').catch(() => {});
+              const state = String(req.query.state ?? "");
+              if (state.startsWith("ref:")) await applySignupReferral(currentUser, state.slice(4), stripe);
             }
           }
         } catch (e) {
@@ -1174,11 +1176,14 @@ export async function registerRoutes(
             // Find user by stripeCustomerId
             const allUsers = await storage.getUserByStripeCustomerId(customerId);
             if (allUsers) {
+              // Time they still hold from a referral year, pack bonus or trial
+              // outlives the subscription instead of being wiped with it.
+              const keepsTime = !!allUsers.trialEndsAt && new Date(allUsers.trialEndsAt).getTime() > Date.now();
               await storage.updateUserSubscription(allUsers.id, {
-                subscriptionStatus: "free",
+                subscriptionStatus: keepsTime ? "trialing" : "free",
                 subscriptionId: undefined,
               });
-              console.log(`[webhook] Subscription cancelled — user ${allUsers.id} moved to free`);
+              console.log(`[webhook] Subscription cancelled — user ${allUsers.id} moved to ${keepsTime ? `trialing until ${allUsers.trialEndsAt}` : "free"}`);
               await sendSubscriptionCancelledAdminAlert({
                 userEmail: allUsers.email || "(unknown email)",
                 userName: allUsers.username || undefined,
@@ -1438,10 +1443,17 @@ export async function registerRoutes(
   // POST /api/admin/users/:userId/grant-yearly-pro
   app.post("/api/admin/users/:userId/grant-yearly-pro", requireAuth as any, async (req: Request, res: Response) => {
     if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
-    const { userId } = req.params;
-    const updated = await storage.grantYearlyPro(userId);
-    if (!updated) return res.status(404).json({ message: "User not found" });
-    return res.json({ message: `${updated.email} granted 1 year of Pro access`, userId });
+    const userId = String(req.params.userId);
+    const user = await storage.getUser(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    // Same rules as a referral reward: a real, expiring year (see server/referrals.ts).
+    const result = await grantProYear(user, stripe, "Granted by Acqlerate");
+    const detail =
+      result.kind === "extended" ? `full access until ${result.until?.slice(0, 10)}`
+      : result.kind === "stripe-credit" ? `$${((result.creditCents ?? 0) / 100).toFixed(2)} Stripe credit (12 months of Monthly)`
+      : result.kind === "already-unlimited" ? "already has permanent access, nothing changed"
+      : `not applied: ${result.note}`;
+    return res.status(result.kind === "needs-manual" ? 500 : 200).json({ message: `${user.email}: ${detail}`, userId, result });
   });
 
   // POST /api/admin/users/:userId/toggle-admin — grant or revoke admin access

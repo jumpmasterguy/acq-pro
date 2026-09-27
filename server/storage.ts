@@ -227,46 +227,34 @@ export class DrizzleStorage implements IStorage {
     return result[0];
   }
 
-  // Record a successful referral signup — increment referrer's count, check reward threshold
+  // Record a successful referral signup: bump the referrer's count and, when
+  // it crosses the next multiple of 2, claim one reward. This only counts and
+  // claims. What the reward actually gives (a year of access, or a Stripe
+  // credit for a Monthly subscriber) is decided in server/referrals.ts, so the
+  // referrer's real subscription status and Stripe id are never overwritten.
+  // Both writes are single atomic UPDATEs, so two signups landing at the same
+  // moment can't lose a count or claim the same reward twice.
   async recordReferral(referralCode: string): Promise<{ rewarded: boolean; referrer: User | undefined }> {
     const referrer = await this.getUserByReferralCode(referralCode);
     if (!referrer) return { rewarded: false, referrer: undefined };
 
-    const newCount = (referrer.referralCount ?? 0) + 1;
-    const rewardsEarned = Math.floor(newCount / 2); // every 2 referrals = 1 reward
-    const alreadyGranted = referrer.referralRewardGranted ?? 0;
-    const shouldReward = rewardsEarned > alreadyGranted;
+    const [counted] = await this.db.update(users)
+      .set({ referralCount: sql`${users.referralCount} + 1` } as any)
+      .where(eq(users.id, referrer.id))
+      .returning();
+    if (!counted) return { rewarded: false, referrer: undefined };
 
-    const updates: any = { referralCount: newCount };
-    if (shouldReward) {
-      updates.referralRewardGranted = rewardsEarned;
-      // Grant 1 year of pro access (set expiry date 1 year from now)
-      const expiry = new Date();
-      expiry.setFullYear(expiry.getFullYear() + 1);
-      updates.subscriptionStatus = 'active';
-      updates.subscriptionId = `referral_reward_${Date.now()}`;
-    }
-
-    await this.db.update(users).set(updates).where(eq(users.id, referrer.id));
-    const updated = await this.getUser(referrer.id);
-    return { rewarded: shouldReward, referrer: updated };
+    const rewardsEarned = Math.floor((counted.referralCount ?? 0) / 2); // every 2 referrals = 1 reward
+    const [claimed] = await this.db.update(users)
+      .set({ referralRewardGranted: rewardsEarned } as any)
+      .where(sql`${users.id} = ${referrer.id} AND ${users.referralRewardGranted} < ${rewardsEarned}`)
+      .returning();
+    return { rewarded: !!claimed, referrer: claimed ?? counted };
   }
 
   // Update arbitrary user fields (for internal use)
   async updateUserFields(userId: string, fields: Record<string, any>): Promise<void> {
     await this.db.update(users).set(fields as any).where(eq(users.id, userId));
-  }
-
-  // Admin: grant yearly pro to a user manually
-  async grantYearlyPro(userId: string): Promise<User | undefined> {
-    const result = await this.db.update(users)
-      .set({
-        subscriptionStatus: 'active',
-        subscriptionId: `yearly_pro_${Date.now()}`,
-      } as any)
-      .where(eq(users.id, userId))
-      .returning();
-    return result[0];
   }
 
   // Find or create a user for Google OAuth — links by email if account already exists
@@ -1276,11 +1264,7 @@ export class MemStorage implements IStorage {
     const shouldReward = rewardsEarned > alreadyGranted;
 
     const updates: any = { referralCount: newCount };
-    if (shouldReward) {
-      updates.referralRewardGranted = rewardsEarned;
-      updates.subscriptionStatus = 'active';
-      updates.subscriptionId = `referral_reward_${Date.now()}`;
-    }
+    if (shouldReward) updates.referralRewardGranted = rewardsEarned; // the grant itself: server/referrals.ts
 
     const updated = { ...referrer, ...updates } as User;
     this.users.set(referrer.id, updated);
@@ -1291,18 +1275,6 @@ export class MemStorage implements IStorage {
     const user = this.users.get(userId);
     if (!user) return;
     this.users.set(userId, { ...user, ...fields } as User);
-  }
-
-  async grantYearlyPro(userId: string): Promise<User | undefined> {
-    const user = this.users.get(userId);
-    if (!user) return undefined;
-    const updated = {
-      ...user,
-      subscriptionStatus: 'active',
-      subscriptionId: `yearly_pro_${Date.now()}`,
-    } as User;
-    this.users.set(userId, updated);
-    return updated;
   }
 
   async updateUserStreak(userId: string): Promise<User | undefined> {

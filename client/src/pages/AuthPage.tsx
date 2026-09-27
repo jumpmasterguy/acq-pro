@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { readReferralFromUrl, getStoredReferral, clearStoredReferral } from "@/lib/referral";
 import { getTotalLessons } from "@/lib/curriculumMeta";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -130,12 +131,16 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
 
   // Pick up ?ref=CODE, ?mode=login and the reset link's ?token= from URL hash params
   useEffect(() => {
+    // Referral code: in the URL now (query string or hash), or remembered from
+    // a link they opened earlier (see lib/referral.ts).
+    const urlRef = readReferralFromUrl();
+    const storedRef = urlRef ?? getStoredReferral();
+    if (storedRef) setReferralCode(storedRef);
+    if (urlRef) setTab('register');
     const hash = window.location.hash; // e.g. #/auth?ref=LUCAS123 or #/reset-password?token=...
     const queryStart = hash.indexOf('?');
     if (queryStart >= 0) {
       const params = new URLSearchParams(hash.slice(queryStart + 1));
-      const ref = params.get('ref');
-      if (ref) { setReferralCode(ref); setTab('register'); }
       if (params.get('mode') === 'login') { setTab('login'); }
       const token = params.get('token');
       if (token && hash.startsWith('#/reset-password')) {
@@ -190,7 +195,9 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
   // Google OAuth: redirect to server-side OAuth flow (full page redirect)
   const handleGoogleSignIn = () => {
     const base = API_BASE || "";
-    window.location.href = `${base}/api/auth/google`;
+    // The server passes the code through Google and credits it if this turns
+    // out to be a brand-new account.
+    window.location.href = `${base}/api/auth/google${referralCode ? `?ref=${encodeURIComponent(referralCode)}` : ""}`;
   };
 
   // Sign in with Apple. Native only: iOS presents the sheet itself, so nothing
@@ -218,9 +225,11 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
         identityToken: r.identityToken,
         givenName: r.givenName ?? "",
         familyName: r.familyName ?? "",
+        ...(referralCode ? { referralCode } : {}),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.message || "Apple sign-in failed.");
+      clearStoredReferral();
       onAuthenticated(data);
     } catch (err: any) {
       // Cancelling the sheet throws too; that isn't an error worth shouting about.
@@ -279,6 +288,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Registration failed");
+      clearStoredReferral();
       toast({ title: "Welcome to Acqlerate!", description: "Your account has been created." });
       onAuthenticated(data);
     } catch (err: any) {

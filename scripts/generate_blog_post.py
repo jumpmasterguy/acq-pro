@@ -762,13 +762,8 @@ def assemble_post(title: str, deck: str, body_html: str, topic: dict,
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
   <link rel="stylesheet" href="/blog/blog.css" />
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SW42SFY999"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){{dataLayer.push(arguments);}}
-    gtag('js', new Date());
-    gtag('config', 'G-SW42SFY999');
-  </script>
+  <!-- Cookie consent + Google Analytics: see /consent.js -->
+  <script src="/consent.js"></script>
   <script type="application/ld+json">
   {{
     "@context": "https://schema.org",

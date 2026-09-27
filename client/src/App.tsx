@@ -1283,6 +1283,8 @@ function AppContent() {
           <div className="flex gap-3 px-3 pt-2 pb-1">
             <a href="/privacy" className="text-[12px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Privacy</a>
             <a href="/terms" className="text-[12px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Terms</a>
+            {/* public/consent.js listens for clicks on [data-acq-cookie-settings] */}
+            <button type="button" data-acq-cookie-settings className="text-[12px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Cookies</button>
             <PWAInstallLink />
           </div>
         </div>

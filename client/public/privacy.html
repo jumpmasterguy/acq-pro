@@ -9,6 +9,8 @@
   <link rel="canonical" href="https://acqlerate.com/privacy" />
   <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg" />
+  <!-- Cookie consent + Google Analytics: see /consent.js -->
+  <script src="/consent.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { -webkit-text-size-adjust: 100%; }
@@ -47,6 +49,9 @@
     .data-table tr:nth-child(even) td { background: #F9FAFB; }
     .data-table td:first-child { font-weight: 600; color: #1F2937; width: 30%; }
     .footer-note { font-size: 0.8rem; color: #6B7280; margin-top: 56px; padding-top: 24px; border-top: 1px solid #E5E7EB; }
+    .btn-settings { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; margin: 4px 0 16px; border-radius: 10px; border: 1.5px solid #0C2340; background: #0C2340; color: white; font: 600 0.9rem/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; cursor: pointer; }
+    .btn-settings:hover { background: #01696F; border-color: #01696F; }
+    .btn-settings:focus-visible { outline: 3px solid #4FC3CB; outline-offset: 2px; }
     @media (max-width: 640px) {
       nav { padding: 14px 16px; }
       .container { padding: 36px 16px 64px; }
@@ -162,7 +167,7 @@
   <p>Like every website, our hosting and network providers see your IP address and basic browser and device info when you load a page. That's how the internet delivers the page to you, and it's also how we block brute-force login attempts and spam (for example, limiting how many times one address can try to log in). This shows up in short-lived server logs. We don't save your IP address to your account.</p>
 
   <h3>Analytics</h3>
-  <p>We use <strong>Google Analytics 4</strong> to count visits and see which pages people use. It tells us things like "40 people read the CPARS lesson page this week," along with rough location (country or city) and device type. It also counts a few key moments: a lesson being completed (with the quiz score), and someone signing up, logging in, or starting checkout. We don't send Google your name, email, or account ID, so none of this is tied to you, and we don't use Google Analytics for advertising. You can opt out with <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google's opt-out add-on</a> or any tracker blocker.</p>
+  <p>We use <strong>Google Analytics 4</strong> to count visits and see which pages people use. It tells us things like "40 people read the CPARS lesson page this week," along with rough location (country or city) and device type. It also counts a few key moments: a lesson being completed (with the quiz score), and someone signing up, logging in, or starting checkout. We don't send Google your name, email, or account ID, so none of this is tied to you, and we don't use Google Analytics for advertising. <strong>If you're in Europe, it only runs if you say yes.</strong> Anyone can switch it off with <a href="#cookies">Cookie settings</a>.</p>
 
   <h2 id="tools">3. What you type into our tools</h2>
 
@@ -218,11 +223,15 @@
   <ul>
     <li><strong>Sign-in cookie.</strong> One cookie keeps you logged in. The site can't work without it. It lasts up to 30 days, and you're signed out automatically once you've been away for 30 minutes (tab closed or in the background).</li>
     <li><strong>Theme cookie.</strong> If you pick light or dark mode, a small cookie remembers it for a year.</li>
-    <li><strong>Google Analytics cookies.</strong> Used to count visits, as described above. Opt out with <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google's add-on</a>, a tracker blocker, or your browser's cookie settings.</li>
+    <li><strong>Google Analytics cookies.</strong> Used to count visits, as described above. <strong>If you're in Europe (the EU, EEA, UK, or Switzerland), we ask first</strong>, and Google Analytics doesn't load at all until you click Accept. Everywhere else it's on by default, and you can turn it off below.</li>
+    <li><strong>Your cookie choice.</strong> A small cookie remembers whether you said yes or no, for 12 months, so we don't ask on every page.</li>
     <li><strong>Stripe.</strong> When you check out, Stripe's own page sets cookies it needs to prevent fraud.</li>
-    <li><strong>Your device's local storage.</strong> Small settings like "I've already seen the tour" or your lesson filter. These stay on your device and aren't sent to us.</li>
+    <li><strong>Your device's local storage.</strong> Small settings like "I've already seen the tour," your lesson filter, or the invite code from a friend's referral link (kept for 30 days so it counts when you sign up). These stay on your device until they're needed.</li>
   </ul>
   <p>No advertising cookies, no tracking pixels, no cross-site tracking.</p>
+  <p><strong>Change your mind any time.</strong> Saying no has no effect on how the site works for you.</p>
+  <button type="button" class="btn-settings" data-acq-cookie-settings>Cookie settings</button>
+  <p>You'll also find "Cookie settings" in the site footer, in the app's sidebar, and at the bottom of My Account. You can also block or delete cookies in your browser, or use <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google's opt-out add-on</a>.</p>
 
   <h2 id="emails">9. Emails we send</h2>
   <ul>
@@ -271,8 +280,8 @@
   <p>European law asks us to name the legal reason for each thing we do with your data. Here they are in plain English:</p>
   <ul>
     <li><strong>To give you what you signed up for</strong> (performance of a contract): your account, progress, the tracker, AI features, certificates, leaderboards, payments, and account emails.</li>
-    <li><strong>Legitimate interests</strong> (things a reasonable user would expect, balanced against your rights): keeping the platform secure, usage and session data, site analytics, and lesson emails to people who already have an account. You can object to any of these, and unsubscribing stops the emails.</li>
-    <li><strong>Consent:</strong> starter kit and newsletter sign-ups from people without an account. You can withdraw it any time with the Unsubscribe link.</li>
+    <li><strong>Legitimate interests</strong> (things a reasonable user would expect, balanced against your rights): keeping the platform secure, usage and session data, and lesson emails to people who already have an account. You can object to any of these, and unsubscribing stops the emails.</li>
+    <li><strong>Consent:</strong> Google Analytics cookies for visitors in Europe (withdraw any time with Cookie settings), and starter kit and newsletter sign-ups from people without an account (withdraw any time with the Unsubscribe link).</li>
     <li><strong>Legal obligation:</strong> keeping purchase records for tax purposes.</li>
   </ul>
 
