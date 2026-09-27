@@ -44,7 +44,7 @@ function emailShell(preheader: string, body: string, recipientEmail?: string, fo
 <div style="max-width:600px;margin:32px auto;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07)">
 <div style="background:#0d2137;padding:32px 48px;text-align:center">
 <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto"><tr>
-<td style="padding-right:12px;vertical-align:middle"><img src="https://acqlerate.com/icon-192x192.png" width="40" height="40" alt="" style="display:block;border-radius:9px"/></td>
+<td style="padding-right:12px;vertical-align:middle"><img src="https://acqlerate.com/icon-192x192.png?v=3d" width="40" height="40" alt="" style="display:block;border-radius:9px"/></td>
 <td style="vertical-align:middle"><span style="color:#ffffff;font-size:22px;font-weight:800;letter-spacing:-0.5px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">Acqlerate</span></td>
 </tr></table>
 </div>
