@@ -1,0 +1,40 @@
+name: Video upload (to Higgsfield)
+# Manual only. PUTs a file from the video-assets branch to a presigned
+# Higgsfield upload URL (the workspace can't reach their storage directly).
+on:
+  workflow_dispatch:
+    inputs:
+      path:
+        description: "File path on the video-assets branch, e.g. final/hank-heist-v1.mp4"
+        required: true
+      upload_url:
+        description: "Presigned PUT URL from Higgsfield media_upload"
+        required: true
+      content_type:
+        description: "MIME type"
+        default: "video/mp4"
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: video-assets
+          sparse-checkout: ${{ inputs.path }}
+          sparse-checkout-cone-mode: false
+      - name: PUT to Higgsfield
+        env:
+          UPLOAD_URL: ${{ inputs.upload_url }}
+          FILE: ${{ inputs.path }}
+          CT: ${{ inputs.content_type }}
+        run: |
+          set -euo pipefail
+          case "$UPLOAD_URL" in https://*.amazonaws.com/*|https://*.higgsfield.ai/*) ;; *) echo "refusing non-Higgsfield upload URL"; exit 1;; esac
+          ls -la "$FILE"
+          code=$(curl -sS -o /tmp/resp.txt -w '%{http_code}' -X PUT -H "Content-Type: $CT" --data-binary @"$FILE" "$UPLOAD_URL")
+          echo "HTTP $code"; head -c 300 /tmp/resp.txt || true
+          [ "$code" = "200" ]
