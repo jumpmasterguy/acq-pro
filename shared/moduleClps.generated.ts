@@ -29,3 +29,18 @@ export const GENERATED_MODULE_CLPS: Record<string, ModuleClp> = {
 
 /** Sum of every module's CLPs, as advertised. */
 export const GENERATED_TOTAL_CLPS = 44.2;
+
+/**
+ * Course-wide totals: the ONE place code reads "how many modules/lessons".
+ * Emails, pages and generators all take their numbers from here (pages via
+ * shared/courseTotals.generated.json, filled in by scripts/sync-blog.mjs).
+ */
+export const COURSE_TOTALS = {
+  modules: 14,
+  modulesWord: "Fourteen",
+  lessons: 123,
+  minutes: 2684,
+  hours: 44.7,
+  clps: 44.2,
+  clpsWhole: 44
+} as const;

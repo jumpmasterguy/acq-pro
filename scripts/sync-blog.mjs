@@ -233,18 +233,52 @@ const NUM_WORDS = ["Zero","One","Two","Three","Four","Five","Six","Seven","Eight
                    "Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen",
                    "Eighteen","Nineteen","Twenty"];
 
+// One source: shared/courseTotals.generated.json, written from curriculum.ts
+// by scripts/gen-module-clps.mjs (which runs first in every build).
 function curriculumCounts() {
-  const src = readFileSync(join(ROOT, "client", "src", "lib", "curriculum.ts"), "utf8");
-  const modules = (src.match(/^    id: '[a-z0-9-]+',$/gm) || []).length;
-  const lessons = (src.match(/\bid:\s*'[a-z]+-\d+[a-z]?'/g) || []).length;
-  if (!modules || !lessons) {
-    console.error("sync-blog: could not parse curriculum counts; refusing to rewrite anything");
-    process.exit(1);
-  }
-  return { modules, lessons, word: NUM_WORDS[modules] || String(modules) };
+  const file = join(ROOT, "shared", "courseTotals.generated.json");
+  let t;
+  try { t = JSON.parse(readFileSync(file, "utf8")); }
+  catch { console.error("sync-blog: shared/courseTotals.generated.json missing. Run node scripts/gen-module-clps.mjs"); process.exit(1); }
+  return { ...t, word: t.modulesWord };
 }
 
 const CC = curriculumCounts();
+
+// ---------------------------------------------------------------------------
+// Placeholders. Any number on a page written as
+//     <span data-count="lessons">123</span>
+// is refreshed from the curriculum on every build. The number inside is just
+// the last value, so the page still reads correctly if the build step is
+// skipped. Keys:
+//   modules, modules-word ("Fourteen"), modules-word-lower, lessons, minutes,
+//   hours, clps (44.2), clps-whole (44, for "over 44 CLPs"),
+//   lessons:<moduleId>, clps:<moduleId>
+// ---------------------------------------------------------------------------
+function markerValue(key) {
+  const [k, mod] = key.split(":");
+  if (mod) {
+    const m = CC.perModule[mod];
+    if (!m) return undefined;
+    if (k === "lessons") return String(m.lessons);
+    if (k === "clps") return m.clps.toFixed(1);
+    return undefined;
+  }
+  return {
+    modules: String(CC.modules), "modules-word": CC.modulesWord,
+    "modules-word-lower": CC.modulesWord.toLowerCase(), lessons: String(CC.lessons),
+    minutes: String(CC.minutes), hours: CC.hours.toFixed(1), clps: CC.clps.toFixed(1),
+    "clps-whole": String(CC.clpsWhole),
+  }[k];
+}
+const badMarkers = [];
+function fillMarkers(text, file) {
+  return text.replace(/(<span data-count="([^"]+)">)[^<]*(<\/span>)/g, (all, open, key, close) => {
+    const v = markerValue(key);
+    if (v === undefined) { badMarkers.push(`${file.replace(ROOT + "/", "")}: unknown data-count="${key}"`); return all; }
+    return open + v + close;
+  });
+}
 
 // Narrow, formulaic phrasings only. Each is emitted by a generator or was
 // copied from one, so these patterns cannot collide with prose that happens to
@@ -278,14 +312,56 @@ function fixCounts(text) {
     .replace(/\b1\d{2}(\+?) (lessons|Lessons)\b/g, (_, plus, word) => `${L}${plus} ${word}`);
 }
 
+// Course-level CLP/PDU totals inside <script> JSON-LD and <meta> tags, where a
+// <span> marker cannot go. Marketing pages only: blog posts talk about other
+// people's CLP numbers ("80 CLPs every two years") and are left alone.
+function fixTotals(text) {
+  return text
+    .replace(/\b(more than|over|Over) \d{2} (CLPs|PDUs)\b/g, (_, a, u) => `${a} ${CC.clpsWhole} ${u}`)
+    .replace(/(~|roughly )\d{2}\.\d (CLPs|PDUs)\b/g, (_, a, u) => `${a}${CC.clps.toFixed(1)} ${u}`);
+}
+const isBlog = (f) => f.includes(`${join("client", "public", "blog")}/`);
+
 let countFixes = 0;
 for (const file of htmlFiles(join(ROOT, "client", "public"))) {
   const before = readFileSync(file, "utf8");
-  const after = fixCounts(before);
+  let after = fillMarkers(fixCounts(before), file);
+  if (!isBlog(file)) after = fixTotals(after);
   if (after !== before) {
     writeFileSync(file, after);
     countFixes++;
   }
+}
+
+// Fail the build on any course total on a marketing page that is not a
+// marker. Strip the markers, and whatever totals remain were typed by hand
+// and will go stale the next time a lesson is added.
+const unmarked = [];
+for (const file of htmlFiles(join(ROOT, "client", "public"))) {
+  if (isBlog(file)) continue;
+  const html = readFileSync(file, "utf8")
+    .replace(/<script[\s\S]*?<\/script>/g, "")      // JSON-LD: rewritten by fixCounts/fixTotals
+    .replace(/<(meta|title)[^>]*>([\s\S]*?<\/title>)?/g, "")
+    .replace(/<span data-count="[^"]+">[^<]*<\/span>/g, "#");
+  const text = html.replace(/<[^>]+>/g, " ");
+  const checks = [
+    /\b1\d{2}\+? lessons\b/gi,                          // course lesson total
+    /\b(all )?1\d modules\b/gi,                           // course module total (10-19)
+    /\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty) modules\b/gi,
+    /\b\d{1,2}\.\d (CLPs|PDUs)\b/g,                        // any CLP/PDU figure
+    /\b(more than|over) \d{2} (CLPs|PDUs)\b/gi,
+  ];
+  for (const re of checks) for (const m of text.matchAll(re))
+    unmarked.push(`${file.replace(ROOT + "/", "")}: "${m[0]}"`);
+  for (const m of html.matchAll(/<td class="pdu-num">(?!~?#)[^<]*<\/td>/g))
+    unmarked.push(`${file.replace(ROOT + "/", "")}: ${m[0]}`);
+}
+if (badMarkers.length || unmarked.length) {
+  console.error(`\nsync-blog: course totals typed by hand on a page. Wrap each number in a ` +
+                `marker so it updates itself, e.g. <span data-count="lessons">${CC.lessons}</span> ` +
+                `(keys are listed at the top of scripts/sync-blog.mjs):`);
+  for (const s of [...new Set([...badMarkers, ...unmarked])]) console.error(`  ${s}`);
+  process.exit(1);
 }
 
 // Fail the build on a stale figure in source we do not rewrite.

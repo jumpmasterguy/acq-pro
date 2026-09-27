@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { createHmac, timingSafeEqual } from "crypto";
+import { COURSE_TOTALS } from "@shared/moduleClps.generated";
 
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
@@ -391,8 +392,8 @@ export async function sendEmail4(to: string, username: string): Promise<void> {
 
     <div class="section-label">What unlocks with Pro</div>
     <ul class="checklist">
-      <li>All 14 modules — Defense Finance, Contracting, Data Analytics, Capture Management, Program Ops, contractor business finance, small business, compliance, government pre-award, sustainment, the startup on-ramp, veteran transition, and acquisition history</li>
-      <li>123 lessons with real DoD content — not textbook theory</li>
+      <li>All ${COURSE_TOTALS.modules} modules — Defense Finance, Contracting, Data Analytics, Capture Management, Program Ops, contractor business finance, small business, compliance, government pre-award, sustainment, the startup on-ramp, veteran transition, and acquisition history</li>
+      <li>${COURSE_TOTALS.lessons} lessons with real DoD content — not textbook theory</li>
       <li>Skill-level system: Novice → Intermediate → Advanced in every lesson</li>
       <li>Module gate assessments to validate what you've learned</li>
       <li>Career roadmap for USG and contractor tracks — with salary benchmarks</li>
@@ -402,7 +403,7 @@ export async function sendEmail4(to: string, username: string): Promise<void> {
 
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
       <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Start at $5.99/month — or get lifetime access for a one-time payment of $99. Either way, you're covered by a 30-day money-back guarantee.</p>
-      <a href="${APP_URL}/app#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Unlock All 14 Modules →</a>
+      <a href="${APP_URL}/app#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Unlock All ${COURSE_TOTALS.modules} Modules →</a>
     </div>
 
     <p>Still working through Module 1? No rush. It'll be there when you're ready.</p>
@@ -543,7 +544,7 @@ export async function sendEmail7(to: string, username: string): Promise<void> {
 
     <ul class="checklist">
       <li>5 Pro modules — Defense Finance, Contracting, Data Analytics, Capture Management, Program Ops</li>
-      <li>123 lessons built from real DoD programs, contracts, and career paths</li>
+      <li>${COURSE_TOTALS.lessons} lessons built from real DoD programs, contracts, and career paths</li>
       <li>Skill levels (Novice → Intermediate → Advanced) so the content grows with you</li>
       <li>Module gate assessments to validate what you've actually learned</li>
       <li>Full career roadmap — USG and contractor tracks, salary benchmarks, certification guidance</li>
@@ -1095,7 +1096,7 @@ export async function sendEmail4New(to: string, username: string): Promise<void>
     <p>A DAU resident course runs <strong>$1,500 or more</strong> once you factor in travel and time off. Management Concepts charges <strong>$2,000+ per course.</strong> Graduate School USA is in the same range.</p>
     <p>Acqlerate is <strong>$5.99/month.</strong></p>
     <div class="highlight-box">
-      <p>For that, you unlock all 14 modules (123 lessons), the AI Study Assistant, CLP certificates for every module, and PDU credit for PMP holders.</p>
+      <p>For that, you unlock all ${COURSE_TOTALS.modules} modules (${COURSE_TOTALS.lessons} lessons), the AI Study Assistant, CLP certificates for every module, and PDU credit for PMP holders.</p>
       <p style="margin-top:10px">If you'd rather not pay monthly, the <strong>lifetime option is $99</strong> — less than a single day of government-sponsored classroom training.</p>
     </div>
     <p>You've already seen what Foundations looks like. The other five modules are built the same way.</p>
@@ -1294,7 +1295,7 @@ export async function sendReferralRewardEmail(to: string, username: string): Pro
       </div>
       <h1 style="color:#fff;font-size:1.5rem;font-weight:800;margin:0 0 16px;text-align:center;">You just earned 1 year of Pro.</h1>
       <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.8;margin:0 0 16px;">Hey ${name} — two people signed up through your referral link. That means you've earned a full year of Acqlerate Pro, on us.</p>
-      <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.8;margin:0 0 24px;">Your account has already been upgraded. Full access to all 14 modules, 123 lessons, unlimited AI study assistant, and everything we add going forward — for a year.</p>
+      <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.8;margin:0 0 24px;">Your account has already been upgraded. Full access to all ${COURSE_TOTALS.modules} modules, ${COURSE_TOTALS.lessons} lessons, unlimited AI study assistant, and everything we add going forward — for a year.</p>
       <div style="background:#01696f22;border:1px solid #01696f44;border-radius:12px;padding:16px 20px;margin-bottom:24px;">
         <p style="color:#4FC3CB;font-size:0.85rem;margin:0;font-weight:600;">Keep sharing your link — every 2 new signups earns another year of Pro.</p>
       </div>
