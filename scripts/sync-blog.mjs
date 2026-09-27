@@ -253,10 +253,16 @@ const CC = curriculumCounts();
 // skipped. Keys:
 //   modules, modules-word ("Fourteen"), modules-word-lower, lessons, minutes,
 //   hours, clps (44.2), clps-whole (44, for "over 44 CLPs"),
-//   lessons:<moduleId>, clps:<moduleId>
+//   lessons:<moduleId>, clps:<moduleId>,
+//   pdus:<area>, modules:<area>  (PMI Talent Triangle: ba, ww, ps)
 // ---------------------------------------------------------------------------
 function markerValue(key) {
   const [k, mod] = key.split(":");
+  if (mod && (k === "pdus" || k === "modules")) {       // Talent Triangle: pdus:ba, modules:ww ...
+    const t = CC.triangle?.[mod];
+    if (!t) return undefined;
+    return k === "pdus" ? t.pdus.toFixed(1) : String(t.modules);
+  }
   if (mod) {
     const m = CC.perModule[mod];
     if (!m) return undefined;
@@ -344,13 +350,21 @@ for (const file of htmlFiles(join(ROOT, "client", "public"))) {
     .replace(/<(meta|title)[^>]*>([\s\S]*?<\/title>)?/g, "")
     .replace(/<span data-count="[^"]+">[^<]*<\/span>/g, "#");
   const text = html.replace(/<[^>]+>/g, " ");
+  // \s+ not " ": a stat tile puts the number and its label in separate
+  // boxes ("122" / "Lessons"), which reads as "122   Lessons" once tags go.
+  // The single-space version let two such tiles ship 122 after the count
+  // moved to 123 (27 Sep 2026).
   const checks = [
-    /\b1\d{2}\+? lessons\b/gi,                          // course lesson total
-    /\b(all )?1\d modules\b/gi,                           // course module total (10-19)
-    /\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty) modules\b/gi,
-    /\b\d{1,2}\.\d (CLPs|PDUs)\b/g,                        // any CLP/PDU figure
-    /\b(more than|over) \d{2} (CLPs|PDUs)\b/gi,
+    /\b1\d{2}\+?\s+lessons\b/gi,                        // course lesson total
+    /\b(all\s+)?1\d\s+modules\b/gi,                       // course module total (10-19)
+    /\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\s+modules\b/gi,
+    /\b\d{1,2}\.\d\s+(CLPs|PDUs)\b/gi,                     // any CLP/PDU figure
+    /\b(more than|over|up to)\s+\d{2}(\s+PMI)?\s+(CLPs|PDUs)\b/gi,
   ];
+  // Number-only cells in the CLP/PDU tables and stat tiles: the label sits in
+  // another element, so the text patterns above can't see them.
+  for (const m of html.matchAll(/class="(pdu-value|pdu-total-value|pdu-num|num|hero-stat-num)"[^>]*>(?!~?#)~?(\d{2,}|\d+\.\d)[^<]*</g))   // 2+ digits or a decimal; "3 Skill Levels" is not a total
+    unmarked.push(`${file.replace(ROOT + "/", "")}: ${m[0]}`);
   for (const re of checks) for (const m of text.matchAll(re))
     unmarked.push(`${file.replace(ROOT + "/", "")}: "${m[0]}"`);
   for (const m of html.matchAll(/<td class="pdu-num">(?!~?#)[^<]*<\/td>/g))

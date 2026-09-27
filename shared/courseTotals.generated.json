@@ -7,6 +7,20 @@
   "hours": 44.7,
   "clps": 44.2,
   "clpsWhole": 44,
+  "triangle": {
+    "ba": {
+      "pdus": 29.8,
+      "modules": 9
+    },
+    "ww": {
+      "pdus": 11,
+      "modules": 4
+    },
+    "ps": {
+      "pdus": 3.4,
+      "modules": 2
+    }
+  },
   "perModule": {
     "foundations": {
       "title": "DoD Acquisitions Foundations",
