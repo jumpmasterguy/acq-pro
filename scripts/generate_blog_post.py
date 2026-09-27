@@ -775,8 +775,8 @@ def assemble_post(title: str, deck: str, body_html: str, topic: dict,
     "@type": "Article",
     "headline": "{title}",
     "description": "{deck}",
-    "author": {{ "@type": "Organization", "name": "Acqlerate" }},
-    "publisher": {{ "@type": "Organization", "name": "Acqlerate", "url": "https://acqlerate.com" }},
+    "author": {{ "@type": "Person", "@id": "https://acqlerate.com/why#lucas-cruz", "name": "Lucas Cruz", "url": "https://acqlerate.com/why#founder" }},
+    "publisher": {{ "@type": "Organization", "@id": "https://acqlerate.com/#organization", "name": "Acqlerate", "url": "https://acqlerate.com" }},
     "datePublished": "{pub_date}",
     "url": "https://acqlerate.com/blog/{slug}"
   }}
@@ -814,11 +814,12 @@ def assemble_post(title: str, deck: str, body_html: str, topic: dict,
     <span class="post-badge">{topic['badge']}</span>
     <h1>{title}</h1>
     <p class="post-deck">{deck}</p>
-    <div class="post-meta">By Acqlerate · {formatted_date} · {read_time} min read · For: {topic['audience']}</div>
+    <div class="post-meta">By <a class="byline-author" href="/why#founder" rel="author">Lucas Cruz</a> · {formatted_date} · {read_time} min read · For: {topic['audience']}</div>
 
     <div class="post-body">
 {body_html}
     </div>
+    <p class="ai-note">Drafted with AI from public sources. Spot a mistake? Email <a href="mailto:lucas@acqlerate.com">lucas@acqlerate.com</a> and I'll fix it.</p>
 
     <!-- Bottom CTA -->
     <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:16px;padding:32px;margin-top:48px;color:white;">

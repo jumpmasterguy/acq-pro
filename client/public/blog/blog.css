@@ -414,3 +414,17 @@ footer {
   font-style: normal;
 }
 .post-figure { background: #FCFCF7; }
+
+/* Byline author link and the "how this was made" note (27 Sep 2026) */
+.post-meta .byline-author, .post-byline .byline-author, .meta .byline-author {
+  color: var(--text); font-weight: 600;
+  text-decoration: underline; text-decoration-color: var(--border); text-underline-offset: 3px;
+}
+.post-meta .byline-author:hover, .post-byline .byline-author:hover, .meta .byline-author:hover {
+  color: var(--teal); text-decoration-color: var(--teal);
+}
+.ai-note {
+  font-size: 0.85rem; color: var(--text-muted); font-style: italic; line-height: 1.6;
+  margin: 32px 0 0; padding-top: 16px; border-top: 1px solid var(--border);
+}
+.ai-note a { color: var(--text-muted); text-decoration: underline; }
