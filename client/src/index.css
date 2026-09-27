@@ -1,0 +1,626 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── General Sans — the app face, self-hosted ──────────────────────────────
+   `--font-sans` has always named General Sans, but the files were never in
+   the repo, so every surface silently rendered in the Inter fallback. These
+   are the four weights the mobile type scale uses (400/500/600/700). */
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* BASE — Light mode (default) */
+:root {
+  --button-outline: rgba(0,0,0, .08);
+  --badge-outline: rgba(0,0,0, .06);
+  --opaque-button-border-intensity: -6;
+  --elevate-1: rgba(0,0,0, .03);
+  --elevate-2: rgba(0,0,0, .06);
+  --background: 210 20% 97%;
+  --foreground: 222 30% 12%;
+  --border: 220 15% 88%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 30% 12%;
+  --card-border: 220 15% 90%;
+  --sidebar: 222 25% 96%;
+  --sidebar-foreground: 222 25% 20%;
+  --sidebar-border: 220 15% 88%;
+  --sidebar-primary: 183 98% 22%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 210 20% 92%;
+  --sidebar-accent-foreground: 222 25% 20%;
+  --sidebar-ring: 183 98% 22%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 30% 12%;
+  --popover-border: 220 15% 88%;
+  --primary: 183 98% 22%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 210 20% 93%;
+  --secondary-foreground: 222 25% 20%;
+  --muted: 210 20% 93%;
+  --muted-foreground: 220 10% 48%;
+  --accent: 210 20% 93%;
+  --accent-foreground: 43 80% 38%;
+  --destructive: 0 72% 50%;
+  --destructive-foreground: 0 0% 98%;
+  --input: 220 15% 88%;
+  --ring: 183 98% 22%;
+  --chart-1: 183 60% 38%;
+  --chart-2: 200 80% 55%;
+  --chart-3: 160 60% 50%;
+  --chart-4: 0 72% 60%;
+  --chart-5: 280 65% 65%;
+  --font-sans: 'General Sans', 'Inter', sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: Menlo, monospace;
+  --radius: .5rem;
+  --shadow-2xs: 0px 1px 2px 0px hsl(220 30% 10% / 0.04);
+  --shadow-xs: 0px 1px 3px 0px hsl(220 30% 10% / 0.06);
+  --shadow-sm: 0px 1px 4px 0px hsl(220 30% 10% / 0.07), 0px 1px 2px -1px hsl(220 30% 10% / 0.05);
+  --shadow: 0px 2px 6px 0px hsl(220 30% 10% / 0.08), 0px 1px 3px -1px hsl(220 30% 10% / 0.06);
+  --shadow-md: 0px 4px 12px 0px hsl(220 30% 10% / 0.10), 0px 2px 4px -1px hsl(220 30% 10% / 0.06);
+  --shadow-lg: 0px 8px 24px 0px hsl(220 30% 10% / 0.12), 0px 4px 8px -2px hsl(220 30% 10% / 0.08);
+  --shadow-xl: 0px 16px 40px 0px hsl(220 30% 10% / 0.15), 0px 8px 16px -4px hsl(220 30% 10% / 0.10);
+  --shadow-2xl: 0px 24px 56px 0px hsl(220 30% 10% / 0.18);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+
+  --sidebar-primary-border: hsl(var(--sidebar-primary));
+  --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --sidebar-accent-border: hsl(var(--sidebar-accent));
+  --sidebar-accent-border: hsl(from hsl(var(--sidebar-accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --primary-border: hsl(var(--primary));
+  --primary-border: hsl(from hsl(var(--primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --secondary-border: hsl(var(--secondary));
+  --secondary-border: hsl(from hsl(var(--secondary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --muted-border: hsl(var(--muted));
+  --muted-border: hsl(from hsl(var(--muted)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --accent-border: hsl(var(--accent));
+  --accent-border: hsl(from hsl(var(--accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --destructive-border: hsl(var(--destructive));
+  --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+}
+
+.dark {
+  --button-outline: rgba(255,255,255, .10);
+  --badge-outline: rgba(255,255,255, .05);
+  --opaque-button-border-intensity: 9;
+  --elevate-1: rgba(255,255,255, .04);
+  --elevate-2: rgba(255,255,255, .09);
+  --background: 222 30% 8%;
+  --foreground: 210 20% 92%;
+  --border: 222 20% 18%;
+  --card: 222 28% 10%;
+  --card-foreground: 210 20% 92%;
+  --card-border: 222 20% 16%;
+  --sidebar: 222 40% 7%;
+  --sidebar-foreground: 210 20% 88%;
+  --sidebar-border: 222 30% 13%;
+  --sidebar-primary: 183 98% 22%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 222 28% 14%;
+  --sidebar-accent-foreground: 210 20% 88%;
+  --sidebar-ring: 183 98% 22%;
+  --popover: 222 28% 10%;
+  --popover-foreground: 210 20% 92%;
+  --popover-border: 222 20% 16%;
+  --primary: 183 98% 22%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 222 20% 17%;
+  --secondary-foreground: 210 20% 88%;
+  --muted: 222 20% 16%;
+  --muted-foreground: 220 10% 60%;
+  --accent: 222 25% 15%;
+  --accent-foreground: 43 90% 61%;
+  --destructive: 0 72% 50%;
+  --destructive-foreground: 0 0% 98%;
+  --input: 222 20% 28%;
+  --ring: 183 98% 22%;
+  --chart-1: 183 60% 38%;
+  --chart-2: 200 80% 55%;
+  --chart-3: 160 60% 50%;
+  --chart-4: 0 72% 60%;
+  --chart-5: 280 65% 65%;
+  --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.20);
+  --shadow-xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.25);
+  --shadow-sm: 0px 1px 4px 0px hsl(0 0% 0% / 0.30), 0px 1px 2px -1px hsl(0 0% 0% / 0.20);
+  --shadow: 0px 2px 6px 0px hsl(0 0% 0% / 0.35), 0px 1px 3px -1px hsl(0 0% 0% / 0.25);
+  --shadow-md: 0px 4px 12px 0px hsl(0 0% 0% / 0.40), 0px 2px 4px -1px hsl(0 0% 0% / 0.30);
+  --shadow-lg: 0px 8px 24px 0px hsl(0 0% 0% / 0.45), 0px 4px 8px -2px hsl(0 0% 0% / 0.35);
+  --shadow-xl: 0px 16px 40px 0px hsl(0 0% 0% / 0.50), 0px 8px 16px -4px hsl(0 0% 0% / 0.40);
+  --shadow-2xl: 0px 24px 56px 0px hsl(0 0% 0% / 0.55);
+
+  --sidebar-primary-border: hsl(var(--sidebar-primary));
+  --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --sidebar-accent-border: hsl(var(--sidebar-accent));
+  --sidebar-accent-border: hsl(from hsl(var(--sidebar-accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --primary-border: hsl(var(--primary));
+  --primary-border: hsl(from hsl(var(--primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --secondary-border: hsl(var(--secondary));
+  --secondary-border: hsl(from hsl(var(--secondary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --muted-border: hsl(var(--muted));
+  --muted-border: hsl(from hsl(var(--muted)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --accent-border: hsl(var(--accent));
+  --accent-border: hsl(from hsl(var(--accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --destructive-border: hsl(var(--destructive));
+  --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MOBILE APP TOKEN RAMP  (--acq-*)
+   The dedicated mobile layout (below `md`) draws from this namespace only.
+   It is deliberately separate from the shadcn HSL ramp above: the mobile
+   design uses a warm parchment neutral ramp, while the desktop web app is
+   cool gray. Keeping them apart means the mobile screens can be exact
+   without repainting desktop. Values are the handoff's light/dark tables;
+   light-theme status values come from the design system's tokens/colors.css.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root {
+  /* ── Brand (identical in both themes) ── */
+  --acq-teal: #01696F;
+  --acq-teal-dark: #0C4E54;
+  --acq-cyan: #4FC3CB;
+  --acq-navy: #0D1B2A;
+  --acq-gold: #D19900;
+  --acq-gold-bright: #F5C842;
+  --acq-gold-ink: #7A5800;
+  --acq-gold-border: #F0D060;
+  --acq-success: #22C55E;
+  --acq-streak: #F97316;
+
+  /* Hero gradient — dashboard + account level card */
+  --acq-gradient-hero: linear-gradient(135deg, #0D2137 0%, #123047 55%, #0A1B2D 100%);
+
+  /* On-gradient text (module cards, hero cards) */
+  --acq-on-dark: #FFFFFF;
+  --acq-on-dark-muted: rgba(255,255,255,.8);
+  --acq-on-dark-faint: rgba(255,255,255,.75);
+  --acq-glass: rgba(255,255,255,.18);
+  --acq-glass-border: rgba(255,255,255,.25);
+
+  /* ── Surfaces — light ── */
+  --acq-surface-page: #FAF6EE;
+  --acq-surface-card: #FFFFFF;
+  --acq-surface-raised: #FDFCF8;
+  --acq-surface-sunken: #F4EDE0;
+  --acq-surface-muted: #EAE0CE;
+  --acq-surface-brand-wash: #E6F2F3;
+  --acq-surface-gold-wash: #FEF9E7;
+
+  /* ── Text — light ── */
+  --acq-text-body: #1A1A1A;
+  --acq-text-heading: #1A1A1A;
+  --acq-text-secondary: #4F4A44;
+  --acq-text-muted: #6E6659;
+  --acq-text-faint: #A99B85;
+  --acq-text-brand: #01696F;
+  --acq-text-gold: #7A5800;
+  --acq-text-streak: #EA580C;
+
+  /* ── Borders — light ── */
+  --acq-border-subtle: #EAE0CE;
+  --acq-border-default: #D9CBB3;
+  --acq-border-button: rgba(0,0,0,.08);
+
+  /* ── Streak pill — light ── */
+  --acq-streak-wash: rgba(249,115,22,.08);
+  --acq-streak-border: rgba(249,115,22,.3);
+  --acq-streak-day: rgba(249,115,22,.15);
+
+  /* ── Status — light (design system tokens/colors.css) ── */
+  --acq-success-wash: #ECFDF5;
+  --acq-success-ink: #065F46;
+  --acq-success-border: #6EE7B7;
+  --acq-danger-wash: rgba(220,38,38,.06);
+  --acq-danger-border: rgba(220,38,38,.3);
+
+  /* ── Elevation — light ── */
+  --acq-shadow-sm: 0 1px 4px rgba(20,26,38,.07), 0 1px 2px -1px rgba(20,26,38,.05);
+  --acq-shadow-md: 0 4px 12px rgba(20,26,38,.10), 0 2px 4px -1px rgba(20,26,38,.06);
+  --acq-shadow-lg: 0 8px 24px rgba(20,26,38,.12), 0 4px 8px -2px rgba(20,26,38,.08);
+  --acq-shadow-2xl: 0 24px 56px rgba(20,26,38,.18);
+
+  /* ── Press / hover washes ── */
+  --acq-elevate-1: rgba(0,0,0,.03);
+  --acq-elevate-2: rgba(0,0,0,.06);
+
+  /* ── Option card (onboarding, account path picker) — light ── */
+  --acq-option-text: var(--acq-text-heading);
+  --acq-option-border: #D9CBB3;
+  --acq-option-border-selected: #01696F;
+  --acq-option-bg-selected: rgba(1,105,111,.05);
+  --acq-option-label-selected: #01696F;
+  --acq-option-icon-bg: #F4EDE0;
+  --acq-option-icon-fg: #6E6659;
+  --acq-option-icon-bg-selected: #01696F;
+  --acq-option-icon-fg-selected: #FFFFFF;
+
+  /* ── Type ── */
+  --acq-font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+}
+
+.dark {
+  /* ── Surfaces — dark ── */
+  --acq-surface-page: #0E121B;
+  --acq-surface-card: #121621;
+  --acq-surface-raised: #171C28;
+  --acq-surface-sunken: #1B2130;
+  --acq-surface-muted: #262D3A;
+  --acq-surface-brand-wash: rgba(79,195,203,.14);
+  --acq-surface-gold-wash: rgba(245,200,66,.12);
+
+  /* ── Text — dark ── */
+  --acq-text-body: #E7EBEF;
+  --acq-text-heading: #FFFFFF;
+  --acq-text-secondary: #C3C9D2;
+  --acq-text-muted: #8F94A3;
+  --acq-text-faint: #6B7280;
+  --acq-text-brand: #4FC3CB;
+  --acq-text-gold: #F5C842;
+  --acq-text-streak: #FDBA74;
+
+  /* ── Borders — dark ── */
+  --acq-border-subtle: #252B37;
+  --acq-border-default: #303845;
+  --acq-border-button: rgba(255,255,255,.12);
+
+  /* ── Streak pill — dark ── */
+  --acq-streak-wash: rgba(249,115,22,.12);
+  --acq-streak-border: rgba(249,115,22,.3);
+  --acq-streak-day: rgba(249,115,22,.18);
+
+  /* ── Status — dark ── */
+  --acq-success-wash: rgba(16,185,129,.12);
+  --acq-success-ink: #6EE7B7;
+  --acq-success-border: rgba(16,185,129,.35);
+  --acq-danger-wash: rgba(220,38,38,.10);
+  --acq-danger-border: rgba(220,38,38,.35);
+
+  /* ── Elevation — dark ── */
+  --acq-shadow-sm: 0 1px 4px rgba(0,0,0,.3);
+  --acq-shadow-md: 0 4px 12px rgba(0,0,0,.4);
+  --acq-shadow-lg: 0 8px 24px rgba(0,0,0,.45);
+  --acq-shadow-2xl: 0 24px 56px rgba(0,0,0,.6);
+
+  /* ── Option card — dark ── */
+  --acq-option-text: #F3EFE6;
+  --acq-option-border: rgba(255,255,255,.14);
+  --acq-option-border-selected: #4FC3CB;
+  --acq-option-bg-selected: rgba(79,195,203,.12);
+  --acq-option-label-selected: #4FC3CB;
+  --acq-option-icon-bg: #262D3A;
+  --acq-option-icon-fg: #C9C3B6;
+  --acq-option-icon-bg-selected: #4FC3CB;
+  --acq-option-icon-fg-selected: #0E121B;
+
+  /* ── Press / hover washes ── */
+  --acq-elevate-1: rgba(255,255,255,.04);
+  --acq-elevate-2: rgba(255,255,255,.09);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    /* max-width: 100vw is unreliable across mobile browser chrome/toolbars --
+       use 100% instead, which is anchored to the actual layout viewport. */
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    max-width: 100%;
+    overflow-x: hidden;
+    /* Left/right/bottom safe area — but NOT top (handled per sticky header) */
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  #root {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  /* Belt-and-suspenders: guarantee no text content can force horizontal
+     overflow, regardless of any container width miscalculation upstream.
+
+     overflow-wrap ONLY. This used to also set `word-break: break-word`, which
+     looks like the same thing and is not: it lets the browser count every
+     letter as a legal break point when sizing boxes, so a table column or a
+     flex item beside a fixed-width sibling could shrink to one character wide
+     and print "Gov / ern / men / t" down the screen. overflow-wrap alone still
+     breaks a word that would genuinely overflow, but never lets a box shrink
+     narrower than its longest word. */
+  h1, h2, h3, h4, h5, h6, p, span, a, li, td, th, button, label {
+    overflow-wrap: break-word;
+  }
+
+  /* Sticky headers must sit BELOW the notch/Dynamic Island */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+@layer utilities {
+  input[type="search"]::-webkit-search-cancel-button {
+    @apply hidden;
+  }
+  [contenteditable][data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: hsl(var(--muted-foreground));
+    pointer-events: none;
+  }
+  .no-default-hover-elevate {}
+  .no-default-active-elevate {}
+
+  .toggle-elevate::before,
+  .toggle-elevate-2::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0px;
+    border-radius: inherit;
+    z-index: -1;
+  }
+  .toggle-elevate.toggle-elevated::before {
+    background-color: var(--elevate-2);
+  }
+  .border.toggle-elevate::before {
+    inset: -1px;
+  }
+  .hover-elevate:not(.no-default-hover-elevate),
+  .active-elevate:not(.no-default-active-elevate),
+  .hover-elevate-2:not(.no-default-hover-elevate),
+  .active-elevate-2:not(.no-default-active-elevate) {
+    position: relative;
+    z-index: 0;
+  }
+  .hover-elevate:not(.no-default-hover-elevate)::after,
+  .active-elevate:not(.no-default-active-elevate)::after,
+  .hover-elevate-2:not(.no-default-hover-elevate)::after,
+  .active-elevate-2:not(.no-default-active-elevate)::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0px;
+    border-radius: inherit;
+    z-index: 999;
+  }
+  .hover-elevate:hover:not(.no-default-hover-elevate)::after,
+  .active-elevate:active:not(.no-default-active-elevate)::after {
+    background-color: var(--elevate-1);
+  }
+  .hover-elevate-2:hover:not(.no-default-hover-elevate)::after,
+  .active-elevate-2:active:not(.no-default-active-elevate)::after {
+    background-color: var(--elevate-2);
+  }
+  .border.hover-elevate:not(.no-hover-interaction-elevate)::after,
+  .border.active-elevate:not(.no-active-interaction-elevate)::after,
+  .border.hover-elevate-2:not(.no-hover-interaction-elevate)::after,
+  .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
+  .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
+    inset: -1px;
+  }
+
+  /* Progress bar animation */
+  @keyframes progress-fill {
+    from { width: 0%; }
+    to { width: var(--progress-width); }
+  }
+  .progress-animated {
+    animation: progress-fill 0.8s ease-out forwards;
+  }
+
+  /* Lesson card hover */
+  .lesson-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .lesson-card:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Badge pulse for new content */
+  @keyframes badge-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  .badge-pulse {
+    animation: badge-pulse 2s ease-in-out infinite;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MOBILE APP SHELL utilities
+   ══════════════════════════════════════════════════════════════════════════ */
+@layer utilities {
+  /* The global `body { padding-bottom: env(safe-area-inset-bottom) }` would
+     shrink the shell and leave a dead strip under the tab bar. The shell
+     toggles this class on <body> while mounted so the tab bar can own the
+     home-indicator area itself. */
+  body.acq-mobile-shell {
+    padding-bottom: 0;
+    overflow: hidden;
+    overscroll-behavior-y: none;
+  }
+
+  .acq-shell {
+    background: var(--acq-surface-page);
+    color: var(--acq-text-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Status bar / home indicator */
+  .acq-inset-top { padding-top: env(safe-area-inset-top); }
+  .acq-inset-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+  /* Scroll area — scrollbar hidden per the handoff */
+  .acq-scroll {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .acq-scroll::-webkit-scrollbar { display: none; }
+
+  /* Anything numeric that changes */
+  .acq-tnum { font-variant-numeric: tabular-nums; }
+
+  .acq-mono { font-family: var(--acq-font-mono); }
+
+  /* Press feedback — darken, never scale (handoff: "Nothing bounces") */
+  .acq-press { transition: background-color 100ms ease, border-color 150ms ease; }
+  .acq-press:active { background-color: var(--acq-elevate-2); }
+}
+
+/* ── Auth screen, mobile ────────────────────────────────────────────────────
+   The form's react-hook-form wiring is shared with desktop, so rather than
+   duplicating twenty fields to restyle them, the mobile sizing and token
+   colors are scoped to the wrapper. Inputs are 44px and buttons 48px per the
+   handoff's hit-target floor; 16px input text keeps iOS from zooming on
+   focus. */
+.acq-auth {
+  background: var(--acq-surface-page);
+  color: var(--acq-text-body);
+}
+.acq-auth label {
+  color: var(--acq-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+}
+.acq-auth input {
+  min-height: 44px;
+  border-radius: 8px;
+  font-size: 16px;
+  background: var(--acq-surface-card);
+  border-color: var(--acq-border-default);
+  color: var(--acq-text-body);
+}
+.acq-auth input::placeholder { color: var(--acq-text-faint); }
+.acq-auth h2 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--acq-text-heading);
+}
+.acq-auth form > div > p,
+.acq-auth p { color: var(--acq-text-muted); }
+/* The two block CTAs (submit + Google) */
+.acq-auth button[type="submit"],
+.acq-auth button[data-testid^="btn-google"] {
+  min-height: 48px;
+  border-radius: 10px;
+  font-size: 15px;
+}
+.acq-auth button[type="submit"] {
+  background: var(--acq-teal);
+  color: #fff;
+}
+.acq-auth button[type="submit"]:active { background: var(--acq-teal-dark); }
+.acq-auth button[data-testid^="btn-google"] {
+  background: var(--acq-surface-card);
+  border-color: var(--acq-border-default);
+  color: var(--acq-text-body);
+  font-weight: 500;
+}
+/* Eye toggle — 40x40 tap target pinned to the field's right edge */
+.acq-auth button[data-testid="toggle-password"],
+.acq-auth .relative > button[type="button"]:not([data-testid]) {
+  width: 40px;
+  height: 40px;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--acq-text-muted);
+}
+
+
+/* Bottom sheets — key terms, daily challenge. Slide up, never bounce. */
+@keyframes acq-sheet-up {
+  from { transform: translateY(24px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Lesson body, mobile ────────────────────────────────────────────────────
+   The block renderers are shared with desktop, so the mobile reading
+   typography is applied to the body wrapper rather than threaded through
+   twenty-five renderers. 16px/1.65 with 18px between blocks, per the
+   handoff. */
+.acq-lesson-body { display: flex; flex-direction: column; gap: 18px; }
+.acq-lesson-body p { font-size: 16px; line-height: 1.65; color: var(--acq-text-body); }
+/* The rule above recolors every paragraph to the body text color, which is
+   right on the light cards and wrong on the few blocks with a fixed dark
+   background — it painted near-black text onto the navy "From Lucas" note.
+   Blocks that sit on a dark surface in both themes carry .acq-on-dark. */
+.acq-lesson-body .acq-on-dark p { color: #e2e8f0; }
+.acq-lesson-body li { font-size: 15px; line-height: 1.6; }
+.acq-lesson-body h2 { font-size: 18px; letter-spacing: -0.01em; color: var(--acq-text-heading); }
+.acq-lesson-body h3 { font-size: 16px; color: var(--acq-text-heading); }
+.acq-lesson-body img { width: 100%; height: auto; border-radius: 12px; background: var(--acq-surface-sunken); }
+
+/* Inline key term — dotted underline, tap opens the sheet. */
+.acq-term {
+  color: var(--acq-text-brand);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  font: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+/* ── Full-screen mobile pages (auth, onboarding) ────────────────────────────
+   These render without the app shell, so nothing opaque sits behind the iOS
+   status bar. Padding the scroll container isn't enough: on iOS the content
+   scrolls up underneath the status bar and collides with the clock. The page
+   is pinned to the viewport and a fixed scrim in the page color fills the
+   inset, so scrolled content passes behind a solid strip instead. */
+.acq-fullscreen {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  background: var(--acq-surface-page);
+}
+.acq-fullscreen::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top);
+  background: var(--acq-surface-page);
+  z-index: 50;
+  pointer-events: none;
+}

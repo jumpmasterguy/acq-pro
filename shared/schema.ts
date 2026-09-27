@@ -1,0 +1,201 @@
+import { sql } from "drizzle-orm";
+import { pgTable, text, varchar, boolean, jsonb, integer, timestamp } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
+
+export const users = pgTable("users", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  username: text("username").notNull().unique(),
+  // Split name fields, added after username already existed as a single
+  // "Full Name" field collected at signup. Nullable because pre-existing
+  // rows don't have them yet — server/index.ts backfills those once from
+  // username (split on the first space) the first time it boots after this
+  // column exists. New signups set both directly; username keeps being
+  // derived as `${firstName} ${lastName}`.trim() so every place that already
+  // reads it (emails, referral codes, admin tables) keeps working unchanged.
+  firstName: text("first_name"),
+  lastName: text("last_name"),
+  email: text("email").notNull().unique(),
+  passwordHash: text("password_hash"),  // null for Google OAuth users
+  googleId: text("google_id").unique(),  // null for local-auth users
+  // Apple's stable per-app user id (the identity token's `sub`). Null unless
+  // they signed in with Apple. Separate from googleId on purpose: one person
+  // can arrive by both routes and we link rather than duplicate.
+  appleId: text("apple_id").unique(),
+  // Stripe
+  stripeCustomerId: text("stripe_customer_id"),
+  subscriptionStatus: text("subscription_status").notNull().default("free"), // 'free' | 'trialing' | 'active' | 'lifetime'
+  subscriptionId: text("subscription_id"),
+  // 14-day free trial: full access from signup until this date. Set at registration.
+  // null for users who registered before the trial existed, or who are on a
+  // permanent tier (free/active/lifetime) that doesn't need a trial clock.
+  trialEndsAt: text("trial_ends_at"),
+  isAdmin: boolean("is_admin").notNull().default(false),
+  // Progress
+  completedLessons: text("completed_lessons").array().notNull().default(sql`ARRAY[]::text[]`),
+  quizScores: jsonb("quiz_scores").notNull().default(sql`'{}'::jsonb`),
+  // Skill levels per module: { moduleId: 'novice' | 'intermediate' | 'advanced' }
+  moduleSkillLevels: jsonb("module_skill_levels").notNull().default(sql`'{}'::jsonb`),
+  // Module gate assessment scores: { moduleId: number (0-100) }
+  moduleAssessmentScores: jsonb("module_assessment_scores").notNull().default(sql`'{}'::jsonb`),
+  // Onboarding / learning path profile
+  // { role, experience, goal, completedOnboarding }
+  userProfile: jsonb("user_profile").default(sql`'{}'::jsonb`),
+  // Analytics / engagement tracking
+  lastLoginAt: text("last_login_at"),         // ISO timestamp string
+  lastActiveAt: text("last_active_at"),        // ISO timestamp string (last heartbeat)
+  loginCount: integer("login_count").notNull().default(0),
+  totalMinutesActive: integer("total_minutes_active").notNull().default(0),
+  // Per-login session history — one entry per login, appended when that
+  // session ends (explicit logout or idle timeout — see server/auth.ts).
+  // [{ loginAt, endedAt, endReason: 'logout' | 'idle_timeout', durationMinutes }]
+  // Capped at the most recent 100 entries (server/storage.ts) so this can't
+  // grow unbounded. totalMinutesActive above is a lifetime cumulative total;
+  // this is what answers "how long does a typical login actually last."
+  loginHistory: jsonb("login_history").notNull().default(sql`'[]'::jsonb`),
+  xp: integer("xp").notNull().default(0),
+  // Streak tracking
+  currentStreak: integer("current_streak").notNull().default(0),
+  longestStreak: integer("longest_streak").notNull().default(0),
+  lastStreakDate: text("last_streak_date"),  // YYYY-MM-DD of last activity
+  // Leaderboards. The week's starting XP is recorded by the first XP-earning
+  // action of each week (see weekRollPatch in shared/xp.ts), so weekly XP is
+  // just "XP now minus this". Monday UTC, YYYY-MM-DD.
+  xpWeekOf: text("xp_week_of"),
+  xpWeekStartXp: integer("xp_week_start_xp").notNull().default(0),
+  // On by default, shown as "First L."; the learner can hide from Account.
+  leaderboardHidden: boolean("leaderboard_hidden").notNull().default(false),
+  // Daily challenge tracking
+  lastChallengeDate: text("last_challenge_date"), // YYYY-MM-DD of last completed challenge
+  challengeHistory: jsonb("challenge_history").notNull().default(sql`'[]'::jsonb`), // [{date, score, xpEarned}]
+  // Acquisition This Week — one entry per brief the user has completed the
+  // check for: [{id, date, score, xpEarned}]. Keyed by brief id rather than
+  // date, because briefs are weekly and a user can work through the archive.
+  briefsRead: jsonb("briefs_read").notNull().default(sql`'[]'::jsonb`),
+  // "The Debrief" audio listens — keyed by module id, not a growing log,
+  // since all we need per module is "has this user ever played it" (for
+  // unique-listener counts) and "how many times" (for a play counter).
+  // { [moduleId]: { firstPlayedAt: string, playCount: number } }
+  audioListens: jsonb("audio_listens").notNull().default(sql`'{}'::jsonb`),
+  // AI Study Assistant usage tracking — resets daily, limits enforced per subscription tier
+  aiCallsToday: integer("ai_calls_today").notNull().default(0),
+  aiCallsDate: text("ai_calls_date"), // YYYY-MM-DD the counter above applies to
+  // Referral tracking
+  referralCode: text("referral_code"),          // user's unique share code (e.g. 'LUCAS42')
+  referredBy: text("referred_by"),              // referral code used at signup
+  referralCount: integer("referral_count").notNull().default(0), // # of free signups via their code
+  referralRewardGranted: integer("referral_reward_granted").notNull().default(0), // # of yearly-pro rewards given
+  // Email drip tracking
+  registeredAt: text("registered_at").notNull().default(sql`now()::text`),
+  sentEmailDays: jsonb("sent_email_days").notNull().default(sql`'[]'::jsonb`), // number[]
+});
+
+export const insertUserSchema = createInsertSchema(users).pick({
+  username: true,
+  email: true,
+  passwordHash: true,
+  firstName: true,
+  lastName: true,
+});
+
+export const insertGoogleUserSchema = createInsertSchema(users).pick({
+  username: true,
+  email: true,
+  googleId: true,
+  firstName: true,
+  lastName: true,
+});
+
+export const insertAppleUserSchema = createInsertSchema(users).pick({
+  username: true,
+  email: true,
+  appleId: true,
+  firstName: true,
+  lastName: true,
+});
+
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type InsertGoogleUser = z.infer<typeof insertGoogleUserSchema>;
+export type InsertAppleUser = z.infer<typeof insertAppleUserSchema>;
+export type User = typeof users.$inferSelect;
+
+// Registration schema (used in auth routes) — collects First/Last Name
+// separately; the server derives the single `username` column from them
+// (see /api/auth/register) so every existing reader of username (emails,
+// referral codes, admin tables) keeps working unchanged.
+export const registerSchema = z.object({
+  firstName: z.string().trim().min(1, "First name is required").max(50),
+  lastName: z.string().trim().min(1, "Last name is required").max(50),
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
+
+export const loginSchema = z.object({
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(1, "Password is required"),
+});
+
+export type RegisterInput = z.infer<typeof registerSchema>;
+export type LoginInput = z.infer<typeof loginSchema>;
+
+// My Account — editing name after signup (PUT /api/account/name)
+export const updateNameSchema = z.object({
+  firstName: z.string().trim().min(1, "First name is required").max(50),
+  lastName: z.string().trim().min(1, "Last name is required").max(50),
+});
+export type UpdateNameInput = z.infer<typeof updateNameSchema>;
+
+// Onboarding profile
+export const userProfileSchema = z.object({
+  role: z.enum(['dod_employee', 'dod_contractor', 'career_changer', 'student']),
+  experience: z.enum(['new', 'some', 'experienced']),
+  goal: z.enum(['contracts_finance', 'bd_capture', 'program_management', 'full_picture']),
+  completedOnboarding: z.boolean().default(true),
+});
+export type UserProfile = z.infer<typeof userProfileSchema>;
+
+// ── Email leads (landing page opt-in) ─────────────────────────────────────
+export const emailLeads = pgTable("email_leads", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: text("email").notNull().unique(),
+  source: text("source").default("landing_page"),   // landing_page | exit_intent
+  createdAt: text("created_at").notNull().default(sql`now()::text`),
+});
+
+export const insertLeadSchema = createInsertSchema(emailLeads).pick({ email: true, source: true });
+export type Lead = typeof emailLeads.$inferSelect;
+export type InsertLead = z.infer<typeof insertLeadSchema>;
+
+// ── Template pack purchases ────────────────────────────────────────────────────
+export const purchases = pgTable("purchases", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id"),            // null if bought without account (email-only)
+  email: text("email").notNull(),
+  pack: text("pack").notNull(),           // 'pm-essentials' | 'proposal-toolkit' | 'finance-cheat-sheets'
+  stripeSessionId: text("stripe_session_id").notNull().unique(),
+  stripePaymentIntent: text("stripe_payment_intent"),
+  amountPaid: integer("amount_paid").notNull(), // in cents
+  downloadToken: text("download_token").notNull(), // secure random token for download links
+  downloadCount: integer("download_count").notNull().default(0),
+  createdAt: text("created_at").notNull().default(sql`now()::text`),
+});
+
+export type Purchase = typeof purchases.$inferSelect;
+
+// One row per password-reset request. Serves two cases that look identical to
+// the user: resetting a forgotten password, and setting a first password on an
+// account created through Google (those rows have password_hash null).
+//
+// Only the SHA-256 of the token is stored. The raw token exists in the emailed
+// link and nowhere else, so a leaked database backup cannot be used to take
+// over an account. Single use, and short-lived via expires_at.
+export const passwordResetTokens = pgTable("password_reset_tokens", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
+  tokenHash: text("token_hash").notNull().unique(),
+  expiresAt: text("expires_at").notNull(),
+  usedAt: text("used_at"),
+  createdAt: text("created_at").notNull().default(sql`now()::text`),
+});
+
+export type PasswordResetToken = typeof passwordResetTokens.$inferSelect;

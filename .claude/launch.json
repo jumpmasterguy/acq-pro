@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "acq-pro-dev",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "SESSION_SECRET=localdev-only-not-a-real-secret-0123456789abcdef PORT=5050 NODE_ENV=development npx tsx server/index.ts"],
+      "port": 5050
+    }
+  ]
+}

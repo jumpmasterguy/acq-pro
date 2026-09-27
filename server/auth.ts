@@ -1,0 +1,342 @@
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import session from "express-session";
+import ConnectPgSimple from "connect-pg-simple";
+import bcrypt from "bcryptjs";
+import { Pool } from "pg";
+import { type Express } from "express";
+import { storage } from "./storage";
+import { type User } from "@shared/schema";
+
+const PgSession = ConnectPgSimple(session);
+
+const IS_DEV = process.env.NODE_ENV === "development";
+
+// Idle timeout: how long an authenticated session can go without a request
+// before it's force-ended (see the middleware below). Separate from the
+// cookie's 30-day maxAge, which just caps how long a session can exist at
+// all — that's refreshed on every request (`rolling: true`) and doesn't
+// care about inactivity. This is the actual "walked away and left it
+// logged in" security control.
+export const IDLE_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
+
+// Type augmentation for session data — loginAt is stamped once at login
+// (used to compute a session's duration when it ends, for loginHistory);
+// lastActivityAt is bumped on every authenticated request and is what the
+// idle-timeout middleware below checks against.
+declare module "express-session" {
+  interface SessionData {
+    loginAt?: string;
+    lastActivityAt?: number;
+  }
+}
+
+// Type augmentation for req.user
+declare global {
+  namespace Express {
+    interface User {
+      id: string;
+      username: string;
+      firstName: string | null;
+      lastName: string | null;
+      email: string;
+      subscriptionStatus: string;
+      stripeCustomerId: string | null;
+      subscriptionId: string | null;
+      completedLessons: string[];
+      quizScores: Record<string, number>;
+      moduleSkillLevels: Record<string, string>;
+      moduleAssessmentScores: Record<string, number>;
+      userProfile: Record<string, any> | null;
+      isAdmin: boolean;
+      currentStreak: number;
+      longestStreak: number;
+      lastChallengeDate: string | null;
+      lastStreakDate: string | null;
+      dailyChallengeXP: number;
+      briefsXP: number;
+      leaderboardHidden: boolean;
+    }
+  }
+}
+
+// Create the session table if it doesn't exist — runs once at startup
+async function ensureSessionTable(pool: Pool): Promise<void> {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS "session" (
+        "sid" varchar NOT NULL COLLATE "default",
+        "sess" json NOT NULL,
+        "expire" timestamp(6) NOT NULL,
+        CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE
+      ) WITH (OIDS=FALSE);
+    `);
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire");
+    `);
+    console.log("[session] Session table ready");
+  } catch (err: any) {
+    console.error("[session] Failed to create session table:", err.message);
+  }
+}
+
+export async function setupAuth(app: Express): Promise<void> {
+  // Trust Railway's reverse proxy — required for secure cookies over HTTPS
+  app.set("trust proxy", 1);
+
+  // ── Session store ──────────────────────────────────────────────────────────
+  let store: session.Store;
+
+  if (process.env.DATABASE_URL) {
+    const pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false },
+    });
+
+    // Ensure table exists BEFORE the store is used
+    await ensureSessionTable(pool);
+
+    store = new PgSession({
+      pool,
+      tableName: "session",
+      createTableIfMissing: false, // we already created it above
+      ttl: 30 * 24 * 60 * 60,       // 30 days in seconds
+      pruneSessionInterval: 60 * 60, // prune expired rows every hour
+    });
+
+    console.log("[session] Using PostgreSQL session store");
+  } else {
+    // `require` is not defined in this ESM module — the local-dev fallback
+    // threw on every boot without a DATABASE_URL.
+    const MemoryStore = (await import("memorystore")).default(session);
+    store = new MemoryStore({ checkPeriod: 86400000 });
+    console.log("[session] No DATABASE_URL — using MemoryStore (local dev)");
+  }
+
+  // ── Session middleware ─────────────────────────────────────────────────────
+  app.use(
+    session({
+      secret: (() => {
+        const s = process.env.SESSION_SECRET;
+        if (!s) {
+          if (process.env.NODE_ENV === 'production') {
+            console.error('[SECURITY] SESSION_SECRET env var is not set — using insecure fallback. Set this in Railway immediately.');
+          }
+          return 'acqpro-dev-secret-not-for-production';
+        }
+        return s;
+      })(),
+      resave: false,
+      saveUninitialized: false,
+      rolling: true,
+      store,
+      cookie: {
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        // Production (Railway + Cloudflare) is always HTTPS, so the cookie is
+        // secure + SameSite=None — the latter is required for the Google OAuth
+        // cross-origin redirect to set it. Over plain http://localhost a
+        // secure cookie is simply dropped, which signed you out on every
+        // reload, so dev relaxes both. The check is for an explicit
+        // "development" rather than "not production", so an unset NODE_ENV
+        // still gets the hardened production cookie.
+        secure: !IS_DEV,
+        httpOnly: true,
+        sameSite: IS_DEV ? "lax" : "none",
+      },
+    })
+  );
+
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  // ── Idle timeout — auto sign-out after IDLE_TIMEOUT_MS of inactivity ──────
+  // Runs before every route. On an authenticated request, if it's been too
+  // long since the last one, the session is force-ended right here: logged
+  // out, destroyed, and (if we know when it started) recorded to
+  // loginHistory as an 'idle_timeout' close before responding 401. A normal
+  // request just bumps lastActivityAt and moves on — this never fires for
+  // someone actively using the app, only for a session nobody's touched in
+  // 30+ minutes (heartbeat included, so an open-but-idle tab still times out).
+  app.use((req, res, next) => {
+    if (!req.isAuthenticated || !req.isAuthenticated()) return next();
+    const now = Date.now();
+    const last = req.session.lastActivityAt;
+    if (last && now - last > IDLE_TIMEOUT_MS) {
+      const userId = req.user!.id;
+      const loginAt = req.session.loginAt;
+      return req.logout(() => {
+        req.session.destroy(() => {
+          res.clearCookie("connect.sid");
+          if (loginAt) {
+            storage.recordLoginEnd(userId, loginAt, 'idle_timeout').catch((e) => {
+              console.error('[idle-timeout] recordLoginEnd failed:', e.message);
+            });
+          }
+          // API calls get the JSON the app expects (it reads idleTimeout to show
+          // the "signed out due to inactivity" notice). A page load — someone
+          // typing acqlerate.com after a long break — must NOT get raw JSON:
+          // the session is already gone, so just let the page render signed-out.
+          // ...except the routes whose whole job is to start a new session.
+          // Hitting the idle timeout and then clicking "Continue with Google"
+          // used to answer this JSON instead of the Google redirect, so the
+          // user got a page of raw JSON and no way to sign back in. The
+          // session is already destroyed above; just let the request through
+          // and let them log in again.
+          const isSignInEntry = /^\/api\/auth\/(google|login|register|logout)\b/.test(req.path);
+          if (req.path.startsWith("/api/") && !isSignInEntry) {
+            return res.status(401).json({ message: "Signed out due to inactivity", idleTimeout: true });
+          }
+          next();
+        });
+      });
+    }
+    req.session.lastActivityAt = now;
+    next();
+  });
+
+  // ── Passport local strategy — authenticate by email ───────────────────────
+  passport.use(
+    new LocalStrategy(
+      { usernameField: "email", passwordField: "password" },
+      async (email, password, done) => {
+        try {
+          const user = await storage.getUserByEmail(email);
+          if (!user) {
+            return done(null, false, { message: "Invalid email or password" });
+          }
+          const match = await bcrypt.compare(password, user.passwordHash);
+          if (!match) {
+            return done(null, false, { message: "Invalid email or password" });
+          }
+          return done(null, toPassportUser(user));
+        } catch (err) {
+          return done(err);
+        }
+      }
+    )
+  );
+
+  // ── Google OAuth strategy ──────────────────────────────────────────────────
+  const googleClientId = process.env.GOOGLE_CLIENT_ID;
+  const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const appUrl = process.env.APP_URL || "http://localhost:5000";
+
+  if (googleClientId && googleClientSecret) {
+    passport.use(
+      new GoogleStrategy(
+        {
+          clientID: googleClientId,
+          clientSecret: googleClientSecret,
+          callbackURL: `${appUrl}/api/auth/google/callback`,
+          scope: ["profile", "email"],
+        },
+        async (_accessToken, _refreshToken, profile, done) => {
+          try {
+            const email = profile.emails?.[0]?.value;
+            if (!email) {
+              return done(null, false);
+            }
+            // Use email as username to guarantee uniqueness; displayName stored separately if needed
+            const username = email;
+            // Google's profile carries given/family name separately — grab
+            // them for My Account so a Google sign-up isn't left with blank
+            // First/Last Name fields. Falls back to splitting displayName on
+            // the first space if Google didn't return structured name parts.
+            const displayParts = (profile.displayName || "").split(" ");
+            const firstName = profile.name?.givenName || displayParts[0] || null;
+            const lastName = profile.name?.familyName || (displayParts.length > 1 ? displayParts.slice(1).join(" ") : null);
+            const user = await storage.upsertGoogleUser({
+              googleId: profile.id,
+              email,
+              username,
+              firstName,
+              lastName,
+            } as any);
+            return done(null, toPassportUser(user));
+          } catch (err) {
+            return done(err as Error);
+          }
+        }
+      )
+    );
+    console.log("[auth] Google OAuth strategy registered");
+  } else {
+    console.warn("[auth] GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET not set — Google OAuth disabled");
+  }
+
+  passport.serializeUser((user, done) => {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(async (id: string, done) => {
+    try {
+      const user = await storage.getUser(id);
+      if (!user) return done(null, false);
+      done(null, toPassportUser(user));
+    } catch (err) {
+      done(err);
+    }
+  });
+}
+
+export function toPassportUser(user: User): Express.User {
+  return {
+    id: user.id,
+    username: user.username,
+    firstName: user.firstName ?? null,
+    lastName: user.lastName ?? null,
+    email: user.email,
+    subscriptionStatus: user.subscriptionStatus,
+    stripeCustomerId: user.stripeCustomerId,
+    subscriptionId: user.subscriptionId,
+    completedLessons: user.completedLessons ?? [],
+    quizScores: (user.quizScores as Record<string, number>) ?? {},
+    moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
+    moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
+    userProfile: (user.userProfile as Record<string, any>) ?? null,
+    isAdmin: Boolean(user.isAdmin),
+    // Bug fix (2026-08-31): these four were missing here, which meant every
+    // request's req.user was silently stripped of them. Two visible symptoms:
+    // (1) GET /api/daily-challenge computed `alreadyCompleted` off
+    //     req.user.lastChallengeDate, which was always undefined -> the
+    //     challenge always looked un-done, so it could be retaken all day.
+    // (2) The client never received the XP the Daily Challenge actually
+    //     earned server-side, so it never showed up in the user's total.
+    currentStreak: user.currentStreak ?? 0,
+    longestStreak: user.longestStreak ?? 0,
+    lastChallengeDate: user.lastChallengeDate ?? null,
+    // Same class of bug as the four fields above: without this, every
+    // req.user is missing the one field getDisplayStreak() (server/storage.ts)
+    // needs to tell a live streak from a lapsed one, so routes reading
+    // req.user directly (GET /api/daily-challenge, /api/auth/me) would
+    // always see it as undefined and report the streak as broken.
+    lastStreakDate: user.lastStreakDate ?? null,
+    dailyChallengeXP: ((user.challengeHistory as any[]) ?? []).reduce(
+      (sum, entry) => sum + (entry?.xpEarned ?? 0),
+      0
+    ),
+    // Same shape and same reason as dailyChallengeXP above: brief XP is
+    // tracked server-side in its own column, and the client folds it into the
+    // total it displays. Without this the user earns brief XP and never sees
+    // it anywhere.
+    briefsXP: ((user.briefsRead as any[]) ?? []).reduce(
+      (sum, entry) => sum + (entry?.xpEarned ?? 0),
+      0
+    ),
+    leaderboardHidden: (user as any).leaderboardHidden ?? false,
+  };
+}
+
+export async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, 12);
+}
+
+export function requireAuth(
+  req: any,
+  res: any,
+  next: () => void
+) {
+  if (req.isAuthenticated()) return next();
+  res.status(401).json({ message: "Authentication required" });
+}

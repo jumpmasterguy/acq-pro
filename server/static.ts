@@ -1,0 +1,221 @@
+import express, { type Express, type Request, type Response } from "express";
+import fs from "fs";
+import path from "path";
+
+export function serveStatic(app: Express) {
+  const distPath = path.resolve(__dirname, "public");
+  if (!fs.existsSync(distPath)) {
+    throw new Error(
+      `Could not find the build directory: ${distPath}, make sure to build the client first`,
+    );
+  }
+
+  // Redirect www to apex domain
+  app.use((req: Request, res: Response, next) => {
+    const host = req.headers.host || '';
+    if (host.startsWith('www.')) {
+      return res.redirect(301, `https://acqlerate.com${req.url}`);
+    }
+    next();
+  });
+
+  // Helper: send file with no-cache headers to bust Cloudflare edge cache
+  const sendNoCache = (res: Response, filePath: string) => {
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+    return res.sendFile(filePath);
+  };
+
+  // Always serve landing page at root — app lives at /app
+  app.get("/", (_req: Request, res: Response) => {
+    const landingPath = path.resolve(distPath, "landing.html");
+    if (fs.existsSync(landingPath)) {
+      return sendNoCache(res, landingPath);
+    }
+    return sendNoCache(res, path.resolve(distPath, "index.html"));
+  });
+
+  // /app route — always serves the React app (index.html)
+  app.get("/app", (_req: Request, res: Response) => {
+    res.sendFile(path.resolve(distPath, "index.html"));
+  });
+
+  // Blog static assets — explicit routes to prevent :slug handler from intercepting
+  app.get("/blog/blog.css", (_req: Request, res: Response) => {
+    sendNoCache(res, path.resolve(distPath, "blog", "blog.css"));
+  });
+  app.get("/blog/blog.js", (_req: Request, res: Response) => {
+    sendNoCache(res, path.resolve(distPath, "blog", "blog.js"));
+  });
+
+
+
+  // /pdu — PMI PDU landing page. sendNoCache for the same reason the blog uses
+  // it: these are hand-edited marketing pages, and without an explicit
+  // Cache-Control the Cloudflare edge can keep serving a stale copy long after
+  // a deploy. That is how the PDU page kept showing old figures on a phone
+  // while the desktop already had the new ones.
+  app.get(["/pdu", "/pdu/"], (_req: Request, res: Response) => {
+    const filePath = path.resolve(distPath, "pdu", "index.html");
+    if (fs.existsSync(filePath)) {
+      return sendNoCache(res, filePath);
+    }
+    return res.redirect("/");
+  });
+
+  // /products/* — serve product landing pages and success pages
+  app.get("/products/:slug", (req: Request, res: Response) => {
+    const slug = req.params.slug;
+    const filePath = path.resolve(distPath, "products", slug, "index.html");
+    if (fs.existsSync(filePath)) {
+      return res.sendFile(filePath);
+    }
+    return res.redirect("/blog");
+  });
+  app.get("/products/:slug/success", (req: Request, res: Response) => {
+    const slug = req.params.slug;
+    const filePath = path.resolve(distPath, "products", slug, "success.html");
+    if (fs.existsSync(filePath)) {
+      return res.sendFile(filePath);
+    }
+    return res.redirect(`/products/${slug}`);
+  });
+
+  // /team/success — Team Pack purchase confirmation
+  app.get(["/team/success", "/team/success/"], (_req: Request, res: Response) => {
+    const filePath = path.resolve(distPath, "team", "success.html");
+    if (fs.existsSync(filePath)) {
+      return res.sendFile(filePath);
+    }
+    return res.redirect("/#pricing");
+  });
+
+  // Blog HTML routes — with and without trailing slash
+  app.get(["/blog", "/blog/"], (_req: Request, res: Response) => {
+    sendNoCache(res, path.resolve(distPath, "blog", "index.html"));
+  });
+  // 301s for old posts that got merged into a newer rewrite of the same
+  // topic — same content republished under a fresh slug, weeks to months
+  // later (ACAT Levels, CMMC, Continuing Resolutions, and the Bid Protests
+  // post all had this happen; CRs alone had 3 separate rewrites over 2
+  // months before being consolidated to one). The old .html files are gone
+  // from client/public/blog/; this keeps any existing backlinks/bookmarks/
+  // search results landing on the current post instead of a 404 or the
+  // bare blog index.
+  const BLOG_SLUG_REDIRECTS: Record<string, string> = {
+    'acat-levels-your-programs-blueprint-for-management-and-oversight': 'acat-levels-your-programs-blueprint-for-oversight-and-management',
+    'cmmc-in-2026-the-compliance-clock-is-ticking-are-you-ready': 'cmmc-in-2026-the-compliance-clock-is-ticking-are-you-ready-2026-07-07',
+    // Continuing Resolutions had 3 rewrites (May 5, Jun 30 x2) — all three
+    // now point to the single surviving post.
+    'crs-the-hidden-risk-crippling-your-defense-programs-future': 'continuing-resolutions-budget-gridlocks-hidden-risk-to-your-defense-program',
+    'crs-budget-gridlocks-silent-sabotage-of-your-defense-program': 'continuing-resolutions-budget-gridlocks-hidden-risk-to-your-defense-program',
+    'why-the-government-loses-bid-protests-your-2026-action-plan': 'why-the-government-loses-protests-what-you-must-do-now',
+    // Stale sitemap.xml entry (lastmod 2025-11-15, predates the current slug
+    // scheme entirely) that never matched a real file — sends it to the
+    // current ACAT post instead of 404ing/falling through to the blog index.
+    // Fourth post on the same Section L vs M thesis, removed 2026-09-13.
+    'why-most-defense-proposals-lose-before-anyone-writes-a-word': 'losing-before-you-write-the-l-m-discipline-for-2026-defense-wins',
+    // Duplicate-intent merges, 2026-09-13.
+    'idiqs-task-orders-win-big-in-defenses-contract-powerhouse': 'mastering-idiqs-your-2025-2026-playbook-for-winning-defense-task-orders',
+    'defense-pm-your-2026-playbook-for-certs-skills-timeline': 'what-it-actually-takes-to-become-a-defense-program-manager-in-2026',
+    'fy26-dod-contracts-pentagons-big-bets-what-they-mean': 'decoding-dods-latest-spends-fy26-contracts-point-to-future-priorities',
+    // The generator's own duplicate, 21 Sep 2026: its 16-topic rotation had no idea
+    // what was already published, so it wrote a 4th cost-plus vs fixed-price post.
+    // Retired in favour of the existing dedicated post; scripts/dupe_guard.py now
+    // blocks this class of post before it is written.
+    'cost-plus-vs-fixed-price-who-really-eats-the-overrun': 'the-contract-choice-fixed-price-vs-cost-plus-in-dod-acquisition',
+    // Duplicate-intent merges, 2026-09-13.
+    'the-dods-workforce-gap-your-call-to-a-critical-career': 'dods-1102-shortage-your-gateway-to-a-high-impact-career',
+    'otas-in-2026-what-the-15b-surge-means-for-your-defense-business': 'dods-ota-surge-in-2026-what-defense-contractors-need-to-know-now',
+    'acat-levels-explained': 'acat-levels-your-programs-blueprint-for-oversight-and-management',
+    // Old Section L vs M slug, still in Google's index (GSC 404 report, 22 Sep 2026).
+    'section-l-vs-section-m-proposal': 'the-silent-killer-of-your-defense-proposal-the-section-l-vs-section-m-mismatch',
+  };
+
+  app.get("/blog/:slug", (req: Request, res: Response) => {
+    const slug = req.params.slug;
+    // Serve static assets directly (avoid redirect loop)
+    if (slug.includes('.')) {
+      const assetPath = path.resolve(distPath, "blog", slug);
+      if (fs.existsSync(assetPath)) return res.sendFile(assetPath);
+      return res.status(404).send('Not found');
+    }
+    if (BLOG_SLUG_REDIRECTS[slug]) {
+      return res.redirect(301, `/blog/${BLOG_SLUG_REDIRECTS[slug]}`);
+    }
+    const filePath = path.resolve(distPath, "blog", `${slug}.html`);
+    if (fs.existsSync(filePath)) {
+      return sendNoCache(res, filePath);
+    }
+    // Unknown slug: serve the blog index so a human still lands somewhere
+    // useful, but with a real 404 status. The previous 302 → /blog told
+    // search engines "this URL is fine, it just moved," which keeps dead
+    // URLs in the index and gets flagged as a soft 404 in Search Console.
+    // Deliberately removed posts belong in BLOG_SLUG_REDIRECTS above (301).
+    res.status(404);
+    return sendNoCache(res, path.resolve(distPath, "blog", "index.html"));
+  });
+
+  // Every template pack's license note points buyers to acqlerate.com/team.
+  // The team page lives at /teams, so send the shorter URL there instead of
+  // letting it fall through to the app. /team/success is registered above.
+  app.get(["/team", "/team/"], (_req: Request, res: Response) => res.redirect(301, "/teams"));
+
+  // Static informational pages
+  const staticPages = ['terms', 'privacy', 'teams', 'sitemap', 'pay-guide', 'tools', 'why'];
+  staticPages.forEach(page => {
+    app.get([`/${page}`, `/${page}/`], (_req: Request, res: Response) => {
+      const filePath = path.resolve(distPath, `${page}.html`);
+      if (fs.existsSync(filePath)) return sendNoCache(res, filePath);
+      return res.redirect('/');
+    });
+  });
+
+  // Public image assets referenced from third-party contexts (email clients,
+  // Resend's broadcast preview, link-unfurlers). Two things break these
+  // otherwise: helmet's default Cross-Origin-Resource-Policy: same-origin
+  // tells browsers to refuse a cross-origin embed even though the request
+  // succeeds, and serving them with no explicit Cache-Control means a
+  // conditional revalidation (304) can reach a CDN edge that never cached
+  // the underlying bytes, which some edges turn into a 503 for the client
+  // instead of relaying the 304. Giving these a real cache lifetime avoids
+  // the revalidation path entirely, and the explicit CORP header allows the
+  // cross-origin embed.
+  app.get(["/icon-192x192.png", "/icon-512x512.png", "/examples/img/:file"], (req: Request, res: Response) => {
+    const filePath = req.path.startsWith("/examples/img/")
+      ? path.resolve(distPath, "examples", "img", req.params.file as string)
+      : path.resolve(distPath, req.path.slice(1));
+    if (!fs.existsSync(filePath)) return res.status(404).send("Not found");
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    return res.sendFile(filePath);
+  });
+
+  // Paid template pack files live under client/public/products/ so that the
+  // token-checked /api/packs/download route can resolve them from distPath.
+  // That also puts them inside express.static's reach below, which would let
+  // anyone download a paid pack by guessing the URL
+  // (/products/pack1-pm-essentials/igce-calculator.xlsx). Block direct access
+  // to the paid pack directories so the download token is the only way in.
+  //
+  // pack3-finance-cheat-sheets is deliberately NOT listed: it's a free lead
+  // magnet and its product page links straight to those files.
+  const PAID_PACK_DIRS = ["pack1-pm-essentials", "pack2-proposal-toolkit", "pack4-cpars-playbook"];
+  app.use((req: Request, res: Response, next) => {
+    const match = req.path.match(/^\/products\/([^/]+)\/.+$/);
+    // 404 rather than 403 — don't confirm the file exists.
+    if (match && PAID_PACK_DIRS.includes(match[1])) {
+      return res.status(404).send("Not found");
+    }
+    next();
+  });
+
+  // Serve all other static assets (JS, CSS, images, etc.)
+  app.use(express.static(distPath));
+
+  // Fall through to index.html for all React routes (hash routing)
+  app.use("/{*path}", (_req, res) => {
+    res.sendFile(path.resolve(distPath, "index.html"));
+  });
+}

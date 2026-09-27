@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Defense Finance Cheat Sheets: Pack Guide</title>
+<style>{{CSS}}
+.cover { display: flex; flex-direction: column; }
+.cover h1 { font-size: 34pt; line-height: 1.02; }
+.cover .lede { font-size: 12pt; margin-top: 8px; max-width: 5.6in; }
+.tools { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 0.5in; }
+.tool { border: 1px solid var(--rule); border-radius: 10px; padding: 11px 13px; position: relative; }
+.tool .fmt { position: absolute; top: 11px; right: 12px; }
+.tool h3 { font-size: 11pt; margin: 0 0 3px; padding-right: 50px; }
+.tool p { font-size: 8.4pt; color: var(--muted); margin: 0; }
+.tool .bar { height: 3px; border-radius: 2px; margin: -11px -13px 9px; }
+.pill.pdf { background: var(--navy); } .pill.xls { background: var(--green); }
+.new li { font-size: 8.6pt; margin-bottom: 4px; }
+.page h2.big { font-size: 15pt; margin-bottom: 6px; }
+.tp { margin-top: 12px; }
+.tp .head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+.tp .head .n { font-size: 8pt; font-weight: 700; letter-spacing: .12em; color: var(--teal); text-transform: uppercase; }
+.tp h2 { font-size: 15pt; margin: 0; }
+.tp p { font-size: 9pt; }
+.analogy { background: var(--teal-soft); border-radius: 8px; padding: 9px 12px; margin: 7px 0; font-size: 9pt; }
+.analogy b { color: var(--teal); letter-spacing: .08em; font-size: 7.4pt; text-transform: uppercase; display: block; margin-bottom: 2px; }
+.steps { counter-reset: s; list-style: none; padding: 0; margin: 4px 0 0; }
+.steps li { counter-increment: s; position: relative; padding-left: 24px; font-size: 8.8pt; margin-bottom: 5px; }
+.steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 16px; height: 16px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 7.5pt; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.divider { height: 1px; background: var(--rule); margin: 14px 0 2px; }
+.qr td { font-size: 8.3pt; padding: 4.5px 6px; }
+.lesson { font-size: 8pt; color: var(--muted); margin-top: 4px; }
+.lesson b { color: var(--teal); }
+</style></head>
+<body>
+
+<!-- ═════════════ PAGE 1: COVER ═════════════ -->
+<section class="page portrait cover">
+  <div class="watermark"></div>
+  <div class="masthead">
+    <div class="lockup"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+    <div class="meta"><div class="eyebrow" style="margin-bottom:3px">Pack guide</div><b>{{EDITION}} edition</b></div>
+  </div>
+
+  <div class="eyebrow" style="margin-top:1.35in">Free pack</div>
+  <h1 style="margin-top:4px">Defense Finance<br>Cheat Sheets</h1>
+  <p class="lede">Four tools that make defense money make sense. Keep them open in the budget drill, the program review, and the meeting where someone says "color of money" like it explains itself.</p>
+
+  <div class="tools">
+    <div class="tool"><div class="bar" style="background:var(--blue)"></div><span class="pill pdf fmt">PDF</span><h3>PPBE Cycle on One Page</h3><p>One budget followed from first planning meeting to last day on contract, drawn as a timeline.</p></div>
+    <div class="tool"><div class="bar" style="background:var(--magenta)"></div><span class="pill pdf fmt">PDF</span><h3>Color of Money Decision Tree</h3><p>Four questions that pick the right appropriation, plus periods, thresholds and RDT&amp;E codes.</p></div>
+    <div class="tool"><div class="bar" style="background:var(--purple)"></div><span class="pill pdf fmt">PDF</span><h3>EVM Formulas Quick Reference</h3><p>Every formula, four EAC methods, how to read them, and a worked example.</p></div>
+    <div class="tool"><div class="bar" style="background:var(--green)"></div><span class="pill xls fmt">Excel</span><h3>Wrap Rate Calculator</h3><p>A live rate build-up plus typical wrap rates by contractor type and business unit.</p></div>
+  </div>
+
+  <div class="card soft" style="margin-top:0.45in">
+    <h2>What is new in this edition</h2>
+    <ul class="new">
+      <li><b>Three sheets are now print-ready PDFs.</b> PPBE is redrawn as a timeline, and Color of Money is a real flowchart.</li>
+      <li><b>Color of Money:</b> the $350K expense/investment line is separated from the $350K simplified acquisition threshold. Same number, different rules. Construction limits updated to $4M (O&amp;M) and $9M (minor MILCON), and RDT&amp;E budget activity 6.8 added.</li>
+      <li><b>EVM:</b> the IPMDAR replaces the old CPR formats, EVM thresholds are $50M and $100M (effective Feb 1, 2026), and there is a worked example.</li>
+      <li><b>PPBE:</b> Resource Management Decisions replace the retired PBDs, with a view of the four budgets DoD works at once.</li>
+      <li><b>Wrap rates:</b> large primes are split by business unit, because one company can run a 1.7x services unit and a 2.9x systems division, and every row's wrap rate now matches its own rates.</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    <div class="lockup small"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+    <div class="sources">Free to share unaltered, branding intact. Educational reference, not official DoD guidance.</div>
+    <div class="pg">acqlerate.com · 1</div>
+  </div>
+</section>
+
+<!-- ═════════════ PAGE 2: WHY + TOOLS 1–2 ═════════════ -->
+<section class="page portrait">
+  <div class="watermark"></div>
+  <h2 class="big">Why defense finance confuses everyone</h2>
+  <p style="font-size:9.2pt">Several kinds of money, each with its own rules. A budget cycle that takes two years before a dollar reaches a contract. Cost accounting rules that would make a CPA reach for the aspirin. And enough acronyms to fill a DD Form nobody has seen since 1987.</p>
+  <p style="font-size:9.2pt">Underneath, it follows a logic. Color of money exists because Congress wants to control how money is spent. EVM exists because the government needs to know a program is in trouble before it is finished. PPBE exists because you cannot build an aircraft carrier on a one-year plan. Each tool in this pack explains one of those logics on a page you can keep open.</p>
+
+  <div class="tp">
+    <div class="head"><span class="n">Tool 1 · PDF</span><h2>PPBE Cycle on One Page</h2></div>
+    <p>The process DoD uses to decide what to buy and how to pay for it: Planning, Programming, Budgeting and Execution, with Congress in the middle. The sheet follows one budget, FY{{FY}}, across the whole timeline, and shows the four budgets that are always in motion at once.</p>
+    <div class="analogy"><b>The analogy</b>Planning a wedding two years out. You pick the venue long before you know the guest count, and by the day itself the money is committed. The only question left is whether you spend it well.</div>
+    <ol class="steps">
+      <li>Find the red <b>Today</b> line. Everything to its left is locked; everything to its right can still move.</li>
+      <li>Read your program's year down the chart. If you need money in FY{{FY}}, it had to be in the POM built in {{FYm2}}.</li>
+      <li>Check the execution bars. They tell you how long each kind of money can be put on contract.</li>
+    </ol>
+    <div class="lesson">Goes with <b>Module 2, Lesson 1: The PPBE Cycle</b></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="tp">
+    <div class="head"><span class="n">Tool 2 · PDF</span><h2>Color of Money Decision Tree</h2></div>
+    <p>Which appropriation pays for a thing, decided by four questions asked in order. Page 2 has the periods of availability, the thresholds, and the RDT&amp;E budget activity codes.</p>
+    <div class="analogy"><b>The analogy</b>Three bank accounts: one for the mortgage, one for groceries, one for the kitchen remodel. You cannot pay the electric bill from the remodel account, even when it has money in it. In DoD, mixing them up is not a bookkeeping error. It can be an Antideficiency Act violation, and those are personal.</div>
+    <ol class="steps">
+      <li>Describe what you are paying for in one plain sentence.</li>
+      <li>Start at question 1 and stop at the first yes.</li>
+      <li>Check the thresholds on page 2, then confirm with your resource manager before you obligate.</li>
+    </ol>
+    <div class="lesson">Goes with <b>Module 2, Lesson 4: Color of Money by Service</b></div>
+  </div>
+
+  <div class="footer">
+    <div class="lockup small"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+    <div class="sources">Defense Finance Cheat Sheets · Pack guide · {{EDITION}} edition</div>
+    <div class="pg">acqlerate.com · 2</div>
+  </div>
+</section>
+
+<!-- ═════════════ PAGE 3: TOOLS 3–4 ═════════════ -->
+<section class="page portrait">
+  <div class="watermark"></div>
+  <div class="tp" style="margin-top:0">
+    <div class="head"><span class="n">Tool 3 · PDF</span><h2>EVM Formulas Quick Reference</h2></div>
+    <p>Earned value management is how DoD tells whether a contract is on track for cost and schedule. Page 1 has the formulas and the four ways to estimate the final cost. Page 2 explains how to read them and walks through a worked example.</p>
+    <div class="analogy"><b>The analogy</b>A road trip where you check the fuel gauge and the map at the same time. Fuel burned tells you one thing, miles covered tells you another. EVM compares both to where you planned to be, which is how you find out about the detour before you run out of gas.</div>
+    <ol class="steps">
+      <li>Get PV, EV and AC for the period from the IPMDAR or your program's EVM tool.</li>
+      <li>Work out CPI and SPI, then the EAC range: the CPI method is usually the floor, the composite the ceiling.</li>
+      <li>Compare TCPI with the CPI the team is actually getting. A big gap means the budget is a hope, not a plan.</li>
+    </ol>
+    <div class="lesson">Goes with <b>Module 2, Lesson 2: Earned Value Management</b> and <b>Lesson 5: Estimate at Completion</b></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="tp">
+    <div class="head"><span class="n">Tool 4 · Excel</span><h2>Wrap Rate Calculator</h2></div>
+    <p>What a contractor charges the government for one hour of a person's time, and why it is well above that person's pay. It stays an Excel file because it is a working calculator: change the blue cells and everything else recalculates.</p>
+    <div class="analogy"><b>The analogy</b>A restaurant steak. The $60 on the menu pays for the $15 steak, plus the cook, the rent, the manager, the accountant and a little profit. A wrap rate is that menu price divided by the cost of the steak.</div>
+    <ol class="steps">
+      <li>Enter a labor rate and the company's fringe, overhead, G&amp;A and fee in the blue cells.</li>
+      <li>Read the fully loaded rate and the wrap rate multiplier.</li>
+      <li>Compare with the Rate Comparison tab, and match on business unit and work site, not just company size.</li>
+    </ol>
+    <div class="lesson">Goes with <b>Module 2, Lesson 6: Wrap Rates &amp; Cost Structure</b></div>
+  </div>
+
+  <div class="footer">
+    <div class="lockup small"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+    <div class="sources">Defense Finance Cheat Sheets · Pack guide · {{EDITION}} edition</div>
+    <div class="pg">acqlerate.com · 3</div>
+  </div>
+</section>
+
+<!-- ═════════════ PAGE 4: QUICK REFERENCE CARD ═════════════ -->
+<section class="page portrait">
+  <div class="watermark"></div>
+  <h2 class="big">Quick reference card</h2>
+  <p style="font-size:9pt" class="muted">The numbers that come up in every meeting, current as of {{EDITION}}.</p>
+
+  <div class="card" style="margin-top:8px">
+    <h2>Key dollar thresholds</h2>
+    <table class="qr">
+      <tr><th>Threshold</th><th style="width:1.35in">Amount</th><th>Source and effective date</th></tr>
+      <tr><td class="k">Micro-purchase</td><td>$15,000</td><td>FAC 2025-06, Oct 1, 2025 (was $10,000)</td></tr>
+      <tr><td class="k">Simplified acquisition (SAT)</td><td>$350,000</td><td>FAC 2025-06, Oct 1, 2025 (was $250,000)</td></tr>
+      <tr><td class="k">J&amp;A the contracting officer can approve</td><td>Up to $900,000</td><td>FAC 2025-06, Oct 1, 2025 (was $750,000)</td></tr>
+      <tr><td class="k">Certified cost or pricing data (TINA)</td><td>$2.5M<br><b>$10M</b> for DoD</td><td>FAC 2025-06; FY2026 NDAA §1804(c) raised the DoD threshold for contracts entered into after June 30, 2026</td></tr>
+      <tr><td class="k">EVM required</td><td>$50M; validated at $100M</td><td>FY2025 NDAA §823; DFARS class deviation 2026-O0011, Feb 1, 2026</td></tr>
+      <tr><td class="k">Expense/investment line</td><td>$350,000</td><td>DoD Appropriations Act 2023 §8039, carried in later acts</td></tr>
+      <tr><td class="k">O&amp;M-funded minor construction</td><td>$4M</td><td>10 U.S.C. §2805(c)</td></tr>
+      <tr><td class="k">Unspecified minor MILCON</td><td>$9M</td><td>10 U.S.C. §2805(a)</td></tr>
+    </table>
+  </div>
+
+  <div class="row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+    <div class="card">
+      <h2>Time to obligate</h2>
+      <table class="qr">
+        <tr><td class="k">O&amp;M, MILPERS</td><td>1 year</td></tr>
+        <tr><td class="k">RDT&amp;E</td><td>2 years</td></tr>
+        <tr><td class="k">Procurement</td><td>3 years (Shipbuilding 5)</td></tr>
+        <tr><td class="k">MILCON</td><td>5 years</td></tr>
+      </table>
+      <p class="small muted" style="margin-top:4px">Then 5 years expired for adjustments only, then cancelled.</p>
+    </div>
+    <div class="card">
+      <h2>EVM in four lines</h2>
+      <table class="qr">
+        <tr><td class="k">CPI = EV ÷ AC</td><td>Below 1.00: over budget</td></tr>
+        <tr><td class="k">SPI = EV ÷ PV</td><td>Below 1.00: behind</td></tr>
+        <tr><td class="k">EAC = BAC ÷ CPI</td><td>Usually the floor</td></tr>
+        <tr><td class="k">TCPI vs CPI</td><td>Big gap: new EAC</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:10px">
+    <h2>Typical wrap rates, including fee</h2>
+    <table class="qr">
+      <tr><th>Who</th><th style="width:1in">Wrap rate</th><th>Why</th></tr>
+      <tr><td class="k">Large prime, services business unit</td><td>1.6x to 2.1x</td><td>Much of the work sits on government sites, so overhead is light</td></tr>
+      <tr><td class="k">Large prime, engineering or systems unit</td><td>2.3x to 3.1x</td><td>Engineering overhead, labs, facilities and IRAD</td></tr>
+      <tr><td class="k">Services integrator</td><td>1.8x to 2.3x</td><td>Scale keeps overhead and G&amp;A low</td></tr>
+      <tr><td class="k">Small business</td><td>1.6x to 2.4x</td><td>Lean, but a small base can push G&amp;A up</td></tr>
+    </table>
+    <p class="small muted" style="margin-top:4px">Full table, with the rates behind each range, in the Wrap Rate Calculator. Compare like with like: business unit and work site matter more than company size.</p>
+  </div>
+
+  <div class="card teal" style="margin-top:10px">
+    <h2>Want to go deeper?</h2>
+    <p style="font-size:9pt;margin:0">Module 2 on Acqlerate, Defense Finance &amp; Budgeting, teaches every tool in this pack in short lessons with quizzes, and counts toward your CLPs. Start free at <b>acqlerate.com</b>.</p>
+  </div>
+
+  <div class="footer">
+    <div class="lockup small"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+    <div class="sources">Thresholds change. Check the current FAR, DFARS and appropriations act before relying on a number.</div>
+    <div class="pg">acqlerate.com · 4</div>
+  </div>
+</section>
+</body></html>

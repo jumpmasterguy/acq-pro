@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Acqlerate mark">
+<title>Acqlerate mark</title>
+<defs>
+<linearGradient id="sgsolo" x1="0.12" y1="0.02" x2="0.86" y2="0.98">
+<stop offset="0" stop-color="#ffffff"></stop>
+<stop offset="0.34" stop-color="#f6fdfe"></stop>
+<stop offset="0.68" stop-color="#ddf2f5"></stop>
+<stop offset="1" stop-color="#a5d4db"></stop>
+</linearGradient>
+<linearGradient id="slsolo" x1="0.1" y1="0" x2="0.9" y2="1">
+<stop offset="0" stop-color="#5d9aa2"></stop>
+<stop offset="1" stop-color="#3d7c86"></stop>
+</linearGradient>
+<linearGradient id="shsolo" x1="0" y1="0" x2="0.75" y2="1">
+<stop offset="0" stop-color="#ffffff" stop-opacity="1"></stop>
+<stop offset="0.46" stop-color="#ffffff" stop-opacity="0.62"></stop>
+<stop offset="1" stop-color="#ffffff" stop-opacity="0.10"></stop>
+</linearGradient>
+<filter id="sdsolo" x="-35%" y="-35%" width="170%" height="170%">
+<feDropShadow dx="0.6" dy="4.6" stdDeviation="4.2" flood-color="#01262c" flood-opacity="0.52"></feDropShadow>
+</filter>
+</defs>
+<g filter="url(#sdsolo)">
+<g transform="translate(0.4,0.9)" fill="none" stroke="#023f47" stroke-linejoin="round" stroke-linecap="round" opacity="0.55"><polygon points="192.00,100.00 146.00,179.67 54.00,179.67 8.00,100.00 54.00,20.33 146.00,20.33" stroke-width="15.80"></polygon><polygon points="137.59,121.70 100.00,143.40 62.41,121.70 62.41,78.30 100.00,56.60 137.59,78.30" stroke-width="13.60"></polygon></g>
+<g transform="translate(1.8,2.3)" fill="none" stroke="url(#slsolo)" stroke-linejoin="round" stroke-linecap="round"><polygon points="192.00,100.00 146.00,179.67 54.00,179.67 8.00,100.00 54.00,20.33 146.00,20.33" stroke-width="13.0"></polygon><polygon points="137.59,121.70 100.00,143.40 62.41,121.70 62.41,78.30 100.00,56.60 137.59,78.30" stroke-width="11.0"></polygon></g>
+<g fill="none" stroke="url(#sgsolo)" stroke-linejoin="round" stroke-linecap="round"><polygon points="192.00,100.00 146.00,179.67 54.00,179.67 8.00,100.00 54.00,20.33 146.00,20.33" stroke-width="13.0"></polygon><polygon points="137.59,121.70 100.00,143.40 62.41,121.70 62.41,78.30 100.00,56.60 137.59,78.30" stroke-width="11.0"></polygon></g>
+<circle cx="100.4" cy="100.9" r="12.30" fill="#023f47" opacity="0.55"></circle>
+<circle cx="101.8" cy="102.3" r="11.0" fill="url(#slsolo)"></circle>
+<circle cx="100" cy="100" r="11.0" fill="url(#sgsolo)"></circle>
+<g transform="translate(-1.1,-1.7)" fill="none" stroke="url(#shsolo)" stroke-linejoin="round" stroke-linecap="round"><polygon points="192.00,100.00 146.00,179.67 54.00,179.67 8.00,100.00 54.00,20.33 146.00,20.33" stroke-width="4.94"></polygon><polygon points="137.59,121.70 100.00,143.40 62.41,121.70 62.41,78.30 100.00,56.60 137.59,78.30" stroke-width="4.18"></polygon></g>
+<circle cx="96.70" cy="96.04" r="4.84" fill="#ffffff" opacity="0.85"></circle>
+</g>
+</svg>

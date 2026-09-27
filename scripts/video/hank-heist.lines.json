@@ -1,0 +1,33 @@
+{
+  "script": "hank-heist",
+  "model": "eleven_v3",
+  "cast": {
+    "N": {"role": "Narrator, movie-trailer energy", "prefer": ["Brian", "Adam", "Daniel", "Bill"], "stability": 0.0},
+    "H": {"role": "Hank, overconfident small-business owner", "prefer": ["Roger", "Chris", "Eric", "Will"], "stability": 0.0},
+    "A": {"role": "Accountant, bone-dry deadpan", "prefer": ["Alice", "Matilda", "Jessica", "Sarah"], "stability": 0.5}
+  },
+  "lines": [
+    {"id": "01", "scene": "open",     "spk": "N", "tts": "[dramatic] Every heist... needs a mastermind.", "caption": "Every heist needs a mastermind."},
+    {"id": "02", "scene": "open",     "spk": "H", "tts": "[smug] That's me!", "caption": "That's me!"},
+    {"id": "03", "scene": "meet",     "spk": "N", "tts": "Hank. Small defense company. Just won... fifty MILLION dollars.", "caption": "Hank. Small defense company. Just won fifty million dollars."},
+    {"id": "04", "scene": "meet",     "spk": "H", "tts": "[whispers] Fifty. Million.", "caption": "Fifty. Million."},
+    {"id": "05", "scene": "plan",     "spk": "N", "tts": "His plan? Do... none of the work.", "caption": "His plan? Do... none of the work."},
+    {"id": "06", "scene": "plan",     "spk": "H", "tts": "[proudly] I've got a CREW!", "caption": "I've got a crew!"},
+    {"id": "07", "scene": "crew",     "spk": "N", "tts": "The engineer builds it. The tester tests it. The integrator integrates it.", "caption": "The engineer builds it. The tester tests it. The integrator integrates it."},
+    {"id": "08", "scene": "crew",     "spk": "N", "tts": "And Hank? [flatly] Hank forwards the emails.", "caption": "And Hank? Hank forwards the emails."},
+    {"id": "09", "scene": "crew",     "spk": "H", "tts": "[shouts] Per my LAST email!", "caption": "Per my last email!"},
+    {"id": "10", "scene": "win",      "spk": "H", "tts": "[happily] Fifty million in revenue, BABY!", "caption": "Fifty million in revenue, baby!"},
+    {"id": "11", "scene": "folder",   "spk": "A", "tts": "[flatly] Hank. You're not the mastermind.", "caption": "Hank. You're not the mastermind."},
+    {"id": "12", "scene": "folder",   "spk": "H", "tts": "[nervously] ...I'm not?", "caption": "I'm not?"},
+    {"id": "13", "scene": "driver",   "spk": "A", "tts": "[flatly] You're the getaway driver.", "caption": "You're the getaway driver."},
+    {"id": "14", "scene": "rewind",   "spk": "N", "tts": "[rushed] Rewind!", "caption": "Rewind!"},
+    {"id": "15", "scene": "rewind",   "spk": "N", "tts": "Hank never controlled the work. His crew did.", "caption": "Hank never controlled the work. His crew did."},
+    {"id": "16", "scene": "rewind",   "spk": "N", "tts": "That makes him an agent, not a principal. And agents only count their fee.", "caption": "That makes him an agent, not a principal. And agents only count their fee."},
+    {"id": "17", "scene": "rewind",   "spk": "N", "tts": "Same cash in the bank. But on paper? His fifty million dollar company...", "caption": "Same cash in the bank. But on paper? His fifty million dollar company..."},
+    {"id": "18", "scene": "rewind",   "spk": "N", "tts": "[sighs] is a five million dollar company.", "caption": "is a five million dollar company."},
+    {"id": "19", "scene": "rewind",   "spk": "H", "tts": "[pleading] Can we rewind again?", "caption": "Can we rewind again?"},
+    {"id": "20", "scene": "donthank", "spk": "N", "tts": "Don't be Hank. Direct the work. Own the results. Put it in writing.", "caption": "Don't be Hank. Direct the work. Own the results. Put it in writing."},
+    {"id": "21", "scene": "cta",      "spk": "N", "tts": "Revenue recognition. Defense Finance, on Ack-luh-rate.", "caption": "Revenue recognition. Defense Finance, on Acqlerate."},
+    {"id": "22", "scene": "cta",      "spk": "H", "tts": "[sheepishly] Learn from my mistakes!", "caption": "Learn from my mistakes!"}
+  ]
+}

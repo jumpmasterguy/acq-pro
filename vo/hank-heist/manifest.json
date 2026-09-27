@@ -1,0 +1,218 @@
+{
+ "script": "hank-heist",
+ "model": "eleven_v3",
+ "cast": {
+  "N": {
+   "voice_id": "nPczCjzI2devNBz1zQrb",
+   "name": "Brian - Deep, Resonant and Comforting"
+  },
+  "H": {
+   "voice_id": "CwhRBWXzGAHq8TQ4Fs17",
+   "name": "Roger - Laid-Back, Casual, Resonant"
+  },
+  "A": {
+   "voice_id": "Xb7hH8MSUJpSbSDYk0k2",
+   "name": "Alice - Clear, Engaging Educator"
+  }
+ },
+ "lines": [
+  {
+   "id": "01",
+   "scene": "open",
+   "spk": "N",
+   "tts": "[dramatic] Every heist... needs a mastermind.",
+   "caption": "Every heist needs a mastermind.",
+   "file": "01_N.mp3",
+   "voice": "Brian - Deep, Resonant and Comforting"
+  },
+  {
+   "id": "02",
+   "scene": "open",
+   "spk": "H",
+   "tts": "[smug] That's me!",
+   "caption": "That's me!",
+   "file": "02_H.mp3",
+   "voice": "Roger - Laid-Back, Casual, Resonant"
+  },
+  {
+   "id": "03",
+   "scene": "meet",
+   "spk": "N",
+   "tts": "Hank. Small defense company. Just won... fifty MILLION dollars.",
+   "caption": "Hank. Small defense company. Just won fifty million dollars.",
+   "file": "03_N.mp3",
+   "voice": "Brian - Deep, Resonant and Comforting"
+  },
+  {
+   "id": "04",
+   "scene": "meet",
+   "spk": "H",
+   "tts": "[whispers] Fifty. Million.",
+   "caption": "Fifty. Million.",
+   "file": "04_H.mp3",
+   "voice": "Roger - Laid-Back, Casual, Resonant"
+  },
+  {
+   "id": "05",
+   "scene": "plan",
+   "spk": "N",
+   "tts": "His plan? Do... none of the work.",
+   "caption": "His plan? Do... none of the work.",
+   "file": "05_N.mp3",
+   "voice": "Brian - Deep, Resonant and Comforting"
+  },
+  {
+   "id": "06",
+   "scene": "plan",
+   "spk": "H",
+   "tts": "[proudly] I've got a CREW!",
+   "caption": "I've got a crew!",
+   "file": "06_H.mp3",
+   "voice": "Roger - Laid-Back, Casual, Resonant"
+  },
+  {
+   "id": "07",
+   "scene": "crew",
+   "spk": "N",
+   "tts": "The engineer builds it. The tester tests it. The integrator integrates it.",
+   "caption": "The engineer builds it. The tester tests it. The integrator integrates it.",
+   "file": "07_N.mp3",
+   "voice": "Brian - Deep, Resonant and Comforting"
+  },
+  {
+   "id": "08",
+   "scene": "crew",
+   "spk": "N",
+   "tts": "And Hank? [flatly] Hank forwards the emails.",
+   "caption": "And Hank? Hank forwards the emails.",
+   "file": "08_N.mp3",
+   "voice": "Brian - Deep, Resonant and Comforting"
+  },
+  {
+   "id": "09",
+   "scene": "crew",
+   "spk": "H",
+   "tts": "[shouts] Per my LAST email!",
+   "caption": "Per my last email!",
+   "file": "09_H.mp3",
+   "voice": "Roger - Laid-Back, Casual, Resonant"
+  },
+  {
+   "id": "10",
+   "scene": "win",
+   "spk": "H",
+   "tts": "[happily] Fifty million in revenue, BABY!",
+   "caption": "Fifty million in revenue, baby!",
+   "file": "10_H.mp3",
+   "voice": "Roger - Laid-Back, Casual, Resonant"
+  },
+  {
+   "id": "11",
+   "scene": "folder",
+   "spk": "A",
+   "tts": "[flatly] Hank. You're not the mastermind.",
+   "caption": "Hank. You're not the mastermind.",
+   "file": "11_A.mp3",
+   "voice": "Alice - Clear, Engaging Educator"
+  },
+  {
+   "id": "12",
+   "scene": "folder",
+   "spk": "H",
+   "tts": "[nervously] ...I'm not?",
+   "caption": "I'm not?",
+   "file": "12_H.mp3",
+   "voice": "Roger - Laid-Back, Casual, Resonant"
+  },
+  {
+   "id": "13",
+   "scene": "driver",
+   "spk": "A",
+   "tts": "[flatly] You're the getaway driver.",
+   "caption": "You're the getaway driver.",
+   "file": "13_A.mp3",
+   "voice": "Alice - Clear, Engaging Educator"
+  },
+  {
+   "id": "14",
+   "scene": "rewind",
+   "spk": "N",
+   "tts": "[rushed] Rewind!",
+   "caption": "Rewind!",
+   "file": "14_N.mp3",
+   "voice": "Brian - Deep, Resonant and Comforting"
+  },
+  {
+   "id": "15",
+   "scene": "rewind",
+   "spk": "N",
+   "tts": "Hank never controlled the work. His crew did.",
+   "caption": "Hank never controlled the work. His crew did.",
+   "file": "15_N.mp3",
+   "voice": "Brian - Deep, Resonant and Comforting"
+  },
+  {
+   "id": "16",
+   "scene": "rewind",
+   "spk": "N",
+   "tts": "That makes him an agent, not a principal. And agents only count their fee.",
+   "caption": "That makes him an agent, not a principal. And agents only count their fee.",
+   "file": "16_N.mp3",
+   "voice": "Brian - Deep, Resonant and Comforting"
+  },
+  {
+   "id": "17",
+   "scene": "rewind",
+   "spk": "N",
+   "tts": "Same cash in the bank. But on paper? His fifty million dollar company...",
+   "caption": "Same cash in the bank. But on paper? His fifty million dollar company...",
+   "file": "17_N.mp3",
+   "voice": "Brian - Deep, Resonant and Comforting"
+  },
+  {
+   "id": "18",
+   "scene": "rewind",
+   "spk": "N",
+   "tts": "[sighs] is a five million dollar company.",
+   "caption": "is a five million dollar company.",
+   "file": "18_N.mp3",
+   "voice": "Brian - Deep, Resonant and Comforting"
+  },
+  {
+   "id": "19",
+   "scene": "rewind",
+   "spk": "H",
+   "tts": "[pleading] Can we rewind again?",
+   "caption": "Can we rewind again?",
+   "file": "19_H.mp3",
+   "voice": "Roger - Laid-Back, Casual, Resonant"
+  },
+  {
+   "id": "20",
+   "scene": "donthank",
+   "spk": "N",
+   "tts": "Don't be Hank. Direct the work. Own the results. Put it in writing.",
+   "caption": "Don't be Hank. Direct the work. Own the results. Put it in writing.",
+   "file": "20_N.mp3",
+   "voice": "Brian - Deep, Resonant and Comforting"
+  },
+  {
+   "id": "21",
+   "scene": "cta",
+   "spk": "N",
+   "tts": "Revenue recognition. Defense Finance, on Ack-luh-rate.",
+   "caption": "Revenue recognition. Defense Finance, on Acqlerate.",
+   "file": "21_N.mp3",
+   "voice": "Brian - Deep, Resonant and Comforting"
+  },
+  {
+   "id": "22",
+   "scene": "cta",
+   "spk": "H",
+   "tts": "[sheepishly] Learn from my mistakes!",
+   "caption": "Learn from my mistakes!",
+   "file": "22_H.mp3",
+   "voice": "Roger - Laid-Back, Casual, Resonant"
+  }
+ ]
+}

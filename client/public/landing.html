@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Google Search Console verification (replace content with your actual verification code) -->
+  <!-- Get this from: search.google.com/search-console → Add property → acqlerate.com → HTML tag method -->
+  <!-- <meta name="google-site-verification" content="REPLACE_WITH_GSC_VERIFICATION_CODE" /> -->
+
+  <!-- Google Analytics 4 -->
+  <!-- Google Analytics 4 — G-SW42SFY999 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SW42SFY999"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SW42SFY999', {
+      page_title: document.title,
+      page_location: window.location.href,
+    });
+  </script>
+  <link rel="canonical" href="https://acqlerate.com/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acqlerate — Master DoD Acquisition. Built for the Professionals Who Win.</title>
+  <meta name="description" content="DoD acquisition training from a leader’s perspective. Plain-English modules for program managers, contractors, and capture teams. Start free." />
+  <meta property="og:title" content="Acqlerate — Master DoD Acquisition" />
+  <meta property="og:description" content="The room is full of people who don’t know what they don’t know. Show up prepared. Free module at acqlerate.com." />
+  <meta property="og:url" content="https://acqlerate.com" />
+  <meta property="og:image" content="https://acqlerate.com/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta property="og:image:alt" content="Stop winging it. Learn the system. — Acqlerate" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://acqlerate.com/og-image.jpg" />
+  <meta name="twitter:title" content="Acqlerate — Defense Acquisitions Academy" />
+  <meta name="twitter:description" content="Plain-English DoD acquisition training for program managers, contractors, and capture teams. Start free." />
+    <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #01696F;
+      --teal-dark: #0C4E54;
+      --teal-light: #E6F2F3;
+      --teal-mid: #4F98A3;
+      --navy: #0D1B2A;
+      --navy-mid: #1B2D3E;
+      --text: #1A1A1A;
+      --text-muted: #6B7280;
+      --text-faint: #9CA3AF;
+      --border: #E5E7EB;
+      --bg: #FFFFFF;
+      --surface: #F9FAFB;
+      --gold: #D19900;
+      --gold-bg: #FEF9E7;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-icon {
+      width: 36px; height: 36px; background: var(--teal); border-radius: 9px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .nav-logo-icon svg { width: 22px; height: 22px; }
+    .nav-logo-text { font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+    .nav-logo-text span { color: var(--teal); }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .nav-blog-pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(1,105,111,0.08); border: 1px solid rgba(1,105,111,0.25);
+      color: var(--teal); font-size: 0.85rem; font-weight: 600;
+      padding: 6px 14px; border-radius: 20px; text-decoration: none;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .nav-blog-pill:hover { background: rgba(1,105,111,0.15); border-color: rgba(1,105,111,0.45); }
+    .nav-blog-badge {
+      background: var(--teal); color: white; font-size: 0.65rem;
+      font-weight: 700; padding: 1px 6px; border-radius: 10px;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .btn-ghost {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-muted); font-size: 0.9rem; font-weight: 500;
+      padding: 8px 12px; border-radius: 8px; text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+    }
+    .btn-ghost:hover { color: var(--text); background: var(--surface); }
+    .btn-primary {
+      background: var(--teal); color: white; border: none; cursor: pointer;
+      font-size: 0.9rem; font-weight: 600; padding: 9px 20px;
+      border-radius: 9px; text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+
+    /* ── HERO ── */
+    .hero {
+      background: #0D1B2A;
+      padding: 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before { display: none; }
+    /* Text FIRST, illustration BELOW — at every screen size. The hero graphic is a
+       labeled diagram (BD / Capture / Proposal / Execution), not a mood photo, so it
+       needs its own space instead of a dark overlay with text on top of it. */
+    .hero-image-wrap {
+      display: flex;
+      flex-direction: column-reverse;
+      width: 100%;
+      height: auto;
+    }
+    .hero-image-wrap > img {
+      position: static;
+      width: 100%;
+      height: clamp(200px, 39vw, 600px);
+      object-fit: cover; object-position: center center;
+      display: block;
+      flex-shrink: 0;
+    }
+    .hero-image-wrap::after { display: none; }
+    .hero-text-layer {
+      position: static;
+      background: #0D1B2A;
+      padding: 48px 2rem 40px;
+      flex: 1;
+    }
+    @media (max-width: 640px) {
+      .hero-image-wrap > img { height: 200px; }
+      .hero-text-layer {
+        padding: 32px 1.25rem 24px;
+        text-align: center;
+      }
+      .hero h1 { font-size: 1.75rem; line-height: 1.15; }
+      .hero-sub { font-size: 0.95rem; margin-bottom: 28px; }
+      .hero-badge { margin-bottom: 20px; }
+    }
+    .hero-stats-bar {
+      background: #0D1B2A;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 24px 2rem;
+    }
+    .hero-bullets {
+      background: #0D1B2A;
+      padding: 0 2rem 40px;
+      display: flex; flex-wrap: wrap;
+      justify-content: center; gap: 10px 32px;
+      max-width: 800px; margin: 0 auto;
+    }
+    .hero-bullet {
+      display: flex; align-items: center; gap: 8px;
+      color: rgba(255,255,255,0.8); font-size: 0.875rem;
+    }
+    .hero-bullet-check { color: #4FC3CB; font-weight: 700; }
+    .hero-badge {
+      display: inline-flex; align-items: flex-start; gap: 8px;
+      background: rgba(13,27,42,0.55); border: 1px solid rgba(79,152,163,0.7);
+      color: #7ECFD6; font-size: 0.8rem; font-weight: 700;
+      padding: 6px 16px; border-radius: 100px; margin-bottom: 28px;
+      backdrop-filter: blur(4px); text-shadow: none;
+      letter-spacing: 0.04em;
+    }
+    .hero-badge-dot { width: 7px; height: 7px; min-width: 7px; background: #4F98A3; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 800; line-height: 1.12;
+      color: white; letter-spacing: -0.03em;
+      max-width: 820px; margin: 0 auto 20px;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.6), 0 1px 4px rgba(0,0,0,0.8);
+    }
+    .hero h1 em { font-style: normal; color: #4FC3CB; text-shadow: 0 2px 24px rgba(0,0,0,0.5); }
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      color: rgba(255,255,255,0.92);
+      max-width: 580px; margin: 0 auto 40px; line-height: 1.7;
+      text-shadow: 0 1px 12px rgba(0,0,0,0.7);
+    }
+    .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 56px; }
+    .btn-hero-primary {
+      background: var(--teal); color: white; border: none; cursor: pointer;
+      font-size: 1rem; font-weight: 700; padding: 15px 32px;
+      border-radius: 10px; text-decoration: none;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+      box-shadow: 0 4px 20px rgba(1,105,111,0.4);
+    }
+    .btn-hero-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(1,105,111,0.5); }
+    .btn-hero-secondary {
+      background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.25);
+      cursor: pointer; font-size: 1rem; font-weight: 600; padding: 15px 32px;
+      border-radius: 10px; text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn-hero-secondary:hover { background: rgba(255,255,255,0.18); transform: translateY(-2px); }
+
+    .hero-stats {
+      display: flex; gap: 40px; justify-content: center; flex-wrap: wrap;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat-num { font-size: 1.8rem; font-weight: 800; color: white; line-height: 1; }
+    .hero-stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* ── EMAIL CAPTURE ── */
+    .email-capture-bar {
+      background: var(--gold-bg);
+      border-bottom: 1px solid #F0D060;
+      padding: 18px 2rem;
+    }
+    .email-capture-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center;
+    }
+    .email-capture-label {
+      font-size: 0.9rem; font-weight: 600; color: #7A5800;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .email-form { display: flex; gap: 8px; flex-wrap: wrap; }
+    .email-input {
+      padding: 10px 16px; border: 1.5px solid #E0C050; border-radius: 8px;
+      font-size: 0.9rem; font-family: inherit; background: white;
+      outline: none; width: 260px; max-width: 100%;
+      transition: border-color 0.15s;
+    }
+    .email-input:focus { border-color: var(--teal); }
+    .btn-capture {
+      background: var(--gold); color: white; border: none; cursor: pointer;
+      font-size: 0.9rem; font-weight: 700; padding: 10px 20px;
+      border-radius: 8px; white-space: nowrap;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn-capture:hover { background: #B88600; transform: translateY(-1px); }
+    .capture-success { color: var(--teal); font-size: 0.85rem; font-weight: 600; display: none; }
+
+    /* ── SECTIONS ── */
+    section { padding: 80px 2rem; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-eyebrow {
+      font-size: 0.95rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: 12px;
+      text-align: center;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 800; letter-spacing: -0.025em;
+      color: var(--text); line-height: 1.2; margin-bottom: 16px;
+      text-align: center;
+    }
+    .section-sub {
+      font-size: 1rem; color: var(--text-muted);
+      max-width: 560px; line-height: 1.7; margin-bottom: 48px;
+      text-align: center; margin-left: auto; margin-right: auto;
+    }
+
+    /* ── WHO IT'S FOR ── */
+    .avatars { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .avatar-card {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 16px; padding: 28px 24px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .avatar-card:hover { border-color: var(--teal-mid); box-shadow: 0 4px 20px rgba(1,105,111,0.08); }
+    .avatar-icon { font-size: 2.2rem; margin-bottom: 14px; }
+    .avatar-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .avatar-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+    .avatar-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em;
+      padding: 3px 10px; border-radius: 100px;
+      background: var(--teal-light); color: var(--teal-dark);
+    }
+
+    /* ── MODULES ── */
+    .modules-bg { background: var(--surface); }
+    .modules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+    .module-card {
+      background: white; border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 22px 20px;
+      display: flex; gap: 16px; align-items: flex-start;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .module-card:hover { border-color: var(--teal-mid); box-shadow: 0 4px 16px rgba(1,105,111,0.07); }
+    .module-num {
+      flex-shrink: 0; width: 36px; height: 36px;
+      background: var(--teal-light); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 800; color: var(--teal-dark);
+    }
+    .module-num.free-num { background: #ECFDF5; color: #065F46; }
+    .module-info { flex: 1; }
+    .module-name { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .module-topics { font-size: 0.82rem; color: var(--text-muted); line-height: 1.55; }
+    .module-topics-list { list-style: none; margin: 0; padding: 0; font-size: 0.82rem; color: var(--text-muted); }
+    .module-topics-list li { position: relative; padding-left: 15px; line-height: 1.55; margin-bottom: 3px; }
+    .module-topics-list li::before { content: "\2022"; position: absolute; left: 0; top: 0; color: var(--teal-mid); font-weight: 700; }
+    .module-topics-list li:last-child { margin-bottom: 0; }
+    .free-badge {
+      display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
+      padding: 2px 8px; border-radius: 100px;
+      background: #ECFDF5; color: #065F46; border: 1px solid #6EE7B7;
+      margin-left: 6px; vertical-align: middle;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px; }
+    .step {
+      text-align: center; padding: 32px 20px;
+      background: var(--surface); border: 1.5px solid var(--border); border-radius: 16px;
+    }
+    .step-icon {
+      width: 56px; height: 56px; border-radius: 16px;
+      background: var(--teal-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; margin: 0 auto 18px;
+    }
+    .step-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .step-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── PRICING ── */
+    .pricing-bg { background: var(--navy); }
+    .pricing-bg .section-title { color: white; text-align: center; }
+    .pricing-bg .section-sub { color: rgba(255,255,255,0.55); text-align: center; margin-left: auto; margin-right: auto; }
+    .pricing-bg .section-eyebrow { color: var(--teal-mid); text-align: center; }
+    .pricing-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; max-width: 1320px; margin: 0 auto; }
+    .price-card {
+      background: var(--navy-mid); border: 1.5px solid rgba(255,255,255,0.1);
+      border-radius: 20px; padding: 32px 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .price-card:hover { border-color: rgba(79,152,163,0.5); transform: translateY(-3px); }
+    .price-card.featured {
+      border-color: var(--teal); background: #0C3A40;
+      position: relative;
+    }
+    .featured-badge {
+      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+      background: var(--teal); color: white;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em;
+      padding: 4px 14px; border-radius: 100px;
+    }
+    .plan-name { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
+    .plan-price { font-size: 2.8rem; font-weight: 800; color: white; line-height: 1; margin-bottom: 6px; }
+    .plan-price span { font-size: 1rem; font-weight: 400; color: rgba(255,255,255,0.4); }
+    .plan-desc { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 24px; line-height: 1.5; }
+    .plan-features { list-style: none; margin-bottom: 28px; display: flex; flex-direction: column; gap: 10px; }
+    .plan-features li { font-size: 0.875rem; color: rgba(255,255,255,0.75); display: flex; align-items: flex-start; gap: 10px; }
+    .check { color: #4FC3CB; flex-shrink: 0; margin-top: 2px; }
+    .btn-plan {
+      width: 100%; padding: 13px; border-radius: 10px; font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; border: none; text-align: center; text-decoration: none;
+      display: block; transition: background 0.15s, transform 0.1s;
+    }
+    .btn-plan-outline { background: rgba(255,255,255,0.08); color: white; border: 1.5px solid rgba(255,255,255,0.2); }
+    .btn-plan-outline:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+    .btn-plan-teal { background: var(--teal); color: white; }
+    .btn-plan-teal:hover { background: var(--teal-dark); transform: translateY(-1px); }
+
+    /* ── SOCIAL PROOF ── */
+    .testimonials { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .testimonial {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 16px; padding: 24px;
+    }
+    .testimonial-stars { color: #F59E0B; font-size: 0.9rem; margin-bottom: 12px; }
+    .testimonial-text { font-size: 0.9rem; color: var(--text); line-height: 1.65; margin-bottom: 16px; font-style: italic; }
+    .testimonial-author { font-size: 0.82rem; font-weight: 600; color: var(--text-muted); }
+
+    /* ── FAQ ── */
+    .faq-list { max-width: 740px; margin: 0 auto; display: flex; flex-direction: column; gap: 4px; }
+    .faq-item { border: 1.5px solid var(--border); border-radius: 12px; }
+    .faq-q {
+      width: 100%; background: none; border: none; cursor: pointer;
+      padding: 18px 20px; text-align: left; font-family: inherit;
+      font-size: 0.95rem; font-weight: 600; color: var(--text);
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      transition: background 0.15s;
+    }
+    .faq-q:hover { background: var(--surface); }
+    .faq-chevron { flex-shrink: 0; color: var(--text-muted); transition: transform 0.25s; font-size: 1rem; }
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+    .faq-a {
+      padding: 0 20px; max-height: 0; overflow: hidden;
+      font-size: 0.9rem; color: var(--text-muted); line-height: 1.7;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+    .faq-item.open .faq-a { max-height: 300px; padding: 0 20px 18px; }
+
+    /* ── FINAL CTA ── */
+    .final-cta {
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+      text-align: center; padding: 80px 2rem;
+    }
+    .final-cta h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 800; color: white; letter-spacing: -0.025em; margin-bottom: 16px; }
+    .final-cta p { font-size: 1rem; color: rgba(255,255,255,0.7); max-width: 480px; margin: 0 auto 36px; }
+    .final-cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: white; color: var(--teal-dark); border: none; cursor: pointer; font-size: 1rem; font-weight: 700; padding: 14px 32px; border-radius: 10px; text-decoration: none; transition: transform 0.1s, box-shadow 0.15s; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+    .btn-white-outline { background: rgba(255,255,255,0.1); color: white; border: 1.5px solid rgba(255,255,255,0.3); cursor: pointer; font-size: 1rem; font-weight: 600; padding: 14px 32px; border-radius: 10px; text-decoration: none; transition: background 0.15s, transform 0.1s; }
+    .btn-white-outline:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy); padding: 40px 2rem 28px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .footer-brand { font-size: 1rem; font-weight: 800; color: white; letter-spacing: -0.02em; }
+    .footer-brand span { color: var(--teal-mid); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 0.82rem; color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.15s; }
+    .footer-links a:hover { color: rgba(255,255,255,0.7); }
+    .footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.25); width: 100%; margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .footer-copy a { color: rgba(255,255,255,0.25); text-decoration: none; }
+    .footer-copy a:hover { color: rgba(255,255,255,0.45); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      nav { padding: 0 0.75rem; }
+      .nav-actions .btn-ghost:not(.nav-signin) { display: none; }
+      .nav-actions .nav-blog { display: inline-flex; padding: 5px 7px; font-size: 0.72rem; gap: 3px; }
+      .nav-actions .nav-blog .nav-blog-badge { padding: 1px 4px; font-size: 0.58rem; }
+      .nav-actions .nav-signin { display: inline-flex; font-size: 0.7rem; padding: 5px 2px; white-space: nowrap; }
+      .nav-actions { gap: 3px; }
+      .nav-logo { gap: 6px; }
+
+      /* Nav CTA — prevent overflow, keep it compact */
+      .btn-primary {
+        padding: 8px 10px;
+        font-size: 0.75rem;
+        white-space: nowrap;
+      }
+      .btn-primary .nav-arrow { display: none; }
+
+      section { padding: 56px 1.25rem; }
+      .hero { padding: 0 1.25rem 56px; }
+      .hero-stats { gap: 24px; }
+      .email-capture-inner { flex-direction: column; align-items: stretch; gap: 10px; text-align: center; }
+      .email-capture-label { font-size: 0.9rem; }
+      .email-form { width: 100%; flex-direction: column; }
+      .email-input { width: 100%; }
+      .btn-capture { width: 100%; }
+      .pricing-cards { grid-template-columns: 1fr; max-width: 480px; }
+      .blog-featured-stats { display: none !important; }
+      .blog-featured-card { grid-template-columns: 1fr !important; }
+
+      /* Who is this for cards — prevent text overflow */
+      .avatars { grid-template-columns: 1fr; }
+      .avatar-card { padding: 24px 18px; word-break: break-word; overflow: hidden; }
+      .avatar-desc { font-size: 0.85rem; }
+
+      /* Modules grid — single column */
+      .modules-grid { grid-template-columns: 1fr; }
+      .module-card { padding: 18px 16px; }
+
+      /* Footer nav — wrap cleanly */
+      footer > .footer-inner { flex-direction: column; align-items: flex-start; gap: 20px; }
+      .footer-links { flex-wrap: wrap; gap: 12px 16px; }
+      .footer-links a { font-size: 0.8rem; }
+
+      /* PDU table — stack as cards on mobile instead of horizontal scroll */
+      #pduTableInner { min-width: 0 !important; }
+      .pdu-header-row { display: none !important; }
+      .pdu-row, .pdu-total-row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: baseline !important;
+        row-gap: 6px !important;
+        column-gap: 10px !important;
+      }
+      .pdu-row .pdu-module, .pdu-total-row .pdu-total-label {
+        flex: 1 1 100% !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+      }
+      .pdu-row .pdu-value, .pdu-row .pdu-badge,
+      .pdu-total-row .pdu-total-value, .pdu-total-row .pdu-total-caption {
+        text-align: left !important;
+        padding: 0 !important;
+      }
+
+      /* Why section story card padding */
+      #why > div > div[style*="padding:40px 48px"] { padding: 28px 20px !important; }
+
+      /* CTA buttons — no awkward wrapping */
+      .btn-hero-primary, .btn-hero-secondary, .btn-white, .btn-white-outline {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+        white-space: normal;
+      }
+    }
+
+    /* ── JARGON TOOLTIPS ── */
+    .jt {
+      border-bottom: 1px dashed rgba(1,105,111,0.5);
+      cursor: help;
+      position: relative;
+      display: inline;
+      white-space: nowrap;
+    }
+    .jt::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0d2137;
+      color: rgba(255,255,255,0.92);
+      font-size: 0.72rem;
+      font-weight: 500;
+      line-height: 1.45;
+      padding: 7px 11px;
+      border-radius: 7px;
+      white-space: normal;
+      width: max-content;
+      max-width: 220px;
+      text-align: left;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+      z-index: 100;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    }
+    .jt::before {
+      content: '';
+      position: absolute;
+      bottom: calc(100% + 3px);
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #0d2137;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+      z-index: 100;
+    }
+    .jt:hover::after, .jt:hover::before { opacity: 1; }
+    /* Dark-surface variant — tooltip goes white-on-dark */
+    .jt-light::after { background: white; color: #0d2137; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+    .jt-light::before { border-top-color: white; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I use Acqlerate to earn CLPs (Continuous Learning Points) toward my DAWIA certification requirement?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Defense Acquisition Workforce members can self-report Acqlerate modules as External Training in their WarU learning portal. Each module generates a Certificate of Completion. All 14 modules combined equal more than 44 CLPs, over half of the 80-point biennial requirement."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need any prior acquisition experience?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Module 1 starts from zero and explains the DoD acquisition system, key players, and how programs get funded. The skill-level system lets you move at your own pace."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Acqlerate a replacement for WarU (formerly DAU)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. WarU (formerly DAU) certification courses are mandatory for the DoD workforce. Acqlerate focuses on practical knowledge you can apply on the job. Many users do both. WarU gets you certified, and Acqlerate helps you understand what you learned."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Acqlerate useful for defense contractor professionals?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. There is a dedicated contractor track surfacing Capture & BD, Contracting Fundamentals, and Finance modules first. Understanding how the government side works is the biggest competitive advantage a contractor PM can have."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much does Acqlerate cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Every new account gets a 14-day free trial with full access to all 14 modules, no credit card required. After the trial, Module 1 plus one free preview lesson per module stay free permanently. Pro access is $5.99/month or $99 one-time for lifetime access to all 14 modules, 123 lessons, and all future content."
+        }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "@id": "https://acqlerate.com/#organization",
+    "name": "Acqlerate",
+    "alternateName": "Acqlerate Defense Acquisitions Academy",
+    "description": "Defense Acquisitions Academy offering plain-English DoD acquisition training for program managers, contractors, and capture teams.",
+    "url": "https://acqlerate.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://acqlerate.com/acqlerate-logo.svg"
+    },
+    "sameAs": [
+      "https://www.linkedin.com/company/acqlerate/",
+      "https://www.crunchbase.com/organization/acqlerate"
+    ],
+    "founder": {
+      "@type": "Person",
+      "@id": "https://acqlerate.com/why#lucas-cruz",
+      "name": "Lucas Cruz",
+      "url": "https://acqlerate.com/why#founder"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free module — DoD Acquisitions Foundations"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">
+        <img src="/acqlerate-icon.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit">
+      </div>
+      <span class="nav-logo-text">Acq<span>lerate</span></span>
+    </a>
+    <div class="nav-actions">
+      <a href="/tools" class="btn-ghost" style="font-size:0.82rem">Tools</a>
+      <a href="/blog" class="nav-blog-pill nav-blog">
+        <span>Blog</span>
+        <span class="nav-blog-badge">Free</span>
+      </a>
+      <a href="/app#/auth?mode=login" class="btn-ghost nav-signin">Sign In</a>
+      <a href="/app#/auth" class="btn-primary">Start Free <span class="nav-arrow">→</span></a>
+    </div>
+  </div>
+</nav>
+
+<!-- OUR STORY BANNER -->
+<a href="/why" class="story-banner" aria-label="Read our story: why Acqlerate exists">
+  <div class="story-banner-inner">
+    <span class="story-banner-text"><strong>Our Story:</strong> Why I built Acqlerate after failing to answer a question about my own program</span>
+    <span class="story-banner-arrow">Read our story →</span>
+  </div>
+</a>
+<style>
+  .story-banner { display: block; background: var(--teal); text-decoration: none; }
+  .story-banner-inner { max-width: 1100px; margin: 0 auto; padding: 10px 2rem; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; text-align: center; }
+  .story-banner-text { color: rgba(255,255,255,0.95); font-size: 0.88rem; font-weight: 500; }
+  .story-banner-text strong { font-weight: 800; }
+  .story-banner-arrow { color: white; font-size: 0.88rem; font-weight: 700; white-space: nowrap; text-decoration: underline; }
+  .story-banner:hover { background: #0C4E54; }
+  @media (max-width: 640px) {
+    .story-banner-inner { padding: 10px 1rem; }
+    .story-banner-text { font-size: 0.8rem; }
+  }
+</style>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-image-wrap">
+    <img src="/img-hero-whiteboard.jpg" alt="Whiteboard diagram of the four phases of a defense program: BD, Capture, Proposal, and Execution" loading="eager" />
+    <div class="hero-text-layer">
+      <div class="hero-badge">
+        For defense contractor PMs, BD leads, and capture managers
+      </div>
+      <h1>Built for the people doing the work.<br><em>Not the people writing about it.</em></h1>
+      <p class="hero-sub">There’s no shortage of AI tools, federal databases, and contract vehicles in defense acquisition. The gap is the foundation underneath them. Acqlerate teaches you the acquisition system in plain English, PM side or BD side, so when you pick up the tools, the data, and the regulations, you actually know what you’re doing with them.</p>
+      <div class="hero-ctas">
+        <a href="/app#/auth" class="btn-hero-primary">Start Free → No experience required</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-stats-bar"><div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num">14</div>
+      <div class="hero-stat-label">Modules</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">122</div>
+      <div class="hero-stat-label">Lessons</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">3</div>
+      <div class="hero-stat-label">Skill Levels</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num" style="font-size:1.1rem;letter-spacing:-0.01em">AI ✦</div>
+      <div class="hero-stat-label">Study Assistant</div>
+    </div>
+
+  </div>
+  <!-- Benefit bullets -->
+  <div class="hero-bullets">
+    <div class="hero-bullet"><span class="hero-bullet-check">✓</span><span>Understand how DoD programs are funded, contracted, and run, before your first review</span></div>
+    <div class="hero-bullet"><span class="hero-bullet-check">✓</span><span>Know contract types, CPARS, source selection, and what the government is actually evaluating</span></div>
+    <div class="hero-bullet"><span class="hero-bullet-check">✓</span><span>Built by a practicing DoD PM who ran a $950M program. Plain English, real examples, no textbook fluff</span></div>
+  </div>
+</section>
+
+<!-- EMAIL CAPTURE BAR -->
+<div class="email-capture-bar">
+  <div class="email-capture-inner">
+    <div class="email-capture-label">
+      📥 Free: <strong>Acquisition Starter Kit</strong>
+    </div>
+    <form class="email-form" id="captureForm" onsubmit="submitLead(event, 'hero_bar')">
+      <input type="email" class="email-input" id="captureEmail" placeholder="your@email.com" required />
+      <button type="submit" class="btn-capture">Send It Free</button>
+    </form>
+    <div class="capture-success" id="captureSuccess">✓ Sent to your inbox. Or grab it now: <a href="/starter-kit-usg.pdf" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;font-weight:800;">USG Edition</a> · <a href="/starter-kit-contractor.pdf" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;font-weight:800;">Contractor Edition</a></div>
+  </div>
+</div>
+
+<!-- TEAM OUTCOMES SECTION -->
+<section id="team-outcomes" style="background:#F9FAFB;padding:72px 2rem;border-top:1px solid #E5E7EB;">
+  <div style="max-width:960px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:52px;">
+      <div style="font-size:0.95rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#01696F;margin-bottom:14px;">Why it matters</div>
+      <h2 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:#1A1A1A;letter-spacing:-0.025em;margin-bottom:18px;line-height:1.2;">Most defense professionals learn acquisition<br>the hard way. You don't have to.</h2>
+      <p style="font-size:1rem;color:#4B5563;max-width:580px;margin:0 auto;line-height:1.75;">A new PM who doesn't understand contract types, color of money, or how the COR relationship works will make expensive mistakes. Slowly. On the job. At the program's expense. Nobody puts that part in the job posting. Acqlerate closes that gap before it costs you.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px;">
+      <div style="background:white;border:1px solid #E5E7EB;border-top:3px solid #01696F;border-radius:0 0 14px 14px;padding:28px 24px;">
+        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#01696F;margin-bottom:10px;">For program managers</div>
+        <div style="font-weight:700;font-size:1rem;color:#1A1A1A;margin-bottom:10px;line-height:1.3;">Understand the system, not just the rulebook</div>
+        <div style="font-size:0.875rem;color:#6B7280;line-height:1.65;">Contract types, funding constraints, oversight relationships, risk management. This is the context that turns someone who just updates a spreadsheet into someone the team actually listens to.</div>
+      </div>
+      <div style="background:white;border:1px solid #E5E7EB;border-top:3px solid #01696F;border-radius:0 0 14px 14px;padding:28px 24px;">
+        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#01696F;margin-bottom:10px;">For new hires</div>
+        <div style="font-weight:700;font-size:1rem;color:#1A1A1A;margin-bottom:10px;line-height:1.3;">Go from confused to contributing in weeks, not a year</div>
+        <div style="font-size:0.875rem;color:#6B7280;line-height:1.65;">A structured 30 day path through the DoD acquisition landscape. So new hires stop asking the same question in three different meetings and start actually adding value.</div>
+      </div>
+      <div style="background:white;border:1px solid #E5E7EB;border-top:3px solid #01696F;border-radius:0 0 14px 14px;padding:28px 24px;">
+        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#01696F;margin-bottom:10px;">For capture &amp; BD</div>
+        <div style="font-weight:700;font-size:1rem;color:#1A1A1A;margin-bottom:10px;line-height:1.3;">Write to what the government actually scores, not just what you know</div>
+        <div style="font-size:0.875rem;color:#6B7280;line-height:1.65;">Understanding source selection, Section M, and contract vehicles from the buyer's side is what separates the proposal that wins from the one that just looks nice in a binder.</div>
+      </div>
+      <div style="background:white;border:1px solid #E5E7EB;border-top:3px solid #01696F;border-radius:0 0 14px 14px;padding:28px 24px;">
+        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#01696F;margin-bottom:10px;">For the whole team</div>
+        <div style="font-weight:700;font-size:1rem;color:#1A1A1A;margin-bottom:10px;line-height:1.3;">One platform. Every role. No scheduling.</div>
+        <div style="font-size:0.875rem;color:#6B7280;line-height:1.65;">Learning built around each role, with an AI study assistant on call. People learn between meetings, on a flight, whenever works, and they actually finish it this time.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- LESSON TICKER -->
+<section style="background:#0D1B2A;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);padding:52px 2rem;overflow:hidden;">
+  <div style="max-width:760px;margin:0 auto;text-align:center;">
+    <div style="font-size:0.7rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#4FC3CB;margin-bottom:24px;">From the curriculum</div>
+    <div id="lesson-ticker" style="min-height:90px;display:flex;align-items:center;justify-content:center;"></div>
+    <div id="ticker-dots" style="display:flex;justify-content:center;gap:6px;margin-top:24px;"></div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var lessons = [
+    { text: "The IDIQ (Indefinite Delivery, Indefinite Quantity) vehicle is the hunting license. The task order is the hunt.", source: "Defense Contracting Fundamentals", module: "03" },
+    { text: "Color of money isn’t a metaphor. Use O&M to buy a $400K piece of equipment and you’ve got an ADA violation.", source: "Defense Finance & Budgeting", module: "02" },
+    { text: "A PM who takes care of their people creates a team that surfaces problems early. That’s the entire job.", source: "PM Operations & Leadership", module: "06" },
+    { text: "September 30th is real. Every contracting office in DoD is drowning in the last 30 days of the fiscal year. Plan around it.", source: "Defense Finance & Budgeting", module: "02" },
+    { text: "If your COR (Contracting Officer's Rep) asks you to do something outside your SOW (Statement of Work) — stop. Just say: 'Can we get a mod first?' It protects everyone.", source: "Defense Contracting Fundamentals", module: "03" },
+    { text: "Read Section M before you read anything else in an RFP. It’s the scoring rubric. Everything else exists to score well against it.", source: "Capture Management & BD", module: "05" },
+    { text: "A risk register nobody updates is just a paperwork exercise. If a risk has been yellow for 90 days with no movement, someone’s not working it.", source: "PM Operations & Leadership", module: "06" },
+    { text: "Winning the vehicle gets you in the door. Winning task orders is how you actually make money.", source: "Defense Contracting Fundamentals", module: "03" },
+    { text: "EVM (Earned Value Management) tells you right now whether your program will finish on time and on budget. Most programs generate the reports and never actually use the information.", source: "Data Analytics for PMs", module: "04" },
+    { text: "Becoming a PM is a lateral move into a different discipline. The skills that made you a great engineer are different from the skills that make a great PM.", source: "PM Operations & Leadership", module: "06" },
+    { text: "Sources Sought and RFIs are the government asking who’s out there. Responding is free. Not responding means they don’t know you exist.", source: "Capture Management & BD", module: "05" },
+    { text: "The best program review I ever sat in had zero green stoplight charts. Everything was yellow or red. Every item had an owner and a date.", source: "PM Operations & Leadership", module: "06" }
+  ];
+
+  var current = 0;
+  var container = document.getElementById('lesson-ticker');
+  var dotsContainer = document.getElementById('ticker-dots');
+  var timer;
+
+  lessons.forEach(function(_, i) {
+    var dot = document.createElement('div');
+    dot.style.cssText = 'width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,0.2);transition:all 0.3s;cursor:pointer;flex-shrink:0;';
+    dot.addEventListener('click', function() { goTo(i); });
+    dotsContainer.appendChild(dot);
+  });
+
+  function updateDots(idx) {
+    Array.from(dotsContainer.children).forEach(function(d, i) {
+      d.style.background = i === idx ? '#4FC3CB' : 'rgba(255,255,255,0.2)';
+      d.style.width = i === idx ? '20px' : '6px';
+    });
+  }
+
+  function render(idx, dir) {
+    var l = lessons[idx];
+    var incoming = document.createElement('div');
+    incoming.style.cssText = 'opacity:0;transition:opacity 0.45s ease;width:100%;';
+    incoming.innerHTML =
+      '<p style="font-size:clamp(1rem,2vw,1.18rem);font-weight:600;color:#ffffff;line-height:1.7;margin:0 0 14px;">' +
+        '“' + l.text + '”' +
+      '</p>' +
+      '<span style="font-size:0.72rem;font-weight:800;color:#4FC3CB;text-transform:uppercase;letter-spacing:0.09em;">' +
+        l.source + ' — Module ' + l.module +
+      '</span>';
+    container.innerHTML = '';
+    container.appendChild(incoming);
+    updateDots(idx);
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() { incoming.style.opacity = '1'; });
+    });
+  }
+
+  function goTo(idx) {
+    clearInterval(timer);
+    current = idx;
+    render(idx);
+    startTimer();
+  }
+
+  function startTimer() {
+    timer = setInterval(function() {
+      var el = container.firstChild;
+      if (el) el.style.opacity = '0';
+      setTimeout(function() {
+        current = (current + 1) % lessons.length;
+        render(current);
+      }, 450);
+    }, 4500);
+  }
+
+  render(0);
+  startTimer();
+})();
+</script>
+
+
+<!-- CLP FEATURE SECTION -->
+<section style="background:white;padding:72px 2rem;border-top:1px solid #E5E7EB;">
+  <div style="max-width:960px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:40px;align-items:start;">
+      <!-- Left: value prop -->
+      <div>
+        <div style="font-size:0.72rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#01696F;margin-bottom:14px;">For the Defense Acquisition Workforce</div>
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2rem);font-weight:800;color:#1A1A1A;letter-spacing:-0.025em;line-height:1.25;margin-bottom:16px;">Earn <span class="jt" data-tip="CLPs = Continuous Learning Points. The DoD requires acquisition professionals to earn 80 CLPs every two years to keep their certifications current.">CLPs</span> you're already required to get.</h2>
+        <p style="font-size:1rem;color:#4B5563;line-height:1.75;margin-bottom:20px;">Defense Acquisition Workforce members must earn <strong>80 Continuous Learning Points every two years</strong>. Every completed Acqlerate module counts, and comes with a signed Certificate of Completion you can self-report in your WarU learning portal.</p>
+        <p style="font-size:0.95rem;color:#4B5563;line-height:1.75;margin-bottom:28px;">No waiting for a class to be scheduled. No travel. No block of time off your calendar. You earn CLPs while you actually learn something useful.</p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:0.875rem;color:#1A1A1A;line-height:1.5;">
+            <span style="color:#01696F;font-weight:800;">✓</span>
+            <span>Self-reportable as External Training in CAPPMIS, eDACM &amp; FAITAS</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:0.875rem;color:#1A1A1A;line-height:1.5;">
+            <span style="color:#01696F;font-weight:800;">✓</span>
+            <span>Maps to PM, Contracting (CON), and BFM functional areas</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:0.875rem;color:#1A1A1A;line-height:1.5;">
+            <span style="color:#01696F;font-weight:800;">✓</span>
+            <span>Certificate includes module name, date, hours, and <span class="jt" data-tip="DAWIA = Defense Acquisition Workforce Improvement Act. The law that sets training and certification requirements for DoD acquisition professionals.">DAWIA</span> functional area mapping</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:0.875rem;color:#1A1A1A;line-height:1.5;">
+            <span style="color:#01696F;font-weight:800;">✓</span>
+            <span>Over <span data-count="clps-whole">44</span> CLPs total across all <span data-count="modules">14</span> modules</span>
+          </div>
+        </div>
+      </div>
+      <!-- Right: CLP breakdown table -->
+      <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:16px;overflow:hidden;">
+        <div style="background:#0C2340;padding:16px 20px;">
+          <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#4FC3CB;margin-bottom:4px;">CLP Breakdown</div>
+          <div style="font-size:0.875rem;color:rgba(255,255,255,0.7);">1 hour of instruction = 1 CLP</div>
+        </div>
+        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;"><table style="width:100%;border-collapse:collapse;min-width:280px;">
+          <tbody>
+            <tr style="border-bottom:1px solid #E5E7EB;">
+              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">DoD Acquisitions Foundations</td>
+              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:foundations">2.5</span> CLPs</td>
+            </tr>
+            <tr style="border-bottom:1px solid #E5E7EB;background:#F3FAFB;">
+              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Defense Finance &amp; Budgeting</td>
+              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:finance">4.0</span> CLPs</td>
+            </tr>
+            <tr style="border-bottom:1px solid #E5E7EB;">
+              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Defense Contracting Fundamentals</td>
+              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:contracts">4.1</span> CLPs</td>
+            </tr>
+            <tr style="border-bottom:1px solid #E5E7EB;background:#F3FAFB;">
+              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Data Analytics for PMs</td>
+              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:data">2.9</span> CLPs</td>
+            </tr>
+            <tr style="border-bottom:1px solid #E5E7EB;">
+              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Capture Management &amp; BD</td>
+              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:capture">1.6</span> CLPs</td>
+            </tr>
+            <tr style="border-bottom:1px solid #E5E7EB;background:#F3FAFB;">
+              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">PM Operations &amp; Leadership</td>
+              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:operations">1.8</span> CLPs</td>
+            </tr>
+            <tr style="border-bottom:1px solid #E5E7EB;">
+              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">The Business of Defense Contracting</td>
+              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:business">4.2</span> CLPs</td>
+            </tr>
+            <tr style="border-bottom:1px solid #E5E7EB;background:#F3FAFB;">
+              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Small Business in Defense Contracting</td>
+              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:smallbiz">3.9</span> CLPs</td>
+            </tr>
+            <tr style="border-bottom:1px solid #E5E7EB;">
+              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">The Compliance Stack</td>
+              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:compliance">4.0</span> CLPs</td>
+            </tr>
+            <tr style="border-bottom:1px solid #E5E7EB;background:#F3FAFB;">
+              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Government Pre-Award Process</td>
+              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:preaward">4.0</span> CLPs</td>
+            </tr>
+            <tr style="border-bottom:1px solid #E5E7EB;">
+              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Beyond Award: Sustainment &amp; Closeout</td>
+              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:lifecycle">3.2</span> CLPs</td>
+            </tr>
+            <tr style="border-bottom:1px solid #E5E7EB;background:#F3FAFB;">
+              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">The Startup On-Ramp</td>
+              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:onramp">3.0</span> CLPs</td>
+            </tr>
+            <tr style="border-bottom:1px solid #E5E7EB;">
+              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Veteran Transition</td>
+              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:veteran">2.5</span> CLPs</td>
+            </tr>
+            <tr style="border-bottom:1px solid #E5E7EB;background:#F3FAFB;">
+              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Why the Rules Exist</td>
+              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:history">2.5</span> CLPs</td>
+            </tr>
+            <tr style="background:#0C2340;">
+              <td style="padding:14px 18px;font-size:0.9rem;font-weight:800;color:white;">Total (all <span data-count="modules">14</span> modules)</td>
+              <td style="padding:14px 18px;text-align:right;font-size:1rem;font-weight:800;color:#4FC3CB;"><span data-count="clps">44.2</span> CLPs</td>
+            </tr>
+          </tbody>
+        </table></div>
+        <div style="padding:14px 20px;background:#F9FAFB;border-top:1px solid #E5E7EB;">
+          <p style="font-size:0.75rem;color:#9CA3AF;margin:0;line-height:1.5;">Self-reportable in CAPPMIS (Army), eDACM (Navy/Marine/AF), and FAITAS (Civilian). Certificate includes <span class="jt" data-tip="DAWIA = Defense Acquisition Workforce Improvement Act. Sets the training and certification requirements for DoD acquisition professionals.">DAWIA</span> functional area mapping.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section id="who" style="padding:0;overflow:hidden;">
+  <!-- Team image banner -->
+  <div style="width:100%;height:clamp(220px,28vw,320px);overflow:hidden;position:relative;">
+    <img src="/img-team.jpg" alt="Defense acquisition team collaborating in a secure facility" style="width:100%;height:100%;object-fit:cover;object-position:center 35%;display:block;" loading="lazy" />
+    <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(13,27,42,0.82) 0%,rgba(13,27,42,0.4) 55%,transparent 100%);"></div>
+    <div style="position:absolute;top:50%;left:0;transform:translateY(-50%);padding:0 clamp(24px,4vw,56px);max-width:520px;">
+      <div style="font-size:0.72rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#4FC3CB;margin-bottom:10px;">Who It’s For</div>
+      <h2 style="font-size:clamp(1.3rem,2.5vw,1.9rem);font-weight:800;color:white;letter-spacing:-0.02em;line-height:1.25;margin:0;">Three paths. One thing in common:<br>they show up prepared.</h2>
+    </div>
+  </div>
+  <div style="padding:56px 2rem 72px;">
+  <div class="section-inner" style="padding:0;">
+    <p class="section-sub" style="text-align:center;margin-bottom:40px;">Whether you’re on the government side, the contractor side, or making the switch — Acqlerate meets you where you are.</p>
+    <div class="avatars">
+      <div class="avatar-card" style="border:2px solid rgba(1,105,111,0.35)">
+        <div class="avatar-icon">🏢</div>
+        <div class="avatar-title">The Contractor PM</div>
+        <div class="avatar-desc">You're in a PM or PM-track role at a defense contractor. You need to understand how DoD programs are funded, how contracts work, what CPARS means for your next award, and how to think like the government customer you're serving.</div>
+        <div class="avatar-tags">
+          <span class="tag">Contractor PM</span>
+          <span class="tag">Deputy PM</span>
+          <span class="tag">Program Analyst</span>
+          <span class="tag jt" data-tip="BD = Business Development. Finding and pursuing government contract opportunities.">BD Professional</span>
+        </div>
+      </div>
+      <div class="avatar-card">
+        <div class="avatar-icon">🚀</div>
+        <div class="avatar-title">The Career Changer</div>
+        <div class="avatar-desc">You're transitioning from military service or another industry and targeting a PM role at a defense contractor. You need a clear on-ramp — not a 400-page regulation and not a $2,000 classroom course.</div>
+        <div class="avatar-tags">
+          <span class="tag">Veterans</span>
+          <span class="tag">Military Transition</span>
+          <span class="tag">Industry Switchers</span>
+          <span class="tag">New Hires</span>
+        </div>
+      </div>
+      <div class="avatar-card">
+        <div class="avatar-icon">🏛️</div>
+        <div class="avatar-title">The DoD Professional</div>
+        <div class="avatar-desc">You're a civilian or military officer managing programs and want to sharpen your PM, finance, and contracting knowledge — or you're a government side professional who wants to understand how your contractor partners think.</div>
+        <div class="avatar-tags">
+          <span class="tag">Government PM</span>
+          <span class="tag">Contracting Specialist</span>
+          <span class="tag jt" data-tip="COR = Contracting Officer's Representative. Monitors contractor performance on-site.">COR</span>
+          <span class="tag">Financial Manager</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- WHAT YOU LEARN -->
+<section id="modules" class="modules-bg">
+  <div class="section-inner">
+    <div class="section-eyebrow">Curriculum</div>
+    <h2 class="section-title"><span data-count="modules-word">Fourteen</span> modules. <span data-count="lessons">123</span> lessons. The complete acquisition picture.</h2>
+    <p class="section-sub">Start with how the system works, then go as deep as your job requires: contractor finance, small business, compliance, the government pre-award process, sustainment, the startup on-ramp, veteran transition, and why the rules exist at all. Every lesson has three depth levels, key terms, a twelve-question quiz, and a module assessment that unlocks the next level. Module 1 is completely free.</p>
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-num free-num">01</div>
+        <div class="module-info">
+          <div class="module-name">DoD Acquisitions Foundations <span class="free-badge">FREE</span></div>
+          <ul class="module-topics-list"><li>Acquisition lifecycle</li><li>ACAT levels</li><li>Roles &amp; career paths</li><li>OTAs &amp; FAR Part 12</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">02</div>
+        <div class="module-info">
+          <div class="module-name">Defense Finance &amp; Budgeting</div>
+          <ul class="module-topics-list"><li>PPBE cycle</li><li>Color of money</li><li>EVM</li><li>Cost estimating</li><li>DCAA &amp; DCMA</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">03</div>
+        <div class="module-info">
+          <div class="module-name">Defense Contracting Fundamentals</div>
+          <ul class="module-topics-list"><li>Contract types</li><li>GSA vehicles</li><li>Source selection</li><li>COR fundamentals</li><li>Modifications &amp; REAs</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">04</div>
+        <div class="module-info">
+          <div class="module-name">Data Analytics for PMs</div>
+          <ul class="module-topics-list"><li>Program KPIs</li><li>Reading IPMR reports</li><li>Cost reports by CLIN</li><li>Burn forecasting</li><li>FPDS &amp; USASpending intel</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">05</div>
+        <div class="module-info">
+          <div class="module-name">Capture Management &amp; BD</div>
+          <ul class="module-topics-list"><li>BD to capture lifecycle</li><li>Section L vs M</li><li>Proposal development</li><li>Source selection strategy</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">06</div>
+        <div class="module-info">
+          <div class="module-name">PM Operations &amp; Leadership</div>
+          <ul class="module-topics-list"><li>Career roadmap</li><li>Risk management</li><li>Stakeholder management</li><li>Subcontractor management</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">07</div>
+        <div class="module-info">
+          <div class="module-name">The Business of Defense Contracting</div>
+          <ul class="module-topics-list"><li>Revenue recognition &amp; EAC</li><li>Why Q3 was bad</li><li>Pass-through vs value-add</li><li>Backlog &amp; book-to-bill</li><li>Reading a prime's 10-K</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">08</div>
+        <div class="module-info">
+          <div class="module-name">Small Business in Defense Contracting</div>
+          <ul class="module-topics-list"><li>Size standards &amp; NAICS</li><li>8(a), HUBZone, SDVOSB, WOSB</li><li>Limitations on subcontracting</li><li>Affiliation</li><li>Mentor-prot&eacute;g&eacute; &amp; JVs</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">09</div>
+        <div class="module-info">
+          <div class="module-name">The Compliance Stack</div>
+          <ul class="module-topics-list"><li>CMMC &amp; DFARS 7012</li><li>CUI and classified</li><li>ITAR &amp; export controls</li><li>Data rights &amp; IP</li><li>TINA, Buy American, SCA</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">10</div>
+        <div class="module-info">
+          <div class="module-name">From Need to RFP: Government Pre-Award</div>
+          <ul class="module-topics-list"><li>Acquisition planning</li><li>Market research</li><li>Writing the PWS</li><li>The IGCE</li><li>J&amp;As and D&amp;Fs</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">11</div>
+        <div class="module-info">
+          <div class="module-name">Beyond Award: Sustainment &amp; Closeout</div>
+          <ul class="module-topics-list"><li>O&amp;S cost</li><li>Test &amp; evaluation</li><li>Software pathway &amp; agile</li><li>Terminations &amp; transition</li><li>Options and bridges</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">12</div>
+        <div class="module-info">
+          <div class="module-name">The Startup On-Ramp</div>
+          <ul class="module-topics-list"><li>SBIR/STTR through Phase III</li><li>Other Transactions</li><li>DIU, AFWERX &amp; CSOs</li><li>The valley of death</li><li>Pricing without a cost history</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">13</div>
+        <div class="module-info">
+          <div class="module-name">Veteran Transition</div>
+          <ul class="module-topics-list"><li>Translating your record</li><li>USAJOBS &amp; hiring authorities</li><li>The contractor path</li><li>Your clearance as an asset</li><li>SDVOSB and the revolving door</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">14</div>
+        <div class="module-info">
+          <div class="module-name">Why the Rules Exist</div>
+          <ul class="module-topics-list"><li>Where the FAR came from</li><li>CICA and the $435 hammer</li><li>TINA, CAS &amp; DCAA</li><li>Program failures &amp; Nunn-McCurdy</li><li>The 2026 FAR rewrite</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-inner">
+    <div class="section-eyebrow">How It Works</div>
+    <h2 class="section-title" style="color:white;">Designed for how acquisition professionals actually learn</h2>
+    <p class="section-sub">Not a passive video course. Built around how defense contractor PMs actually learn — role-filtered curriculum, real program examples, and an AI assistant that explains things the way a mentor would.</p>
+    <div class="how-steps">
+      <div class="step">
+        <div class="step-icon">🎯</div>
+        <div class="step-title">Personalized Path</div>
+        <div class="step-desc">Answer 3 quick questions about your role and goals. Acqlerate builds a custom learning path — primary modules first, bonus content available when you want it.</div>
+      </div>
+      <div class="step">
+        <div class="step-icon">📚</div>
+        <div class="step-title">Three Skill Levels</div>
+        <div class="step-desc">Every module has Novice, Intermediate, and Advanced content. Pass the gate assessment (75%) to unlock the next tier and demonstrate mastery.</div>
+      </div>
+      <div class="step">
+        <div class="step-icon">🤖</div>
+        <div class="step-title">AI Study Assistant</div>
+        <div class="step-desc">Every lesson has an AI button. Ask it to explain the concept like you're 5, or how to apply it as a PM. Powered by Gemini 2.5 Flash — instant, plain-language answers.</div>
+      </div>
+      <div class="step">
+        <div class="step-icon">✅</div>
+        <div class="step-title">Quizzes & XP</div>
+        <div class="step-desc">Multi-format quizzes after every lesson. Earn XP, track your level, and see your progress across every module. The dashboard always shows your next lesson.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STREAK / RETENTION -->
+<section id="streaks" style="background:var(--navy);padding:72px 2rem;color:#fff">
+  <div style="max-width:1040px;margin:0 auto">
+    <div style="text-align:center;color:var(--teal-mid);font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px">Built to stick, not just to finish</div>
+    <h2 style="text-align:center;font-size:2rem;font-weight:800;margin:0 0 14px;color:#fff">You won't forget you started this one.</h2>
+    <p style="text-align:center;color:rgba(255,255,255,0.62);max-width:620px;margin:0 auto 48px;font-size:1.05rem;line-height:1.6">Most training platforms are built to be finished once. Acqlerate is built to be opened daily — a streak that tracks your progress, a level that goes up as you learn, and a way to earn free Pro access just by sharing it.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:24px">
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:32px 24px;text-align:center">
+        <div style="font-size:2.4rem;margin-bottom:10px">🔥</div>
+        <div style="font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:6px">Daily Streaks</div>
+        <div style="color:rgba(255,255,255,0.6);font-size:0.92rem;line-height:1.55">A short daily challenge keeps your streak alive. Hit 7 days and you've unlocked a habit, not just a badge.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:32px 24px;text-align:center">
+        <div style="font-size:2.4rem;margin-bottom:10px">⚡</div>
+        <div style="font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:6px">XP & Levels</div>
+        <div style="color:rgba(255,255,255,0.6);font-size:0.92rem;line-height:1.55">Every lesson and quiz earns XP. Your level climbs across all <span data-count="modules">14</span> modules, so progress is always visible — not buried in a completion percentage.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:32px 24px;text-align:center">
+        <div style="font-size:2.4rem;margin-bottom:10px">🎁</div>
+        <div style="font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:6px">Refer & Earn Pro</div>
+        <div style="color:rgba(255,255,255,0.6);font-size:0.92rem;line-height:1.55">Every account gets a referral link. Get enough colleagues signed up and Acqlerate gives you a year of Pro access, free.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- BLOG TEASER -->
+<section id="blog-teaser" style="background:#F7F9FB;padding:72px 2rem;border-top:1px solid var(--border)">
+  <div style="max-width:860px;margin:0 auto">
+
+    <!-- Section header — centered -->
+    <div style="text-align:center;margin-bottom:40px">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#E8F5F5;border:1px solid rgba(1,105,111,0.2);border-radius:20px;padding:5px 14px;margin-bottom:16px">
+        <span style="width:7px;height:7px;background:#01696f;border-radius:50%;display:inline-block"></span>
+        <span style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#01696f">Free — No Account Required</span>
+      </div>
+      <h2 class="section-title" style="text-align:center;margin-bottom:12px">The Acquisition Intel Blog</h2>
+      <p style="font-size:1rem;color:var(--text-muted);margin:0 auto;max-width:520px;line-height:1.65">Real insights on defense acquisitions, budget changes, and career strategy — no fluff, no paywalls, no login required.</p>
+      <a href="/blog" style="display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:white;font-weight:700;font-size:0.875rem;padding:11px 22px;border-radius:10px;text-decoration:none;white-space:nowrap;margin-top:20px;transition:background 0.15s" onmouseover="this.style.background='#015a5f'" onmouseout="this.style.background='var(--teal)'">Browse All 50+ Posts →</a>
+    </div>
+
+    <!-- AUTO-ROTATING CAROUSEL -->
+    <div id="blogCarousel" style="position:relative">
+
+      <!-- Slides -->
+      <div id="blogSlides" style="position:relative;overflow:hidden;border-radius:16px">
+        <!-- BLOG_CAROUSEL:START — generated by scripts/sync-blog.mjs from client/public/blog/*.html. Do not hand-edit; run `npm run sync:blog`. -->
+        <!-- Slide 0: DAWIA Certification: What It Really Costs and Why Industry Can't Get One -->
+        <a href="/blog/dawia-certification-what-it-really-costs-and-why-industry-cant-get-one" class="blog-slide" data-index="0" style="display:flex;text-decoration:none;background:linear-gradient(135deg,#0d2137 0%,#0c4e54 100%);border-radius:16px;overflow:hidden;transition:box-shadow 0.2s" onmouseover="this.style.boxShadow='0 12px 48px rgba(1,105,111,0.25)'" onmouseout="this.style.boxShadow=''">
+          <div style="padding:36px 40px;flex:1">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+              <span style="background:#f5c842;color:#0d2137;font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:4px 10px;border-radius:4px">🔥 Latest</span>
+              <span style="font-size:0.72rem;color:rgba(255,255,255,0.4)">Sep 27, 2026 · 6 min read</span>
+            </div>
+            <h3 style="font-size:clamp(1.1rem,2.5vw,1.45rem);font-weight:800;color:white;line-height:1.3;letter-spacing:-0.02em;margin:0 0 12px">DAWIA Certification: What It Really Costs and Why Industry Can't Get One</h3>
+            <p style="font-size:0.92rem;color:rgba(255,255,255,0.65);line-height:1.65;margin:0 0 24px">The real price tag isn't tuition, it's time, and it's a badge that contractors legally cannot wear anyway. Here's what to do instead.</p>
+            <div style="display:inline-flex;align-items:center;gap:8px;background:#f5c842;color:#0d2137;font-weight:800;font-size:0.85rem;padding:10px 20px;border-radius:9px">Read the Breakdown →</div>
+          </div>
+          <div class="blog-featured-stats" style="background:rgba(0,0,0,0.18);min-width:160px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:28px 24px;gap:18px;border-left:1px solid rgba(255,255,255,0.07)">
+            <div style="text-align:center"><div style="font-size:1.6rem;font-weight:900;color:white;line-height:1">6 min</div><div style="font-size:0.62rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px">Read Time</div></div>
+            <div style="width:1px;height:28px;background:rgba(255,255,255,0.1)"></div>
+            <div style="text-align:center"><div style="font-size:1.05rem;font-weight:900;color:#f5c842;line-height:1">USG &amp; Contractor</div><div style="font-size:0.62rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px">Written For</div></div>
+            <div style="width:1px;height:28px;background:rgba(255,255,255,0.1)"></div>
+            <div style="text-align:center"><div style="font-size:1.05rem;font-weight:900;color:white;line-height:1">Sep 2026</div><div style="font-size:0.62rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px">Published</div></div>
+          </div>
+        </a>
+
+        <!-- Slide 1: The Revolutionary FAR Overhaul, Explained (2026 Update) -->
+        <a href="/blog/revolutionary-far-overhaul-explained" class="blog-slide" data-index="1" style="display:none;text-decoration:none;background:linear-gradient(135deg,#1B2D3E 0%,#2d4a6b 100%);border-radius:16px;overflow:hidden;transition:box-shadow 0.2s" onmouseover="this.style.boxShadow='0 12px 48px rgba(0,0,0,0.2)'" onmouseout="this.style.boxShadow=''">
+          <div style="padding:36px 40px;flex:1">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+              <span style="background:rgba(255,255,255,0.15);color:white;font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:4px 10px;border-radius:4px">USG &amp; Contractor</span>
+              <span style="font-size:0.72rem;color:rgba(255,255,255,0.4)">Sep 23, 2026 · 6 min read</span>
+            </div>
+            <h3 style="font-size:clamp(1.1rem,2.5vw,1.45rem);font-weight:800;color:white;line-height:1.3;letter-spacing:-0.02em;margin:0 0 12px">The Revolutionary FAR Overhaul, Explained (2026 Update)</h3>
+            <p style="font-size:0.92rem;color:rgba(255,255,255,0.65);line-height:1.65;margin:0 0 24px">What the Revolutionary FAR Overhaul changed, where the rulemaking stands in September 2026, which clauses moved, and the free WarU resources worth your time.</p>
+            <div style="display:inline-flex;align-items:center;gap:8px;background:white;color:#1B2D3E;font-weight:800;font-size:0.85rem;padding:10px 20px;border-radius:9px">Read the Guide →</div>
+          </div>
+          <div class="blog-featured-stats" style="background:rgba(0,0,0,0.18);min-width:160px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:28px 24px;gap:18px;border-left:1px solid rgba(255,255,255,0.07)">
+            <div style="text-align:center"><div style="font-size:1.6rem;font-weight:900;color:white;line-height:1">6 min</div><div style="font-size:0.62rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px">Read Time</div></div>
+            <div style="width:1px;height:28px;background:rgba(255,255,255,0.1)"></div>
+            <div style="text-align:center"><div style="font-size:1.05rem;font-weight:900;color:#4FC3CB;line-height:1">USG &amp; Contractor</div><div style="font-size:0.62rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px">Written For</div></div>
+            <div style="width:1px;height:28px;background:rgba(255,255,255,0.1)"></div>
+            <div style="text-align:center"><div style="font-size:1.05rem;font-weight:900;color:white;line-height:1">Sep 2026</div><div style="font-size:0.62rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px">Published</div></div>
+          </div>
+        </a>
+
+        <!-- Slide 2: The Work That Quietly Disqualifies You From the Bid You Wanted -->
+        <a href="/blog/organizational-conflicts-of-interest-disqualified-from-the-bid" class="blog-slide" data-index="2" style="display:none;text-decoration:none;background:linear-gradient(135deg,#0d2137 0%,#014a4f 100%);border-radius:16px;overflow:hidden;transition:box-shadow 0.2s" onmouseover="this.style.boxShadow='0 12px 48px rgba(1,105,111,0.25)'" onmouseout="this.style.boxShadow=''">
+          <div style="padding:36px 40px;flex:1">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+              <span style="background:rgba(255,255,255,0.15);color:white;font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:4px 10px;border-radius:4px">For Contractors</span>
+              <span style="font-size:0.72rem;color:rgba(255,255,255,0.4)">Sep 19, 2026 · 6 min read</span>
+            </div>
+            <h3 style="font-size:clamp(1.1rem,2.5vw,1.45rem);font-weight:800;color:white;line-height:1.3;letter-spacing:-0.02em;margin:0 0 12px">The Work That Quietly Disqualifies You From the Bid You Wanted</h3>
+            <p style="font-size:0.92rem;color:rgba(255,255,255,0.65);line-height:1.65;margin:0 0 24px">Organizational conflicts of interest do not announce themselves. They show up the week the RFP drops, after you have already spent the capture money.</p>
+            <div style="display:inline-flex;align-items:center;gap:8px;background:white;color:#0d2137;font-weight:800;font-size:0.85rem;padding:10px 20px;border-radius:9px">Read the Guide →</div>
+          </div>
+          <div class="blog-featured-stats" style="background:rgba(0,0,0,0.18);min-width:160px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:28px 24px;gap:18px;border-left:1px solid rgba(255,255,255,0.07)">
+            <div style="text-align:center"><div style="font-size:1.6rem;font-weight:900;color:white;line-height:1">6 min</div><div style="font-size:0.62rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px">Read Time</div></div>
+            <div style="width:1px;height:28px;background:rgba(255,255,255,0.1)"></div>
+            <div style="text-align:center"><div style="font-size:1.05rem;font-weight:900;color:#f5c842;line-height:1">For Contractors</div><div style="font-size:0.62rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px">Written For</div></div>
+            <div style="width:1px;height:28px;background:rgba(255,255,255,0.1)"></div>
+            <div style="text-align:center"><div style="font-size:1.05rem;font-weight:900;color:white;line-height:1">Sep 2026</div><div style="font-size:0.62rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px">Published</div></div>
+          </div>
+        </a>
+        <!-- BLOG_CAROUSEL:END -->
+      </div><!-- /blogSlides -->
+
+      <!-- Dot indicators -->
+      <div style="display:flex;justify-content:center;gap:8px;margin-top:16px" id="blogDots">
+        <button onclick="goToSlide(0)" class="blog-dot" style="width:8px;height:8px;border-radius:50%;border:none;background:#01696f;cursor:pointer;padding:0;transition:all 0.2s"></button>
+        <button onclick="goToSlide(1)" class="blog-dot" style="width:8px;height:8px;border-radius:50%;border:none;background:rgba(1,105,111,0.25);cursor:pointer;padding:0;transition:all 0.2s"></button>
+        <button onclick="goToSlide(2)" class="blog-dot" style="width:8px;height:8px;border-radius:50%;border:none;background:rgba(1,105,111,0.25);cursor:pointer;padding:0;transition:all 0.2s"></button>
+      </div>
+
+    </div><!-- /blogCarousel -->
+
+    <!-- Bottom strip -->
+    <div style="background:white;border:1.5px solid var(--border);border-radius:14px;padding:22px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-top:28px">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="width:9px;height:9px;background:#01696f;border-radius:50%;animation:pulse 2s infinite;flex-shrink:0"></div>
+        <div>
+          <div style="font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:2px">New posts every Tuesday &amp; Saturday</div>
+          <div style="font-size:0.8rem;color:var(--text-muted)">50+ articles published. Always free. No account needed.</div>
+        </div>
+      </div>
+      <a href="/blog" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:white;font-weight:800;font-size:0.875rem;padding:11px 22px;border-radius:10px;text-decoration:none;white-space:nowrap;transition:background 0.15s" onmouseover="this.style.background='#1B2D3E'" onmouseout="this.style.background='var(--navy)'">Browse All 50+ Articles →</a>
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function(){
+  var slides = document.querySelectorAll('.blog-slide');
+  var dots = document.querySelectorAll('.blog-dot');
+  var current = 0;
+  var timer;
+
+  function goToSlide(n) {
+    slides[current].style.display = 'none';
+    dots[current].style.background = 'rgba(1,105,111,0.25)';
+    dots[current].style.width = '8px';
+    current = n;
+    slides[current].style.display = 'flex';
+    dots[current].style.background = '#01696f';
+    dots[current].style.width = '24px';
+    dots[current].style.borderRadius = '4px';
+    resetTimer();
+  }
+
+  function next() { goToSlide((current + 1) % slides.length); }
+
+  function resetTimer() {
+    clearInterval(timer);
+    timer = setInterval(next, 5000);
+  }
+
+  // expose for onclick handlers
+  window.goToSlide = goToSlide;
+
+  // init first dot as wide
+  dots[0].style.width = '24px';
+  dots[0].style.borderRadius = '4px';
+
+  // pause on hover
+  document.getElementById('blogCarousel').addEventListener('mouseenter', function(){ clearInterval(timer); });
+  document.getElementById('blogCarousel').addEventListener('mouseleave', resetTimer);
+
+  resetTimer();
+})();
+</script>
+
+<!-- PMI PDU SECTION -->
+<section style="background:#0D1B2A;padding:72px 2rem;border-top:1px solid rgba(255,255,255,0.07)">
+  <div style="max-width:960px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:48px">
+      <div style="font-size:0.75rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#4F98A3;margin-bottom:12px">For PMP Holders</div>
+      <h2 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:white;letter-spacing:-0.025em;margin-bottom:16px">Earn Up to 44 PMI PDUs</h2>
+      <p style="font-size:1rem;color:rgba(255,255,255,0.55);max-width:560px;margin:0 auto;line-height:1.7">Every Acqlerate lesson counts as Self-Paced Online Learning. Log them directly in PMI CCRS (the PMI certification portal), with no pre-approval needed. 1 hour = 1 PDU (Professional Development Unit).</p>
+    </div>
+
+    <!-- PDU table -->
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:16px;overflow:hidden;margin-bottom:40px">
+      <div id="pduTableInner">
+      <div class="pdu-header-row" style="display:grid;grid-template-columns:1fr auto auto;gap:0;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:rgba(255,255,255,0.4);padding:14px 24px;border-bottom:1px solid rgba(255,255,255,0.07)">
+        <span>Talent Triangle Area</span><span style="text-align:center;padding:0 20px">PDUs</span><span style="text-align:right">Coverage</span>
+      </div>
+      <div id="pduRows">
+        <div class="pdu-row" style="display:grid;grid-template-columns:1fr auto auto;padding:14px 24px;border-bottom:1px solid rgba(255,255,255,0.05);align-items:center">
+          <span class="pdu-module" style="color:rgba(255,255,255,0.85);font-size:0.875rem">Business Acumen</span>
+          <span class="pdu-value" style="text-align:center;padding:0 20px;font-weight:700;color:#4FB3BF;font-size:0.875rem">29.8</span>
+          <span class="pdu-badge" style="text-align:right"><span style="background:#01696F22;color:#4FC5CB;font-size:0.7rem;font-weight:700;padding:3px 8px;border-radius:4px">9 modules</span></span>
+        </div>
+        <div class="pdu-row" style="display:grid;grid-template-columns:1fr auto auto;padding:14px 24px;border-bottom:1px solid rgba(255,255,255,0.05);align-items:center">
+          <span class="pdu-module" style="color:rgba(255,255,255,0.85);font-size:0.875rem">Ways of Working</span>
+          <span class="pdu-value" style="text-align:center;padding:0 20px;font-weight:700;color:#60A5FA;font-size:0.875rem">11.0</span>
+          <span class="pdu-badge" style="text-align:right"><span style="background:#1D4ED822;color:#8BA9F5;font-size:0.7rem;font-weight:700;padding:3px 8px;border-radius:4px">4 modules</span></span>
+        </div>
+        <div class="pdu-row" style="display:grid;grid-template-columns:1fr auto auto;padding:14px 24px;align-items:center">
+          <span class="pdu-module" style="color:rgba(255,255,255,0.85);font-size:0.875rem">Power Skills</span>
+          <span class="pdu-value" style="text-align:center;padding:0 20px;font-weight:700;color:#A78BFA;font-size:0.875rem">3.4</span>
+          <span class="pdu-badge" style="text-align:right"><span style="background:#7C3AED22;color:#A78BFA;font-size:0.7rem;font-weight:700;padding:3px 8px;border-radius:4px">2 modules</span></span>
+        </div>
+      <div class="pdu-total-row" style="display:grid;grid-template-columns:1fr auto auto;padding:14px 24px;background:rgba(1,105,111,0.15);border-top:1px solid rgba(1,105,111,0.3);align-items:center">
+        <span class="pdu-total-label" style="font-weight:800;color:white;font-size:0.875rem">Total Available</span>
+        <span class="pdu-total-value" style="text-align:center;padding:0 20px;font-weight:900;color:#4FB3BF;font-size:1.1rem">~44.2</span>
+        <span class="pdu-total-caption" style="text-align:right;font-size:0.75rem;color:rgba(255,255,255,0.4)">PDUs total</span>
+      </div>
+      </div><!-- /pduTableInner -->
+    </div>
+
+    <!-- How to log + CTA -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px;align-items:start">
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:24px">
+        <div style="font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:#4F98A3;margin-bottom:12px">How to Log</div>
+        <ol style="list-style:none;padding:0;margin:0;space-y:8px">
+          <li style="display:flex;gap:10px;margin-bottom:10px;font-size:0.875rem;color:rgba(255,255,255,0.7)"><span style="background:#01696F;color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;flex-shrink:0;margin-top:1px">1</span>Complete lessons on Acqlerate</li>
+          <li style="display:flex;gap:10px;margin-bottom:10px;font-size:0.875rem;color:rgba(255,255,255,0.7)"><span style="background:#01696F;color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;flex-shrink:0;margin-top:1px">2</span>Note total time in your PDU tracker</li>
+          <li style="display:flex;gap:10px;margin-bottom:10px;font-size:0.875rem;color:rgba(255,255,255,0.7)"><span style="background:#01696F;color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;flex-shrink:0;margin-top:1px">3</span>Go to <strong style="color:white">pmlearning.pmi.org</strong></li>
+          <li style="display:flex;gap:10px;font-size:0.875rem;color:rgba(255,255,255,0.7)"><span style="background:#01696F;color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;flex-shrink:0;margin-top:1px">4</span>Log as <strong style="color:white">Online or Digital Media → Self-Paced</strong></li>
+        </ol>
+        <a href="/pdu" style="display:block;margin-top:16px;font-size:0.8rem;color:#4F98A3;font-weight:600;text-decoration:none">Full PDU guide →</a>
+      </div>
+      <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:14px;padding:28px;text-align:center">
+        <div style="font-size:2rem;font-weight:900;color:white;line-height:1">~44</div>
+        <div style="font-size:0.8rem;color:rgba(255,255,255,0.7);margin-bottom:16px">PDUs with full Pro access</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.55);margin-bottom:20px">Enough to clear the 35 Education PDU minimum on its own. Business Acumen and Ways of Working each pass the 8 PDU per-area bar; top Power Skills up elsewhere.</div>
+        <a href="/app#/auth" style="display:block;background:white;color:#01696F;font-weight:800;font-size:0.9rem;padding:11px;border-radius:9px;text-decoration:none;margin-bottom:8px">Start Earning PDUs Free →</a>
+        <a href="/pdu" style="font-size:0.75rem;color:rgba(255,255,255,0.6);text-decoration:none">Learn more about PDUs →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CURRICULUM STANDARDS -->
+<section style="background:#0C2340;padding:72px 2rem;">
+  <div style="max-width:960px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:52px;">
+      <div style="font-size:0.95rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#4FC3CB;margin-bottom:14px;">Curriculum Standards</div>
+      <h2 style="font-size:clamp(1.5rem,2.8vw,2rem);font-weight:800;color:white;letter-spacing:-0.025em;line-height:1.25;margin-bottom:16px;">Built on the official blueprints.<br>Not someone's interpretation of them.</h2>
+      <p style="font-size:1rem;color:rgba(255,255,255,0.65);max-width:600px;margin:0 auto;line-height:1.75;">Acqlerate's curriculum is mapped to the authoritative DoD frameworks that define what acquisition professionals are actually required to know. We didn't make up the topics — we built to the standard.</p>
+    </div>
+
+    <!-- Three standards cards -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px;margin-bottom:40px;">
+
+      <!-- Card 1: DoD Contracting Competency Model -->
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(79,195,203,0.25);border-top:3px solid #4FC3CB;border-radius:12px;padding:28px 24px;">
+        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#4FC3CB;margin-bottom:10px;">DoD DPCAP · Nov 2024</div>
+        <div style="font-weight:800;font-size:1rem;color:white;margin-bottom:10px;line-height:1.3;">DoD Contracting Competency Model</div>
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.65;margin-bottom:16px;">The official competency framework for the DoD contracting community — covering the full contract lifecycle from pre-award planning through solicitation, source selection, award, administration, and closeout.</p>
+        <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);font-style:italic;margin-bottom:14px;">Acqlerate modules aligned:</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:rgba(255,255,255,0.8);">
+            <span style="color:#4FC3CB;font-weight:700;flex-shrink:0;">→</span>
+            <span><strong style="color:white;">Defense Contracting Fundamentals</strong> — contract lifecycle, solicitation, source selection, administration, modifications, REAs</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:rgba(255,255,255,0.8);">
+            <span style="color:#4FC3CB;font-weight:700;flex-shrink:0;">→</span>
+            <span><strong style="color:white;">Capture Management & BD</strong> — solicitation development, evaluation criteria, proposal compliance, source selection from buyer perspective</span>
+          </div>
+        </div>
+        <a href="https://www.acq.osd.mil/asda/dpc/cp/policy/docs/wd/DoD-Contracting-Competency-Model-(2024).pdf" target="_blank" rel="noopener" style="display:inline-block;margin-top:16px;font-size:0.75rem;color:#4FC3CB;text-decoration:none;border-bottom:1px solid rgba(79,195,203,0.4);">View the official framework →</a>
+      </div>
+
+      <!-- Card 2: GS-1102 / DAWIA -->
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(79,195,203,0.25);border-top:3px solid #4FC3CB;border-radius:12px;padding:28px 24px;">
+        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#4FC3CB;margin-bottom:10px;">OPM / USD A&S · DAWIA (Defense Acquisition Workforce Improvement Act)</div>
+        <div style="font-weight:800;font-size:1rem;color:white;margin-bottom:10px;line-height:1.3;">Contracting Specialist Professional Standards & DAWIA Functional Areas</div>
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.65;margin-bottom:16px;">The qualification standard and functional area competencies for DoD acquisition workforce members — spanning Program Management (PM), Contracting (CON), and Business Financial Management (BFM).</p>
+        <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);font-style:italic;margin-bottom:14px;">Acqlerate modules aligned:</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:rgba(255,255,255,0.8);">
+            <span style="color:#4FC3CB;font-weight:700;flex-shrink:0;">→</span>
+            <span><strong style="color:white;">DoD Acquisitions Foundations</strong> — acquisition lifecycle, ACAT levels, roles (PM · CO · COR · DCMA), OTAs, FAR Part 12</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:rgba(255,255,255,0.8);">
+            <span style="color:#4FC3CB;font-weight:700;flex-shrink:0;">→</span>
+            <span><strong style="color:white;">Defense Finance & Budgeting</strong> — PPBE, appropriations law, EVM, cost estimating, DCAA oversight (BFM functional area)</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:rgba(255,255,255,0.8);">
+            <span style="color:#4FC3CB;font-weight:700;flex-shrink:0;">→</span>
+            <span><strong style="color:white;">PM Operations & Leadership</strong> — risk management, stakeholder communication, program reviews (PM functional area)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Self-certification note -->
+      <div style="background:rgba(1,105,111,0.12);border:1px solid rgba(1,105,111,0.35);border-top:3px solid #01696F;border-radius:12px;padding:28px 24px;">
+        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#4FC3CB;margin-bottom:10px;">Transparency</div>
+        <div style="font-weight:800;font-size:1rem;color:white;margin-bottom:10px;line-height:1.3;">What "mapped to" means — and what it doesn't</div>
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.65;margin-bottom:16px;">Acqlerate is not an accredited institution and is not affiliated with WarU, DoD, or any government agency. "Mapped to" means our curriculum covers the same knowledge domains these frameworks define — not that we have formal approval from these bodies.</p>
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.65;">DAW members self-report Acqlerate training as External Training in their portal. The frameworks above define <em>what</em> the acquisition workforce must know. Acqlerate teaches it — in plain English, at your pace, with a Certificate of Completion for your records.</p>
+      </div>
+
+    </div>
+
+    <!-- Bottom framework badges row -->
+    <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:28px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:center;">
+      <span style="font-size:0.75rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.08em;">Aligned to:</span>
+      <a href="https://www.acq.osd.mil/asda/dpc/cp/policy/docs/wd/DoD-Contracting-Competency-Model-(2024).pdf" target="_blank" rel="noopener" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:700;color:rgba(255,255,255,0.7);text-decoration:none;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='rgba(79,195,203,0.12)';this.style.borderColor='rgba(79,195,203,0.35)'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.15)'">DoD Contracting Competency Model (Nov 2024)</a>
+      <a href="https://www.opm.gov/policy-data-oversight/classification-qualifications/general-schedule-qualification-standards/1100/contracting-series-1102/" target="_blank" rel="noopener" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:700;color:rgba(255,255,255,0.7);text-decoration:none;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='rgba(79,195,203,0.12)';this.style.borderColor='rgba(79,195,203,0.35)'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.15)'">GS-1102 Qualification Standard</a>
+      <a href="https://www.dau.edu/functional-areas/" target="_blank" rel="noopener" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:700;color:rgba(255,255,255,0.7);text-decoration:none;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='rgba(79,195,203,0.12)';this.style.borderColor='rgba(79,195,203,0.35)'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.15)'">DAWIA Functional Areas (PM · CON · BFM)</a>
+      <a href="https://www.fai.gov/certification/fac-c/fac-c-competencies" target="_blank" rel="noopener" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:700;color:rgba(255,255,255,0.7);text-decoration:none;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='rgba(79,195,203,0.12)';this.style.borderColor='rgba(79,195,203,0.35)'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.15)'">FAC-C (Professional) Competencies</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="pricing-bg">
+  <div class="section-inner">
+    <div class="section-eyebrow">Pricing</div>
+    <h2 class="section-title">Try everything free for 14 days. Go pro when you're ready.</h2>
+    <p class="section-sub">Every new account gets 14 days of full access to all <span data-count="modules">14</span> modules automatically — no credit card, no plan to remember to cancel. After that, Module 1 plus one free preview lesson in every other module stay free for good.</p>
+    <!-- CLP callout -->
+    <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(1,105,111,0.15);border:1px solid rgba(1,105,111,0.4);border-radius:10px;padding:10px 20px;margin-bottom:32px;">
+      <span style="font-size:1.1rem;">🎓</span>
+      <span style="font-size:0.875rem;color:rgba(255,255,255,0.9);">
+        <strong style="color:#4FC3CB;">Earn over <span data-count="clps-whole">44</span> CLPs across all <span data-count="modules">14</span> modules</strong> —
+        self-reportable in CAPPMIS, eDACM &amp; FAITAS.
+        Every completed module includes a Certificate of Completion.
+      </span>
+    </div>
+    <div class="pricing-cards">
+      <!-- Free -->
+      <div class="price-card">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">$0 <span>/ forever</span></div>
+        <div class="plan-desc">What you keep after your 14-day trial ends, whether you upgrade or not.</div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span> Module 1: DoD Acquisitions Foundations</li>
+          <li><span class="check">✓</span> <span data-count="lessons:foundations">10</span> lessons + quizzes</li>
+          <li><span class="check">✓</span> 1 free preview lesson in every other module</li>
+          <li><span class="check">✓</span> AI Study Assistant</li>
+          <li><span class="check">✓</span> Key terms & skill levels</li>
+          <li><span class="check">✓</span> <span data-count="clps:foundations">2.5</span> CLPs — Certificate of Completion</li>
+        </ul>
+        <a href="/app#/auth" class="btn-plan btn-plan-outline">Start Your Free Trial →</a>
+      </div>
+      <!-- Monthly (featured / center) -->
+      <div class="price-card featured">
+        <div class="featured-badge">MOST POPULAR</div>
+        <div class="plan-name">Monthly Pro</div>
+        <div class="plan-price">$5.99 <span>/ month</span></div>
+        <div class="plan-desc">Full access while subscribed. Cancel anytime.</div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span> All <span data-count="modules">14</span> modules — <span data-count="lessons">123</span> lessons</li>
+          <li><span class="check">✓</span> All skill levels unlocked</li>
+          <li><span class="check">✓</span> AI Study Assistant — limited</li>
+          <li><span class="check">✓</span> Module gate assessments</li>
+          <li><span class="check">✓</span> Personalized learning path</li>
+          <li><span class="check">✓</span> "The Debrief" — audio lessons for every module (stream anytime)</li>
+          <li><span class="check">✓</span> Over <span data-count="clps-whole">44</span> CLPs — Certificate per module</li>
+          <li style="opacity:0.4"><span style="color:rgba(255,255,255,0.3)">✗</span> "How Do I Apply This?" AI</li>
+        </ul>
+        <a href="/app#/auth?plan=monthly" class="btn-plan btn-plan-teal" id="monthlyBtn">Get Monthly Access →</a>
+      </div>
+      <!-- Lifetime -->
+      <div class="price-card">
+        <div class="plan-name">Lifetime Pro</div>
+        <div class="plan-price">$99 <span>one-time</span></div>
+        <div class="plan-desc">Full access forever. No subscription. No renewals.</div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span> All <span data-count="modules">14</span> modules — <span data-count="lessons">123</span> lessons</li>
+          <li><span class="check">✓</span> All skill levels unlocked</li>
+          <li><span class="check">✓</span> AI Study Assistant — unlimited</li>
+          <li><span class="check">✓</span> All future content updates</li>
+          <li><span class="check">✓</span> Module gate assessments</li>
+          <li><span class="check">✓</span> Personalized learning path</li>
+          <li><span class="check">✓</span> "The Debrief" — audio lessons for every module (stream anytime)</li>
+          <li><span class="check">✓</span> Over <span data-count="clps-whole">44</span> CLPs — Certificate per module</li>
+          <li><span class="check">✓</span> "How Do I Apply This?" AI — exclusive</li>
+        </ul>
+        <a href="/app#/auth?plan=lifetime" class="btn-plan btn-plan-outline" id="lifetimeBtn">Get Lifetime Access →</a>
+      </div>
+      <!-- Team -->
+      <div class="price-card" style="border-top:3px solid #4FC3CB;">
+        <div class="plan-name">Team Pack</div>
+        <div class="plan-price">$399 <span>one-time</span></div>
+        <div class="plan-desc">10 seats of Lifetime Pro for your PM team. One invoice, not ten.</div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span> 10 Lifetime Pro seats</li>
+          <li><span class="check">✓</span> All <span data-count="modules">14</span> modules — <span data-count="lessons">123</span> lessons, per seat</li>
+          <li><span class="check">✓</span> "The Debrief" — audio lessons for every module (stream anytime)</li>
+          <li><span class="check">✓</span> Certificates of Completion for CLP self-reporting</li>
+          <li><span class="check">✓</span> One invoice instead of 10 separate purchases</li>
+          <li><span class="check">✓</span> $39.90/seat vs. $1,500+/seat classroom training</li>
+        </ul>
+        <button type="button" class="btn-plan btn-plan-teal" id="teamBtn" onclick="startTeamCheckout()">Get Team Access →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  async function startTeamCheckout() {
+    const btn = document.getElementById('teamBtn');
+    const email = prompt("What email should the receipt and seat invites go to?");
+    if (!email) return;
+    btn.textContent = 'Loading…';
+    btn.disabled = true;
+    try {
+      const resp = await fetch('/api/team/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await resp.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.message || 'Something went wrong — please email lucas@acqlerate.com to set up your team.');
+        btn.textContent = 'Get Team Access →';
+        btn.disabled = false;
+      }
+    } catch (err) {
+      alert('Something went wrong — please email lucas@acqlerate.com to set up your team.');
+      btn.textContent = 'Get Team Access →';
+      btn.disabled = false;
+    }
+  }
+</script>
+
+<!-- FAQ -->
+<section id="faq" style="background:#fff">
+  <div class="section-inner" style="text-align: center;">
+    <div class="section-eyebrow">FAQ</div>
+    <h2 class="section-title" style="margin-bottom: 8px;">Common questions</h2>
+    <p class="section-sub" style="margin: 0 auto 40px;">Still not sure? Here are the ones we hear most.</p>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Do I need any prior acquisition experience?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-a">No. Module 1 starts from zero. It explains the DoD acquisition system, who the key players are, and how programs get funded and executed. If you're brand new, start there. The skill level system means you move at your own pace, and the AI assistant can explain any concept in plain language whenever you get stuck.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Is it useful for contractor-side professionals?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-a">Absolutely. The onboarding flow has a dedicated contractor track that surfaces the most relevant modules first: Capture & BD, Contracting Fundamentals, and Finance. Understanding how the government side works is the biggest competitive advantage a contractor PM or BD professional can have.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Is this a replacement for WarU (formerly DAU)?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-a">No, and we're not trying to be. WarU (formerly DAU) certification courses are mandatory for the DoD workforce and focused on compliance. Acqlerate is focused on practical knowledge you can apply on the job: understanding concepts deeply, not just checking certification boxes. Many users do both. WarU gets you certified. Acqlerate helps you actually understand what you learned.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What's the AI Study Assistant, exactly?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-a">Every lesson has an AI button with two built-in prompts: "Explain this like I'm 5" for when a concept is confusing, and "How do I apply this as a PM?" for practical context. You can also type your own question. It's powered by Google Gemini 2.5 Flash and responds in seconds.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Can I use Acqlerate to earn CLPs toward my DAWIA requirement?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-a">Yes. Defense Acquisition Workforce members can self-report Acqlerate modules as External Training in their WarU learning portal (CAPPMIS for Army, eDACM for Navy/Marine Corps/Air Force, FAITAS for civilian). Each module generates a Certificate of Completion showing the course name, date, instruction hours, and DAWIA functional area mapping. 1 hour of instruction equals 1 CLP. All <span data-count="modules">14</span> modules combined equal more than <span data-count="clps-whole">44</span> CLPs. That's over half of your 80 point biennial requirement.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Can I cancel the monthly subscription?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-a">Yes, anytime. When you cancel, your access remains active through the end of the billing period. After that you drop to the free tier, which includes Module 1 permanently. Your progress and quiz scores are saved. You pick up right where you left off if you resubscribe.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Will there be more modules added?
+          <span class="faq-chevron">▾</span>
+        </button>
+        <div class="faq-a">Yes. The current <span data-count="modules-word-lower">fourteen</span> modules cover the acquisition system end to end, from foundations through sustainment, plus tracks for small business, startups entering defense, and service members transitioning in. We keep building: new lessons, deeper levels on existing ones, and a weekly brief on what changed. Lifetime Pro users get all future content at no extra cost.</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 64px;">
+      <div class="section-eyebrow" style="color: #B8912E;">JUST FOR FUN</div>
+      <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--text); text-align: center; margin-bottom: 8px; letter-spacing: -0.02em;">Also, people ask us this.</h3>
+      <p class="section-sub" style="margin: 0 auto 32px; max-width: 480px;">Not serious. Still true.</p>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Is Bigfoot real?
+            <span class="faq-chevron">▾</span>
+          </button>
+          <div class="faq-a">Unconfirmed. But we have personally seen stranger things survive a government audit.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Will this help me survive September 30th?
+            <span class="faq-chevron">▾</span>
+          </button>
+          <div class="faq-a">Nothing fully prepares you for fiscal year end. We can at least explain why everyone around you is panicking.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Do you accept payment in MREs?
+            <span class="faq-chevron">▾</span>
+          </button>
+          <div class="faq-a">We do not. Though we respect the creativity of the offer.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Is “per my last email” a legally recognized threat?
+            <span class="faq-chevron">▾</span>
+          </button>
+          <div class="faq-a">Not yet. Give it time.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY WE BUILT THIS -->
+<section id="why" style="background:#F9FAFB;padding:80px 2rem;border-top:1px solid #E5E7EB;">
+  <div style="max-width:860px;margin:0 auto;">
+    <!-- Eyebrow -->
+    <p style="font-size:0.95rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#01696F;margin:0 0 16px;text-align:center;">Why We Built This</p>
+    <!-- Headline -->
+    <h2 style="font-size:clamp(1.75rem,3.5vw,2.6rem);font-weight:800;color:#0D1B2A;line-height:1.2;margin:0 0 36px;letter-spacing:-0.025em;text-align:center;">
+      I was in a meeting and couldn't answer the question.<br>
+      <span style="color:#01696F;">That moment built Acqlerate.</span>
+    </h2>
+
+    <!-- Story card -->
+    <div style="background:#0D1B2A;border-radius:16px;padding:40px 48px;margin-bottom:36px;position:relative;overflow:hidden;">
+      <!-- Subtle background accent -->
+      <div style="position:absolute;top:-40px;right:-40px;width:220px;height:220px;background:rgba(1,105,111,0.08);border-radius:50%;"></div>
+      <div style="position:absolute;bottom:-60px;left:-20px;width:180px;height:180px;background:rgba(79,152,163,0.06);border-radius:50%;"></div>
+
+      <!-- From Lucas label -->
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(212,172,61,0.15);border:1px solid rgba(212,172,61,0.3);border-radius:6px;padding:5px 12px;margin-bottom:24px;">
+        <span style="width:6px;height:6px;background:#D4AC3D;border-radius:50%;display:inline-block;"></span>
+        <span style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#D4AC3D;">From Lucas</span>
+      </div>
+
+      <p style="font-size:1.05rem;line-height:1.75;color:rgba(255,255,255,0.88);margin:0 0 20px;position:relative;z-index:1;">
+        I was sitting in a meeting with people who'd been in the defense industry for years. Someone turned to me and asked about DSO, cashflow, and the variance of revenue for the financial period.
+      </p>
+      <p style="font-size:1.05rem;line-height:1.75;color:rgba(255,255,255,0.88);margin:0 0 20px;position:relative;z-index:1;">
+        I had no idea what to say. Not because I wasn't capable. Because nobody had ever explained it to me in plain English. I was a veteran who'd worked on programs worth hundreds of millions of dollars and I still didn't have the vocabulary to talk about my own work.
+      </p>
+      <p style="font-size:1.05rem;line-height:1.75;color:rgba(255,255,255,0.88);margin:0;position:relative;z-index:1;">
+        I don't want that to happen to you. That's why I built Acqlerate. Not to add more jargon to the pile. To give defense contractors the plain-English foundation they need to do the job with confidence.
+      </p>
+
+      <!-- Signature line -->
+      <div style="margin-top:28px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:12px;">
+        <div style="width:36px;height:36px;background:#01696F;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;font-weight:800;color:white;">L</div>
+        <div>
+          <p style="margin:0;font-size:0.85rem;font-weight:700;color:white;">Lucas Cruz</p>
+          <p style="margin:0;font-size:0.78rem;color:rgba(255,255,255,0.45);">Founder, Acqlerate</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Link to full story/data/bio page -->
+    <p style="font-size:1rem;line-height:1.7;color:#4B5563;margin:0 0 24px;text-align:center;max-width:640px;margin-left:auto;margin-right:auto;">
+      Turns out I wasn't the only one stuck in that moment. This gap shows up across the whole industry, and it's expensive. See the data behind it, and more about who's building this.
+    </p>
+    <div style="text-align:center;">
+      <a href="/why" style="display:inline-block;background:#01696F;color:white;font-weight:700;font-size:0.95rem;padding:12px 28px;border-radius:8px;text-decoration:none;">Read the Full Story &amp; the Data →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<div class="final-cta">
+  <h2>Your next promotion starts here.</h2>
+  <p>The acquisition professionals who get ahead are the ones who take the time to understand the system. Start with Module 1 — free, today.</p>
+  <div class="final-cta-btns">
+    <a href="/app#/auth" class="btn-white">Start Free — Module 1</a>
+    <a href="#pricing" class="btn-white-outline">View Pricing</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">Acq<span>lerate</span></div>
+    <div class="footer-links">
+      <a href="/app#/auth?mode=login">Sign In</a>
+      <a href="#modules">Curriculum</a>
+      <a href="#pricing">Pricing</a>
+      <a href="/blog">Blog</a>
+      <a href="#faq">FAQ</a>
+      <a href="/why">Our Story</a>
+    </div>
+  </div>
+  <div class="footer-inner">
+    <div class="footer-copy">
+      <span>© 2026 Acqlerate. All rights reserved. Not affiliated with WarU, DoD, or any government agency.</span>
+      <span style="display:flex;gap:16px;">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+        <a href="/sitemap.xml">Sitemap</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // FAQ accordion
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Email lead capture
+  async function submitLead(e, source) {
+    e.preventDefault();
+    const email = document.getElementById('captureEmail').value.trim();
+    if (!email) return;
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source }),
+      });
+      if (res.ok) {
+        document.getElementById('captureForm').style.display = 'none';
+        document.getElementById('captureSuccess').style.display = 'block';
+      }
+    } catch (err) {
+      console.error('Lead capture error:', err);
+    }
+  }
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#') return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+</body>
+</html>

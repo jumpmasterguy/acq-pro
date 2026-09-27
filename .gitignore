@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+.env.local
+.DS_Store
+*.log
+__pycache__/
+*.pyc
+*.patch
+
+# Staged for manual deletion (large originals, never commit)
+_to_delete/
