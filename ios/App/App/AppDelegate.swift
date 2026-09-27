@@ -47,3 +47,61 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 }
+
+// MARK: - Launch screen handover
+//
+// iOS dismisses the launch storyboard as soon as the app is up, which is
+// before the page has painted, so without this there is a bare teal frame
+// between the launch image and the page's own copy of it (index.html
+// #boot-splash). MainViewController lays the same launch image over the
+// web view and keeps it there until the page calls Launch.ready(), i.e.
+// once its identical copy is on screen. Then the cover steps aside and the
+// handover is invisible. Six seconds at most, so a dead connection never
+// traps anyone on the image.
+//
+// These live here, in a file the Xcode target already compiles, rather than
+// in new files that would need adding to the project by hand.
+
+class MainViewController: CAPBridgeViewController {
+    private var launchCover: UIImageView?
+
+    override func capacitorDidLoad() {
+        bridge?.registerPluginInstance(LaunchPlugin())
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let cover = UIImageView(image: UIImage(named: "Splash"))
+        cover.contentMode = .scaleAspectFill   // same fit as LaunchScreen.storyboard
+        cover.frame = view.bounds
+        cover.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        cover.backgroundColor = UIColor(red: 1 / 255, green: 105 / 255, blue: 111 / 255, alpha: 1)
+        view.addSubview(cover)
+        launchCover = cover
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6) { [weak self] in
+            self?.hideLaunchCover()
+        }
+    }
+
+    func hideLaunchCover() {
+        guard let cover = launchCover else { return }
+        launchCover = nil
+        cover.removeFromSuperview()
+    }
+}
+
+@objc(LaunchPlugin)
+public class LaunchPlugin: CAPPlugin, CAPBridgedPlugin {
+    public let identifier = "LaunchPlugin"
+    public let jsName = "Launch"
+    public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "ready", returnType: CAPPluginReturnPromise)
+    ]
+
+    @objc func ready(_ call: CAPPluginCall) {
+        DispatchQueue.main.async { [weak self] in
+            (self?.bridge?.viewController as? MainViewController)?.hideLaunchCover()
+        }
+        call.resolve()
+    }
+}
