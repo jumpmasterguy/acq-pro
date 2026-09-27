@@ -21,7 +21,7 @@ from dupe_guard import check as dupe_check, nearest as dupe_nearest, DuplicateTo
 
 # ── Config ────────────────────────────────────────────────────────────────────
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
-if not ANTHROPIC_API_KEY:
+if not ANTHROPIC_API_KEY and "--selftest" not in sys.argv:
     raise SystemExit("ANTHROPIC_API_KEY environment variable is not set. Set it before running this script.")
 DUPE_THRESHOLD = float(os.environ.get("DUPE_THRESHOLD", "0.30"))
 CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5")
@@ -510,6 +510,36 @@ def render_diagram_blocks(body: str) -> str:
     return body
 
 
+# Rule 12 of the article prompt. Kept OUT of the f-string on purpose: the JSON
+# examples contain { and }, which an f-string treats as code. That is what broke
+# every run from 21 Sep to 26 Sep 2026. Plain string, inserted with one
+# placeholder, so the braces are just text. `--selftest` checks this path.
+DIAGRAM_RULE = """12. DIAGRAM. The post needs exactly one diagram, but you do NOT draw it. Hand-placed SVG
+    coordinates are how the 19 Sep 2026 post shipped with black boxes and a label clipped to
+    "$2,00", so the drawing is done by scripts/diagram.py instead. You choose WHAT it shows;
+    the renderer handles layout, wrapping, centring and arrows.
+    Emit a single fenced block, anywhere after the section it illustrates, exactly like this:
+
+    ```diagram
+    {"kind": "flow", "caption": "One line saying what it shows.", ...}
+    ```
+
+    Pick the kind that fits the DATA:
+      flow      {"kind":"flow","steps":[{"label":str,"value":str?}...],
+                 "outcomes":[{"heading":str,"lines":[str,...]}...]}   1-3 steps, 0-3 outcomes
+      compare   {"kind":"compare","columns":[{"heading":str,"lines":[str,...]}...]}   2-3 columns
+      bars      {"kind":"bars","bars":[{"label":str,"value":number,"display":str}...],"note":str?}   2-6 bars
+      timeline  {"kind":"timeline","steps":[{"label":str,"sub":str?}...]}   3-5 steps
+
+    Rules for the spec:
+      - Valid JSON on one line. No SVG, no coordinates, no colours, no font sizes.
+      - It must carry information from THIS article. Real numbers wherever the topic has them.
+      - UNITS ALWAYS. Never a bare number: every value carries $ or % or a unit word, and where
+        a whole splits into parts, label the whole too.
+      - Keep each label under about 45 characters. The renderer wraps, but short reads better.
+      - "caption" is required: one plain sentence naming the takeaway."""
+
+
 def generate_article_body(topic: dict, research: str, pub_date: str) -> tuple:
     """Ask Claude for the article body + title + deck. Returns (title, deck, body_html)."""
     
@@ -553,30 +583,7 @@ REQUIREMENTS:
 10. Every section needs a "so what". Connect facts to what the reader should actually DO or KNOW.
 11. NO EM DASHES OR EN DASHES anywhere, in the title, deck or body. They read as AI-generated.
     Use periods, commas or parentheses instead. This rule is absolute.
-12. DIAGRAM. The post needs exactly one diagram, but you do NOT draw it. Hand-placed SVG
-    coordinates are how the 19 Sep 2026 post shipped with black boxes and a label clipped to
-    "$2,00", so the drawing is done by scripts/diagram.py instead. You choose WHAT it shows;
-    the renderer handles layout, wrapping, centring and arrows.
-    Emit a single fenced block, anywhere after the section it illustrates, exactly like this:
-
-    ```diagram
-    {"kind": "flow", "caption": "One line saying what it shows.", ...}
-    ```
-
-    Pick the kind that fits the DATA:
-      flow      {"kind":"flow","steps":[{"label":str,"value":str?}...],
-                 "outcomes":[{"heading":str,"lines":[str,...]}...]}   1-3 steps, 0-3 outcomes
-      compare   {"kind":"compare","columns":[{"heading":str,"lines":[str,...]}...]}   2-3 columns
-      bars      {"kind":"bars","bars":[{"label":str,"value":number,"display":str}...],"note":str?}   2-6 bars
-      timeline  {"kind":"timeline","steps":[{"label":str,"sub":str?}...]}   3-5 steps
-
-    Rules for the spec:
-      - Valid JSON on one line. No SVG, no coordinates, no colours, no font sizes.
-      - It must carry information from THIS article. Real numbers wherever the topic has them.
-      - UNITS ALWAYS. Never a bare number: every value carries $ or % or a unit word, and where
-        a whole splits into parts, label the whole too.
-      - Keep each label under about 45 characters. The renderer wraps, but short reads better.
-      - "caption" is required: one plain sentence naming the takeaway.
+{DIAGRAM_RULE}
 
 Start with the title on line 1, deck on line 2, then the body HTML."""
     
@@ -953,6 +960,53 @@ def git_push(slug: str, title: str) -> bool:
         return False
 
 
+def selftest() -> int:
+    """Run the whole writing path for every topic with the API stubbed out.
+
+    No network, no key, no files written. Catches the class of bug that
+    broke 21-26 Sep 2026: code that imports fine but blows up the first time
+    a real run reaches it. Runs in CI on every push to scripts/ and before
+    each scheduled post, so a bug is caught the day it is written.
+    """
+    global claude_generate
+    real = claude_generate
+    fake_body = ("Stub Title For Selftest\nStub deck sentence.\n"
+                 "<div class=\"callout\"><p><strong>TL;DR.</strong> Stub.</p></div>\n"
+                 "<h2>Section</h2><p>Body text.</p>\n"
+                 "```diagram\n"
+                 '{"kind":"compare","caption":"Stub caption.","columns":['
+                 '{"heading":"A","lines":["one","two"]},{"heading":"B","lines":["three"]}]}\n'
+                 "```\n<p>More text.</p>")
+    prompts = []
+    claude_generate = lambda prompt: (prompts.append(prompt), fake_body)[1]
+    pools = {"news": TOPIC_POOL_NEWS, "demand": TOPIC_POOL_DEMAND,
+             "educational": TOPIC_POOL_EDUCATIONAL}
+    failures, n = [], 0
+    try:
+        for name, pool in pools.items():
+            for i, topic in enumerate(pool):
+                n += 1
+                where = f"{name}[{i}] {topic.get('angle', '')[:50]}"
+                try:
+                    title, deck, body = generate_article_body(topic, "stub research", "2026-01-01")
+                    assert "DIAGRAM" in prompts[-1], "diagram rule missing from prompt"
+                    assert "<svg" in body, "diagram fence did not render"
+                    slug = slugify(title) or "selftest"
+                    html = assemble_post(title, deck, body, topic, "2026-01-01", slug, get_read_time(body))
+                    assert "<svg" in html and title in html, "assembled page is missing parts"
+                except Exception as e:
+                    failures.append(f"{where}: {type(e).__name__}: {e}")
+    finally:
+        claude_generate = real
+    if failures:
+        print(f"SELFTEST FAILED ({len(failures)} of {n} topics):")
+        for f in failures:
+            print("  -", f)
+        return 1
+    print(f"Selftest passed: {n} topics across {len(pools)} pools, prompt + diagram + page OK.")
+    return 0
+
+
 def main() -> int:
     now       = datetime.now(timezone.utc)
     pub_date  = now.strftime("%Y-%m-%d")
@@ -1060,4 +1114,4 @@ guessing. Do not state a figure you did not find."""
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(selftest() if "--selftest" in sys.argv else main())

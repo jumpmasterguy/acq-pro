@@ -34,6 +34,12 @@ jobs:
           git commit -m "blog: publish staged draft"
           git push origin HEAD:main
 
+      # Dry run of the whole writing path with the API stubbed. Fails in
+      # seconds, before any API spend, if the generator is broken.
+      - name: Selftest the generator
+        if: steps.drafts.outputs.published != 'yes'
+        run: python3 scripts/generate_blog_post.py --selftest
+
       - name: Generate a new post
         if: steps.drafts.outputs.published != 'yes'
         run: python3 scripts/generate_blog_post.py
