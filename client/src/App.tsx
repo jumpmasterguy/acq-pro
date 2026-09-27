@@ -121,6 +121,7 @@ const LessonPage = lazy(() => import("@/pages/LessonPage"));
 const AdminPage = lazy(() => import("@/pages/AdminPage"));
 const AdminAnalytics = lazy(() => import("@/pages/AdminAnalytics"));
 const PDUTracker = lazy(() => import("@/pages/PDUTracker"));
+const CertificatesPage = lazy(() => import("@/pages/CertificatesPage"));
 const CostTrackerIntroPage = lazy(() => import("@/pages/cost/CostTrackerIntroPage"));
 const CostProjectsPage = lazy(() => import("@/pages/cost/CostProjectsPage"));
 const CostProjectDetailPage = lazy(() => import("@/pages/cost/CostProjectDetailPage"));
@@ -155,6 +156,7 @@ type View =
   | { type: 'admin' }
   | { type: 'analytics' }
   | { type: 'pdu' }
+  | { type: 'certificates' }
   | { type: 'costTrackerIntro' }
   | { type: 'costProjects' }
   | { type: 'costProject'; projectId: string }
@@ -194,7 +196,7 @@ function loadSavedView(): View | null {
     const raw = sessionStorage.getItem(VIEW_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as View;
-    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin', 'analytics', 'pdu', 'costProjects', 'costRates', 'costTaskOrders'];
+    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin', 'analytics', 'pdu', 'certificates', 'costProjects', 'costRates', 'costTaskOrders'];
     if (!valid.includes(parsed.type)) return null;
     // Validate lesson ID still exists in curriculum
     if (parsed.type === 'lesson') {
@@ -432,6 +434,7 @@ function AppContent() {
     if (!isMobile) return;
     const MOBILE_VIEWS: View['type'][] = [
       'dashboard', 'modules', 'module', 'lesson', 'upgrade', 'account', 'resources', 'auth', 'onboarding',
+      'certificates',
     ];
     if (!MOBILE_VIEWS.includes(view.type)) setView({ type: 'dashboard' });
   }, [isMobile, view.type]);
@@ -955,6 +958,7 @@ function AppContent() {
               user={authState.user}
               onBack={() => setView({ type: 'dashboard' })}
               onUpgrade={() => setView({ type: 'upgrade' })}
+              onOpenCertificates={() => setView({ type: 'certificates' })}
               onNameUpdated={handleNameUpdated}
               onAccountDeleted={handleAccountDeleted}
               xp={progress.xp}
@@ -975,6 +979,12 @@ function AppContent() {
             <PDUTracker
               onBack={() => setView({ type: 'dashboard' })}
               completedLessons={Array.from(completedLessons)}
+            />
+          )}
+          {view.type === 'certificates' && (
+            <CertificatesPage
+              onBack={() => setView({ type: 'dashboard' })}
+              onUpgrade={() => setView({ type: 'upgrade' })}
             />
           )}
           {view.type === 'costTrackerIntro' && (
@@ -1170,15 +1180,28 @@ function AppContent() {
               Figures derive from the curriculum, so this cannot drift. */}
           {(() => {
             const nextMod = modules.find(m => m.lessons.some(l => !progress.completedLessons.has(l.id)));
-            if (!nextMod) return null;
-            const done = nextMod.lessons.filter(l => progress.completedLessons.has(l.id)).length;
-            const left = nextMod.lessons.length - done;
-            const pct = Math.round((done / nextMod.lessons.length) * 100);
             const earned = modules
               .filter(m => m.lessons.every(l => progress.completedLessons.has(l.id)))
               .reduce((sum, m) => sum + moduleClps(m.id), 0);
+            // The whole block opens My Certificates (the CLP ledger).
+            const open = () => { setView({ type: 'certificates' }); setSidebarOpen(false); };
+            if (!nextMod) {
+              return (
+                <button onClick={open} className="w-full text-left rounded-lg px-3 py-2 bg-amber-500/[0.12] border border-amber-500/35 space-y-1 hover:bg-amber-500/[0.18] transition-colors" data-testid="clp-tracker">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[12px] leading-none">&#127891;</span>
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-amber-700 dark:text-amber-300">CLP credit</span>
+                    <span className="ml-auto text-xs font-bold text-amber-500">{formatClps(earned)} earned</span>
+                  </div>
+                  <div className="text-xs text-amber-800 dark:text-amber-200/90">Every module finished. My certificates &rarr;</div>
+                </button>
+              );
+            }
+            const done = nextMod.lessons.filter(l => progress.completedLessons.has(l.id)).length;
+            const left = nextMod.lessons.length - done;
+            const pct = Math.round((done / nextMod.lessons.length) * 100);
             return (
-              <div className="rounded-lg px-3 py-2 bg-amber-500/[0.12] border border-amber-500/35 space-y-1.5" data-testid="clp-tracker">
+              <button onClick={open} className="w-full text-left rounded-lg px-3 py-2 bg-amber-500/[0.12] border border-amber-500/35 space-y-1.5 hover:bg-amber-500/[0.18] transition-colors" data-testid="clp-tracker">
                 <div className="flex items-center gap-1.5">
                   <span className="text-[12px] leading-none">&#127891;</span>
                   <span className="text-[11px] font-bold uppercase tracking-widest text-amber-700 dark:text-amber-300">CLP credit</span>
@@ -1195,10 +1218,11 @@ function AppContent() {
                 <div className="text-xs text-amber-800 dark:text-amber-200/90">
                   {left} more {left === 1 ? 'lesson' : 'lessons'} to this certificate
                 </div>
-                <div className="text-xs text-amber-800/80 dark:text-amber-200/70">
-                  {formatClps(totalClps())} available &middot; 80 per 2-year cycle
+                <div className="text-xs text-amber-800/80 dark:text-amber-200/70 flex justify-between gap-2">
+                  <span>{formatClps(totalClps())} available &middot; 80 per 2-year cycle</span>
+                  <span className="font-semibold whitespace-nowrap">My certificates &rarr;</span>
                 </div>
-              </div>
+              </button>
             );
           })()}
 

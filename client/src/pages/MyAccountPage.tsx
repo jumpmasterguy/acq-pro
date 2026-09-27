@@ -27,6 +27,8 @@ interface MyAccountPageProps {
   user: AuthUser;
   onBack: () => void;
   onUpgrade: () => void;
+  /** Opens My Certificates (the CLP ledger). On phones this is the only way in. */
+  onOpenCertificates?: () => void;
   onNameUpdated: (firstName: string, lastName: string, username: string) => void;
   onAccountDeleted: () => void;
   // ── Mobile Account ────────────────────────────────────────────────────────
@@ -65,7 +67,7 @@ function Section({ icon: Icon, title, children }: { icon: any; title: string; ch
   );
 }
 
-export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, onAccountDeleted,
+export default function MyAccountPage({ user, onBack, onUpgrade, onOpenCertificates, onNameUpdated, onAccountDeleted,
   xp = 0, completedLessons = new Set<string>(), streak = 0, onSignOut, themeMode = 'system', onThemeChange }: MyAccountPageProps) {
   const isMobile = useIsMobile();
   const nativeApp = isNativeApp();
@@ -211,6 +213,20 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
             completedLessons={completedLessons}
             skillLevels={(user.moduleSkillLevels ?? {}) as Record<string, string>}
           />
+          {onOpenCertificates && (
+            <button
+              onClick={onOpenCertificates}
+              className="mt-3 w-full flex items-center gap-3 rounded-lg px-3 py-2.5 bg-amber-500/[0.12] border border-amber-500/35 text-left"
+              data-testid="account-certificates"
+            >
+              <span className="text-lg leading-none">&#127891;</span>
+              <span className="flex-1">
+                <span className="block text-sm font-bold">My certificates</span>
+                <span className="block text-xs text-muted-foreground">Your CLP ledger, with IDs you can verify</span>
+              </span>
+              <span className="text-amber-600 dark:text-amber-400 text-sm font-semibold">&rarr;</span>
+            </button>
+          )}
         </AccountSection>
 
         <AccountSection icon={UserCircle} title="Name">

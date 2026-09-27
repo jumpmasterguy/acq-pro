@@ -2,7 +2,8 @@
 """
 Acqlerate Certificate of Completion generator.
 Usage: python3 certificate.py '<json>'
-JSON fields: name, module_id, module_title, clps, date, email
+JSON fields: name, module_id, module_title, clps, date, email,
+             cert_id (stored, verifiable), func_areas (list), verify_url
 Outputs the PDF to stdout as binary.
 """
 
@@ -49,14 +50,19 @@ def generate(data: dict) -> bytes:
         "capture":     "Contracting (CON) · Program Management (PM)",
         "operations":  "Program Management (PM)",
     }
-    func_areas = FUNC_MAP.get(module_id, "Program Management (PM)")
+    # The server sends the functional areas from shared/moduleClps.generated.ts
+    # (all 14 modules). FUNC_MAP is only a fallback for an old caller.
+    fa = data.get("func_areas")
+    func_areas = " · ".join(fa) if isinstance(fa, list) and fa else FUNC_MAP.get(module_id, "Program Management (PM)")
+    cert_id    = data.get("cert_id", "")
+    verify_url = data.get("verify_url", "")
     hours = round(clps, 1)
 
     buf = io.BytesIO()
     w, h = letter  # 612 x 792
 
     c = rl_canvas.Canvas(buf, pagesize=letter)
-    c.setTitle(f"Acqlerate Certificate of Completion — {module_title}")
+    c.setTitle(f"Acqlerate Certificate of Completion: {module_title}")
     c.setAuthor("Acqlerate")
 
     # ── Background ──────────────────────────────────────────────────────────
@@ -144,7 +150,7 @@ def generate(data: dict) -> bytes:
 
     c.setFillColor(MUTED)
     c.setFont("Helvetica", 9)
-    c.drawCentredString(w / 2, title_bottom - 16, "offered by Acqlerate — Defense Acquisitions Academy")
+    c.drawCentredString(w / 2, title_bottom - 16, "offered by Acqlerate, Defense Acquisitions Academy")
 
     # ── CLP Box ──────────────────────────────────────────────────────────────
     box_y = title_bottom - 80
@@ -184,8 +190,13 @@ def generate(data: dict) -> bytes:
         c.drawString(label_x, y, label.upper())
         c.setFillColor(NAVY)
         c.setFont("Helvetica", 9)
-        # Wrap long values
-        if len(value) > 55:
+        # Wrap long values at a " · " boundary, never mid-word
+        if len(value) > 55 and " · " in value:
+            parts = value.split(" · ")
+            first, rest = parts[0], " · ".join(parts[1:])
+            c.drawString(value_x, y + 3, first + " ·")
+            c.drawString(value_x, y - 8, rest)
+        elif len(value) > 55:
             c.drawString(value_x, y + 3, value[:55])
             c.drawString(value_x, y - 8, value[55:])
         else:
@@ -202,8 +213,8 @@ def generate(data: dict) -> bytes:
     c.setFillColor(MUTED)
     c.setFont("Helvetica-Oblique", 8)
     note = ("This certificate documents completion of self-paced online training. "
-            "DAW members may self-report this training as External Training in their DAU learning portal. "
-            "Content maps to DAWIA functional area requirements per DAU CLP policy.")
+            "DAW members may self-report this training as External Training in their WarU learning portal. "
+            "Content maps to DAWIA functional area requirements per WarU (formerly DAU) CLP policy.")
     # Simple word wrap
     words = note.split()
     lines = []
@@ -224,10 +235,17 @@ def generate(data: dict) -> bytes:
     # ── Footer ───────────────────────────────────────────────────────────────
     c.setFillColor(WHITE)
     c.setFont("Helvetica", 8)
-    c.drawCentredString(w / 2, 75, "Acqlerate — Defense Acquisitions Academy  ·  acqlerate.com")
+    c.drawCentredString(w / 2, 75, "Acqlerate, Defense Acquisitions Academy  ·  acqlerate.com")
     c.setFillColor(colors.HexColor("#94A3B8"))
     c.setFont("Helvetica", 7.5)
-    c.drawCentredString(w / 2, 60, f"Certificate ID: ACQ-{module_id.upper()}-{datetime.now().strftime('%Y%m')}-{abs(hash(email + name)) % 100000:05d}")
+    # The ID is issued once, stored with the completion, and checkable at the
+    # verify URL. (It used to be built from Python's hash(), which changes on
+    # every run, so the same certificate printed a different ID each time.)
+    if cert_id:
+        line = f"Certificate ID: {cert_id}"
+        if verify_url:
+            line += f"  ·  Verify at {verify_url}"
+        c.drawCentredString(w / 2, 60, line)
 
     c.save()
     return buf.getvalue()

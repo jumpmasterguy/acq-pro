@@ -77,6 +77,9 @@ export const users = pgTable("users", {
   // unique-listener counts) and "how many times" (for a play counter).
   // { [moduleId]: { firstPlayedAt: string, playCount: number } }
   audioListens: jsonb("audio_listens").notNull().default(sql`'{}'::jsonb`),
+  // One permanent record per finished module: completion date + certificate
+  // ID. See server/credentials.ts. { [moduleId]: { completedAt, certId, backfilled? } }
+  moduleCompletions: jsonb("module_completions").notNull().default(sql`'{}'::jsonb`),
   // AI Study Assistant usage tracking — resets daily, limits enforced per subscription tier
   aiCallsToday: integer("ai_calls_today").notNull().default(0),
   aiCallsDate: text("ai_calls_date"), // YYYY-MM-DD the counter above applies to

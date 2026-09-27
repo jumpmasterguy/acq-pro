@@ -38,29 +38,30 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
   ];
 
   const monthlyFeatures = [
-    `All ${modules.length} modules — every domain covered`,
-    `${totalLessons}+ in-depth lessons with real DoD content`,
+    `All ${modules.length} modules, every domain covered`,
+    `${totalLessons} lessons with real DoD content`,
     "All quiz questions with detailed explanations",
     "Key terms glossary for every lesson",
     "Career roadmap for gov & contractor tracks",
-    "\"The Debrief\" — audio lessons for every module (stream anytime)",
-    "AI Study Assistant — limited",
+    "\"The Debrief\": audio lessons for every module (stream anytime)",
+    "A certificate for every module you finish",
+    "AI Study Assistant (limited)",
     "Cancel anytime",
   ];
 
   const lifetimeFeatures = [
-    `All ${modules.length} modules — every domain covered`,
-    `${totalLessons}+ in-depth lessons with real DoD content`,
+    "\u2605 CLP ledger: every certificate in one place, your 2-year cycle tracked, one-tap copy for CAPPMIS, eDACM, and FAITAS, and a spreadsheet export",
+    `All ${modules.length} modules, every domain covered`,
+    `${totalLessons} lessons with real DoD content`,
     "All quiz questions with detailed explanations",
     "Key terms glossary for every lesson",
     "Formulas, tables & quick-reference content",
     "Career roadmap for gov & contractor tracks",
     "Salary benchmarks & certification guidance",
-    "\"The Debrief\" — audio lessons for every module (stream anytime)",
-    "AI Study Assistant — unlimited",
+    "\"The Debrief\": audio lessons for every module (stream anytime)",
+    "AI Study Assistant (unlimited), including \"How Do I Apply This?\"",
     "Lifetime content updates as regulations change",
     "Priority email support",
-    "\u2605 \"How Do I Apply This?\" AI — exclusive to Lifetime",
   ];
 
   const premiumModules = modules.filter(m => !m.free);

@@ -56,7 +56,8 @@ function readModules() {
     const seg = src.slice(mark.at, i + 1 < marks.length ? marks[i + 1].at : src.length);
     const title = (seg.match(/title:\s*'((?:[^'\\]|\\.)*)'/) || [])[1];
     const durations = [...seg.matchAll(/duration:\s*'(\d+)\s*min'/g)].map((m) => +m[1]);
-    const lessons = [...seg.matchAll(/\bid:\s*'[a-z]+-\d+[a-z]?'/g)].length;
+    const lessonIds = [...seg.matchAll(/\bid:\s*'([a-z]+-\d+[a-z]?)'/g)].map((m) => m[1]);
+    const lessons = lessonIds.length;
     if (!title) {
       console.error(`gen-module-clps: module '${mark.id}' has no title`);
       process.exit(1);
@@ -77,7 +78,7 @@ function readModules() {
     // (The hand-built table this replaced rounded, and inconsistently: it was
     // generated in Python, where 2.15 rounds down to 2.1 but 4.15 rounds up to
     // 4.2, a float artifact rather than a policy.)
-    return { id: mark.id, title, lessons, minutes, clps: Math.floor((minutes / 60) * 10) / 10 };
+    return { id: mark.id, title, lessons, lessonIds, minutes, clps: Math.floor((minutes / 60) * 10) / 10 };
   });
 }
 
@@ -107,6 +108,31 @@ const TALENT_TRIANGLE = {
   compliance: ["ba"], preaward: ["ww"], lifecycle: ["ww"], onramp: ["ba"],
   veteran: ["ps"], history: ["ba"],
 };
+// DAWIA functional areas printed on each module's Certificate of Completion.
+// Same rule as the Talent Triangle map: a new module must be added here or
+// the build stops, so no certificate silently falls back to a default.
+const FUNCTIONAL_AREAS = {
+  foundations: ["Program Management (PM)", "Contracting (CON)"],
+  finance:     ["Business Financial Management (BFM)", "Program Management (PM)"],
+  contracts:   ["Contracting (CON)", "Program Management (PM)"],
+  data:        ["Program Management (PM)", "Business Financial Management (BFM)"],
+  capture:     ["Contracting (CON)", "Program Management (PM)"],
+  operations:  ["Program Management (PM)"],
+  business:    ["Business Financial Management (BFM)", "Program Management (PM)"],
+  smallbiz:    ["Contracting (CON)", "Program Management (PM)"],
+  compliance:  ["Contracting (CON)", "Program Management (PM)"],
+  preaward:    ["Contracting (CON)", "Program Management (PM)"],
+  lifecycle:   ["Program Management (PM)", "Life Cycle Logistics (LCL)"],
+  onramp:      ["Contracting (CON)", "Program Management (PM)"],
+  veteran:     ["Program Management (PM)"],
+  history:     ["Program Management (PM)", "Contracting (CON)"],
+};
+const unmappedFA = mods.filter((m) => !FUNCTIONAL_AREAS[m.id]).map((m) => m.id);
+if (unmappedFA.length) {
+  console.error(`gen-module-clps: no DAWIA functional area for module(s) ${unmappedFA.join(", ")}. ` +
+                `Add them to FUNCTIONAL_AREAS in scripts/gen-module-clps.mjs.`);
+  process.exit(1);
+}
 const unmapped = mods.filter((m) => !TALENT_TRIANGLE[m.id]).map((m) => m.id);
 if (unmapped.length) {
   console.error(`gen-module-clps: no PMI Talent Triangle area for module(s) ${unmapped.join(", ")}. ` +
@@ -156,6 +182,17 @@ export const GENERATED_TOTAL_CLPS = ${total.toFixed(1)};
  * shared/courseTotals.generated.json, filled in by scripts/sync-blog.mjs).
  */
 export const COURSE_TOTALS = ${JSON.stringify(totals, null, 2).replace(/"([a-zA-Z]+)":/g, "$1:")} as const;
+
+/** Lesson ids per module. The server uses this to decide when a module is
+ *  finished, which is what gates its Certificate of Completion. */
+export const MODULE_LESSON_IDS: Record<string, readonly string[]> = {
+${mods.map((m) => `  ${m.id}: ${JSON.stringify(m.lessonIds)},`).join("\n")}
+};
+
+/** DAWIA functional areas printed on each module's certificate. */
+export const MODULE_FUNCTIONAL_AREAS: Record<string, readonly string[]> = {
+${mods.map((m) => `  ${m.id}: ${JSON.stringify(FUNCTIONAL_AREAS[m.id])},`).join("\n")}
+};
 `;
 
 const existing = (() => { try { return readFileSync(OUT, "utf8"); } catch { return null; } })();

@@ -115,6 +115,10 @@ export interface IStorage {
   completeBrief(userId: string, briefId: string, score: number, xpEarned: number): Promise<{ user: User; awarded: boolean; briefsRead: string[] } | undefined>;
   getBriefsRead(userId: string): Promise<string[]>;
   checkAndConsumeAiCall(userId: string): Promise<{ allowed: boolean; remaining: number | null; limit: number | null }>;
+  /** The user holding this certificate ID, for the public verify page. */
+  findUserByCertId(certId: string): Promise<User | undefined>;
+  /** Both implementations had this; the interface never declared it. */
+  updateUserFields(userId: string, fields: Record<string, any>): Promise<void>;
   runAiUsageMigration(): Promise<{ ok: boolean; detail: string }>;
   saveLead(email: string, source?: string): Promise<Lead>;
   getAllLeads(): Promise<Lead[]>;
@@ -255,6 +259,17 @@ export class DrizzleStorage implements IStorage {
   // Update arbitrary user fields (for internal use)
   async updateUserFields(userId: string, fields: Record<string, any>): Promise<void> {
     await this.db.update(users).set(fields as any).where(eq(users.id, userId));
+  }
+
+  async findUserByCertId(certId: string): Promise<User | undefined> {
+    // jsonb_each over module_completions: fine at this scale, and it keeps
+    // the record in one column instead of a second table to keep in sync.
+    const rows = await this.db
+      .select()
+      .from(users)
+      .where(sql`EXISTS (SELECT 1 FROM jsonb_each(${users.moduleCompletions}) e WHERE e.value->>'certId' = ${certId})`)
+      .limit(1);
+    return rows[0];
   }
 
   // Find or create a user for Google OAuth — links by email if account already exists
@@ -1275,6 +1290,14 @@ export class MemStorage implements IStorage {
     const user = this.users.get(userId);
     if (!user) return;
     this.users.set(userId, { ...user, ...fields } as User);
+  }
+
+  async findUserByCertId(certId: string): Promise<User | undefined> {
+    for (const u of Array.from(this.users.values())) {
+      const comps = ((u as any).moduleCompletions ?? {}) as Record<string, { certId: string }>;
+      if (Object.values(comps).some((c) => c.certId === certId)) return u;
+    }
+    return undefined;
   }
 
   async updateUserStreak(userId: string): Promise<User | undefined> {

@@ -272,6 +272,7 @@ app.use((req, res, next) => {
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS login_history JSONB NOT NULL DEFAULT '[]'::JSONB`,
         // "The Debrief" audio listen tracking, keyed by module id
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS audio_listens JSONB NOT NULL DEFAULT '{}'::JSONB`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS module_completions JSONB NOT NULL DEFAULT '{}'::JSONB`,
         // My Account — split name fields (see shared/schema.ts for why
         // username sticks around). Columns first, then a one-time backfill
         // for every pre-existing row (new signups set these directly, so

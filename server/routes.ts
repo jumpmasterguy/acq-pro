@@ -13,6 +13,8 @@ import { registerSchema, loginSchema, userProfileSchema, updateNameSchema } from
 import { hasPaidPlan, hasFullAccess, PACK_BONUS_PACKS } from "@shared/access";
 import { grantPackBonus, packBonusStatus } from "./packBonus";
 import { MODULE_CLPS } from "@shared/moduleClps";
+import { MODULE_FUNCTIONAL_AREAS } from "@shared/moduleClps.generated";
+import { syncCompletions, moduleOfLesson, certificateName, formatCertDate, buildLedger, ledgerCsv, type ModuleCompletions } from "./credentials";
 import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken, sendPurchaseAdminAlert, sendSubscriptionCancelledAdminAlert, sendPasswordResetEmail, sendPackPurchaseEmail } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 import { costTrackerStorage } from "./costTrackerStorage";
@@ -723,10 +725,19 @@ export async function registerRoutes(
       }
     }
 
+    // Finishing a module's last lesson records its completion date and issues
+    // its certificate ID, once, permanently (server/credentials.ts).
+    const sync = syncCompletions(
+      completedLessons,
+      (currentUser as any).moduleCompletions as ModuleCompletions,
+      scoreOnly === true ? undefined : moduleOfLesson(lessonId),
+    );
+
     // Recorded from the user as they were BEFORE this lesson or score, so the
     // XP it earns counts toward this week's leaderboard.
     const updated = await storage.updateUserProgress(
-      userId, completedLessons, newScores, weekRollPatch(currentUser as any),
+      userId, completedLessons, newScores,
+      { ...weekRollPatch(currentUser as any), ...(sync.changed ? { moduleCompletions: sync.completions } : {}) },
     );
     if (!updated) {
       return res.status(500).json({ message: "Failed to save progress" });
@@ -741,7 +752,14 @@ export async function registerRoutes(
     req.user!.completedLessons = updated.completedLessons ?? [];
     req.user!.quizScores = (updated.quizScores as Record<string, number>) ?? {};
 
-    return res.json({ completedLessons: updated.completedLessons, quizScores: updated.quizScores });
+    (req.user as any).moduleCompletions = (updated as any).moduleCompletions ?? {};
+
+    return res.json({
+      completedLessons: updated.completedLessons,
+      quizScores: updated.quizScores,
+      // Lets the client celebrate "certificate earned" on the lesson that did it.
+      newlyCompletedModules: sync.newlyCompleted.filter((m) => m === moduleOfLesson(lessonId)),
+    });
   });
 
   // ─── Skill Level Routes ────────────────────────────────────────────
@@ -2723,40 +2741,73 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
     });
   });
 
-  // ── GET /api/certificate/:moduleId ─────────────────────────────────────────
-  // Generates a PDF Certificate of Completion for an authenticated user.
-  // Only available if user has completed all lessons in the module.
-  app.get("/api/certificate/:moduleId", requireAuth as any, async (req: Request, res: Response) => {
-    const { moduleId } = req.params;
-    const user = (req as any).user as { id: number; username: string; email: string };
+  // ── Certificates, the CLP ledger, and public verification ─────────────────
+  // All read users.module_completions (server/credentials.ts). A user's record
+  // is brought up to date first, so modules finished before records existed
+  // get stamped (marked backfilled) the first time anyone looks.
+  async function freshCompletions(userId: string): Promise<{ user: any; completions: ModuleCompletions } | null> {
+    const user = await storage.getUser(userId);
+    if (!user) return null;
+    const sync = syncCompletions((user as any).completedLessons ?? [], (user as any).moduleCompletions);
+    if (sync.changed) {
+      await storage.updateUserFields(userId, { moduleCompletions: sync.completions });
+    }
+    return { user, completions: sync.completions };
+  }
 
-    // Moved to shared/moduleClps.ts so the client can show the same numbers
-    // it will print here — the mobile Modules list and Module header both
-    // display CLPs, and a second copy would have drifted.
+  const CERT_ID_RE = /^ACQ-[2-9A-Z]{4}-[2-9A-Z]{4}$/;
+
+  async function lookupCertificate(rawId: string) {
+    const certId = String(rawId || '').toUpperCase().trim();
+    if (!CERT_ID_RE.test(certId)) return null;
+    const user = await storage.findUserByCertId(certId);
+    if (!user) return null;
+    const entry = Object.entries(((user as any).moduleCompletions ?? {}) as ModuleCompletions)
+      .find(([, c]) => c.certId === certId);
+    if (!entry || !MODULE_CLPS[entry[0]]) return null;
+    const [moduleId, rec] = entry;
+    return {
+      certId,
+      name: certificateName(user as any),
+      course: MODULE_CLPS[moduleId].title,
+      clps: MODULE_CLPS[moduleId].clps,
+      functionalAreas: MODULE_FUNCTIONAL_AREAS[moduleId] ?? [],
+      completedOn: formatCertDate(rec.completedAt),
+    };
+  }
+
+  // GET /api/certificate/:moduleId: PDF Certificate of Completion. Issued only
+  // for a finished module, with its recorded completion date and permanent ID.
+  // (It used to issue to anyone who asked, dated the day of download.)
+  app.get("/api/certificate/:moduleId", requireAuth as any, async (req: Request, res: Response) => {
+    const moduleId = String(req.params.moduleId);
+    // Shared with the client so the app shows the same numbers printed here.
     const mod = MODULE_CLPS[moduleId];
     if (!mod) return res.status(404).json({ message: 'Module not found' });
+
+    const fresh = await freshCompletions((req.user as any).id);
+    if (!fresh) return res.status(404).json({ message: 'User not found' });
+    const record = fresh.completions[moduleId];
+    if (!record) {
+      return res.status(403).json({ message: 'Finish every lesson in this module to earn its certificate.' });
+    }
 
     const { execFile } = await import('child_process');
     const { promisify } = await import('util');
     const path = await import('path');
     const execFileAsync = promisify(execFile);
 
-    // Prefer First + Last. Google sign-ups have username = their email, which
-    // used to get printed on the certificate; never print an email address.
-    const u = user as any;
-    const fullName = `${u.firstName ?? ''} ${u.lastName ?? ''}`.trim();
-    const certName =
-      (fullName && !fullName.includes('@')) ? fullName
-      : (user.username && !user.username.includes('@')) ? user.username
-      : 'Defense Professional';
-
     const payload = JSON.stringify({
-      name: certName,
+      // Never an email address: Google sign-ups have username = email.
+      name: certificateName(fresh.user),
       module_id: moduleId,
       module_title: mod.title,
       clps: mod.clps,
-      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
-      email: user.email || '',
+      date: formatCertDate(record.completedAt),
+      email: '',
+      cert_id: record.certId,
+      func_areas: MODULE_FUNCTIONAL_AREAS[moduleId] ?? [],
+      verify_url: `acqlerate.com/verify/${record.certId}`,
     });
 
     try {
@@ -2774,6 +2825,101 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       console.error('[certificate] PDF generation failed:', err.message);
       return res.status(500).json({ message: 'Certificate generation failed' });
     }
+  });
+
+  const ledgerUnlocked = (u: any) => u?.subscriptionStatus === 'lifetime' || !!u?.isAdmin;
+
+  // GET /api/clp-ledger: every certificate the user holds, plus the two-year
+  // cycle. Lifetime Pro feature. Other tiers get a summary for the upsell,
+  // never the per-certificate detail or the export. Individual certificates
+  // stay downloadable from each module page on every tier.
+  app.get("/api/clp-ledger", requireAuth as any, async (req: Request, res: Response) => {
+    const fresh = await freshCompletions((req.user as any).id);
+    if (!fresh) return res.status(404).json({ message: 'User not found' });
+    const ledger = buildLedger(fresh.completions);
+    if (!ledgerUnlocked(fresh.user)) {
+      return res.json({
+        locked: true,
+        certificates: ledger.entries.length,
+        totalClps: ledger.totalClps,
+        availableClps: ledger.availableClps,
+        cycleTarget: ledger.cycleTarget,
+        modulesTotal: ledger.modulesTotal,
+      });
+    }
+    return res.json({ locked: false, name: certificateName(fresh.user), ...ledger });
+  });
+
+  // GET /api/clp-ledger.csv: the same ledger as a spreadsheet. Lifetime only.
+  app.get("/api/clp-ledger.csv", requireAuth as any, async (req: Request, res: Response) => {
+    const fresh = await freshCompletions((req.user as any).id);
+    if (!fresh) return res.status(404).json({ message: 'User not found' });
+    if (!ledgerUnlocked(fresh.user)) {
+      return res.status(403).json({ message: 'The CLP ledger export is part of Lifetime Pro.' });
+    }
+    const csv = ledgerCsv(buildLedger(fresh.completions), certificateName(fresh.user));
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="acqlerate-clp-ledger.csv"');
+    return res.send(csv);
+  });
+
+  // GET /api/verify/:certId: public, no sign-in. Returns only what is printed
+  // on the certificate itself.
+  app.get("/api/verify/:certId", async (req: Request, res: Response) => {
+    const cert = await lookupCertificate(String(req.params.certId));
+    res.setHeader('Cache-Control', 'no-store');
+    if (!cert) return res.status(404).json({ valid: false });
+    return res.json({ valid: true, provider: 'Acqlerate', ...cert });
+  });
+
+  // GET /verify/:certId: the page behind the link printed on every
+  // certificate. Server-rendered, so it works for anyone with no app and no JS.
+  app.get("/verify/:certId", async (req: Request, res: Response) => {
+    const cert = await lookupCertificate(String(req.params.certId));
+    const esc = (v: string) => v.replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]!));
+    let body: string;
+    if (cert) {
+      const rows: [string, string][] = [
+        ['Awarded to', cert.name],
+        ['Course', cert.course],
+        ['Completed', cert.completedOn],
+        ['Instruction hours / CLPs', cert.clps.toFixed(1)],
+        ['DAWIA functional areas', cert.functionalAreas.join(', ')],
+        ['Certificate ID', cert.certId],
+      ];
+      body = `<div class="badge ok">&#10003; Valid certificate</div>
+        <h1>Certificate of Completion</h1>
+        <table>${rows.map(([k, v]) => `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`).join('')}</table>
+        <p class="fine">Issued by Acqlerate for self-paced online training. Acqlerate is not affiliated with WarU, DoD, or any government agency. The learner self-reports this training in their own portal.</p>`;
+    } else {
+      body = `<div class="badge no">No match</div>
+        <h1>We could not find that certificate</h1>
+        <p>Check the ID against the printed certificate. It looks like <b>ACQ-XXXX-XXXX</b> and never uses the characters 0, 1, O, I, or L.</p>`;
+    }
+    res.status(cert ? 200 : 404);
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('X-Robots-Tag', 'noindex');
+    return res.send(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verify a certificate | Acqlerate</title><meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg">
+<style>
+@font-face{font-family:'General Sans';font-weight:500;src:url('/fonts/GeneralSans-Medium.woff2') format('woff2')}
+@font-face{font-family:'General Sans';font-weight:700;src:url('/fonts/GeneralSans-Bold.woff2') format('woff2')}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'General Sans',-apple-system,sans-serif;background:#F1F5F4;color:#0F172A;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:48px 16px}
+a.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#0F172A;font-weight:700;font-size:1.1rem;margin-bottom:28px}
+a.logo span{color:#01696F}
+a.logo img{width:32px;height:32px;border-radius:8px;background:#01696F}
+.card{background:#fff;border:1px solid #D3DFDE;border-top:4px solid #D9B64C;border-radius:14px;padding:32px;max-width:560px;width:100%}
+h1{font-size:1.5rem;margin:14px 0 18px;letter-spacing:-.01em}
+.badge{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:6px}
+.ok{background:#E7F2EC;color:#1F6B43}.no{background:#FAEDE5;color:#A8482A}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th{text-align:left;color:#6B8082;font-weight:500;padding:9px 12px 9px 0;vertical-align:top;width:44%;border-bottom:1px solid #E7EEED}
+td{padding:9px 0;font-weight:500;border-bottom:1px solid #E7EEED}
+p{color:#3D5153;line-height:1.6}.fine{font-size:.82rem;margin-top:18px;color:#6B8082}
+</style></head><body><a class="logo" href="/"><img src="/acqlerate-icon.svg" alt=""><b>Acq<span>lerate</span></b></a><div class="card">${body}</div></body></html>`);
   });
 
   return httpServer;
