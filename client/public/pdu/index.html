@@ -224,11 +224,13 @@
     .price-amount span { font-size: 1rem; font-weight: 400; color: rgba(255,255,255,0.4); }
     .price-desc { font-size: 0.82rem; color: rgba(255,255,255,0.45); margin: 0 0 20px; line-height: 1.5; }
     .price-features { list-style: none; padding: 0; margin: 0 0 24px; }
+    /* Block, not flex: in a flex li each count marker became its own flex
+       item and the words spread apart. The tick sits in the left padding. */
     .price-features li {
-      font-size: 0.85rem; color: rgba(255,255,255,0.65); padding: 7px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; gap: 8px;
+      font-size: 0.85rem; color: rgba(255,255,255,0.65); padding: 7px 0 7px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.05); position: relative;
     }
-    .price-features li::before { content: '✓'; color: #4FB3BF; font-weight: 800; flex-shrink: 0; }
+    .price-features li::before { content: '✓'; color: #4FB3BF; font-weight: 800; position: absolute; left: 0; top: 7px; }
     .btn-price-primary {
       display: block; background: #01696F; color: white; font-weight: 800; font-size: 0.9rem;
       padding: 13px 20px; border-radius: 10px; text-decoration: none; text-align: center;
@@ -589,16 +591,17 @@
     <p class="section-sub">Free access includes Module 1 sample lessons. Pro unlocks all <span data-count="modules">14</span> modules, all <span data-count="lessons">123</span> lessons, and the full ~<span data-count="clps">44.2</span> PDUs.</p>
 
     <div class="pricing-grid">
+<!--pricing:legacy-->
       <div class="price-card featured">
         <div class="price-tier">Pro Lifetime</div>
         <div class="price-amount">$99 <span>one-time</span></div>
-        <p class="price-desc">Lifetime access to all content. Best value, especially if you are in a 3-year PDU cycle and want the content permanently.</p>
+        <p class="price-desc">Lifetime access to all content. Sold through September 30 only; from October 1 it is replaced by Annual Pro at $149 a year.</p>
         <ul class="price-features">
           <li>All <span data-count="modules">14</span> modules, <span data-count="lessons">123</span> lessons</li>
           <li>~<span data-count="clps">44.2</span> PDUs, across all three Talent Triangle areas</li>
           <li>New content added as curriculum grows</li>
           <li>PMI CCRS logging guide included</li>
-          <li>Downloadable module completion records</li>
+          <li>Lesson Book PDFs and module completion records to download</li>
           <li>No recurring charges</li>
         </ul>
         <a href="/app#/auth" class="btn-price-primary">Get Lifetime Access →</a>
@@ -606,7 +609,7 @@
       <div class="price-card">
         <div class="price-tier">Pro Monthly</div>
         <div class="price-amount">$5.99 <span>/ month</span></div>
-        <p class="price-desc">Full access month-to-month. Cancel anytime. Ideal if you want to complete all modules in a focused sprint.</p>
+        <p class="price-desc">Full access month-to-month. Subscribe by September 30 and keep $5.99 for as long as you stay; $14.99 from October 1.</p>
         <ul class="price-features">
           <li>All <span data-count="modules">14</span> modules, <span data-count="lessons">123</span> lessons</li>
           <li>~<span data-count="clps">44.2</span> PDUs available</li>
@@ -615,6 +618,35 @@
         </ul>
         <a href="/app#/auth" class="btn-price-ghost">Start Monthly →</a>
       </div>
+<!--/pricing:legacy-->
+<!--pricing:new-->
+      <div class="price-card featured">
+        <div class="price-tier">Pro Annual</div>
+        <div class="price-amount">$149 <span>/ year</span></div>
+        <p class="price-desc">$12.42 a month, billed yearly. Best value for a 3-year PDU cycle: a year is plenty of time to finish every module.</p>
+        <ul class="price-features">
+          <li>All <span data-count="modules">14</span> modules, <span data-count="lessons">123</span> lessons</li>
+          <li>~<span data-count="clps">44.2</span> PDUs, across all three Talent Triangle areas</li>
+          <li>New content added as curriculum grows</li>
+          <li>PMI CCRS logging guide included</li>
+          <li>Lesson Book PDFs and module completion records to download</li>
+          <li>Two months free vs. Monthly</li>
+        </ul>
+        <a href="/app#/auth?plan=annual" class="btn-price-primary">Get Annual Access →</a>
+      </div>
+      <div class="price-card">
+        <div class="price-tier">Pro Monthly</div>
+        <div class="price-amount">$14.99 <span>/ month</span></div>
+        <p class="price-desc">Full access month-to-month. Cancel anytime. Ideal if you want to complete all modules in a focused sprint.</p>
+        <ul class="price-features">
+          <li>All <span data-count="modules">14</span> modules, <span data-count="lessons">123</span> lessons</li>
+          <li>~<span data-count="clps">44.2</span> PDUs available</li>
+          <li>Cancel anytime</li>
+          <li>PMI CCRS logging guide included</li>
+        </ul>
+        <a href="/app#/auth?plan=monthly" class="btn-price-ghost">Start Monthly →</a>
+      </div>
+<!--/pricing:new-->
     </div>
 
     <p style="text-align:center;font-size:0.8rem;color:rgba(255,255,255,0.3);margin-top:18px">

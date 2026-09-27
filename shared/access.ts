@@ -1,12 +1,28 @@
 // Access-tier helpers shared by client and server.
 //
 // subscriptionStatus lifecycle: 'free' -> 'trialing' (14 days from signup) ->
-// 'active' | 'lifetime' (paid) OR back down to 'free' once the trial clock
+// 'active' (Monthly) | 'annual' | 'lifetime' (paid) OR back down to 'free' once the trial clock
 // runs out without a payment. We never flip 'trialing' -> 'free' in the DB;
 // expiry is computed on read (see hasFullAccess) so there's no cron job that
 // can silently fail and leave someone with the wrong access level.
 
 export const TRIAL_DAYS = 14;
+
+/** Statuses that mean the person has actually paid (or been comped). */
+export const PAID_STATUSES = ["active", "annual", "lifetime"] as const;
+
+export function isPaidStatus(status: string | null | undefined): boolean {
+  return !!status && (PAID_STATUSES as readonly string[]).includes(status);
+}
+
+/**
+ * Annual and Lifetime are the "top" plans: Lesson Book PDF downloads,
+ * unlimited AI Study Assistant and the "How Do I Apply This?" AI. Monthly
+ * (at any price) streams everything but does not include downloads.
+ */
+export function isTopPlanStatus(status: string | null | undefined): boolean {
+  return status === "annual" || status === "lifetime";
+}
 
 export interface TrialFields {
   subscriptionStatus?: string | null;
@@ -16,7 +32,7 @@ export interface TrialFields {
 /** Full-catalog access: all 6 modules, AI assistant at the paid limit, etc. */
 export function hasFullAccess(user: TrialFields | null | undefined): boolean {
   if (!user) return false;
-  if (user.subscriptionStatus === "active" || user.subscriptionStatus === "lifetime") return true;
+  if (isPaidStatus(user.subscriptionStatus)) return true;
   if (user.subscriptionStatus === "trialing" && user.trialEndsAt) {
     return new Date(user.trialEndsAt).getTime() > Date.now();
   }
@@ -32,7 +48,15 @@ export function hasFullAccess(user: TrialFields | null | undefined): boolean {
  */
 export function hasPaidPlan(user: TrialFields | null | undefined): boolean {
   if (!user) return false;
-  return user.subscriptionStatus === "active" || user.subscriptionStatus === "lifetime";
+  return isPaidStatus(user.subscriptionStatus);
+}
+
+/**
+ * Lesson Book PDF downloads (every module except Module 1, which is free to
+ * any signed-in user). Annual and Lifetime only: not Monthly, not a trial.
+ */
+export function canDownloadLessonBooks(user: TrialFields | null | undefined): boolean {
+  return !!user && isTopPlanStatus(user.subscriptionStatus);
 }
 
 /** True only while an unconverted trial is still running (used for trial-specific UI/emails). */

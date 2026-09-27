@@ -22,6 +22,7 @@ import { getActiveTrack, useActiveTrack } from "@/lib/careerTracks";
 import { DailyChallengeSheet } from "@/components/mobile/DailyChallengeSheet";
 import { LeaderboardQuietRow } from "@/components/Leaderboard";
 import { WeeklyBrief } from "@/components/WeeklyBrief";
+import { upgradeCtaSuffix } from "@shared/pricing";
 
 interface DashboardProps {
   progress: UserProgress;
@@ -1102,11 +1103,11 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
           <h3 className="font-bold text-lg mb-1.5">Unlock the Full Academy</h3>
           <p className="text-sm text-muted-foreground mb-5 max-w-md mx-auto">
             Get access to all {modules.length} modules, {getTotalLessons()}+ lessons,
-            quizzes, and career resources for a one-time investment in your career.
+            quizzes, and career resources.
           </p>
           <Button onClick={onUpgrade} size="lg" data-testid="upgrade-cta">
             {/* No price on native — App Store 3.1.1. */}
-            {isNativeApp() ? "Upgrade to Pro" : "Upgrade to Pro — $99 lifetime"}
+            {isNativeApp() ? "Upgrade to Pro" : `Upgrade to Pro, ${upgradeCtaSuffix()}`}
           </Button>
         </div>
       )}

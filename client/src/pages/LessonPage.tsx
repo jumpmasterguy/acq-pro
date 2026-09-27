@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { TermTapProvider } from "@/components/AcronymText";
 import { KeyTermSheet, QuizOption, LessonFooter } from "@/components/mobile/LessonPieces";
+import { topPlanName } from "@shared/pricing";
 
 const SKILL_LEVELS: SkillLevel[] = ['novice', 'intermediate', 'advanced'];
 const LEVEL_LABELS: Record<SkillLevel, string> = {
@@ -157,7 +158,7 @@ interface LessonPageProps {
   unlockedLevel?: SkillLevel;
   // Callback to open the module assessment from within a lesson
   onOpenAssessment?: () => void;
-  // True only for lifetime subscribers — unlocks "How Do I Apply This?" AI button
+  // True for Annual and Lifetime (the top plans): unlocks "How Do I Apply This?"
   isLifetime?: boolean;
   activeCareer?: string | null;
 }
@@ -3481,12 +3482,12 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                   <div
                     data-testid="ai-apply-locked"
                     className="flex-1 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-dashed border-border/60 text-sm text-left cursor-default opacity-60"
-                    title="Upgrade to Lifetime to unlock"
+                    title={`Upgrade to ${topPlanName()} to unlock`}
                   >
                     <Lock className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
                     <div>
                       <div className="font-semibold text-xs text-muted-foreground">How Do I Apply This?</div>
-                      <div className="text-[11px] text-muted-foreground/70">Lifetime plan — <a href="/#/upgrade" className="underline hover:text-primary">upgrade</a></div>
+                      <div className="text-[11px] text-muted-foreground/70">{topPlanName()}: <a href="/#/upgrade" className="underline hover:text-primary">upgrade</a></div>
                     </div>
                   </div>
                 )}

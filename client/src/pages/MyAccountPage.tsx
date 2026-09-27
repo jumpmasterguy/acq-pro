@@ -52,6 +52,7 @@ const SUBSCRIPTION_LABELS: Record<string, { label: string; tone: string }> = {
   free: { label: 'Free', tone: 'bg-muted text-muted-foreground' },
   trialing: { label: 'Free Trial', tone: 'bg-amber-500/10 text-amber-700 dark:text-amber-400' },
   active: { label: 'Pro (Monthly)', tone: 'bg-primary/15 text-primary' },
+  annual: { label: 'Pro (Annual)', tone: 'bg-yellow-500/15 text-yellow-600 dark:text-yellow-400' },
   lifetime: { label: 'Pro (Lifetime)', tone: 'bg-yellow-500/15 text-yellow-600 dark:text-yellow-400' },
 };
 
@@ -578,7 +579,7 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onOpenCertifica
       <Section icon={AlertTriangle} title="Delete Account">
         <p className="text-sm text-muted-foreground mb-3">
           Permanently deletes your account, progress, streaks and XP.
-          {user.subscriptionStatus === 'active' && ' Your monthly subscription is cancelled immediately.'}
+          {(user.subscriptionStatus === 'active' || user.subscriptionStatus === 'annual') && ' Your subscription is cancelled immediately.'}
           {' '}This cannot be undone.
         </p>
         <Button size="sm" variant="outline" className="gap-1.5 border-destructive/40 text-destructive hover:bg-destructive/10" onClick={() => { setDeleteText(""); setDeleteOpen(true); }} data-testid="delete-account">

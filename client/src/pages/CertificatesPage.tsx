@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, API_BASE } from "@/lib/queryClient";
 import { isNativeApp } from "@/lib/platform";
+import { isNewPricing, topPlanName } from "@shared/pricing";
 
 /**
- * My Certificates: the CLP ledger. A Lifetime Pro feature (server enforces it
+ * My Certificates: the CLP ledger. An Annual/Lifetime Pro feature (server enforces it
  * on /api/clp-ledger and the CSV). Every other tier sees what they have earned
  * so far and what the ledger adds; individual certificates stay downloadable
  * from each module page on every tier.
@@ -100,7 +101,7 @@ export default function CertificatesPage({ onBack, onUpgrade }: Props) {
     );
   }
 
-  // ── Locked: every tier except Lifetime ──────────────────────────────────
+  // ── Locked: every tier except Annual and Lifetime ───────────────────────
   if (data.locked) {
     return (
       <div className="space-y-6 pb-8" data-testid="certificates-locked">
@@ -121,7 +122,7 @@ export default function CertificatesPage({ onBack, onUpgrade }: Props) {
 
         <div className="bg-card border border-border rounded-xl p-5 space-y-4">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-700 dark:text-amber-300">
-            <Lock className="w-3.5 h-3.5" /> Lifetime Pro
+            <Lock className="w-3.5 h-3.5" /> {topPlanName()}
           </div>
           <h2 className="font-bold">Every certificate in one place, ready for your portal</h2>
           <ul className="space-y-2.5 text-sm">
@@ -129,7 +130,9 @@ export default function CertificatesPage({ onBack, onUpgrade }: Props) {
               ["Your two-year cycle, tracked", `CLPs earned in the last 24 months against the ${data.cycleTarget}-point requirement.`],
               ["Copy for CAPPMIS, eDACM, or FAITAS", "One tap copies course title, date, hours, functional areas, and certificate ID in the order the forms ask for them."],
               ["Export the whole ledger", "A spreadsheet of every certificate for your supervisor, your training coordinator, or an audit."],
-              ["Kept for good", "Your ledger never expires, whatever you finish next year or the year after."],
+              isNewPricing()
+                ? ["Your certificates stay yours", "Every certificate you earn stays downloadable from its module page, whatever plan you're on."]
+                : ["Kept for good", "Your ledger never expires, whatever you finish next year or the year after."],
             ].map(([title, desc]) => (
               <li key={title} className="flex gap-3">
                 <CheckCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
@@ -139,7 +142,7 @@ export default function CertificatesPage({ onBack, onUpgrade }: Props) {
           </ul>
           {!isNativeApp() && (
             <Button onClick={onUpgrade} className="w-full sm:w-auto" data-testid="certificates-upgrade">
-              <Award className="w-4 h-4 mr-1.5" /> Get Lifetime Pro, $99 once
+              <Award className="w-4 h-4 mr-1.5" /> {isNewPricing() ? "Get Annual Pro, $149 a year" : "Get Lifetime Pro, $99 once"}
             </Button>
           )}
         </div>

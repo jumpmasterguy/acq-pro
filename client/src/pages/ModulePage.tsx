@@ -17,6 +17,7 @@ import { moduleGradient } from "@/lib/moduleTheme";
 import { getTotalLessons } from "@/lib/curriculumMeta";
 import { formatClps, moduleClps } from "@shared/moduleClps";
 import { SkillLevelPill, ResourceRow, LessonRow } from "@/components/mobile/ModulePieces";
+import { topPlanName, upgradeCtaSuffix } from "@shared/pricing";
 
 const LEVEL_LABELS: Record<SkillLevel, string> = {
   novice: 'Novice',
@@ -66,7 +67,9 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
   // isActuallyPaid — NOT progress.isPremium, which is also true mid-trial.
   // The Debrief audio stays Pro-only on every module, Module 1 included —
   // it's streamed, not downloaded, so it carries no such risk.
-  const canDownloadPdf = FREE_MODULES.includes(mod.id) || progress.isActuallyPaid;
+  // Downloads are an Annual/Lifetime perk from the 1 Oct 2026 pricing
+  // (shared/pricing.ts): Monthly streams everything but doesn't keep files.
+  const canDownloadPdf = FREE_MODULES.includes(mod.id) || progress.hasTopPlan;
   const canListenAudio = progress.isPremium;
   const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
   const theme = getModuleFamilyTheme(mod.id);
@@ -434,7 +437,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                 onClick={onUpgrade}
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary"
               >
-                <Lock className="w-3.5 h-3.5" /> Unlock to download
+                <Lock className="w-3.5 h-3.5" /> {isNativeApp() ? "Unlock to download" : `Download with ${topPlanName()}`}
               </button>
             )}
           </div>
@@ -641,11 +644,11 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
           <h3 className="font-semibold mb-2">This Module Requires Pro Access</h3>
           <p className="text-sm text-muted-foreground mb-4">
             Unlock all {modules.reduce((sum, m) => sum + m.lessons.length, 0)} lessons across all modules 
-            with a one-time Pro upgrade.
+            with Pro.
           </p>
           <Button onClick={onUpgrade} data-testid="module-upgrade-btn">
             {/* No price on native — App Store 3.1.1. */}
-            {isNativeApp() ? "Upgrade to Pro" : "Upgrade to Pro — $99 lifetime"}
+            {isNativeApp() ? "Upgrade to Pro" : `Upgrade to Pro, ${upgradeCtaSuffix()}`}
           </Button>
         </div>
       )}

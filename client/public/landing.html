@@ -294,12 +294,26 @@
       padding: 4px 14px; border-radius: 100px;
     }
     .plan-name { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
-    .plan-price { font-size: 2.8rem; font-weight: 800; color: white; line-height: 1; margin-bottom: 6px; }
+    .plan-price { font-size: clamp(2.1rem, 2.5vw, 2.8rem); font-weight: 800; color: white; line-height: 1; margin-bottom: 6px; white-space: nowrap; }
     .plan-price span { font-size: 1rem; font-weight: 400; color: rgba(255,255,255,0.4); }
     .plan-desc { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 24px; line-height: 1.5; }
     .plan-features { list-style: none; margin-bottom: 28px; display: flex; flex-direction: column; gap: 10px; }
-    .plan-features li { font-size: 0.875rem; color: rgba(255,255,255,0.75); display: flex; align-items: flex-start; gap: 10px; }
-    .check { color: #4FC3CB; flex-shrink: 0; margin-top: 2px; }
+    /* Block + absolutely placed tick, not flex: in a flex li every text run
+       and count marker became its own flex item, so a line like "All N
+       modules" rendered with gaps between the words and wrapped in columns. */
+    .plan-features li { font-size: 0.875rem; color: rgba(255,255,255,0.75); display: block; position: relative; padding-left: 22px; line-height: 1.5; }
+    .check { color: #4FC3CB; position: absolute; left: 0; top: 0; }
+    .plan-features li.no { color: rgba(255,255,255,0.38); }
+    .plan-features li.no .check { color: rgba(255,255,255,0.3); }
+    .plan-note { font-size: 0.78rem; color: #F5C842; margin: -14px 0 20px; line-height: 1.45; }
+    .price-change {
+      max-width: 1320px; margin: 0 auto 36px; padding: 16px 22px; border-radius: 14px;
+      background: rgba(245,200,66,0.10); border: 1px solid rgba(245,200,66,0.45);
+      color: rgba(255,255,255,0.88); font-size: 0.92rem; line-height: 1.55; text-align: left;
+      display: flex; gap: 14px; align-items: flex-start;
+    }
+    .price-change strong { color: #F5C842; }
+    .price-change .pc-icon { font-size: 1.3rem; line-height: 1.2; }
     .btn-plan {
       width: 100%; padding: 13px; border-radius: 10px; font-size: 0.95rem; font-weight: 700;
       cursor: pointer; border: none; text-align: center; text-decoration: none;
@@ -536,7 +550,7 @@
         "name": "How much does Acqlerate cost?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Every new account gets a 14-day free trial with full access to all 14 modules, no credit card required. After the trial, Module 1 plus one free preview lesson per module stay free permanently. Pro access is $5.99/month or $99 one-time for lifetime access to all 14 modules, 123 lessons, and all future content."
+          "text": "Every new account gets a 14-day free trial with full access to all 14 modules, no credit card required. After the trial, Module 1 plus one free preview lesson per module stay free permanently. Pro access is <!--pricing:legacy-->$5.99/month or $99 one-time for lifetime access to all 14 modules, 123 lessons, and all future content. From October 1, 2026, Pro is $14.99/month or $149/year.<!--/pricing:legacy--><!--pricing:new-->$14.99/month, or $149/year for Annual Pro, which adds downloadable Lesson Book PDFs, the CLP ledger, and unlimited AI Study Assistant.<!--/pricing:new-->"
         }
       }
     ]
@@ -1413,6 +1427,11 @@
         Every completed module includes a Certificate of Completion.
       </span>
     </div>
+<!--pricing:legacy-->
+    <div class="price-change" data-testid="price-change-banner">
+      <span class="pc-icon">⏳</span>
+      <div><strong>Prices change October 1.</strong> Lifetime Pro and the one-time Team Pack are sold through September 30, then they're gone. Monthly goes to $14.99, but subscribe at $5.99 before then and you keep $5.99 for as long as you stay.</div>
+    </div>
     <div class="pricing-cards">
       <!-- Free -->
       <div class="price-card">
@@ -1420,67 +1439,143 @@
         <div class="plan-price">$0 <span>/ forever</span></div>
         <div class="plan-desc">What you keep after your 14-day trial ends, whether you upgrade or not.</div>
         <ul class="plan-features">
-          <li><span class="check">✓</span> Module 1: DoD Acquisitions Foundations</li>
-          <li><span class="check">✓</span> <span data-count="lessons:foundations">10</span> lessons + quizzes</li>
-          <li><span class="check">✓</span> 1 free preview lesson in every other module</li>
-          <li><span class="check">✓</span> AI Study Assistant</li>
-          <li><span class="check">✓</span> Key terms & skill levels</li>
-          <li><span class="check">✓</span> <span data-count="clps:foundations">2.5</span> CLPs: Certificate of Completion</li>
+          <li><span class="check">✓</span>Module 1: DoD Acquisitions Foundations</li>
+          <li><span class="check">✓</span><span data-count="lessons:foundations">10</span> lessons + quizzes</li>
+          <li><span class="check">✓</span>1 free preview lesson in every other module</li>
+          <li><span class="check">✓</span>AI Study Assistant</li>
+          <li><span class="check">✓</span>Key terms &amp; skill levels</li>
+          <li><span class="check">✓</span><span data-count="clps:foundations">2.5</span> CLPs: Certificate of Completion</li>
         </ul>
         <a href="/app#/auth" class="btn-plan btn-plan-outline">Start Your Free Trial →</a>
       </div>
-      <!-- Monthly (featured / center) -->
-      <div class="price-card featured">
-        <div class="featured-badge">MOST POPULAR</div>
+      <!-- Monthly -->
+      <div class="price-card">
         <div class="plan-name">Monthly Pro</div>
         <div class="plan-price">$5.99 <span>/ month</span></div>
         <div class="plan-desc">Full access while subscribed. Cancel anytime.</div>
+        <div class="plan-note">Subscribe by Sept 30 and keep $5.99 for as long as you stay. $14.99 from Oct 1.</div>
         <ul class="plan-features">
-          <li><span class="check">✓</span> All <span data-count="modules">14</span> modules, <span data-count="lessons">123</span> lessons</li>
-          <li><span class="check">✓</span> All skill levels unlocked</li>
-          <li><span class="check">✓</span> AI Study Assistant: limited</li>
-          <li><span class="check">✓</span> Module gate assessments</li>
-          <li><span class="check">✓</span> Personalized learning path</li>
-          <li><span class="check">✓</span> "The Debrief": audio lessons for every module (stream anytime)</li>
-          <li><span class="check">✓</span> Over <span data-count="clps-whole">44</span> CLPs: Certificate per module</li>
-          <li style="opacity:0.4"><span style="color:rgba(255,255,255,0.3)">✗</span> CLP ledger and portal export</li>
+          <li><span class="check">✓</span>All <span data-count="modules">14</span> modules, <span data-count="lessons">123</span> lessons</li>
+          <li><span class="check">✓</span>All skill levels unlocked</li>
+          <li><span class="check">✓</span>AI Study Assistant: limited</li>
+          <li><span class="check">✓</span>Module gate assessments</li>
+          <li><span class="check">✓</span>Personalized learning path</li>
+          <li><span class="check">✓</span>"The Debrief": audio lessons for every module (stream anytime)</li>
+          <li><span class="check">✓</span>Over <span data-count="clps-whole">44</span> CLPs: Certificate per module</li>
+          <li class="no"><span class="check">✗</span>Lesson Book PDF downloads</li>
+          <li class="no"><span class="check">✗</span>CLP ledger and portal export</li>
         </ul>
-        <a href="/app#/auth?plan=monthly" class="btn-plan btn-plan-teal" id="monthlyBtn">Get Monthly Access →</a>
+        <a href="/app#/auth?plan=monthly" class="btn-plan btn-plan-outline" id="monthlyBtn">Lock In $5.99/Month →</a>
       </div>
-      <!-- Lifetime -->
-      <div class="price-card">
+      <!-- Lifetime (last chance) -->
+      <div class="price-card featured">
+        <div class="featured-badge">ENDS SEPT 30</div>
         <div class="plan-name">Lifetime Pro</div>
         <div class="plan-price">$99 <span>one-time</span></div>
         <div class="plan-desc">Full access forever. No subscription. No renewals.</div>
+        <div class="plan-note">Last chance. From Oct 1 this becomes Annual Pro at $149 a year.</div>
         <ul class="plan-features">
-          <li><span class="check">✓</span> All <span data-count="modules">14</span> modules, <span data-count="lessons">123</span> lessons</li>
-          <li><span class="check">✓</span> All skill levels unlocked</li>
-          <li><span class="check">✓</span> AI Study Assistant: unlimited</li>
-          <li><span class="check">✓</span> All future content updates</li>
-          <li><span class="check">✓</span> Module gate assessments</li>
-          <li><span class="check">✓</span> Personalized learning path</li>
-          <li><span class="check">✓</span> "The Debrief": audio lessons for every module (stream anytime)</li>
-          <li><span class="check">✓</span> Over <span data-count="clps-whole">44</span> CLPs: Certificate per module</li>
-          <li><span class="check">✓</span> <strong>CLP ledger:</strong> every certificate in one place, your 2-year cycle tracked, one-tap copy for CAPPMIS, eDACM, and FAITAS</li>
+          <li><span class="check">✓</span>All <span data-count="modules">14</span> modules, <span data-count="lessons">123</span> lessons</li>
+          <li><span class="check">✓</span><strong>Lesson Book PDFs:</strong> download every module to keep and print</li>
+          <li><span class="check">✓</span>All skill levels unlocked</li>
+          <li><span class="check">✓</span>AI Study Assistant: unlimited</li>
+          <li><span class="check">✓</span>All future content updates</li>
+          <li><span class="check">✓</span>"The Debrief": audio lessons for every module (stream anytime)</li>
+          <li><span class="check">✓</span>Over <span data-count="clps-whole">44</span> CLPs: Certificate per module</li>
+          <li><span class="check">✓</span><strong>CLP ledger:</strong> every certificate in one place, your 2-year cycle tracked, one-tap copy for CAPPMIS, eDACM, and FAITAS</li>
         </ul>
-        <a href="/app#/auth?plan=lifetime" class="btn-plan btn-plan-outline" id="lifetimeBtn">Get Lifetime Access →</a>
+        <a href="/app#/auth?plan=lifetime" class="btn-plan btn-plan-teal" id="lifetimeBtn">Get Lifetime Before It's Gone →</a>
       </div>
-      <!-- Team -->
+      <!-- Team Pack (last chance) -->
       <div class="price-card" style="border-top:3px solid #4FC3CB;">
         <div class="plan-name">Team Pack</div>
         <div class="plan-price">$399 <span>one-time</span></div>
         <div class="plan-desc">10 seats of Lifetime Pro for your PM team. One invoice, not ten.</div>
+        <div class="plan-note">Ends Sept 30. From Oct 1, Team is $999 a year for 10 Annual seats.</div>
         <ul class="plan-features">
-          <li><span class="check">✓</span> 10 Lifetime Pro seats</li>
-          <li><span class="check">✓</span> All <span data-count="modules">14</span> modules, <span data-count="lessons">123</span> lessons, per seat</li>
-          <li><span class="check">✓</span> "The Debrief": audio lessons for every module (stream anytime)</li>
-          <li><span class="check">✓</span> Certificates of Completion for CLP self-reporting</li>
-          <li><span class="check">✓</span> One invoice instead of 10 separate purchases</li>
-          <li><span class="check">✓</span> $39.90/seat vs. $1,500+/seat classroom training</li>
+          <li><span class="check">✓</span>10 Lifetime Pro seats</li>
+          <li><span class="check">✓</span>All <span data-count="modules">14</span> modules, <span data-count="lessons">123</span> lessons, per seat</li>
+          <li><span class="check">✓</span>Lesson Book PDFs for every seat</li>
+          <li><span class="check">✓</span>"The Debrief": audio lessons for every module (stream anytime)</li>
+          <li><span class="check">✓</span>Certificates of Completion for CLP self-reporting</li>
+          <li><span class="check">✓</span>One invoice instead of 10 separate purchases</li>
+          <li><span class="check">✓</span>$39.90 a seat, once, vs. $1,500+ a seat for classroom training</li>
         </ul>
         <button type="button" class="btn-plan btn-plan-teal" id="teamBtn" onclick="startTeamCheckout()">Get Team Access →</button>
       </div>
     </div>
+<!--/pricing:legacy-->
+<!--pricing:new-->
+    <div class="pricing-cards">
+      <!-- Free -->
+      <div class="price-card">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">$0 <span>/ forever</span></div>
+        <div class="plan-desc">What you keep after your 14-day trial ends, whether you upgrade or not.</div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span>Module 1: DoD Acquisitions Foundations</li>
+          <li><span class="check">✓</span><span data-count="lessons:foundations">10</span> lessons + quizzes</li>
+          <li><span class="check">✓</span>1 free preview lesson in every other module</li>
+          <li><span class="check">✓</span>AI Study Assistant</li>
+          <li><span class="check">✓</span>Key terms &amp; skill levels</li>
+          <li><span class="check">✓</span><span data-count="clps:foundations">2.5</span> CLPs: Certificate of Completion</li>
+        </ul>
+        <a href="/app#/auth" class="btn-plan btn-plan-outline">Start Your Free Trial →</a>
+      </div>
+      <!-- Monthly -->
+      <div class="price-card">
+        <div class="plan-name">Monthly Pro</div>
+        <div class="plan-price">$14.99 <span>/ month</span></div>
+        <div class="plan-desc">Full access while subscribed. Cancel anytime.</div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span>All <span data-count="modules">14</span> modules, <span data-count="lessons">123</span> lessons</li>
+          <li><span class="check">✓</span>All skill levels unlocked</li>
+          <li><span class="check">✓</span>AI Study Assistant: limited</li>
+          <li><span class="check">✓</span>Module gate assessments</li>
+          <li><span class="check">✓</span>Personalized learning path</li>
+          <li><span class="check">✓</span>"The Debrief": audio lessons for every module (stream anytime)</li>
+          <li><span class="check">✓</span>Over <span data-count="clps-whole">44</span> CLPs: Certificate per module</li>
+          <li class="no"><span class="check">✗</span>Lesson Book PDF downloads</li>
+          <li class="no"><span class="check">✗</span>CLP ledger and portal export</li>
+        </ul>
+        <a href="/app#/auth?plan=monthly" class="btn-plan btn-plan-outline" id="monthlyBtn">Get Monthly Access →</a>
+      </div>
+      <!-- Annual (featured) -->
+      <div class="price-card featured">
+        <div class="featured-badge">BEST VALUE</div>
+        <div class="plan-name">Annual Pro</div>
+        <div class="plan-price">$149 <span>/ year</span></div>
+        <div class="plan-desc">$12.42 a month, billed yearly. Two months free vs. Monthly.</div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span>All <span data-count="modules">14</span> modules, <span data-count="lessons">123</span> lessons</li>
+          <li><span class="check">✓</span><strong>Lesson Book PDFs:</strong> download every module to keep and print</li>
+          <li><span class="check">✓</span>All skill levels unlocked</li>
+          <li><span class="check">✓</span>AI Study Assistant: unlimited</li>
+          <li><span class="check">✓</span>Every new lesson and module while subscribed</li>
+          <li><span class="check">✓</span>"The Debrief": audio lessons for every module (stream anytime)</li>
+          <li><span class="check">✓</span>Over <span data-count="clps-whole">44</span> CLPs: Certificate per module</li>
+          <li><span class="check">✓</span><strong>CLP ledger:</strong> every certificate in one place, your 2-year cycle tracked, one-tap copy for CAPPMIS, eDACM, and FAITAS</li>
+        </ul>
+        <a href="/app#/auth?plan=annual" class="btn-plan btn-plan-teal" id="annualBtn">Get Annual Access →</a>
+      </div>
+      <!-- Team -->
+      <div class="price-card" style="border-top:3px solid #4FC3CB;">
+        <div class="plan-name">Team</div>
+        <div class="plan-price">$999 <span>/ year</span></div>
+        <div class="plan-desc">10 seats of Annual Pro for your PM team. One invoice, not ten.</div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span>10 Annual Pro seats</li>
+          <li><span class="check">✓</span>All <span data-count="modules">14</span> modules, <span data-count="lessons">123</span> lessons, per seat</li>
+          <li><span class="check">✓</span>Lesson Book PDFs for every seat</li>
+          <li><span class="check">✓</span>"The Debrief": audio lessons for every module (stream anytime)</li>
+          <li><span class="check">✓</span>Certificates of Completion for CLP self-reporting</li>
+          <li><span class="check">✓</span>One invoice instead of 10 separate purchases</li>
+          <li><span class="check">✓</span>$99.90 a seat per year vs. $1,500+ a seat for classroom training</li>
+        </ul>
+        <button type="button" class="btn-plan btn-plan-teal" id="teamBtn" onclick="startTeamCheckout()">Get Team Access →</button>
+      </div>
+    </div>
+<!--/pricing:new-->
   </div>
 </section>
 
@@ -1568,7 +1663,7 @@
           Will there be more modules added?
           <span class="faq-chevron">▾</span>
         </button>
-        <div class="faq-a">Yes. The current <span data-count="modules-word-lower">fourteen</span> modules cover the acquisition system end to end, from foundations through sustainment, plus tracks for small business, startups entering defense, and service members transitioning in. We keep building: new lessons, deeper levels on existing ones, and a weekly brief on what changed. Lifetime Pro users get all future content at no extra cost.</div>
+        <div class="faq-a">Yes. The current <span data-count="modules-word-lower">fourteen</span> modules cover the acquisition system end to end, from foundations through sustainment, plus tracks for small business, startups entering defense, and service members transitioning in. We keep building: new lessons, deeper levels on existing ones, and a weekly brief on what changed. <!--pricing:legacy-->Lifetime Pro users get all future content at no extra cost.<!--/pricing:legacy--><!--pricing:new-->Pro members get every new lesson and module at no extra cost.<!--/pricing:new--></div>
       </div>
     </div>
 

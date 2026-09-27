@@ -7,7 +7,7 @@ import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calculateXP, ladderFor } from "@/lib/progress";
-import { hasFullAccess, hasPaidPlan, trialDaysRemaining } from "@shared/access";
+import { hasFullAccess, hasPaidPlan, isTopPlanStatus, trialDaysRemaining } from "@shared/access";
 import { isNativeApp, getPlatform } from "@/lib/platform";
 import { useActiveTrack } from "@/lib/careerTracks";
 import { modules, prefetchCurriculum } from "@/lib/curriculumMeta";
@@ -173,12 +173,14 @@ type AuthState =
 function buildProgressFromUser(user: AuthUser) {
   const isPremium = hasFullAccess(user);
   const isActuallyPaid = hasPaidPlan(user);
+  const hasTopPlan = isTopPlanStatus(user.subscriptionStatus);
   return {
     completedLessons: new Set<string>(user.completedLessons ?? []),
     quizScores: user.quizScores ?? {},
     unlockedModules: new Set<string>(['foundations']),
     isPremium,
     isActuallyPaid,
+    hasTopPlan,
     xp: 0,
   };
 }
@@ -379,6 +381,8 @@ function AppContent() {
   // hasn't actually paid, so they should still see the upgrade CTA/countdown.
   const isActuallyPaid =
     authState.status === 'authenticated' && hasPaidPlan(authState.user);
+  const hasTopPlan =
+    authState.status === 'authenticated' && isTopPlanStatus(authState.user.subscriptionStatus);
   const completedLessons =
     authState.status === 'authenticated'
       ? new Set<string>(authState.user.completedLessons ?? [])
@@ -406,6 +410,7 @@ function AppContent() {
     unlockedModules: new Set<string>(['foundations']),
     isPremium,
     isActuallyPaid,
+    hasTopPlan,
     xp: calculateXP(completedLessons, quizScores, dailyChallengeXP, briefsXP + sessionBriefXp),
   };
 
@@ -924,7 +929,7 @@ function AppContent() {
                 onNextLesson={handleNextLesson}
                 unlockedLevel={unlockedLevel}
                 onOpenAssessment={parentMod ? () => setAssessmentModuleId(parentMod.id) : undefined}
-                isLifetime={authState.status === 'authenticated' && authState.user.subscriptionStatus === 'lifetime'}
+                isLifetime={hasTopPlan}
                 activeCareer={(view as any).activeCareer ?? null}
               />
             );

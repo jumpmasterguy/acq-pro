@@ -6,8 +6,8 @@
 //     any trial/pack time they still have. Uses the same trial clock as the
 //     14-day trial and the pack bonus, so it expires on read (hasFullAccess)
 //     and nothing permanent is written.
-//   - Monthly Pro (a real Stripe subscription): 12 months of the monthly price
-//     as a Stripe customer credit, so their next 12 invoices cost nothing.
+//   - Monthly or Annual Pro (a real Stripe subscription): one year of their own
+//     price as a Stripe customer credit, so the next year of invoices is free.
 //     Their subscription id and status are never touched.
 //   - Lifetime, or comped Pro with no Stripe subscription: nothing to add.
 //     The referral still counts and they get a thank-you.
@@ -46,14 +46,21 @@ export function cleanReferralCode(raw: unknown): string {
   return raw.replace(/[^A-Za-z0-9]/g, "").slice(0, 20).toUpperCase();
 }
 
-async function monthlyPriceCents(stripe: Stripe): Promise<number> {
-  const priceId = process.env.STRIPE_PRICE_ID_MONTHLY;
-  if (!priceId) return FALLBACK_MONTHLY_CENTS;
+/**
+ * What one year of this person's own subscription costs, in cents: 12 x a
+ * monthly price, or 1 x a yearly one. Read from their subscription rather
+ * than an env var, because Monthly has two live prices ($5.99 kept by
+ * people who subscribed before the 1 Oct 2026 switch, $14.99 after).
+ */
+async function subscriptionYearCents(stripe: Stripe, subscriptionId: string): Promise<number> {
   try {
-    const price = await stripe.prices.retrieve(priceId);
-    return price.unit_amount ?? FALLBACK_MONTHLY_CENTS;
+    const sub = await stripe.subscriptions.retrieve(subscriptionId);
+    const price = sub.items.data[0]?.price;
+    const amount = price?.unit_amount;
+    if (!amount) return FALLBACK_MONTHLY_CENTS * 12;
+    return price?.recurring?.interval === "year" ? amount : amount * 12;
   } catch {
-    return FALLBACK_MONTHLY_CENTS;
+    return FALLBACK_MONTHLY_CENTS * 12;
   }
 }
 
@@ -66,14 +73,14 @@ export async function grantProYear(user: User, stripe: Stripe | null, reason: st
 
   if (status === "lifetime") return { kind: "already-unlimited" };
 
-  if (status === "active") {
+  if (status === "active" || status === "annual") {
     const subId = user.subscriptionId ?? "";
     if (!subId.startsWith("sub_")) return { kind: "already-unlimited" }; // comped, no billing to cover
     if (!stripe || !user.stripeCustomerId) {
-      return { kind: "needs-manual", note: "Monthly subscriber but Stripe isn't configured or there's no customer id" };
+      return { kind: "needs-manual", note: "Subscriber but Stripe isn't configured or there's no customer id" };
     }
     try {
-      const creditCents = (await monthlyPriceCents(stripe)) * 12;
+      const creditCents = await subscriptionYearCents(stripe, subId);
       await stripe.customers.createBalanceTransaction(user.stripeCustomerId, {
         amount: -creditCents, // negative = credit toward future invoices
         currency: "usd",
@@ -130,7 +137,7 @@ export async function applySignupReferral(newUser: User, rawCode: unknown, strip
         [
           `Referrer: ${counted.email} (plan: ${counted.subscriptionStatus})`,
           `New signup that triggered it: ${newUser.email}`,
-          result.creditCents ? `Stripe credit: $${(result.creditCents / 100).toFixed(2)} (12 months of Monthly Pro)` : "",
+          result.creditCents ? `Stripe credit: $${(result.creditCents / 100).toFixed(2)} (one year of their plan)` : "",
           result.note ? `Problem: ${result.note}` : "",
           counted.stripeCustomerId ? `Stripe customer: https://dashboard.stripe.com/customers/${counted.stripeCustomerId}` : "",
         ].filter(Boolean),

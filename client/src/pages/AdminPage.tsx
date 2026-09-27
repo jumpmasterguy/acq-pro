@@ -73,12 +73,14 @@ interface AnalyticsData {
 
 const statusColors: Record<string, string> = {
   lifetime: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400",
+  annual:   "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400",
   active:   "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400",
   free:     "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400",
 };
 
 const statusLabel: Record<string, string> = {
   lifetime: "Lifetime Pro",
+  annual:   "Annual Pro",
   active:   "Monthly Pro",
   free:     "Free",
 };
@@ -293,7 +295,7 @@ export default function AdminPage() {
 
   const userStats = {
     total: users.length,
-    pro: users.filter(u => u.subscriptionStatus === "active" || u.subscriptionStatus === "lifetime").length,
+    pro: users.filter(u => u.subscriptionStatus === "active" || u.subscriptionStatus === "annual" || u.subscriptionStatus === "lifetime").length,
     lifetime: users.filter(u => u.subscriptionStatus === "lifetime").length,
     free: users.filter(u => u.subscriptionStatus === "free").length,
   };
@@ -574,6 +576,14 @@ export default function AdminPage() {
                               >
                                 <Crown className="w-3.5 h-3.5 text-amber-500" />
                                 Grant Lifetime Pro
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => makePro.mutate({ userId: user.id, plan: "annual" })}
+                                className="gap-2 cursor-pointer"
+                                data-testid={`admin-grant-annual-${user.id}`}
+                              >
+                                <Crown className="w-3.5 h-3.5 text-teal-500" />
+                                Make Annual Pro (team seat)
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => makePro.mutate({ userId: user.id, plan: "active" })}

@@ -10,7 +10,8 @@ import { excludeInternalAccounts } from "./internalAccounts";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { verifyAppleIdentityToken } from "./appleAuth";
 import { registerSchema, loginSchema, userProfileSchema, updateNameSchema } from "@shared/schema";
-import { hasPaidPlan, hasFullAccess, PACK_BONUS_PACKS } from "@shared/access";
+import { hasPaidPlan, hasFullAccess, isPaidStatus, isTopPlanStatus, canDownloadLessonBooks, PACK_BONUS_PACKS } from "@shared/access";
+import { isNewPricing, topPlanName, planPrice, type PlanType } from "@shared/pricing";
 import { grantPackBonus, packBonusStatus } from "./packBonus";
 import { MODULE_CLPS } from "@shared/moduleClps";
 import { MODULE_FUNCTIONAL_AREAS } from "@shared/moduleClps.generated";
@@ -37,7 +38,14 @@ const stripe = stripeSecretKey
   : null;
 
 const STRIPE_PRICE_LIFETIME = process.env.STRIPE_PRICE_ID_LIFETIME;
+// $5.99 Monthly. Sold until the pricing switch (shared/pricing.ts); anyone
+// subscribed on it keeps it, because Stripe never moves an existing
+// subscription to a new price on its own.
 const STRIPE_PRICE_MONTHLY = process.env.STRIPE_PRICE_ID_MONTHLY;
+// From the switch: $14.99 Monthly, $149 Annual, $999/yr Team (10 Annual seats).
+const STRIPE_PRICE_MONTHLY_2026 = process.env.STRIPE_PRICE_ID_MONTHLY_2026;
+const STRIPE_PRICE_ANNUAL = process.env.STRIPE_PRICE_ID_ANNUAL;
+const STRIPE_PRICE_TEAM_ANNUAL = process.env.STRIPE_PRICE_ID_TEAM_ANNUAL;
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 
 // ── Template pack price IDs (set in Railway env vars) ─────────────────────────
@@ -424,10 +432,10 @@ export async function registerRoutes(
     const email = user.email;
     let billingNote = "no subscription";
 
-    if (stripe && user.subscriptionId && user.subscriptionStatus === "active") {
+    if (stripe && user.subscriptionId && (user.subscriptionStatus === "active" || user.subscriptionStatus === "annual")) {
       try {
         await stripe.subscriptions.cancel(user.subscriptionId);
-        billingNote = `monthly subscription ${user.subscriptionId} cancelled in Stripe`;
+        billingNote = `${user.subscriptionStatus === "annual" ? "annual" : "monthly"} subscription ${user.subscriptionId} cancelled in Stripe`;
       } catch (err: any) {
         // Don't block the deletion — but make sure the founder knows to cancel by hand.
         billingNote = `FAILED to cancel subscription ${user.subscriptionId}: ${err?.message ?? err} — cancel it manually in Stripe`;
@@ -999,9 +1007,25 @@ export async function registerRoutes(
         return res.status(503).json({ message: "Payment processing not configured" });
       }
 
-      const { priceType } = req.body; // 'lifetime' | 'monthly'
+      const priceType = req.body?.priceType as PlanType; // 'monthly' | 'annual' | 'lifetime'
+      // The pricing switch decides what is for sale (shared/pricing.ts):
+      // before it, Monthly $5.99 and Lifetime $99; from it, Monthly $14.99
+      // and Annual $149. A tab left open across the switch gets a clear
+      // message instead of the old price.
+      const newPricing = isNewPricing();
+      if (priceType === "lifetime" && newPricing) {
+        return res.status(410).json({ message: "Lifetime Pro ended on September 30. Annual Pro is $149 a year and includes everything Lifetime did." });
+      }
+      if (priceType === "annual" && !newPricing) {
+        return res.status(400).json({ message: "Annual Pro opens on October 1. Until then, Lifetime Pro is $99 one-time." });
+      }
+      if (priceType !== "monthly" && priceType !== "annual" && priceType !== "lifetime") {
+        return res.status(400).json({ message: "Unknown plan" });
+      }
       const priceId =
-        priceType === "monthly" ? STRIPE_PRICE_MONTHLY : STRIPE_PRICE_LIFETIME;
+        priceType === "annual" ? STRIPE_PRICE_ANNUAL
+        : priceType === "lifetime" ? STRIPE_PRICE_LIFETIME
+        : newPricing ? STRIPE_PRICE_MONTHLY_2026 : STRIPE_PRICE_MONTHLY;
 
       if (!priceId) {
         return res
@@ -1035,7 +1059,7 @@ export async function registerRoutes(
         }
 
         // Determine mode
-        const mode = priceType === "monthly" ? "subscription" : "payment";
+        const mode = priceType === "lifetime" ? "payment" : "subscription";
 
         // Build success/cancel URLs — use the app's origin
         const origin =
@@ -1051,11 +1075,11 @@ export async function registerRoutes(
           mode,
           success_url: successUrl,
           cancel_url: cancelUrl,
-          metadata: { userId },
+          metadata: { userId, plan: priceType },
           allow_promotion_codes: true,
         });
 
-        return res.json({ url: session.url });
+        return res.json({ url: session.url, plan: priceType, amount: planPrice(priceType) });
       } catch (err: any) {
         reportCheckoutFailure("/api/stripe/create-checkout-session", err, { priceType, priceId, userId, userEmail });
         return res.status(500).json({ message: "Payment error — please try again" });
@@ -1147,6 +1171,9 @@ export async function registerRoutes(
               // Team Pack — save purchase record + alert admin to manually provision seats.
               // MVP: seats are provisioned by hand, not self-serve, for now.
               const seats = parseInt(session.metadata?.seats || "10", 10);
+              // "annual" = the $999/yr Team subscription (seats get Annual
+              // Pro); anything else = the old $399 one-time Team Pack.
+              const teamPlan = session.metadata?.plan === "annual" ? "annual" : "lifetime";
               const email = session.customer_details?.email || session.customer_email || "";
               const downloadToken = crypto.randomBytes(32).toString("hex");
               await storage.savePurchase({
@@ -1159,22 +1186,47 @@ export async function registerRoutes(
                 downloadToken,
               });
               const { sendTeamPurchaseAdminAlert } = await import("./email.js") as any;
-              await sendTeamPurchaseAdminAlert(email, seats, session.amount_total || 0, session.id).catch(() => {});
+              await sendTeamPurchaseAdminAlert(email, seats, session.amount_total || 0, session.id, teamPlan).catch(() => {});
               console.log(`[webhook] Team purchase saved: ${email} (${seats} seats)`);
             } else if (userId) {
-              // Subscription / lifetime upgrade
+              // Subscription / lifetime upgrade. metadata.plan is set at
+              // checkout; sessions created before it existed fall back to mode.
               const isSubscription = session.mode === "subscription";
+              const plan: PlanType = session.metadata?.plan === "annual" ? "annual"
+                : isSubscription ? "monthly" : "lifetime";
+              const newStatus = plan === "annual" ? "annual" : plan === "monthly" ? "active" : "lifetime";
+              const productName = plan === "annual" ? "Annual Pro" : plan === "monthly" ? "Monthly Pro" : "Lifetime Pro";
               // Read the user first so the alert can say "trial → paid" and show their name.
               const before = await storage.getUser(userId).catch(() => undefined);
               await storage.updateUserSubscription(userId, {
-                subscriptionStatus: isSubscription ? "active" : "lifetime",
+                subscriptionStatus: newStatus,
                 subscriptionId: isSubscription ? (session.subscription as string) : undefined,
                 stripeCustomerId: session.customer as string,
               });
-              console.log(`[webhook] ${isSubscription ? "Monthly" : "Lifetime"} upgrade saved for user ${userId}`);
+              console.log(`[webhook] ${productName} upgrade saved for user ${userId}`);
+              // Moving up from Monthly (to Annual or Lifetime) is a new
+              // Stripe purchase, not a plan change, so the old Monthly
+              // subscription would keep billing. Cancel it. Its deletion
+              // webhook is ignored below because it is no longer the user's
+              // current subscription.
+              const oldSubId = before?.subscriptionId;
+              const newSubId = isSubscription ? (session.subscription as string) : undefined;
+              if (stripe && plan !== "monthly" && oldSubId && oldSubId.startsWith("sub_") && oldSubId !== newSubId
+                  && (before?.subscriptionStatus === "active" || before?.subscriptionStatus === "annual")) {
+                try {
+                  await stripe.subscriptions.cancel(oldSubId);
+                  console.log(`[webhook] Cancelled previous subscription ${oldSubId} for user ${userId} after ${productName} purchase`);
+                } catch (cancelErr: any) {
+                  console.error(`[webhook] Could not cancel previous subscription ${oldSubId}:`, cancelErr?.message);
+                  await sendOpsAlertEmail("Cancel an old subscription by hand", [
+                    `User ${userId} bought ${productName} but their previous subscription ${oldSubId} could not be cancelled automatically.`,
+                    `Error: ${cancelErr?.message || "unknown"}. Cancel it in Stripe so they are not billed twice.`,
+                  ]).catch(() => {});
+                }
+              }
               await sendPurchaseAdminAlert({
-                product: isSubscription ? "Monthly Pro" : "Lifetime Pro",
-                kind: isSubscription ? "monthly" : "lifetime",
+                product: productName,
+                kind: plan,
                 buyerEmail: session.customer_details?.email || session.customer_email || before?.email || "(unknown email)",
                 buyerName: before?.username || undefined,
                 amountPaidCents: session.amount_total || 0,
@@ -1193,7 +1245,16 @@ export async function registerRoutes(
             const customerId = sub.customer as string;
             // Find user by stripeCustomerId
             const allUsers = await storage.getUserByStripeCustomerId(customerId);
-            if (allUsers) {
+            // A subscription that is no longer the user's current plan (a
+            // Monthly replaced by Annual or Lifetime, cancelled above) must
+            // not downgrade them. Lifetime never expires.
+            const staleSub = !!allUsers && (
+              allUsers.subscriptionStatus === "lifetime" ||
+              (!!allUsers.subscriptionId && allUsers.subscriptionId !== sub.id)
+            );
+            if (allUsers && staleSub) {
+              console.log(`[webhook] Subscription ${sub.id} ended but user ${allUsers.id} is on ${allUsers.subscriptionStatus} (${allUsers.subscriptionId || "no sub"}), leaving them as is`);
+            } else if (allUsers) {
               // Time they still hold from a referral year, pack bonus or trial
               // outlives the subscription instead of being wiped with it.
               const keepsTime = !!allUsers.trialEndsAt && new Date(allUsers.trialEndsAt).getTime() > Date.now();
@@ -1208,6 +1269,14 @@ export async function registerRoutes(
                 stripeCustomerId: customerId,
                 stripeSubscriptionId: sub.id,
               });
+            } else if (sub.metadata?.type === "team_purchase") {
+              // Team seats are provisioned by hand, so they have to be
+              // switched off by hand too. Tell the founder.
+              console.warn(`[webhook] Team subscription ${sub.id} ended — seats need downgrading by hand`);
+              await sendOpsAlertEmail("Team subscription ended: downgrade its seats", [
+                `Team subscription ${sub.id} (customer ${customerId}) has ended.`,
+                "Its 10 seats were set to Annual by hand. Set them back to Free in the admin panel.",
+              ]).catch(() => {});
             } else {
               console.warn(`[webhook] Subscription ${sub.id} cancelled but no user has stripeCustomerId ${customerId}`);
             }
@@ -1303,14 +1372,17 @@ export async function registerRoutes(
     }
   });
 
-  // POST /api/team/checkout — Team Pack: $399, 10 seats, one-time payment.
+  // POST /api/team/checkout — Team: until the pricing switch, the $399
+  // one-time Team Pack (10 Lifetime seats); from it, $999 a year for 10
+  // Annual seats (a yearly subscription).
   // MVP: seats are provisioned manually (see sendTeamPurchaseAdminAlert) rather
   // than self-serve. This gets a real, working B2B purchase path live now;
   // self-serve seat management is a bigger project for once demand is proven.
   app.post("/api/team/checkout", async (req: Request, res: Response) => {
     if (!stripe) return res.status(503).json({ message: "Payment processing not configured" });
 
-    const priceId = process.env.STRIPE_PRICE_ID_TEAM;
+    const teamAnnual = isNewPricing();
+    const priceId = teamAnnual ? STRIPE_PRICE_TEAM_ANNUAL : process.env.STRIPE_PRICE_ID_TEAM;
     if (!priceId) {
       return res.status(503).json({ message: "Team Pack price not configured yet" });
     }
@@ -1321,14 +1393,18 @@ export async function registerRoutes(
     const customerEmail = email || (req.user as any)?.email;
 
     try {
+      const metadata = { type: "team_purchase", seats: "10", plan: teamAnnual ? "annual" : "lifetime", userId: userId || "" };
       const session = await stripe.checkout.sessions.create({
-        mode: "payment",
+        mode: teamAnnual ? "subscription" : "payment",
         payment_method_types: ["card"],
         line_items: [{ price: priceId, quantity: 1 }],
         ...(customerEmail ? { customer_email: customerEmail } : {}),
         success_url: `${origin}/team/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${origin}/#pricing`,
-        metadata: { type: "team_purchase", seats: "10", userId: userId || "" },
+        metadata,
+        // Copied onto the subscription so its cancellation webhook can tell
+        // a team subscription from an individual one.
+        ...(teamAnnual ? { subscription_data: { metadata } } : {}),
         allow_promotion_codes: true,
       });
       return res.json({ url: session.url });
@@ -1453,7 +1529,8 @@ export async function registerRoutes(
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    const status = plan === "free" ? "free" : plan === "lifetime" ? "lifetime" : "active";
+    // "annual" is how Team seats are provisioned (by hand, see team checkout).
+    const status = plan === "free" ? "free" : plan === "lifetime" ? "lifetime" : plan === "annual" ? "annual" : "active";
     await storage.updateUserSubscription(user.id, { subscriptionStatus: status });
     return res.json({ message: `${user.email} is now ${status}`, userId: user.id });
   });
@@ -1507,9 +1584,7 @@ export async function registerRoutes(
     if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
     const allUsers = await storage.getAllUsers();
     const totalUsers = allUsers.length;
-    const proUsers = allUsers.filter((u: any) =>
-      u.subscriptionStatus === "active" || u.subscriptionStatus === "lifetime"
-    ).length;
+    const proUsers = allUsers.filter((u: any) => isPaidStatus(u.subscriptionStatus)).length;
     return res.json({ totalUsers, proUsers, freeUsers: totalUsers - proUsers });
   });
 
@@ -1562,10 +1637,10 @@ export async function registerRoutes(
     // Same order as self-service deletion: stop billing first, so a user who
     // asks us by email to delete them can't keep getting charged.
     let billingNote = "";
-    if (stripe && user.subscriptionId && user.subscriptionStatus === "active" && user.subscriptionId.startsWith("sub_")) {
+    if (stripe && user.subscriptionId && (user.subscriptionStatus === "active" || user.subscriptionStatus === "annual") && user.subscriptionId.startsWith("sub_")) {
       try {
         await stripe.subscriptions.cancel(user.subscriptionId);
-        billingNote = " (monthly subscription cancelled in Stripe)";
+        billingNote = " (subscription cancelled in Stripe)";
       } catch (err: any) {
         billingNote = ` (FAILED to cancel ${user.subscriptionId}: cancel it manually in Stripe)`;
         console.error(`[admin-delete] ${user.email}${billingNote}`, err?.message ?? err);
@@ -1875,7 +1950,8 @@ export async function registerRoutes(
         switch (u.subscriptionStatus) {
           case "lifetime": lifetime++; break;
           case "trialing": trialing++; break;
-          case "active":   paying++;   break;
+          case "active":   paying++;   break; // Monthly
+          case "annual":   paying++;   break;
           default:         free++;
         }
 
@@ -2007,7 +2083,7 @@ export async function registerRoutes(
       // "Pro" = actually paying (active or lifetime). Trialing users have full
       // access but haven't converted yet — counted separately so this number
       // doesn't overstate real revenue-paying users.
-      const proUsers = allUsers.filter(u => u.subscriptionStatus === 'active' || u.subscriptionStatus === 'lifetime').length;
+      const proUsers = allUsers.filter(u => isPaidStatus(u.subscriptionStatus)).length;
       const trialingUsers = allUsers.filter(u => u.subscriptionStatus === 'trialing').length;
       const dau = allUsers.filter(u => {
         if (!u.lastActiveAt) return false;
@@ -2192,10 +2268,15 @@ export async function registerRoutes(
     if (!lessonTitle || !lessonContext || !mode) {
       return res.status(400).json({ message: "Missing required fields" });
     }
+    // "How Do I Apply This?" is an Annual/Lifetime perk. Checked before the
+    // usage counter so a locked request doesn't burn one of today's calls.
+    if (mode === "apply" && !isTopPlanStatus((req.user as any).subscriptionStatus)) {
+      return res.status(403).json({ message: `"How Do I Apply This?" comes with ${topPlanName()}.` });
+    }
     const usage = await storage.checkAndConsumeAiCall((req.user as any).id);
     if (!usage.allowed) {
       return res.status(429).json({
-        message: `You've used today's AI Study Assistant limit (${usage.limit}/day). Upgrade to Lifetime Pro for unlimited access, or come back tomorrow.`,
+        message: `You've used today's AI Study Assistant limit (${usage.limit}/day). Upgrade to ${topPlanName()} for unlimited access, or come back tomorrow.`,
         limitReached: true,
       });
     }
@@ -2254,7 +2335,7 @@ export async function registerRoutes(
     const usage = await storage.checkAndConsumeAiCall((req.user as any).id);
     if (!usage.allowed) {
       return res.status(429).json({
-        message: `You've used today's AI Study Assistant limit (${usage.limit}/day). Upgrade to Lifetime Pro for unlimited access, or come back tomorrow.`,
+        message: `You've used today's AI Study Assistant limit (${usage.limit}/day). Upgrade to ${topPlanName()} for unlimited access, or come back tomorrow.`,
         limitReached: true,
       });
     }
@@ -2297,7 +2378,7 @@ export async function registerRoutes(
     const usage = await storage.checkAndConsumeAiCall((req.user as any).id);
     if (!usage.allowed) {
       return res.status(429).json({
-        message: `You've used today's AI limit (${usage.limit}/day). Upgrade to Lifetime Pro for unlimited access, or come back tomorrow.`,
+        message: `You've used today's AI limit (${usage.limit}/day). Upgrade to ${topPlanName()} for unlimited access, or come back tomorrow.`,
         limitReached: true,
       });
     }
@@ -2481,13 +2562,17 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       const subscriptions = await stripe.subscriptions.list({ limit: 100, status: 'active' });
       const allUsers = await storage.getAllUsers();
 
+      // Annual (and yearly Team) subscriptions count at a twelfth of their price.
       const monthlyCustomers = subscriptions.data.filter(s =>
-        s.items.data.some(i => i.price.recurring?.interval === 'month')
+        s.items.data.some(i => i.price.recurring?.interval === 'month' || i.price.recurring?.interval === 'year')
       );
-      const mrr = monthlyCustomers.reduce((sum, s) => {
-        const monthlyAmount = s.items.data.reduce((a, i) => a + (i.price.unit_amount ?? 0), 0);
+      const mrr = Math.round(monthlyCustomers.reduce((sum, s) => {
+        const monthlyAmount = s.items.data.reduce((a, i) => {
+          const amt = i.price.unit_amount ?? 0;
+          return a + (i.price.recurring?.interval === 'year' ? amt / 12 : amt);
+        }, 0);
         return sum + monthlyAmount;
-      }, 0) / 100; // cents to dollars
+      }, 0)) / 100; // cents to dollars
 
       // Lifetime payments (one-time charges)
       const paymentIntents = await stripe.paymentIntents.list({ limit: 100 });
@@ -2512,7 +2597,7 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       // Free to paid conversion — trialing users have full access but haven't
       // converted yet, so they're excluded from "paid" (see trialingUsers below).
       const totalUsers = allUsers.length;
-      const paidUsers = allUsers.filter(u => u.subscriptionStatus === 'active' || u.subscriptionStatus === 'lifetime').length;
+      const paidUsers = allUsers.filter(u => isPaidStatus(u.subscriptionStatus)).length;
       const trialingUsers = allUsers.filter(u => u.subscriptionStatus === 'trialing').length;
       const conversionRate = totalUsers > 0 ? Math.round((paidUsers / totalUsers) * 100) : 0;
 
@@ -2672,8 +2757,9 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
     const filename = LESSON_BOOK_FILES[moduleId];
     if (!filename) return res.status(404).json({ message: 'Module not found' });
 
-    if (!FREE_LESSON_BOOK_MODULES.includes(moduleId) && !hasPaidPlan(user)) {
-      return res.status(403).json({ message: 'Upgrade to a paid plan to download this module\'s Lesson Book.' });
+    // Downloads are an Annual/Lifetime perk (Monthly streams, it doesn't keep).
+    if (!FREE_LESSON_BOOK_MODULES.includes(moduleId) && !canDownloadLessonBooks(user)) {
+      return res.status(403).json({ message: `Lesson Book downloads come with ${topPlanName()}.` });
     }
 
     const filePath = path.join(process.cwd(), 'server', 'assets', 'lesson-books', filename);
@@ -2827,10 +2913,11 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
     }
   });
 
-  const ledgerUnlocked = (u: any) => u?.subscriptionStatus === 'lifetime' || !!u?.isAdmin;
+  // Annual and Lifetime (the top plans, shared/access.ts), plus admins.
+  const ledgerUnlocked = (u: any) => isTopPlanStatus(u?.subscriptionStatus) || !!u?.isAdmin;
 
   // GET /api/clp-ledger: every certificate the user holds, plus the two-year
-  // cycle. Lifetime Pro feature. Other tiers get a summary for the upsell,
+  // cycle. Annual/Lifetime Pro feature. Other tiers get a summary for the upsell,
   // never the per-certificate detail or the export. Individual certificates
   // stay downloadable from each module page on every tier.
   app.get("/api/clp-ledger", requireAuth as any, async (req: Request, res: Response) => {
@@ -2850,12 +2937,12 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
     return res.json({ locked: false, name: certificateName(fresh.user), ...ledger });
   });
 
-  // GET /api/clp-ledger.csv: the same ledger as a spreadsheet. Lifetime only.
+  // GET /api/clp-ledger.csv: the same ledger as a spreadsheet. Annual/Lifetime only.
   app.get("/api/clp-ledger.csv", requireAuth as any, async (req: Request, res: Response) => {
     const fresh = await freshCompletions((req.user as any).id);
     if (!fresh) return res.status(404).json({ message: 'User not found' });
     if (!ledgerUnlocked(fresh.user)) {
-      return res.status(403).json({ message: 'The CLP ledger export is part of Lifetime Pro.' });
+      return res.status(403).json({ message: `The CLP ledger export is part of ${topPlanName()}.` });
     }
     const csv = ledgerCsv(buildLedger(fresh.completions), certificateName(fresh.user));
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');

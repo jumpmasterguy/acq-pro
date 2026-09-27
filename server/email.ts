@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { createHmac, timingSafeEqual } from "crypto";
 import { COURSE_TOTALS } from "@shared/moduleClps.generated";
+import { isNewPricing } from "@shared/pricing";
 
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
@@ -402,7 +403,9 @@ export async function sendEmail4(to: string, username: string): Promise<void> {
     </ul>
 
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
-      <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Start at $5.99/month — or get lifetime access for a one-time payment of $99. Either way, you're covered by a 30-day money-back guarantee.</p>
+      <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">${isNewPricing()
+        ? "Monthly is $14.99. Annual is $149 for the year, which works out to $12.42 a month and is the plan that includes the downloadable Lesson Books. Either way, you're covered by a 30-day money-back guarantee."
+        : "Start at $5.99/month — or get lifetime access for a one-time payment of $99. Either way, you're covered by a 30-day money-back guarantee."}</p>
       <a href="${APP_URL}/app#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Unlock All ${COURSE_TOTALS.modules} Modules →</a>
     </div>
 
@@ -507,7 +510,7 @@ export async function sendEmail6(to: string, username: string): Promise<void> {
     </ul>
 
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
-      <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Your path is waiting. All five Pro modules + your personalized sequence — starting at $5.99/month with a 30-day guarantee.</p>
+      <p style="color:#ffffff !important;font-size:14px;margin:0 0 20px;line-height:1.65">Your path is waiting. All five Pro modules + your personalized sequence — ${isNewPricing() ? "$14.99/month, or $149 for the full year," : "starting at $5.99/month"} with a 30-day guarantee.</p>
       <a href="${APP_URL}/app#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none">Start Your Learning Path →</a>
     </div>
 
@@ -553,8 +556,8 @@ export async function sendEmail7(to: string, username: string): Promise<void> {
     </ul>
 
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
-      <p style="color:#ffffff !important;font-size:16px;font-weight:800;margin:0 0 6px">Start at $5.99/month</p>
-      <p style="color:#ffffff !important;font-size:13px;margin:0 0 20px;opacity:0.8">or $99 one-time for lifetime access — no renewals, ever</p>
+      <p style="color:#ffffff !important;font-size:16px;font-weight:800;margin:0 0 6px">${isNewPricing() ? "$149 for the year" : "Start at $5.99/month"}</p>
+      <p style="color:#ffffff !important;font-size:13px;margin:0 0 20px;opacity:0.8">${isNewPricing() ? "$12.42 a month, Lesson Book downloads included. Or $14.99 month to month." : "or $99 one-time for lifetime access — no renewals, ever"}</p>
       <a href="${APP_URL}/app#/upgrade" class="btn" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 30px;border-radius:8px;text-decoration:none;margin-bottom:10px">Unlock Pro Access →</a>
       <p style="color:#ffffff !important;font-size:12px;margin:12px 0 0;opacity:0.7">30-day money-back guarantee. No questions asked.</p>
     </div>
@@ -819,7 +822,9 @@ export async function sendTeamPurchaseAdminAlert(
   buyerEmail: string,
   seats: number,
   amountPaidCents: number,
-  stripeSessionId: string
+  stripeSessionId: string,
+  /** "annual" = $999/yr Team (Annual seats); "lifetime" = old one-time Team Pack. */
+  seatPlan: "annual" | "lifetime" = "lifetime"
 ): Promise<void> {
   const adminEmail = process.env.ADMIN_EMAILS || 'lucas.l.cruz.es@gmail.com';
   if (!resend) { console.log('[email] RESEND_API_KEY not set — skipping team purchase alert'); return; }
@@ -833,6 +838,8 @@ export async function sendTeamPurchaseAdminAlert(
               <td style="font-size:14px;font-weight:700;color:#0d2137;padding:4px 0">${buyerEmail}</td></tr>
           <tr><td style="font-size:13px;color:#64748b;padding:4px 0">Seats</td>
               <td style="font-size:14px;font-weight:700;color:#0d2137;padding:4px 0">${seats}</td></tr>
+          <tr><td style="font-size:13px;color:#64748b;padding:4px 0">Seat plan</td>
+              <td style="font-size:14px;font-weight:700;color:#0d2137;padding:4px 0">${seatPlan === "annual" ? "Annual (renews yearly)" : "Lifetime (one-time Team Pack)"}</td></tr>
           <tr><td style="font-size:13px;color:#64748b;padding:4px 0">Amount paid</td>
               <td style="font-size:14px;font-weight:700;color:#01696f;padding:4px 0">$${(amountPaidCents / 100).toFixed(2)}</td></tr>
           <tr><td style="font-size:13px;color:#64748b;padding:4px 0">Stripe session</td>
@@ -840,7 +847,7 @@ export async function sendTeamPurchaseAdminAlert(
         </table>
       </td></tr>
     </table>
-    <p style="font-size:13px;color:#64748b;margin:0">Action needed: reach out to provision ${seats} Pro seats for this buyer.</p>
+    <p style="font-size:13px;color:#64748b;margin:0">Action needed: reach out to provision ${seats} ${seatPlan === "annual" ? "Annual" : "Lifetime"} seats for this buyer (admin panel: ${seatPlan === "annual" ? "Make Annual" : "Make Lifetime"}).</p>
   `;
 
   await resend.emails.send({
@@ -853,13 +860,13 @@ export async function sendTeamPurchaseAdminAlert(
 }
 
 // ── Purchase alerts — founder notification for every paid checkout ──────────
-// Fires from the Stripe webhook for Monthly, Lifetime and template-pack
+// Fires from the Stripe webhook for Monthly, Annual, Lifetime and template-pack
 // purchases (Team Pack has its own alert above because it needs action).
 // Never throws: a failed email must not break the webhook, which has already
 // granted access / saved the purchase by the time this runs.
 export interface PurchaseAlert {
   product: string;             // "Lifetime Pro", "Monthly Pro", "PM Essentials Pack"
-  kind: "lifetime" | "monthly" | "pack";
+  kind: "lifetime" | "monthly" | "annual" | "pack";
   buyerEmail: string;
   buyerName?: string;
   amountPaidCents: number;
@@ -889,7 +896,7 @@ export async function sendPurchaseAdminAlert(p: PurchaseAlert): Promise<void> {
   const when = new Date().toLocaleString('en-US', {
     timeZone: 'America/New_York', dateStyle: 'medium', timeStyle: 'short',
   });
-  const recurring = p.kind === 'monthly' ? ' / month' : ' one-time';
+  const recurring = p.kind === 'monthly' ? ' / month' : p.kind === 'annual' ? ' / year' : ' one-time';
   const cameFrom = p.previousStatus === 'trialing' ? 'Free trial → paid'
     : p.previousStatus ? `${p.previousStatus} → paid` : undefined;
 
@@ -1094,10 +1101,12 @@ export async function sendEmail4New(to: string, username: string): Promise<void>
     <div class="greeting">Hey ${username} —</div>
     <p>Let me be direct about the value here.</p>
     <p>A DAU resident course runs <strong>$1,500 or more</strong> once you factor in travel and time off. Management Concepts charges <strong>$2,000+ per course.</strong> Graduate School USA is in the same range.</p>
-    <p>Acqlerate is <strong>$5.99/month.</strong></p>
+    <p>Acqlerate is <strong>${isNewPricing() ? "$149 a year" : "$5.99/month"}.</strong></p>
     <div class="highlight-box">
       <p>For that, you unlock all ${COURSE_TOTALS.modules} modules (${COURSE_TOTALS.lessons} lessons), the AI Study Assistant, CLP certificates for every module, and PDU credit for PMP holders.</p>
-      <p style="margin-top:10px">If you'd rather not pay monthly, the <strong>lifetime option is $99</strong> — less than a single day of government-sponsored classroom training.</p>
+      <p style="margin-top:10px">${isNewPricing()
+        ? "That's $12.42 a month, less than a single day of government-sponsored classroom training, and it includes the downloadable Lesson Books. Or go month to month at <strong>$14.99</strong>."
+        : "If you'd rather not pay monthly, the <strong>lifetime option is $99</strong> — less than a single day of government-sponsored classroom training."}</p>
     </div>
     <p>You've already seen what Foundations looks like. The other five modules are built the same way.</p>
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">
@@ -1108,7 +1117,7 @@ export async function sendEmail4New(to: string, username: string): Promise<void>
   `;
   await resend.emails.send({
     from: FROM, to, replyTo: "hello@acqlerate.com",
-    subject: "What $5.99 actually buys you in this field",
+    subject: isNewPricing() ? "What $149 a year actually buys you in this field" : "What $5.99 actually buys you in this field",
     html: emailShell("DAU courses run $1,500+. Management Concepts charges $2,000. Here's the math instead.", body, to),
   });
   console.log(`[email] Email 4 new (day 12) sent to ${to}`);
@@ -1121,7 +1130,7 @@ export async function sendEmail7New(to: string, username: string): Promise<void>
   const body = `
     <div class="greeting">Hey ${username} —</div>
     <p>This is the last email I'll send about upgrading. I mean that.</p>
-    <p>You may not be in a place right now where $5.99/month makes sense. That's okay. Timing is real.</p>
+    <p>You may not be in a place right now where ${isNewPricing() ? "a subscription" : "$5.99/month"} makes sense. That's okay. Timing is real.</p>
     <p>What I will say — just from watching people move through this field for years — is that the ones who do best aren't necessarily the ones with the most credentials or the most experience.</p>
     <div class="highlight-box">
       <p><strong>They're the ones who kept learning even when nobody was asking them to.</strong></p>
@@ -1151,7 +1160,9 @@ export async function sendTrialEndingEmail(to: string, username: string): Promis
     <p>Your full-access trial wraps up today.</p>
     <p>Here's exactly what that means: you keep permanent free access to <strong>Foundations (all 10 lessons)</strong> and the first lesson of every other module. Everything else — the rest of Finance, Contracts, Data & Analytics, Capture & BD, Operations, plus the full AI Study Assistant — goes back behind the paywall unless you upgrade.</p>
     <div class="highlight-box">
-      <p>If the last few weeks were useful, staying in is <strong>$5.99/month</strong> — or <strong>$99 once, for good</strong> if you'd rather not think about it again.</p>
+      <p>${isNewPricing()
+        ? "If the last few weeks were useful, staying in is <strong>$14.99/month</strong>, or <strong>$149 for the year</strong> ($12.42 a month, Lesson Book downloads included)."
+        : "If the last few weeks were useful, staying in is <strong>$5.99/month</strong> — or <strong>$99 once, for good</strong> if you'd rather not think about it again."}</p>
     </div>
     <p>Nothing you've completed is lost either way. Your progress, XP, and streak are all still there.</p>
     <div class="cta-box" style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:1px solid #264d73">

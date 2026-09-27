@@ -1,6 +1,7 @@
 import express, { type Express, type Request, type Response } from "express";
 import fs from "fs";
 import path from "path";
+import { applyPricingWindow } from "@shared/pricing";
 
 export function serveStatic(app: Express) {
   const distPath = path.resolve(__dirname, "public");
@@ -19,11 +20,22 @@ export function serveStatic(app: Express) {
     next();
   });
 
-  // Helper: send file with no-cache headers to bust Cloudflare edge cache
+  // Helper: send file with no-cache headers to bust Cloudflare edge cache.
+  // HTML pages that carry both price sets (<!--pricing:legacy/new--> fences,
+  // see shared/pricing.ts) are sent with only the current set, so the
+  // 1 Oct 2026 price change happens on the clock rather than on a deploy.
   const sendNoCache = (res: Response, filePath: string) => {
     res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     res.setHeader("Pragma", "no-cache");
     res.setHeader("Expires", "0");
+    if (filePath.endsWith(".html")) {
+      let html: string;
+      try { html = fs.readFileSync(filePath, "utf8"); } catch { return res.sendFile(filePath); }
+      if (html.includes("<!--pricing:")) {
+        res.type("html");
+        return res.send(applyPricingWindow(html));
+      }
+    }
     return res.sendFile(filePath);
   };
 
@@ -209,6 +221,16 @@ export function serveStatic(app: Express) {
       return res.status(404).send("Not found");
     }
     next();
+  });
+
+  // Any other .html reached by its raw path (/landing.html, /blog/x.html,
+  // /products/<pack>/index.html) goes through the same price switch, so no
+  // URL shows both price sets.
+  app.use((req: Request, res: Response, next) => {
+    if (req.method !== "GET" || !req.path.endsWith(".html")) return next();
+    const filePath = path.resolve(distPath, "." + decodeURIComponent(req.path));
+    if (!filePath.startsWith(distPath + path.sep) || !fs.existsSync(filePath)) return next();
+    return sendNoCache(res, filePath);
   });
 
   // Serve all other static assets (JS, CSS, images, etc.)

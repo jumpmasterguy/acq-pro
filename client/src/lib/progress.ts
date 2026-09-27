@@ -10,6 +10,10 @@ export interface UserProgress {
   // isActuallyPaid gates anything permanent/keepable (downloads) so a trial
   // signup can't grab everything and walk away with it for free.
   isActuallyPaid: boolean;
+  // Annual or Lifetime (shared/access.ts isTopPlanStatus): Lesson Book PDF
+  // downloads, "How Do I Apply This?", unlimited AI, the CLP ledger.
+  // Monthly is paid but not a top plan.
+  hasTopPlan: boolean;
   xp: number;
 }
 

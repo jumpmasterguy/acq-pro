@@ -594,7 +594,7 @@ export class DrizzleStorage implements IStorage {
   }
 
   // AI Study Assistant gating — enforces the tier limits sold on the pricing page:
-  // free = 5/day, active (Monthly Pro) = 30/day, lifetime = unlimited.
+  // free = 5/day, active (Monthly Pro) = 30/day, annual and lifetime = unlimited.
   // NOTE: depends on the ai_calls_today/ai_calls_date columns existing in the DB.
   // See /api/admin/migrate-status and /api/admin/run-migration — verify those
   // return success BEFORE trusting this in production again.
@@ -603,7 +603,7 @@ export class DrizzleStorage implements IStorage {
     if (!user) return { allowed: false, remaining: 0, limit: 0 };
 
     const status = (user as any).subscriptionStatus ?? 'free';
-    if (status === 'lifetime') return { allowed: true, remaining: null, limit: null }; // unlimited
+    if (status === 'lifetime' || status === 'annual') return { allowed: true, remaining: null, limit: null }; // unlimited
 
     // Trialing users get the paid (Monthly Pro) limit for as long as their
     // trial clock is still running; once it lapses they fall back to Free

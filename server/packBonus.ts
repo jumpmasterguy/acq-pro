@@ -13,7 +13,7 @@
 // computes it on read, nothing flips in the DB.
 
 import { storage } from "./storage";
-import { computePackBonusEndsAt } from "@shared/access";
+import { computePackBonusEndsAt, isPaidStatus } from "@shared/access";
 import type { User } from "@shared/schema";
 
 export type PackBonusResult = "granted" | "on-signup" | "already-paid";
@@ -37,14 +37,14 @@ async function findUserByEmail(email: string, userId?: string): Promise<User | u
 export async function packBonusStatus(email: string, userId?: string): Promise<PackBonusResult> {
   const user = await findUserByEmail(email, userId);
   if (!user) return "on-signup";
-  if (user.subscriptionStatus === "active" || user.subscriptionStatus === "lifetime") return "already-paid";
+  if (isPaidStatus(user.subscriptionStatus)) return "already-paid";
   return "granted";
 }
 
 export async function grantPackBonus(email: string, userId?: string): Promise<PackBonusResult> {
   const user = await findUserByEmail(email, userId);
   if (!user) return "on-signup";
-  if (user.subscriptionStatus === "active" || user.subscriptionStatus === "lifetime") return "already-paid";
+  if (isPaidStatus(user.subscriptionStatus)) return "already-paid";
 
   const bonusEnd = computePackBonusEndsAt();
   const currentEnd = user.subscriptionStatus === "trialing" && user.trialEndsAt
