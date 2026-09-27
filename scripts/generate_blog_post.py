@@ -28,6 +28,9 @@ CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5")
 WEB_SEARCH_TOOL = os.environ.get("WEB_SEARCH_TOOL", "web_search_20260318")
 BLOG_DIR       = Path(__file__).parent.parent / "client" / "public" / "blog"
 REPO_ROOT      = Path(__file__).parent.parent
+# Borderline duplicates are saved here for review. Outside client/public, so never served.
+HELD_DIR       = REPO_ROOT.resolve() / "blog-held"
+HOLD_CEILING   = float(os.environ.get("HOLD_CEILING", "0.45"))
 
 # ── Module map: module ID → display title + lesson area ─────────────────────
 MODULES = {
@@ -910,15 +913,15 @@ def add_to_index(slug: str, title: str, excerpt: str, topic: dict, read_time: in
         print("WARNING: Could not find posts-grid in index.html")
 
 
-def git_push(slug: str, title: str) -> bool:
+def git_push(slug: str, title: str, paths: list = None, message: str = None) -> bool:
+    paths = paths or [f"client/public/blog/{slug}.html", "client/public/blog/index.html"]
+    message = message or f"blog: publish '{title[:60]}'"
     try:
         for cmd in [
             ["git", "config", "user.email", "blog-bot@acqlerate.com"],
             ["git", "config", "user.name", "Acqlerate Blog Bot"],
-            ["git", "add",
-             f"client/public/blog/{slug}.html",
-             "client/public/blog/index.html"],
-            ["git", "commit", "-m", f"blog: publish '{title[:60]}'"],
+            ["git", "add", *paths],
+            ["git", "commit", "-m", message],
         ]:
             subprocess.run(cmd, cwd=REPO_ROOT, check=True, capture_output=True)
         # In GitHub Actions, actions/checkout has already put an Authorization
@@ -1109,12 +1112,24 @@ guessing. Do not state a figure you did not find."""
     # The article can drift toward covered ground while it is being written, so
     # this checks what was actually produced. Failing here costs the API spend
     # for one article, which is still cheaper than a live duplicate.
+    #
+    # Scores between DUPE_THRESHOLD and HOLD_CEILING are the band where real
+    # duplicates and genuinely new topics overlap (the merged duplicates in
+    # server/static.ts score 0.33-1.00; the 27 Sep DAWIA post scored 0.24 on
+    # one run and 0.34 on the next). A researched article in that band is not
+    # thrown away: it is saved to blog-held/ (outside the public site) for a
+    # human to judge. Only a clear duplicate is discarded.
+    held = False
     try:
         heads = " ".join(re.findall(r"<h2[^>]*>(.*?)</h2>", body_html, re.S))
         dupe_check(BLOG_DIR, title, f"{deck} {heads}", stage="drafted title")
     except DuplicateTopic as e:
-        print(f"\nDUPLICATE, not publishing:\n{e}")
-        return 1
+        score = dupe_nearest(BLOG_DIR, title, f"{deck} {heads}")[0]
+        if score >= HOLD_CEILING:
+            print(f"\nDUPLICATE, not publishing:\n{e}")
+            return 1
+        print(f"\nBORDERLINE ({score:.2f}), holding for review instead of publishing:\n{e}")
+        held = True
 
     # 3. Build slug
     slug = slugify(title)
@@ -1126,6 +1141,17 @@ guessing. Do not state a figure you did not find."""
     # 4. Assemble full HTML with all required elements
     print("Assembling post...")
     post_html = strip_em_dashes(assemble_post(title, deck, body_html, topic, pub_date, slug, read_time))
+
+    if held:
+        HELD_DIR.mkdir(exist_ok=True)
+        held_path = HELD_DIR / f"{slug}.html"
+        held_path.write_text(post_html)
+        ok = git_push(slug, title, paths=[str(held_path.relative_to(REPO_ROOT.resolve()))],
+                      message=f"blog: hold '{title[:50]}' for duplicate review")
+        print(f"\nHeld for review: blog-held/{slug}.html ({'pushed' if ok else 'push failed'})")
+        print("Nothing went live. If it is not a duplicate, move it into "
+              "client/public/blog/_drafts/ and the next run publishes it.")
+        return 1
 
     # 5. Write file
     post_path = BLOG_DIR / f"{slug}.html"
