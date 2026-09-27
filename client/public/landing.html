@@ -62,195 +62,130 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── NAV ── */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(255,255,255,0.96);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
-    }
-    .nav-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between;
-      height: 60px;
-    }
-    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .nav-logo-icon {
-      width: 36px; height: 36px; background: var(--teal); border-radius: 9px;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .nav-logo-icon svg { width: 22px; height: 22px; }
-    .nav-logo-text { font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
-    .nav-logo-text span { color: var(--teal); }
-    .nav-actions { display: flex; align-items: center; gap: 12px; }
-    .nav-blog-pill {
-      display: inline-flex; align-items: center; gap: 7px;
-      background: rgba(1,105,111,0.08); border: 1px solid rgba(1,105,111,0.25);
-      color: var(--teal); font-size: 0.85rem; font-weight: 600;
-      padding: 6px 14px; border-radius: 20px; text-decoration: none;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .nav-blog-pill:hover { background: rgba(1,105,111,0.15); border-color: rgba(1,105,111,0.45); }
-    .nav-blog-badge {
-      background: var(--teal); color: white; font-size: 0.65rem;
-      font-weight: 700; padding: 1px 6px; border-radius: 10px;
-      letter-spacing: 0.04em; text-transform: uppercase;
-    }
-    .btn-ghost {
-      background: none; border: none; cursor: pointer;
-      color: var(--text-muted); font-size: 0.9rem; font-weight: 500;
-      padding: 8px 12px; border-radius: 8px; text-decoration: none;
-      transition: color 0.15s, background 0.15s;
-    }
-    .btn-ghost:hover { color: var(--text); background: var(--surface); }
-    .btn-primary {
-      background: var(--teal); color: white; border: none; cursor: pointer;
-      font-size: 0.9rem; font-weight: 600; padding: 9px 20px;
-      border-radius: 9px; text-decoration: none;
-      transition: background 0.15s, transform 0.1s;
-      display: inline-flex; align-items: center; gap: 6px;
-    }
-    .btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); }
-    .btn-primary:active { transform: translateY(0); }
 
-    /* ── HERO ── */
-    .hero {
-      background: #0D1B2A;
-      padding: 0;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+    /* ── NEW TOP (hero rebuild, Sep 2026): its own tokens so it cannot bleed into the rest of the page ── */
+    .top {
+      --bg: #F1F5F4; --surface: #FFFFFF; --surface-2: #E7EEED;
+      --ink: #0F172A; --ink-2: #3D5153; --ink-3: #6B8082; --line: #D3DFDE;
+      --brand: #01696F; --brand-dark: #0C4E54; --brand-2: #E0EDEC; --brand-bright: #4FC3CB;
+      --navy: #0F172A; --navy-2: #0C2B33; --navy-3: #0F3D42;
+      --gold: #D9B64C; --gold-ink: #8A6D1A; --gold-tint: #FBF7EC; --gold-edge: #E7D69B;
+      --f-found: #3D8FD1; --t-found: #E8F1FA; --e-found: #B0D0EC;
+      --font: 'General Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --wrap: 1120px; --gutter: clamp(16px, 4vw, 40px);
+      font-family: var(--font); color: var(--ink); line-height: 1.6;
     }
-    .hero::before { display: none; }
-    /* Text FIRST, illustration BELOW: at every screen size. The hero graphic is a
-       labeled diagram (BD / Capture / Proposal / Execution), not a mood photo, so it
-       needs its own space instead of a dark overlay with text on top of it. */
-    .hero-image-wrap {
-      display: flex;
-      flex-direction: column-reverse;
-      width: 100%;
-      height: auto;
-    }
-    .hero-image-wrap > img {
-      position: static;
-      width: 100%;
-      height: clamp(200px, 39vw, 600px);
-      object-fit: cover; object-position: center center;
-      display: block;
-      flex-shrink: 0;
-    }
-    .hero-image-wrap::after { display: none; }
-    .hero-text-layer {
-      position: static;
-      background: #0D1B2A;
-      padding: 48px 2rem 40px;
-      flex: 1;
-    }
-    @media (max-width: 640px) {
-      .hero-image-wrap > img { height: 200px; }
-      .hero-text-layer {
-        padding: 32px 1.25rem 24px;
-        text-align: center;
-      }
-      .hero h1 { font-size: 1.75rem; line-height: 1.15; }
-      .hero-sub { font-size: 0.95rem; margin-bottom: 28px; }
-      .hero-badge { margin-bottom: 20px; }
-    }
-    .hero-stats-bar {
-      background: #0D1B2A;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 24px 2rem;
-    }
-    .hero-bullets {
-      background: #0D1B2A;
-      padding: 0 2rem 40px;
-      display: flex; flex-wrap: wrap;
-      justify-content: center; gap: 10px 32px;
-      max-width: 800px; margin: 0 auto;
-    }
-    .hero-bullet {
-      display: flex; align-items: center; gap: 8px;
-      color: rgba(255,255,255,0.8); font-size: 0.875rem;
-    }
-    .hero-bullet-check { color: #4FC3CB; font-weight: 700; }
-    .hero-badge {
-      display: inline-flex; align-items: flex-start; gap: 8px;
-      background: rgba(13,27,42,0.55); border: 1px solid rgba(79,152,163,0.7);
-      color: #7ECFD6; font-size: 0.8rem; font-weight: 700;
-      padding: 6px 16px; border-radius: 100px; margin-bottom: 28px;
-      backdrop-filter: blur(4px); text-shadow: none;
-      letter-spacing: 0.04em;
-    }
-    .hero-badge-dot { width: 7px; height: 7px; min-width: 7px; background: #4F98A3; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
-    .hero h1 {
-      font-size: clamp(2.2rem, 5vw, 3.6rem);
-      font-weight: 800; line-height: 1.12;
-      color: white; letter-spacing: -0.03em;
-      max-width: 820px; margin: 0 auto 20px;
-      text-shadow: 0 2px 24px rgba(0,0,0,0.6), 0 1px 4px rgba(0,0,0,0.8);
-    }
-    .hero h1 em { font-style: normal; color: #4FC3CB; text-shadow: 0 2px 24px rgba(0,0,0,0.5); }
-    .hero-sub {
-      font-size: clamp(1rem, 2vw, 1.15rem);
-      color: rgba(255,255,255,0.92);
-      max-width: 580px; margin: 0 auto 40px; line-height: 1.7;
-      text-shadow: 0 1px 12px rgba(0,0,0,0.7);
-    }
-    .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 56px; }
-    .btn-hero-primary {
-      background: var(--teal); color: white; border: none; cursor: pointer;
-      font-size: 1rem; font-weight: 700; padding: 15px 32px;
-      border-radius: 10px; text-decoration: none;
-      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-      box-shadow: 0 4px 20px rgba(1,105,111,0.4);
-    }
-    .btn-hero-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(1,105,111,0.5); }
-    .btn-hero-secondary {
-      background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.25);
-      cursor: pointer; font-size: 1rem; font-weight: 600; padding: 15px 32px;
-      border-radius: 10px; text-decoration: none;
-      transition: background 0.15s, transform 0.1s;
-    }
-    .btn-hero-secondary:hover { background: rgba(255,255,255,0.18); transform: translateY(-2px); }
+    .top .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gutter); }
+    .top h1 { font-weight: 700; letter-spacing: -0.02em; line-height: 1.12; font-size: clamp(2.1rem, 4.8vw, 3.5rem); }
+    .top .lede { font-size: clamp(1.02rem, 1.3vw, 1.15rem); line-height: 1.65; max-width: 640px; margin-top: 14px; }
+    .top img { max-width: 100%; display: block; }
+    @font-face { font-family: 'General Sans'; font-weight: 400; src: url('/fonts/GeneralSans-Regular.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'General Sans'; font-weight: 500; src: url('/fonts/GeneralSans-Medium.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'General Sans'; font-weight: 600; src: url('/fonts/GeneralSans-Semibold.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'General Sans'; font-weight: 700; src: url('/fonts/GeneralSans-Bold.woff2') format('woff2'); font-display: swap; }
 
-    .hero-stats {
-      display: flex; gap: 40px; justify-content: center; flex-wrap: wrap;
-    }
-    .hero-stat { text-align: center; }
-    .hero-stat-num { font-size: 1.8rem; font-weight: 800; color: white; line-height: 1; }
-    .hero-stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .top .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font); font-weight: 600; font-size: 0.95rem; padding: 13px 22px; border-radius: 10px; text-decoration: none; border: 1.5px solid transparent; cursor: pointer; line-height: 1; white-space: nowrap; transition: transform 0.12s, background 0.15s, border-color 0.15s, box-shadow 0.15s; }
+    .top .btn:active { transform: translateY(1px); }
+    .top .btn-brand { background: var(--brand); color: #fff; box-shadow: 0 6px 18px -8px var(--brand); }
+    .top .btn-brand:hover { background: var(--brand-dark); }
+    .top .btn-gold { background: var(--gold); color: var(--navy); }
+    .top .btn-gold:hover { background: #E3C56A; }
+    .top .btn-outline { background: transparent; color: var(--ink); border-color: var(--line); }
+    .top .btn-outline:hover { border-color: var(--brand); color: var(--brand); }
+    .top .btn-white { background: #fff; color: var(--navy); }
+    .top .btn-ghost-light { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.25); }
+    .top .btn-ghost-light:hover { background: rgba(255,255,255,0.16); }
+    .top .btn-sm { font-size: 0.85rem; padding: 9px 16px; }
 
-    /* ── EMAIL CAPTURE ── */
-    .email-capture-bar {
-      background: var(--gold-bg);
-      border-bottom: 1px solid #F0D060;
-      padding: 18px 2rem;
-    }
-    .email-capture-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center;
-    }
-    .email-capture-label {
-      font-size: 0.9rem; font-weight: 600; color: #7A5800;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .email-form { display: flex; gap: 8px; flex-wrap: wrap; }
-    .email-input {
-      padding: 10px 16px; border: 1.5px solid #E0C050; border-radius: 8px;
-      font-size: 0.9rem; font-family: inherit; background: white;
-      outline: none; width: 260px; max-width: 100%;
-      transition: border-color 0.15s;
-    }
-    .email-input:focus { border-color: var(--teal); }
-    .btn-capture {
-      background: var(--gold); color: white; border: none; cursor: pointer;
-      font-size: 0.9rem; font-weight: 700; padding: 10px 20px;
-      border-radius: 8px; white-space: nowrap;
-      transition: background 0.15s, transform 0.1s;
-    }
-    .btn-capture:hover { background: #B88600; transform: translateY(-1px); }
-    .capture-success { color: var(--teal); font-size: 0.85rem; font-weight: 600; display: none; }
+    /* icon tile: the product's module tile */
+    .top .tile { width: 40px; height: 40px; border-radius: 10px; display: inline-grid; place-items: center; font-size: 20px; flex-shrink: 0; background: var(--tint, var(--brand-2)); border: 1px solid var(--edge, var(--line)); }
+    .top .tile.lg { width: 52px; height: 52px; font-size: 26px; border-radius: 13px; }
+    .top .fam { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fam, var(--brand)); }
+    .top .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
+    .top .bar { height: 6px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+    .top .bar i { display: block; height: 100%; background: var(--fam, var(--brand)); border-radius: 99px; }
+    .top .found { --fam: var(--f-found); --tint: var(--t-found); --edge: var(--e-found); }
+    .top .money { --fam: var(--f-money); --tint: var(--t-money); --edge: var(--e-money); }
+    .top .con { --fam: var(--f-con);   --tint: var(--t-con);   --edge: var(--e-con); }
+    .top .win { --fam: var(--f-win);   --tint: var(--t-win);   --edge: var(--e-win); }
+    .top .run { --fam: var(--f-run);   --tint: var(--t-run);   --edge: var(--e-run); }
+    .top .goldf { --fam: var(--gold-ink); --tint: var(--gold-tint); --edge: var(--gold-edge); }
+
+    /* tooltips */
+    .top .jt { position: relative; border-bottom: 1.5px dotted currentColor; cursor: help; }
+    .top .jt::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--navy); color: #fff; font-size: 0.75rem; font-weight: 500; line-height: 1.45; padding: 8px 11px; border-radius: 7px; white-space: normal; width: max-content; max-width: min(240px, 70vw); text-align: left; pointer-events: none; display: none; z-index: 100; box-shadow: 0 4px 16px rgba(0,0,0,0.25); font-style: normal; }
+    .top .jt::before { content: ''; position: absolute; bottom: calc(100% + 3px); left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--navy); pointer-events: none; display: none; z-index: 100; }
+    .top .jt:hover::after, .top .jt:hover::before { display: block; }
+    .top .jt-light::after { background: #fff; color: var(--navy); }
+    .top .jt-light::before { border-top-color: #fff; }
+
+
+    .top nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .top .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .top .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .top .nav-logo-icon { width: 34px; height: 34px; border-radius: 9px; background: var(--brand); overflow: hidden; flex-shrink: 0; }
+    .top .nav-logo-text { font-size: 1.15rem; font-weight: 700; color: var(--navy); letter-spacing: -0.02em; }
+    .top .nav-logo-text span { color: var(--brand); }
+    .top .nav-links { display: flex; align-items: center; gap: 2px; }
+    .top .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--ink-2); text-decoration: none; padding: 8px 12px; border-radius: 8px; }
+    .top .nav-links a:hover { color: var(--brand); background: var(--brand-2); }
+    .top .nav-cta { display: flex; align-items: center; gap: 8px; }
+    @media (max-width: 800px) { .top .nav-links, .top .nav-signin { display: none; } }
+
+
+    .top .hero { background: linear-gradient(110deg, var(--navy-2) 0%, var(--navy-3) 60%, #0C4E54 100%); color: #fff; padding: clamp(48px, 7vw, 88px) 0 0; position: relative; overflow: hidden; }
+    .top .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(600px 400px at 85% 20%, rgba(79,195,203,0.18), transparent 60%), radial-gradient(500px 300px at 10% 90%, rgba(217,182,76,0.10), transparent 60%); pointer-events: none; }
+    .top .hero .wrap { position: relative; }
+    .top .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+    .top .hero h1 { color: #fff; }
+    .top .hero h1 em { font-style: normal; color: var(--brand-bright); }
+    .top .hero .lede { color: rgba(255,255,255,0.78); }
+    .top .hero-kicker { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); color: rgba(255,255,255,0.85); font-size: 0.78rem; font-weight: 600; padding: 6px 12px; border-radius: 99px; margin-bottom: 20px; }
+    .top .hero-kicker i { width: 7px; height: 7px; border-radius: 50%; background: var(--brand-bright); }
+    .top .hero-ctas { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+    .top .hero-note { font-size: 0.85rem; color: rgba(255,255,255,0.55); margin-top: 16px; }
+    .top .hero-note b { color: rgba(255,255,255,0.85); font-weight: 600; }
+
+    /* product mock in hero */
+    .top .mock { display: grid; gap: 12px; }
+    .top .mock-card { background: var(--surface); color: var(--ink); border-radius: 12px; padding: 16px 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.35); }
+    .top .mock-focus { border-left: 4px solid var(--fam); display: flex; align-items: center; gap: 14px; }
+    .top .mock-focus .t { font-weight: 700; font-size: 1rem; margin-top: 2px; }
+    .top .mock-focus .s { font-size: 0.82rem; color: var(--ink-2); }
+    .top .mock-btn { background: var(--fam); color: #fff; border-radius: 8px; padding: 10px 16px; font-weight: 600; font-size: 0.85rem; white-space: nowrap; margin-left: auto; }
+    .top .mock-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .top .mock-mini { padding: 14px 16px; display: flex; gap: 12px; align-items: center; }
+    .top .mock-mini .tile { width: 36px; height: 36px; font-size: 18px; }
+    .top .mock-mini b { display: block; font-size: 0.9rem; }
+    .top .mock-mini span { font-size: 0.78rem; color: var(--ink-2); }
+    .top .mock-clp { background: var(--gold-tint); border: 1px solid var(--gold-edge); }
+    .top .mock-clp .hd { display: flex; justify-content: space-between; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-ink); margin-bottom: 8px; }
+    .top .mock-clp .nx { font-weight: 700; font-size: 0.95rem; display: flex; justify-content: space-between; }
+    .top .mock-clp .bar { background: #EFE4C4; margin: 8px 0 6px; }
+    .top .mock-clp .bar i { background: var(--gold); }
+    .top .mock-clp .ft { font-size: 0.78rem; color: var(--ink-3); }
+    .top .mock-label { position: absolute; top: -12px; right: 14px; background: var(--gold); color: var(--navy); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; }
+    @media (max-width: 900px) { .top .hero-grid { grid-template-columns: 1fr; } }
+
+    .top .stats { position: relative; margin-top: clamp(40px, 6vw, 64px); background: rgba(255,255,255,0.06); border-top: 1px solid rgba(255,255,255,0.1); }
+    .top .stats-row { display: grid; grid-template-columns: repeat(5, 1fr); }
+    .top .stat { padding: 20px 12px; text-align: center; border-left: 1px solid rgba(255,255,255,0.1); }
+    .top .stat:first-child { border-left: none; }
+    .top .stat-n { font-size: clamp(1.6rem, 2.8vw, 2.1rem); font-weight: 700; color: #fff; line-height: 1; letter-spacing: -0.02em; }
+    .top .stat-n.gold { color: var(--gold); }
+    .top .stat-l { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-top: 8px; }
+    @media (max-width: 860px) { .top .stats-row { grid-template-columns: repeat(2, 1fr); } .top .stat:nth-child(odd) { border-left: none; } .top .stat:nth-child(n+3) { border-top: 1px solid rgba(255,255,255,0.1); } .top .stat:nth-child(5) { grid-column: 1 / -1; } }
+
+    /* STARTER KIT */
+    .top .kit { background: var(--surface); border-bottom: 1px solid var(--line); padding: 22px 0; }
+    .top .kit-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .top .kit-label { display: flex; align-items: center; gap: 12px; font-size: 0.95rem; color: var(--ink-2); }
+    .top .kit-label b { color: var(--ink); font-weight: 600; }
+    .top .email-form { display: flex; gap: 8px; flex-wrap: wrap; }
+    .top .email-input { font-family: var(--font); font-size: 0.95rem; padding: 11px 14px; border: 1.5px solid var(--line); border-radius: 9px; background: #fff; min-width: 240px; outline: none; color: var(--ink); }
+    .top .email-input:focus { border-color: var(--brand); }
+    .top .capture-success { display: none; font-size: 0.9rem; font-weight: 600; color: var(--brand); }
+
 
     /* ── SECTIONS ── */
     section { padding: 80px 2rem; }
@@ -641,101 +576,90 @@
 </head>
 <body>
 
+<div class="top">
 <!-- NAV -->
 <nav>
-  <div class="nav-inner">
+  <div class="wrap nav-inner">
     <a href="/" class="nav-logo">
-      <div class="nav-logo-icon">
-        <img src="/acqlerate-icon.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit">
-      </div>
+      <span class="nav-logo-icon"><img src="/acqlerate-icon.svg" alt="" /></span>
       <span class="nav-logo-text">Acq<span>lerate</span></span>
     </a>
-    <div class="nav-actions">
-      <a href="/tools" class="btn-ghost" style="font-size:0.82rem">Tools</a>
-      <a href="/blog" class="nav-blog-pill nav-blog">
-        <span>Blog</span>
-        <span class="nav-blog-badge">Free</span>
-      </a>
-      <a href="/app#/auth?mode=login" class="btn-ghost nav-signin">Sign In</a>
-      <a href="/app#/auth" class="btn-primary">Start Free <span class="nav-arrow">→</span></a>
+    <div class="nav-links">
+      <a href="#modules">Curriculum</a>
+      <a href="/pdu">CLPs &amp; PDUs</a>
+      <a href="#pricing">Pricing</a>
+      <a href="/blog">Blog</a>
+      <a href="/tools">Tools</a>
+      <a href="/why">Our Story</a>
+    </div>
+    <div class="nav-cta">
+      <a href="/app#/auth?mode=login" class="btn btn-sm nav-signin" style="color:var(--ink-2)">Sign In</a>
+      <a href="/app#/auth" class="btn btn-brand btn-sm">Start Free →</a>
     </div>
   </div>
 </nav>
 
-<!-- OUR STORY BANNER -->
-<a href="/why" class="story-banner" aria-label="Read our story: why Acqlerate exists">
-  <div class="story-banner-inner">
-    <span class="story-banner-text"><strong>Our Story:</strong> Why I built Acqlerate after failing to answer a question about my own program</span>
-    <span class="story-banner-arrow">Read our story →</span>
-  </div>
-</a>
-<style>
-  .story-banner { display: block; background: var(--teal); text-decoration: none; }
-  .story-banner-inner { max-width: 1100px; margin: 0 auto; padding: 10px 2rem; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; text-align: center; }
-  .story-banner-text { color: rgba(255,255,255,0.95); font-size: 0.88rem; font-weight: 500; }
-  .story-banner-text strong { font-weight: 800; }
-  .story-banner-arrow { color: white; font-size: 0.88rem; font-weight: 700; white-space: nowrap; text-decoration: underline; }
-  .story-banner:hover { background: #0C4E54; }
-  @media (max-width: 640px) {
-    .story-banner-inner { padding: 10px 1rem; }
-    .story-banner-text { font-size: 0.8rem; }
-  }
-</style>
-
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-image-wrap">
-    <img src="/img-hero-whiteboard.jpg" alt="Whiteboard diagram of the four phases of a defense program: BD, Capture, Proposal, and Execution" loading="eager" />
-    <div class="hero-text-layer">
-      <div class="hero-badge">
-        For defense contractor PMs, BD leads, and capture managers
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-kicker"><i></i> Plain-English DoD acquisition training</div>
+        <h1>Know what everyone in the room is <em>pretending</em> to know.</h1>
+        <p class="lede">Short lessons on how defense programs get funded, contracted, and run. Real numbers, real program examples, and a certificate at the end of every module. <span class="jt jt-light" data-tip="Appropriations come in categories (O&amp;M, procurement, RDT&amp;E) and each can only be spent on certain things. Spend the wrong kind and it is a legal problem, not an accounting one.">Color of money</span> explained before it costs you something.</p>
+        <div class="hero-ctas">
+          <a href="/app#/auth" class="btn btn-gold">Start free, no card needed →</a>
+          <a href="#modules" class="btn btn-ghost-light">See the curriculum</a>
+        </div>
+        <p class="hero-note"><b>Built by a practicing DoD PM</b> who ran a $950M program. Module 1 is free for good.</p>
       </div>
-      <h1>Built for the people doing the work.<br><em>Not the people writing about it.</em></h1>
-      <p class="hero-sub">There’s no shortage of AI tools, federal databases, and contract vehicles in defense acquisition. The gap is the foundation underneath them. Acqlerate teaches you the acquisition system in plain English, PM side or BD side, so when you pick up the tools, the data, and the regulations, you actually know what you’re doing with them.</p>
-      <div class="hero-ctas">
-        <a href="/app#/auth" class="btn-hero-primary">Start Free → No experience required</a>
+      <div class="mock" aria-label="What the app looks like">
+        <div class="mock-card mock-focus found" style="position:relative">
+          <span class="mock-label">Your dashboard</span>
+          <span class="tile lg">🏛️</span>
+          <div style="min-width:0">
+            <div class="fam">Continue · Foundations</div>
+            <div class="t">Color of Money: Why Appropriations Matter</div>
+            <div class="s">Lesson 4 of <span data-count="lessons:foundations">10</span> · 14 min</div>
+          </div>
+          <span class="mock-btn">Continue ›</span>
+        </div>
+        <div class="mock-row">
+          <div class="mock-card mock-mini goldf"><span class="tile">🔥</span><div><b>6-day streak</b><span>Tomorrow makes a week</span></div></div>
+          <div class="mock-card mock-mini goldf"><span class="tile">⚡</span><div><b>Daily challenge</b><span>5 questions · 2 min · 50 XP</span></div></div>
+        </div>
+        <div class="mock-card mock-clp">
+          <div class="hd"><span>🎓 CLP credit</span><span>Next certificate</span></div>
+          <div class="nx"><span>🏛️ Foundations</span><span style="color:var(--gold-ink)"><span data-count="clps:foundations">2.5</span> CLPs</span></div>
+          <div class="bar"><i style="width:40%"></i></div>
+          <div class="ft">6 lessons to your first certificate · <span data-count="clps">44.2</span> available across the course</div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="hero-stats-bar"><div class="hero-stats">
-    <div class="hero-stat">
-      <div class="hero-stat-num"><span data-count="modules">14</span></div>
-      <div class="hero-stat-label">Modules</div>
+  <div class="stats">
+    <div class="wrap stats-row">
+      <div class="stat"><div class="stat-n"><span data-count="modules">14</span></div><div class="stat-l">Modules</div></div>
+      <div class="stat"><div class="stat-n"><span data-count="lessons">123</span></div><div class="stat-l">Lessons</div></div>
+      <div class="stat"><div class="stat-n"><span data-count="avg-minutes">22</span> min</div><div class="stat-l">Per lesson, average</div></div>
+      <div class="stat"><div class="stat-n gold"><span data-count="clps-whole">44</span>+</div><div class="stat-l">CLPs available</div></div>
+      <div class="stat"><div class="stat-n">0</div><div class="stat-l">Slide decks</div></div>
     </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num"><span data-count="lessons">123</span></div>
-      <div class="hero-stat-label">Lessons</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num">3</div>
-      <div class="hero-stat-label">Skill Levels</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num" style="font-size:1.1rem;letter-spacing:-0.01em">AI ✦</div>
-      <div class="hero-stat-label">Study Assistant</div>
-    </div>
-
   </div>
-  <!-- Benefit bullets -->
-  <div class="hero-bullets">
-    <div class="hero-bullet"><span class="hero-bullet-check">✓</span><span>Understand how DoD programs are funded, contracted, and run, before your first review</span></div>
-    <div class="hero-bullet"><span class="hero-bullet-check">✓</span><span>Know contract types, CPARS, source selection, and what the government is actually evaluating</span></div>
-    <div class="hero-bullet"><span class="hero-bullet-check">✓</span><span>Built by a practicing DoD PM who ran a $950M program. Plain English, real examples, no textbook fluff</span></div>
-  </div>
-</section>
+</header>
 
-<!-- EMAIL CAPTURE BAR -->
-<div class="email-capture-bar">
-  <div class="email-capture-inner">
-    <div class="email-capture-label">
-      📥 Free: <strong>Acquisition Starter Kit</strong>
-    </div>
+<!-- STARTER KIT -->
+<div class="kit">
+  <div class="wrap kit-inner">
+    <div class="kit-label"><span class="tile">📥</span><span><b>Free download: the Acquisition Starter Kit.</b> Key terms, ACAT levels, career roadmaps, and the five mistakes everyone makes once.</span></div>
     <form class="email-form" id="captureForm" onsubmit="submitLead(event, 'hero_bar')">
       <input type="email" class="email-input" id="captureEmail" placeholder="your@email.com" required />
-      <button type="submit" class="btn-capture">Send It Free</button>
+      <button type="submit" class="btn btn-brand btn-sm">Send it free</button>
     </form>
-    <div class="capture-success" id="captureSuccess">✓ Sent to your inbox. Or grab it now: <a href="/starter-kit-usg.pdf" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;font-weight:800;">USG Edition</a> · <a href="/starter-kit-contractor.pdf" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;font-weight:800;">Contractor Edition</a></div>
+    <div class="capture-success" id="captureSuccess">✓ Sent to your inbox. Or grab it now: <a href="/starter-kit-usg.pdf" target="_blank" rel="noopener">USG Edition</a> · <a href="/starter-kit-contractor.pdf" target="_blank" rel="noopener">Contractor Edition</a></div>
   </div>
+</div>
+
 </div>
 
 <!-- TEAM OUTCOMES SECTION -->
