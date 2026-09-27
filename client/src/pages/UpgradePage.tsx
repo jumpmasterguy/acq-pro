@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { modules, getTotalLessons } from "@/lib/curriculumMeta";
 import { ArrowLeft, CheckCircle, Shield, Award, Zap, Lock, CreditCard, ExternalLink, Globe, Star, RotateCcw, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,12 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { isNativeApp } from "@/lib/platform";
+import { getCheckoutMode, openAppCheckout, type CheckoutMode } from "@/lib/appCheckout";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FREE_MODULES } from "@/lib/progress";
 import { getModuleTheme, moduleGradient, getModuleFamilyTheme } from "@/lib/moduleTheme";
 import { formatClps, moduleClps } from "@shared/moduleClps";
-import { isNewPricing, planPrice, topPlanName, PRICES, LEGACY_PRICES } from "@shared/pricing";
+import { isNewPricing, planPrice, PRICES, LEGACY_PRICES } from "@shared/pricing";
 
 interface UpgradePageProps {
   onBack: () => void;
@@ -21,9 +22,15 @@ interface UpgradePageProps {
   userEmail?: string;
   /** Native's "Already upgraded? Sign out and back in". */
   onSignOut?: () => void;
+  /**
+   * After an in-app checkout sheet closes: re-read the account until Pro
+   * shows up (the Stripe webhook can lag a second or two). Resolves true
+   * once the account is paid.
+   */
+  onAfterAppCheckout?: () => Promise<boolean>;
 }
 
-export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 'your email', onSignOut }: UpgradePageProps) {
+export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 'your email', onSignOut, onAfterAppCheckout }: UpgradePageProps) {
   const isMobile = useIsMobile();
   const totalLessons = getTotalLessons();
   const [loadingTop, setLoadingTop] = useState(false);
@@ -36,6 +43,13 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
   const topPlan = newPricing ? "annual" as const : "lifetime" as const;
   const nativeApp = isNativeApp();
   const { toast } = useToast();
+  // Whether this device may sell Pro, and how (lib/appCheckout.ts). In the
+  // app this waits on the App Store's answer, so it starts as "can't".
+  const [checkoutMode, setCheckoutMode] = useState<CheckoutMode>(nativeApp ? 'none' : 'web');
+  useEffect(() => { void getCheckoutMode().then(setCheckoutMode); }, []);
+  const canBuy = checkoutMode !== 'none';
+  const [confirming, setConfirming] = useState(false);
+  const [unconfirmed, setUnconfirmed] = useState(false);
 
   const freeFeatures = [
     "Module 1: Foundations (full access, 10 lessons)",
@@ -104,7 +118,46 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
     ? { price: `$${PRICES.monthly}`, note: "Cancel anytime" }
     : { price: `$${LEGACY_PRICES.monthly}`, note: `Subscribe by Sept 30 and keep $${LEGACY_PRICES.monthly} for as long as you stay. New price from Oct 1: $${PRICES.monthly}.` };
 
+  // iPhone on the US App Store: checkout in the browser sheet, then confirm.
+  const handleAppCheckout = async (priceType: "annual" | "lifetime" | "monthly") => {
+    const setLoading = priceType === "monthly" ? setLoadingMonthly : setLoadingTop;
+    setLoading(true);
+    setUnconfirmed(false);
+    try {
+      try {
+        (window as any).trackEvent?.('begin_checkout', {
+          currency: 'USD', value: planPrice(priceType),
+          items: [{ item_name: `Acqlerate Pro ${priceType}`, price: planPrice(priceType) }],
+        });
+      } catch {}
+      await openAppCheckout(priceType);
+      setLoading(false);
+      setConfirming(true);
+      const paid = await (onAfterAppCheckout?.() ?? Promise.resolve(false));
+      // Not paid yet can mean they backed out, or the payment is still
+      // settling. Offer a re-check rather than guessing which.
+      if (!paid) setUnconfirmed(true);
+    } catch (err: any) {
+      toast({
+        title: "Checkout error",
+        description: err.message || "Unable to start checkout. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+      setConfirming(false);
+    }
+  };
+
+  const recheck = async () => {
+    setConfirming(true);
+    const paid = await (onAfterAppCheckout?.() ?? Promise.resolve(false));
+    setConfirming(false);
+    setUnconfirmed(!paid);
+  };
+
   const handleCheckout = async (priceType: "annual" | "lifetime" | "monthly") => {
+    if (checkoutMode === 'ios-us') return handleAppCheckout(priceType);
     const setLoading = priceType === "monthly" ? setLoadingMonthly : setLoadingTop;
     setLoading(true);
     try {
@@ -177,9 +230,9 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
             Unlock the Full Academy
           </h1>
           <p className="mt-1.5 text-sm leading-[1.5]" style={{ color: 'var(--acq-text-muted)' }}>
-            {nativeApp
-              ? 'Every module, lesson, quiz, and resource. Pro access is set up on acqlerate.com, then works here automatically.'
-              : 'Get access to every module, lesson, quiz, and resource — everything you need to launch or advance your DoD acquisitions career.'}
+            {canBuy
+              ? 'Get access to every module, lesson, quiz, and resource — everything you need to launch or advance your DoD acquisitions career.'
+              : 'Every module, lesson, quiz, and resource. If Pro is already on your account, it works here too.'}
           </p>
           {trialDaysLeft !== null && (
             <span
@@ -194,10 +247,10 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
           )}
         </div>
 
-        {/* Native can't take payment, so it explains where to. On the web a
-            phone is a perfectly legal place to sell, so mobile web keeps the
-            real plans and Stripe checkout. */}
-        {!nativeApp && (
+        {/* Real plans wherever this device may sell: any browser, and the
+            iPhone app on the US App Store (checkout opens in the browser
+            sheet). See lib/appCheckout.ts for the store rules. */}
+        {canBuy && (
           <div className="flex flex-col gap-2.5">
             {[
               { id: topPlan, name: top.name, price: top.price, unit: top.unit, note: top.note, loading: loadingTop, badge: top.badge },
@@ -253,8 +306,42 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
           </div>
         )}
 
-        {/* How to upgrade */}
-        {nativeApp && (
+        {/* After an in-app checkout: confirming, or not confirmed yet. */}
+        {(confirming || unconfirmed) && (
+          <div
+            className="flex items-center gap-3 rounded-[14px] p-4"
+            style={{ background: 'var(--acq-surface-sunken)' }}
+            role="status"
+            data-testid="app-checkout-status"
+          >
+            {confirming ? (
+              <>
+                <Loader2 className="h-4 w-4 shrink-0 animate-spin" style={{ color: 'var(--acq-text-muted)' }} />
+                <span className="text-sm" style={{ color: 'var(--acq-text-body)' }}>Checking your account…</span>
+              </>
+            ) : (
+              <>
+                <span className="min-w-0 flex-1 text-sm leading-[1.45]" style={{ color: 'var(--acq-text-body)' }}>
+                  Didn't finish checkout? No charge was made. If you did pay, it can take a minute to show up.
+                </span>
+                <button
+                  type="button"
+                  onClick={recheck}
+                  className="shrink-0 rounded-lg px-3 py-2 text-xs font-bold text-white"
+                  style={{ background: 'var(--acq-teal)' }}
+                  data-testid="app-checkout-recheck"
+                >
+                  Check again
+                </button>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Where this device may not sell: no directions to buy elsewhere
+            (outside the US App Store Apple forbids exactly that), just the
+            way in for people who already have Pro on their account. */}
+        {nativeApp && !canBuy && (
         <section
           className="rounded-[14px] p-4"
           style={{
@@ -267,25 +354,12 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
             className="mb-3 text-xs font-bold uppercase tracking-[0.06em]"
             style={{ color: 'var(--acq-text-muted)' }}
           >
-            How to upgrade
+            Already have Pro?
           </h2>
-          <ol className="flex flex-col gap-3">
-            {[
-              <>On a computer or in your browser, go to <strong>acqlerate.com</strong> and sign in with {userEmail}.</>,
-              <>Choose Monthly Pro or {topPlanName()}. Both come with a 30-day money-back guarantee.</>,
-              <>Come back to the app. Sign out and back in and all {modules.length} modules unlock.</>,
-            ].map((text, i) => (
-              <li key={i} className="flex gap-3 text-sm leading-[1.5]" style={{ color: 'var(--acq-text-body)' }}>
-                <span
-                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold"
-                  style={{ background: 'var(--acq-surface-brand-wash)', color: 'var(--acq-text-brand)' }}
-                >
-                  {i + 1}
-                </span>
-                <span className="min-w-0 flex-1">{text}</span>
-              </li>
-            ))}
-          </ol>
+          <p className="text-sm leading-[1.5]" style={{ color: 'var(--acq-text-body)' }}>
+            Pro belongs to your account, so it works everywhere you sign in as {userEmail}.
+            If it isn't showing here yet, sign out and back in.
+          </p>
           <button
             type="button"
             onClick={onSignOut}

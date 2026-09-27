@@ -1008,6 +1008,10 @@ export async function registerRoutes(
       }
 
       const priceType = req.body?.priceType as PlanType; // 'monthly' | 'annual' | 'lifetime'
+      // 'ios-app': started from the iPhone app (US App Store link-out, see
+      // client/src/lib/appCheckout.ts). It opens in a browser sheet, so it
+      // must come back to /checkout/return rather than into the web app.
+      const fromIosApp = req.body?.source === "ios-app";
       // The pricing switch decides what is for sale (shared/pricing.ts):
       // before it, Monthly $5.99 and Lifetime $99; from it, Monthly $14.99
       // and Annual $149. A tab left open across the switch gets a clear
@@ -1065,8 +1069,12 @@ export async function registerRoutes(
         const origin =
           process.env.APP_URL ||
           `${req.protocol}://${req.get("host")}`;
-        const successUrl = `${origin}/app#/dashboard?payment=success`;
-        const cancelUrl = `${origin}/app#/upgrade?payment=cancelled`;
+        const successUrl = fromIosApp
+          ? `${origin}/checkout/return?result=success`
+          : `${origin}/app#/dashboard?payment=success`;
+        const cancelUrl = fromIosApp
+          ? `${origin}/checkout/return?result=cancelled`
+          : `${origin}/app#/upgrade?payment=cancelled`;
 
         const session = await stripe.checkout.sessions.create({
           customer: customerId,
@@ -1075,7 +1083,7 @@ export async function registerRoutes(
           mode,
           success_url: successUrl,
           cancel_url: cancelUrl,
-          metadata: { userId, plan: priceType },
+          metadata: { userId, plan: priceType, source: fromIosApp ? "ios-app" : "web" },
           allow_promotion_codes: true,
         });
 
@@ -1086,6 +1094,48 @@ export async function registerRoutes(
       }
     }
   );
+
+  // ── GET /checkout/return ─────────────────────────────────────────────────
+  // Where a checkout started in the iPhone app lands. It is shown inside the
+  // browser sheet, which does not share the app's sign-in, so it is a plain
+  // page: say what happened and hand the learner back. Access itself is
+  // granted by the webhook; the app re-reads the account when the sheet closes.
+  app.get("/checkout/return", (req: Request, res: Response) => {
+    const result = String(req.query.result ?? "");
+    const portal = result === "portal";
+    const ok = result === "success" || portal;
+    const title = portal ? "All set." : ok ? "You're in. Welcome to Pro." : "No charge made.";
+    const body = portal
+      ? "Your billing changes are saved. Head back to the app."
+      : ok
+        ? "Every module is unlocked. Head back to the app and pick up where you left off."
+        : "Nothing was bought. You can come back to it any time.";
+    res.setHeader("Cache-Control", "no-store");
+    res.type("html").send(`<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>${portal ? "Billing updated" : ok ? "Welcome to Pro" : "Checkout cancelled"} | Acqlerate</title>
+<style>
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#F7F3EC;color:#0D1B2A;
+    padding:24px;box-sizing:border-box;text-align:center}
+  .card{max-width:360px}
+  .badge{width:72px;height:72px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;
+    justify-content:center;font-size:34px;background:${ok ? "#01696F" : "#E7E1D6"};color:#fff}
+  h1{font-size:24px;margin:0 0 10px;letter-spacing:-.02em}
+  p{font-size:16px;line-height:1.55;color:#44505C;margin:0 0 26px}
+  a.btn{display:block;background:#01696F;color:#fff;text-decoration:none;font-weight:700;
+    padding:15px 18px;border-radius:12px;font-size:16px}
+  .hint{margin-top:14px;font-size:13px;color:#7A838C}
+</style></head>
+<body><div class="card">
+  <div class="badge">${ok ? "&#10003;" : "&#8617;"}</div>
+  <h1>${title}</h1>
+  <p>${body}</p>
+  <a class="btn" href="acqlerate://checkout?result=${portal ? "portal" : ok ? "success" : "cancelled"}">Return to Acqlerate</a>
+  <div class="hint">Or tap <strong>Done</strong> at the top of the screen.</div>
+</div></body></html>`);
+  });
 
   // Stripe webhook — handles checkout.session.completed
   app.post(
@@ -1313,9 +1363,14 @@ export async function registerRoutes(
         const origin =
           process.env.APP_URL ||
           `${req.protocol}://${req.get("host")}`;
+        // The app lives at /app; the bare root is the marketing homepage, so
+        // the old `${origin}/#/dashboard` sent people back to the sales page.
+        // From the iPhone app the portal opens in a browser sheet, which
+        // returns to the plain /checkout/return page instead.
+        const fromIosApp = req.body?.source === "ios-app";
         const session = await stripe.billingPortal.sessions.create({
           customer: portalCustomerId,
-          return_url: `${origin}/#/dashboard`,
+          return_url: fromIosApp ? `${origin}/checkout/return?result=portal` : `${origin}/app#/dashboard`,
         });
         return res.json({ url: session.url });
       } catch (err: any) {

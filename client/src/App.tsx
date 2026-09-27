@@ -629,6 +629,27 @@ function AppContent() {
     }
   }, [authState.status]);
 
+  // After a checkout started in the iPhone app (browser sheet, see
+  // lib/appCheckout.ts): the webhook grants Pro on Stripe's word, which can
+  // land a second or two after the sheet closes. Re-read the account a few
+  // times; the moment it is paid, take the learner to their unlocked home.
+  const refreshAfterAppCheckout = useCallback(async (): Promise<boolean> => {
+    for (let attempt = 0; attempt < 6; attempt++) {
+      if (attempt > 0) await new Promise(r => setTimeout(r, 1500));
+      try {
+        const res = await apiRequest("GET", "/api/auth/me");
+        if (!res.ok) continue;
+        const user: AuthUser = await res.json();
+        if (hasPaidPlan(user)) {
+          setAuthState({ status: 'authenticated', user });
+          setView({ type: 'dashboard' });
+          return true;
+        }
+      } catch { /* offline for a moment: try again */ }
+    }
+    return false;
+  }, []);
+
   // GA4 helper
   const track = (event: string, params?: Record<string, any>) => {
     try { (window as any).trackEvent?.(event, params); } catch {}
@@ -956,6 +977,7 @@ function AppContent() {
               trialDaysLeft={trialDaysLeft}
               userEmail={authState.status === 'authenticated' ? authState.user.email : undefined}
               onSignOut={handleSignOut}
+              onAfterAppCheckout={refreshAfterAppCheckout}
             />
           )}
           {view.type === 'account' && authState.status === 'authenticated' && (

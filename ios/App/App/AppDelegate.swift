@@ -1,5 +1,6 @@
 import UIKit
 import Capacitor
+import StoreKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -67,6 +68,7 @@ class MainViewController: CAPBridgeViewController {
 
     override func capacitorDidLoad() {
         bridge?.registerPluginInstance(LaunchPlugin())
+        bridge?.registerPluginInstance(StorePlugin())
     }
 
     override func viewDidLoad() {
@@ -103,5 +105,30 @@ public class LaunchPlugin: CAPPlugin, CAPBridgedPlugin {
             (self?.bridge?.viewController as? MainViewController)?.hideLaunchCover()
         }
         call.resolve()
+    }
+}
+
+// MARK: - App Store storefront
+//
+// Which App Store country this phone is signed into. Decides whether the app
+// may show Pro checkout (client/src/lib/appCheckout.ts): Apple allows linking
+// out to our own checkout on the US storefront only. This is the store
+// account's country, which is what Apple's rules key on, not the phone's
+// location or language.
+
+@objc(StorePlugin)
+public class StorePlugin: CAPPlugin, CAPBridgedPlugin {
+    public let identifier = "StorePlugin"
+    public let jsName = "Store"
+    public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "storefront", returnType: CAPPluginReturnPromise)
+    ]
+
+    @objc func storefront(_ call: CAPPluginCall) {
+        Task {
+            // ISO 3166-1 alpha-3, e.g. "USA". Empty if StoreKit can't say.
+            let code = await Storefront.current?.countryCode ?? ""
+            call.resolve(["countryCode": code])
+        }
     }
 }

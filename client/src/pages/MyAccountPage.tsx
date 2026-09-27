@@ -1,6 +1,7 @@
 import { useState, useEffect, type ReactNode } from "react";
 import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap, Trash2, AlertTriangle, Award, LogOut, Moon, Gift, Trophy, MessageCircleHeart } from "lucide-react";
 import { ContactUs } from "@/components/ContactUs";
+import { getCheckoutMode, openAppBillingPortal, type CheckoutMode } from "@/lib/appCheckout";
 import { LevelRoadSheet } from "@/components/LevelRoad";
 import { LeaderboardVisibilityRow } from "@/components/Leaderboard";
 import { Button } from "@/components/ui/button";
@@ -73,6 +74,10 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onOpenCertifica
   const isMobile = useIsMobile();
   const nativeApp = isNativeApp();
   const { toast } = useToast();
+  // Whether this device may sell or manage Pro (lib/appCheckout.ts).
+  const [checkoutMode, setCheckoutMode] = useState<CheckoutMode>(nativeApp ? 'none' : 'web');
+  useEffect(() => { void getCheckoutMode().then(setCheckoutMode); }, []);
+  const canSell = checkoutMode !== 'none';
   const [firstName, setFirstName] = useState(user.firstName ?? "");
   const [lastName, setLastName] = useState(user.lastName ?? "");
   const [saving, setSaving] = useState(false);
@@ -112,6 +117,7 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onOpenCertifica
   const handleManageBilling = async () => {
     setPortalLoading(true);
     try {
+      if (checkoutMode === 'ios-us') { await openAppBillingPortal(); return; }
       const res = await apiRequest("POST", "/api/stripe/portal", {});
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Portal unavailable");
@@ -317,28 +323,34 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onOpenCertifica
               </span>
             )}
           </div>
-          {/* Native can't take payment, so it explains where to. On the web the
-              billing portal and the priced upgrade page are both fair game. */}
-          {nativeApp ? (
+          {/* What this device may offer depends on its store (lib/appCheckout.ts).
+              Where the app may not sell, it also may not point people to buy
+              elsewhere, so it says only what is true on the account. */}
+          {canSell ? (
+            paid ? (
+              <p className="mt-2 text-xs leading-[1.5]" style={{ color: 'var(--acq-text-muted)' }}>
+                Manage billing, payment method and cancellation in the customer portal.
+              </p>
+            ) : null
+          ) : (
             <p className="mt-2 text-xs leading-[1.5]" style={{ color: 'var(--acq-text-muted)' }}>
-              Plans are managed on acqlerate.com, not in the app. Upgrade there and sign back in here
-              to unlock every module.
+              {paid
+                ? 'Your plan is active on your account and works wherever you sign in.'
+                : 'Pro belongs to your account, so if it is already on it, it works here too.'}
             </p>
-          ) : paid ? (
-            <p className="mt-2 text-xs leading-[1.5]" style={{ color: 'var(--acq-text-muted)' }}>
-              Manage billing, payment method and cancellation in the customer portal.
-            </p>
-          ) : null}
-          <button
-            type="button"
-            onClick={paid && !nativeApp ? handleManageBilling : onUpgrade}
-            className="mt-3 flex h-10 items-center gap-1.5 rounded-lg border px-3 text-[13px] font-semibold"
-            style={{ borderColor: 'var(--acq-border-default)', color: 'var(--acq-text-body)' }}
-            data-testid="account-upgrade"
-          >
-            {portalLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Zap className="h-3.5 w-3.5" />}
-            {paid && !nativeApp ? 'Manage billing' : 'How to upgrade'}
-          </button>
+          )}
+          {(canSell || !paid) && (
+            <button
+              type="button"
+              onClick={paid && canSell ? handleManageBilling : onUpgrade}
+              className="mt-3 flex h-10 items-center gap-1.5 rounded-lg border px-3 text-[13px] font-semibold"
+              style={{ borderColor: 'var(--acq-border-default)', color: 'var(--acq-text-body)' }}
+              data-testid="account-upgrade"
+            >
+              {portalLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Zap className="h-3.5 w-3.5" />}
+              {paid && canSell ? 'Manage billing' : canSell ? 'Upgrade to Pro' : 'What Pro includes'}
+            </button>
+          )}
         </AccountSection>
 
         {/* Theme — not in the handoff, but the mobile top bar has no toggle and
