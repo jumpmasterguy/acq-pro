@@ -274,7 +274,7 @@ function markerValue(key) {
     modules: String(CC.modules), "modules-word": CC.modulesWord,
     "modules-word-lower": CC.modulesWord.toLowerCase(), lessons: String(CC.lessons),
     minutes: String(CC.minutes), hours: CC.hours.toFixed(1), clps: CC.clps.toFixed(1),
-    "clps-whole": String(CC.clpsWhole),
+    "clps-whole": String(CC.clpsWhole), "avg-minutes": String(CC.avgMinutes),
   }[k];
 }
 const badMarkers = [];

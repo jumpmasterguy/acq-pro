@@ -42,5 +42,6 @@ export const COURSE_TOTALS = {
   minutes: 2684,
   hours: 44.7,
   clps: 44.2,
+  avgMinutes: 22,
   clpsWhole: 44
 } as const;

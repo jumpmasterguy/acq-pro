@@ -94,6 +94,7 @@ const totals = {
   minutes: minutesAll,
   hours: Math.floor((minutesAll / 60) * 10) / 10,
   clps: total,
+  avgMinutes: Math.round(minutesAll / mods.reduce((s, m) => s + m.lessons, 0)),
   // "over 44 CLPs": whole CLPs, rounded DOWN so the claim is never an overstatement
   clpsWhole: Math.floor(total),
 };
