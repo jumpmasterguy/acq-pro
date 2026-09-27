@@ -15,7 +15,7 @@ Safety:
 Run:  python3 scripts/video/bakeoff.py            (real run)
       DRY_RUN=1 python3 scripts/video/bakeoff.py  (no API calls)
 """
-import json, os, sys, time, urllib.request, urllib.error
+import json, os, subprocess, sys, time
 from pathlib import Path
 
 BASE = "https://api.higgsfield.ai"
@@ -75,22 +75,32 @@ def _auth():
     return f"Key {kid}:{sec}"
 
 
+def _curl(args, cfg="", data=None):
+    """Run curl. Higgsfield's firewall (Cloudflare 1010) blocks Python's
+    default HTTP signature, and their own docs use curl, so we do too.
+    The auth header goes in via stdin config so it never shows in args."""
+    cmd = ["curl", "-sS", "--max-time", "120", "-K", "-"] + args
+    stdin = cfg
+    if data is not None:
+        stdin += "data = " + json.dumps(json.dumps(data)) + "\n"
+    return subprocess.run(cmd, input=stdin.encode(), capture_output=True)
+
+
 def call(method, path, body=None):
-    req = urllib.request.Request(
-        BASE + path, method=method,
-        data=json.dumps(body).encode() if body is not None else None,
-        headers={"Authorization": _auth(), "Content-Type": "application/json",
-                 "Accept": "application/json"},
-    )
+    cfg = (f'header = "Authorization: {_auth()}"\n'
+           'header = "Content-Type: application/json"\n'
+           'header = "Accept: application/json"\n')
+    r = _curl(["-X", method, "-w", "\n%{http_code}", BASE + path],
+              cfg, body)
+    out = r.stdout.decode(errors="replace").rsplit("\n", 1)
+    if len(out) != 2 or not out[1].strip().isdigit():
+        return 0, {"raw": (r.stderr or r.stdout).decode(errors="replace")[:500]}
+    txt, code = out[0], int(out[1])
     try:
-        with urllib.request.urlopen(req, timeout=60) as r:
-            return r.status, json.loads(r.read() or b"{}")
-    except urllib.error.HTTPError as e:
-        txt = e.read().decode(errors="replace")[:500]
-        try:
-            return e.code, json.loads(txt)
-        except ValueError:
-            return e.code, {"raw": txt}
+        js = json.loads(txt or "{}")
+    except ValueError:
+        js = {"raw": txt[:500]}
+    return code, js
 
 
 def estimate(path, body):
@@ -130,8 +140,9 @@ def wait(request_id, label, timeout=900):
 
 def download(url, dest):
     dest.parent.mkdir(parents=True, exist_ok=True)
-    with urllib.request.urlopen(url, timeout=120) as r:
-        dest.write_bytes(r.read())
+    r = _curl(["-fL", "-o", str(dest), url])
+    if r.returncode != 0:
+        raise RuntimeError(f"download failed: {r.stderr.decode()[:200]}")
     return dest
 
 
