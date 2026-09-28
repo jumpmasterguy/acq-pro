@@ -426,6 +426,9 @@
     .v2 a.m-audio { text-decoration: none; }
 
     /* Hear it first: two 30-second Debrief clips (public previews; full episodes stay behind login) */
+    .listen-v2 { background: #fff; }
+    section.v2.listen-v2 { padding: clamp(36px, 5vw, 56px) 0; }
+    .listen-v2 .listen { margin-top: 0 !important; }
     .v2 .listen { margin-top: 44px; background: var(--bg); border: 1px solid var(--line-2); border-radius: 18px; padding: clamp(20px, 3vw, 32px); display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.6fr); gap: clamp(20px, 3vw, 40px); align-items: center; }
     .v2 .listen-hd { display: flex; flex-direction: column; gap: 8px; }
     .v2 .listen-hd h3 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; }
@@ -873,223 +876,245 @@
   </div>
 </header>
 
-<!-- STARTER KIT (Sep 2026 redesign: edition picker, real contents) -->
-<div class="kit" id="starterKit" data-edition="usg">
-  <div class="wrap kit-grid">
-    <div class="kit-covers" aria-hidden="true">
-      <div class="kit-cover kc-usg">
-        <div class="kc-brand"><img src="/acqlerate-icon.svg" alt="" width="18" height="18" /><span>ACQLERATE</span></div>
-        <div class="kc-rule"></div>
-        <div class="kc-ed">GOVERNMENT EDITION</div>
-        <div class="kc-ttl">The Acquisition Starter Kit</div>
-        <div class="kc-meta">13 pages · Jul 2026</div>
+</div>
+
+<!-- HEAR IT FIRST (Debrief preview clips, moved up under the hero Sep 2026) -->
+<section id="listen-sec" class="v2 listen-v2">
+  <div class="wrap">
+    <!-- Hear it first: two short cuts from The Debrief. Public preview files in
+         /audio-preview/; the full episodes stay behind login (/api/audio/:id). -->
+    <div class="listen" id="listen">
+      <div class="listen-hd">
+        <span class="eyebrow">Hear it first</span>
+        <h3>Two short cuts from The Debrief</h3>
+        <p>Every module has a full audio episode for the commute. Here is what two of them sound like: one from Contracts, one from The Business of Defense Contracting.</p>
+        <a class="listen-cta" href="/app#/auth">Start free and hear every module &rarr;</a>
       </div>
-      <div class="kit-cover kc-con">
-        <div class="kc-brand"><img src="/acqlerate-icon.svg" alt="" width="18" height="18" /><span>ACQLERATE</span></div>
-        <div class="kc-rule"></div>
-        <div class="kc-ed">CONTRACTOR EDITION</div>
-        <div class="kc-ttl">The Contractor's Acquisition Starter Kit</div>
-        <div class="kc-meta">16 pages · Jul 2026</div>
+      <div class="listen-grid">
+        <div class="clip" data-clip="contracts">
+          <div class="clip-top">
+            <button class="clip-btn" type="button" aria-label="Play the Contracts clip, 38 seconds"><svg class="i-play" width="16" height="16" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"></path></svg><svg class="i-pause" width="16" height="16" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><rect x="6" y="4.5" width="4" height="15" rx="1"></rect><rect x="14" y="4.5" width="4" height="15" rx="1"></rect></svg></button>
+            <div class="clip-meta"><span class="clip-fam">Contracts</span><b>The restaurant with no prices</b></div>
+          </div>
+          <p class="clip-quote">Why undefinitized contract actions (UCAs) cost the government so much: you eat the meal first and argue about the bill later.</p>
+          <div class="clip-row"><div class="clip-bar" role="progressbar" aria-label="Contracts clip progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div><span class="clip-time" data-len="0:38">0:38</span></div>
+          <audio preload="none"><source src="/audio-preview/debrief-contracts-uca.webm" type="audio/webm; codecs=opus"><source src="/audio-preview/debrief-contracts-uca.m4a" type="audio/mp4"></audio>
+        </div>
+        <div class="clip money" data-clip="business">
+          <div class="clip-top">
+            <button class="clip-btn" type="button" aria-label="Play the Business of Defense Contracting clip, 26 seconds"><svg class="i-play" width="16" height="16" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"></path></svg><svg class="i-pause" width="16" height="16" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><rect x="6" y="4.5" width="4" height="15" rx="1"></rect><rect x="14" y="4.5" width="4" height="15" rx="1"></rect></svg></button>
+            <div class="clip-meta"><span class="clip-fam">Business</span><b>Finance reads the odometer</b></div>
+          </div>
+          <p class="clip-quote">Why a stale estimate at completion makes a failing program look like it is right on track.</p>
+          <div class="clip-row"><div class="clip-bar" role="progressbar" aria-label="Business clip progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div><span class="clip-time" data-len="0:26">0:26</span></div>
+          <audio preload="none"><source src="/audio-preview/debrief-business-odometer.webm" type="audio/webm; codecs=opus"><source src="/audio-preview/debrief-business-odometer.m4a" type="audio/mp4"></audio>
+        </div>
       </div>
-      <div class="kit-fresh">Updated July 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU LEARN -->
+<section id="modules" class="modules-bg">
+  <div class="section-inner">
+    <div class="section-eyebrow">Curriculum</div>
+    <h2 class="section-title"><span data-count="modules-word">Fourteen</span> modules. <span data-count="lessons">124</span> lessons. The complete acquisition picture.</h2>
+    <p class="section-sub">Start with how the system works, then go as deep as your job requires: contractor finance, small business, compliance, the government pre-award process, sustainment, the startup on-ramp, veteran transition, and why the rules exist at all. Every lesson has three depth levels, key terms, a twelve-question quiz, and a module assessment that unlocks the next level. Module 1 is completely free.</p>
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-num free-num">01</div>
+        <div class="module-info">
+          <div class="module-name">DoD Acquisitions Foundations <span class="free-badge">FREE</span></div>
+          <ul class="module-topics-list"><li>Acquisition lifecycle</li><li>ACAT levels</li><li>Roles &amp; career paths</li><li>OTAs &amp; FAR Part 12</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">02</div>
+        <div class="module-info">
+          <div class="module-name">Defense Finance &amp; Budgeting</div>
+          <ul class="module-topics-list"><li>PPBE cycle</li><li>Color of money</li><li>EVM</li><li>Cost estimating</li><li>DCAA &amp; DCMA</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">03</div>
+        <div class="module-info">
+          <div class="module-name">Defense Contracting Fundamentals</div>
+          <ul class="module-topics-list"><li>Contract types</li><li>GSA vehicles</li><li>Source selection</li><li>COR fundamentals</li><li>Modifications &amp; REAs</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">04</div>
+        <div class="module-info">
+          <div class="module-name">Data Analytics for PMs</div>
+          <ul class="module-topics-list"><li>Program KPIs</li><li>Reading IPMR reports</li><li>Cost reports by CLIN</li><li>Burn forecasting</li><li>FPDS &amp; USASpending intel</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">05</div>
+        <div class="module-info">
+          <div class="module-name">Capture Management &amp; BD</div>
+          <ul class="module-topics-list"><li>BD to capture lifecycle</li><li>Section L vs M</li><li>Proposal development</li><li>Source selection strategy</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">06</div>
+        <div class="module-info">
+          <div class="module-name">PM Operations &amp; Leadership</div>
+          <ul class="module-topics-list"><li>Career roadmap</li><li>Risk management</li><li>Stakeholder management</li><li>Subcontractor management</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">07</div>
+        <div class="module-info">
+          <div class="module-name">The Business of Defense Contracting</div>
+          <ul class="module-topics-list"><li>Revenue recognition &amp; EAC</li><li>Why Q3 was bad</li><li>Pass-through vs value-add</li><li>Backlog &amp; book-to-bill</li><li>Reading a prime's 10-K</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">08</div>
+        <div class="module-info">
+          <div class="module-name">Small Business in Defense Contracting</div>
+          <ul class="module-topics-list"><li>Size standards &amp; NAICS</li><li>8(a), HUBZone, SDVOSB, WOSB</li><li>Limitations on subcontracting</li><li>Affiliation</li><li>Mentor-prot&eacute;g&eacute; &amp; JVs</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">09</div>
+        <div class="module-info">
+          <div class="module-name">The Compliance Stack</div>
+          <ul class="module-topics-list"><li>CMMC &amp; DFARS 7012</li><li>CUI and classified</li><li>ITAR &amp; export controls</li><li>Data rights &amp; IP</li><li>TINA, Buy American, SCA</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">10</div>
+        <div class="module-info">
+          <div class="module-name">From Need to RFP: Government Pre-Award</div>
+          <ul class="module-topics-list"><li>Acquisition planning</li><li>Market research</li><li>Writing the PWS</li><li>The IGCE</li><li>J&amp;As and D&amp;Fs</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">11</div>
+        <div class="module-info">
+          <div class="module-name">Beyond Award: Sustainment &amp; Closeout</div>
+          <ul class="module-topics-list"><li>O&amp;S cost</li><li>Test &amp; evaluation</li><li>Software pathway &amp; agile</li><li>Terminations &amp; transition</li><li>Options and bridges</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">12</div>
+        <div class="module-info">
+          <div class="module-name">The Startup On-Ramp</div>
+          <ul class="module-topics-list"><li>SBIR/STTR through Phase III</li><li>Other Transactions</li><li>DIU, AFWERX &amp; CSOs</li><li>The valley of death</li><li>Pricing without a cost history</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">13</div>
+        <div class="module-info">
+          <div class="module-name">Veteran Transition</div>
+          <ul class="module-topics-list"><li>Translating your record</li><li>USAJOBS &amp; hiring authorities</li><li>The contractor path</li><li>Your clearance as an asset</li><li>SDVOSB and the revolving door</li></ul>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">14</div>
+        <div class="module-info">
+          <div class="module-name">Why the Rules Exist</div>
+          <ul class="module-topics-list"><li>Where the FAR came from</li><li>CICA and the $435 hammer</li><li>TINA, CAS &amp; DCAA</li><li>Program failures &amp; Nunn-McCurdy</li><li>The 2026 FAR rewrite</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS (Sep 2026 redesign: the learning loop, shown with the real screens) -->
+<section id="how" class="v2 how-v2">
+  <div class="wrap">
+    <div class="head wide">
+      <span class="eyebrow">How it works</span>
+      <h2>One lesson a day. That's the whole trick.</h2>
+      <p class="lede">Lessons average <span data-count="avg-minutes">22</span> minutes, run on real program numbers, and end with proof you learned the thing. Here's the loop.</p>
     </div>
 
-    <div class="kit-copy">
-      <div class="eyebrow-row"><span class="tile">📥</span><span class="eyebrow">Free field guide · No account needed</span></div>
-      <h2>The field guide nobody hands you on day one.</h2>
-      <p>Tell us which side you work on and we send the edition written for it. Already current for the thresholds that changed in October 2025: the <span class="jt" data-tip="Simplified Acquisition Threshold. Below it, buying rules get simpler and faster.">SAT</span> is now $350K and the <span class="jt" data-tip="The amount a government purchase cardholder can usually buy without competing it.">micro-purchase</span> limit is $15K.</p>
-      <ul class="chips" data-for="usg">
-        <li class="chip">✓ Lifecycle cheat sheet</li>
-        <li class="chip">✓ ACAT decision tree</li>
-        <li class="chip">✓ 50+ acronyms decoded</li>
-        <li class="chip">✓ 5 mistakes new PMs make</li>
-      </ul>
-      <ul class="chips" data-for="contractor" hidden>
-        <li class="chip">✓ Task orders vs. standalone</li>
-        <li class="chip">✓ Who's buying: GSA, Air Force</li>
-        <li class="chip">✓ 70+ acronyms decoded</li>
-        <li class="chip">✓ 5 mistakes contractors make</li>
-      </ul>
-    </div>
-
-    <div class="kit-form">
-      <form id="captureForm" onsubmit="submitLead(event)" novalidate>
-        <div class="kit-field">
-          <span class="kit-lbl" id="kitSideLabel">Which side are you on?</span>
-          <div class="seg" role="group" aria-labelledby="kitSideLabel">
-            <button type="button" data-edition="usg" aria-pressed="true">🏛️ Government</button>
-            <button type="button" data-edition="contractor" aria-pressed="false">🏢 Contractor</button>
+    <ol class="steps">
+      <li class="stp">
+        <div class="stp-n"><span class="num">1</span></div>
+        <div class="stp-card">
+          <div class="scr" aria-hidden="true">
+            <div class="m-top"><span class="m-cap">Question 3 of 3</span><span class="m-dots"><i></i><i></i><i></i></span></div>
+            <div class="m-q">What's your primary goal?</div>
+            <div class="m-opt on"><span class="m-radio"></span>Become a Better Program Manager</div>
+            <div class="m-opt"><span class="m-radio"></span>Master Contracts &amp; Finance</div>
+            <div class="m-opt m-hide-sm"><span class="m-radio"></span>Win More Business (BD / Capture)</div>
+          </div>
+          <div class="stp-txt">
+            <h3>Tell it your job</h3>
+            <p>Three quick questions at signup. Your track puts the modules that fit your job first and keeps the rest one tap away.</p>
           </div>
         </div>
-        <div class="kit-field">
-          <label class="kit-lbl" for="captureEmail">Email</label>
-          <input type="email" class="kit-input" id="captureEmail" placeholder="you@company.com" autocomplete="email" required />
+      </li>
+      <li class="stp">
+        <div class="stp-n"><span class="num">2</span></div>
+        <div class="stp-card">
+          <div class="scr" aria-hidden="true">
+            <div class="m-lesson"><span class="m-ic f-con">📋</span><span class="m-grow"><span class="m-fam">Contracts</span><b>Contract Types</b></span><span class="m-min">16 min</span></div>
+            <div class="m-seg"><span>Novice</span><span class="on">Intermediate</span><span>Advanced</span></div>
+            <div class="m-body"><b>FFP</b> locks the price at award. Overruns are the contractor's problem, so the bid prices that risk in.</div>
+            <a class="m-audio" href="#listen" tabindex="-1"><span class="m-play"><svg width="11" height="11" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M7 4.5v15l12-7.5z"></path></svg></span><span class="m-grow"><b>The Debrief</b><small>Contracts · audio overview</small></span></a>
+          </div>
+          <div class="stp-txt">
+            <h3>Learn at your depth</h3>
+            <p>Novice, Intermediate or Advanced, with real program examples. Rather listen? Every module has The Debrief, an audio overview for the drive in.</p>
+          </div>
         </div>
-        <button type="submit" class="btn btn-brand kit-send" id="captureBtn">Send my kit →</button>
-        <p class="kit-note" id="captureNote">Free. Unsubscribe with one click.</p>
-      </form>
-      <div class="kit-done" id="captureSuccess" hidden>
-        <span class="kit-ok" aria-hidden="true">✓</span>
-        <b>It's in your inbox.</b>
-        <p>Can't wait? <a href="/starter-kit-usg.pdf" id="captureOpen" target="_blank" rel="noopener">Open the <span id="captureEdName">Government edition</span> PDF now →</a></p>
-        <p>While you're here, Module 1 is free for good. <a href="/app#/auth">Start it →</a></p>
-      </div>
-    </div>
-  </div>
-</div>
-
-</div>
-
-<!-- TEAM OUTCOMES SECTION -->
-<section id="team-outcomes" style="background:#F9FAFB;padding:72px 2rem;border-top:1px solid #E5E7EB;">
-  <div style="max-width:960px;margin:0 auto;">
-    <div style="text-align:center;margin-bottom:52px;">
-      <div style="font-size:0.95rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#01696F;margin-bottom:14px;">Why it matters</div>
-      <h2 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:#1A1A1A;letter-spacing:-0.025em;margin-bottom:18px;line-height:1.2;">Most defense professionals learn acquisition<br>the hard way. You don't have to.</h2>
-      <p style="font-size:1rem;color:#4B5563;max-width:580px;margin:0 auto;line-height:1.75;">A new PM who doesn't understand contract types, color of money, or how the COR relationship works will make expensive mistakes. Slowly. On the job. At the program's expense. Nobody puts that part in the job posting. Acqlerate closes that gap before it costs you.</p>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px;">
-      <div style="background:white;border:1px solid #E5E7EB;border-top:3px solid #01696F;border-radius:0 0 14px 14px;padding:28px 24px;">
-        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#01696F;margin-bottom:10px;">For program managers</div>
-        <div style="font-weight:700;font-size:1rem;color:#1A1A1A;margin-bottom:10px;line-height:1.3;">Understand the system, not just the rulebook</div>
-        <div style="font-size:0.875rem;color:#6B7280;line-height:1.65;">Contract types, funding constraints, oversight relationships, risk management. This is the context that turns someone who just updates a spreadsheet into someone the team actually listens to.</div>
-      </div>
-      <div style="background:white;border:1px solid #E5E7EB;border-top:3px solid #01696F;border-radius:0 0 14px 14px;padding:28px 24px;">
-        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#01696F;margin-bottom:10px;">For new hires</div>
-        <div style="font-weight:700;font-size:1rem;color:#1A1A1A;margin-bottom:10px;line-height:1.3;">Go from confused to contributing in weeks, not a year</div>
-        <div style="font-size:0.875rem;color:#6B7280;line-height:1.65;">A structured 30 day path through the DoD acquisition landscape. So new hires stop asking the same question in three different meetings and start actually adding value.</div>
-      </div>
-      <div style="background:white;border:1px solid #E5E7EB;border-top:3px solid #01696F;border-radius:0 0 14px 14px;padding:28px 24px;">
-        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#01696F;margin-bottom:10px;">For capture &amp; BD</div>
-        <div style="font-weight:700;font-size:1rem;color:#1A1A1A;margin-bottom:10px;line-height:1.3;">Write to what the government actually scores, not just what you know</div>
-        <div style="font-size:0.875rem;color:#6B7280;line-height:1.65;">Understanding source selection, Section M, and contract vehicles from the buyer's side is what separates the proposal that wins from the one that just looks nice in a binder.</div>
-      </div>
-      <div style="background:white;border:1px solid #E5E7EB;border-top:3px solid #01696F;border-radius:0 0 14px 14px;padding:28px 24px;">
-        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#01696F;margin-bottom:10px;">For the whole team</div>
-        <div style="font-weight:700;font-size:1rem;color:#1A1A1A;margin-bottom:10px;line-height:1.3;">One platform. Every role. No scheduling.</div>
-        <div style="font-size:0.875rem;color:#6B7280;line-height:1.65;">Learning built around each role, with the Acqlerate Coach checking that it actually stuck. People learn between meetings, on a flight, whenever works, and they actually finish it this time.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- LESSON TICKER -->
-<section style="background:#0D1B2A;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);padding:52px 2rem;overflow:hidden;">
-  <div style="max-width:760px;margin:0 auto;text-align:center;">
-    <div style="font-size:0.7rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#4FC3CB;margin-bottom:24px;">From the curriculum</div>
-    <div id="lesson-ticker" style="min-height:90px;display:flex;align-items:center;justify-content:center;"></div>
-    <div id="ticker-dots" style="display:flex;justify-content:center;gap:6px;margin-top:24px;"></div>
-  </div>
-</section>
-
-<script>
-(function() {
-  var lessons = [
-    { text: "The IDIQ (Indefinite Delivery, Indefinite Quantity) vehicle is the hunting license. The task order is the hunt.", source: "Defense Contracting Fundamentals", module: "03" },
-    { text: "Color of money isn’t a metaphor. Use O&M to buy a $400K piece of equipment and you’ve got an ADA violation.", source: "Defense Finance & Budgeting", module: "02" },
-    { text: "A PM who takes care of their people creates a team that surfaces problems early. That’s the entire job.", source: "PM Operations & Leadership", module: "06" },
-    { text: "September 30th is real. Every contracting office in DoD is drowning in the last 30 days of the fiscal year. Plan around it.", source: "Defense Finance & Budgeting", module: "02" },
-    { text: "If your COR (Contracting Officer's Rep) asks you to do something outside your SOW (Statement of Work), stop. Just say: 'Can we get a mod first?' It protects everyone.", source: "Defense Contracting Fundamentals", module: "03" },
-    { text: "Read Section M before you read anything else in an RFP. It’s the scoring rubric. Everything else exists to score well against it.", source: "Capture Management & BD", module: "05" },
-    { text: "A risk register nobody updates is just a paperwork exercise. If a risk has been yellow for 90 days with no movement, someone’s not working it.", source: "PM Operations & Leadership", module: "06" },
-    { text: "Winning the vehicle gets you in the door. Winning task orders is how you actually make money.", source: "Defense Contracting Fundamentals", module: "03" },
-    { text: "EVM (Earned Value Management) tells you right now whether your program will finish on time and on budget. Most programs generate the reports and never actually use the information.", source: "Data Analytics for PMs", module: "04" },
-    { text: "Becoming a PM is a lateral move into a different discipline. The skills that made you a great engineer are different from the skills that make a great PM.", source: "PM Operations & Leadership", module: "06" },
-    { text: "Sources Sought and RFIs are the government asking who’s out there. Responding is free. Not responding means they don’t know you exist.", source: "Capture Management & BD", module: "05" },
-    { text: "The best program review I ever sat in had zero green stoplight charts. Everything was yellow or red. Every item had an owner and a date.", source: "PM Operations & Leadership", module: "06" }
-  ];
-
-  var current = 0;
-  var container = document.getElementById('lesson-ticker');
-  var dotsContainer = document.getElementById('ticker-dots');
-  var timer;
-
-  lessons.forEach(function(_, i) {
-    var dot = document.createElement('div');
-    dot.style.cssText = 'width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,0.2);transition:all 0.3s;cursor:pointer;flex-shrink:0;';
-    dot.addEventListener('click', function() { goTo(i); });
-    dotsContainer.appendChild(dot);
-  });
-
-  function updateDots(idx) {
-    Array.from(dotsContainer.children).forEach(function(d, i) {
-      d.style.background = i === idx ? '#4FC3CB' : 'rgba(255,255,255,0.2)';
-      d.style.width = i === idx ? '20px' : '6px';
-    });
-  }
-
-  function render(idx, dir) {
-    var l = lessons[idx];
-    var incoming = document.createElement('div');
-    incoming.style.cssText = 'opacity:0;transition:opacity 0.45s ease;width:100%;';
-    incoming.innerHTML =
-      '<p style="font-size:clamp(1rem,2vw,1.18rem);font-weight:600;color:#ffffff;line-height:1.7;margin:0 0 14px;">' +
-        '“' + l.text + '”' +
-      '</p>' +
-      '<span style="font-size:0.72rem;font-weight:800;color:#4FC3CB;text-transform:uppercase;letter-spacing:0.09em;">' +
-        l.source + ' · Module ' + l.module +
-      '</span>';
-    container.innerHTML = '';
-    container.appendChild(incoming);
-    updateDots(idx);
-    requestAnimationFrame(function() {
-      requestAnimationFrame(function() { incoming.style.opacity = '1'; });
-    });
-  }
-
-  function goTo(idx) {
-    clearInterval(timer);
-    current = idx;
-    render(idx);
-    startTimer();
-  }
-
-  function startTimer() {
-    timer = setInterval(function() {
-      var el = container.firstChild;
-      if (el) el.style.opacity = '0';
-      setTimeout(function() {
-        current = (current + 1) % lessons.length;
-        render(current);
-      }, 450);
-    }, 4500);
-  }
-
-  render(0);
-  startTimer();
-})();
-</script>
-
-
-<!-- CLPs & PDUs summary (Sep 2026). The full breakdown lives on /pdu. -->
-<section id="credit" class="v2 credit-v2">
-  <div class="wrap">
-    <div class="head">
-      <span class="eyebrow">CLPs &amp; PDUs</span>
-      <h2>The hours count toward your credential.</h2>
-      <p class="lede">Every hour of Acqlerate is 1 CLP for the Defense Acquisition Workforce and 1 PDU for PMP holders. Finish a module and you get a certificate that proves it.</p>
-    </div>
-    <div class="credit-grid">
-      <a class="credit-card" href="/pdu#clps">
-        <div class="cc-top"><span class="cc-ic f-gold" aria-hidden="true">🎓</span><span class="micro">Defense Acquisition Workforce</span></div>
-        <div class="cc-n gold"><span data-count="clps-whole">44</span>+ CLPs</div>
-        <p>More than half of the 80 you owe every two years. Each certificate lists hours, completion date and DAWIA functional area, with an ID anyone can verify online.</p>
-        <div class="cc-meter" aria-hidden="true"><i style="width:56%"></i></div>
-        <div class="cc-cap"><span>0</span><span>80 every 2 years</span></div>
-        <span class="cc-link">See CLPs by module and how to log them →</span>
-      </a>
-      <a class="credit-card" href="/pdu#pdus">
-        <div class="cc-top"><span class="cc-ic" aria-hidden="true">PMP</span><span class="micro">PMP holders</span></div>
-        <div class="cc-n teal">About <span data-count="clps-whole">44</span> PDUs</div>
-        <p>Clears PMI's 35 Education PDU minimum on its own. Self-report in CCRS as online learning, with no pre-approval.</p>
-        <div class="cc-tri" aria-label="PDUs by Talent Triangle area">
-          <span><b><span data-count="pdus:ba">30.2</span></b> Business Acumen</span>
-          <span><b><span data-count="pdus:ww">11.0</span></b> Ways of Working</span>
-          <span><b><span data-count="pdus:ps">3.4</span></b> Power Skills</span>
+      </li>
+      <li class="stp">
+        <div class="stp-n"><span class="num">3</span></div>
+        <div class="stp-card">
+          <div class="scr" aria-hidden="true">
+            <span class="m-cap m-brand">✦ Lesson quiz</span>
+            <div class="m-q sm">Who carries the cost risk on a firm-fixed-price contract?</div>
+            <div class="m-ans">The government</div>
+            <div class="m-ans ok"><span>The contractor</span><span>✓</span></div>
+            <div class="m-ans m-hide-sm">Split by a share ratio</div>
+            <div class="m-gate">
+              <div class="m-gate-hd"><span>Module check</span><span>8 / 10</span></div>
+              <div class="m-bar"><i></i><em></em></div>
+              <small>75% opens the next level</small>
+            </div>
+          </div>
+          <div class="stp-txt">
+            <h3>Prove it</h3>
+            <p>Every lesson ends in a quiz. Score 75% on the module check and the next depth level opens up.</p>
+          </div>
         </div>
-        <span class="cc-link">See PDUs by module and the CCRS steps →</span>
-      </a>
+      </li>
+      <li class="stp">
+        <div class="stp-n"><span class="num gold">4</span></div>
+        <div class="stp-card">
+          <div class="scr" aria-hidden="true">
+            <div class="m-cert">
+              <div class="m-cert-hd"><img src="/acqlerate-icon.svg" alt="" width="18" height="18" /><span>Certificate of completion</span></div>
+              <b>Defense Contracting Fundamentals</b>
+              <span class="m-cert-meta"><span data-count="clps:contracts">4.1</span> hours · <span data-count="clps:contracts">4.1</span> CLPs · Functional area: CON</span>
+              <div class="m-cert-ft"><span><i></i>Lucas Cruz, Founder</span><span class="m-cert-cap">🎓</span></div>
+            </div>
+            <span class="m-cap">Self-report it in</span>
+            <div class="m-chips"><span>CAPPMIS</span><span>eDACM</span><span>FAITAS</span></div>
+          </div>
+          <div class="stp-txt">
+            <h3>Get the credit</h3>
+            <p>Finish a module, get a signed certificate with hours and functional area. <span data-count="clps-whole">44</span>+ CLPs and about <span data-count="clps-whole">44</span> PDUs across the course.</p>
+          </div>
+        </div>
+      </li>
+    </ol>
+
+    <div class="how-cta">
+      <div>
+        <b>Module 1 is free for good. So is one lesson in every other module.</b>
+        <span>No card, no class schedule. Start between meetings.</span>
+      </div>
+      <div class="btns">
+        <a href="/app#/auth" class="btn btn-brand">Start free →</a>
+        <a href="#modules" class="btn btn-outline">See the curriculum</a>
+      </div>
     </div>
   </div>
 </section>
@@ -1302,242 +1327,6 @@
   </div>
 </section>
 
-<!-- WHAT YOU LEARN -->
-<section id="modules" class="modules-bg">
-  <div class="section-inner">
-    <div class="section-eyebrow">Curriculum</div>
-    <h2 class="section-title"><span data-count="modules-word">Fourteen</span> modules. <span data-count="lessons">124</span> lessons. The complete acquisition picture.</h2>
-    <p class="section-sub">Start with how the system works, then go as deep as your job requires: contractor finance, small business, compliance, the government pre-award process, sustainment, the startup on-ramp, veteran transition, and why the rules exist at all. Every lesson has three depth levels, key terms, a twelve-question quiz, and a module assessment that unlocks the next level. Module 1 is completely free.</p>
-    <div class="modules-grid">
-      <div class="module-card">
-        <div class="module-num free-num">01</div>
-        <div class="module-info">
-          <div class="module-name">DoD Acquisitions Foundations <span class="free-badge">FREE</span></div>
-          <ul class="module-topics-list"><li>Acquisition lifecycle</li><li>ACAT levels</li><li>Roles &amp; career paths</li><li>OTAs &amp; FAR Part 12</li></ul>
-        </div>
-      </div>
-      <div class="module-card">
-        <div class="module-num">02</div>
-        <div class="module-info">
-          <div class="module-name">Defense Finance &amp; Budgeting</div>
-          <ul class="module-topics-list"><li>PPBE cycle</li><li>Color of money</li><li>EVM</li><li>Cost estimating</li><li>DCAA &amp; DCMA</li></ul>
-        </div>
-      </div>
-      <div class="module-card">
-        <div class="module-num">03</div>
-        <div class="module-info">
-          <div class="module-name">Defense Contracting Fundamentals</div>
-          <ul class="module-topics-list"><li>Contract types</li><li>GSA vehicles</li><li>Source selection</li><li>COR fundamentals</li><li>Modifications &amp; REAs</li></ul>
-        </div>
-      </div>
-      <div class="module-card">
-        <div class="module-num">04</div>
-        <div class="module-info">
-          <div class="module-name">Data Analytics for PMs</div>
-          <ul class="module-topics-list"><li>Program KPIs</li><li>Reading IPMR reports</li><li>Cost reports by CLIN</li><li>Burn forecasting</li><li>FPDS &amp; USASpending intel</li></ul>
-        </div>
-      </div>
-      <div class="module-card">
-        <div class="module-num">05</div>
-        <div class="module-info">
-          <div class="module-name">Capture Management &amp; BD</div>
-          <ul class="module-topics-list"><li>BD to capture lifecycle</li><li>Section L vs M</li><li>Proposal development</li><li>Source selection strategy</li></ul>
-        </div>
-      </div>
-      <div class="module-card">
-        <div class="module-num">06</div>
-        <div class="module-info">
-          <div class="module-name">PM Operations &amp; Leadership</div>
-          <ul class="module-topics-list"><li>Career roadmap</li><li>Risk management</li><li>Stakeholder management</li><li>Subcontractor management</li></ul>
-        </div>
-      </div>
-      <div class="module-card">
-        <div class="module-num">07</div>
-        <div class="module-info">
-          <div class="module-name">The Business of Defense Contracting</div>
-          <ul class="module-topics-list"><li>Revenue recognition &amp; EAC</li><li>Why Q3 was bad</li><li>Pass-through vs value-add</li><li>Backlog &amp; book-to-bill</li><li>Reading a prime's 10-K</li></ul>
-        </div>
-      </div>
-      <div class="module-card">
-        <div class="module-num">08</div>
-        <div class="module-info">
-          <div class="module-name">Small Business in Defense Contracting</div>
-          <ul class="module-topics-list"><li>Size standards &amp; NAICS</li><li>8(a), HUBZone, SDVOSB, WOSB</li><li>Limitations on subcontracting</li><li>Affiliation</li><li>Mentor-prot&eacute;g&eacute; &amp; JVs</li></ul>
-        </div>
-      </div>
-      <div class="module-card">
-        <div class="module-num">09</div>
-        <div class="module-info">
-          <div class="module-name">The Compliance Stack</div>
-          <ul class="module-topics-list"><li>CMMC &amp; DFARS 7012</li><li>CUI and classified</li><li>ITAR &amp; export controls</li><li>Data rights &amp; IP</li><li>TINA, Buy American, SCA</li></ul>
-        </div>
-      </div>
-      <div class="module-card">
-        <div class="module-num">10</div>
-        <div class="module-info">
-          <div class="module-name">From Need to RFP: Government Pre-Award</div>
-          <ul class="module-topics-list"><li>Acquisition planning</li><li>Market research</li><li>Writing the PWS</li><li>The IGCE</li><li>J&amp;As and D&amp;Fs</li></ul>
-        </div>
-      </div>
-      <div class="module-card">
-        <div class="module-num">11</div>
-        <div class="module-info">
-          <div class="module-name">Beyond Award: Sustainment &amp; Closeout</div>
-          <ul class="module-topics-list"><li>O&amp;S cost</li><li>Test &amp; evaluation</li><li>Software pathway &amp; agile</li><li>Terminations &amp; transition</li><li>Options and bridges</li></ul>
-        </div>
-      </div>
-      <div class="module-card">
-        <div class="module-num">12</div>
-        <div class="module-info">
-          <div class="module-name">The Startup On-Ramp</div>
-          <ul class="module-topics-list"><li>SBIR/STTR through Phase III</li><li>Other Transactions</li><li>DIU, AFWERX &amp; CSOs</li><li>The valley of death</li><li>Pricing without a cost history</li></ul>
-        </div>
-      </div>
-      <div class="module-card">
-        <div class="module-num">13</div>
-        <div class="module-info">
-          <div class="module-name">Veteran Transition</div>
-          <ul class="module-topics-list"><li>Translating your record</li><li>USAJOBS &amp; hiring authorities</li><li>The contractor path</li><li>Your clearance as an asset</li><li>SDVOSB and the revolving door</li></ul>
-        </div>
-      </div>
-      <div class="module-card">
-        <div class="module-num">14</div>
-        <div class="module-info">
-          <div class="module-name">Why the Rules Exist</div>
-          <ul class="module-topics-list"><li>Where the FAR came from</li><li>CICA and the $435 hammer</li><li>TINA, CAS &amp; DCAA</li><li>Program failures &amp; Nunn-McCurdy</li><li>The 2026 FAR rewrite</li></ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS (Sep 2026 redesign: the learning loop, shown with the real screens) -->
-<section id="how" class="v2 how-v2">
-  <div class="wrap">
-    <div class="head wide">
-      <span class="eyebrow">How it works</span>
-      <h2>One lesson a day. That's the whole trick.</h2>
-      <p class="lede">Lessons average <span data-count="avg-minutes">22</span> minutes, run on real program numbers, and end with proof you learned the thing. Here's the loop.</p>
-    </div>
-
-    <ol class="steps">
-      <li class="stp">
-        <div class="stp-n"><span class="num">1</span></div>
-        <div class="stp-card">
-          <div class="scr" aria-hidden="true">
-            <div class="m-top"><span class="m-cap">Question 3 of 3</span><span class="m-dots"><i></i><i></i><i></i></span></div>
-            <div class="m-q">What's your primary goal?</div>
-            <div class="m-opt on"><span class="m-radio"></span>Become a Better Program Manager</div>
-            <div class="m-opt"><span class="m-radio"></span>Master Contracts &amp; Finance</div>
-            <div class="m-opt m-hide-sm"><span class="m-radio"></span>Win More Business (BD / Capture)</div>
-          </div>
-          <div class="stp-txt">
-            <h3>Tell it your job</h3>
-            <p>Three quick questions at signup. Your track puts the modules that fit your job first and keeps the rest one tap away.</p>
-          </div>
-        </div>
-      </li>
-      <li class="stp">
-        <div class="stp-n"><span class="num">2</span></div>
-        <div class="stp-card">
-          <div class="scr" aria-hidden="true">
-            <div class="m-lesson"><span class="m-ic f-con">📋</span><span class="m-grow"><span class="m-fam">Contracts</span><b>Contract Types</b></span><span class="m-min">16 min</span></div>
-            <div class="m-seg"><span>Novice</span><span class="on">Intermediate</span><span>Advanced</span></div>
-            <div class="m-body"><b>FFP</b> locks the price at award. Overruns are the contractor's problem, so the bid prices that risk in.</div>
-            <a class="m-audio" href="#listen" tabindex="-1"><span class="m-play"><svg width="11" height="11" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M7 4.5v15l12-7.5z"></path></svg></span><span class="m-grow"><b>The Debrief</b><small>Contracts · audio overview</small></span></a>
-          </div>
-          <div class="stp-txt">
-            <h3>Learn at your depth</h3>
-            <p>Novice, Intermediate or Advanced, with real program examples. Rather listen? Every module has The Debrief, an audio overview for the drive in.</p>
-          </div>
-        </div>
-      </li>
-      <li class="stp">
-        <div class="stp-n"><span class="num">3</span></div>
-        <div class="stp-card">
-          <div class="scr" aria-hidden="true">
-            <span class="m-cap m-brand">✦ Lesson quiz</span>
-            <div class="m-q sm">Who carries the cost risk on a firm-fixed-price contract?</div>
-            <div class="m-ans">The government</div>
-            <div class="m-ans ok"><span>The contractor</span><span>✓</span></div>
-            <div class="m-ans m-hide-sm">Split by a share ratio</div>
-            <div class="m-gate">
-              <div class="m-gate-hd"><span>Module check</span><span>8 / 10</span></div>
-              <div class="m-bar"><i></i><em></em></div>
-              <small>75% opens the next level</small>
-            </div>
-          </div>
-          <div class="stp-txt">
-            <h3>Prove it</h3>
-            <p>Every lesson ends in a quiz. Score 75% on the module check and the next depth level opens up.</p>
-          </div>
-        </div>
-      </li>
-      <li class="stp">
-        <div class="stp-n"><span class="num gold">4</span></div>
-        <div class="stp-card">
-          <div class="scr" aria-hidden="true">
-            <div class="m-cert">
-              <div class="m-cert-hd"><img src="/acqlerate-icon.svg" alt="" width="18" height="18" /><span>Certificate of completion</span></div>
-              <b>Defense Contracting Fundamentals</b>
-              <span class="m-cert-meta"><span data-count="clps:contracts">4.1</span> hours · <span data-count="clps:contracts">4.1</span> CLPs · Functional area: CON</span>
-              <div class="m-cert-ft"><span><i></i>Lucas Cruz, Founder</span><span class="m-cert-cap">🎓</span></div>
-            </div>
-            <span class="m-cap">Self-report it in</span>
-            <div class="m-chips"><span>CAPPMIS</span><span>eDACM</span><span>FAITAS</span></div>
-          </div>
-          <div class="stp-txt">
-            <h3>Get the credit</h3>
-            <p>Finish a module, get a signed certificate with hours and functional area. <span data-count="clps-whole">44</span>+ CLPs and about <span data-count="clps-whole">44</span> PDUs across the course.</p>
-          </div>
-        </div>
-      </li>
-    </ol>
-
-    <!-- Hear it first: two short cuts from The Debrief. Public preview files in
-         /audio-preview/; the full episodes stay behind login (/api/audio/:id). -->
-    <div class="listen" id="listen">
-      <div class="listen-hd">
-        <span class="eyebrow">Hear it first</span>
-        <h3>Two short cuts from The Debrief</h3>
-        <p>Every module has a full audio episode for the commute. Here is what two of them sound like: one from Contracts, one from The Business of Defense Contracting.</p>
-        <a class="listen-cta" href="/app#/auth">Start free and hear every module &rarr;</a>
-      </div>
-      <div class="listen-grid">
-        <div class="clip" data-clip="contracts">
-          <div class="clip-top">
-            <button class="clip-btn" type="button" aria-label="Play the Contracts clip, 38 seconds"><svg class="i-play" width="16" height="16" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"></path></svg><svg class="i-pause" width="16" height="16" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><rect x="6" y="4.5" width="4" height="15" rx="1"></rect><rect x="14" y="4.5" width="4" height="15" rx="1"></rect></svg></button>
-            <div class="clip-meta"><span class="clip-fam">Contracts</span><b>The restaurant with no prices</b></div>
-          </div>
-          <p class="clip-quote">Why undefinitized contract actions (UCAs) cost the government so much: you eat the meal first and argue about the bill later.</p>
-          <div class="clip-row"><div class="clip-bar" role="progressbar" aria-label="Contracts clip progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div><span class="clip-time" data-len="0:38">0:38</span></div>
-          <audio preload="none"><source src="/audio-preview/debrief-contracts-uca.webm" type="audio/webm; codecs=opus"><source src="/audio-preview/debrief-contracts-uca.m4a" type="audio/mp4"></audio>
-        </div>
-        <div class="clip money" data-clip="business">
-          <div class="clip-top">
-            <button class="clip-btn" type="button" aria-label="Play the Business of Defense Contracting clip, 26 seconds"><svg class="i-play" width="16" height="16" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"></path></svg><svg class="i-pause" width="16" height="16" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><rect x="6" y="4.5" width="4" height="15" rx="1"></rect><rect x="14" y="4.5" width="4" height="15" rx="1"></rect></svg></button>
-            <div class="clip-meta"><span class="clip-fam">Business</span><b>Finance reads the odometer</b></div>
-          </div>
-          <p class="clip-quote">Why a stale estimate at completion makes a failing program look like it is right on track.</p>
-          <div class="clip-row"><div class="clip-bar" role="progressbar" aria-label="Business clip progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div><span class="clip-time" data-len="0:26">0:26</span></div>
-          <audio preload="none"><source src="/audio-preview/debrief-business-odometer.webm" type="audio/webm; codecs=opus"><source src="/audio-preview/debrief-business-odometer.m4a" type="audio/mp4"></audio>
-        </div>
-      </div>
-    </div>
-
-    <div class="how-cta">
-      <div>
-        <b>Module 1 is free for good. So is one lesson in every other module.</b>
-        <span>No card, no class schedule. Start between meetings.</span>
-      </div>
-      <div class="btns">
-        <a href="/app#/auth" class="btn btn-brand">Start free →</a>
-        <a href="#modules" class="btn btn-outline">See the curriculum</a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- STREAK / RETENTION -->
 <section id="streaks" style="background:var(--navy);padding:72px 2rem;color:#fff">
   <div style="max-width:1040px;margin:0 auto">
@@ -1565,6 +1354,304 @@
 </section>
 
 
+
+<!-- LESSON TICKER -->
+<section style="background:#0D1B2A;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);padding:52px 2rem;overflow:hidden;">
+  <div style="max-width:760px;margin:0 auto;text-align:center;">
+    <div style="font-size:0.7rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#4FC3CB;margin-bottom:24px;">From the curriculum</div>
+    <div id="lesson-ticker" style="min-height:90px;display:flex;align-items:center;justify-content:center;"></div>
+    <div id="ticker-dots" style="display:flex;justify-content:center;gap:6px;margin-top:24px;"></div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var lessons = [
+    { text: "The IDIQ (Indefinite Delivery, Indefinite Quantity) vehicle is the hunting license. The task order is the hunt.", source: "Defense Contracting Fundamentals", module: "03" },
+    { text: "Color of money isn’t a metaphor. Use O&M to buy a $400K piece of equipment and you’ve got an ADA violation.", source: "Defense Finance & Budgeting", module: "02" },
+    { text: "A PM who takes care of their people creates a team that surfaces problems early. That’s the entire job.", source: "PM Operations & Leadership", module: "06" },
+    { text: "September 30th is real. Every contracting office in DoD is drowning in the last 30 days of the fiscal year. Plan around it.", source: "Defense Finance & Budgeting", module: "02" },
+    { text: "If your COR (Contracting Officer's Rep) asks you to do something outside your SOW (Statement of Work), stop. Just say: 'Can we get a mod first?' It protects everyone.", source: "Defense Contracting Fundamentals", module: "03" },
+    { text: "Read Section M before you read anything else in an RFP. It’s the scoring rubric. Everything else exists to score well against it.", source: "Capture Management & BD", module: "05" },
+    { text: "A risk register nobody updates is just a paperwork exercise. If a risk has been yellow for 90 days with no movement, someone’s not working it.", source: "PM Operations & Leadership", module: "06" },
+    { text: "Winning the vehicle gets you in the door. Winning task orders is how you actually make money.", source: "Defense Contracting Fundamentals", module: "03" },
+    { text: "EVM (Earned Value Management) tells you right now whether your program will finish on time and on budget. Most programs generate the reports and never actually use the information.", source: "Data Analytics for PMs", module: "04" },
+    { text: "Becoming a PM is a lateral move into a different discipline. The skills that made you a great engineer are different from the skills that make a great PM.", source: "PM Operations & Leadership", module: "06" },
+    { text: "Sources Sought and RFIs are the government asking who’s out there. Responding is free. Not responding means they don’t know you exist.", source: "Capture Management & BD", module: "05" },
+    { text: "The best program review I ever sat in had zero green stoplight charts. Everything was yellow or red. Every item had an owner and a date.", source: "PM Operations & Leadership", module: "06" }
+  ];
+
+  var current = 0;
+  var container = document.getElementById('lesson-ticker');
+  var dotsContainer = document.getElementById('ticker-dots');
+  var timer;
+
+  lessons.forEach(function(_, i) {
+    var dot = document.createElement('div');
+    dot.style.cssText = 'width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,0.2);transition:all 0.3s;cursor:pointer;flex-shrink:0;';
+    dot.addEventListener('click', function() { goTo(i); });
+    dotsContainer.appendChild(dot);
+  });
+
+  function updateDots(idx) {
+    Array.from(dotsContainer.children).forEach(function(d, i) {
+      d.style.background = i === idx ? '#4FC3CB' : 'rgba(255,255,255,0.2)';
+      d.style.width = i === idx ? '20px' : '6px';
+    });
+  }
+
+  function render(idx, dir) {
+    var l = lessons[idx];
+    var incoming = document.createElement('div');
+    incoming.style.cssText = 'opacity:0;transition:opacity 0.45s ease;width:100%;';
+    incoming.innerHTML =
+      '<p style="font-size:clamp(1rem,2vw,1.18rem);font-weight:600;color:#ffffff;line-height:1.7;margin:0 0 14px;">' +
+        '“' + l.text + '”' +
+      '</p>' +
+      '<span style="font-size:0.72rem;font-weight:800;color:#4FC3CB;text-transform:uppercase;letter-spacing:0.09em;">' +
+        l.source + ' · Module ' + l.module +
+      '</span>';
+    container.innerHTML = '';
+    container.appendChild(incoming);
+    updateDots(idx);
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() { incoming.style.opacity = '1'; });
+    });
+  }
+
+  function goTo(idx) {
+    clearInterval(timer);
+    current = idx;
+    render(idx);
+    startTimer();
+  }
+
+  function startTimer() {
+    timer = setInterval(function() {
+      var el = container.firstChild;
+      if (el) el.style.opacity = '0';
+      setTimeout(function() {
+        current = (current + 1) % lessons.length;
+        render(current);
+      }, 450);
+    }, 4500);
+  }
+
+  render(0);
+  startTimer();
+})();
+</script>
+
+
+<!-- STARTER KIT: own .top wrapper so its scoped styles still apply after the move -->
+<div class="top">
+<!-- STARTER KIT (Sep 2026 redesign: edition picker, real contents) -->
+<div class="kit" id="starterKit" data-edition="usg">
+  <div class="wrap kit-grid">
+    <div class="kit-covers" aria-hidden="true">
+      <div class="kit-cover kc-usg">
+        <div class="kc-brand"><img src="/acqlerate-icon.svg" alt="" width="18" height="18" /><span>ACQLERATE</span></div>
+        <div class="kc-rule"></div>
+        <div class="kc-ed">GOVERNMENT EDITION</div>
+        <div class="kc-ttl">The Acquisition Starter Kit</div>
+        <div class="kc-meta">13 pages · Jul 2026</div>
+      </div>
+      <div class="kit-cover kc-con">
+        <div class="kc-brand"><img src="/acqlerate-icon.svg" alt="" width="18" height="18" /><span>ACQLERATE</span></div>
+        <div class="kc-rule"></div>
+        <div class="kc-ed">CONTRACTOR EDITION</div>
+        <div class="kc-ttl">The Contractor's Acquisition Starter Kit</div>
+        <div class="kc-meta">16 pages · Jul 2026</div>
+      </div>
+      <div class="kit-fresh">Updated July 2026</div>
+    </div>
+
+    <div class="kit-copy">
+      <div class="eyebrow-row"><span class="tile">📥</span><span class="eyebrow">Free field guide · No account needed</span></div>
+      <h2>The field guide nobody hands you on day one.</h2>
+      <p>Tell us which side you work on and we send the edition written for it. Already current for the thresholds that changed in October 2025: the <span class="jt" data-tip="Simplified Acquisition Threshold. Below it, buying rules get simpler and faster.">SAT</span> is now $350K and the <span class="jt" data-tip="The amount a government purchase cardholder can usually buy without competing it.">micro-purchase</span> limit is $15K.</p>
+      <ul class="chips" data-for="usg">
+        <li class="chip">✓ Lifecycle cheat sheet</li>
+        <li class="chip">✓ ACAT decision tree</li>
+        <li class="chip">✓ 50+ acronyms decoded</li>
+        <li class="chip">✓ 5 mistakes new PMs make</li>
+      </ul>
+      <ul class="chips" data-for="contractor" hidden>
+        <li class="chip">✓ Task orders vs. standalone</li>
+        <li class="chip">✓ Who's buying: GSA, Air Force</li>
+        <li class="chip">✓ 70+ acronyms decoded</li>
+        <li class="chip">✓ 5 mistakes contractors make</li>
+      </ul>
+    </div>
+
+    <div class="kit-form">
+      <form id="captureForm" onsubmit="submitLead(event)" novalidate>
+        <div class="kit-field">
+          <span class="kit-lbl" id="kitSideLabel">Which side are you on?</span>
+          <div class="seg" role="group" aria-labelledby="kitSideLabel">
+            <button type="button" data-edition="usg" aria-pressed="true">🏛️ Government</button>
+            <button type="button" data-edition="contractor" aria-pressed="false">🏢 Contractor</button>
+          </div>
+        </div>
+        <div class="kit-field">
+          <label class="kit-lbl" for="captureEmail">Email</label>
+          <input type="email" class="kit-input" id="captureEmail" placeholder="you@company.com" autocomplete="email" required />
+        </div>
+        <button type="submit" class="btn btn-brand kit-send" id="captureBtn">Send my kit →</button>
+        <p class="kit-note" id="captureNote">Free. Unsubscribe with one click.</p>
+      </form>
+      <div class="kit-done" id="captureSuccess" hidden>
+        <span class="kit-ok" aria-hidden="true">✓</span>
+        <b>It's in your inbox.</b>
+        <p>Can't wait? <a href="/starter-kit-usg.pdf" id="captureOpen" target="_blank" rel="noopener">Open the <span id="captureEdName">Government edition</span> PDF now →</a></p>
+        <p>While you're here, Module 1 is free for good. <a href="/app#/auth">Start it →</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- CLPs & PDUs summary (Sep 2026). The full breakdown lives on /pdu. -->
+<section id="credit" class="v2 credit-v2">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">CLPs &amp; PDUs</span>
+      <h2>The hours count toward your credential.</h2>
+      <p class="lede">Every hour of Acqlerate is 1 CLP for the Defense Acquisition Workforce and 1 PDU for PMP holders. Finish a module and you get a certificate that proves it.</p>
+    </div>
+    <div class="credit-grid">
+      <a class="credit-card" href="/pdu#clps">
+        <div class="cc-top"><span class="cc-ic f-gold" aria-hidden="true">🎓</span><span class="micro">Defense Acquisition Workforce</span></div>
+        <div class="cc-n gold"><span data-count="clps-whole">44</span>+ CLPs</div>
+        <p>More than half of the 80 you owe every two years. Each certificate lists hours, completion date and DAWIA functional area, with an ID anyone can verify online.</p>
+        <div class="cc-meter" aria-hidden="true"><i style="width:56%"></i></div>
+        <div class="cc-cap"><span>0</span><span>80 every 2 years</span></div>
+        <span class="cc-link">See CLPs by module and how to log them →</span>
+      </a>
+      <a class="credit-card" href="/pdu#pdus">
+        <div class="cc-top"><span class="cc-ic" aria-hidden="true">PMP</span><span class="micro">PMP holders</span></div>
+        <div class="cc-n teal">About <span data-count="clps-whole">44</span> PDUs</div>
+        <p>Clears PMI's 35 Education PDU minimum on its own. Self-report in CCRS as online learning, with no pre-approval.</p>
+        <div class="cc-tri" aria-label="PDUs by Talent Triangle area">
+          <span><b><span data-count="pdus:ba">30.2</span></b> Business Acumen</span>
+          <span><b><span data-count="pdus:ww">11.0</span></b> Ways of Working</span>
+          <span><b><span data-count="pdus:ps">3.4</span></b> Power Skills</span>
+        </div>
+        <span class="cc-link">See PDUs by module and the CCRS steps →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM OUTCOMES SECTION -->
+<section id="team-outcomes" style="background:#F9FAFB;padding:72px 2rem;border-top:1px solid #E5E7EB;">
+  <div style="max-width:960px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:52px;">
+      <div style="font-size:0.95rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#01696F;margin-bottom:14px;">Why it matters</div>
+      <h2 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:#1A1A1A;letter-spacing:-0.025em;margin-bottom:18px;line-height:1.2;">Most defense professionals learn acquisition<br>the hard way. You don't have to.</h2>
+      <p style="font-size:1rem;color:#4B5563;max-width:580px;margin:0 auto;line-height:1.75;">A new PM who doesn't understand contract types, color of money, or how the COR relationship works will make expensive mistakes. Slowly. On the job. At the program's expense. Nobody puts that part in the job posting. Acqlerate closes that gap before it costs you.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px;">
+      <div style="background:white;border:1px solid #E5E7EB;border-top:3px solid #01696F;border-radius:0 0 14px 14px;padding:28px 24px;">
+        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#01696F;margin-bottom:10px;">For program managers</div>
+        <div style="font-weight:700;font-size:1rem;color:#1A1A1A;margin-bottom:10px;line-height:1.3;">Understand the system, not just the rulebook</div>
+        <div style="font-size:0.875rem;color:#6B7280;line-height:1.65;">Contract types, funding constraints, oversight relationships, risk management. This is the context that turns someone who just updates a spreadsheet into someone the team actually listens to.</div>
+      </div>
+      <div style="background:white;border:1px solid #E5E7EB;border-top:3px solid #01696F;border-radius:0 0 14px 14px;padding:28px 24px;">
+        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#01696F;margin-bottom:10px;">For new hires</div>
+        <div style="font-weight:700;font-size:1rem;color:#1A1A1A;margin-bottom:10px;line-height:1.3;">Go from confused to contributing in weeks, not a year</div>
+        <div style="font-size:0.875rem;color:#6B7280;line-height:1.65;">A structured 30 day path through the DoD acquisition landscape. So new hires stop asking the same question in three different meetings and start actually adding value.</div>
+      </div>
+      <div style="background:white;border:1px solid #E5E7EB;border-top:3px solid #01696F;border-radius:0 0 14px 14px;padding:28px 24px;">
+        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#01696F;margin-bottom:10px;">For capture &amp; BD</div>
+        <div style="font-weight:700;font-size:1rem;color:#1A1A1A;margin-bottom:10px;line-height:1.3;">Write to what the government actually scores, not just what you know</div>
+        <div style="font-size:0.875rem;color:#6B7280;line-height:1.65;">Understanding source selection, Section M, and contract vehicles from the buyer's side is what separates the proposal that wins from the one that just looks nice in a binder.</div>
+      </div>
+      <div style="background:white;border:1px solid #E5E7EB;border-top:3px solid #01696F;border-radius:0 0 14px 14px;padding:28px 24px;">
+        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#01696F;margin-bottom:10px;">For the whole team</div>
+        <div style="font-weight:700;font-size:1rem;color:#1A1A1A;margin-bottom:10px;line-height:1.3;">One platform. Every role. No scheduling.</div>
+        <div style="font-size:0.875rem;color:#6B7280;line-height:1.65;">Learning built around each role, with the Acqlerate Coach checking that it actually stuck. People learn between meetings, on a flight, whenever works, and they actually finish it this time.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CURRICULUM STANDARDS -->
+<section style="background:#0C2340;padding:72px 2rem;">
+  <div style="max-width:960px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:52px;">
+      <div style="font-size:0.95rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#4FC3CB;margin-bottom:14px;">Curriculum Standards</div>
+      <h2 style="font-size:clamp(1.5rem,2.8vw,2rem);font-weight:800;color:white;letter-spacing:-0.025em;line-height:1.25;margin-bottom:16px;">Built on the official blueprints.<br>Not someone's interpretation of them.</h2>
+      <p style="font-size:1rem;color:rgba(255,255,255,0.65);max-width:600px;margin:0 auto;line-height:1.75;">Acqlerate's curriculum is mapped to the authoritative DoD frameworks that define what acquisition professionals are actually required to know. We didn't make up the topics. We built to the standard.</p>
+    </div>
+
+    <!-- Three standards cards -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px;margin-bottom:40px;">
+
+      <!-- Card 1: DoD Contracting Competency Model -->
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(79,195,203,0.25);border-top:3px solid #4FC3CB;border-radius:12px;padding:28px 24px;">
+        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#4FC3CB;margin-bottom:10px;">DoD DPCAP · Nov 2024</div>
+        <div style="font-weight:800;font-size:1rem;color:white;margin-bottom:10px;line-height:1.3;">DoD Contracting Competency Model</div>
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.65;margin-bottom:16px;">The official competency framework for the DoD contracting community, covering the full contract lifecycle from pre-award planning through solicitation, source selection, award, administration, and closeout.</p>
+        <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);font-style:italic;margin-bottom:14px;">Acqlerate modules aligned:</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:rgba(255,255,255,0.8);">
+            <span style="color:#4FC3CB;font-weight:700;flex-shrink:0;">→</span>
+            <span><strong style="color:white;">Defense Contracting Fundamentals</strong>: contract lifecycle, solicitation, source selection, administration, modifications, REAs</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:rgba(255,255,255,0.8);">
+            <span style="color:#4FC3CB;font-weight:700;flex-shrink:0;">→</span>
+            <span><strong style="color:white;">Capture Management & BD</strong>: solicitation development, evaluation criteria, proposal compliance, source selection from buyer perspective</span>
+          </div>
+        </div>
+        <a href="https://www.acq.osd.mil/asda/dpc/cp/policy/docs/wd/DoD-Contracting-Competency-Model-(2024).pdf" target="_blank" rel="noopener" style="display:inline-block;margin-top:16px;font-size:0.75rem;color:#4FC3CB;text-decoration:none;border-bottom:1px solid rgba(79,195,203,0.4);">View the official framework →</a>
+      </div>
+
+      <!-- Card 2: GS-1102 / DAWIA -->
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(79,195,203,0.25);border-top:3px solid #4FC3CB;border-radius:12px;padding:28px 24px;">
+        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#4FC3CB;margin-bottom:10px;">OPM / USD A&S · DAWIA (Defense Acquisition Workforce Improvement Act)</div>
+        <div style="font-weight:800;font-size:1rem;color:white;margin-bottom:10px;line-height:1.3;">Contracting Specialist Professional Standards & DAWIA Functional Areas</div>
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.65;margin-bottom:16px;">The qualification standard and functional area competencies for DoD acquisition workforce members, spanning Program Management (PM), Contracting (CON), and Business Financial Management (BFM).</p>
+        <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);font-style:italic;margin-bottom:14px;">Acqlerate modules aligned:</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:rgba(255,255,255,0.8);">
+            <span style="color:#4FC3CB;font-weight:700;flex-shrink:0;">→</span>
+            <span><strong style="color:white;">DoD Acquisitions Foundations</strong>: acquisition lifecycle, ACAT levels, roles (PM · CO · COR · DCMA), OTAs, FAR Part 12</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:rgba(255,255,255,0.8);">
+            <span style="color:#4FC3CB;font-weight:700;flex-shrink:0;">→</span>
+            <span><strong style="color:white;">Defense Finance & Budgeting</strong>: PPBE, appropriations law, EVM, cost estimating, DCAA oversight (BFM functional area)</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:rgba(255,255,255,0.8);">
+            <span style="color:#4FC3CB;font-weight:700;flex-shrink:0;">→</span>
+            <span><strong style="color:white;">PM Operations & Leadership</strong>: risk management, stakeholder communication, program reviews (PM functional area)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Self-certification note -->
+      <div style="background:rgba(1,105,111,0.12);border:1px solid rgba(1,105,111,0.35);border-top:3px solid #01696F;border-radius:12px;padding:28px 24px;">
+        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#4FC3CB;margin-bottom:10px;">Transparency</div>
+        <div style="font-weight:800;font-size:1rem;color:white;margin-bottom:10px;line-height:1.3;">What "mapped to" means (and what it doesn't)</div>
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.65;margin-bottom:16px;">Acqlerate is not an accredited institution and is not affiliated with WarU, DoD, or any government agency. "Mapped to" means our curriculum covers the same knowledge domains these frameworks define. It does not mean we have formal approval from these bodies.</p>
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.65;">DAW members self-report Acqlerate training as External Training in their portal. The frameworks above define <em>what</em> the acquisition workforce must know. Acqlerate teaches it in plain English, at your pace, with a Certificate of Completion for your records.</p>
+      </div>
+
+    </div>
+
+    <!-- Bottom framework badges row -->
+    <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:28px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:center;">
+      <span style="font-size:0.75rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.08em;">Aligned to:</span>
+      <a href="https://www.acq.osd.mil/asda/dpc/cp/policy/docs/wd/DoD-Contracting-Competency-Model-(2024).pdf" target="_blank" rel="noopener" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:700;color:rgba(255,255,255,0.7);text-decoration:none;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='rgba(79,195,203,0.12)';this.style.borderColor='rgba(79,195,203,0.35)'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.15)'">DoD Contracting Competency Model (Nov 2024)</a>
+      <a href="https://www.opm.gov/policy-data-oversight/classification-qualifications/general-schedule-qualification-standards/1100/contracting-series-1102/" target="_blank" rel="noopener" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:700;color:rgba(255,255,255,0.7);text-decoration:none;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='rgba(79,195,203,0.12)';this.style.borderColor='rgba(79,195,203,0.35)'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.15)'">GS-1102 Qualification Standard</a>
+      <a href="https://www.dau.edu/functional-areas/" target="_blank" rel="noopener" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:700;color:rgba(255,255,255,0.7);text-decoration:none;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='rgba(79,195,203,0.12)';this.style.borderColor='rgba(79,195,203,0.35)'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.15)'">DAWIA Functional Areas (PM · CON · BFM)</a>
+      <a href="https://www.fai.gov/certification/fac-c/fac-c-competencies" target="_blank" rel="noopener" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:700;color:rgba(255,255,255,0.7);text-decoration:none;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='rgba(79,195,203,0.12)';this.style.borderColor='rgba(79,195,203,0.35)'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.15)'">FAC-C (Professional) Competencies</a>
+    </div>
+
+  </div>
+</section>
 
 <!-- BLOG TEASER -->
 <section id="blog-teaser" style="background:#F7F9FB;padding:72px 2rem;border-top:1px solid var(--border)">
@@ -1713,82 +1800,6 @@
   resetTimer();
 })();
 </script>
-
-<!-- CURRICULUM STANDARDS -->
-<section style="background:#0C2340;padding:72px 2rem;">
-  <div style="max-width:960px;margin:0 auto;">
-
-    <div style="text-align:center;margin-bottom:52px;">
-      <div style="font-size:0.95rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#4FC3CB;margin-bottom:14px;">Curriculum Standards</div>
-      <h2 style="font-size:clamp(1.5rem,2.8vw,2rem);font-weight:800;color:white;letter-spacing:-0.025em;line-height:1.25;margin-bottom:16px;">Built on the official blueprints.<br>Not someone's interpretation of them.</h2>
-      <p style="font-size:1rem;color:rgba(255,255,255,0.65);max-width:600px;margin:0 auto;line-height:1.75;">Acqlerate's curriculum is mapped to the authoritative DoD frameworks that define what acquisition professionals are actually required to know. We didn't make up the topics. We built to the standard.</p>
-    </div>
-
-    <!-- Three standards cards -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px;margin-bottom:40px;">
-
-      <!-- Card 1: DoD Contracting Competency Model -->
-      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(79,195,203,0.25);border-top:3px solid #4FC3CB;border-radius:12px;padding:28px 24px;">
-        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#4FC3CB;margin-bottom:10px;">DoD DPCAP · Nov 2024</div>
-        <div style="font-weight:800;font-size:1rem;color:white;margin-bottom:10px;line-height:1.3;">DoD Contracting Competency Model</div>
-        <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.65;margin-bottom:16px;">The official competency framework for the DoD contracting community, covering the full contract lifecycle from pre-award planning through solicitation, source selection, award, administration, and closeout.</p>
-        <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);font-style:italic;margin-bottom:14px;">Acqlerate modules aligned:</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <div style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:rgba(255,255,255,0.8);">
-            <span style="color:#4FC3CB;font-weight:700;flex-shrink:0;">→</span>
-            <span><strong style="color:white;">Defense Contracting Fundamentals</strong>: contract lifecycle, solicitation, source selection, administration, modifications, REAs</span>
-          </div>
-          <div style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:rgba(255,255,255,0.8);">
-            <span style="color:#4FC3CB;font-weight:700;flex-shrink:0;">→</span>
-            <span><strong style="color:white;">Capture Management & BD</strong>: solicitation development, evaluation criteria, proposal compliance, source selection from buyer perspective</span>
-          </div>
-        </div>
-        <a href="https://www.acq.osd.mil/asda/dpc/cp/policy/docs/wd/DoD-Contracting-Competency-Model-(2024).pdf" target="_blank" rel="noopener" style="display:inline-block;margin-top:16px;font-size:0.75rem;color:#4FC3CB;text-decoration:none;border-bottom:1px solid rgba(79,195,203,0.4);">View the official framework →</a>
-      </div>
-
-      <!-- Card 2: GS-1102 / DAWIA -->
-      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(79,195,203,0.25);border-top:3px solid #4FC3CB;border-radius:12px;padding:28px 24px;">
-        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#4FC3CB;margin-bottom:10px;">OPM / USD A&S · DAWIA (Defense Acquisition Workforce Improvement Act)</div>
-        <div style="font-weight:800;font-size:1rem;color:white;margin-bottom:10px;line-height:1.3;">Contracting Specialist Professional Standards & DAWIA Functional Areas</div>
-        <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.65;margin-bottom:16px;">The qualification standard and functional area competencies for DoD acquisition workforce members, spanning Program Management (PM), Contracting (CON), and Business Financial Management (BFM).</p>
-        <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);font-style:italic;margin-bottom:14px;">Acqlerate modules aligned:</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <div style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:rgba(255,255,255,0.8);">
-            <span style="color:#4FC3CB;font-weight:700;flex-shrink:0;">→</span>
-            <span><strong style="color:white;">DoD Acquisitions Foundations</strong>: acquisition lifecycle, ACAT levels, roles (PM · CO · COR · DCMA), OTAs, FAR Part 12</span>
-          </div>
-          <div style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:rgba(255,255,255,0.8);">
-            <span style="color:#4FC3CB;font-weight:700;flex-shrink:0;">→</span>
-            <span><strong style="color:white;">Defense Finance & Budgeting</strong>: PPBE, appropriations law, EVM, cost estimating, DCAA oversight (BFM functional area)</span>
-          </div>
-          <div style="display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:rgba(255,255,255,0.8);">
-            <span style="color:#4FC3CB;font-weight:700;flex-shrink:0;">→</span>
-            <span><strong style="color:white;">PM Operations & Leadership</strong>: risk management, stakeholder communication, program reviews (PM functional area)</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 3: Self-certification note -->
-      <div style="background:rgba(1,105,111,0.12);border:1px solid rgba(1,105,111,0.35);border-top:3px solid #01696F;border-radius:12px;padding:28px 24px;">
-        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#4FC3CB;margin-bottom:10px;">Transparency</div>
-        <div style="font-weight:800;font-size:1rem;color:white;margin-bottom:10px;line-height:1.3;">What "mapped to" means (and what it doesn't)</div>
-        <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.65;margin-bottom:16px;">Acqlerate is not an accredited institution and is not affiliated with WarU, DoD, or any government agency. "Mapped to" means our curriculum covers the same knowledge domains these frameworks define. It does not mean we have formal approval from these bodies.</p>
-        <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.65;">DAW members self-report Acqlerate training as External Training in their portal. The frameworks above define <em>what</em> the acquisition workforce must know. Acqlerate teaches it in plain English, at your pace, with a Certificate of Completion for your records.</p>
-      </div>
-
-    </div>
-
-    <!-- Bottom framework badges row -->
-    <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:28px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:center;">
-      <span style="font-size:0.75rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.08em;">Aligned to:</span>
-      <a href="https://www.acq.osd.mil/asda/dpc/cp/policy/docs/wd/DoD-Contracting-Competency-Model-(2024).pdf" target="_blank" rel="noopener" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:700;color:rgba(255,255,255,0.7);text-decoration:none;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='rgba(79,195,203,0.12)';this.style.borderColor='rgba(79,195,203,0.35)'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.15)'">DoD Contracting Competency Model (Nov 2024)</a>
-      <a href="https://www.opm.gov/policy-data-oversight/classification-qualifications/general-schedule-qualification-standards/1100/contracting-series-1102/" target="_blank" rel="noopener" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:700;color:rgba(255,255,255,0.7);text-decoration:none;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='rgba(79,195,203,0.12)';this.style.borderColor='rgba(79,195,203,0.35)'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.15)'">GS-1102 Qualification Standard</a>
-      <a href="https://www.dau.edu/functional-areas/" target="_blank" rel="noopener" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:700;color:rgba(255,255,255,0.7);text-decoration:none;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='rgba(79,195,203,0.12)';this.style.borderColor='rgba(79,195,203,0.35)'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.15)'">DAWIA Functional Areas (PM · CON · BFM)</a>
-      <a href="https://www.fai.gov/certification/fac-c/fac-c-competencies" target="_blank" rel="noopener" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:700;color:rgba(255,255,255,0.7);text-decoration:none;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='rgba(79,195,203,0.12)';this.style.borderColor='rgba(79,195,203,0.35)'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.15)'">FAC-C (Professional) Competencies</a>
-    </div>
-
-  </div>
-</section>
 
 <!-- PRICING -->
 <section id="pricing" class="pricing-bg">
