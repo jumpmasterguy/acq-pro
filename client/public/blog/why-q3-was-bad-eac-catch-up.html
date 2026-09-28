@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why Q3 Was Bad: The Paycheck Clawback Hiding in Your EAC</title>
+  <meta name="description" content="One late EAC change can wipe out a quarter of profit. The cumulative catch-up math in plain English, and how an R&amp;O keeps your program off slide 14." />
+  <meta property="og:title" content="Why Q3 Was Bad: The Paycheck Clawback Hiding in Your EAC" />
+  <meta property="og:description" content="One late change to your Estimate at Completion can turn a quarter of real work into a loss. Here's the math, and the R&amp;O habit that keeps it from being a surprise." />
+  <meta property="og:url" content="https://acqlerate.com/blog/why-q3-was-bad-eac-catch-up" />
+  <meta property="og:image" content="https://acqlerate.com/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="627" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://acqlerate.com/og-image.jpg" />
+  <meta property="article:published_time" content="2026-09-28" />
+  <meta property="article:modified_time" content="2026-09-28" />
+  <link rel="canonical" href="https://acqlerate.com/blog/why-q3-was-bad-eac-catch-up" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="stylesheet" href="/blog/blog.css" />
+  <!-- Cookie consent + Google Analytics: see /consent.js -->
+  <script src="/consent.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Why Q3 Was Bad: The Paycheck Clawback Hiding in Your EAC",
+    "description": "One late change to your Estimate at Completion can turn a quarter of real work into a loss. Here's the math, and the R&O habit that keeps it from being a surprise.",
+    "author": {"@type": "Person", "@id": "https://acqlerate.com/why#lucas-cruz", "name": "Lucas Cruz", "url": "https://acqlerate.com/why#founder"},
+    "publisher": {"@type": "Organization", "@id": "https://acqlerate.com/#organization", "name": "Acqlerate", "url": "https://acqlerate.com"},
+    "datePublished": "2026-09-28",
+    "dateModified": "2026-09-28",
+    "url": "https://acqlerate.com/blog/why-q3-was-bad-eac-catch-up"
+  }
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">
+        <img src="/acqlerate-icon.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit">
+      </div>
+      <span class="nav-logo-text">Acq<span>lerate</span></span>
+    </a>
+    <div class="nav-actions">
+      <a href="/tools" class="btn-ghost" style="font-size:0.82rem">Tools</a>
+      <a href="/blog" class="btn-ghost nav-blog">← Blog</a>
+      <a href="/app#/auth" class="btn-ghost">Sign In</a>
+      <a href="/app#/auth" class="btn-primary">Start Free →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="post-layout">
+  <article class="post-main">
+    <div class="breadcrumb"><a href="/blog">Blog</a><span>›</span><span>Finance</span></div>
+    <span class="post-badge">Finance</span>
+    <h1>Why Q3 Was Bad: The Paycheck Clawback Hiding in Your EAC</h1>
+    <p class="post-deck">One late change to your Estimate at Completion can turn a quarter of real work into a loss. Here's the math, and the R&amp;O habit that keeps it from being a surprise.</p>
+    <div class="post-meta">By <a class="byline-author" href="/why#founder" rel="author">Lucas Cruz</a> · September 2026 · 6 min read · For: Contractor PMs</div>
+
+    <div class="post-body">
+<div class="callout"><p><strong>TL;DR.</strong> On most long DoD contracts, profit is booked as the work gets done. Change your EAC and the correction for every past month lands in one quarter.</p>
+<ul>
+<li><strong>New to this?</strong> EAC is the Estimate at Completion, what the whole contract is expected to cost. Finance uses it to decide how much profit you've earned so far.</li>
+<li><strong>Contractor PM?</strong> In our example, a $1.5M overrun found in September turns $2M of real work into a $649K loss for the quarter.</li>
+<li><strong>Leading several programs?</strong> Keep an R&amp;O (Risks and Opportunities) list so you can see when one program's good news already covers another's bad news.</li>
+<li><strong>Everyone:</strong> the quarter doesn't punish the overrun. It punishes the surprise. Nobody wants their name on slide 14.</li>
+</ul></div>
+
+<p>Payroll emails you on a Friday afternoon.</p>
+
+<p>"Small correction. We've been overpaying you since January. We'll take the difference out of this month's check."</p>
+
+<p>You worked a full month. You did good work. And your paycheck is negative.</p>
+
+<p>Nothing went wrong this month. This month just got the bill for every month before it.</p>
+
+<p>Hold onto that feeling, because it's the fastest way to understand why defense contractors have bad quarters. Finance even has a polite name for it: a <strong>cumulative catch-up</strong>. I'm going to call it what it feels like. The clawback.</p>
+
+<h2 id="meanwhile-on-slide-14">Meanwhile, on Slide 14</h2>
+
+<p>If you're a program manager (PM) on the contractor side, you may have lived the work version of this.</p>
+
+<p>It's the second week of October. The quarterly business review is going fine. Then the chief financial officer (CFO) clicks to slide 14, and slide 14 has your program's name on it.</p>
+
+<p>Back in September, you raised your EAC. Integration was running long. It was an honest update, and it felt like a program problem.</p>
+
+<p>Turns out it was a company problem. Here's why.</p>
+
+
+<div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:14px;padding:28px 32px;margin:40px 0;color:white;">
+  <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;opacity:0.7;margin-bottom:6px">Free Starter Kit</div>
+  <h3 style="font-size:1.1rem;font-weight:800;margin:0 0 8px;color:white">Get the Acqlerate Acquisition Starter Kit (Free)</h3>
+  <p style="font-size:0.9rem;opacity:0.9;margin:0 0 18px;line-height:1.5">Key terms, ACAT levels, career roadmaps, and the 5 most common acquisition mistakes. Tailored to your role: USG, contractor, or career changer.</p>
+  <form id="midCapture" onsubmit="submitSidebarLead(event,'midCapture','midSuccess')" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+    <input type="email" placeholder="your@email.com" required style="padding:10px 14px;border:none;border-radius:8px;font-size:0.9rem;font-family:inherit;width:240px;max-width:100%;outline:none;color:#1A1A1A" />
+    <button type="submit" style="background:white;color:#01696F;border:none;cursor:pointer;font-size:0.9rem;font-weight:800;padding:10px 20px;border-radius:8px;font-family:inherit;white-space:nowrap">Send It Free →</button>
+  </form>
+  <div id="midSuccess" style="font-size:0.875rem;font-weight:700;color:rgba(255,255,255,0.9);display:none;margin-top:10px">✓ Check your inbox. It's on its way.</div>
+</div>
+<h2 id="your-eac-is-secretly-a-revenue-number">Your EAC Is Secretly a Revenue Number</h2>
+
+<p>EAC stands for <strong>Estimate at Completion</strong>: your best guess of what the whole contract will cost by the time it's done.</p>
+
+<p>Most PMs treat it as a program management number. Finance treats it as something else entirely.</p>
+
+<p>On most long-term Department of Defense (DoD) contracts, the company doesn't wait until the end to count revenue and profit. It counts them as the work gets done. And the most common way to measure "how done" is simple:</p>
+
+<div class="callout"><p><strong>Percent complete = cost spent so far ÷ EAC</strong></p></div>
+
+<p>Profit gets counted the same way. If you're 50% complete, the company has already booked 50% of the contract's expected profit.</p>
+
+<p>So when your EAC changes, two things change at once: how "done" you are, and how much profit the whole job will make. Which means the profit the company <em>already booked</em> is now wrong.</p>
+
+<p>It gets fixed all at once. In this quarter. That's the clawback.</p>
+
+<h2 id="the-math-four-lines-promise">The Math (Four Lines, Promise)</h2>
+
+<p>Here's a simplified example. It's the same one we use in the lesson.</p>
+
+<ul>
+<li><strong>The deal:</strong> a $20M firm-fixed-price contract. Planned cost: $17M. Planned profit: $3M, a 15% margin.</li>
+<li><strong>End of Q2 (the second quarter):</strong> you've spent $8.5M, so you're 50% complete. The company has booked $1.5M of profit.</li>
+<li><strong>During Q3:</strong> your team spends another $2M. At the September review, you raise the EAC to $18.5M. Total expected profit drops to $1.5M (7.5%).</li>
+</ul>
+
+<p>Now finance recalculates everything:</p>
+
+<ol>
+<li>New percent complete: $10.5M ÷ $18.5M = about 57%</li>
+<li>Profit "earned" to date at the new margin: 57% × $1.5M = about $851K</li>
+<li>Profit already on the books: $1.5M</li>
+<li>Q3 profit: $851K minus $1.5M = <strong>negative $649K</strong></li>
+</ol>
+
+<p>Your team did $2M of real work in Q3. The quarter still shows a loss.</p>
+
+<p>Here's the part that stings. If the EAC hadn't moved, Q3 would have shown a gain of about $353K. So the swing between what the CFO expected and what actually got booked is roughly <strong>$1M</strong>. From one program. In one quarter.</p>
+
+<p>That's slide 14.</p>
+
+<h2 id="why-it-hits-twice">Why It Hits Twice</h2>
+
+<p>A mid-program EAC increase lands in two places:</p>
+
+<ol>
+<li><strong>The past.</strong> Profit already booked on work you finished gets taken back, right now. (The clawback.)</li>
+<li><strong>The future.</strong> Every dollar of work left on the contract now earns at the lower margin.</li>
+</ol>
+
+<p>So the pain doesn't spread politely across the life of the contract. A big chunk of it shows up in one quarter, with your name on the slide.</p>
+
+<h2 id="the-good-news-back-pay-works-the-same-way">The Good News: Back Pay Works the Same Way</h2>
+
+<p>The clawback has a happy twin.</p>
+
+<p>Go back to that payroll email. Now imagine it says, "We've been <em>under</em>paying you since January." All of that lands in one check too.</p>
+
+<p>Same with your EAC. Retire a risk, close out a subcontract under budget, or pass a test on the first try, and the EAC comes down. The company recalculates profit at the higher margin and books the gain this quarter.</p>
+
+<p>This is why programs often look better in their final stretch. It's also why a padded EAC that never comes down is a problem: that's profit the company earned and never got credit for on time.</p>
+
+<h2 id="how-to-keep-your-program-off-slide-14">How to Keep Your Program Off Slide 14</h2>
+
+<p>The goal isn't a perfect EAC. The goal is a <strong>boring</strong> one. Finance loves an estimate that moves in small, well-explained steps.</p>
+
+<ul>
+<li><strong>Update monthly, not quarterly.</strong> Spot a $200K problem in July? Tell finance in July, not at the September lock. Small moves get absorbed. Surprises get a slide.</li>
+<li><strong>Split timing from true cost growth.</strong> Work that slipped right but costs the same doesn't change the EAC. Work that costs more does. Report them separately.</li>
+<li><strong>Put every risk and opportunity on the R&amp;O.</strong> Good news included. More on that next, because it's the big one.</li>
+</ul>
+
+<h2 id="the-r-o-nobody-gets-left-in-the-dark">The R&amp;O: Nobody Gets Left in the Dark</h2>
+
+<p>Most defense contractors keep an <strong>R&amp;O</strong>, short for Risks and Opportunities. It's one list of everything that could move the program's money, good or bad, with odds and dollars attached. It gets updated every month with the EAC, and it rolls up so a leader can see every program's list on one page.</p>
+
+<p>Every line gets a likelihood, an impact, and a <strong>weighted value</strong> (likelihood × impact). Here's a tiny one:</p>
+
+<table class="comparison-table">
+  <thead><tr><th>Item</th><th>Odds</th><th>Impact</th><th>Weighted</th></tr></thead>
+  <tbody>
+    <tr><td>Risk: testing runs 6 weeks long</td><td>60%</td><td>−$600K</td><td>−$360K</td></tr>
+    <tr><td>Risk: supplier raises prices</td><td>30%</td><td>−$400K</td><td>−$120K</td></tr>
+    <tr><td>Opportunity: cabling sub under budget</td><td>75%</td><td>+$400K</td><td>+$300K</td></tr>
+  </tbody>
+</table>
+
+<p>On its own, the testing risk is a $600K scare. Next to the cabling opportunity landing in the same quarter, it nets to about −$60K. That's the whole point of an R&amp;O: a leader looking at the full board can see when one team's good news already covers another team's bad news, before anyone calls the CFO.</p>
+
+<p>(Keep the gross numbers visible, though. If both risks hit and the opportunity doesn't, this little list is still a $1M problem.)</p>
+
+<p>It also fixes the clawback. A risk that's been on the R&amp;O since July isn't a surprise in September. Finance saw it coming, sized it, and maybe set money aside. And an opportunity on the R&amp;O gets claimed on time, instead of sitting in someone's back pocket as a "cushion."</p>
+
+<h2 id="the-takeaway">The Takeaway</h2>
+
+<p>The quarter doesn't punish you for the overrun. It punishes you for the surprise.</p>
+
+<p>Every month a known problem stays out of the EAC, the company keeps booking profit at a margin you already know is wrong. Which means the clawback, when it finally comes, is bigger.</p>
+
+<p>You can't always avoid the clawback. But you do get to choose whether it's a small one everybody saw coming, or a big one on slide 14.</p>
+
+    </div>
+    <p class="ai-note">Drafted with AI from Acqlerate's course material. Spot a mistake? Email <a href="mailto:lucas@acqlerate.com">lucas@acqlerate.com</a> and I'll fix it.</p>
+
+    <!-- Bottom CTA -->
+    <div style="background:linear-gradient(135deg,#0d2137 0%,#01474d 100%);border-radius:14px;padding:32px 36px;margin:40px 0;text-align:center">
+      <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.45);margin-bottom:10px">The Business of Defense Contracting Module</div>
+      <h3 style="font-size:1.15rem;font-weight:800;margin-bottom:10px;color:white;line-height:1.4">Want to run the numbers yourself? Build a full business unit R&amp;O, likelihoods and all, and see when an opportunity really cancels a risk (and when it only looks like it does).</h3>
+      <p style="font-size:0.85rem;color:rgba(255,255,255,0.55);margin:0 0 20px">Lessons: <strong style="color:rgba(255,255,255,0.8)">Why Q3 Was Bad</strong> and <strong style="color:rgba(255,255,255,0.8)">The R&amp;O</strong>. Already live and breathe this stuff? The advanced tier covers management vs. accounting EAC.</p>
+      <a href="/app#/lesson/business-11" style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:0.95rem;padding:12px 24px;border-radius:10px;text-decoration:none;margin-right:12px">Open the R&amp;O Lesson →</a>
+      <a href="/app#/lesson/business-2" style="display:inline-block;color:rgba(255,255,255,0.55);font-size:0.85rem;padding:12px 0;text-decoration:none">Or start with Why Q3 Was Bad</a>
+    </div>
+
+    <div class="related-posts" data-acq="related-auto">
+      <h2>Continue Reading</h2>
+      <div class="related-grid">
+        <a href="/blog/why-your-contract-revenue-might-be-half-what-it-should-be" class="related-card">
+          <div class="cat">Finance</div>
+          <h3>Why Your Contract Revenue Might Be Half What It Should Be</h3>
+        </a>
+        <a href="/blog/wrap-rate-explained-defense-contractors" class="related-card">
+          <div class="cat">Finance</div>
+          <h3>The Wrap Rate Explained: What It Is, Why It Matters, and How to Stop Getting Surprised by It</h3>
+        </a>
+        <a href="/blog/evm-decoded-your-programs-vital-signs-cpi-spi-in-2026" class="related-card">
+          <div class="cat">Program Management</div>
+          <h3>EVM Decoded: Your Program's Vital Signs (CPI &amp; SPI) in 2026</h3>
+        </a>
+      </div>
+    </div>
+
+  </article>
+
+  <aside class="post-sidebar">
+    <div class="sidebar-toc">
+      <div class="sidebar-toc-title">In This Article</div>
+      <ul style="list-style:none;padding:0;margin:0">
+        <li style="font-size:0.8rem;margin-bottom:5px"><a href="#meanwhile-on-slide-14" style="color:var(--teal)">Meanwhile, on Slide 14</a></li>
+        <li style="font-size:0.8rem;margin-bottom:5px"><a href="#your-eac-is-secretly-a-revenue-number" style="color:var(--teal)">Your EAC Is Secretly a Revenue Number</a></li>
+        <li style="font-size:0.8rem;margin-bottom:5px"><a href="#the-math-four-lines-promise" style="color:var(--teal)">The Math (Four Lines, Promise)</a></li>
+        <li style="font-size:0.8rem;margin-bottom:5px"><a href="#why-it-hits-twice" style="color:var(--teal)">Why It Hits Twice</a></li>
+        <li style="font-size:0.8rem;margin-bottom:5px"><a href="#the-good-news-back-pay-works-the-same-way" style="color:var(--teal)">The Good News: Back Pay</a></li>
+        <li style="font-size:0.8rem;margin-bottom:5px"><a href="#how-to-keep-your-program-off-slide-14" style="color:var(--teal)">How to Keep Your Program Off Slide 14</a></li>
+        <li style="font-size:0.8rem;margin-bottom:5px"><a href="#the-r-o-nobody-gets-left-in-the-dark" style="color:var(--teal)">The R&amp;O: Nobody Gets Left in the Dark</a></li>
+        <li style="font-size:0.8rem;margin-bottom:5px"><a href="#the-takeaway" style="color:var(--teal)">The Takeaway</a></li>
+      </ul>
+    </div>
+
+    <!-- Sidebar module link -->
+    <div style="background:var(--teal-light,#E6F2F3);border:1.5px solid var(--teal,#01696F);border-radius:12px;padding:20px;margin-top:20px">
+      <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--teal);margin-bottom:6px">Relevant Module</div>
+      <p style="font-size:0.85rem;font-weight:700;color:#0D1B2A;margin:0 0 6px">The Business of Defense Contracting</p>
+      <p style="font-size:0.8rem;color:#374151;margin:0 0 14px;line-height:1.4">How your program's numbers become the company's revenue, profit, cash, backlog, and valuation.</p>
+      <a href="/app#/lesson/business-11" style="display:block;text-align:center;background:var(--teal,#01696F);color:white;font-weight:700;font-size:0.875rem;padding:9px 14px;border-radius:8px;text-decoration:none">Open the R&amp;O Lesson →</a>
+    </div>
+
+    <!-- Sidebar email capture -->
+
+    <div class="sidebar-capture" style="margin-top:24px;background:var(--gold-bg);border:1.5px solid #F0D060;border-radius:12px;padding:20px">
+      <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold);margin-bottom:6px">Free Resource</div>
+      <p style="font-size:0.85rem;color:var(--text);margin:0 0 12px;line-height:1.5">Acquisition Starter Kit: key terms, career paths, and the 5 biggest mistakes. Tailored to your role.</p>
+      <form id="sidebarCapture" onsubmit="submitSidebarLead(event,'sidebarCapture','sidebarSuccess')" style="display:flex;flex-direction:column;gap:8px">
+        <input type="email" placeholder="your@email.com" required style="padding:9px 12px;border:1.5px solid #E0C050;border-radius:7px;font-size:0.85rem;font-family:inherit;outline:none" />
+        <button type="submit" style="background:var(--gold);color:white;border:none;cursor:pointer;font-size:0.85rem;font-weight:700;padding:9px;border-radius:7px;font-family:inherit">Get Starter Kit →</button>
+      </form>
+      <div id="sidebarSuccess" style="font-size:0.8rem;font-weight:700;color:var(--teal);display:none;margin-top:6px">✓ Check your inbox!</div>
+    </div>
+
+  </aside>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <a href="/" class="footer-logo">
+      <div class="nav-logo-icon" style="width:28px;height:28px;background:var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center">
+        <img src="/acqlerate-icon.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit">
+      </div>
+      <span class="footer-logo-text">Acq<span>lerate</span></span>
+    </a>
+    <div class="footer-links">
+      <a href="/blog">Blog</a>
+      <a href="/app#/auth">Sign Up Free</a>
+      <a href="/app#/upgrade">Pricing</a>
+      <a href="mailto:lucas@acqlerate.com">Contact</a>
+    </div>
+    <div class="footer-copy">© 2026 Acqlerate. Defense Acquisitions Academy.</div>
+  </div>
+</footer>
+<script src="/blog/blog.js"></script>
+</body>
+</html>
