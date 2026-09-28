@@ -19,8 +19,12 @@ import { askClaude } from "./ai";
 import { storage } from "./storage";
 import type { Lesson, QuizQuestion } from "../client/src/lib/curriculum";
 
-// Written once and shown to many people, so quality beats speed here.
-const WRITE_ONCE_MODELS = ["claude-sonnet-5", "claude-haiku-4-5-20251001"];
+// Every Acqlerate Coach feature (Explain My Mistake, Teach It Back, and the
+// "How Do I Apply This?" button) runs on Claude Sonnet 5.5, released 28 Sep
+// 2026 at the same price as Sonnet 5 ($2 in / $10 out per million tokens).
+// Sonnet 5 is the automatic backup if 5.5 is overloaded or unavailable; the
+// "[ai] coach:... model=" log line shows which one answered.
+export const COACH_MODELS = ["claude-sonnet-5-5", "claude-sonnet-5"];
 
 export const TEACH_BACK_XP = 25;
 export const TEACH_BACK_MIN_CHARS = 40;
@@ -159,7 +163,7 @@ If the learner's pick is arguably defensible, say so honestly in "wrong" and exp
 
 Reply with only a JSON object: {"tempting": "...", "wrong": "...", "tell": "..."}`;
 
-  const { text, model } = await askClaude({ feature: "coach:mistake", prompt, maxTokens: 600, models: WRITE_ONCE_MODELS });
+  const { text, model } = await askClaude({ feature: "coach:mistake", prompt, maxTokens: 600, models: COACH_MODELS });
   const raw = parseJson<Partial<MistakeExplanation>>(text);
   if (!raw.tempting || !raw.wrong || !raw.tell) throw new CoachError("Incomplete explanation", 502);
   const explanation: MistakeExplanation = {
@@ -198,7 +202,7 @@ Return:
 
 Reply with only a JSON object: {"keyPoints": ["...", "..."], "proVersion": "..."}`;
 
-  const { text: reply, model } = await askClaude({ feature: "coach:keypoints", prompt, maxTokens: 700, models: WRITE_ONCE_MODELS });
+  const { text: reply, model } = await askClaude({ feature: "coach:keypoints", prompt, maxTokens: 700, models: COACH_MODELS });
   const raw = parseJson<Partial<LessonKeyPoints>>(reply);
   const keyPoints = (raw.keyPoints ?? []).filter(p => typeof p === "string" && p.trim()).slice(0, 5).map(noDashes);
   if (keyPoints.length < 2 || !raw.proVersion) throw new CoachError("Could not prepare this lesson", 502);
@@ -244,7 +248,7 @@ Talk to the learner directly ("you").
 
 Reply with only a JSON object: {"covered": [true, false], "misconception": null, "nailed": "...", "gap": "..."}`;
 
-  const { text } = await askClaude({ feature: "coach:teachback", prompt, maxTokens: 500, models: WRITE_ONCE_MODELS });
+  const { text } = await askClaude({ feature: "coach:teachback", prompt, maxTokens: 500, models: COACH_MODELS });
   const raw = parseJson<{ covered?: unknown[]; misconception?: string | null; nailed?: string | null; gap?: string | null }>(text);
   const covered = kp.keyPoints.map((_, i) => raw.covered?.[i] === true);
   const hits = covered.filter(Boolean).length;

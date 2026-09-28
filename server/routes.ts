@@ -19,7 +19,7 @@ import { syncCompletions, moduleOfLesson, certificateName, formatCertDate, build
 import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken, sendPurchaseAdminAlert, sendSubscriptionCancelledAdminAlert, sendPasswordResetEmail, sendPackPurchaseEmail } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 import { askClaude, aiConfigured, AiError } from "./ai";
-import { explainMistake, gradeTeachBack, lessonTextById, CoachError, TEACH_BACK_XP, TEACH_BACK_MIN_CHARS, TEACH_BACK_MAX_CHARS } from "./coach";
+import { explainMistake, gradeTeachBack, lessonTextById, COACH_MODELS, CoachError, TEACH_BACK_XP, TEACH_BACK_MIN_CHARS, TEACH_BACK_MAX_CHARS } from "./coach";
 import { costTrackerStorage } from "./costTrackerStorage";
 import { reportCheckoutFailure } from "./stripeHealth";
 import { getSeoStats } from "./searchConsole";
@@ -2366,7 +2366,14 @@ export async function registerRoutes(
       lost: `You are a patient acquisition mentor. A student is confused about the following topic. First, name in one plain sentence what usually trips people up about it. Then re-explain the whole idea from scratch using a different, simpler approach than a textbook would — a step-by-step walkthrough, a side-by-side comparison, or a concrete everyday example. Keep it under 200 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${context}`,
     };
     try {
-      const { text } = await askClaude({ feature: `explain:${mode}`, prompt: prompts[mode], maxTokens: 700 });
+      // "How Do I Apply This?" is part of the Acqlerate Coach, so it runs on the
+      // Coach model; ELI5 and I'm Still Lost stay on fast, cheap Haiku.
+      const { text } = await askClaude({
+        feature: `explain:${mode}`,
+        prompt: prompts[mode],
+        maxTokens: 700,
+        ...(mode === "apply" ? { models: COACH_MODELS } : {}),
+      });
       return res.json({ explanation: text });
     } catch (err: any) {
       const status = err instanceof AiError && err.status === 503 ? 503 : 500;
