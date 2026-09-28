@@ -22,6 +22,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { TermTapProvider } from "@/components/AcronymText";
 import { KeyTermSheet, QuizOption, LessonFooter } from "@/components/mobile/LessonPieces";
 import { topPlanName } from "@shared/pricing";
+import { MistakeCoach } from "@/components/coach/MistakeCoach";
+import { TeachItBack } from "@/components/coach/TeachItBack";
 
 const SKILL_LEVELS: SkillLevel[] = ['novice', 'intermediate', 'advanced'];
 const LEVEL_LABELS: Record<SkillLevel, string> = {
@@ -162,6 +164,12 @@ interface LessonPageProps {
   // True for Annual and Lifetime (the top plans): unlocks "How Do I Apply This?"
   isLifetime?: boolean;
   activeCareer?: string | null;
+  // Acqlerate Coach Teach It Back: lessons this account has attempted (non-top
+  // plans get one free try in total), and a callback with the XP awarded.
+  teachBackCount?: number;
+  onTeachBack?: (xpAwarded: number) => void;
+  // Opens the in-app upgrade page (used by the Coach teasers and locked buttons).
+  onUpgrade?: () => void;
 }
 
 type Tab = 'lesson' | 'quiz' | 'terms';
@@ -625,7 +633,7 @@ function DragMatchQuestion({ question, submitted, onMatchChange, currentMatches 
 
 // ─── Main LessonPage ───────────────────────────────────────────────────────
 
-export default function LessonPage({ lessonId, progress, onBack, onComplete, onNextLesson, unlockedLevel = 'novice', onOpenAssessment, isLifetime = false, activeCareer }: LessonPageProps) {
+export default function LessonPage({ lessonId, progress, onBack, onComplete, onNextLesson, unlockedLevel = 'novice', onOpenAssessment, isLifetime = false, activeCareer, teachBackCount = 0, onTeachBack, onUpgrade }: LessonPageProps) {
   const isMobile = useIsMobile();
   const { openDocument } = useDocumentViewer();
   const trackData = getTrackData((activeCareer as CareerTrackId) ?? null);
@@ -846,7 +854,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
       const res = await fetch(`${API_BASE}/api/explain`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ lessonTitle: lesson.title, lessonContext, mode }),
+        body: JSON.stringify({ lessonTitle: lesson.title, lessonContext, mode, lessonId }),
         credentials: 'include',
         signal: controller.signal,
       });
@@ -935,6 +943,18 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     )} data-testid={`explanation-${qi}`}>
                       <strong className="font-semibold">{qzIsCorrect ? "✓ Correct!" : "✗ Incorrect."}</strong>{" "}
                       {question.explanation || question.options[question.correct]?.split('|||')[1] || ""}
+                    </div>
+                  )}
+                  {isWrong && (
+                    <div className="sm:ml-8">
+                      <MistakeCoach
+                        lessonId={lessonId}
+                        questionId={question.id}
+                        questionText={question.question}
+                        picked={quizAnswers[question.id] as number}
+                        hasTopPlan={isLifetime}
+                        onUpgrade={onUpgrade}
+                      />
                     </div>
                   )}
                 </div>
@@ -3202,6 +3222,16 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                           {q.explanation || q.options[q.correct]?.split('|||')[1] || ''}
                         </div>
                       )}
+                      {quizSubmitted && picked !== undefined && picked !== q.correct && (
+                        <MistakeCoach
+                          lessonId={lessonId}
+                          questionId={q.id}
+                          questionText={q.question}
+                          picked={picked as number}
+                          hasTopPlan={isLifetime}
+                          onUpgrade={onUpgrade}
+                        />
+                      )}
                     </div>
                   );
                 })}
@@ -3227,6 +3257,18 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                 >
                   Retake quiz
                 </button>
+              )}
+              {quizSubmitted && (
+                <div className="mt-6">
+                  <TeachItBack
+                  key={lessonId}
+                  lessonId={lessonId}
+                  hasTopPlan={isLifetime}
+                  teachBackCount={teachBackCount}
+                  onResult={onTeachBack}
+                  onUpgrade={onUpgrade}
+                />
+                </div>
               )}
             </div>
           )}
@@ -3487,7 +3529,9 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     <Lock className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
                     <div>
                       <div className="font-semibold text-xs text-muted-foreground">How Do I Apply This?</div>
-                      <div className="text-[11px] text-muted-foreground/70">{topPlanName()}: <a href="/#/upgrade" className="underline hover:text-primary">upgrade</a></div>
+                      <div className="text-[11px] text-muted-foreground/70">{topPlanName()}: {onUpgrade
+                        ? <button type="button" onClick={onUpgrade} className="underline hover:text-primary">upgrade</button>
+                        : <a href="/app#/upgrade" className="underline hover:text-primary">upgrade</a>}</div>
                     </div>
                   </div>
                 )}
@@ -3686,6 +3730,18 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             >
               Submit Quiz ({answeredCount}/{effectiveQuiz.length} answered)
             </Button>
+          )}
+
+          {/* Acqlerate Coach: Teach It Back, once the quiz is checked */}
+          {quizSubmitted && (
+            <TeachItBack
+                key={lessonId}
+                lessonId={lessonId}
+                hasTopPlan={isLifetime}
+                teachBackCount={teachBackCount}
+                onResult={onTeachBack}
+                onUpgrade={onUpgrade}
+              />
           )}
 
           {/* Mark complete / next */}

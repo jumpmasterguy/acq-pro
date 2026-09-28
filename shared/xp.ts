@@ -17,10 +17,11 @@ export function xpFromParts(
   quizScores: ScoreMap,
   challengeXp: number,
   briefsXp: number,
+  coachXp: number = 0,
 ): number {
   let xp = completedCount * XP_PER_LESSON;
   for (const score of Object.values(quizScores ?? {})) xp += Math.floor((Number(score) || 0) / 10);
-  return xp + (challengeXp || 0) + (briefsXp || 0);
+  return xp + (challengeXp || 0) + (briefsXp || 0) + (coachXp || 0);
 }
 
 /** Sums `xpEarned` across challengeHistory / briefsRead style entries. */
@@ -34,6 +35,8 @@ export interface XpSource {
   quizScores?: unknown;
   challengeHistory?: unknown;
   briefsRead?: unknown;
+  /** Acqlerate Coach Teach It Back results, [{lessonId, xpEarned, ...}]. */
+  teachBacks?: unknown;
 }
 
 /** A user's XP exactly as the app displays it, from their stored record. */
@@ -43,6 +46,7 @@ export function computeUserXp(u: XpSource): number {
     (u.quizScores as ScoreMap) ?? {},
     sumEarned(u.challengeHistory),
     sumEarned(u.briefsRead),
+    sumEarned(u.teachBacks),
   );
 }
 

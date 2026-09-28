@@ -19,6 +19,7 @@ import { syncCompletions, moduleOfLesson, certificateName, formatCertDate, build
 import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken, sendPurchaseAdminAlert, sendSubscriptionCancelledAdminAlert, sendPasswordResetEmail, sendPackPurchaseEmail } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 import { askClaude, aiConfigured, AiError } from "./ai";
+import { explainMistake, gradeTeachBack, lessonTextById, CoachError, TEACH_BACK_XP, TEACH_BACK_MIN_CHARS, TEACH_BACK_MAX_CHARS } from "./coach";
 import { costTrackerStorage } from "./costTrackerStorage";
 import { reportCheckoutFailure } from "./stripeHealth";
 import { getSeoStats } from "./searchConsole";
@@ -367,6 +368,13 @@ export async function registerRoutes(
       currentStreak: getDisplayStreak((user as any).currentStreak, (user as any).lastStreakDate),
       longestStreak: (user as any).longestStreak ?? 0,
       lastChallengeDate: (user as any).lastChallengeDate ?? null,
+      // XP earned outside lessons/quizzes (see toPassportUser in auth.ts). The
+      // app adds these to its total; without them a reload showed less XP
+      // than the leaderboards did.
+      dailyChallengeXP: (user as any).dailyChallengeXP ?? 0,
+      briefsXP: (user as any).briefsXP ?? 0,
+      coachXP: (user as any).coachXP ?? 0,
+      teachBackCount: (user as any).teachBackCount ?? 0,
     });
   });
 
@@ -1869,6 +1877,7 @@ export async function registerRoutes(
           id: m.id, firstName: m.firstName ?? null, lastName: m.lastName ?? null,
           completedLessons: m.completedLessons ?? [], quizScores: m.quizScores ?? {},
           challengeHistory: m.challengeHistory ?? [], briefsRead: m.briefsRead ?? [],
+          teachBacks: m.teachBacks ?? [],
           currentStreak: m.currentStreak ?? 0, lastStreakDate: m.lastStreakDate ?? null,
           xpWeekOf: m.xpWeekOf ?? null, xpWeekStartXp: m.xpWeekStartXp ?? 0,
           leaderboardHidden: m.leaderboardHidden ?? false,
@@ -1932,6 +1941,7 @@ export async function registerRoutes(
         );
       const challengeXp = sumXpEarned((currentUser as any).challengeHistory);
       const briefXp = sumXpEarned((currentUser as any).briefsRead);
+      const coachXp = sumXpEarned((currentUser as any).teachBacks);
 
       const newXp = Math.round(
         completedCount * 10
@@ -1939,6 +1949,7 @@ export async function registerRoutes(
         + skillUnlocks * 50
         + challengeXp
         + briefXp
+        + coachXp
       );
 
       const newMinutes = (currentUser.totalMinutesActive ?? 0) + Math.max(0, Math.round(minutesActive));
@@ -2320,7 +2331,7 @@ export async function registerRoutes(
   // Body: { lessonTitle: string, lessonContext: string, mode: 'eli5' | 'apply' | 'lost' }
   // Returns: { explanation: string }
   app.post("/api/explain", requireAuth as any, async (req: Request, res: Response) => {
-    const { lessonTitle, lessonContext, mode } = req.body;
+    const { lessonTitle, lessonContext, mode, lessonId } = req.body;
     if (!lessonTitle || !lessonContext || !mode) {
       return res.status(400).json({ message: "Missing required fields" });
     }
@@ -2348,12 +2359,17 @@ export async function registerRoutes(
 - The first time you use any acronym, spell it out in plain words right there in the sentence — do not assume the reader already knows FAR, RFP, CPIF, IDIQ, T&M, O&M, OEM, GPC, COTS, or any other acronym. If an acronym is not essential to the point you are making, skip it entirely and just describe the thing in plain words.
 - Do not stack multiple acronyms or citations back to back. One new term at a time, explained in the same breath you introduce it.
 - Use short sentences. Prefer concrete, everyday language over formal or academic phrasing.
-- Skip citing specific FAR/DFARS part numbers unless the student would actually need to go look something up — a plain description of the rule is almost always more useful than the citation.`;
+- Skip citing specific FAR/DFARS part numbers unless the student would actually need to go look something up — a plain description of the rule is almost always more useful than the citation.
+- Stick to what the lesson text below says. Don't add dollar figures, dates, thresholds, or regulation numbers that aren't in it.`;
+    // The full lesson when the app sends its id (grounds the answer in what
+    // Acqlerate actually teaches); older app versions send only a snippet.
+    const fullText = await lessonTextById(lessonId);
+    const context = fullText ? `(full lesson text)\n${fullText}` : lessonContext;
 
     const prompts: Record<string, string> = {
-      eli5: `You are a friendly teacher explaining DoD acquisitions to someone who just started learning, like they are a total beginner with zero background. Explain the following lesson topic in simple, plain English — use one real-world analogy a regular person would recognize (not a military or contracting analogy), keep it under 150 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
-      apply: `You are a seasoned DoD acquisition professional coaching a new Program Manager who is still learning the basics. For the following lesson topic, walk through 2-3 concrete, realistic moments where this knowledge would actually come up on the job — described as short stories or scenarios a new PM could picture themselves in, not a checklist of contract types and citations. Only mention a contract type, dollar figure, or regulation by name if it is essential to the scenario, and explain what it means in the same sentence. Keep it under 200 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
-      lost: `You are a patient acquisition mentor. A student is confused about the following topic. First, name in one plain sentence what usually trips people up about it. Then re-explain the whole idea from scratch using a different, simpler approach than a textbook would — a step-by-step walkthrough, a side-by-side comparison, or a concrete everyday example. Keep it under 200 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
+      eli5: `You are a friendly teacher explaining DoD acquisitions to someone who just started learning, like they are a total beginner with zero background. Explain the following lesson topic in simple, plain English — use one real-world analogy a regular person would recognize (not a military or contracting analogy), keep it under 150 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${context}`,
+      apply: `You are a seasoned DoD acquisition professional coaching a new Program Manager who is still learning the basics. For the following lesson topic, walk through 2-3 concrete, realistic moments where this knowledge would actually come up on the job — described as short stories or scenarios a new PM could picture themselves in, not a checklist of contract types and citations. Only mention a contract type, dollar figure, or regulation by name if it is essential to the scenario, and explain what it means in the same sentence. Keep it under 200 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${context}`,
+      lost: `You are a patient acquisition mentor. A student is confused about the following topic. First, name in one plain sentence what usually trips people up about it. Then re-explain the whole idea from scratch using a different, simpler approach than a textbook would — a step-by-step walkthrough, a side-by-side comparison, or a concrete everyday example. Keep it under 200 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${context}`,
     };
     try {
       const { text } = await askClaude({ feature: `explain:${mode}`, prompt: prompts[mode], maxTokens: 700 });
@@ -2447,6 +2463,70 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
     } catch (err: any) {
       const status = err instanceof AiError && err.status === 503 ? 503 : 500;
       return res.status(status).json({ message: `Failed: ${err?.message ?? 'unknown error'}` });
+    }
+  });
+
+  // ─── Acqlerate Coach (Annual / Lifetime) ─────────────────────────────────
+  // Explain My Mistake: Annual/Lifetime only; everyone else sees a teaser in
+  // the app. Teach It Back: Annual/Lifetime, plus ONE free try in total for
+  // everyone else. See server/coach.ts.
+  const coachFail = (res: Response, err: any) => {
+    if (err instanceof CoachError) return res.status(err.status).json({ message: err.message });
+    const status = err instanceof AiError && err.status === 503 ? 503 : 500;
+    console.error("[coach] failed:", err?.message ?? err);
+    return res.status(status).json({ message: "The Coach couldn't answer just now. Try again in a moment." });
+  };
+
+  // POST /api/coach/mistake
+  // Body: { lessonId, questionId, question (text), picked (option index) }
+  app.post("/api/coach/mistake", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isTopPlanStatus((req.user as any).subscriptionStatus)) {
+      return res.status(403).json({ message: `Explain My Mistake comes with ${topPlanName()}.`, locked: true });
+    }
+    const { lessonId, questionId, question, picked } = req.body ?? {};
+    if (typeof lessonId !== "string" || typeof questionId !== "string" || typeof question !== "string" || typeof picked !== "number") {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+    if (!aiConfigured()) return res.status(503).json({ message: "AI is not configured yet." });
+    try {
+      const { explanation, cached } = await explainMistake(lessonId, questionId, question, picked);
+      return res.json({ explanation, cached });
+    } catch (err: any) {
+      return coachFail(res, err);
+    }
+  });
+
+  // POST /api/coach/teach-back
+  // Body: { lessonId, answer }. The answer is graded and discarded; only the
+  // result is stored (privacy policy: we keep your score, not your words).
+  app.post("/api/coach/teach-back", requireAuth as any, async (req: Request, res: Response) => {
+    const userId = (req.user as any).id;
+    const { lessonId, answer } = req.body ?? {};
+    if (typeof lessonId !== "string" || typeof answer !== "string") {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+    const text = answer.trim();
+    if (text.length < TEACH_BACK_MIN_CHARS) {
+      return res.status(400).json({ message: "Give it at least a couple of sentences." });
+    }
+    if (text.length > TEACH_BACK_MAX_CHARS) {
+      return res.status(400).json({ message: "Keep it short: 2 to 4 sentences is the point." });
+    }
+    const user = await storage.getUser(userId);
+    if (!user) return res.status(401).json({ message: "Authentication required" });
+    const topPlan = isTopPlanStatus((user as any).subscriptionStatus);
+    const tries = (((user as any).teachBacks as any[]) ?? []).length;
+    if (!topPlan && tries > 0) {
+      return res.status(403).json({ message: `You've used your free Teach It Back. It's unlimited with ${topPlanName()}.`, locked: true });
+    }
+    if (!aiConfigured()) return res.status(503).json({ message: "AI is not configured yet." });
+    try {
+      const result = await gradeTeachBack(lessonId, text);
+      const covered = result.keyPoints.filter(k => k.covered).length;
+      const saved = await storage.recordTeachBack(userId, lessonId, covered, result.keyPoints.length, result.verdict === "pass", TEACH_BACK_XP);
+      return res.json({ ...result, xpAwarded: saved?.xpAwarded ?? 0, freeTry: !topPlan });
+    } catch (err: any) {
+      return coachFail(res, err);
     }
   });
 

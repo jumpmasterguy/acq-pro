@@ -1158,7 +1158,7 @@ export async function sendEmail4New(to: string, username: string): Promise<void>
     <p>A DAU resident course runs <strong>$1,500 or more</strong> once you factor in travel and time off. Management Concepts charges <strong>$2,000+ per course.</strong> Graduate School USA is in the same range.</p>
     <p>Acqlerate is <strong>${isNewPricing() ? "$149 a year" : "$5.99/month"}.</strong></p>
     <div class="highlight-box">
-      <p>For that, you unlock all ${COURSE_TOTALS.modules} modules (${COURSE_TOTALS.lessons} lessons), the AI Study Assistant, CLP certificates for every module, and PDU credit for PMP holders.</p>
+      <p>For that, you unlock all ${COURSE_TOTALS.modules} modules (${COURSE_TOTALS.lessons} lessons), ${isNewPricing() ? "the Acqlerate Coach (it grades how well you can explain each lesson, like a sharp mentor would), " : ""}CLP certificates for every module, and PDU credit for PMP holders.</p>
       <p style="margin-top:10px">${isNewPricing()
         ? "That's $12.42 a month, less than a single day of government-sponsored classroom training, and it includes the downloadable Lesson Books. Or go month to month at <strong>$14.99</strong>."
         : "If you'd rather not pay monthly, the <strong>lifetime option is $99</strong> — less than a single day of government-sponsored classroom training."}</p>
@@ -1213,7 +1213,7 @@ export async function sendTrialEndingEmail(to: string, username: string): Promis
   const body = `
     <div class="greeting">Hey ${username} —</div>
     <p>Your full-access trial wraps up today.</p>
-    <p>Here's exactly what that means: you keep permanent free access to <strong>Foundations (all 10 lessons)</strong> and the first lesson of every other module. Everything else — the rest of Finance, Contracts, Data & Analytics, Capture & BD, Operations, plus the full AI Study Assistant — goes back behind the paywall unless you upgrade.</p>
+    <p>Here's exactly what that means: you keep permanent free access to <strong>Foundations (all 10 lessons)</strong> and the first lesson of every other module. Everything else (the rest of Finance, Contracts, Data & Analytics, Capture & BD, Operations, plus your higher daily AI limit) goes back behind the paywall unless you upgrade.</p>
     <div class="highlight-box">
       <p>${isNewPricing()
         ? "If the last few weeks were useful, staying in is <strong>$14.99/month</strong>, or <strong>$149 for the year</strong> ($12.42 a month, Lesson Book downloads included)."
@@ -1366,7 +1366,7 @@ export async function sendReferralRewardEmail(
     : {
         subject: "You earned a year of Acqlerate Pro",
         headline: "You just earned a year of Pro.",
-        body: `Your account is already upgraded: every module, every lesson, the audio Debriefs, and the AI study assistant${untilText ? `, through ${untilText}` : " for the next year"}. No card needed.`,
+        body: `Your account is already upgraded: every module, every lesson, and the audio Debriefs${untilText ? `, through ${untilText}` : " for the next year"}. No card needed.`,
       };
   await resend.emails.send({
     from: 'Lucas Cruz | Acqlerate <hello@acqlerate.com>',

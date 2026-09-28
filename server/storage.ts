@@ -114,6 +114,12 @@ export interface IStorage {
   // awarded:false and writes nothing, so XP cannot be farmed by reopening it.
   completeBrief(userId: string, briefId: string, score: number, xpEarned: number): Promise<{ user: User; awarded: boolean; briefsRead: string[] } | undefined>;
   getBriefsRead(userId: string): Promise<string[]>;
+  // Acqlerate Coach cache: AI answers that are identical for everyone.
+  getCoachCache(key: string): Promise<unknown | null>;
+  putCoachCache(key: string, kind: string, lessonId: string | null, payload: unknown, model: string | null): Promise<void>;
+  // Records one Teach It Back attempt (the result, never the learner's text).
+  // Awards XP once per lesson, the first time it's passed.
+  recordTeachBack(userId: string, lessonId: string, covered: number, total: number, passed: boolean, xpForPass: number): Promise<{ user: User; xpAwarded: number } | undefined>;
   checkAndConsumeAiCall(userId: string): Promise<{ allowed: boolean; remaining: number | null; limit: number | null }>;
   /** The user holding this certificate ID, for the public verify page. */
   findUserByCertId(certId: string): Promise<User | undefined>;
@@ -138,6 +144,45 @@ export interface IStorage {
 }
 
 // ─── Postgres Storage (production) ─────────────────────────────────────────
+
+export interface TeachBackEntry {
+  lessonId: string;
+  attempts: number;
+  passed: boolean;
+  bestCovered: number;
+  total: number;
+  xpEarned: number;
+  firstPassedAt: string | null;
+  lastAt: string;
+}
+
+/** Shared by both storages: fold one attempt into the user's teach_backs list. */
+function nextTeachBacks(
+  current: unknown,
+  lessonId: string,
+  covered: number,
+  total: number,
+  passed: boolean,
+  xpForPass: number,
+): { entries: TeachBackEntry[]; xpAwarded: number } {
+  const entries = (Array.isArray(current) ? [...current] : []) as TeachBackEntry[];
+  const today = new Date().toISOString().slice(0, 10);
+  const i = entries.findIndex(e => e?.lessonId === lessonId);
+  const prev = i >= 0 ? entries[i] : null;
+  const xpAwarded = passed && !(prev?.passed) ? xpForPass : 0;
+  const next: TeachBackEntry = {
+    lessonId,
+    attempts: (prev?.attempts ?? 0) + 1,
+    passed: Boolean(prev?.passed) || passed,
+    bestCovered: Math.max(prev?.bestCovered ?? 0, covered),
+    total,
+    xpEarned: (prev?.xpEarned ?? 0) + xpAwarded,
+    firstPassedAt: prev?.firstPassedAt ?? (passed ? today : null),
+    lastAt: today,
+  };
+  if (i >= 0) entries[i] = next; else entries.push(next);
+  return { entries, xpAwarded };
+}
 
 export class DrizzleStorage implements IStorage {
   private db: ReturnType<typeof drizzle>;
@@ -440,6 +485,7 @@ export class DrizzleStorage implements IStorage {
         quizScores: users.quizScores,
         challengeHistory: users.challengeHistory,
         briefsRead: users.briefsRead,
+        teachBacks: users.teachBacks,
         currentStreak: users.currentStreak,
         lastStreakDate: users.lastStreakDate,
         xpWeekOf: users.xpWeekOf,
@@ -727,6 +773,52 @@ export class DrizzleStorage implements IStorage {
     await this.updateUserStreak(userId);
     const updatedUser = await this.getUser(userId);
     return { user: updatedUser ?? result[0], awarded: true, briefsRead: entries.map(e => e.id) };
+  }
+
+  private coachTableReady = false;
+  private async ensureCoachTable(): Promise<void> {
+    if (this.coachTableReady) return;
+    await this.db.execute(sql`CREATE TABLE IF NOT EXISTS coach_cache (
+      key TEXT PRIMARY KEY, kind TEXT NOT NULL, lesson_id TEXT, payload JSONB NOT NULL,
+      model TEXT, created_at TEXT NOT NULL DEFAULT now()::text)`);
+    this.coachTableReady = true;
+  }
+
+  async getCoachCache(key: string): Promise<unknown | null> {
+    await this.ensureCoachTable();
+    const res: any = await this.db.execute(sql`SELECT payload FROM coach_cache WHERE key = ${key} LIMIT 1`);
+    const rows = Array.isArray(res) ? res : res?.rows;
+    return rows?.[0]?.payload ?? null;
+  }
+
+  async putCoachCache(key: string, kind: string, lessonId: string | null, payload: unknown, model: string | null): Promise<void> {
+    await this.ensureCoachTable();
+    await this.db.execute(sql`INSERT INTO coach_cache (key, kind, lesson_id, payload, model)
+      VALUES (${key}, ${kind}, ${lessonId}, ${JSON.stringify(payload)}::jsonb, ${model})
+      ON CONFLICT (key) DO NOTHING`);
+  }
+
+  async recordTeachBack(
+    userId: string,
+    lessonId: string,
+    covered: number,
+    total: number,
+    passed: boolean,
+    xpForPass: number,
+  ): Promise<{ user: User; xpAwarded: number } | undefined> {
+    const user = await this.getUser(userId);
+    if (!user) return undefined;
+    const { entries, xpAwarded } = nextTeachBacks((user as any).teachBacks, lessonId, covered, total, passed, xpForPass);
+    const weekRoll = xpAwarded > 0 ? weekRollPatch(user as any) : {};
+    const result = await this.db
+      .update(users)
+      .set({ teachBacks: entries, xp: (user.xp ?? 0) + xpAwarded, ...weekRoll } as any)
+      .where(eq(users.id, userId))
+      .returning();
+    // Teaching a lesson back is real activity, same as a brief.
+    if (xpAwarded > 0) await this.updateUserStreak(userId);
+    const updatedUser = await this.getUser(userId);
+    return { user: updatedUser ?? result[0], xpAwarded };
   }
 
   async saveUserProfile(userId: string, profile: Record<string, any>): Promise<User | undefined> {
@@ -1089,6 +1181,7 @@ export class MemStorage implements IStorage {
       quizScores: u.quizScores ?? {},
       challengeHistory: u.challengeHistory ?? [],
       briefsRead: u.briefsRead ?? [],
+      teachBacks: u.teachBacks ?? [],
       currentStreak: u.currentStreak ?? 0,
       lastStreakDate: u.lastStreakDate ?? null,
       xpWeekOf: u.xpWeekOf ?? null,
@@ -1387,6 +1480,20 @@ export class MemStorage implements IStorage {
   }
 
   private unsubscribed = new Set<string>();
+  private coachCache = new Map<string, unknown>();
+  async getCoachCache(key: string): Promise<unknown | null> { return this.coachCache.get(key) ?? null; }
+  async putCoachCache(key: string, _kind: string, _lessonId: string | null, payload: unknown): Promise<void> {
+    if (!this.coachCache.has(key)) this.coachCache.set(key, payload);
+  }
+  async recordTeachBack(userId: string, lessonId: string, covered: number, total: number, passed: boolean, xpForPass: number): Promise<{ user: User; xpAwarded: number } | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const { entries, xpAwarded } = nextTeachBacks((user as any).teachBacks, lessonId, covered, total, passed, xpForPass);
+    const weekRoll = xpAwarded > 0 ? weekRollPatch(user as any) : {};
+    const updated = { ...user, teachBacks: entries, xp: (user.xp ?? 0) + xpAwarded, ...weekRoll } as User;
+    this.users.set(userId, updated);
+    return { user: updated, xpAwarded };
+  }
   async isUnsubscribed(email: string): Promise<boolean> { return this.unsubscribed.has(email.trim().toLowerCase()); }
   async setUnsubscribed(email: string): Promise<void> { this.unsubscribed.add(email.trim().toLowerCase()); }
   async getUnsubscribedSet(): Promise<Set<string>> { return new Set(this.unsubscribed); }

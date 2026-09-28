@@ -11,7 +11,8 @@ export interface UserProgress {
   // signup can't grab everything and walk away with it for free.
   isActuallyPaid: boolean;
   // Annual or Lifetime (shared/access.ts isTopPlanStatus): Lesson Book PDF
-  // downloads, "How Do I Apply This?", unlimited AI, the CLP ledger.
+  // downloads, the Acqlerate Coach (Teach It Back, Explain My Mistake,
+  // "How Do I Apply This?"), unlimited AI, the CLP ledger.
   // Monthly is paid but not a top plan.
   hasTopPlan: boolean;
   xp: number;
@@ -32,12 +33,13 @@ export const calculateXP = (
   completedLessons: Set<string>,
   quizScores: Record<string, number>,
   dailyChallengeXP: number = 0,
-  briefsXP: number = 0
+  briefsXP: number = 0,
+  coachXP: number = 0
 ) =>
   // Shared with the server so the leaderboards and the learner's own screen
   // can never disagree. Daily Challenge and brief XP are earned outside the
   // lesson/quiz formula, so they are passed in as totals.
-  xpFromParts(completedLessons.size, quizScores, dailyChallengeXP, briefsXP);
+  xpFromParts(completedLessons.size, quizScores, dailyChallengeXP, briefsXP, coachXP);
 
 /**
  * Career ladders. Government learners climb the GS scale to SES; people on

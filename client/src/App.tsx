@@ -371,6 +371,11 @@ function AppContent() {
   const [streak, setStreak] = useState({ currentStreak: 0, longestStreak: 0 });
   // XP from briefs completed since this session's user object was loaded.
   const [sessionBriefXp, setSessionBriefXp] = useState(0);
+  // Acqlerate Coach, same optimistic pattern as briefs: XP from a Teach It
+  // Back passed this session, and how many lessons were attempted this session
+  // (non-Annual plans get one free try in total).
+  const [sessionCoachXp, setSessionCoachXp] = useState(0);
+  const [sessionTeachBacks, setSessionTeachBacks] = useState(0);
 
   // Derived progress from server auth
   const isPremium =
@@ -403,6 +408,10 @@ function AppContent() {
   // value already includes it.
   const briefsXP =
     authState.status === 'authenticated' ? authState.user.briefsXP ?? 0 : 0;
+  const coachXP =
+    authState.status === 'authenticated' ? authState.user.coachXP ?? 0 : 0;
+  const teachBackCount =
+    (authState.status === 'authenticated' ? authState.user.teachBackCount ?? 0 : 0) + sessionTeachBacks;
 
   const progress = {
     completedLessons,
@@ -411,7 +420,7 @@ function AppContent() {
     isPremium,
     isActuallyPaid,
     hasTopPlan,
-    xp: calculateXP(completedLessons, quizScores, dailyChallengeXP, briefsXP + sessionBriefXp),
+    xp: calculateXP(completedLessons, quizScores, dailyChallengeXP, briefsXP + sessionBriefXp, coachXP + sessionCoachXp),
   };
 
   // Streak — fetched here rather than only in Dashboard. The mobile top bar
@@ -952,6 +961,12 @@ function AppContent() {
                 onOpenAssessment={parentMod ? () => setAssessmentModuleId(parentMod.id) : undefined}
                 isLifetime={hasTopPlan}
                 activeCareer={(view as any).activeCareer ?? null}
+                teachBackCount={teachBackCount}
+                onTeachBack={(xpAwarded) => {
+                  setSessionTeachBacks(n => n + 1);
+                  if (xpAwarded > 0) setSessionCoachXp(x => x + xpAwarded);
+                }}
+                onUpgrade={() => setView({ type: 'upgrade' })}
               />
             );
           })()}

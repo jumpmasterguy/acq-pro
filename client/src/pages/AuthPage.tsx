@@ -89,6 +89,10 @@ export interface AuthUser {
   dailyChallengeXP?: number;
   /** XP earned from Acquisition This Week briefs (server-tracked, same deal). */
   briefsXP?: number;
+  /** XP from Acqlerate Coach Teach It Back passes (+25 once per lesson). */
+  coachXP?: number;
+  /** Lessons with a Teach It Back attempt. Non-Annual plans get one free try. */
+  teachBackCount?: number;
 }
 
 interface AuthPageProps {

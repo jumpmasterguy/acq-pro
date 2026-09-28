@@ -58,6 +58,11 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
     "Key terms & glossary",
   ];
 
+  // The headline Annual/Lifetime perk. Listed first so it's the first thing
+  // people read on the top plan.
+  const COACH_FEATURE =
+    "\u2605 Acqlerate Coach: Teach It Back grades how well you can explain each lesson, Explain My Mistake shows why a wrong answer was so tempting, and How Do I Apply This? puts it on the job";
+
   const monthlyFeatures = [
     `All ${modules.length} modules, every domain covered`,
     `${totalLessons} lessons with real DoD content`,
@@ -66,7 +71,7 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
     "Career roadmap for gov & contractor tracks",
     "\"The Debrief\": audio lessons for every module (stream anytime)",
     "A certificate for every module you finish",
-    "AI Study Assistant (limited)",
+    "AI explain-it-simpler buttons (30 a day)",
     "Cancel anytime",
   ];
 
@@ -74,10 +79,11 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
   const monthlyExcluded = [
     "Lesson Book PDF downloads",
     "CLP ledger and portal export",
-    "\"How Do I Apply This?\" AI",
+    "Acqlerate Coach: Teach It Back, Explain My Mistake, How Do I Apply This?",
   ];
 
   const annualFeatures = [
+    COACH_FEATURE,
     "\u2605 Lesson Book PDFs: download every module to keep, print, and mark up",
     "\u2605 CLP ledger: every certificate in one place, your 2-year cycle tracked, one-tap copy for CAPPMIS, eDACM, and FAITAS, and a spreadsheet export",
     `All ${modules.length} modules, every domain covered`,
@@ -87,12 +93,13 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
     "Formulas, tables & quick-reference content",
     "Career roadmap for gov & contractor tracks",
     "\"The Debrief\": audio lessons for every module (stream anytime)",
-    "AI Study Assistant (unlimited), including \"How Do I Apply This?\"",
+    "Unlimited AI explain-it-simpler buttons",
     "Every new lesson and module while you're subscribed",
     "Priority email support",
   ];
 
   const lifetimeFeatures = [
+    COACH_FEATURE,
     "\u2605 Lesson Book PDFs: download every module to keep, print, and mark up",
     "\u2605 CLP ledger: every certificate in one place, your 2-year cycle tracked, one-tap copy for CAPPMIS, eDACM, and FAITAS, and a spreadsheet export",
     `All ${modules.length} modules, every domain covered`,
@@ -103,7 +110,7 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
     "Career roadmap for gov & contractor tracks",
     "Salary benchmarks & certification guidance",
     "\"The Debrief\": audio lessons for every module (stream anytime)",
-    "AI Study Assistant (unlimited), including \"How Do I Apply This?\"",
+    "Unlimited AI explain-it-simpler buttons",
     "Lifetime content updates as regulations change",
     "Priority email support",
   ];

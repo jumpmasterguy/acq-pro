@@ -28,6 +28,7 @@ export interface LeaderboardRow {
   quizScores: unknown;
   challengeHistory: unknown;
   briefsRead: unknown;
+  teachBacks: unknown;
   currentStreak: number | null;
   lastStreakDate: string | null;
   xpWeekOf: string | null;

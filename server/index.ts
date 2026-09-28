@@ -165,6 +165,7 @@ app.use("/api/leads", leadsLimiter);
 app.use("/api/expand-item", aiLimiter);
 app.use("/api/explain", aiLimiter);
 app.use("/api/far-translate", aiLimiter);
+app.use("/api/coach", aiLimiter);
 
 app.use(
   express.json({
@@ -264,6 +265,8 @@ app.use((req, res, next) => {
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS challenge_history JSONB NOT NULL DEFAULT '[]'::JSONB`,
         // Acquisition This Week brief completions: [{id, date, score, xpEarned}]
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS briefs_read JSONB NOT NULL DEFAULT '[]'::JSONB`,
+        // Acqlerate Coach "Teach It Back" results (see shared/schema.ts)
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS teach_backs JSONB NOT NULL DEFAULT '[]'::JSONB`,
         // AI Study Assistant usage tracking
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS ai_calls_today INTEGER NOT NULL DEFAULT 0`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS ai_calls_date TEXT`,
@@ -324,6 +327,21 @@ app.use((req, res, next) => {
             token_hash TEXT NOT NULL UNIQUE,
             expires_at TEXT NOT NULL,
             used_at TEXT,
+            created_at TEXT NOT NULL DEFAULT now()::text
+          )
+        `);
+      } catch (e: any) { /* table already exists */ }
+      // Acqlerate Coach: AI answers that are the same for everyone (a given
+      // wrong quiz pick, a lesson's key points), written once and reused.
+      // server/coach.ts; storage also creates it lazily if this ever misses.
+      try {
+        await schemaPool.query(`
+          CREATE TABLE IF NOT EXISTS coach_cache (
+            key TEXT PRIMARY KEY,
+            kind TEXT NOT NULL,
+            lesson_id TEXT,
+            payload JSONB NOT NULL,
+            model TEXT,
             created_at TEXT NOT NULL DEFAULT now()::text
           )
         `);

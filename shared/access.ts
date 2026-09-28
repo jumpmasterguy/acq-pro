@@ -17,7 +17,8 @@ export function isPaidStatus(status: string | null | undefined): boolean {
 
 /**
  * Annual and Lifetime are the "top" plans: Lesson Book PDF downloads,
- * unlimited AI Study Assistant and the "How Do I Apply This?" AI. Monthly
+ * unlimited AI and the Acqlerate Coach (Teach It Back, Explain My Mistake,
+ * "How Do I Apply This?"). Monthly
  * (at any price) streams everything but does not include downloads.
  */
 export function isTopPlanStatus(status: string | null | undefined): boolean {

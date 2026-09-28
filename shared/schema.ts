@@ -72,6 +72,11 @@ export const users = pgTable("users", {
   // check for: [{id, date, score, xpEarned}]. Keyed by brief id rather than
   // date, because briefs are weekly and a user can work through the archive.
   briefsRead: jsonb("briefs_read").notNull().default(sql`'[]'::jsonb`),
+  // Acqlerate Coach "Teach It Back" — one entry per lesson attempted (never
+  // the learner's own text, only the result): [{lessonId, attempts, passed,
+  // bestCovered, total, xpEarned, firstPassedAt, lastAt}]. xpEarned is 25 once
+  // the lesson is passed, 0 before; summed into XP like briefsRead.
+  teachBacks: jsonb("teach_backs").notNull().default(sql`'[]'::jsonb`),
   // "The Debrief" audio listens — keyed by module id, not a growing log,
   // since all we need per module is "has this user ever played it" (for
   // unique-listener counts) and "how many times" (for a play counter).
