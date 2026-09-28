@@ -37,12 +37,13 @@ const LEVEL_COLORS: Record<SkillLevel, string> = {
 
 // ─── Expandable List Item Component ─────────────────────────────────────────
 const BADGE_COLORS: Record<string, string> = {
-  blue:   'bg-blue-500/10 text-blue-400 border border-blue-400/30',
-  amber:  'bg-amber-500/10 text-amber-400 border border-amber-400/30',
-  green:  'bg-emerald-500/10 text-emerald-400 border border-emerald-400/30',
-  red:    'bg-red-500/10 text-red-400 border border-red-400/30',
-  purple: 'bg-purple-500/10 text-purple-400 border border-purple-400/30',
-  gray:   'bg-muted/50 text-muted-foreground border border-border',
+  // -700 text on a light tint in light mode, -300 in dark: both pass contrast.
+  blue:   'bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/30',
+  amber:  'bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/35',
+  green:  'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30',
+  red:    'bg-red-500/10 text-red-700 dark:text-red-300 border border-red-500/30',
+  purple: 'bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/30',
+  gray:   'bg-muted/50 text-foreground/75 border border-border',
 };
 
 function ExpandableListItemCard({ item }: { item: ExpandableItem }) {
@@ -76,10 +77,10 @@ function ExpandableListItemCard({ item }: { item: ExpandableItem }) {
             )}
           </div>
           {item.sublabel && (
-            <p className="text-xs text-muted-foreground mt-0.5">{item.sublabel}</p>
+            <p className="text-[13px] text-foreground/75 mt-0.5">{item.sublabel}</p>
           )}
           {item.summary && !open && (
-            <p className="text-xs text-muted-foreground mt-1 leading-relaxed line-clamp-2">{item.summary}</p>
+            <p className="text-[13px] text-foreground/75 mt-1 leading-relaxed line-clamp-2">{item.summary}</p>
           )}
         </div>
       </button>
@@ -104,7 +105,7 @@ function ExpandableListItemCard({ item }: { item: ExpandableItem }) {
                     const label = dashIdx > 0 && dashIdx <= 45 ? bulletText.slice(0, dashIdx) : null;
                     const rest = label ? bulletText.slice(dashIdx) : null;
                     return (
-                      <li key={ii} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <li key={ii} className="flex items-start gap-2 text-sm text-foreground/85">
                         <ChevronRight className="w-3.5 h-3.5 text-primary flex-shrink-0 mt-0.5" />
                         <span>
                           {label
@@ -133,7 +134,7 @@ function ExpandableListItemCard({ item }: { item: ExpandableItem }) {
               {(section.type === 'text' || !section.type) && section.items && (
                 <ul className="space-y-1.5 mt-2">
                   {section.items.map((it, ii) => (
-                    <li key={ii} className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <li key={ii} className="flex items-start gap-2 text-sm text-foreground/85">
                       <ChevronRight className="w-3.5 h-3.5 text-primary flex-shrink-0 mt-0.5" />
                       {it}
                     </li>
@@ -2720,7 +2721,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                   {block.heading && (
                     <div className="px-1 mb-1">
                       <h3 className="font-semibold text-sm text-foreground">{block.heading}</h3>
-                      {block.body && <p className="text-xs text-muted-foreground mt-0.5">{block.body}</p>}
+                      {block.body && <p className="text-[13px] text-foreground/75 mt-0.5">{block.body}</p>}
                     </div>
                   )}
                   {block.expandableItems?.map((item, ei) => (

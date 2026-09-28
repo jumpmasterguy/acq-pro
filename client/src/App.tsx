@@ -81,7 +81,7 @@ function PWAInstallLink() {
       onClick={() => {
         try { window.dispatchEvent(new Event('pwa-install-request')); } catch {}
       }}
-      className="text-[10px] text-primary/60 hover:text-primary transition-colors"
+      className="text-[12px] font-medium text-primary hover:underline transition-colors"
     >
       Install App
     </button>
@@ -1294,14 +1294,14 @@ function AppContent() {
             <div className="flex items-center gap-3 px-3 pb-1">
               <button
                 onClick={() => { setView({ type: 'admin' }); setSidebarOpen(false); }}
-                className="flex items-center gap-1.5 text-[12px] text-sidebar-foreground/40 hover:text-sidebar-foreground transition-colors"
+                className="flex items-center gap-1.5 text-[12px] font-medium text-sidebar-foreground/90 hover:text-sidebar-foreground transition-colors"
                 data-testid="nav-admin"
               >
                 <ShieldCheck className="w-3.5 h-3.5" /> Admin
               </button>
               <button
                 onClick={() => { setView({ type: 'analytics' }); setSidebarOpen(false); }}
-                className="flex items-center gap-1.5 text-[12px] text-sidebar-foreground/40 hover:text-sidebar-foreground transition-colors"
+                className="flex items-center gap-1.5 text-[12px] font-medium text-sidebar-foreground/90 hover:text-sidebar-foreground transition-colors"
                 data-testid="nav-analytics"
               >
                 <BarChart3 className="w-3.5 h-3.5" /> Analytics
@@ -1318,24 +1318,24 @@ function AppContent() {
             </div>
             <div className="min-w-0 flex-1">
               <div className="text-sm font-semibold text-sidebar-foreground truncate">{user.username}</div>
-              <div className="text-[12px] text-sidebar-foreground/45 truncate">
+              <div className="text-[12px] text-sidebar-foreground/80 truncate">
                 {isPremium ? 'Pro' : 'Free'}{isAdmin ? ' · Admin' : ''}
               </div>
             </div>
           </button>
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
             data-testid="nav-signout"
           >
             <LogOut className="w-4 h-4" />
             Sign Out
           </button>
           <div className="flex gap-3 px-3 pt-2 pb-1">
-            <a href="/privacy" className="text-[12px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Privacy</a>
-            <a href="/terms" className="text-[12px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Terms</a>
+            <a href="/privacy" className="text-[12px] text-sidebar-foreground/75 hover:text-sidebar-foreground transition-colors">Privacy</a>
+            <a href="/terms" className="text-[12px] text-sidebar-foreground/75 hover:text-sidebar-foreground transition-colors">Terms</a>
             {/* public/consent.js listens for clicks on [data-acq-cookie-settings] */}
-            <button type="button" data-acq-cookie-settings className="text-[12px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Cookies</button>
+            <button type="button" data-acq-cookie-settings className="text-[12px] text-sidebar-foreground/75 hover:text-sidebar-foreground transition-colors">Cookies</button>
             <PWAInstallLink />
           </div>
         </div>
