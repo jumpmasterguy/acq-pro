@@ -2,7 +2,7 @@
  * Continuous Learning Points per module — the single source of truth.
  *
  * These numbers are printed on the Certificate of Completion
- * (GET /api/certificate/:moduleId → server/certificate.py), so anywhere the
+ * (GET /api/certificate/:moduleId → server/certificate.ts), so anywhere the
  * app *shows* a CLP figure has to agree with what the certificate will say.
  * They used to live only in server/routes.ts, which meant the client had no
  * way to display them at all; the mobile Modules list and Module header both

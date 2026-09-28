@@ -28,6 +28,7 @@ import { applySignupReferral, cleanReferralCode, grantProYear } from "./referral
 import { dailyChallengeQuestionBank } from "./dailyChallengeQuestions";
 import { buildLeaderboards, type LeaderboardRow } from "./leaderboard";
 import { weekRollPatch } from "@shared/xp";
+import { renderCertificate } from "./certificate";
 import {
   summarizeProject, aggregateSummaries, createProjectSchema, createFundingModSchema,
   createCostEntrySchema, updateRatesSchema, createTaskOrderSchema, setProjectTaskOrderSchema,
@@ -2942,35 +2943,21 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       return res.status(403).json({ message: 'Finish every lesson in this module to earn its certificate.' });
     }
 
-    const { execFile } = await import('child_process');
-    const { promisify } = await import('util');
-    const path = await import('path');
-    const execFileAsync = promisify(execFile);
-
-    const payload = JSON.stringify({
-      // Never an email address: Google sign-ups have username = email.
-      name: certificateName(fresh.user),
-      module_id: moduleId,
-      module_title: mod.title,
-      clps: mod.clps,
-      date: formatCertDate(record.completedAt),
-      email: '',
-      cert_id: record.certId,
-      func_areas: MODULE_FUNCTIONAL_AREAS[moduleId] ?? [],
-      verify_url: `acqlerate.com/verify/${record.certId}`,
-    });
-
     try {
-      const scriptPath = path.join(process.cwd(), 'server', 'certificate.py');
-      const { stdout } = await execFileAsync('python3', [scriptPath, payload], {
-        encoding: 'buffer',
-        maxBuffer: 5 * 1024 * 1024,
+      const pdf = await renderCertificate({
+        // Never an email address: Google sign-ups have username = email.
+        name: certificateName(fresh.user),
+        moduleTitle: mod.title,
+        clps: mod.clps,
+        date: formatCertDate(record.completedAt),
+        certId: record.certId,
+        functionalAreas: MODULE_FUNCTIONAL_AREAS[moduleId] ?? [],
       });
 
       const safeName = mod.title.replace(/[^a-z0-9]+/gi, '-').toLowerCase();
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', `attachment; filename="acqlerate-certificate-${safeName}.pdf"`);
-      res.send(stdout);
+      res.send(pdf);
     } catch (err: any) {
       console.error('[certificate] PDF generation failed:', err.message);
       return res.status(500).json({ message: 'Certificate generation failed' });

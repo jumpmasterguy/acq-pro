@@ -40,7 +40,9 @@ await build({
   external: [
     "better-sqlite3","passport","passport-google-oauth20","passport-local",
     "express-session","connect-pg-simple","stripe","resend","nodemailer",
-    "drizzle-orm","pg","@neondatabase/serverless","ws","bufferutil","utf-8-validate"
+    "drizzle-orm","pg","@neondatabase/serverless","ws","bufferutil","utf-8-validate",
+    // pdfkit reads its own data files from its package folder at run time.
+    "pdfkit"
   ],
   logLevel: "info",
 });
