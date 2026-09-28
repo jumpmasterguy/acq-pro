@@ -31,6 +31,74 @@ export function unsubscribeUrl(email: string): string {
   return `${APP_URL}/api/unsubscribe?email=${encodeURIComponent(clean)}&token=${unsubscribeToken(clean)}`;
 }
 
+// ─── Easter eggs ─────────────────────────────────────────────────────────────
+// Every email ends with one small joke, and it changes from email to email.
+// The pick is day-based, offset per recipient, so one person's drip emails
+// (sent on different days) never repeat within 40 days, while two
+// people opening the same day's email see different eggs. Numbered so
+// readers can "collect" them. Rules: dry insider humor, workplace-safe, no
+// em dashes, no invented facts, nothing about CORs asking for work outside
+// the SOW (overdone). Add new ones at the END so existing numbers hold.
+export const EASTER_EGGS: string[] = [
+  "Estimated reading time of this email: 2 minutes. Estimated time to route it for signature: 6 to 8 weeks.",
+  "Somewhere right now, a program office is renaming \"Final_v7_FINAL.pptx\" to \"Final_v8_USE_THIS_ONE.pptx.\"",
+  "The color of money is not a paint swatch. We checked. Twice.",
+  "Every program has three schedules: the one in the briefing, the one in the IMS, and the real one.",
+  "\"We'll take that for action\" is the government's version of \"let me think about it.\"",
+  "Fourth-quarter spending is like a gym in January. Suddenly everyone has a plan.",
+  "Continuing resolution forecast: 80% chance of \"we'll know more next week.\"",
+  "This email contains zero slide decks. You're welcome.",
+  "You read all the way down here. That's worth 0 CLPs, but it is worth our respect.",
+  "Obligated vs. expended: one is booking the flight, the other is actually boarding it.",
+  "A milestone decision review is just a meeting with higher stakes and better snacks.",
+  "The fastest-moving thing in any headquarters is the rumor about the next reorg.",
+  "Our spell-checker still underlines \"DFARS.\" Honestly, same.",
+  "If your CPI has been exactly 1.00 for six straight months, someone's math is doing yoga.",
+  "The J-Book is not a novel. It does have more plot twists.",
+  "A risk register with zero risks isn't a healthy program. It's a haunted one.",
+  "Say \"POM\" in a meeting and half the room thinks budget. The other half thinks juice.",
+  "Travel voucher status: pending. Your grandkids may see it approved.",
+  "If you can explain appropriations to a 10-year-old, you can explain them to a general. The 10-year-old asks better follow-ups.",
+  "\"It depends\" is the right answer to most acquisition questions. The rest are \"check with legal.\"",
+  "The best time to update your IMS was last month. The second best time is before anyone asks.",
+  "An RFP walks into a bar. The bartender asks for it in a different format, with a page limit.",
+  "Nothing unites a program office faster than a fire drill at 4:55 on a Friday.",
+  "In acquisition, \"quick question\" has never once been a quick question.",
+  "The five stages of a data call: denial, anger, spreadsheet, more spreadsheet, acceptance.",
+  "There's no crying in contracting. There is, however, a lot of re-reading Section L.",
+  "Program manager superpower: turning \"we're late\" into \"we've re-baselined.\"",
+  "EVM, made relatable: your budget is a pizza, and someone ate three slices before the meeting started.",
+  "The shortest story in defense acquisition: \"Requirements changed.\"",
+  "Somewhere, a slide has 14 bullets in 9-point font. Be the change.",
+  "A \"draft\" document in a program office has a half-life of roughly forever.",
+  "The real Revolutionary FAR Overhaul was the friends we cited along the way.",
+  "Budget drills are like fire drills, except nobody leaves the building.",
+  "\"Per my last email\" is the most polite way to say \"I have receipts.\"",
+  "Every working group eventually spawns a sub-working group. It's the circle of life.",
+  "Hidden achievement unlocked: Actually Scrolled to the Bottom.",
+  "Our lawyers asked us to clarify that \"burn rate\" is about money, not the office coffee pot.",
+  "Some people collect stamps. You collect acronyms. Both are valid hobbies.",
+  "The unofficial fuel of every major program is coffee. The official one is also coffee, if you ask the program office.",
+  "Congress has the power of the purse. Program offices have the power of the spreadsheet nobody else can open.",
+];
+
+export function pickEasterEgg(recipient = "", now: number = Date.now()): { n: number; total: number; text: string } {
+  const day = Math.floor(now / 86_400_000);
+  let h = 0;
+  for (const ch of recipient.trim().toLowerCase()) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  const i = (day + h) % EASTER_EGGS.length;
+  return { n: i + 1, total: EASTER_EGGS.length, text: EASTER_EGGS[i] };
+}
+
+function easterEggHtml(recipient?: string): string {
+  const egg = pickEasterEgg(recipient || "");
+  const text = egg.text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return `<div style="margin:0 48px 28px;padding:14px 18px;background:#fff8e1;border:1px dashed #f5c842;border-radius:10px">
+<p style="margin:0 0 4px;font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#a16207">&#129370; Easter egg ${egg.n} of ${egg.total}</p>
+<p style="margin:0;font-size:13px;line-height:1.55;color:#374151">${text}</p>
+</div>`;
+}
+
 // ─── Shared HTML shell ────────────────────────────────────
 
 function emailShell(preheader: string, body: string, recipientEmail?: string, footerNote = "You're receiving this because you created an account at Acqlerate."): string {
@@ -49,8 +117,9 @@ function emailShell(preheader: string, body: string, recipientEmail?: string, fo
 </tr></table>
 </div>
 <div style="padding:36px 48px">${body}</div>
+${easterEggHtml(recipientEmail)}
 <div style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:22px 48px;text-align:center">
-<p style="font-size:12px;color:#94a3b8;margin:0;line-height:1.7">${footerNote}<br/><a href="${APP_URL}" style="color:#01696f;text-decoration:none">acqlerate.com</a> &nbsp;·&nbsp; Defense Acquisitions Academy${unsubLink}</p>
+<p style="font-size:12px;color:#94a3b8;margin:0;line-height:1.7">${footerNote}<br/><a href="${APP_URL}" style="color:#01696f;text-decoration:none">acqlerate.com</a> &nbsp;·&nbsp; Plain-English DoD acquisition training${unsubLink}<br/>Not affiliated with WarU, DoD, or any government agency.</p>
 </div>
 </div>
 </body></html>`;

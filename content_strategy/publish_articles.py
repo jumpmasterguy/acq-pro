@@ -88,7 +88,7 @@ FOOTER_HTML = """<footer>
       <a href="/app#/upgrade">Pricing</a>
       <a href="mailto:lucas@acqlerate.com">Contact</a>
     </div>
-    <div class="footer-copy">© 2026 Acqlerate. Defense Acquisitions Academy.</div>
+    <div class="footer-copy">© 2026 Acqlerate. Plain-English DoD acquisition training. Not affiliated with WarU, DoD, or any government agency.</div>
   </div>
 </footer>"""
 

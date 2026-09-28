@@ -99,7 +99,7 @@ def generate(data: dict) -> bytes:
 
     c.setFillColor(TEAL)
     c.setFont("Helvetica", 10)
-    c.drawCentredString(w / 2, panel_y + panel_h - 68, "Defense Acquisitions Academy  ·  acqlerate.com")
+    c.drawCentredString(w / 2, panel_y + panel_h - 68, "Plain-English DoD acquisition training  ·  acqlerate.com")
 
     # Decorative line
     c.setStrokeColor(TEAL)
@@ -150,7 +150,7 @@ def generate(data: dict) -> bytes:
 
     c.setFillColor(MUTED)
     c.setFont("Helvetica", 9)
-    c.drawCentredString(w / 2, title_bottom - 16, "offered by Acqlerate, Defense Acquisitions Academy")
+    c.drawCentredString(w / 2, title_bottom - 16, "offered by Acqlerate (acqlerate.com), an independent training provider")
 
     # ── CLP Box ──────────────────────────────────────────────────────────────
     box_y = title_bottom - 80
@@ -235,7 +235,7 @@ def generate(data: dict) -> bytes:
     # ── Footer ───────────────────────────────────────────────────────────────
     c.setFillColor(WHITE)
     c.setFont("Helvetica", 8)
-    c.drawCentredString(w / 2, 75, "Acqlerate, Defense Acquisitions Academy  ·  acqlerate.com")
+    c.drawCentredString(w / 2, 75, "Acqlerate  ·  acqlerate.com  ·  Not affiliated with WarU, DoD, or any government agency")
     c.setFillColor(colors.HexColor("#94A3B8"))
     c.setFont("Helvetica", 7.5)
     # The ID is issued once, stored with the completion, and checkable at the
