@@ -76,6 +76,12 @@ export function serveStatic(app: Express) {
     return res.redirect("/");
   });
 
+  // /clp and /clps: the words people type. The CLP half of the page is at
+  // /pdu#clps (the nav calls it "CLPs & PDUs").
+  app.get(["/clp", "/clp/", "/clps", "/clps/"], (_req: Request, res: Response) => {
+    res.redirect(301, "/pdu#clps");
+  });
+
   // /products/* — serve product landing pages and success pages
   app.get("/products/:slug", (req: Request, res: Response) => {
     const slug = req.params.slug;

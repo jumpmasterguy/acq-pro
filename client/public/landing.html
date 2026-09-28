@@ -312,6 +312,27 @@
     .v2 .f-run   { --tint: #F7EAF2; --edge: #E7C2D9; --fam-ink: #8E2862; }
     .v2 .jt { border-bottom: 1.5px dotted currentColor; white-space: normal; }
 
+    /* CLPs & PDUs summary (Sep 2026) */
+    .credit-v2 { background: #fff; border-top: 1px solid var(--line-2); }
+    .v2 .credit-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .v2 .credit-card { display: flex; flex-direction: column; gap: 12px; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: clamp(22px, 3vw, 28px); text-decoration: none; color: var(--ink); transition: border-color 0.15s, box-shadow 0.15s, transform 0.12s; }
+    .v2 .credit-card:hover { border-color: var(--brand); box-shadow: 0 8px 24px -12px rgba(1,105,111,0.35); transform: translateY(-1px); }
+    .v2 .cc-top { display: flex; align-items: center; gap: 12px; }
+    .v2 .cc-ic { width: 40px; height: 40px; border-radius: 10px; display: inline-grid; place-items: center; flex-shrink: 0; background: var(--brand-2); border: 1px solid var(--line); color: var(--brand-dark); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; }
+    .v2 .cc-ic.f-gold { background: var(--gold-tint); border-color: var(--gold-edge); font-size: 20px; }
+    .v2 .cc-n { font-size: clamp(1.8rem, 3vw, 2.3rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+    .v2 .cc-n.gold { color: var(--gold-ink); }
+    .v2 .cc-n.teal { color: var(--brand); }
+    .v2 .credit-card p { font-size: 0.95rem; line-height: 1.6; color: var(--ink-2); }
+    .v2 .cc-meter { position: relative; height: 10px; border-radius: 99px; background: var(--line-2); margin-top: 2px; }
+    .v2 .cc-meter i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 99px; background: var(--gold); }
+    .v2 .cc-cap { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--ink-3); }
+    .v2 .cc-tri { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .v2 .cc-tri > span { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font-size: 0.75rem; line-height: 1.35; color: var(--ink-2); }
+    .v2 .cc-tri b { display: block; font-size: 1.05rem; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .v2 .cc-link { margin-top: auto; padding-top: 6px; font-size: 0.9rem; font-weight: 600; color: var(--brand); }
+    @media (max-width: 800px) { .v2 .credit-grid { grid-template-columns: minmax(0, 1fr); } }
+
     /* Who it's for */
     .who-v2 { background: var(--bg); }
     .v2 .tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 6px; }
@@ -637,27 +658,6 @@
       .footer-links { flex-wrap: wrap; gap: 12px 16px; }
       .footer-links a { font-size: 0.8rem; }
 
-      /* PDU table: stack as cards on mobile instead of horizontal scroll */
-      #pduTableInner { min-width: 0 !important; }
-      .pdu-header-row { display: none !important; }
-      .pdu-row, .pdu-total-row {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        align-items: baseline !important;
-        row-gap: 6px !important;
-        column-gap: 10px !important;
-      }
-      .pdu-row .pdu-module, .pdu-total-row .pdu-total-label {
-        flex: 1 1 100% !important;
-        font-weight: 700 !important;
-        color: #fff !important;
-      }
-      .pdu-row .pdu-value, .pdu-row .pdu-badge,
-      .pdu-total-row .pdu-total-value, .pdu-total-row .pdu-total-caption {
-        text-align: left !important;
-        padding: 0 !important;
-      }
-
       /* Why section story card padding */
       #why > div > div[style*="padding:40px 48px"] { padding: 28px 20px !important; }
 
@@ -729,7 +729,7 @@
         "name": "Can I use Acqlerate to earn CLPs (Continuous Learning Points) toward my DAWIA certification requirement?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. Defense Acquisition Workforce members can self-report Acqlerate modules as External Training in their WarU learning portal. Each module generates a Certificate of Completion. All 14 modules combined equal more than 44 CLPs, over half of the 80-point biennial requirement."
+          "text": "In most cases, yes. Training from outside providers can count toward continuous learning, and your supervisor decides the credit. Every finished Acqlerate module comes with a certificate showing hours, completion date and DAWIA functional areas, with an ID that can be verified online. All 14 modules add up to more than 44 CLPs, over half of the 80 required every two years. The full breakdown is at acqlerate.com/pdu."
         }
       },
       {
@@ -1062,109 +1062,34 @@
 </script>
 
 
-<!-- CLP FEATURE SECTION -->
-<section style="background:white;padding:72px 2rem;border-top:1px solid #E5E7EB;">
-  <div style="max-width:960px;margin:0 auto;">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:40px;align-items:start;">
-      <!-- Left: value prop -->
-      <div>
-        <div style="font-size:0.72rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#01696F;margin-bottom:14px;">For the Defense Acquisition Workforce</div>
-        <h2 style="font-size:clamp(1.5rem,2.8vw,2rem);font-weight:800;color:#1A1A1A;letter-spacing:-0.025em;line-height:1.25;margin-bottom:16px;">Earn <span class="jt" data-tip="CLPs = Continuous Learning Points. The DoD requires acquisition professionals to earn 80 CLPs every two years to keep their certifications current.">CLPs</span> you're already required to get.</h2>
-        <p style="font-size:1rem;color:#4B5563;line-height:1.75;margin-bottom:20px;">Defense Acquisition Workforce members must earn <strong>80 Continuous Learning Points every two years</strong>. Every completed Acqlerate module counts, and comes with a signed Certificate of Completion you can self-report in your WarU learning portal.</p>
-        <p style="font-size:0.95rem;color:#4B5563;line-height:1.75;margin-bottom:28px;">No waiting for a class to be scheduled. No travel. No block of time off your calendar. You earn CLPs while you actually learn something useful.</p>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <div style="display:flex;align-items:flex-start;gap:10px;font-size:0.875rem;color:#1A1A1A;line-height:1.5;">
-            <span style="color:#01696F;font-weight:800;">✓</span>
-            <span>Self-reportable as External Training in CAPPMIS, eDACM &amp; FAITAS</span>
-          </div>
-          <div style="display:flex;align-items:flex-start;gap:10px;font-size:0.875rem;color:#1A1A1A;line-height:1.5;">
-            <span style="color:#01696F;font-weight:800;">✓</span>
-            <span>Maps to PM, Contracting (CON), and BFM functional areas</span>
-          </div>
-          <div style="display:flex;align-items:flex-start;gap:10px;font-size:0.875rem;color:#1A1A1A;line-height:1.5;">
-            <span style="color:#01696F;font-weight:800;">✓</span>
-            <span>Certificate includes module name, date, hours, and <span class="jt" data-tip="DAWIA = Defense Acquisition Workforce Improvement Act. The law that sets training and certification requirements for DoD acquisition professionals.">DAWIA</span> functional area mapping</span>
-          </div>
-          <div style="display:flex;align-items:flex-start;gap:10px;font-size:0.875rem;color:#1A1A1A;line-height:1.5;">
-            <span style="color:#01696F;font-weight:800;">✓</span>
-            <span>Over <span data-count="clps-whole">44</span> CLPs total across all <span data-count="modules">14</span> modules</span>
-          </div>
+<!-- CLPs & PDUs summary (Sep 2026). The full breakdown lives on /pdu. -->
+<section id="credit" class="v2 credit-v2">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">CLPs &amp; PDUs</span>
+      <h2>The hours count toward your credential.</h2>
+      <p class="lede">Every hour of Acqlerate is 1 CLP for the Defense Acquisition Workforce and 1 PDU for PMP holders. Finish a module and you get a certificate that proves it.</p>
+    </div>
+    <div class="credit-grid">
+      <a class="credit-card" href="/pdu#clps">
+        <div class="cc-top"><span class="cc-ic f-gold" aria-hidden="true">🎓</span><span class="micro">Defense Acquisition Workforce</span></div>
+        <div class="cc-n gold"><span data-count="clps-whole">44</span>+ CLPs</div>
+        <p>More than half of the 80 you owe every two years. Each certificate lists hours, completion date and DAWIA functional area, with an ID anyone can verify online.</p>
+        <div class="cc-meter" aria-hidden="true"><i style="width:56%"></i></div>
+        <div class="cc-cap"><span>0</span><span>80 every 2 years</span></div>
+        <span class="cc-link">See CLPs by module and how to log them →</span>
+      </a>
+      <a class="credit-card" href="/pdu#pdus">
+        <div class="cc-top"><span class="cc-ic" aria-hidden="true">PMP</span><span class="micro">PMP holders</span></div>
+        <div class="cc-n teal">About <span data-count="clps-whole">44</span> PDUs</div>
+        <p>Clears PMI's 35 Education PDU minimum on its own. Self-report in CCRS as online learning, with no pre-approval.</p>
+        <div class="cc-tri" aria-label="PDUs by Talent Triangle area">
+          <span><b><span data-count="pdus:ba">30.2</span></b> Business Acumen</span>
+          <span><b><span data-count="pdus:ww">11.0</span></b> Ways of Working</span>
+          <span><b><span data-count="pdus:ps">3.4</span></b> Power Skills</span>
         </div>
-      </div>
-      <!-- Right: CLP breakdown table -->
-      <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:16px;overflow:hidden;">
-        <div style="background:#0C2340;padding:16px 20px;">
-          <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#4FC3CB;margin-bottom:4px;">CLP Breakdown</div>
-          <div style="font-size:0.875rem;color:rgba(255,255,255,0.7);">1 hour of instruction = 1 CLP</div>
-        </div>
-        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;"><table style="width:100%;border-collapse:collapse;min-width:280px;">
-          <tbody>
-            <tr style="border-bottom:1px solid #E5E7EB;">
-              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">DoD Acquisitions Foundations</td>
-              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:foundations">2.5</span> CLPs</td>
-            </tr>
-            <tr style="border-bottom:1px solid #E5E7EB;background:#F3FAFB;">
-              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Defense Finance &amp; Budgeting</td>
-              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:finance">4.0</span> CLPs</td>
-            </tr>
-            <tr style="border-bottom:1px solid #E5E7EB;">
-              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Defense Contracting Fundamentals</td>
-              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:contracts">4.1</span> CLPs</td>
-            </tr>
-            <tr style="border-bottom:1px solid #E5E7EB;background:#F3FAFB;">
-              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Data Analytics for PMs</td>
-              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:data">2.9</span> CLPs</td>
-            </tr>
-            <tr style="border-bottom:1px solid #E5E7EB;">
-              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Capture Management &amp; BD</td>
-              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:capture">1.6</span> CLPs</td>
-            </tr>
-            <tr style="border-bottom:1px solid #E5E7EB;background:#F3FAFB;">
-              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">PM Operations &amp; Leadership</td>
-              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:operations">1.8</span> CLPs</td>
-            </tr>
-            <tr style="border-bottom:1px solid #E5E7EB;">
-              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">The Business of Defense Contracting</td>
-              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:business">4.6</span> CLPs</td>
-            </tr>
-            <tr style="border-bottom:1px solid #E5E7EB;background:#F3FAFB;">
-              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Small Business in Defense Contracting</td>
-              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:smallbiz">3.9</span> CLPs</td>
-            </tr>
-            <tr style="border-bottom:1px solid #E5E7EB;">
-              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">The Compliance Stack</td>
-              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:compliance">4.0</span> CLPs</td>
-            </tr>
-            <tr style="border-bottom:1px solid #E5E7EB;background:#F3FAFB;">
-              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Government Pre-Award Process</td>
-              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:preaward">4.0</span> CLPs</td>
-            </tr>
-            <tr style="border-bottom:1px solid #E5E7EB;">
-              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Beyond Award: Sustainment &amp; Closeout</td>
-              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:lifecycle">3.2</span> CLPs</td>
-            </tr>
-            <tr style="border-bottom:1px solid #E5E7EB;background:#F3FAFB;">
-              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">The Startup On-Ramp</td>
-              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:onramp">3.0</span> CLPs</td>
-            </tr>
-            <tr style="border-bottom:1px solid #E5E7EB;">
-              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Veteran Transition</td>
-              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:veteran">2.5</span> CLPs</td>
-            </tr>
-            <tr style="border-bottom:1px solid #E5E7EB;background:#F3FAFB;">
-              <td style="padding:9px 18px;font-size:0.8rem;color:#1A1A1A;font-weight:600;">Why the Rules Exist</td>
-              <td style="padding:9px 18px;text-align:right;font-size:0.8rem;font-weight:800;color:#01696F;"><span data-count="clps:history">2.5</span> CLPs</td>
-            </tr>
-            <tr style="background:#0C2340;">
-              <td style="padding:14px 18px;font-size:0.9rem;font-weight:800;color:white;">Total (all <span data-count="modules">14</span> modules)</td>
-              <td style="padding:14px 18px;text-align:right;font-size:1rem;font-weight:800;color:#4FC3CB;"><span data-count="clps">44.6</span> CLPs</td>
-            </tr>
-          </tbody>
-        </table></div>
-        <div style="padding:14px 20px;background:#F9FAFB;border-top:1px solid #E5E7EB;">
-          <p style="font-size:0.75rem;color:#9CA3AF;margin:0;line-height:1.5;">Self-reportable in CAPPMIS (Army), eDACM (Navy/Marine/AF), and FAITAS (Civilian). Certificate includes <span class="jt" data-tip="DAWIA = Defense Acquisition Workforce Improvement Act. Sets the training and certification requirements for DoD acquisition professionals.">DAWIA</span> functional area mapping.</p>
-        </div>
-      </div>
+        <span class="cc-link">See PDUs by module and the CCRS steps →</span>
+      </a>
     </div>
   </div>
 </section>
@@ -1789,68 +1714,6 @@
 })();
 </script>
 
-<!-- PMI PDU SECTION -->
-<section style="background:#0D1B2A;padding:72px 2rem;border-top:1px solid rgba(255,255,255,0.07)">
-  <div style="max-width:960px;margin:0 auto">
-    <div style="text-align:center;margin-bottom:48px">
-      <div style="font-size:0.75rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#4F98A3;margin-bottom:12px">For PMP Holders</div>
-      <h2 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:white;letter-spacing:-0.025em;margin-bottom:16px">Earn Up to <span data-count="clps-whole">44</span> PMI PDUs</h2>
-      <p style="font-size:1rem;color:rgba(255,255,255,0.55);max-width:560px;margin:0 auto;line-height:1.7">Every Acqlerate lesson counts as Self-Paced Online Learning. Log them directly in PMI CCRS (the PMI certification portal), with no pre-approval needed. 1 hour = 1 PDU (Professional Development Unit).</p>
-    </div>
-
-    <!-- PDU table -->
-    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:16px;overflow:hidden;margin-bottom:40px">
-      <div id="pduTableInner">
-      <div class="pdu-header-row" style="display:grid;grid-template-columns:1fr auto auto;gap:0;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:rgba(255,255,255,0.4);padding:14px 24px;border-bottom:1px solid rgba(255,255,255,0.07)">
-        <span>Talent Triangle Area</span><span style="text-align:center;padding:0 20px">PDUs</span><span style="text-align:right">Coverage</span>
-      </div>
-      <div id="pduRows">
-        <div class="pdu-row" style="display:grid;grid-template-columns:1fr auto auto;padding:14px 24px;border-bottom:1px solid rgba(255,255,255,0.05);align-items:center">
-          <span class="pdu-module" style="color:rgba(255,255,255,0.85);font-size:0.875rem">Business Acumen</span>
-          <span class="pdu-value" style="text-align:center;padding:0 20px;font-weight:700;color:#4FB3BF;font-size:0.875rem"><span data-count="pdus:ba">30.2</span></span>
-          <span class="pdu-badge" style="text-align:right"><span style="background:#01696F22;color:#4FC5CB;font-size:0.7rem;font-weight:700;padding:3px 8px;border-radius:4px"><span data-count="modules:ba">9</span> modules</span></span>
-        </div>
-        <div class="pdu-row" style="display:grid;grid-template-columns:1fr auto auto;padding:14px 24px;border-bottom:1px solid rgba(255,255,255,0.05);align-items:center">
-          <span class="pdu-module" style="color:rgba(255,255,255,0.85);font-size:0.875rem">Ways of Working</span>
-          <span class="pdu-value" style="text-align:center;padding:0 20px;font-weight:700;color:#60A5FA;font-size:0.875rem"><span data-count="pdus:ww">11.0</span></span>
-          <span class="pdu-badge" style="text-align:right"><span style="background:#1D4ED822;color:#8BA9F5;font-size:0.7rem;font-weight:700;padding:3px 8px;border-radius:4px"><span data-count="modules:ww">4</span> modules</span></span>
-        </div>
-        <div class="pdu-row" style="display:grid;grid-template-columns:1fr auto auto;padding:14px 24px;align-items:center">
-          <span class="pdu-module" style="color:rgba(255,255,255,0.85);font-size:0.875rem">Power Skills</span>
-          <span class="pdu-value" style="text-align:center;padding:0 20px;font-weight:700;color:#A78BFA;font-size:0.875rem"><span data-count="pdus:ps">3.4</span></span>
-          <span class="pdu-badge" style="text-align:right"><span style="background:#7C3AED22;color:#A78BFA;font-size:0.7rem;font-weight:700;padding:3px 8px;border-radius:4px"><span data-count="modules:ps">2</span> modules</span></span>
-        </div>
-      <div class="pdu-total-row" style="display:grid;grid-template-columns:1fr auto auto;padding:14px 24px;background:rgba(1,105,111,0.15);border-top:1px solid rgba(1,105,111,0.3);align-items:center">
-        <span class="pdu-total-label" style="font-weight:800;color:white;font-size:0.875rem">Total Available</span>
-        <span class="pdu-total-value" style="text-align:center;padding:0 20px;font-weight:900;color:#4FB3BF;font-size:1.1rem">~<span data-count="clps">44.6</span></span>
-        <span class="pdu-total-caption" style="text-align:right;font-size:0.75rem;color:rgba(255,255,255,0.4)">PDUs total</span>
-      </div>
-      </div><!-- /pduTableInner -->
-    </div>
-
-    <!-- How to log + CTA -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px;align-items:start">
-      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:24px">
-        <div style="font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:#4F98A3;margin-bottom:12px">How to Log</div>
-        <ol style="list-style:none;padding:0;margin:0;space-y:8px">
-          <li style="display:flex;gap:10px;margin-bottom:10px;font-size:0.875rem;color:rgba(255,255,255,0.7)"><span style="background:#01696F;color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;flex-shrink:0;margin-top:1px">1</span>Complete lessons on Acqlerate</li>
-          <li style="display:flex;gap:10px;margin-bottom:10px;font-size:0.875rem;color:rgba(255,255,255,0.7)"><span style="background:#01696F;color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;flex-shrink:0;margin-top:1px">2</span>Note total time in your PDU tracker</li>
-          <li style="display:flex;gap:10px;margin-bottom:10px;font-size:0.875rem;color:rgba(255,255,255,0.7)"><span style="background:#01696F;color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;flex-shrink:0;margin-top:1px">3</span>Go to <strong style="color:white">pmlearning.pmi.org</strong></li>
-          <li style="display:flex;gap:10px;font-size:0.875rem;color:rgba(255,255,255,0.7)"><span style="background:#01696F;color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;flex-shrink:0;margin-top:1px">4</span>Log as <strong style="color:white">Online or Digital Media → Self-Paced</strong></li>
-        </ol>
-        <a href="/pdu" style="display:block;margin-top:16px;font-size:0.8rem;color:#4F98A3;font-weight:600;text-decoration:none">Full PDU guide →</a>
-      </div>
-      <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:14px;padding:28px;text-align:center">
-        <div style="font-size:2rem;font-weight:900;color:white;line-height:1">~44</div>
-        <div style="font-size:0.8rem;color:rgba(255,255,255,0.7);margin-bottom:16px">PDUs with full Pro access</div>
-        <div style="font-size:0.75rem;color:rgba(255,255,255,0.55);margin-bottom:20px">Enough to clear the 35 Education PDU minimum on its own. Business Acumen and Ways of Working each pass the 8 PDU per-area bar; top Power Skills up elsewhere.</div>
-        <a href="/app#/auth" style="display:block;background:white;color:#01696F;font-weight:800;font-size:0.9rem;padding:11px;border-radius:9px;text-decoration:none;margin-bottom:8px">Start Earning PDUs Free →</a>
-        <a href="/pdu" style="font-size:0.75rem;color:rgba(255,255,255,0.6);text-decoration:none">Learn more about PDUs →</a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- CURRICULUM STANDARDS -->
 <section style="background:#0C2340;padding:72px 2rem;">
   <div style="max-width:960px;margin:0 auto;">
@@ -2170,7 +2033,7 @@
           Can I use Acqlerate to earn CLPs toward my DAWIA requirement?
           <span class="faq-chevron">▾</span>
         </button>
-        <div class="faq-a">Yes. Defense Acquisition Workforce members can self-report Acqlerate modules as External Training in their WarU learning portal (CAPPMIS for Army, eDACM for Navy/Marine Corps/Air Force, FAITAS for civilian). Each module generates a Certificate of Completion showing the course name, date, instruction hours, and DAWIA functional area mapping. 1 hour of instruction equals 1 CLP. All <span data-count="modules">14</span> modules combined equal more than <span data-count="clps-whole">44</span> CLPs. That's over half of your 80 point biennial requirement.</div>
+        <div class="faq-a">In most cases, yes. Training from outside providers can count toward continuous learning, and your supervisor decides the credit. Every finished module comes with a certificate showing the course, completion date, hours and DAWIA functional areas, plus an ID anyone can verify online. Log it where your component tracks continuous learning, such as CAPPMIS, eDACM or FAITAS. All <span data-count="modules">14</span> modules add up to more than <span data-count="clps-whole">44</span> CLPs, over half of the 80 you need every two years. <a href="/pdu#clps" style="color:var(--teal);font-weight:600">See CLPs by module →</a></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">
