@@ -1229,6 +1229,26 @@ export const modules: ModuleMeta[] = [
         ]
       },
       {
+        "id": "business-11",
+        "title": "The R&O: Every Risk and Opportunity to Revenue, on One Page",
+        "duration": "24 min",
+        "description": "The industry-standard tool that keeps nobody in the dark. How contractors put a likelihood and a dollar value on every risk and opportunity, roll them up so a leader sees the whole board, and decide when one program's good news really cancels another's bad news.",
+        "quizCount": 12,
+        "termCount": 10,
+        "terms": [
+          "R&O (Risks and Opportunities)",
+          "Likelihood",
+          "Impact",
+          "Weighted Value",
+          "Gross vs. Net",
+          "Handling Plan",
+          "Trigger Date",
+          "Roll-Up",
+          "EAC Range",
+          "Sandbagging"
+        ]
+      },
+      {
         "id": "business-3",
         "title": "Pass-Through vs. Value-Add: The Same Question, Asked by Your Auditor and Your CO",
         "duration": "27 min",
