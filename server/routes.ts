@@ -18,6 +18,7 @@ import { MODULE_FUNCTIONAL_AREAS } from "@shared/moduleClps.generated";
 import { syncCompletions, moduleOfLesson, certificateName, formatCertDate, buildLedger, ledgerCsv, type ModuleCompletions } from "./credentials";
 import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken, sendPurchaseAdminAlert, sendSubscriptionCancelledAdminAlert, sendPasswordResetEmail, sendPackPurchaseEmail } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
+import { askClaude, aiConfigured, AiError } from "./ai";
 import { costTrackerStorage } from "./costTrackerStorage";
 import { reportCheckoutFailure } from "./stripeHealth";
 import { getSeoStats } from "./searchConsole";
@@ -2323,6 +2324,12 @@ export async function registerRoutes(
     if (!lessonTitle || !lessonContext || !mode) {
       return res.status(400).json({ message: "Missing required fields" });
     }
+    if (!["eli5", "apply", "lost"].includes(mode)) {
+      return res.status(400).json({ message: "Unknown mode" });
+    }
+    if (!aiConfigured()) {
+      return res.status(503).json({ message: "AI explanations are not configured yet. Add ANTHROPIC_API_KEY in Railway." });
+    }
     // "How Do I Apply This?" is an Annual/Lifetime perk. Checked before the
     // usage counter so a locked request doesn't burn one of today's calls.
     if (mode === "apply" && !isTopPlanStatus((req.user as any).subscriptionStatus)) {
@@ -2334,10 +2341,6 @@ export async function registerRoutes(
         message: `You've used today's AI Study Assistant limit (${usage.limit}/day). Upgrade to ${topPlanName()} for unlimited access, or come back tomorrow.`,
         limitReached: true,
       });
-    }
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return res.status(503).json({ message: "AI explanations are not configured yet. Add GEMINI_API_KEY in Railway." });
     }
     const PLAIN_ENGLISH_RULES = `PLAIN ENGLISH RULES (non-negotiable):
 - Write like you are talking to a colleague, not writing a memo. No stiff openers like "Excellent question" or "Let's ground ourselves" — just start explaining.
@@ -2352,30 +2355,13 @@ export async function registerRoutes(
       apply: `You are a seasoned DoD acquisition professional coaching a new Program Manager who is still learning the basics. For the following lesson topic, walk through 2-3 concrete, realistic moments where this knowledge would actually come up on the job — described as short stories or scenarios a new PM could picture themselves in, not a checklist of contract types and citations. Only mention a contract type, dollar figure, or regulation by name if it is essential to the scenario, and explain what it means in the same sentence. Keep it under 200 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
       lost: `You are a patient acquisition mentor. A student is confused about the following topic. First, name in one plain sentence what usually trips people up about it. Then re-explain the whole idea from scratch using a different, simpler approach than a textbook would — a step-by-step walkthrough, a side-by-side comparison, or a concrete everyday example. Keep it under 200 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
     };
-    // Use raw REST to avoid SDK model-name lock; try models in order of preference
-    const modelNames = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-flash-latest'];
-    let lastErr = '';
-    for (const modelName of modelNames) {
-      try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-        const resp = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts: [{ text: prompts[mode] }] }] }),
-        });
-        const data: any = await resp.json();
-        if (resp.ok) {
-          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
-          if (text) return res.json({ explanation: text });
-        }
-        lastErr = data?.error?.message ?? `HTTP ${resp.status}`;
-        if (resp.status === 429) break; // rate limit — don't try more models
-      } catch (err: any) {
-        lastErr = err?.message ?? 'fetch error';
-      }
+    try {
+      const { text } = await askClaude({ feature: `explain:${mode}`, prompt: prompts[mode], maxTokens: 700 });
+      return res.json({ explanation: text });
+    } catch (err: any) {
+      const status = err instanceof AiError && err.status === 503 ? 503 : 500;
+      return res.status(status).json({ message: `AI explanation failed: ${err?.message ?? 'unknown error'}` });
     }
-    console.error('Gemini explain failed — last error:', lastErr);
-    return res.status(500).json({ message: `AI explanation failed: ${lastErr}` });
   });
 
   // ─── AI List Item Expand ─────────────────────────────────────────────────
@@ -2387,6 +2373,7 @@ export async function registerRoutes(
     if (!item || !lessonTitle) {
       return res.status(400).json({ message: "Missing required fields" });
     }
+    if (!aiConfigured()) return res.status(503).json({ message: "AI is not configured yet." });
     const usage = await storage.checkAndConsumeAiCall((req.user as any).id);
     if (!usage.allowed) {
       return res.status(429).json({
@@ -2394,34 +2381,15 @@ export async function registerRoutes(
         limitReached: true,
       });
     }
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return res.status(503).json({ message: "GEMINI_API_KEY not configured" });
-    }
     const context = heading ? `Section: ${heading}\nItem: ${item}` : `Item: ${item}`;
     const prompt = `You are a concise DoD acquisitions instructor. Expand on the following bullet point from a lesson titled "${lessonTitle}". Give 2-4 plain-English sentences of practical detail a defense professional would find genuinely useful — a real example or a common mistake beats a regulatory citation. Only include a dollar threshold or a FAR/DFARS citation if it's essential, and if you do, explain what it means in the same sentence rather than stating it bare. Do not repeat the bullet text.\n\nPLAIN ENGLISH RULES: no markdown formatting (no asterisks or bold), no stacking multiple acronyms back to back, spell out any acronym the first time you use it, short sentences, talk like a colleague explaining this over coffee, not a policy memo.\n\n${context}`;
-    const modelNames = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-flash-latest'];
-    let lastErr = '';
-    for (const modelName of modelNames) {
-      try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-        const resp = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-        });
-        const data: any = await resp.json();
-        if (resp.ok) {
-          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
-          if (text) return res.json({ detail: text.trim() });
-        }
-        lastErr = data?.error?.message ?? `HTTP ${resp.status}`;
-        if (resp.status === 429) break;
-      } catch (err: any) {
-        lastErr = err?.message ?? 'fetch error';
-      }
+    try {
+      const { text } = await askClaude({ feature: "expand-item", prompt, maxTokens: 400 });
+      return res.json({ detail: text });
+    } catch (err: any) {
+      const status = err instanceof AiError && err.status === 503 ? 503 : 500;
+      return res.status(status).json({ message: `Failed: ${err?.message ?? 'unknown error'}` });
     }
-    return res.status(500).json({ message: `Failed: ${lastErr}` });
   });
 
   // POST /api/far-translate — FAR/DFARS clause plain-English translator (v2)
@@ -2430,6 +2398,7 @@ export async function registerRoutes(
   app.post("/api/far-translate", requireAuth as any, async (req: Request, res: Response) => {
     const { clause } = req.body as { clause: string };
     if (!clause?.trim()) return res.status(400).json({ message: 'Clause number or keyword required' });
+    if (!aiConfigured()) return res.status(503).json({ message: 'AI not configured' });
     const usage = await storage.checkAndConsumeAiCall((req.user as any).id);
     if (!usage.allowed) {
       return res.status(429).json({
@@ -2437,8 +2406,6 @@ export async function registerRoutes(
         limitReached: true,
       });
     }
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) return res.status(503).json({ message: 'AI not configured' });
 
     // Run deterministic scanner on the input text
     const findings: TimingFinding[] = scanForTimingTraps(clause.trim());
@@ -2474,63 +2441,25 @@ List every deadline, clock, and trap, one per line, each prefixed with ⏱ for t
 
 If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly. Keep the total response under 250 words. Be direct and practical.`;
 
-    const modelNames = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-flash-latest'];
-    let lastErr = '';
-    for (const modelName of modelNames) {
-      try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-        const resp = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-        });
-        const data: any = await resp.json();
-        if (resp.ok) {
-          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
-          if (text) return res.json({ result: text.trim(), clause: clause.trim() });
-        }
-        lastErr = data?.error?.message ?? `HTTP ${resp.status}`;
-        if (resp.status === 429) break;
-      } catch (err: any) {
-        lastErr = err?.message ?? 'fetch error';
-      }
+    try {
+      const { text } = await askClaude({ feature: "far-translate", prompt, maxTokens: 900 });
+      return res.json({ result: text, clause: clause.trim() });
+    } catch (err: any) {
+      const status = err instanceof AiError && err.status === 503 ? 503 : 500;
+      return res.status(status).json({ message: `Failed: ${err?.message ?? 'unknown error'}` });
     }
-    return res.status(500).json({ message: `Failed: ${lastErr}` });
   });
 
-  // GET /api/ai-health — check Gemini key is working (admin only)
+  // GET /api/ai-health — check the Anthropic key and model are working (admin only)
   app.get("/api/ai-health", requireAuth as any, async (_req: Request, res: Response) => {
     if (!isAdmin(_req)) return res.status(403).json({ message: "Forbidden" });
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) return res.json({ ok: false, reason: 'GEMINI_API_KEY not set' });
-    // Confirmed working models as of March 2026 via ListModels
-    const modelCandidates = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-flash-latest'];
-    const attempts = modelCandidates.map(m => ({
-      url: `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`,
-      label: `v1beta/${m}`
-    }));
-    const results: Record<string, string> = {};
-    for (const { url } of attempts) {
-      const label = url.replace(/key=[^&]+/, 'key=REDACTED').replace('https://generativelanguage.googleapis.com/', '');
-      try {
-        const resp = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts: [{ text: 'Say OK' }] }] }),
-        });
-        const data: any = await resp.json();
-        if (resp.ok) {
-          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? 'no text';
-          results[label] = `OK: ${text.trim()}`;
-          return res.json({ ok: true, workingEndpoint: label, allResults: results });
-        } else {
-          results[label] = `${resp.status}: ${data?.error?.message?.substring(0, 100) ?? 'unknown'}`;
-        }
-      } catch (err: any) {
-        results[label] = `FETCH_ERR: ${err?.message?.substring(0, 80)}`;
-      }
+    if (!aiConfigured()) return res.json({ ok: false, reason: 'ANTHROPIC_API_KEY not set' });
+    try {
+      const r = await askClaude({ feature: "ai-health", prompt: "Say OK", maxTokens: 10 });
+      return res.json({ ok: true, model: r.model, reply: r.text });
+    } catch (err: any) {
+      return res.json({ ok: false, reason: err?.message ?? 'unknown error' });
     }
-    return res.json({ ok: false, reason: 'No endpoints worked', allResults: results });
   });
 
   // ── Email lead capture (landing page opt-in) ──────────────────────────────

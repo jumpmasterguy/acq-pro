@@ -28,7 +28,8 @@ declare module "http" {
 }
 
 // ── Security headers via helmet ──────────────────────────────────────────────
-// Content-Security-Policy is intentionally relaxed for Stripe, Google, Gemini.
+// Content-Security-Policy is intentionally relaxed for Stripe and Google.
+// (AI calls go server-to-server to Anthropic, so the browser never needs it.)
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -51,7 +52,6 @@ app.use(
           "'self'",
           "https://api.stripe.com",
           "https://checkout.stripe.com",
-          "https://generativelanguage.googleapis.com",
           // GA4 (only loaded with consent, see client/public/consent.js). GA4
           // also posts to region1.google-analytics.com and analytics.google.com,
           // which the old single-host entry blocked. Google's recommended set:
@@ -129,7 +129,7 @@ const authLimiter = rateLimit({
   skip: (req) => process.env.NODE_ENV === "development",
 });
 
-// AI endpoints — protect Gemini API quota
+// AI endpoints — protect AI spend (Anthropic bills per call)
 const aiLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
   max: 30,             // 30 AI requests per minute per IP
@@ -164,6 +164,7 @@ app.use("/api/auth/login", authLimiter);
 app.use("/api/leads", leadsLimiter);
 app.use("/api/expand-item", aiLimiter);
 app.use("/api/explain", aiLimiter);
+app.use("/api/far-translate", aiLimiter);
 
 app.use(
   express.json({

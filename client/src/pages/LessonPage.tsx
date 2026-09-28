@@ -838,7 +838,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
     // Build a brief context from the first text/callout block
     const contextBlock = (lesson.content ?? []).find(b => b.type === 'text' || b.type === 'callout');
     const lessonContext = contextBlock?.body ?? lesson.description;
-    // 20-second timeout — Gemini can be slow on first call
+    // 20-second timeout; the server gives up at 18s so it can still send a clear error
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 20000);
     try {
@@ -3442,7 +3442,6 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               <div className="flex items-center gap-2 mb-3">
                 <Sparkles className="w-4 h-4 text-primary" />
                 <span className="text-sm font-semibold text-foreground">AI Study Assistant</span>
-                <span className="text-xs text-muted-foreground ml-1">Powered by Gemini</span>
               </div>
               <div className="flex flex-col sm:flex-row gap-2">
                 <button
