@@ -252,6 +252,25 @@
 
     /* ── MODULES ── */
     .modules-bg { background: var(--surface); }
+    .fam-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; margin-top: 8px; }
+    .fam-card { background: #fff; border: 1.5px solid var(--border); border-top: 4px solid var(--fam); border-radius: 14px; padding: 18px 16px; display: flex; flex-direction: column; gap: 8px; }
+    .fam-hd { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .fam-name { font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fam); }
+    .fam-n { font-size: 0.74rem; font-weight: 600; color: #56696B; }
+    .fam-what { font-size: 0.92rem; font-weight: 600; line-height: 1.35; color: #0F172A; margin: 0; }
+    .fam-mods { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+    .fam-mods li { font-size: 0.82rem; line-height: 1.4; color: #3D5153; padding-left: 12px; position: relative; }
+    .fam-mods li::before { content: ''; position: absolute; left: 0; top: 0.55em; width: 5px; height: 5px; border-radius: 50%; background: var(--fam); }
+    .fam-mods em { font-style: normal; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #065F46; background: #ECFDF5; border-radius: 99px; padding: 1px 7px; margin-left: 4px; }
+    .mods-all { margin-top: 22px; }
+    .mods-all > summary { cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: 8px; font-size: 0.92rem; font-weight: 700; color: var(--teal); padding: 8px 0; }
+    .mods-all > summary::-webkit-details-marker { display: none; }
+    .mods-all > summary::after { content: '+'; display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid currentColor; font-size: 0.9rem; line-height: 1; }
+    .mods-all[open] > summary::after { content: '\2212'; }
+    .mods-all .modules-grid { margin-top: 14px; }
+    @media (max-width: 1100px) { .fam-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 760px) { .fam-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 480px) { .fam-grid { grid-template-columns: minmax(0, 1fr); } }
     .modules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
     .module-card {
       background: white; border: 1.5px solid var(--border);
@@ -914,12 +933,73 @@
   </div>
 </section>
 
+<!-- CLPs & PDUs summary (Sep 2026). The full breakdown lives on /pdu. -->
+<section id="credit" class="v2 credit-v2">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">CLPs &amp; PDUs</span>
+      <h2>The hours count toward your credential.</h2>
+      <p class="lede">Every hour of Acqlerate is 1 CLP for the Defense Acquisition Workforce and 1 PDU for PMP holders. Finish a module and you get a certificate that proves it.</p>
+    </div>
+    <div class="credit-grid">
+      <a class="credit-card" href="/pdu#clps">
+        <div class="cc-top"><span class="cc-ic f-gold" aria-hidden="true">🎓</span><span class="micro">Defense Acquisition Workforce</span></div>
+        <div class="cc-n gold"><span data-count="clps-whole">44</span>+ CLPs</div>
+        <p>More than half of the 80 you owe every two years. Each certificate lists hours, completion date and DAWIA functional area, with an ID anyone can verify online.</p>
+        <div class="cc-meter" aria-hidden="true"><i style="width:56%"></i></div>
+        <div class="cc-cap"><span>0</span><span>80 every 2 years</span></div>
+        <span class="cc-link">See CLPs by module and how to log them →</span>
+      </a>
+      <a class="credit-card" href="/pdu#pdus">
+        <div class="cc-top"><span class="cc-ic" aria-hidden="true">PMP</span><span class="micro">PMP holders</span></div>
+        <div class="cc-n teal">About <span data-count="clps-whole">44</span> PDUs</div>
+        <p>Clears PMI's 35 Education PDU minimum on its own. Self-report in CCRS as online learning, with no pre-approval.</p>
+        <div class="cc-tri" aria-label="PDUs by Talent Triangle area">
+          <span><b><span data-count="pdus:ba">30.2</span></b> Business Acumen</span>
+          <span><b><span data-count="pdus:ww">11.0</span></b> Ways of Working</span>
+          <span><b><span data-count="pdus:ps">3.4</span></b> Power Skills</span>
+        </div>
+        <span class="cc-link">See PDUs by module and the CCRS steps →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- WHAT YOU LEARN -->
 <section id="modules" class="modules-bg">
   <div class="section-inner">
     <div class="section-eyebrow">Curriculum</div>
     <h2 class="section-title"><span data-count="modules-word">Fourteen</span> modules. <span data-count="lessons">124</span> lessons. The complete acquisition picture.</h2>
-    <p class="section-sub">Start with how the system works, then go as deep as your job requires: contractor finance, small business, compliance, the government pre-award process, sustainment, the startup on-ramp, veteran transition, and why the rules exist at all. Every lesson has three depth levels, key terms, a twelve-question quiz, and a module assessment that unlocks the next level. Module 1 is completely free.</p>
+    <p class="section-sub">Five families, one path. Start with how the system works, then go as deep as your job needs. Every lesson comes in three depth levels and ends in a quiz. Module 1 is free.</p>
+    <div class="fam-grid">
+      <div class="fam-card fam-found" style="--fam:#3D8FD1">
+        <div class="fam-hd"><span class="fam-name">Foundations</span></div>
+        <p class="fam-what">How the system works, end to end</p>
+        <ul class="fam-mods"><li>DoD Acquisitions Foundations <em>Free</em></li><li>From Need to RFP: Government Pre-Award</li><li>Beyond Award: Sustainment &amp; Closeout</li><li>The Startup On-Ramp</li><li>Why the Rules Exist</li></ul>
+      </div>
+      <div class="fam-card fam-money" style="--fam:#2E8B57">
+        <div class="fam-hd"><span class="fam-name">Money</span></div>
+        <p class="fam-what">Where the dollars come from and where they go</p>
+        <ul class="fam-mods"><li>Defense Finance &amp; Budgeting</li><li>The Business of Defense Contracting</li></ul>
+      </div>
+      <div class="fam-card fam-con" style="--fam:#5E3596">
+        <div class="fam-hd"><span class="fam-name">Contracts</span></div>
+        <p class="fam-what">The rules and the paperwork that bind you</p>
+        <ul class="fam-mods"><li>Defense Contracting Fundamentals</li><li>The Compliance Stack</li></ul>
+      </div>
+      <div class="fam-card fam-win" style="--fam:#D1571A">
+        <div class="fam-hd"><span class="fam-name">Winning work</span></div>
+        <p class="fam-what">Going after work and landing it</p>
+        <ul class="fam-mods"><li>Capture Management &amp; BD</li><li>Small Business in Defense Contracting</li><li>Veteran Transition</li></ul>
+      </div>
+      <div class="fam-card fam-run" style="--fam:#B0327A">
+        <div class="fam-hd"><span class="fam-name">Run the program</span></div>
+        <p class="fam-what">Executing it once you have it</p>
+        <ul class="fam-mods"><li>Data Analytics for PMs</li><li>PM Operations &amp; Leadership</li></ul>
+      </div>
+    </div>
+    <details class="mods-all">
+      <summary><span>See all <span data-count="modules">14</span> modules and what each one covers</span></summary>
     <div class="modules-grid">
       <div class="module-card">
         <div class="module-num free-num">01</div>
@@ -1020,6 +1100,7 @@
         </div>
       </div>
     </div>
+    </details>
   </div>
 </section>
 
@@ -1510,38 +1591,6 @@
   </div>
 </div>
 </div>
-
-<!-- CLPs & PDUs summary (Sep 2026). The full breakdown lives on /pdu. -->
-<section id="credit" class="v2 credit-v2">
-  <div class="wrap">
-    <div class="head">
-      <span class="eyebrow">CLPs &amp; PDUs</span>
-      <h2>The hours count toward your credential.</h2>
-      <p class="lede">Every hour of Acqlerate is 1 CLP for the Defense Acquisition Workforce and 1 PDU for PMP holders. Finish a module and you get a certificate that proves it.</p>
-    </div>
-    <div class="credit-grid">
-      <a class="credit-card" href="/pdu#clps">
-        <div class="cc-top"><span class="cc-ic f-gold" aria-hidden="true">🎓</span><span class="micro">Defense Acquisition Workforce</span></div>
-        <div class="cc-n gold"><span data-count="clps-whole">44</span>+ CLPs</div>
-        <p>More than half of the 80 you owe every two years. Each certificate lists hours, completion date and DAWIA functional area, with an ID anyone can verify online.</p>
-        <div class="cc-meter" aria-hidden="true"><i style="width:56%"></i></div>
-        <div class="cc-cap"><span>0</span><span>80 every 2 years</span></div>
-        <span class="cc-link">See CLPs by module and how to log them →</span>
-      </a>
-      <a class="credit-card" href="/pdu#pdus">
-        <div class="cc-top"><span class="cc-ic" aria-hidden="true">PMP</span><span class="micro">PMP holders</span></div>
-        <div class="cc-n teal">About <span data-count="clps-whole">44</span> PDUs</div>
-        <p>Clears PMI's 35 Education PDU minimum on its own. Self-report in CCRS as online learning, with no pre-approval.</p>
-        <div class="cc-tri" aria-label="PDUs by Talent Triangle area">
-          <span><b><span data-count="pdus:ba">30.2</span></b> Business Acumen</span>
-          <span><b><span data-count="pdus:ww">11.0</span></b> Ways of Working</span>
-          <span><b><span data-count="pdus:ps">3.4</span></b> Power Skills</span>
-        </div>
-        <span class="cc-link">See PDUs by module and the CCRS steps →</span>
-      </a>
-    </div>
-  </div>
-</section>
 
 <!-- TEAM OUTCOMES SECTION -->
 <section id="team-outcomes" style="background:#F9FAFB;padding:72px 2rem;border-top:1px solid #E5E7EB;">
