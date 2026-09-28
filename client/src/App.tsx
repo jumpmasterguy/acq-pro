@@ -440,15 +440,16 @@ function AppContent() {
       .catch(() => {});
   }, [authState.status]);
 
-  // Admin, Analytics, PDU and the Cost Tracker have no home in the four-tab
-  // map, so they stay desktop-only. A saved view (sessionStorage) or a resize
+  // PDU and the Cost Tracker have no home in the four-tab map, so they stay
+  // desktop-only. Admin (and Analytics behind it) live under the Account tab
+  // for admins, with a back button in the header. A saved view (sessionStorage) or a resize
   // could otherwise strand a phone on a screen it can't navigate away from.
   // Must sit above the auth/onboarding early returns — it's a hook.
   useEffect(() => {
     if (!isMobile) return;
     const MOBILE_VIEWS: View['type'][] = [
       'dashboard', 'modules', 'module', 'lesson', 'upgrade', 'account', 'resources', 'auth', 'onboarding',
-      'certificates',
+      'certificates', 'admin', 'analytics',
     ];
     if (!MOBILE_VIEWS.includes(view.type)) setView({ type: 'dashboard' });
   }, [isMobile, view.type]);
@@ -849,7 +850,7 @@ function AppContent() {
   // Which tab lights up. Module, Lesson and Pro access all live under Learn.
   const mobileTab: MobileTab =
     view.type === 'resources' ? 'resources'
-    : view.type === 'account' ? 'account'
+    : (view.type === 'account' || view.type === 'admin' || view.type === 'analytics') ? 'account'
     : (view.type === 'modules' || view.type === 'module' || view.type === 'lesson' || view.type === 'upgrade') ? 'modules'
     : 'home';
 
@@ -864,6 +865,10 @@ function AppContent() {
         return { kind: 'title', title: 'Resources & tools' };
       case 'account':
         return { kind: 'title', title: 'My Account' };
+      case 'admin':
+        return { kind: 'back', title: 'Admin', onBack: () => setView({ type: 'account' }) };
+      case 'analytics':
+        return { kind: 'back', title: 'Analytics', onBack: () => setView({ type: 'admin' }) };
       case 'upgrade':
         return { kind: 'back', title: 'Pro access', onBack: () => setView({ type: 'modules' }) };
       case 'module': {
@@ -1001,6 +1006,7 @@ function AppContent() {
               onBack={() => setView({ type: 'dashboard' })}
               onUpgrade={() => setView({ type: 'upgrade' })}
               onOpenCertificates={() => setView({ type: 'certificates' })}
+              onOpenAdmin={isAdmin ? () => setView({ type: 'admin' }) : undefined}
               onNameUpdated={handleNameUpdated}
               onAccountDeleted={handleAccountDeleted}
               xp={progress.xp}
@@ -1012,7 +1018,7 @@ function AppContent() {
             />
           )}
           {view.type === 'admin' && isAdmin && (
-            <AdminPage />
+            <div className={isMobile ? "px-4 pt-3 pb-8" : ""}><AdminPage /></div>
           )}
           {view.type === 'analytics' && isAdmin && (
             <AdminAnalytics onBack={() => setView({ type: 'admin' })} />

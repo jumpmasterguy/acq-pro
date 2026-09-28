@@ -1,4 +1,5 @@
 import { useState } from "react";
+import AdminToday from "@/components/admin/AdminToday";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Shield, Users, Crown, UserX, RefreshCw, ChevronDown,
@@ -113,14 +114,14 @@ function formatMinutes(mins: number): string {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-type AdminTab = "users" | "analytics" | "referrals" | "newsletter" | "leads";
+type AdminTab = "today" | "users" | "analytics" | "referrals" | "newsletter" | "leads";
 
 export default function AdminPage() {
   const { toast } = useToast();
   const qc = useQueryClient();
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<AdminTab>("users");
+  const [activeTab, setActiveTab] = useState<AdminTab>("today");
   const [sortField, setSortField] = useState<keyof AnalyticsUser>("xp");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [nlSubject, setNlSubject] = useState("");
@@ -138,6 +139,7 @@ export default function AdminPage() {
         if (!res.ok) throw new Error("Failed to fetch users");
         return res.json();
       },
+      enabled: activeTab === "users",
     });
 
   const { data: analytics, isLoading: analyticsLoading, isError: analyticsError, refetch: refetchAnalytics } =
@@ -354,10 +356,11 @@ export default function AdminPage() {
   // ── Render ───────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-6" data-testid="admin-page">
+    <div className="space-y-5 sm:space-y-6" data-testid="admin-page">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <div className={`${activeTab === "today" ? "hidden sm:flex" : "flex"} items-center justify-end sm:justify-between`}>
+        {/* Phones already show "Admin" in the top bar. */}
+        <div className="hidden sm:flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
             <Shield className="w-5 h-5 text-primary" />
           </div>
@@ -366,7 +369,7 @@ export default function AdminPage() {
             <p className="text-sm text-muted-foreground">Manage users &amp; engagement analytics</p>
           </div>
         </div>
-        <Button
+        {activeTab !== "today" && <Button
           variant="outline"
           size="sm"
           onClick={() => { refetchUsers(); if (activeTab === "analytics") refetchAnalytics(); if (activeTab === "leads") refetchLeads(); }}
@@ -375,14 +378,28 @@ export default function AdminPage() {
         >
           <RefreshCw className="w-3.5 h-3.5" />
           Refresh
-        </Button>
+        </Button>}
       </div>
 
       {/* Tab Bar */}
-      <div className="flex border-b border-border">
+      <div className="flex border-b border-border overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:none]">
+        <button
+          onClick={() => setActiveTab("today")}
+          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
+            activeTab === "today"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+          data-testid="admin-tab-today"
+        >
+          <span className="flex items-center gap-1.5">
+            <Zap className="w-4 h-4" />
+            Today
+          </span>
+        </button>
         <button
           onClick={() => setActiveTab("users")}
-          className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
             activeTab === "users"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground"
@@ -396,7 +413,7 @@ export default function AdminPage() {
         </button>
         <button
           onClick={() => setActiveTab("analytics")}
-          className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
             activeTab === "analytics"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground"
@@ -410,7 +427,7 @@ export default function AdminPage() {
         </button>
         <button
           onClick={() => setActiveTab("referrals")}
-          className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
             activeTab === "referrals"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground"
@@ -423,7 +440,7 @@ export default function AdminPage() {
         </button>
         <button
           onClick={() => setActiveTab("newsletter")}
-          className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
             activeTab === "newsletter"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground"
@@ -437,7 +454,7 @@ export default function AdminPage() {
         </button>
         <button
           onClick={() => setActiveTab("leads")}
-          className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
             activeTab === "leads"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground"
@@ -450,6 +467,9 @@ export default function AdminPage() {
           </span>
         </button>
       </div>
+
+      {/* ── TODAY TAB (phone-first) ──────────────────────────────────────────── */}
+      {activeTab === "today" && <AdminToday />}
 
       {/* ── USERS TAB ────────────────────────────────────────────────────────── */}
       {activeTab === "users" && (

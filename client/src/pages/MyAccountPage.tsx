@@ -1,5 +1,5 @@
 import { useState, useEffect, type ReactNode } from "react";
-import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap, Trash2, AlertTriangle, Award, LogOut, Moon, Gift, Trophy, MessageCircleHeart } from "lucide-react";
+import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap, Trash2, AlertTriangle, Award, LogOut, Moon, Gift, Trophy, MessageCircleHeart, ShieldCheck } from "lucide-react";
 import { ContactUs } from "@/components/ContactUs";
 import { getCheckoutMode, openAppBillingPortal, type CheckoutMode } from "@/lib/appCheckout";
 import { LevelRoadSheet } from "@/components/LevelRoad";
@@ -30,6 +30,8 @@ interface MyAccountPageProps {
   onUpgrade: () => void;
   /** Opens My Certificates (the CLP ledger). On phones this is the only way in. */
   onOpenCertificates?: () => void;
+  /** Admins only: opens the Admin screen (Today, user lookup). Phones have no sidebar. */
+  onOpenAdmin?: () => void;
   onNameUpdated: (firstName: string, lastName: string, username: string) => void;
   onAccountDeleted: () => void;
   // ── Mobile Account ────────────────────────────────────────────────────────
@@ -69,7 +71,7 @@ function Section({ icon: Icon, title, children }: { icon: any; title: string; ch
   );
 }
 
-export default function MyAccountPage({ user, onBack, onUpgrade, onOpenCertificates, onNameUpdated, onAccountDeleted,
+export default function MyAccountPage({ user, onBack, onUpgrade, onOpenCertificates, onOpenAdmin, onNameUpdated, onAccountDeleted,
   xp = 0, completedLessons = new Set<string>(), streak = 0, onSignOut, themeMode = 'system', onThemeChange }: MyAccountPageProps) {
   const isMobile = useIsMobile();
   const nativeApp = isNativeApp();
@@ -201,6 +203,20 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onOpenCertifica
 
     return (
       <div className="flex flex-col gap-4 px-4 pb-8 pt-4" data-testid="account-page-mobile">
+        {onOpenAdmin && (
+          <button
+            onClick={onOpenAdmin}
+            className="w-full flex items-center gap-3 rounded-2xl px-4 py-3 bg-violet-500/[0.10] border border-violet-500/30 text-left"
+            data-testid="account-open-admin"
+          >
+            <ShieldCheck className="w-5 h-5 text-violet-600 dark:text-violet-400 flex-shrink-0" />
+            <span className="flex-1">
+              <span className="block text-sm font-bold">Admin</span>
+              <span className="block text-xs text-muted-foreground">Today's numbers, find a user, quick fixes</span>
+            </span>
+            <span className="text-violet-600 dark:text-violet-400 text-sm font-semibold">&rarr;</span>
+          </button>
+        )}
         <LevelHero
           level={level.level}
           title={level.title}

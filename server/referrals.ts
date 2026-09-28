@@ -93,15 +93,25 @@ export async function grantProYear(user: User, stripe: Stripe | null, reason: st
   }
 
   // Free, or trialing (normal trial or pack bonus). Stack on remaining time.
+  const until = await extendAccessDays(user, REFERRAL_REWARD_DAYS);
+  return { kind: "extended", until };
+}
+
+/**
+ * Add `days` of full access to a free or trialing account, stacked on any
+ * time they still have. Returns the new end date (ISO). Callers must not
+ * use this on paying or lifetime accounts (they already have access).
+ */
+export async function extendAccessDays(user: User, days: number): Promise<string> {
   const now = Date.now();
-  const currentEnd = status === "trialing" && user.trialEndsAt ? new Date(user.trialEndsAt).getTime() : 0;
-  const until = new Date(Math.max(now, currentEnd) + REFERRAL_REWARD_DAYS * DAY_MS).toISOString();
+  const currentEnd = user.subscriptionStatus === "trialing" && user.trialEndsAt ? new Date(user.trialEndsAt).getTime() : 0;
+  const until = new Date(Math.max(now, currentEnd) + days * DAY_MS).toISOString();
   await storage.setTrialEndsAt(user.id, until);
   const sent = Array.isArray(user.sentEmailDays) ? (user.sentEmailDays as number[]) : [];
   if (sent.includes(TRIAL_ENDING_EMAIL_KEY)) {
     await storage.updateSentEmailDays(user.id, sent.filter((d) => d !== TRIAL_ENDING_EMAIL_KEY));
   }
-  return { kind: "extended", until };
+  return until;
 }
 
 /**
