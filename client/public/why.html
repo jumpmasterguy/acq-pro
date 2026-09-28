@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Why Acqlerate Exists — Our Story</title>
+  <title>Why Acqlerate Exists | Our Story</title>
   <meta name="description" content="Why Acqlerate exists: the DoD acquisition workforce gap, the data behind it, and the founder's story." />
   <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg" />
@@ -70,9 +70,61 @@
     .bio-avatar { width: 56px; height: 56px; background: #01696F; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; color: white; flex-shrink: 0; }
     .bio-name { font-size: 1.2rem; font-weight: 800; color: #0C2340; }
     .bio-title { font-size: 0.9rem; color: #6B7280; }
-    .bio-facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 24px; margin: 24px 0; padding: 20px 0; border-top: 1px solid #E5E7EB; border-bottom: 1px solid #E5E7EB; }
-    .bio-fact { font-size: 0.92rem; color: #374151; }
-    .bio-fact strong { color: #0C2340; }
+
+    /* Founder section (rewritten 28 Sep 2026): story first, credentials last */
+    .found { --fam: #3D8FD1; --tint: #E8F1FA; --edge: #B0D0EC; }
+    .win   { --fam: #D1571A; --tint: #FBEDE5; --edge: #F0C3A9; }
+    .run   { --fam: #B0327A; --tint: #F7E8F1; --edge: #E4B4D0; }
+    .tile { width: 44px; height: 44px; border-radius: 11px; display: inline-grid; place-items: center; font-size: 22px; flex-shrink: 0; background: var(--tint, #E0EDEC); border: 1px solid var(--edge, #D3DFDE); }
+    .eyebrow-sm { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #01696F; margin-bottom: 8px; }
+    .founder-stack { display: flex; flex-direction: column; gap: 18px; }
+    .card-h3 { font-size: 1.2rem; font-weight: 800; color: #0C2340; margin-bottom: 12px; letter-spacing: -0.01em; }
+
+    .intro-card { background: white; border: 1px solid #E5E7EB; border-radius: 16px; padding: 32px 36px; }
+    .intro-card .bio-header { margin-bottom: 18px; }
+    .intro-card p:last-child { margin-bottom: 0; }
+
+    .traits { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .trait { background: white; border: 1px solid #E5E7EB; border-top: 3px solid var(--fam); border-radius: 14px; padding: 20px 18px; }
+    .trait .tile { margin-bottom: 12px; }
+    .trait h3 { font-size: 1rem; font-weight: 800; color: #0C2340; margin-bottom: 6px; line-height: 1.3; }
+    .trait p { font-size: 0.9rem; line-height: 1.6; margin: 0; }
+
+    .nope { background: white; border: 1px solid #E5E7EB; border-radius: 16px; padding: 28px 32px; }
+    .nope ul { list-style: none; display: flex; flex-direction: column; gap: 16px; margin-top: 10px; }
+    .nope li { display: flex; gap: 14px; align-items: flex-start; }
+    .nope .x { width: 30px; height: 30px; border-radius: 8px; background: #F3F4F6; border: 1px solid #E5E7EB; color: #6B7280; display: grid; place-items: center; font-weight: 800; font-size: 0.8rem; flex-shrink: 0; margin-top: 1px; }
+    .nope b { display: block; color: #0C2340; font-size: 0.95rem; }
+    .nope li span.t { display: block; font-size: 0.9rem; color: #4B5563; line-height: 1.55; }
+
+    .basics { background: #0D1B2A; border-radius: 16px; padding: 36px 40px; position: relative; overflow: hidden; }
+    .basics::before { content: ''; position: absolute; top: -50px; right: -50px; width: 220px; height: 220px; background: rgba(1,105,111,0.12); border-radius: 50%; }
+    .basics > * { position: relative; z-index: 1; }
+    .basics .eyebrow-sm { color: #4FC3CB; }
+    .basics .card-h3 { color: white; font-size: 1.5rem; margin-bottom: 16px; }
+    .basics p { color: rgba(255,255,255,0.86); }
+    .streak { display: grid; grid-template-columns: repeat(7, minmax(0, 42px)); gap: 6px; margin: 8px 0 10px; }
+    .streak .day { text-align: center; }
+    .streak .dot { width: 100%; max-width: 34px; aspect-ratio: 1; height: auto; margin: 0 auto 5px; border-radius: 50%; background: #D9B64C; color: #0D1B2A; display: grid; place-items: center; font-weight: 800; font-size: 0.85rem; }
+    .streak .day span { font-size: 0.68rem; color: rgba(255,255,255,0.55); font-weight: 700; letter-spacing: 0.06em; }
+    .streak .day.today .dot { box-shadow: 0 0 0 3px rgba(217,182,76,0.35); }
+    .streak .day.today span { color: #E7D69B; }
+    .streak-cap { font-size: 0.82rem; color: #E7D69B; font-weight: 600; margin-bottom: 22px; }
+    .basics .punch { font-size: 1.35rem; font-weight: 800; color: white; margin: 4px 0 0; }
+
+    .presence { background: white; border: 1px solid #E5E7EB; border-radius: 16px; padding: 28px 32px; }
+    .mail-link { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; color: #01696F; background: #E6F2F3; border: 1px solid #B9DADC; padding: 11px 18px; border-radius: 10px; text-decoration: none; margin: 2px 0 22px; }
+    .mail-link:hover { background: #D5EBEC; }
+    .presence .small { font-size: 0.88rem; color: #6B7280; margin-bottom: 12px; }
+    .presence .social-row { justify-content: flex-start; }
+
+    .closer { background: #E6F2F3; border-radius: 16px; padding: 40px 40px 36px; text-align: center; }
+    .closer .big { font-size: clamp(1.8rem, 3.6vw, 2.4rem); font-weight: 800; color: #0C2340; letter-spacing: -0.02em; line-height: 1.12; margin-bottom: 14px; }
+    .closer .big span { color: #01696F; }
+    .closer p { color: #374151; max-width: 540px; margin: 0 auto 22px; }
+    .fineprint { font-size: 0.82rem; color: #6B7280; background: #F1F1EC; border-radius: 12px; padding: 16px 20px; line-height: 1.6; }
+    .fineprint strong { color: #374151; }
+    .story-ps { font-size: 0.88rem !important; color: rgba(255,255,255,0.6) !important; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; margin-top: 8px; }
 
     .cta-box { background: #E6F2F3; border-radius: 16px; padding: 36px 40px; text-align: center; margin-top: 8px; }
     .cta-box h3 { font-size: 1.25rem; font-weight: 800; color: #0C2340; margin-bottom: 10px; }
@@ -102,8 +154,10 @@
 
     @media (max-width: 640px) {
       .stats-grid { grid-template-columns: 1fr; }
-      .bio-facts { grid-template-columns: 1fr; }
-      .story-card, .bio-section { padding: 28px 24px; }
+      .traits { grid-template-columns: 1fr; }
+      .story-card, .bio-section, .intro-card, .nope, .basics, .presence, .closer { padding: 26px 22px; }
+      .social-row { flex-direction: column; }
+      .social-card { max-width: none; }
     }
   </style>
   <script type="application/ld+json">
@@ -154,7 +208,7 @@
   <div class="container">
     <div class="eyebrow">Why We Built This</div>
     <h1>I couldn't answer a question about my own program.<br><span>That's why Acqlerate exists.</span></h1>
-    <p>The data behind the gap, and the story behind the fix.</p>
+    <p>The story, the data, and the regular guy behind it.</p>
   </div>
 </div>
 
@@ -166,55 +220,105 @@
   <section style="padding-top: 40px;">
     <div class="story-card">
       <p>I was sitting in a meeting with people who'd been in the defense industry for years. Someone turned to me and asked about DSO, cashflow, and the variance of revenue for the financial period.</p>
-      <p>I had no idea what to say. Not because I wasn't capable. Because nobody had ever explained it to me in plain English. I was a veteran who'd worked on programs worth hundreds of millions of dollars, and I still didn't have the vocabulary to talk about my own work.</p>
-      <p>I don't want that to happen to you. That's why I built Acqlerate. Not to add more jargon to the pile. To give the people doing this job the plain English foundation they need to do it with confidence.</p>
+      <p>I had no idea what to say. So I gave them the slow, thoughtful nod. You know the one. It says "great question" while your brain quietly looks for the nearest exit.</p>
+      <p>It wasn't that I couldn't learn it. Nobody had ever explained it to me in plain English. I was a veteran who'd worked on programs worth hundreds of millions of dollars, and I didn't have the vocabulary to talk about my own work.</p>
+      <p>I don't want that to happen to you. That's why I built Acqlerate. Not to add more jargon to the pile. To give the people doing this job the plain-English foundation to do it with confidence.</p>
+      <p class="story-ps">P.S. DSO is Days Sales Outstanding: how many days, on average, it takes to get paid after you send the invoice. Past me would have loved that sentence.</p>
     </div>
   </section>
 
-  <section id="founder">
-    <h2>About the founder</h2>
-    <div class="bio-section">
-      <div class="bio-header">
-        <div class="bio-avatar">L</div>
-        <div>
-          <div class="bio-name">Lucas Cruz</div>
-          <div class="bio-title">Founder, Acqlerate</div>
-        </div>
-      </div>
-      <p>I'm a U.S. Army veteran who spent my early career on the networking side, supporting special operations forces communications, before moving into defense acquisition. I hold a CCIE (Cisco's top-level networking certification) and a PMP, and I made the jump from network engineer to program manager on a large DoD contract in about three years, with no acquisition background walking in.</p>
-      <p>I went on to lead a defense program with a $950 million contract ceiling supporting U.S. Air Forces in Europe.</p>
-      <div class="bio-facts">
-        <div class="bio-fact"><strong>Background:</strong> Network engineer → DoD Program Manager in ~3 years</div>
-        <div class="bio-fact"><strong>Certifications:</strong> CCIE, PMP</div>
-        <div class="bio-fact"><strong>Notable program:</strong> Led a $950M ceiling program supporting USAFE</div>
-        <div class="bio-fact"><strong>Military:</strong> U.S. Army veteran, SOF communications support</div>
-      </div>
-      <p>If I could learn this system starting from zero, so can you. That's the whole premise of Acqlerate: no textbook fluff, no assuming you already speak the language. Just plain English, real examples, and the stuff people usually only learn by getting burned on the job.</p>
-    </div>
-  </section>
+  <section id="founder" style="padding-top: 8px;">
+    <h2>Who's behind this</h2>
+    <div class="founder-stack">
 
-  <section>
-    <h2>Follow along</h2>
-    <p>Most of what I post is the same plain-English breakdown you get in the curriculum, just shorter. Follow if you want the drip version.</p>
-    <div class="social-row">
-      <a href="https://www.linkedin.com/company/acqlerate/" target="_blank" rel="noopener" class="social-card">
-        <div class="social-icon linkedin">
-          <svg viewBox="0 0 24 24" fill="white"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.114 20.452H3.558V9h3.556v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      <div class="intro-card">
+        <div class="bio-header">
+          <div class="bio-avatar">L</div>
+          <div>
+            <div class="bio-name">Lucas Cruz</div>
+            <div class="bio-title">Founder. Also customer support, the curriculum team, and IT.</div>
+          </div>
         </div>
-        <div>
-          <div class="social-text-name">LinkedIn</div>
-          <div class="social-text-sub">Follow Acqlerate</div>
+        <p>I'm not a professor or a consultant, and I don't have a leadership book to sell you. I'm an Army guy who walked into defense acquisition from the networking side, with zero acquisition background, and figured it out on the job.</p>
+        <p>Acqlerate is the thing I wish somebody had handed me on day one. Here's the short version of how I got here.</p>
+      </div>
+
+      <div class="traits">
+        <div class="trait win">
+          <span class="tile" aria-hidden="true">🪖</span>
+          <h3>Army guy</h3>
+          <p>I learn by doing, not by reading. Hand me a thick regulation and I'll nod politely. Hand me crayons and construction paper and I'll teach it back to you by lunch.</p>
         </div>
-      </a>
-      <a href="https://www.facebook.com/profile.php?id=61590468715890" target="_blank" rel="noopener" class="social-card">
-        <div class="social-icon facebook">
-          <svg viewBox="0 0 24 24" fill="white"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+        <div class="trait found">
+          <span class="tile" aria-hidden="true">🔌</span>
+          <h3>Network nerd</h3>
+          <p>Spent years getting networks to talk to each other, supporting special operations communications. Still easier than getting finance and engineering to talk to each other.</p>
         </div>
-        <div>
-          <div class="social-text-name">Facebook</div>
-          <div class="social-text-sub">Follow Acqlerate</div>
+        <div class="trait run">
+          <span class="tile" aria-hidden="true">📋</span>
+          <h3>Accidental program manager</h3>
+          <p>Went from network engineer to running a DoD program in about three years. Learned a lot of it by getting burned. You don't have to.</p>
         </div>
-      </a>
+      </div>
+
+      <div class="nope">
+        <div class="eyebrow-sm">What you won't find here</div>
+        <ul>
+          <li><span class="x" aria-hidden="true">✕</span><div><b>MBAs</b><span class="t">No MBAs were harmed in the making of this platform.</span></div></li>
+          <li><span class="x" aria-hidden="true">✕</span><div><b>Buzzwords</b><span class="t">Nobody here will ask you to "leverage cross-functional synergies." Ever.</span></div></li>
+          <li><span class="x" aria-hidden="true">✕</span><div><b>Assuming you already speak the language</b><span class="t">Every acronym gets explained the first time. Like EAC (Estimate at Completion: what the whole job will cost by the time it's done). See? Painless.</span></div></li>
+          <li><span class="x" aria-hidden="true">✕</span><div><b>Four-hour webinars</b><span class="t">Lessons fit in a lunch break, not a lost afternoon.</span></div></li>
+        </ul>
+      </div>
+
+      <div class="basics">
+        <div class="eyebrow-sm">The rule I stole from Special Forces</div>
+        <h3 class="card-h3">Practice the basics. Every day.</h3>
+        <p>At SFAS (Special Forces Assessment and Selection), one of the cadre asked us what actually makes Special Forces soldiers special. People guessed the cool stuff. Sniper school. Ranger school.</p>
+        <p>His answer: they practice the basics every day. So when the real fight shows up, it isn't a big moment. It's just another day they've already lived a thousand times in training.</p>
+        <div class="streak" aria-hidden="true"><div class="day"><div class="dot">✓</div><span>WED</span></div><div class="day"><div class="dot">✓</div><span>THU</span></div><div class="day"><div class="dot">✓</div><span>FRI</span></div><div class="day"><div class="dot">✓</div><span>SAT</span></div><div class="day"><div class="dot">✓</div><span>SUN</span></div><div class="day"><div class="dot">✓</div><span>MON</span></div><div class="day today"><div class="dot">✓</div><span>TUE</span></div></div>
+        <div class="streak-cap">🔥 7-day streak. Honestly, that's the whole strategy.</div>
+        <p>That's how Acqlerate is built. Short lessons, a quick daily challenge, and a streak that keeps you honest. So the next time someone in a meeting asks about your DSO, it isn't a big moment.</p>
+        <p class="punch">It's just Tuesday.</p>
+      </div>
+
+      <div class="presence">
+        <div class="eyebrow-sm">One more thing I believe</div>
+        <h3 class="card-h3">Presence is power.</h3>
+        <p>A leader shouldn't be a ghost you only know from an email signature. I'd rather you actually know me.</p>
+        <p>So if a lesson confuses you, you spot something wrong, or you just want to argue about contract types, write to me. You'll get me, not a ticket number.</p>
+        <a class="mail-link" href="mailto:lucas@acqlerate.com">✉️ lucas@acqlerate.com</a>
+        <p class="small">Or follow along. I post the short versions of the lessons here.</p>
+        <div class="social-row">
+          <a href="https://www.linkedin.com/company/acqlerate/" target="_blank" rel="noopener" class="social-card">
+            <div class="social-icon linkedin">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.114 20.452H3.558V9h3.556v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </div>
+            <div>
+              <div class="social-text-name">LinkedIn</div>
+              <div class="social-text-sub">Follow Acqlerate</div>
+            </div>
+          </a>
+          <a href="https://www.facebook.com/profile.php?id=61590468715890" target="_blank" rel="noopener" class="social-card">
+            <div class="social-icon facebook">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+            </div>
+            <div>
+              <div class="social-text-name">Facebook</div>
+              <div class="social-text-sub">Follow Acqlerate</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="closer">
+        <div class="big">If I can do it,<br><span>you can.</span></div>
+        <p>I learned this system from zero, as an Army network guy who couldn't have told you what DSO stood for. Now I build the lessons. Start where I'd tell a friend to start: Module 1. It's free.</p>
+        <a href="/app#/auth" class="btn">Start Module 1 Free →</a>
+      </div>
+
+      <div class="fineprint"><strong>The paperwork</strong>, for anyone who skipped straight here looking for credentials: U.S. Army veteran. CCIE (Cisco's top networking certification) and PMP. Led a DoD program with a $950M contract ceiling supporting U.S. Air Forces in Europe.</div>
+
     </div>
   </section>
 
@@ -238,7 +342,7 @@
           </div>
           <div class="stat-card-sm">
             <div class="stat-num">12+ years</div>
-            <div class="stat-desc">Average time it now takes DoD to deliver a major weapon system capability — GAO ties this directly to thinning program office staff and workforce gaps.</div>
+            <div class="stat-desc">Average time it now takes DoD to deliver a major weapon system capability. GAO ties this directly to thinning program office staff and workforce gaps.</div>
             <div class="stat-source">Source: <a href="https://www.meritalk.com/articles/gao-dod-weapons-acquisition-continues-to-face-delays/" target="_blank" rel="noopener">GAO-26-108457</a>, Jul 2026</div>
           </div>
         </div>
