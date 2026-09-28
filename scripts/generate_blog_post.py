@@ -24,7 +24,10 @@ ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 if not ANTHROPIC_API_KEY and "--selftest" not in sys.argv:
     raise SystemExit("ANTHROPIC_API_KEY environment variable is not set. Set it before running this script.")
 DUPE_THRESHOLD = float(os.environ.get("DUPE_THRESHOLD", "0.30"))
-CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5")
+CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5-5")
+# Backup if the main model is unavailable (launch-day overload, renamed or
+# retired), so a scheduled run still publishes instead of failing.
+FALLBACK_MODEL = os.environ.get("CLAUDE_FALLBACK_MODEL", "claude-sonnet-5")
 WEB_SEARCH_TOOL = os.environ.get("WEB_SEARCH_TOOL", "web_search_20260318")
 BLOG_DIR       = Path(__file__).parent.parent / "client" / "public" / "blog"
 REPO_ROOT      = Path(__file__).parent.parent
@@ -384,28 +387,39 @@ def _text_of(result: dict) -> str:
     return "".join(b.get("text", "") for b in result.get("content", []) if b.get("type") == "text")
 
 
-def claude_generate(prompt: str) -> str:
+def claude_generate(prompt: str, model: str | None = None) -> str:
+    model = model or CLAUDE_MODEL
     try:
         return _text_of(_api({
-            "model": CLAUDE_MODEL,
+            "model": model,
             "max_tokens": 8192,
             "messages": [{"role": "user", "content": prompt}],
         }))
     except urllib.error.HTTPError as e:
-        print(f"Claude API error {e.code}: {e.read().decode()[:500]}"); sys.exit(1)
+        detail = e.read().decode()[:500]
+        if model != FALLBACK_MODEL:
+            print(f"Claude API error {e.code} on {model}: {detail}")
+            print(f"Retrying with {FALLBACK_MODEL}.")
+            return claude_generate(prompt, FALLBACK_MODEL)
+        print(f"Claude API error {e.code}: {detail}"); sys.exit(1)
     except Exception as e:
+        if model != FALLBACK_MODEL:
+            print(f"Claude error on {model}: {e}. Retrying with {FALLBACK_MODEL}.")
+            return claude_generate(prompt, FALLBACK_MODEL)
         print(f"Claude error: {e}"); sys.exit(1)
 
 
-def claude_research(prompt: str) -> str:
-    """Research with live web search. Falls back to a plain call if the tool fails,
-    so a search outage degrades quality instead of killing the run."""
+def claude_research(prompt: str, model: str | None = None) -> str:
+    """Research with live web search. If the main model fails, retries once on
+    FALLBACK_MODEL; if that fails too, falls back to a plain call, so an outage
+    degrades quality instead of killing the run."""
+    model = model or CLAUDE_MODEL
     tools = [{"type": WEB_SEARCH_TOOL, "name": "web_search", "max_uses": 4}]
     messages = [{"role": "user", "content": prompt}]
     collected, searches = [], 0
     try:
         for _ in range(5):
-            payload = {"model": CLAUDE_MODEL, "max_tokens": 8192,
+            payload = {"model": model, "max_tokens": 8192,
                        "messages": messages, "tools": tools}
             result = _api_streamed(payload)
             searches += (result.get("usage", {}).get("server_tool_use", {})
@@ -415,15 +429,17 @@ def claude_research(prompt: str) -> str:
                 break
             messages.append({"role": "assistant", "content": result["content"]})
         out = "\n".join(t for t in collected if t.strip())
-        print(f"Research complete ({searches} web searches)")
+        print(f"Research complete ({searches} web searches, {model})")
         return out
     except urllib.error.HTTPError as e:
-        print(f"Web search unavailable ({e.code}): {e.read().decode()[:300]}")
-        print("Falling back to research without web access.")
-        return claude_generate(prompt)
+        print(f"Web search unavailable on {model} ({e.code}): {e.read().decode()[:300]}")
     except Exception as e:
-        print(f"Web search error: {e} - falling back to research without web access.")
-        return claude_generate(prompt)
+        print(f"Web search error on {model}: {e}")
+    if model != FALLBACK_MODEL:
+        print(f"Retrying research with {FALLBACK_MODEL}.")
+        return claude_research(prompt, FALLBACK_MODEL)
+    print("Falling back to research without web access.")
+    return claude_generate(prompt, FALLBACK_MODEL)
 
 
 EM_DASH_RANGE = re.compile(r"(\d)\s*[\u2014\u2013]\s*(\d)")
