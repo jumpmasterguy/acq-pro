@@ -128,7 +128,7 @@ function ExpandableListItemCard({ item }: { item: ExpandableItem }) {
                 </div>
               )}
               {(section.type === 'text' || !section.type) && section.body && (
-                <p className="text-sm text-muted-foreground leading-relaxed">{section.body}</p>
+                <p className="text-sm text-foreground/85 leading-relaxed">{section.body}</p>
               )}
               {(section.type === 'text' || !section.type) && section.items && (
                 <ul className="space-y-1.5 mt-2">
@@ -1086,7 +1086,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     </div>
                   )}
                   {block.body && block.body.split('\n\n').filter(Boolean).map((para, pi) => (
-                    <p key={pi} className={`text-[15px] text-muted-foreground leading-relaxed${pi > 0 ? ' mt-3' : ''}`}>
+                    <p key={pi} className={`text-[15px] text-foreground/85 leading-relaxed${pi > 0 ? ' mt-3' : ''}`}>
                       {para.trim().split(/\*\*([^*]+)\*\*/).map((seg, si) =>
                         si % 2 === 1
                           ? <strong key={si} className="font-semibold text-foreground">{seg}</strong>
@@ -1123,7 +1123,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     <div>
                       {block.heading && <h3 className="font-semibold text-base mb-2 text-primary">{block.heading}</h3>}
                       {block.body && block.body.split('\n\n').filter(Boolean).map((para, pi) => (
-                        <p key={pi} className={`text-[15px] text-muted-foreground leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>
+                        <p key={pi} className={`text-[15px] text-foreground/85 leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>
                           <AcronymText text={para.trim()} keyTerms={lesson!.keyTerms} seenTerms={seenTermsRef.current} />
                         </p>
                       ))}
@@ -1140,7 +1140,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     <AlertTriangle className="w-4.5 h-4.5 text-red-500 flex-shrink-0 mt-0.5" />
                     <div>
                       {block.heading && <h3 className="font-semibold text-base mb-2 text-red-700 dark:text-red-400">{block.heading}</h3>}
-                      {block.body && <p className="text-[15px] text-muted-foreground leading-relaxed">{block.body}</p>}
+                      {block.body && <p className="text-[15px] text-foreground/85 leading-relaxed">{block.body}</p>}
                     </div>
                   </div>
                 </div>
@@ -1155,7 +1155,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                     <div>
                       {block.heading && <h3 className="font-semibold text-base mb-2 text-amber-700 dark:text-amber-400">{block.heading}</h3>}
                       {block.body && block.body.split('\n\n').filter(Boolean).map((para, pi) => (
-                        <p key={pi} className={`text-[15px] text-muted-foreground leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>{para.trim()}</p>
+                        <p key={pi} className={`text-[15px] text-foreground/85 leading-relaxed${pi > 0 ? ' mt-2' : ''}`}>{para.trim()}</p>
                       ))}
                     </div>
                   </div>
@@ -3059,7 +3059,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                           <span className="text-xs font-bold text-primary uppercase tracking-wide leading-tight">{row.label}</span>
                           {row.badge && <span className="block mt-0.5 text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded font-medium w-fit">{row.badge}</span>}
                         </div>
-                        <div className="flex-1 text-sm text-muted-foreground leading-relaxed">{row.text}</div>
+                        <div className="flex-1 text-sm text-foreground/85 leading-relaxed">{row.text}</div>
                       </div>
                     ))}
                   </div>
@@ -3414,7 +3414,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             return lvl.sections.map((section: any, si: number) => (
               <div key={si} className="space-y-3">
                 {section.heading && <h3 className="font-bold text-sm text-foreground">{section.heading}</h3>}
-                {section.content && <p className="text-sm text-muted-foreground leading-relaxed">{section.content}</p>}
+                {section.content && <p className="text-sm text-foreground/85 leading-relaxed">{section.content}</p>}
                 {section.items && (
                   <ul className="space-y-2">
                     {section.items.map((item: string, ii: number) => {
@@ -3586,7 +3586,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                 <Briefcase className="w-4 h-4 text-primary flex-shrink-0" />
                 <h3 className="font-bold text-sm">If You Are on the Contractor Side</h3>
               </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">{lesson.contractorNote}</p>
+              <p className="text-sm text-foreground/85 leading-relaxed">{lesson.contractorNote}</p>
             </div>
           )}
 
@@ -3634,7 +3634,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
               </div>
               {expandedTerm === term.term && (
                 <div className="px-5 pb-4 border-t border-border/50 bg-muted/10">
-                  <p className="text-sm text-muted-foreground leading-relaxed pt-3">{term.definition}</p>
+                  <p className="text-sm text-foreground/85 leading-relaxed pt-3">{term.definition}</p>
                 </div>
               )}
             </div>

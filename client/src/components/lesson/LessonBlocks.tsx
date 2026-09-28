@@ -111,7 +111,7 @@ export function MobileTableCards({
         );
       })}
 
-      {explanation && <p className="text-muted-foreground">{explanation}</p>}
+      {explanation && <p className="text-foreground/85">{explanation}</p>}
     </div>
   );
 }
@@ -460,7 +460,7 @@ export function FormulaBlock({
         {explanation && (
           <div className="flex gap-2.5 px-1 pt-1">
             <Lightbulb className="mt-1 h-4 w-4 flex-shrink-0" style={{ color: "#d97706" }} />
-            <p className="leading-relaxed text-muted-foreground">{explanation}</p>
+            <p className="leading-relaxed text-foreground/85">{explanation}</p>
           </div>
         )}
       </div>
