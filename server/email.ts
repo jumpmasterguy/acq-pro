@@ -215,6 +215,32 @@ export async function sendPasswordResetEmail(
   console.log(`[email] password reset sent to ${to} (firstPassword=${isFirstPassword})`);
 }
 
+// ─── Starter Kit contents (one list for every email that sends the kits) ──
+// Rebuild the PDFs with scripts/starter-kit/build_starter_kits.py and update
+// STARTER_KIT_EDITION here in the same commit.
+const STARTER_KIT_EDITION = 'September 2026';
+const STARTER_KIT_ITEMS = {
+  usg: [
+    'What changed in 2025 and 2026: the FAR overhaul, CMMC, the end of JCIDS, new thresholds',
+    'The six acquisition pathways, milestones and ACAT levels',
+    'The dollar lines that come up in every meeting',
+    '90+ acronyms decoded, a career roadmap and the 5 mistakes new PMs make',
+  ],
+  contractor: [
+    'What changed: FAR clause moves, the CMMC pause, TINA and EVM thresholds',
+    'Task orders vs. standalone contracts, and when GSA buys for DoD',
+    "Who's actually buying, and the thresholds that change how you bid",
+    '90+ terms decoded, the 5 mistakes contractors make and a pre-bid checklist',
+  ],
+} as const;
+
+function kitItemCards(items: readonly string[]): string {
+  return items.map((item, i) => `
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:${i === items.length - 1 ? 24 : 10}px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 18px">
+      <p style="font-size:14px;font-weight:600;color:#0d2137;margin:0">${item}</p>
+    </td></tr></table>`).join('');
+}
+
 // ─── Starter Kit Email ────────────────────────────────────────────────────
 // Sent after onboarding is complete and role is known
 
@@ -234,13 +260,13 @@ export async function sendStarterKitEmail(to: string, username: string, role: Us
     ? 'The Contractor\'s Acquisition Starter Kit'
     : isUSG
     ? 'The Acquisition Starter Kit (USG Edition)'
-    : 'Both Starter Kits — USG & Contractor';
+    : 'Both Starter Kits: Government and Contractor';
 
   const kitDesc = isContractor
-    ? 'Built for defense contractors, BD professionals, and proposal teams — contracts, task orders, vehicles, IDIQ structures, common mistakes, and the acronym glossary you need from day one.'
+    ? `For BD, capture, proposal and contracts teams. How the government buys in 2026, who actually buys, and the mistakes that cost contractors the recompete. Updated ${STARTER_KIT_EDITION}.`
     : isUSG
-    ? 'Built for government acquisition professionals — DoD lifecycle, ACAT levels, key roles, acquisition pathways, the 5 most common PM mistakes, and the vocabulary you need to be effective.'
-    : 'Because understanding both sides of the table is one of the fastest ways to accelerate your career — we\'re sending you both the USG and Contractor editions.';
+    ? `For government acquisition professionals. How DoD buys in 2026, the numbers that come up in every meeting, and the five mistakes new PMs make. Updated ${STARTER_KIT_EDITION}.`
+    : `Understanding both sides of the table is one of the fastest ways to grow in this field, so we're sending you both editions. Updated ${STARTER_KIT_EDITION}.`;
 
   const downloadButtons = isContractor ? `
     <a href="${APP_URL}/starter-kit-contractor.pdf"
@@ -274,59 +300,24 @@ export async function sendStarterKitEmail(to: string, username: string, role: Us
     </div>
 
     <div style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:28px;border:2px solid #264d73">
-      <p style="color:#ffffff;font-size:14px;margin:0 0 20px;line-height:1.65">Your PDF reference guide — save it, share it with your team, and use it when you need a quick reminder of the terminology or frameworks that come up every day in this field.</p>
+      <p style="color:#ffffff;font-size:14px;margin:0 0 20px;line-height:1.65">Your PDF field guide. Save it, share it with your team, and keep it open the next time someone says ACAT in a meeting.</p>
       ${downloadButtons}
     </div>
 
     <p style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#01696f;margin:0 0 14px">What's inside</p>
-    ${isContractor ? `
+    ${isContractor ? kitItemCards(STARTER_KIT_ITEMS.contractor) : isUSG ? kitItemCards(STARTER_KIT_ITEMS.usg) : `
     <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:10px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
-      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">Task Orders vs. Standalone Contracts</p>
-      <p style="font-size:13px;color:#64748b;margin:0">IDIQs, fair opportunity, single vs. multiple award — how DoD actually buys services</p>
-    </td></tr></table>
-    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:10px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
-      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">GSA AAS-D & IDIQ Vehicle Landscape</p>
-      <p style="font-size:13px;color:#64748b;margin:0">OASIS+, FEDSIM, ASTRO, and the vehicles that matter for defense contractors</p>
-    </td></tr></table>
-    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:10px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
-      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">Who's Buying — AFICC, ESS & MAJCOM Contracting</p>
-      <p style="font-size:13px;color:#64748b;margin:0">The three tiers of Air Force contracting and how to engage each one</p>
+      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">Government edition</p>
+      <p style="font-size:13px;color:#64748b;margin:0">The government side: what changed, pathways and milestones, thresholds, acronyms and a career roadmap</p>
     </td></tr></table>
     <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
-      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">5 Most Common Contractor Mistakes + 70+ Acronym Glossary</p>
-      <p style="font-size:13px;color:#64748b;margin:0">Pipeline strategy, COR relationship, DCAA compliance, recompete planning</p>
-    </td></tr></table>
-    ` : isUSG ? `
-    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:10px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
-      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">DoD Acquisition Lifecycle Cheat Sheet</p>
-      <p style="font-size:13px;color:#64748b;margin:0">All 6 AAF pathways with timelines, governing DoDIs, and MDA levels</p>
-    </td></tr></table>
-    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:10px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
-      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">ACAT Decision Tree</p>
-      <p style="font-size:13px;color:#64748b;margin:0">ACAT I/II/III thresholds, MDA levels, Nunn-McCurdy breach triggers</p>
-    </td></tr></table>
-    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:10px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
-      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">5 Most Common PM Mistakes</p>
-      <p style="font-size:13px;color:#64748b;margin:0">IMS discipline, Nunn-McCurdy thresholds, EVM signals, requirements quality, stakeholder management</p>
-    </td></tr></table>
-    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
-      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">50+ Acronym Glossary & AAF Pathway Selector</p>
-      <p style="font-size:13px;color:#64748b;margin:0">Every acronym you'll encounter in your first year, organized by category</p>
-    </td></tr></table>
-    ` : `
-    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:10px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
-      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">USG Edition — Lifecycle, ACAT, PM Mistakes, Acronyms</p>
-      <p style="font-size:13px;color:#64748b;margin:0">The government side: programs, milestones, oversight, and career paths</p>
-    </td></tr></table>
-    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px">
-      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">Contractor Edition — Vehicles, Mistakes, Glossary, Who's Buying</p>
-      <p style="font-size:13px;color:#64748b;margin:0">The industry side: IDIQs, BD strategy, DCAA compliance, COR relationship</p>
+      <p style="font-size:14px;font-weight:700;color:#0d2137;margin:0 0 3px">Contractor edition</p>
+      <p style="font-size:13px;color:#64748b;margin:0">The industry side: task orders, who's buying, CMMC and OTs, and a pre-bid checklist</p>
     </td></tr></table>
     `}
-
     <hr style="border:none;border-top:1px solid #f1f5f9;margin:4px 0 24px" />
-    <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 6px">This is just the start — Module 1 inside Acqlerate is waiting for you whenever you're ready to go deeper.</p>
-    <p style="font-size:14px;color:#0d2137;font-weight:700;margin:0">— Lucas, Acqlerate</p>
+    <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 6px">This is just the start. Module 1 inside Acqlerate is free and waiting whenever you're ready to go deeper.</p>
+    <p style="font-size:14px;color:#0d2137;font-weight:700;margin:0">Lucas, Acqlerate</p>
   `;
 
   await resend.emails.send({
@@ -334,7 +325,7 @@ export async function sendStarterKitEmail(to: string, username: string, role: Us
       replyTo: "hello@acqlerate.com",
     to,
     subject: `Your Acqlerate Starter Kit is ready to download`,
-    html: emailShell('Your free acquisition reference guide — tailored to your role.', body, to),
+    html: emailShell('Your free acquisition field guide, written for your side of the table.', body, to),
   });
   console.log(`[email] Starter kit email sent to ${to} (role: ${role})`);
 }
@@ -739,20 +730,20 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
         name: 'Government edition',
         pdf: `${APP_URL}/starter-kit-usg.pdf`,
         who: 'For DoD civilians, uniformed PMs, COs and budget analysts working inside a program office or contracting shop.',
-        items: ['DoD acquisition lifecycle cheat sheet', 'ACAT decision tree', '50+ acronyms, decoded', 'The 5 mistakes new PMs make'],
+        items: STARTER_KIT_ITEMS.usg,
       },
       contractor: {
         name: 'Contractor edition',
         pdf: `${APP_URL}/starter-kit-contractor.pdf`,
         who: 'For contractor PMs, BD leads, capture managers and proposal teams working for industry.',
-        items: ['Task orders vs. standalone contracts', 'GSA AAS-D and the IDIQ landscape', "Who's buying: AFICC, ESS and MAJCOM", '70+ acronyms and the 5 mistakes contractors make'],
+        items: STARTER_KIT_ITEMS.contractor,
       },
     } as const;
     const ed = editions[kitEdition];
     const other = editions[kitEdition === 'usg' ? 'contractor' : 'usg'];
     const body = `
       <div style="font-size:18px;font-weight:800;color:#0d2137;margin:0 0 8px">Your ${ed.name} is ready.</div>
-      <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 20px">Here's the Acquisition Starter Kit you asked for, updated July 2026 for the new thresholds. Keep it open the next time someone says ACAT in a meeting.</p>
+      <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 20px">Here's the Acquisition Starter Kit you asked for, updated ${STARTER_KIT_EDITION} for the FAR overhaul, the CMMC pause and the new thresholds. Keep it open the next time someone says ACAT in a meeting.</p>
       <div style="background:#f0f9fa;border:2px solid #01696f;border-radius:12px;padding:24px 28px;margin-bottom:16px">
         <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#01696f;margin-bottom:8px">The Acquisition Starter Kit · ${ed.name}</div>
         <p style="font-size:13px;color:#374151;line-height:1.6;margin:0 0 12px">${ed.who}</p>
@@ -787,7 +778,7 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
 
   const body = `
     <div style="font-size:18px;font-weight:800;color:#0d2137;margin:0 0 8px">Your Acquisition Starter Kit is ready. Both editions.</div>
-    <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 20px">No extra steps. Here are both PDFs, updated July 2026. Grab whichever side of the table applies to you (or both).</p>
+    <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 20px">No extra steps. Here are both PDFs, updated ${STARTER_KIT_EDITION}. Grab whichever side of the table applies to you (or both).</p>
 
     <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px">
       <tr>
@@ -798,10 +789,7 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
             <div style="font-size:12px;color:#374151;line-height:1.6;margin-bottom:12px">DoD civilians, active duty, COs, PMs, budget analysts working inside a program office or contracting shop.</div>
             <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#01696f;margin-bottom:6px">Kit includes:</div>
             <ul style="font-size:12px;color:#374151;margin:0;padding-left:16px;line-height:1.8">
-              <li>DoD Acquisition Lifecycle Cheat Sheet</li>
-              <li>ACAT Decision Tree</li>
-              <li>5 Most Common PM Mistakes</li>
-              <li>50+ Acronym Glossary</li>
+              ${STARTER_KIT_ITEMS.usg.map((i) => `<li>${i}</li>`).join('')}
             </ul>
             <a href="${APP_URL}/starter-kit-usg.pdf"
                style="display:inline-block;margin-top:14px;background:#01696f;color:#ffffff;font-weight:800;font-size:13px;padding:10px 20px;border-radius:8px;text-decoration:none">
@@ -816,10 +804,7 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
             <div style="font-size:12px;color:#374151;line-height:1.6;margin-bottom:12px">Prime/sub contractors, BD leads, Capture Managers, proposal teams, and program support working for industry.</div>
             <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#d4a017;margin-bottom:6px">Kit includes:</div>
             <ul style="font-size:12px;color:#374151;margin:0;padding-left:16px;line-height:1.8">
-              <li>Task Orders vs. Contracts Guide</li>
-              <li>GSA AAS-D & IDIQ Vehicle Landscape</li>
-              <li>Who's Buying: AFICC, ESS & MAJCOM</li>
-              <li>5 Common Contractor Mistakes + 70+ Acronyms</li>
+              ${STARTER_KIT_ITEMS.contractor.map((i) => `<li>${i}</li>`).join('')}
             </ul>
             <a href="${APP_URL}/starter-kit-contractor.pdf"
                style="display:inline-block;margin-top:14px;background:#d4a017;color:#0d2137;font-weight:800;font-size:13px;padding:10px 20px;border-radius:8px;text-decoration:none">
