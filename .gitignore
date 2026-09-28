@@ -10,3 +10,9 @@ __pycache__/
 
 # Staged for manual deletion (large originals, never commit)
 _to_delete/
+
+# Local working folders from Claude sessions (durable notes go to the claude.ai Project)
+Claude outputs/
+claude/
+_claude-staging/
+_stale-git-locks/

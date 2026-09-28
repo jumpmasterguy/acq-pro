@@ -1,0 +1,205 @@
+diff --git a/client/src/lib/careerTracks.ts b/client/src/lib/careerTracks.ts
+index b4042f0..5626a89 100644
+--- a/client/src/lib/careerTracks.ts
++++ b/client/src/lib/careerTracks.ts
+@@ -3,6 +3,8 @@
+  * Shared between Dashboard (filter bar) and ModulePage (lesson ordering).
+  */
+ 
++import { getAllLessons, parseDuration } from "./curriculum";
++
+ export type CareerTrackId = 'usg_pm' | 'contractor_pm' | 'contracting_officer' | 'capture_bd';
+ 
+ export interface CareerTrackData {
+@@ -10,6 +12,13 @@ export interface CareerTrackData {
+   label: string;
+   shortLabel: string;
+   desc: string;
++  /** Emoji for the path-switcher card (My Account page). Plain string, not
++   * JSX, to keep this file's "pure data" contract from the header comment. */
++  icon: string;
++  /** Funny "before" one-liner for the path-switcher card. */
++  before: string;
++  /** Funny "after" one-liner for the path-switcher card. */
++  after: string;
+   /** Lessons shown first, in order — this is what the user should focus on */
+   primaryLessons: string[];
+   /** Lessons shown below a divider — useful but not the core path */
+@@ -22,6 +31,9 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
+     label: 'USG Program Manager',
+     shortLabel: 'USG PM',
+     desc: 'Government-side PM managing programs, budgets, oversight, and the full acquisition lifecycle',
++    icon: '🏛️',
++    before: 'Before: buried in status decks, hoping nobody asks about the IPMR',
++    after: "After: the PM who reads the IPMR before the PMR — and brings receipts",
+     primaryLessons: [
+       'foundations-1', 'foundations-3', 'foundations-5',
+       'foundations-6', 'foundations-9', 'foundations-2', 'foundations-7',
+@@ -43,6 +55,9 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
+     label: 'DoD Contractor PM',
+     shortLabel: 'Contractor PM',
+     desc: 'Industry-side PM executing contracts, managing costs, task orders, and subcontractors',
++    icon: '💼',
++    before: 'Before: nodding along when someone says "fully burdened rate"',
++    after: 'After: fluent in burn rate, DCAA audits, and CPAF math',
+     primaryLessons: [
+       // Foundations — what you need to operate, skip ACAT/congressional deep dives
+       'foundations-1', 'foundations-3', 'foundations-5', 'foundations-9',
+@@ -72,6 +87,9 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
+     label: 'Contracting Specialist / KO',
+     shortLabel: 'KO / Specialist',
+     desc: 'Source selection, contract administration, FAR/DFARS compliance',
++    icon: '📜',
++    before: 'Before: FAR Part 15 gives you a minor existential crisis',
++    after: 'After: running source selection like you wrote the FAR yourself',
+     primaryLessons: [
+       'foundations-1', 'foundations-3', 'foundations-5',
+       'foundations-6', 'foundations-9', 'foundations-2', 'foundations-7',
+@@ -92,6 +110,9 @@ export const CAREER_TRACK_DATA: CareerTrackData[] = [
+     label: 'Capture & Business Development',
+     shortLabel: 'Capture / BD',
+     desc: 'Win more business — proposals, pipeline, and source selection strategy',
++    icon: '🎯',
++    before: 'Before: chasing revenue and QoQ project fire drills',
++    after: 'After: running the full capture lifecycle like a playbook, not a scramble',
+     primaryLessons: [
+       'foundations-1', 'foundations-3', 'foundations-5',
+       'contracts-8', 'contracts-1', 'contracts-4', 'contracts-7', 'contracts-5', 'contracts-9', 'contracts-2',
+@@ -147,3 +168,18 @@ export function sortLessonsByTrack(
+ 
+   return { primary, bonus, unclassified };
+ }
++
++/**
++ * Core-focus lesson count + total minutes for a track, for the path-switcher
++ * card on the My Account page ("24 core lessons · 5h 10m"). Computed against
++ * the actual curriculum rather than trackData.primaryLessons.length directly,
++ * so a lesson id that's been renamed or removed can never inflate the count.
++ */
++export function getTrackStats(id: CareerTrackId): { lessonCount: number; totalMinutes: number } {
++  const track = getTrackData(id);
++  if (!track) return { lessonCount: 0, totalMinutes: 0 };
++  const primarySet = new Set(track.primaryLessons);
++  const matches = getAllLessons().filter(({ lesson }) => primarySet.has(lesson.id));
++  const totalMinutes = matches.reduce((sum, { lesson }) => sum + parseDuration(lesson.duration), 0);
++  return { lessonCount: matches.length, totalMinutes };
++}
+diff --git a/client/src/pages/MyAccountPage.tsx b/client/src/pages/MyAccountPage.tsx
+index 30cd11f..32cece1 100644
+--- a/client/src/pages/MyAccountPage.tsx
++++ b/client/src/pages/MyAccountPage.tsx
+@@ -6,7 +6,10 @@ import { Label } from "@/components/ui/label";
+ import { useToast } from "@/hooks/use-toast";
+ import { apiRequest } from "@/lib/queryClient";
+ import { hasPaidPlan, trialDaysRemaining } from "@shared/access";
+-import type { AuthUser, UserProfile } from "./AuthPage";
++import { CAREER_TRACK_DATA, getTrackStats, type CareerTrackId } from "@/lib/careerTracks";
++import { formatDuration } from "@/lib/curriculum";
++import { cn } from "@/lib/utils";
++import type { AuthUser } from "./AuthPage";
+ 
+ interface MyAccountPageProps {
+   user: AuthUser;
+@@ -15,14 +18,11 @@ interface MyAccountPageProps {
+   onNameUpdated: (firstName: string, lastName: string, username: string) => void;
+ }
+ 
+-// "Path selected" = the goal picked during onboarding (OnboardingFlow.tsx
+-// calls this step "Build My Path") — the same four labels shown there.
+-const GOAL_LABELS: Record<UserProfile['goal'], string> = {
+-  program_management: 'Become a Better Program Manager',
+-  contracts_finance: 'Master Contracts & Finance',
+-  bd_capture: 'Win More Business (BD / Capture)',
+-  full_picture: 'Understand the Full Picture',
+-};
++// Same localStorage key + default Dashboard.tsx already uses for the career
++// filter bar — the path switcher here is a second way to change the same
++// setting, so it has to read/write the exact same place to stay in sync.
++const ACTIVE_CAREER_KEY = 'acq_active_career';
++const DEFAULT_CAREER: CareerTrackId = 'contractor_pm';
+ 
+ const SUBSCRIPTION_LABELS: Record<string, { label: string; tone: string }> = {
+   free: { label: 'Free', tone: 'bg-muted text-muted-foreground' },
+@@ -49,6 +49,9 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated }
+   const [lastName, setLastName] = useState(user.lastName ?? "");
+   const [saving, setSaving] = useState(false);
+   const [portalLoading, setPortalLoading] = useState(false);
++  const [activeCareer, setActiveCareer] = useState<CareerTrackId>(() => {
++    try { return (localStorage.getItem(ACTIVE_CAREER_KEY) as CareerTrackId) || DEFAULT_CAREER; } catch { return DEFAULT_CAREER; }
++  });
+ 
+   const dirty = firstName.trim() !== (user.firstName ?? "") || lastName.trim() !== (user.lastName ?? "");
+   const canSave = dirty && firstName.trim().length > 0 && lastName.trim().length > 0 && !saving;
+@@ -86,7 +89,14 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated }
+     }
+   };
+ 
+-  const goal = user.userProfile?.goal;
++  const handleSelectPath = (id: CareerTrackId) => {
++    if (id === activeCareer) return;
++    setActiveCareer(id);
++    try { localStorage.setItem(ACTIVE_CAREER_KEY, id); } catch {}
++    const track = CAREER_TRACK_DATA.find(t => t.id === id);
++    toast({ title: `Switched to ${track?.label ?? id}`, description: "Your Dashboard will reorder lessons to match on your next visit." });
++  };
++
+   const sub = SUBSCRIPTION_LABELS[user.subscriptionStatus] ?? SUBSCRIPTION_LABELS.free;
+   const paid = hasPaidPlan(user);
+   const daysLeft = trialDaysRemaining(user);
+@@ -139,13 +149,50 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated }
+         <p className="text-xs text-muted-foreground mt-1">Tied to your login — contact support to change it.</p>
+       </Section>
+ 
+-      {/* Path selected — read-only */}
++      {/* Your Path — editable, drives lesson ordering on the Dashboard */}
+       <Section icon={Compass} title="Your Path">
+-        {goal ? (
+-          <p className="text-sm text-foreground font-medium">{GOAL_LABELS[goal] ?? goal}</p>
+-        ) : (
+-          <p className="text-sm text-muted-foreground">You haven't set a learning path yet.</p>
+-        )}
++        <div className="space-y-2.5">
++          {CAREER_TRACK_DATA.map((track) => {
++            const isActive = track.id === activeCareer;
++            const stats = getTrackStats(track.id);
++            return (
++              <button
++                key={track.id}
++                type="button"
++                onClick={() => handleSelectPath(track.id)}
++                className={cn(
++                  "w-full text-left rounded-xl border-2 p-3.5 transition-all",
++                  isActive
++                    ? "border-primary bg-primary/5"
++                    : "border-border hover:border-primary/40 hover:bg-muted/30"
++                )}
++                data-testid={`path-card-${track.id}`}
++              >
++                <div className="flex items-start gap-3">
++                  <div className="text-2xl leading-none flex-shrink-0">{track.icon}</div>
++                  <div className="flex-1 min-w-0">
++                    <div className="flex items-center gap-2 mb-1 flex-wrap">
++                      <span className="font-semibold text-sm">{track.label}</span>
++                      {isActive && (
++                        <span className="text-[10px] font-bold uppercase tracking-wide text-primary bg-primary/10 px-2 py-0.5 rounded-full">
++                          Current
++                        </span>
++                      )}
++                    </div>
++                    <p className="text-xs text-muted-foreground italic mb-0.5">{track.before}</p>
++                    <p className="text-xs font-medium text-foreground mb-2">{track.after}</p>
++                    <p className="text-[11px] text-muted-foreground">
++                      {stats.lessonCount} core lessons · {formatDuration(stats.totalMinutes)} focused
++                    </p>
++                  </div>
++                </div>
++              </button>
++            );
++          })}
++        </div>
++        <p className="text-xs text-muted-foreground mt-3">
++          Switch anytime — nothing gets locked away. Lessons outside your core focus are still there, just filed as bonus content instead of top billing.
++        </p>
+       </Section>
+ 
+       {/* Subscription — read-only, with billing/upgrade actions */}

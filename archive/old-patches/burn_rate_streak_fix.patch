@@ -1,0 +1,179 @@
+diff --git a/client/src/App.tsx b/client/src/App.tsx
+index a4e3dbf..0d71956 100644
+--- a/client/src/App.tsx
++++ b/client/src/App.tsx
+@@ -639,18 +639,19 @@ function AppContent() {
+             </div>
+           </button>
+ 
+-          {/* Burn Rate — Acqlerate's take on a daily streak. In real acquisitions,
+-              burn rate is how fast a program spends its funding; here it's how
+-              fast you're spending daily reps. */}
++          {/* Burn Rate Streak — Acqlerate's take on a daily streak. In real
++              acquisitions, burn rate is how fast a program spends its
++              funding; here it's how fast you're spending daily reps. Named
++              "...Streak" explicitly so it reads as a streak, not just a rate. */}
+           {streak.currentStreak > 0 ? (
+             <div
+               className="w-full flex items-center gap-2 rounded-lg px-3 py-1.5 bg-orange-500/10 border border-orange-500/30"
+-              title="Burn Rate: your consecutive days active. In acquisitions, burn rate tracks how fast a program spends its funding — here, it tracks how fast you're spending daily reps. Don't let it hit zero."
++              title="Burn Rate Streak: your consecutive days active. In acquisitions, burn rate tracks how fast a program spends its funding — here, it tracks how fast you're spending daily reps. Don't let it hit zero."
+               data-testid="burn-rate-badge"
+             >
+               <Flame className="w-3.5 h-3.5 text-orange-400 flex-shrink-0 fill-orange-400/30" />
+               <span className="text-xs font-bold text-orange-300 flex-1 truncate">
+-                {streak.currentStreak}-day burn rate
++                {streak.currentStreak}-day burn rate streak
+               </span>
+               {streak.currentStreak >= 7 && (
+                 <span className="text-[9px] font-bold text-amber-400 flex-shrink-0">🏆 {streak.longestStreak}d best</span>
+diff --git a/client/src/pages/Dashboard.tsx b/client/src/pages/Dashboard.tsx
+index b38dc07..68d9c7b 100644
+--- a/client/src/pages/Dashboard.tsx
++++ b/client/src/pages/Dashboard.tsx
+@@ -784,19 +784,21 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
+         </div>
+       )}
+ 
+-      {/* ── Burn Rate + Daily Challenge ───────────────────────────────────────
+-          "Burn Rate" is Acqlerate's acquisitions-flavored spin on a daily streak:
+-          in real DoD acquisitions, burn rate is how fast a program spends its
+-          funding. Here, it's how fast you're spending daily reps. */}
++      {/* ── Burn Rate Streak + Daily Challenge ─────────────────────────────────
++          "Burn Rate Streak" is Acqlerate's acquisitions-flavored spin on a
++          daily streak: in real DoD acquisitions, burn rate is how fast a
++          program spends its funding. Here, it's how fast you're spending
++          daily reps. "Streak" is spelled out in the label so it reads as a
++          streak counter, not a rate. */}
+       <div className="grid sm:grid-cols-2 gap-3">
+-        {/* Burn Rate card */}
++        {/* Burn Rate Streak card */}
+         <div
+           className="rounded-2xl border border-orange-500/25 bg-orange-500/[0.04] p-4 flex items-center gap-4"
+           title="In acquisitions, burn rate tracks how fast a program spends its funding. Here, it tracks how fast you're spending daily reps."
+         >
+           <div className="text-4xl">{streak.currentStreak > 0 ? '🔥' : '💤'}</div>
+           <div className="flex-1">
+-            <p className="text-xl font-black">{streak.currentStreak}-day burn rate</p>
++            <p className="text-xl font-black">{streak.currentStreak}-day burn rate streak</p>
+             <p className="text-xs text-muted-foreground">Personal best: {streak.longestStreak} day{streak.longestStreak !== 1 ? 's' : ''}</p>
+           </div>
+           {streak.currentStreak >= 7 && (
+diff --git a/server/auth.ts b/server/auth.ts
+index ca2e144..50f5c91 100644
+--- a/server/auth.ts
++++ b/server/auth.ts
+@@ -49,6 +49,7 @@ declare global {
+       currentStreak: number;
+       longestStreak: number;
+       lastChallengeDate: string | null;
++      lastStreakDate: string | null;
+       dailyChallengeXP: number;
+     }
+   }
+@@ -265,6 +266,12 @@ export function toPassportUser(user: User): Express.User {
+     currentStreak: user.currentStreak ?? 0,
+     longestStreak: user.longestStreak ?? 0,
+     lastChallengeDate: user.lastChallengeDate ?? null,
++    // Same class of bug as the four fields above: without this, every
++    // req.user is missing the one field getDisplayStreak() (server/storage.ts)
++    // needs to tell a live streak from a lapsed one, so routes reading
++    // req.user directly (GET /api/daily-challenge, /api/auth/me) would
++    // always see it as undefined and report the streak as broken.
++    lastStreakDate: user.lastStreakDate ?? null,
+     dailyChallengeXP: ((user.challengeHistory as any[]) ?? []).reduce(
+       (sum, entry) => sum + (entry?.xpEarned ?? 0),
+       0
+diff --git a/server/routes.ts b/server/routes.ts
+index e3b685a..1f99f34 100644
+--- a/server/routes.ts
++++ b/server/routes.ts
+@@ -5,7 +5,7 @@ import passport from "passport";
+ import crypto from "crypto";
+ import path from "path";
+ import fs from "fs";
+-import { storage } from "./storage";
++import { storage, getDisplayStreak } from "./storage";
+ import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
+ import { registerSchema, loginSchema, userProfileSchema } from "@shared/schema";
+ import { hasPaidPlan } from "@shared/access";
+@@ -141,7 +141,7 @@ export async function registerRoutes(
+         moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
+         moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
+         userProfile: (user as any).userProfile ?? null,
+-        currentStreak: (user as any).currentStreak ?? 0,
++        currentStreak: getDisplayStreak((user as any).currentStreak, (user as any).lastStreakDate),
+         longestStreak: (user as any).longestStreak ?? 0,
+         lastChallengeDate: (user as any).lastChallengeDate ?? null,
+       });
+@@ -197,7 +197,7 @@ export async function registerRoutes(
+             moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
+             moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
+             userProfile: (user as any).userProfile ?? null,
+-            currentStreak: (user as any).currentStreak ?? 0,
++            currentStreak: getDisplayStreak((user as any).currentStreak, (user as any).lastStreakDate),
+             longestStreak: (user as any).longestStreak ?? 0,
+             lastChallengeDate: (user as any).lastChallengeDate ?? null,
+           });
+@@ -242,7 +242,7 @@ export async function registerRoutes(
+       moduleSkillLevels: (user.moduleSkillLevels as Record<string, string>) ?? {},
+       moduleAssessmentScores: (user.moduleAssessmentScores as Record<string, number>) ?? {},
+       userProfile: user.userProfile ?? null,
+-      currentStreak: (user as any).currentStreak ?? 0,
++      currentStreak: getDisplayStreak((user as any).currentStreak, (user as any).lastStreakDate),
+       longestStreak: (user as any).longestStreak ?? 0,
+       lastChallengeDate: (user as any).lastChallengeDate ?? null,
+     });
+@@ -1128,7 +1128,7 @@ export async function registerRoutes(
+       date: todayStr,
+       alreadyCompleted,
+       lastChallengeDate: (user as any).lastChallengeDate ?? null,
+-      currentStreak: (user as any).currentStreak ?? 0,
++      currentStreak: getDisplayStreak((user as any).currentStreak, (user as any).lastStreakDate),
+       longestStreak: (user as any).longestStreak ?? 0,
+       questions: todaysQuestions,
+     });
+@@ -1149,7 +1149,7 @@ export async function registerRoutes(
+       score,
+       xpEarned: awarded ? xpEarned : 0,
+       alreadyCompleted: !awarded,
+-      currentStreak: (updated as any).currentStreak ?? 0,
++      currentStreak: getDisplayStreak((updated as any).currentStreak, (updated as any).lastStreakDate),
+       longestStreak: (updated as any).longestStreak ?? 0,
+       message: !awarded
+         ? "You already completed today's challenge — come back tomorrow!"
+diff --git a/server/storage.ts b/server/storage.ts
+index 11f94bc..bdd1fb9 100644
+--- a/server/storage.ts
++++ b/server/storage.ts
+@@ -10,6 +10,30 @@ export type SkillLevel = 'novice' | 'intermediate' | 'advanced';
+ // Every module id in the curriculum — used by the admin "unlock all" action
+ const ALL_MODULE_IDS = ['foundations', 'finance', 'contracts', 'data', 'capture', 'operations'];
+ 
++/**
++ * The stored `currentStreak` only ever gets recomputed when the user does
++ * something (completes a lesson/quiz/daily challenge) — see updateUserStreak
++ * below. That means a user who goes quiet just keeps seeing their last
++ * streak count forever, since nothing runs to notice the gap and zero it
++ * out. Every place that *displays* the streak to the client should go
++ * through this instead of reading the raw column, so a lapsed streak
++ * (more than a day since the last activity) reads as broken (0)
++ * immediately instead of only after the user's next activity re-triggers
++ * updateUserStreak.
++ */
++export function getDisplayStreak(currentStreak: number | null | undefined, lastStreakDate: string | null | undefined): number {
++  if (!lastStreakDate) return 0;
++  const todayStr = new Date().toISOString().slice(0, 10);
++  if (lastStreakDate === todayStr) return currentStreak ?? 0;
++  const yesterday = new Date();
++  yesterday.setDate(yesterday.getDate() - 1);
++  const yesterdayStr = yesterday.toISOString().slice(0, 10);
++  if (lastStreakDate === yesterdayStr) return currentStreak ?? 0;
++  // More than a day has passed since the last completed activity — the
++  // streak is broken even though we haven't written that to the DB yet.
++  return 0;
++}
++
+ // ─── Interface ─────────────────────────────────────────────────────────────
+ 
+ export interface IStorage {
