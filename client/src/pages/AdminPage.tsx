@@ -302,7 +302,7 @@ export default function AdminPage() {
 
   const leadStats = {
     total: leads.length,
-    heroBar: leads.filter(l => l.source === "hero_bar").length,
+    heroBar: leads.filter(l => (l.source ?? "").startsWith("hero_bar")).length,
     exitIntent: leads.filter(l => l.source === "exit_intent").length,
     last7Days: leads.filter(l => {
       const created = new Date(l.createdAt).getTime();

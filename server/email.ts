@@ -661,9 +661,64 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
     return;
   }
 
+  // Homepage kit bar with the edition picker: lead with the side they picked,
+  // keep the other edition one click away.
+  const kitEdition = source === 'hero_bar_usg' ? 'usg' : source === 'hero_bar_contractor' ? 'contractor' : null;
+  if (kitEdition) {
+    const editions = {
+      usg: {
+        name: 'Government edition',
+        pdf: `${APP_URL}/starter-kit-usg.pdf`,
+        who: 'For DoD civilians, uniformed PMs, COs and budget analysts working inside a program office or contracting shop.',
+        items: ['DoD acquisition lifecycle cheat sheet', 'ACAT decision tree', '50+ acronyms, decoded', 'The 5 mistakes new PMs make'],
+      },
+      contractor: {
+        name: 'Contractor edition',
+        pdf: `${APP_URL}/starter-kit-contractor.pdf`,
+        who: 'For contractor PMs, BD leads, capture managers and proposal teams working for industry.',
+        items: ['Task orders vs. standalone contracts', 'GSA AAS-D and the IDIQ landscape', "Who's buying: AFICC, ESS and MAJCOM", '70+ acronyms and the 5 mistakes contractors make'],
+      },
+    } as const;
+    const ed = editions[kitEdition];
+    const other = editions[kitEdition === 'usg' ? 'contractor' : 'usg'];
+    const body = `
+      <div style="font-size:18px;font-weight:800;color:#0d2137;margin:0 0 8px">Your ${ed.name} is ready.</div>
+      <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 20px">Here's the Acquisition Starter Kit you asked for, updated July 2026 for the new thresholds. Keep it open the next time someone says ACAT in a meeting.</p>
+      <div style="background:#f0f9fa;border:2px solid #01696f;border-radius:12px;padding:24px 28px;margin-bottom:16px">
+        <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#01696f;margin-bottom:8px">The Acquisition Starter Kit · ${ed.name}</div>
+        <p style="font-size:13px;color:#374151;line-height:1.6;margin:0 0 12px">${ed.who}</p>
+        <ul style="font-size:13px;color:#374151;margin:0 0 18px;padding-left:18px;line-height:1.8">
+          ${ed.items.map((i) => `<li>${i}</li>`).join('')}
+        </ul>
+        <a href="${ed.pdf}"
+           style="display:inline-block;background:#01696f;color:#ffffff;font-weight:800;font-size:15px;padding:13px 28px;border-radius:8px;text-decoration:none">
+          Download the ${ed.name} →
+        </a>
+      </div>
+      <p style="font-size:13px;color:#64748b;line-height:1.7;margin:0 0 24px">Work with the other side of the table too? <a href="${other.pdf}" style="color:#01696f;font-weight:600;text-decoration:none">Grab the ${other.name}</a>.</p>
+      <div style="background:#0d2137;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:24px;border:1px solid #264d73">
+        <p style="color:#ffffff;font-size:15px;font-weight:700;margin:0 0 6px">Want more than a PDF? Module 1 is free.</p>
+        <p style="color:rgba(255,255,255,0.7);font-size:13px;margin:0 0 20px;line-height:1.6">Create a free account (60 seconds, no card) and start DoD Acquisitions Foundations today.</p>
+        <a href="${APP_URL}/app#/auth"
+           style="display:inline-block;background:#f5c842;color:#0d2137;font-weight:800;font-size:15px;padding:13px 32px;border-radius:8px;text-decoration:none">
+          Start Free →
+        </a>
+      </div>
+    `;
+    await resend.emails.send({
+      from: FROM,
+      replyTo: "hello@acqlerate.com",
+      to,
+      subject: `Your Acquisition Starter Kit (${ed.name})`,
+      html: emailShell(`Your ${ed.name}, ready to download.`, body, to, "You're receiving this because you asked for the Acquisition Starter Kit at acqlerate.com."),
+    });
+    console.log(`[email] Starter kit (${kitEdition}) sent to ${to}`);
+    return;
+  }
+
   const body = `
-    <div style="font-size:18px;font-weight:800;color:#0d2137;margin:0 0 8px">Your Acquisition Starter Kit is ready — both editions.</div>
-    <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 20px">No extra steps. Here are both PDFs, updated July 2026 — grab whichever side of the table applies to you (or both).</p>
+    <div style="font-size:18px;font-weight:800;color:#0d2137;margin:0 0 8px">Your Acquisition Starter Kit is ready. Both editions.</div>
+    <p style="font-size:15px;color:#374151;line-height:1.75;margin:0 0 20px">No extra steps. Here are both PDFs, updated July 2026. Grab whichever side of the table applies to you (or both).</p>
 
     <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px">
       <tr>
@@ -694,7 +749,7 @@ export async function sendLeadNurtureEmail(to: string, source?: string): Promise
             <ul style="font-size:12px;color:#374151;margin:0;padding-left:16px;line-height:1.8">
               <li>Task Orders vs. Contracts Guide</li>
               <li>GSA AAS-D & IDIQ Vehicle Landscape</li>
-              <li>Who's Buying — AFICC, ESS & MAJCOM</li>
+              <li>Who's Buying: AFICC, ESS & MAJCOM</li>
               <li>5 Common Contractor Mistakes + 70+ Acronyms</li>
             </ul>
             <a href="${APP_URL}/starter-kit-contractor.pdf"

@@ -176,15 +176,58 @@
     .top .stat-l { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-top: 8px; }
     @media (max-width: 860px) { .top .stats-row { grid-template-columns: repeat(2, 1fr); } .top .stat:nth-child(odd) { border-left: none; } .top .stat:nth-child(n+3) { border-top: 1px solid rgba(255,255,255,0.1); } .top .stat:nth-child(5) { grid-column: 1 / -1; } }
 
-    /* STARTER KIT */
-    .top .kit { background: var(--surface); border-bottom: 1px solid var(--line); padding: 22px 0; }
-    .top .kit-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-    .top .kit-label { display: flex; align-items: center; gap: 12px; font-size: 0.95rem; color: var(--ink-2); }
-    .top .kit-label b { color: var(--ink); font-weight: 600; }
-    .top .email-form { display: flex; gap: 8px; flex-wrap: wrap; }
-    .top .email-input { font-family: var(--font); font-size: 0.95rem; padding: 11px 14px; border: 1.5px solid var(--line); border-radius: 9px; background: #fff; min-width: 240px; outline: none; color: var(--ink); }
-    .top .email-input:focus { border-color: var(--brand); }
-    .top .capture-success { display: none; font-size: 0.9rem; font-weight: 600; color: var(--brand); }
+    /* STARTER KIT (Sep 2026 redesign). Inside .top, so it shares the hero tokens. */
+    .top [hidden] { display: none !important; }
+    .top .kit { background: var(--surface); border-bottom: 1px solid var(--line); padding: clamp(32px, 4vw, 44px) 0; }
+    .top .kit-grid { display: grid; grid-template-columns: 220px minmax(0, 1fr) 320px; gap: 36px; align-items: center; }
+    .top .kit-covers { position: relative; width: 220px; height: 250px; }
+    .top .kit-cover { position: absolute; width: 148px; height: 196px; box-sizing: border-box; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 8px; border: 2px solid transparent; z-index: 1; transition: transform 0.2s ease, border-color 0.2s ease; }
+    .top .kc-usg { left: 0; top: 30px; background: linear-gradient(155deg, #0C2B33 0%, #0F3D42 70%, #0C4E54 100%); transform: rotate(-6deg); box-shadow: 0 18px 40px -12px rgba(12,43,51,0.55); }
+    .top .kc-con { left: 72px; top: 12px; background: linear-gradient(155deg, #0F172A 0%, #0C2B33 65%, #0F3D42 100%); transform: rotate(5deg); box-shadow: 0 22px 44px -12px rgba(12,43,51,0.6); }
+    .top .kit[data-edition="usg"] .kc-usg { z-index: 2; border-color: var(--brand-bright); transform: rotate(-6deg) translateY(-8px); }
+    .top .kit[data-edition="contractor"] .kc-con { z-index: 2; border-color: var(--brand-bright); transform: rotate(5deg) translateY(-8px); }
+    .top .kc-brand { display: flex; align-items: center; gap: 6px; font-size: 8px; font-weight: 700; letter-spacing: 0.14em; color: rgba(255,255,255,0.75); }
+    .top .kc-brand img { width: 18px; height: 18px; }
+    .top .kc-rule { height: 2px; width: 28px; background: var(--brand-bright); border-radius: 2px; margin-top: 10px; }
+    .top .kc-ed { font-size: 8.5px; font-weight: 700; letter-spacing: 0.12em; color: var(--brand-bright); }
+    .top .kc-ttl { font-size: 15px; font-weight: 700; line-height: 1.2; color: #fff; }
+    .top .kc-meta { margin-top: auto; font-size: 9px; color: rgba(255,255,255,0.6); }
+    .top .kit-fresh { position: absolute; left: 44px; bottom: 0; z-index: 3; background: var(--brand-2); border: 1px solid #B9D6D4; color: var(--brand-dark); font-size: 12px; font-weight: 600; padding: 5px 11px; border-radius: 99px; }
+    .top .kit-copy { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+    .top .eyebrow-row { display: flex; align-items: center; gap: 10px; }
+    .top .eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--brand); }
+    .top .kit h2 { font-size: clamp(1.55rem, 2.4vw, 1.9rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.18; color: var(--ink); }
+    .top .kit-copy p { font-size: 0.97rem; line-height: 1.6; color: var(--ink-2); }
+    .top .chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; }
+    .top .chip { font-size: 0.82rem; font-weight: 500; padding: 6px 11px; border-radius: 99px; background: var(--bg); border: 1px solid var(--line); color: var(--ink); }
+    .top .kit-form { background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+    .top .kit-form form { display: flex; flex-direction: column; gap: 14px; }
+    .top .kit-field { display: flex; flex-direction: column; gap: 8px; }
+    .top .kit-lbl { font-size: 0.82rem; font-weight: 600; color: var(--ink); }
+    .top .seg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .top .seg button { height: 46px; border-radius: 10px; font-family: var(--font); font-size: 0.88rem; font-weight: 600; cursor: pointer; background: transparent; color: var(--ink-2); border: 1.5px solid var(--line); transition: border-color 0.15s, background 0.15s; }
+    .top .seg button:hover { border-color: var(--brand); }
+    .top .seg button[aria-pressed="true"] { background: #fff; color: var(--ink); border-color: var(--brand); }
+    .top .kit-input { height: 46px; width: 100%; box-sizing: border-box; padding: 0 14px; border-radius: 10px; border: 1.5px solid var(--line); background: #fff; font-family: var(--font); font-size: 1rem; color: var(--ink); outline: none; }
+    .top .kit-input:focus { border-color: var(--brand); }
+    .top .kit-input[aria-invalid="true"] { border-color: #B42318; }
+    .top .kit-send { width: 100%; height: 48px; font-size: 0.95rem; }
+    .top .kit-send[disabled] { opacity: 0.7; cursor: wait; }
+    .top .kit-note { font-size: 0.78rem; color: #56696B; text-align: center; }
+    .top .kit-note.err { color: #B42318; }
+    .top .kit-done { display: flex; flex-direction: column; gap: 12px; }
+    .top .kit-done b { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+    .top .kit-done p { font-size: 0.9rem; line-height: 1.6; color: var(--ink-2); }
+    .top .kit-done a { color: var(--brand); font-weight: 600; }
+    .top .kit-ok { width: 44px; height: 44px; border-radius: 12px; display: inline-grid; place-items: center; font-size: 22px; font-weight: 700; background: var(--brand-2); border: 1px solid #B9D6D4; color: var(--brand); }
+    .top .seg button:focus-visible, .top .kit-send:focus-visible, .top .kit-done a:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    @media (max-width: 1040px) { .top .kit-grid { grid-template-columns: minmax(0, 1fr) 340px; } .top .kit-covers { display: none; } }
+    @media (max-width: 720px) {
+      .top .kit-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+      .top .kit-covers { display: block; margin: 0 auto -44px; transform: scale(0.8); transform-origin: top center; }
+      .top .kit-form { padding: 18px; }
+      .top .kit-input { height: 48px; }
+    }
 
 
     /* ── SECTIONS ── */
@@ -205,24 +248,6 @@
       font-size: 1rem; color: var(--text-muted);
       max-width: 560px; line-height: 1.7; margin-bottom: 48px;
       text-align: center; margin-left: auto; margin-right: auto;
-    }
-
-    /* ── WHO IT'S FOR ── */
-    .avatars { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-    .avatar-card {
-      background: var(--surface); border: 1.5px solid var(--border);
-      border-radius: 16px; padding: 28px 24px;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .avatar-card:hover { border-color: var(--teal-mid); box-shadow: 0 4px 20px rgba(1,105,111,0.08); }
-    .avatar-icon { font-size: 2.2rem; margin-bottom: 14px; }
-    .avatar-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-    .avatar-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
-    .avatar-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .tag {
-      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em;
-      padding: 3px 10px; border-radius: 100px;
-      background: var(--teal-light); color: var(--teal-dark);
     }
 
     /* ── MODULES ── */
@@ -256,20 +281,178 @@
       margin-left: 6px; vertical-align: middle;
     }
 
-    /* ── HOW IT WORKS ── */
-    .how-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px; }
-    .step {
-      text-align: center; padding: 32px 20px;
-      background: var(--surface); border: 1.5px solid var(--border); border-radius: 16px;
+    /* ── V2 SECTIONS (Sep 2026): Who it's for + How it works, same tokens as the hero ── */
+    .v2 {
+      --bg: #F1F5F4; --surface: #FFFFFF; --ink: #0F172A; --ink-2: #3D5153; --ink-3: #56696B; --line: #D3DFDE; --line-2: #E1E9E8;
+      --brand: #01696F; --brand-dark: #0C4E54; --brand-2: #E0EDEC; --brand-bright: #4FC3CB;
+      --gold: #D9B64C; --gold-ink: #7A5F14; --gold-tint: #FBF7EC; --gold-edge: #E7D69B;
+      --font: 'General Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: var(--font); color: var(--ink); line-height: 1.6;
     }
-    .step-icon {
-      width: 56px; height: 56px; border-radius: 16px;
-      background: var(--teal-light);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.6rem; margin: 0 auto 18px;
+    section.v2 { padding: clamp(56px, 7vw, 88px) 0; }
+    .v2 [hidden] { display: none !important; }
+    .v2 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px); }
+    .v2 .head { display: flex; flex-direction: column; gap: 12px; max-width: 760px; margin-bottom: 28px; }
+    .v2 .head.wide { max-width: 900px; margin-bottom: 40px; }
+    .v2 .eyebrow { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--brand); }
+    .v2 h2 { font-size: clamp(1.9rem, 3.6vw, 2.65rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.12; color: var(--ink); }
+    .v2 h3 { color: var(--ink); }
+    .v2 .lede { font-size: clamp(1rem, 1.3vw, 1.06rem); line-height: 1.65; color: var(--ink-2); }
+    .v2 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font); font-weight: 600; font-size: 0.95rem; height: 48px; padding: 0 22px; border-radius: 10px; text-decoration: none; border: 1.5px solid transparent; cursor: pointer; white-space: nowrap; transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.12s; }
+    .v2 .btn:active { transform: translateY(1px); }
+    .v2 .btn-brand { background: var(--brand); color: #fff; box-shadow: 0 6px 18px -8px var(--brand); }
+    .v2 .btn-brand:hover { background: var(--brand-dark); }
+    .v2 .btn-outline { background: #fff; color: var(--ink); border-color: var(--line); }
+    .v2 .btn-outline:hover { border-color: var(--brand); color: var(--brand); }
+    .v2 button:focus-visible, .v2 a:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .v2 .f-found { --tint: #E8F1FA; --edge: #B0D0EC; --fam-ink: #2A6B9E; }
+    .v2 .f-money { --tint: #EAF3EE; --edge: #C0DCCD; --fam-ink: #226B43; }
+    .v2 .f-con   { --tint: #EFEBF5; --edge: #CFC2E0; --fam-ink: #5E3596; }
+    .v2 .f-win   { --tint: #FAEEE8; --edge: #F1CDBA; --fam-ink: #A8440F; }
+    .v2 .f-run   { --tint: #F7EAF2; --edge: #E7C2D9; --fam-ink: #8E2862; }
+    .v2 .jt { border-bottom: 1.5px dotted currentColor; white-space: normal; }
+
+    /* Who it's for */
+    .who-v2 { background: var(--bg); }
+    .v2 .tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 6px; }
+    .v2 .tab { display: flex; align-items: center; gap: 12px; text-align: left; padding: 12px 14px; min-height: 64px; border-radius: 12px; border: none; cursor: pointer; font-family: var(--font); background: transparent; color: var(--ink); transition: background 0.15s; }
+    .v2 .tab:hover { background: var(--bg); }
+    .v2 .tab[aria-selected="true"] { background: var(--ink); color: #fff; }
+    .v2 .tab .ic { width: 38px; height: 38px; border-radius: 10px; display: inline-grid; place-items: center; font-size: 19px; flex-shrink: 0; background: var(--brand-2); }
+    .v2 .tab[aria-selected="true"] .ic { background: rgba(255,255,255,0.12); }
+    .v2 .tab b { display: block; font-size: 0.95rem; font-weight: 700; line-height: 1.3; }
+    .v2 .tab small { display: block; font-size: 0.82rem; opacity: 0.75; }
+    .v2 .panel { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr); gap: 20px; margin-top: 24px; }
+    .v2 .persona { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: clamp(22px, 3vw, 32px); display: flex; flex-direction: column; gap: 20px; }
+    .v2 .persona-hd { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .v2 .persona h3 { font-size: clamp(1.35rem, 2vw, 1.62rem); font-weight: 700; letter-spacing: -0.015em; line-height: 1.2; }
+    .v2 .pill { font-size: 0.78rem; font-weight: 600; color: var(--brand-dark); background: var(--brand-2); padding: 5px 11px; border-radius: 99px; }
+    .v2 .persona p { font-size: 1rem; line-height: 1.65; color: var(--ink-2); }
+    .v2 .stack { display: flex; flex-direction: column; gap: 10px; }
+    .v2 .stack-sm { display: flex; flex-direction: column; gap: 6px; }
+    .v2 .micro { font-size: 0.69rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+    .v2 .likes { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .v2 .likes li { position: relative; padding-left: 22px; font-size: 0.95rem; line-height: 1.45; }
+    .v2 .likes li::before { content: '✓'; position: absolute; left: 0; top: 0; color: var(--brand); font-weight: 700; }
+    .v2 .hr { height: 1px; background: var(--line-2); }
+    .v2 .mods { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .v2 .mod { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; min-width: 0; }
+    .v2 .mod .ic { width: 36px; height: 36px; border-radius: 10px; display: inline-grid; place-items: center; font-size: 18px; flex-shrink: 0; background: var(--tint); border: 1px solid var(--edge); }
+    .v2 .mod .fam { display: block; font-size: 0.63rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fam-ink); }
+    .v2 .mod .nm { display: block; font-size: 0.88rem; font-weight: 600; line-height: 1.3; }
+    .v2 .aside-note { font-size: 0.85rem; line-height: 1.5; color: var(--ink-3); }
+    .v2 .cta-row { display: flex; align-items: center; gap: 14px; margin-top: auto; flex-wrap: wrap; }
+    .v2 .credit { display: inline-block; font-size: 0.82rem; font-weight: 600; color: var(--gold-ink); background: var(--gold-tint); border: 1px solid var(--gold-edge); padding: 6px 11px; border-radius: 99px; }
+    .v2 .road { background: linear-gradient(160deg, #0C2B33 0%, #0F3D42 62%, #0C4E54 100%); border-radius: 16px; padding: 28px 30px; color: #fff; display: flex; flex-direction: column; gap: 18px; }
+    .v2 .road .micro { color: var(--brand-bright); }
+    .v2 .road-t { font-size: 1.25rem; font-weight: 700; }
+    .v2 .road-s { font-size: 0.88rem; line-height: 1.5; color: rgba(255,255,255,0.72); }
+    .v2 .rungs { position: relative; list-style: none; display: flex; flex-direction: column; }
+    .v2 .rungs::before { content: ''; position: absolute; left: 7px; top: 22px; bottom: 22px; width: 2px; background: rgba(255,255,255,0.16); }
+    .v2 .rungs li { position: relative; display: flex; align-items: center; gap: 14px; height: 46px; font-size: 0.95rem; font-weight: 500; color: rgba(255,255,255,0.88); }
+    .v2 .rungs.tight li { height: 41px; }
+    .v2 .rungs .dot { width: 16px; height: 16px; box-sizing: border-box; border-radius: 50%; border: 2px solid rgba(255,255,255,0.4); background: #0F3D42; flex-shrink: 0; }
+    .v2 .rungs .nm { flex-grow: 1; }
+    .v2 .rungs .xp { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.6); font-variant-numeric: tabular-nums; }
+    .v2 .rungs .peak { color: #fff; font-weight: 600; }
+    .v2 .rungs .peak .dot { border-color: var(--gold); }
+    .v2 .rungs .peak .xp { color: var(--gold); font-weight: 700; }
+    .v2 .rungs .start { color: #fff; font-weight: 700; }
+    .v2 .rungs .start .dot { border: none; background: var(--brand-bright); box-shadow: 0 0 0 5px rgba(79,195,203,0.22); }
+    .v2 .here { font-size: 0.72rem; font-weight: 700; color: var(--ink); background: var(--brand-bright); padding: 3px 9px; border-radius: 99px; white-space: nowrap; }
+    .v2 .road-f { margin-top: auto; font-size: 0.82rem; line-height: 1.5; color: rgba(255,255,255,0.6); }
+
+    /* How it works */
+    .how-v2 { background: #fff; }
+    .v2 .steps { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+    .v2 .stp { display: flex; flex-direction: column; gap: 14px; }
+    .v2 .stp-n { display: flex; align-items: center; gap: 10px; }
+    .v2 .stp-n::after { content: ''; flex-grow: 1; border-top: 2px dashed #B9D6D4; }
+    .v2 .stp:last-child .stp-n::after { display: none; }
+    .v2 .num { width: 34px; height: 34px; border-radius: 50%; display: inline-grid; place-items: center; background: var(--brand); color: #fff; font-size: 0.95rem; font-weight: 700; flex-shrink: 0; }
+    .v2 .num.gold { background: var(--gold); color: var(--ink); }
+    .v2 .stp-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 12px 12px 22px; display: flex; flex-direction: column; gap: 16px; flex-grow: 1; }
+    .v2 .scr { height: 272px; box-sizing: border-box; background: var(--bg); border: 1px solid var(--line-2); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
+    .v2 .stp-txt { display: flex; flex-direction: column; gap: 8px; padding: 0 6px; }
+    .v2 .stp-txt h3 { font-size: 1.19rem; font-weight: 700; letter-spacing: -0.01em; }
+    .v2 .stp-txt p { font-size: 0.9rem; line-height: 1.6; color: var(--ink-2); }
+    .v2 .m-top { display: flex; align-items: center; justify-content: space-between; }
+    .v2 .m-cap { font-size: 0.63rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+    .v2 .m-cap.m-brand { color: var(--brand); }
+    .v2 .m-dots { display: flex; gap: 4px; }
+    .v2 .m-dots i { width: 16px; height: 4px; border-radius: 2px; background: var(--brand); }
+    .v2 .m-q { font-size: 0.9rem; font-weight: 700; margin-bottom: 2px; }
+    .v2 .m-q.sm { font-size: 0.84rem; line-height: 1.35; }
+    .v2 .m-opt { display: flex; align-items: center; gap: 9px; padding: 8px 9px; border-radius: 9px; background: #fff; border: 1px solid var(--line); font-size: 0.75rem; font-weight: 500; line-height: 1.3; color: var(--ink-2); }
+    .v2 .m-opt.on { background: #F2F9F9; border: 1.5px solid var(--brand); font-weight: 600; color: var(--ink); }
+    .v2 .m-radio { width: 14px; height: 14px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #9DB3B2; flex-shrink: 0; background: #fff; }
+    .v2 .m-opt.on .m-radio { border: 4px solid var(--brand); }
+    .v2 .m-lesson { display: flex; align-items: center; gap: 10px; }
+    .v2 .m-lesson b { display: block; font-size: 0.88rem; }
+    .v2 .m-ic { width: 32px; height: 32px; border-radius: 9px; display: inline-grid; place-items: center; font-size: 16px; flex-shrink: 0; background: var(--tint); border: 1px solid var(--edge); }
+    .v2 .m-grow { flex-grow: 1; min-width: 0; display: flex; flex-direction: column; }
+    .v2 .m-fam { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #5E3596; }
+    .v2 .m-min { font-size: 0.69rem; color: var(--ink-3); }
+    .v2 .m-seg { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1fr); gap: 3px; background: #fff; border: 1px solid var(--line); border-radius: 9px; padding: 3px; }
+    .v2 .m-seg span { text-align: center; font-size: 0.66rem; font-weight: 600; color: var(--ink-3); padding: 6px 0; }
+    .v2 .m-seg .on { color: #fff; background: #5E3596; border-radius: 7px; font-weight: 700; }
+    .v2 .m-body { font-size: 0.75rem; line-height: 1.5; color: var(--ink-2); }
+    .v2 .m-body b { color: var(--ink); }
+    .v2 .m-audio { margin-top: auto; display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; color: var(--ink-3); }
+    .v2 .m-audio b { font-size: 0.75rem; color: var(--ink); }
+    .v2 .m-audio small { font-size: 0.66rem; }
+    .v2 .m-play { width: 28px; height: 28px; border-radius: 50%; display: inline-grid; place-items: center; background: var(--ink); flex-shrink: 0; }
+    .v2 .m-ans { display: flex; justify-content: space-between; padding: 7px 10px; border-radius: 8px; background: #fff; border: 1px solid var(--line); font-size: 0.75rem; color: var(--ink-2); }
+    .v2 .m-ans.ok { background: #ECFDF5; border: 1.5px solid #10B981; font-weight: 600; color: #065F46; }
+    .v2 .m-gate { margin-top: auto; display: flex; flex-direction: column; gap: 5px; }
+    .v2 .m-gate-hd { display: flex; justify-content: space-between; font-size: 0.69rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .v2 .m-gate small { font-size: 0.66rem; color: var(--ink-3); }
+    .v2 .m-bar { position: relative; height: 6px; border-radius: 99px; background: var(--line-2); }
+    .v2 .m-bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 80%; border-radius: 99px; background: #5E3596; }
+    .v2 .m-bar em { position: absolute; left: 75%; top: -3px; width: 2px; height: 12px; background: var(--ink); }
+    .v2 .m-cert { background: var(--gold-tint); border: 1px solid var(--gold-edge); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; }
+    .v2 .m-cert b { font-size: 0.9rem; line-height: 1.25; }
+    .v2 .m-cert-hd { display: flex; align-items: center; gap: 7px; font-size: 0.53rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-ink); }
+    .v2 .m-cert-meta { font-size: 0.72rem; color: var(--ink-2); }
+    .v2 .m-cert-ft { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 4px; font-size: 0.63rem; color: var(--ink-3); }
+    .v2 .m-cert-ft i { display: block; width: 92px; border-top: 1px solid #C9B77A; margin-bottom: 2px; }
+    .v2 .m-cert-cap { font-size: 20px; }
+    .v2 .m-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+    .v2 .m-chips span { font-size: 0.66rem; font-weight: 600; background: #fff; border: 1px solid var(--line); border-radius: 99px; padding: 3px 8px; }
+    .v2 .how-cta { margin-top: 40px; display: flex; align-items: center; justify-content: space-between; gap: 20px 24px; flex-wrap: wrap; background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: 22px 26px; }
+    .v2 .how-cta b { display: block; font-size: 1.06rem; font-weight: 700; line-height: 1.35; }
+    .v2 .how-cta span { font-size: 0.9rem; color: var(--ink-3); }
+    .v2 .btns { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    @media (max-width: 1000px) {
+      .v2 .panel { grid-template-columns: minmax(0, 1fr); }
+      .v2 .steps { grid-template-columns: minmax(0, 1fr); gap: 0; }
+      .v2 .stp { display: grid; grid-template-columns: 34px minmax(0, 1fr); column-gap: 14px; }
+      .v2 .stp-n { flex-direction: column; }
+      .v2 .stp-n::after { border-top: none; border-left: 2px dashed #B9D6D4; margin: 6px 0; }
+      .v2 .stp-card { flex-direction: column-reverse; justify-content: flex-end; background: none; border: none; border-radius: 0; padding: 0 0 28px; gap: 12px; }
+      .v2 .stp:last-child .stp-card { padding-bottom: 0; }
+      .v2 .stp-txt { padding: 5px 0 0; }
+      .v2 .stp-txt p { font-size: 0.94rem; }
+      .v2 .scr { height: auto; max-width: 420px; }
     }
-    .step-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-    .step-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; }
+    @media (max-width: 760px) {
+      .v2 .tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .v2 .tab { padding: 10px; gap: 9px; min-height: 58px; }
+      .v2 .tab .ic { width: 32px; height: 32px; font-size: 16px; }
+      .v2 .tab b { font-size: 0.88rem; }
+      .v2 .tab small { font-size: 0.75rem; }
+    }
+    @media (max-width: 560px) {
+      .v2 .mods { grid-template-columns: minmax(0, 1fr); }
+      .v2 .persona-hd { flex-direction: column-reverse; align-items: flex-start; gap: 8px; }
+      .v2 .road { padding: 22px 20px; }
+      .v2 .rungs li, .v2 .rungs.tight li { height: 42px; font-size: 0.9rem; }
+      .v2 .cta-row .btn, .v2 .btns, .v2 .btns .btn { width: 100%; }
+      .v2 .cta-row { justify-content: center; }
+      .v2 .how-cta { padding: 20px 18px; }
+      .v2 .m-hide-sm { display: none; }
+    }
 
     /* ── PRICING ── */
     .pricing-bg { background: var(--navy); }
@@ -411,11 +594,6 @@
       .pricing-cards { grid-template-columns: 1fr; max-width: 480px; }
       .blog-featured-stats { display: none !important; }
       .blog-featured-card { grid-template-columns: 1fr !important; }
-
-      /* Who is this for cards: prevent text overflow */
-      .avatars { grid-template-columns: 1fr; }
-      .avatar-card { padding: 24px 18px; word-break: break-word; overflow: hidden; }
-      .avatar-desc { font-size: 0.85rem; }
 
       /* Modules grid: single column */
       .modules-grid { grid-template-columns: 1fr; }
@@ -662,15 +840,68 @@
   </div>
 </header>
 
-<!-- STARTER KIT -->
-<div class="kit">
-  <div class="wrap kit-inner">
-    <div class="kit-label"><span class="tile">📥</span><span><b>Free download: the Acquisition Starter Kit.</b> Key terms, ACAT levels, career roadmaps, and the five mistakes everyone makes once.</span></div>
-    <form class="email-form" id="captureForm" onsubmit="submitLead(event, 'hero_bar')">
-      <input type="email" class="email-input" id="captureEmail" placeholder="your@email.com" required />
-      <button type="submit" class="btn btn-brand btn-sm">Send it free</button>
-    </form>
-    <div class="capture-success" id="captureSuccess">✓ Sent to your inbox. Or grab it now: <a href="/starter-kit-usg.pdf" target="_blank" rel="noopener">USG Edition</a> · <a href="/starter-kit-contractor.pdf" target="_blank" rel="noopener">Contractor Edition</a></div>
+<!-- STARTER KIT (Sep 2026 redesign: edition picker, real contents) -->
+<div class="kit" id="starterKit" data-edition="usg">
+  <div class="wrap kit-grid">
+    <div class="kit-covers" aria-hidden="true">
+      <div class="kit-cover kc-usg">
+        <div class="kc-brand"><img src="/acqlerate-icon.svg" alt="" width="18" height="18" /><span>ACQLERATE</span></div>
+        <div class="kc-rule"></div>
+        <div class="kc-ed">GOVERNMENT EDITION</div>
+        <div class="kc-ttl">The Acquisition Starter Kit</div>
+        <div class="kc-meta">13 pages · Jul 2026</div>
+      </div>
+      <div class="kit-cover kc-con">
+        <div class="kc-brand"><img src="/acqlerate-icon.svg" alt="" width="18" height="18" /><span>ACQLERATE</span></div>
+        <div class="kc-rule"></div>
+        <div class="kc-ed">CONTRACTOR EDITION</div>
+        <div class="kc-ttl">The Contractor's Acquisition Starter Kit</div>
+        <div class="kc-meta">16 pages · Jul 2026</div>
+      </div>
+      <div class="kit-fresh">Updated July 2026</div>
+    </div>
+
+    <div class="kit-copy">
+      <div class="eyebrow-row"><span class="tile">📥</span><span class="eyebrow">Free field guide · No account needed</span></div>
+      <h2>The field guide nobody hands you on day one.</h2>
+      <p>Tell us which side you work on and we send the edition written for it. Already current for the thresholds that changed in October 2025: the <span class="jt" data-tip="Simplified Acquisition Threshold. Below it, buying rules get simpler and faster.">SAT</span> is now $350K and the <span class="jt" data-tip="The amount a government purchase cardholder can usually buy without competing it.">micro-purchase</span> limit is $15K.</p>
+      <ul class="chips" data-for="usg">
+        <li class="chip">✓ Lifecycle cheat sheet</li>
+        <li class="chip">✓ ACAT decision tree</li>
+        <li class="chip">✓ 50+ acronyms decoded</li>
+        <li class="chip">✓ 5 mistakes new PMs make</li>
+      </ul>
+      <ul class="chips" data-for="contractor" hidden>
+        <li class="chip">✓ Task orders vs. standalone</li>
+        <li class="chip">✓ Who's buying: GSA, Air Force</li>
+        <li class="chip">✓ 70+ acronyms decoded</li>
+        <li class="chip">✓ 5 mistakes contractors make</li>
+      </ul>
+    </div>
+
+    <div class="kit-form">
+      <form id="captureForm" onsubmit="submitLead(event)" novalidate>
+        <div class="kit-field">
+          <span class="kit-lbl" id="kitSideLabel">Which side are you on?</span>
+          <div class="seg" role="group" aria-labelledby="kitSideLabel">
+            <button type="button" data-edition="usg" aria-pressed="true">🏛️ Government</button>
+            <button type="button" data-edition="contractor" aria-pressed="false">🏢 Contractor</button>
+          </div>
+        </div>
+        <div class="kit-field">
+          <label class="kit-lbl" for="captureEmail">Email</label>
+          <input type="email" class="kit-input" id="captureEmail" placeholder="you@company.com" autocomplete="email" required />
+        </div>
+        <button type="submit" class="btn btn-brand kit-send" id="captureBtn">Send my kit →</button>
+        <p class="kit-note" id="captureNote">Free. Unsubscribe with one click.</p>
+      </form>
+      <div class="kit-done" id="captureSuccess" hidden>
+        <span class="kit-ok" aria-hidden="true">✓</span>
+        <b>It's in your inbox.</b>
+        <p>Can't wait? <a href="/starter-kit-usg.pdf" id="captureOpen" target="_blank" rel="noopener">Open the <span id="captureEdName">Government edition</span> PDF now →</a></p>
+        <p>While you're here, Module 1 is free for good. <a href="/app#/auth">Start it →</a></p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -905,56 +1136,211 @@
   </div>
 </section>
 
-<!-- WHO IT'S FOR -->
-<section id="who" style="padding:0;overflow:hidden;">
-  <!-- Team image banner -->
-  <div style="width:100%;height:clamp(220px,28vw,320px);overflow:hidden;position:relative;">
-    <img src="/img-team.jpg" alt="Defense acquisition team collaborating in a secure facility" style="width:100%;height:100%;object-fit:cover;object-position:center 35%;display:block;" loading="lazy" />
-    <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(13,27,42,0.82) 0%,rgba(13,27,42,0.4) 55%,transparent 100%);"></div>
-    <div style="position:absolute;top:50%;left:0;transform:translateY(-50%);padding:0 clamp(24px,4vw,56px);max-width:520px;">
-      <div style="font-size:0.72rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#4FC3CB;margin-bottom:10px;">Who It’s For</div>
-      <h2 style="font-size:clamp(1.3rem,2.5vw,1.9rem);font-weight:800;color:white;letter-spacing:-0.02em;line-height:1.25;margin:0;">Three paths. One thing in common:<br>they show up prepared.</h2>
+<!-- WHO IT'S FOR (Sep 2026 redesign: four paths, real tracks, level road) -->
+<section id="who" class="v2 who-v2">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Who it's for</span>
+      <h2>Pick your side of the table.</h2>
+      <p class="lede">Three questions at signup build your track: which modules come first, and which career ladder your level climbs. Change it any time from your account.</p>
     </div>
-  </div>
-  <div style="padding:56px 2rem 72px;">
-  <div class="section-inner" style="padding:0;">
-    <p class="section-sub" style="text-align:center;margin-bottom:40px;">Whether you’re on the government side, the contractor side, or making the switch, Acqlerate meets you where you are.</p>
-    <div class="avatars">
-      <div class="avatar-card" style="border:2px solid rgba(1,105,111,0.35)">
-        <div class="avatar-icon">🏢</div>
-        <div class="avatar-title">The Contractor PM</div>
-        <div class="avatar-desc">You're in a PM or PM-track role at a defense contractor. You need to understand how DoD programs are funded, how contracts work, what CPARS means for your next award, and how to think like the government customer you're serving.</div>
-        <div class="avatar-tags">
-          <span class="tag">Contractor PM</span>
-          <span class="tag">Deputy PM</span>
-          <span class="tag">Program Analyst</span>
-          <span class="tag jt" data-tip="BD = Business Development. Finding and pursuing government contract opportunities.">BD Professional</span>
+
+    <div class="tabs" role="tablist" aria-label="Who Acqlerate is for">
+      <button type="button" class="tab" role="tab" id="tab-pm" aria-controls="panel-pm" aria-selected="true"><span class="ic" aria-hidden="true">🏢</span><span><b>Contractor PM</b><small>You run the work</small></span></button>
+      <button type="button" class="tab" role="tab" id="tab-bd" aria-controls="panel-bd" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">🤝</span><span><b>BD &amp; Capture</b><small>You win the work</small></span></button>
+      <button type="button" class="tab" role="tab" id="tab-gov" aria-controls="panel-gov" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">🏛️</span><span><b>Government</b><small>You buy the work</small></span></button>
+      <button type="button" class="tab" role="tab" id="tab-new" aria-controls="panel-new" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">🚀</span><span><b>Breaking in</b><small>You want in</small></span></button>
+    </div>
+
+    <!-- Contractor PM -->
+    <div class="panel" role="tabpanel" id="panel-pm" aria-labelledby="tab-pm">
+      <div class="persona">
+        <div class="persona-hd"><h3>The Contractor PM</h3><span class="pill">DoD Contractor PM track</span></div>
+        <p>You run a task order, or you're about to. You need to know how the money shows up, what the contract actually lets you do, and why this year's <span class="jt" data-tip="Contractor Performance Assessment Reporting System. The government's report card on your work, read during future source selections.">CPARS</span> gets read during your next proposal evaluation.</p>
+        <div class="stack">
+          <span class="micro">Sounds like you if</span>
+          <ul class="likes">
+            <li>Someone asked for your <span class="jt" data-tip="Estimate at Completion. What the whole job will cost by the time it is done.">EAC</span> and you answered with great confidence</li>
+            <li>You've nodded along to "that's a different color of money"</li>
+            <li>Your recompete is on a calendar somewhere, just not yours</li>
+          </ul>
+        </div>
+        <div class="hr"></div>
+        <div class="stack">
+          <span class="micro">Core modules on your track</span>
+          <div class="mods">
+            <div class="mod f-con"><span class="ic">📋</span><span><span class="fam">Contracts</span><span class="nm">Defense Contracting Fundamentals</span></span></div>
+            <div class="mod f-money"><span class="ic">💰</span><span><span class="fam">Money</span><span class="nm">Defense Finance &amp; Budgeting</span></span></div>
+            <div class="mod f-money"><span class="ic">📈</span><span><span class="fam">Money</span><span class="nm">The Business of Defense Contracting</span></span></div>
+            <div class="mod f-run"><span class="ic">📊</span><span><span class="fam">Run the program</span><span class="nm">Data Analytics for PMs</span></span></div>
+          </div>
+        </div>
+        <div class="cta-row">
+          <a href="/app#/auth" class="btn btn-brand">Start the Contractor PM track →</a>
+          <span class="credit">🎓 PMP? About <span data-count="clps-whole">44</span> PDUs across the course</span>
         </div>
       </div>
-      <div class="avatar-card">
-        <div class="avatar-icon">🚀</div>
-        <div class="avatar-title">The Career Changer</div>
-        <div class="avatar-desc">You're transitioning from military service or another industry and targeting a PM role at a defense contractor. You need a clear on-ramp, not a 400-page regulation and not a $2,000 classroom course.</div>
-        <div class="avatar-tags">
-          <span class="tag">Veterans</span>
-          <span class="tag">Military Transition</span>
-          <span class="tag">Industry Switchers</span>
-          <span class="tag">New Hires</span>
+      <div class="road">
+        <div class="stack-sm">
+          <span class="micro">Your level road</span>
+          <span class="road-t">The industry PM ladder</span>
+          <span class="road-s">Every lesson is 100 XP, one space on the road. Fifty spaces from your first task order to the top.</span>
         </div>
-      </div>
-      <div class="avatar-card">
-        <div class="avatar-icon">🏛️</div>
-        <div class="avatar-title">The DoD Professional</div>
-        <div class="avatar-desc">You're a civilian or military officer managing programs and want to sharpen your PM, finance, and contracting knowledge. Or you're a government-side professional who wants to understand how your contractor partners think.</div>
-        <div class="avatar-tags">
-          <span class="tag">Government PM</span>
-          <span class="tag">Contracting Specialist</span>
-          <span class="tag jt" data-tip="COR = Contracting Officer's Representative. Monitors contractor performance on-site.">COR</span>
-          <span class="tag">Financial Manager</span>
-        </div>
+        <ol class="rungs">
+          <li class="peak"><span class="dot"></span><span class="nm">Vice President</span><span class="xp">5,000 XP</span></li>
+          <li><span class="dot"></span><span class="nm">Director of Programs</span><span class="xp">3,000 XP</span></li>
+          <li><span class="dot"></span><span class="nm">Program Manager</span><span class="xp">1,800 XP</span></li>
+          <li><span class="dot"></span><span class="nm">Senior Project Manager</span><span class="xp">1,000 XP</span></li>
+          <li><span class="dot"></span><span class="nm">Project Manager</span><span class="xp">500 XP</span></li>
+          <li><span class="dot"></span><span class="nm">Junior Project Manager</span><span class="xp">200 XP</span></li>
+          <li class="start"><span class="dot"></span><span class="nm">Project Coordinator</span><span class="here">You start here</span></li>
+        </ol>
+        <span class="road-f">Weekly leaderboards rank the XP you earn, so a new hire can top the board in week one.</span>
       </div>
     </div>
-  </div>
+
+    <!-- BD & Capture -->
+    <div class="panel" role="tabpanel" id="panel-bd" aria-labelledby="tab-bd" hidden>
+      <div class="persona">
+        <div class="persona-hd"><h3>The BD &amp; Capture Pro</h3><span class="pill">Capture &amp; BD track</span></div>
+        <p>You find the opportunities and build the proposals. You win more when you read an RFP the way the evaluator does: Section M first, then everything written to score against it.</p>
+        <div class="stack">
+          <span class="micro">Sounds like you if</span>
+          <ul class="likes">
+            <li>Your proposal was compliant, beautiful, and rated "Acceptable"</li>
+            <li>You answered a Sources Sought and still wonder if anyone read it</li>
+            <li>"Price to win" was a number somebody said out loud in a meeting</li>
+          </ul>
+        </div>
+        <div class="hr"></div>
+        <div class="stack">
+          <span class="micro">Core modules on your track</span>
+          <div class="mods">
+            <div class="mod f-win"><span class="ic">🎯</span><span><span class="fam">Winning work</span><span class="nm">Capture Management &amp; BD</span></span></div>
+            <div class="mod f-con"><span class="ic">📋</span><span><span class="fam">Contracts</span><span class="nm">Defense Contracting Fundamentals</span></span></div>
+            <div class="mod f-win"><span class="ic">🏪</span><span><span class="fam">Winning work</span><span class="nm">Small Business in Defense Contracting</span></span></div>
+            <div class="mod f-found"><span class="ic">🏛️</span><span><span class="fam">Foundations</span><span class="nm">DoD Acquisitions Foundations</span></span></div>
+          </div>
+        </div>
+        <div class="cta-row">
+          <a href="/app#/auth" class="btn btn-brand">Start the Capture &amp; BD track →</a>
+          <span class="credit">🎓 PMP? About <span data-count="clps-whole">44</span> PDUs across the course</span>
+        </div>
+      </div>
+      <div class="road">
+        <div class="stack-sm">
+          <span class="micro">Your level road</span>
+          <span class="road-t">The BD and capture ladder</span>
+          <span class="road-s">Every lesson is 100 XP, one space on the road. Fifty spaces from your first pipeline review to the top.</span>
+        </div>
+        <ol class="rungs">
+          <li class="peak"><span class="dot"></span><span class="nm">VP of Business Development</span><span class="xp">5,000 XP</span></li>
+          <li><span class="dot"></span><span class="nm">Senior Director of BD</span><span class="xp">3,000 XP</span></li>
+          <li><span class="dot"></span><span class="nm">Director of Capture</span><span class="xp">1,800 XP</span></li>
+          <li><span class="dot"></span><span class="nm">Senior Capture Manager</span><span class="xp">1,000 XP</span></li>
+          <li><span class="dot"></span><span class="nm">Capture Manager</span><span class="xp">500 XP</span></li>
+          <li><span class="dot"></span><span class="nm">Capture Analyst</span><span class="xp">200 XP</span></li>
+          <li class="start"><span class="dot"></span><span class="nm">BD Coordinator</span><span class="here">You start here</span></li>
+        </ol>
+        <span class="road-f">Weekly leaderboards rank the XP you earn, so a new hire can top the board in week one.</span>
+      </div>
+    </div>
+
+    <!-- Government -->
+    <div class="panel" role="tabpanel" id="panel-gov" aria-labelledby="tab-gov" hidden>
+      <div class="persona">
+        <div class="persona-hd"><h3>The Government Professional</h3><span class="pill">USG Program Manager track</span></div>
+        <p>You're a civilian or uniformed acquisition professional. You want the PM, finance, and contracting depth your certification course skimmed, plus a clear view of how the contractors across the table think.</p>
+        <div class="stack">
+          <span class="micro">Sounds like you if</span>
+          <ul class="likes">
+            <li>You owe 80 <span class="jt" data-tip="Continuous Learning Points. DoD acquisition workforce members need 80 every two years.">CLPs</span> every two years and your calendar disagrees</li>
+            <li>You were handed a program and a binder, in that order</li>
+            <li>You'd like to know what the contractor's PM is actually worried about</li>
+          </ul>
+        </div>
+        <div class="hr"></div>
+        <div class="stack">
+          <span class="micro">Core modules on your track</span>
+          <div class="mods">
+            <div class="mod f-found"><span class="ic">🏛️</span><span><span class="fam">Foundations</span><span class="nm">DoD Acquisitions Foundations</span></span></div>
+            <div class="mod f-money"><span class="ic">💰</span><span><span class="fam">Money</span><span class="nm">Defense Finance &amp; Budgeting</span></span></div>
+            <div class="mod f-con"><span class="ic">📋</span><span><span class="fam">Contracts</span><span class="nm">Defense Contracting Fundamentals</span></span></div>
+            <div class="mod f-found"><span class="ic">📐</span><span><span class="fam">Foundations</span><span class="nm">From Need to RFP</span></span></div>
+          </div>
+          <span class="aside-note">Contracting specialist or KO? Pick "Master Contracts &amp; Finance" at signup and you get the KO track instead.</span>
+        </div>
+        <div class="cta-row">
+          <a href="/app#/auth" class="btn btn-brand">Start the Government track →</a>
+          <span class="credit">🎓 <span data-count="clps-whole">44</span>+ CLPs, self-reportable</span>
+        </div>
+      </div>
+      <div class="road">
+        <div class="stack-sm">
+          <span class="micro">Your level road</span>
+          <span class="road-t">The government ladder</span>
+          <span class="road-s">Every lesson is 100 XP, one space on the road. Your level reads like a grade, trainee to SES.</span>
+        </div>
+        <ol class="rungs tight">
+          <li class="peak"><span class="dot"></span><span class="nm">SES-Level Executive</span><span class="xp">5,000 XP</span></li>
+          <li><span class="dot"></span><span class="nm">GS-15 Senior Program Manager</span><span class="xp">4,000 XP</span></li>
+          <li><span class="dot"></span><span class="nm">GS-14 Program Manager</span><span class="xp">3,000 XP</span></li>
+          <li><span class="dot"></span><span class="nm">GS-13 Senior Manager</span><span class="xp">1,800 XP</span></li>
+          <li><span class="dot"></span><span class="nm">GS-12 Specialist</span><span class="xp">1,000 XP</span></li>
+          <li><span class="dot"></span><span class="nm">GS-11 Professional</span><span class="xp">500 XP</span></li>
+          <li><span class="dot"></span><span class="nm">GS-9 Analyst</span><span class="xp">200 XP</span></li>
+          <li class="start"><span class="dot"></span><span class="nm">Acquisition Trainee</span><span class="here">You start here</span></li>
+        </ol>
+        <span class="road-f">Each finished module comes with a signed certificate you can self-report in CAPPMIS, eDACM or FAITAS.</span>
+      </div>
+    </div>
+
+    <!-- Breaking in -->
+    <div class="panel" role="tabpanel" id="panel-new" aria-labelledby="tab-new" hidden>
+      <div class="persona">
+        <div class="persona-hd"><h3>The Career Changer</h3><span class="pill">DoD Contractor PM track</span></div>
+        <p>You're leaving the military or coming over from another industry, and you're aiming at a PM role in defense. You need a clear on-ramp, not a 400-page regulation and not a $2,000 classroom course.</p>
+        <div class="stack">
+          <span class="micro">Sounds like you if</span>
+          <ul class="likes">
+            <li>Your resume says "led 40 soldiers" and the posting says "EVM required"</li>
+            <li>You hold a clearance and aren't sure what it's worth on the outside</li>
+            <li>Every acronym you learn shows up with three friends</li>
+          </ul>
+        </div>
+        <div class="hr"></div>
+        <div class="stack">
+          <span class="micro">Core modules on your track</span>
+          <div class="mods">
+            <div class="mod f-found"><span class="ic">🏛️</span><span><span class="fam">Foundations</span><span class="nm">DoD Acquisitions Foundations</span></span></div>
+            <div class="mod f-con"><span class="ic">📋</span><span><span class="fam">Contracts</span><span class="nm">Defense Contracting Fundamentals</span></span></div>
+            <div class="mod f-money"><span class="ic">💰</span><span><span class="fam">Money</span><span class="nm">Defense Finance &amp; Budgeting</span></span></div>
+            <div class="mod f-run"><span class="ic">⚙️</span><span><span class="fam">Run the program</span><span class="nm">PM Operations &amp; Leadership</span></span></div>
+          </div>
+          <span class="aside-note">Coming out of uniform? The 🎖️ Veteran Transition module covers translating your record, USAJOBS, and what your clearance is worth.</span>
+        </div>
+        <div class="cta-row">
+          <a href="/app#/auth" class="btn btn-brand">Start free, no experience needed →</a>
+        </div>
+      </div>
+      <div class="road">
+        <div class="stack-sm">
+          <span class="micro">Your level road</span>
+          <span class="road-t">The industry PM ladder</span>
+          <span class="road-s">Every lesson is 100 XP, one space on the road. Aiming at a government job instead? Switch to the GS ladder in your account.</span>
+        </div>
+        <ol class="rungs">
+          <li class="peak"><span class="dot"></span><span class="nm">Vice President</span><span class="xp">5,000 XP</span></li>
+          <li><span class="dot"></span><span class="nm">Director of Programs</span><span class="xp">3,000 XP</span></li>
+          <li><span class="dot"></span><span class="nm">Program Manager</span><span class="xp">1,800 XP</span></li>
+          <li><span class="dot"></span><span class="nm">Senior Project Manager</span><span class="xp">1,000 XP</span></li>
+          <li><span class="dot"></span><span class="nm">Project Manager</span><span class="xp">500 XP</span></li>
+          <li><span class="dot"></span><span class="nm">Junior Project Manager</span><span class="xp">200 XP</span></li>
+          <li class="start"><span class="dot"></span><span class="nm">Project Coordinator</span><span class="here">You start here</span></li>
+        </ol>
+        <span class="road-f">Weekly leaderboards rank the XP you earn, so a new hire can top the board in week one.</span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1067,32 +1453,97 @@
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<section id="how">
-  <div class="section-inner">
-    <div class="section-eyebrow">How It Works</div>
-    <h2 class="section-title" style="color:white;">Designed for how acquisition professionals actually learn</h2>
-    <p class="section-sub">Not a passive video course. Built around how defense contractor PMs actually learn: role-filtered curriculum, real program examples, and an AI assistant that explains things the way a mentor would.</p>
-    <div class="how-steps">
-      <div class="step">
-        <div class="step-icon">🎯</div>
-        <div class="step-title">Personalized Path</div>
-        <div class="step-desc">Answer 3 quick questions about your role and goals. Acqlerate builds a custom learning path. Primary modules first, bonus content available when you want it.</div>
+<!-- HOW IT WORKS (Sep 2026 redesign: the learning loop, shown with the real screens) -->
+<section id="how" class="v2 how-v2">
+  <div class="wrap">
+    <div class="head wide">
+      <span class="eyebrow">How it works</span>
+      <h2>One lesson a day. That's the whole trick.</h2>
+      <p class="lede">Lessons average <span data-count="avg-minutes">22</span> minutes, run on real program numbers, and end with proof you learned the thing. Here's the loop.</p>
+    </div>
+
+    <ol class="steps">
+      <li class="stp">
+        <div class="stp-n"><span class="num">1</span></div>
+        <div class="stp-card">
+          <div class="scr" aria-hidden="true">
+            <div class="m-top"><span class="m-cap">Question 3 of 3</span><span class="m-dots"><i></i><i></i><i></i></span></div>
+            <div class="m-q">What's your primary goal?</div>
+            <div class="m-opt on"><span class="m-radio"></span>Become a Better Program Manager</div>
+            <div class="m-opt"><span class="m-radio"></span>Master Contracts &amp; Finance</div>
+            <div class="m-opt m-hide-sm"><span class="m-radio"></span>Win More Business (BD / Capture)</div>
+          </div>
+          <div class="stp-txt">
+            <h3>Tell it your job</h3>
+            <p>Three quick questions at signup. Your track puts the modules that fit your job first and keeps the rest one tap away.</p>
+          </div>
+        </div>
+      </li>
+      <li class="stp">
+        <div class="stp-n"><span class="num">2</span></div>
+        <div class="stp-card">
+          <div class="scr" aria-hidden="true">
+            <div class="m-lesson"><span class="m-ic f-con">📋</span><span class="m-grow"><span class="m-fam">Contracts</span><b>Contract Types</b></span><span class="m-min">16 min</span></div>
+            <div class="m-seg"><span>Novice</span><span class="on">Intermediate</span><span>Advanced</span></div>
+            <div class="m-body"><b>FFP</b> locks the price at award. Overruns are the contractor's problem, so the bid prices that risk in.</div>
+            <div class="m-audio"><span class="m-play"><svg width="11" height="11" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M7 4.5v15l12-7.5z"></path></svg></span><span class="m-grow"><b>The Debrief</b><small>Contracts · audio overview</small></span></div>
+          </div>
+          <div class="stp-txt">
+            <h3>Learn at your depth</h3>
+            <p>Novice, Intermediate or Advanced, with real program examples. Rather listen? Every module has The Debrief, an audio overview for the drive in.</p>
+          </div>
+        </div>
+      </li>
+      <li class="stp">
+        <div class="stp-n"><span class="num">3</span></div>
+        <div class="stp-card">
+          <div class="scr" aria-hidden="true">
+            <span class="m-cap m-brand">✦ Lesson quiz</span>
+            <div class="m-q sm">Who carries the cost risk on a firm-fixed-price contract?</div>
+            <div class="m-ans">The government</div>
+            <div class="m-ans ok"><span>The contractor</span><span>✓</span></div>
+            <div class="m-ans m-hide-sm">Split by a share ratio</div>
+            <div class="m-gate">
+              <div class="m-gate-hd"><span>Module check</span><span>8 / 10</span></div>
+              <div class="m-bar"><i></i><em></em></div>
+              <small>75% opens the next level</small>
+            </div>
+          </div>
+          <div class="stp-txt">
+            <h3>Prove it</h3>
+            <p>Every lesson ends in a quiz. Score 75% on the module check and the next depth level opens up.</p>
+          </div>
+        </div>
+      </li>
+      <li class="stp">
+        <div class="stp-n"><span class="num gold">4</span></div>
+        <div class="stp-card">
+          <div class="scr" aria-hidden="true">
+            <div class="m-cert">
+              <div class="m-cert-hd"><img src="/acqlerate-icon.svg" alt="" width="18" height="18" /><span>Certificate of completion</span></div>
+              <b>Defense Contracting Fundamentals</b>
+              <span class="m-cert-meta"><span data-count="clps:contracts">4.1</span> hours · <span data-count="clps:contracts">4.1</span> CLPs · Functional area: CON</span>
+              <div class="m-cert-ft"><span><i></i>Lucas Cruz, Founder</span><span class="m-cert-cap">🎓</span></div>
+            </div>
+            <span class="m-cap">Self-report it in</span>
+            <div class="m-chips"><span>CAPPMIS</span><span>eDACM</span><span>FAITAS</span></div>
+          </div>
+          <div class="stp-txt">
+            <h3>Get the credit</h3>
+            <p>Finish a module, get a signed certificate with hours and functional area. <span data-count="clps-whole">44</span>+ CLPs and about <span data-count="clps-whole">44</span> PDUs across the course.</p>
+          </div>
+        </div>
+      </li>
+    </ol>
+
+    <div class="how-cta">
+      <div>
+        <b>Module 1 is free for good. So is one lesson in every other module.</b>
+        <span>No card, no class schedule. Start between meetings.</span>
       </div>
-      <div class="step">
-        <div class="step-icon">📚</div>
-        <div class="step-title">Three Skill Levels</div>
-        <div class="step-desc">Every module has Novice, Intermediate, and Advanced content. Pass the gate assessment (75%) to unlock the next tier and demonstrate mastery.</div>
-      </div>
-      <div class="step">
-        <div class="step-icon">🤖</div>
-        <div class="step-title">AI Study Assistant</div>
-        <div class="step-desc">Every lesson has an AI button. Ask it to explain the concept like you're 5, or how to apply it as a PM. Powered by Gemini 2.5 Flash. Instant, plain-language answers.</div>
-      </div>
-      <div class="step">
-        <div class="step-icon">✅</div>
-        <div class="step-title">Quizzes & XP</div>
-        <div class="step-desc">Multi-format quizzes after every lesson. Earn XP, track your level, and see your progress across every module. The dashboard always shows your next lesson.</div>
+      <div class="btns">
+        <a href="/app#/auth" class="btn btn-brand">Start free →</a>
+        <a href="#modules" class="btn btn-outline">See the curriculum</a>
       </div>
     </div>
   </div>
@@ -1803,25 +2254,95 @@
     if (!isOpen) item.classList.add('open');
   }
 
-  // Email lead capture
-  async function submitLead(e, source) {
+  // ── Starter Kit: edition picker + lead capture ─────────────────────────────
+  // The edition rides on the lead source (hero_bar_usg / hero_bar_contractor),
+  // so the leads list shows which side each person picked and the delivery
+  // email leads with that edition.
+  const KIT_EDITIONS = {
+    usg: { name: 'Government edition', pdf: '/starter-kit-usg.pdf' },
+    contractor: { name: 'Contractor edition', pdf: '/starter-kit-contractor.pdf' },
+  };
+  (function initKit() {
+    const kit = document.getElementById('starterKit');
+    if (!kit) return;
+    kit.querySelectorAll('.seg button').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const ed = btn.getAttribute('data-edition');
+        kit.setAttribute('data-edition', ed);
+        kit.querySelectorAll('.seg button').forEach(function (b) {
+          b.setAttribute('aria-pressed', String(b === btn));
+        });
+        kit.querySelectorAll('[data-for]').forEach(function (el) {
+          el.hidden = el.getAttribute('data-for') !== ed;
+        });
+      });
+    });
+  })();
+
+  async function submitLead(e) {
     e.preventDefault();
-    const email = document.getElementById('captureEmail').value.trim();
-    if (!email) return;
+    const kit = document.getElementById('starterKit');
+    const input = document.getElementById('captureEmail');
+    const note = document.getElementById('captureNote');
+    const btn = document.getElementById('captureBtn');
+    const email = input.value.trim();
+    const ed = (kit && kit.getAttribute('data-edition')) || 'usg';
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      input.setAttribute('aria-invalid', 'true');
+      note.textContent = 'That email looks off. Mind checking it?';
+      note.classList.add('err');
+      input.focus();
+      return;
+    }
+    input.removeAttribute('aria-invalid');
+    btn.disabled = true;
     try {
       const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source }),
+        body: JSON.stringify({ email, source: 'hero_bar_' + ed }),
       });
-      if (res.ok) {
-        document.getElementById('captureForm').style.display = 'none';
-        document.getElementById('captureSuccess').style.display = 'block';
-      }
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const edition = KIT_EDITIONS[ed] || KIT_EDITIONS.usg;
+      document.getElementById('captureEdName').textContent = edition.name;
+      document.getElementById('captureOpen').setAttribute('href', edition.pdf);
+      document.getElementById('captureForm').hidden = true;
+      document.getElementById('captureSuccess').hidden = false;
+      if (typeof gtag === 'function') gtag('event', 'generate_lead', { lead_source: 'hero_bar_' + ed });
     } catch (err) {
       console.error('Lead capture error:', err);
+      note.textContent = 'That did not go through. Try again in a moment.';
+      note.classList.add('err');
+      btn.disabled = false;
     }
   }
+
+  // ── Who it's for: tabs ─────────────────────────────────────────────────────
+  (function initWhoTabs() {
+    const tabs = Array.prototype.slice.call(document.querySelectorAll('#who [role="tab"]'));
+    if (!tabs.length) return;
+    function select(tab, focus) {
+      tabs.forEach(function (t) {
+        const on = t === tab;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        const panel = document.getElementById(t.getAttribute('aria-controls'));
+        if (panel) panel.hidden = !on;
+      });
+      if (focus) tab.focus();
+    }
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener('click', function () { select(tab, false); });
+      tab.addEventListener('keydown', function (e) {
+        let j = null;
+        if (e.key === 'ArrowRight') j = (i + 1) % tabs.length;
+        if (e.key === 'ArrowLeft') j = (i - 1 + tabs.length) % tabs.length;
+        if (e.key === 'Home') j = 0;
+        if (e.key === 'End') j = tabs.length - 1;
+        if (j !== null) { e.preventDefault(); select(tabs[j], true); }
+      });
+    });
+  })();
 
   // Smooth scroll for anchor links
   document.querySelectorAll('a[href^="#"]').forEach(a => {
