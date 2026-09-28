@@ -47,6 +47,10 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
+  // ── Audio (Debrief previews, anything streamed with Range): leave to the
+  // browser. A 206 partial response can't go in the Cache API. ──────────────
+  if (url.pathname.startsWith('/audio-preview/') || request.headers.has('range')) return;
+
   // ── API calls: always network-only ──────────────────────────────────────
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(fetch(request).catch(() => new Response(

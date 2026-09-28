@@ -402,6 +402,39 @@
     .v2 .m-audio b { font-size: 0.75rem; color: var(--ink); }
     .v2 .m-audio small { font-size: 0.66rem; }
     .v2 .m-play { width: 28px; height: 28px; border-radius: 50%; display: inline-grid; place-items: center; background: var(--ink); flex-shrink: 0; }
+    .v2 a.m-audio { text-decoration: none; }
+
+    /* Hear it first: two 30-second Debrief clips (public previews; full episodes stay behind login) */
+    .v2 .listen { margin-top: 44px; background: var(--bg); border: 1px solid var(--line-2); border-radius: 18px; padding: clamp(20px, 3vw, 32px); display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.6fr); gap: clamp(20px, 3vw, 40px); align-items: center; }
+    .v2 .listen-hd { display: flex; flex-direction: column; gap: 8px; }
+    .v2 .listen-hd h3 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; }
+    .v2 .listen-hd p { font-size: 0.92rem; line-height: 1.6; color: var(--ink-2); }
+    .v2 .listen-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .v2 .clip { --fam: #5E3596; --tint: #EFE9F6; --edge: #D4C4E8; background: #fff; border: 1px solid var(--line); border-top: 3px solid var(--fam); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .v2 .clip.money { --fam: #2E8B57; --tint: #E7F3EC; --edge: #B9DCC7; }
+    .v2 .clip-top { display: flex; align-items: center; gap: 12px; }
+    .v2 .clip-btn { width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer; background: var(--fam); display: inline-grid; place-items: center; flex-shrink: 0; transition: transform 0.15s; }
+    .v2 .clip-btn:hover { transform: scale(1.06); }
+    .v2 .clip-btn:focus-visible { outline: 3px solid var(--brand-bright); outline-offset: 2px; }
+    .v2 .clip-btn .i-pause { display: none; }
+    .v2 .clip.playing .clip-btn .i-play { display: none; }
+    .v2 .clip.playing .clip-btn .i-pause { display: block; }
+    .v2 .clip-meta { display: flex; flex-direction: column; min-width: 0; }
+    .v2 .clip-fam { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fam); }
+    .v2 .clip-meta b { font-size: 0.98rem; line-height: 1.3; color: var(--ink); }
+    .v2 .clip-quote { font-size: 0.86rem; line-height: 1.55; color: var(--ink-2); margin: 0; }
+    .v2 .clip-row { display: flex; align-items: center; gap: 10px; }
+    .v2 .clip-bar { flex-grow: 1; height: 6px; border-radius: 99px; background: var(--tint); overflow: hidden; cursor: pointer; }
+    .v2 .clip-bar i { display: block; height: 100%; width: 0; background: var(--fam); border-radius: 99px; }
+    .v2 .clip-time { font-size: 0.75rem; font-weight: 600; color: var(--ink-3); font-variant-numeric: tabular-nums; min-width: 34px; text-align: right; }
+    .v2 .listen-cta { font-size: 0.86rem; font-weight: 600; color: var(--brand); text-decoration: none; }
+    .v2 .listen-cta:hover { text-decoration: underline; }
+    @media (max-width: 900px) {
+      .v2 .listen { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .v2 .listen-grid { grid-template-columns: minmax(0, 1fr); }
+    }
     .v2 .m-ans { display: flex; justify-content: space-between; padding: 7px 10px; border-radius: 8px; background: #fff; border: 1px solid var(--line); font-size: 0.75rem; color: var(--ink-2); }
     .v2 .m-ans.ok { background: #ECFDF5; border: 1.5px solid #10B981; font-weight: 600; color: #065F46; }
     .v2 .m-gate { margin-top: auto; display: flex; flex-direction: column; gap: 5px; }
@@ -1486,7 +1519,7 @@
             <div class="m-lesson"><span class="m-ic f-con">📋</span><span class="m-grow"><span class="m-fam">Contracts</span><b>Contract Types</b></span><span class="m-min">16 min</span></div>
             <div class="m-seg"><span>Novice</span><span class="on">Intermediate</span><span>Advanced</span></div>
             <div class="m-body"><b>FFP</b> locks the price at award. Overruns are the contractor's problem, so the bid prices that risk in.</div>
-            <div class="m-audio"><span class="m-play"><svg width="11" height="11" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M7 4.5v15l12-7.5z"></path></svg></span><span class="m-grow"><b>The Debrief</b><small>Contracts · audio overview</small></span></div>
+            <a class="m-audio" href="#listen" tabindex="-1"><span class="m-play"><svg width="11" height="11" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M7 4.5v15l12-7.5z"></path></svg></span><span class="m-grow"><b>The Debrief</b><small>Contracts · audio overview</small></span></a>
           </div>
           <div class="stp-txt">
             <h3>Learn at your depth</h3>
@@ -1535,6 +1568,37 @@
         </div>
       </li>
     </ol>
+
+    <!-- Hear it first: two short cuts from The Debrief. Public preview files in
+         /audio-preview/; the full episodes stay behind login (/api/audio/:id). -->
+    <div class="listen" id="listen">
+      <div class="listen-hd">
+        <span class="eyebrow">Hear it first</span>
+        <h3>Two short cuts from The Debrief</h3>
+        <p>Every module has a full audio episode for the commute. Here is what two of them sound like: one from Contracts, one from The Business of Defense Contracting.</p>
+        <a class="listen-cta" href="/app#/auth">Start free and hear every module &rarr;</a>
+      </div>
+      <div class="listen-grid">
+        <div class="clip" data-clip="contracts">
+          <div class="clip-top">
+            <button class="clip-btn" type="button" aria-label="Play the Contracts clip, 38 seconds"><svg class="i-play" width="16" height="16" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"></path></svg><svg class="i-pause" width="16" height="16" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><rect x="6" y="4.5" width="4" height="15" rx="1"></rect><rect x="14" y="4.5" width="4" height="15" rx="1"></rect></svg></button>
+            <div class="clip-meta"><span class="clip-fam">Contracts</span><b>The restaurant with no prices</b></div>
+          </div>
+          <p class="clip-quote">Why undefinitized contract actions (UCAs) cost the government so much: you eat the meal first and argue about the bill later.</p>
+          <div class="clip-row"><div class="clip-bar" role="progressbar" aria-label="Contracts clip progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div><span class="clip-time" data-len="0:38">0:38</span></div>
+          <audio preload="none"><source src="/audio-preview/debrief-contracts-uca.webm" type="audio/webm; codecs=opus"><source src="/audio-preview/debrief-contracts-uca.m4a" type="audio/mp4"></audio>
+        </div>
+        <div class="clip money" data-clip="business">
+          <div class="clip-top">
+            <button class="clip-btn" type="button" aria-label="Play the Business of Defense Contracting clip, 26 seconds"><svg class="i-play" width="16" height="16" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"></path></svg><svg class="i-pause" width="16" height="16" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><rect x="6" y="4.5" width="4" height="15" rx="1"></rect><rect x="14" y="4.5" width="4" height="15" rx="1"></rect></svg></button>
+            <div class="clip-meta"><span class="clip-fam">Business</span><b>Finance reads the odometer</b></div>
+          </div>
+          <p class="clip-quote">Why a stale estimate at completion makes a failing program look like it is right on track.</p>
+          <div class="clip-row"><div class="clip-bar" role="progressbar" aria-label="Business clip progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div><span class="clip-time" data-len="0:26">0:26</span></div>
+          <audio preload="none"><source src="/audio-preview/debrief-business-odometer.webm" type="audio/webm; codecs=opus"><source src="/audio-preview/debrief-business-odometer.m4a" type="audio/mp4"></audio>
+        </div>
+      </div>
+    </div>
 
     <div class="how-cta">
       <div>
@@ -2362,6 +2426,44 @@
       }
     });
   });
+</script>
+<script>
+  // Debrief preview players: one plays at a time, tap the bar to seek.
+  (function () {
+    var clips = Array.prototype.slice.call(document.querySelectorAll('.listen .clip'));
+    function fmt(t) { t = Math.max(0, Math.round(t)); return Math.floor(t / 60) + ':' + ('0' + (t % 60)).slice(-2); }
+    clips.forEach(function (clip) {
+      var audio = clip.querySelector('audio'), btn = clip.querySelector('.clip-btn'),
+          bar = clip.querySelector('.clip-bar'), fill = bar.querySelector('i'), time = clip.querySelector('.clip-time'),
+          started = false;
+      btn.addEventListener('click', function () {
+        if (audio.paused) {
+          clips.forEach(function (c) { if (c !== clip) c.querySelector('audio').pause(); });
+          audio.play().catch(function () {});
+          if (!started) {
+            started = true;
+            try { if (typeof gtag === 'function') gtag('event', 'debrief_preview_play', { clip: clip.getAttribute('data-clip') }); } catch (e) {}
+          }
+        } else { audio.pause(); }
+      });
+      audio.addEventListener('play', function () { clip.classList.add('playing'); btn.setAttribute('aria-label', btn.getAttribute('aria-label').replace('Play', 'Pause')); });
+      audio.addEventListener('pause', function () { clip.classList.remove('playing'); btn.setAttribute('aria-label', btn.getAttribute('aria-label').replace('Pause', 'Play')); });
+      audio.addEventListener('timeupdate', function () {
+        var pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+        fill.style.width = pct + '%'; bar.setAttribute('aria-valuenow', Math.round(pct));
+        time.textContent = audio.duration ? fmt(audio.duration - audio.currentTime) : time.getAttribute('data-len');
+      });
+      audio.addEventListener('ended', function () {
+        fill.style.width = '0%'; time.textContent = time.getAttribute('data-len'); audio.currentTime = 0;
+        try { if (typeof gtag === 'function') gtag('event', 'debrief_preview_complete', { clip: clip.getAttribute('data-clip') }); } catch (e) {}
+      });
+      bar.addEventListener('click', function (e) {
+        if (!audio.duration) return;
+        var r = bar.getBoundingClientRect();
+        audio.currentTime = Math.min(audio.duration, Math.max(0, (e.clientX - r.left) / r.width * audio.duration));
+      });
+    });
+  })();
 </script>
 </body>
 </html>
