@@ -17,6 +17,8 @@ export const INTERNAL_EMAILS = new Set([
   "lucas.l.cruz.es@gmail.com",
   "lucas.l.cruz.pr@gmail.com",
   "jumpmasterguy@gmail.com",
+  // Demo login given to Google Play and App Store reviewers (Annual Pro).
+  "appreview@acqlerate.com",
 ]);
 
 export function isInternalAccount(u: { email?: string | null; isAdmin?: boolean | null }): boolean {
