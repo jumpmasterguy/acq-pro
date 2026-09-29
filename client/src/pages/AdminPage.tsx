@@ -799,7 +799,7 @@ export default function AdminPage() {
                   <div className="text-sm">
                     <span className="font-semibold text-foreground">XP here matches the app: </span>
                     <span className="text-muted-foreground">
-                      100 per lesson, plus a tenth of each quiz score, plus Daily Challenge, weekly brief and Coach XP.
+                      100 per lesson, plus a tenth of each quiz score, plus Daily Challenge and Coach XP.
                     </span>
                   </div>
                 </div>

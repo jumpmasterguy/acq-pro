@@ -21,7 +21,6 @@ import { MobileHome } from "@/components/mobile/MobileHome";
 import { getActiveTrack, useActiveTrack } from "@/lib/careerTracks";
 import { DailyChallengeSheet } from "@/components/mobile/DailyChallengeSheet";
 import { LeaderboardQuietRow } from "@/components/Leaderboard";
-import { WeeklyBrief } from "@/components/WeeklyBrief";
 import { upgradeCtaSuffix } from "@shared/pricing";
 
 interface DashboardProps {
@@ -47,7 +46,6 @@ interface DashboardProps {
   /** Learn tab target, for the carousel's "See all →". */
   onOpenModules?: () => void;
   /** Fired when a brief awards XP, so App can show it before the next reload. */
-  onBriefXpEarned?: (xpEarned: number) => void;
 }
 
 // ── Career track lesson-level definitions ───────────────────────────────────
@@ -378,7 +376,7 @@ function FilterTab({ active, onClick, children }: { active: boolean; onClick: ()
 }
 
 // ── Main Dashboard ───────────────────────────────────────────────────────────
-export default function Dashboard({ progress, onSelectModule, onSelectLesson, onUpgrade, username, isAdmin, onStreakUpdate, onBriefXpEarned, firstName, lastName, lastStreakDate, onOpenModules, onOpenAccount }: DashboardProps) {
+export default function Dashboard({ progress, onSelectModule, onSelectLesson, onUpgrade, username, isAdmin, onStreakUpdate, firstName, lastName, lastStreakDate, onOpenModules, onOpenAccount }: DashboardProps) {
   const totalLessons = getTotalLessons();
   const completedCount = progress.completedLessons.size;
   // Use progress.xp (computed once in App.tsx) rather than recalculating
@@ -894,22 +892,6 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
         {/* Leaderboards */}
         <LeaderboardQuietRow />
       </div>
-
-      {/* ── Acquisition This Week ──────────────────────────────────────────
-          A short, dated brief that gives returning users a reason to open the
-          app between lessons. Read state is local to the browser; XP and streak
-          integration is a follow-up. */}
-      <WeeklyBrief
-        onSelectLesson={onSelectLesson}
-        onXpEarned={(xp, currentStreak) => {
-          if (xp > 0) onBriefXpEarned?.(xp);
-          if (typeof currentStreak === 'number') {
-            setStreak(st => ({ ...st, currentStreak }));
-            onStreakUpdate?.({ currentStreak, longestStreak: streak.longestStreak });
-          }
-        }}
-        className="mb-6"
-      />
 
       {/* Daily challenge modal */}
       {challengeModal}

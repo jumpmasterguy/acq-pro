@@ -922,7 +922,6 @@ function AppContent() {
               onEditProfile={handleEditProfile}
               isAdmin={isAdmin}
               onStreakUpdate={(s) => setStreak(s)}
-              onBriefXpEarned={(amount) => setSessionBriefXp(x => x + amount)}
               firstName={authState.status === 'authenticated' ? authState.user.firstName : null}
               lastName={authState.status === 'authenticated' ? authState.user.lastName : null}
               lastStreakDate={authState.status === 'authenticated' ? authState.user.lastStreakDate ?? null : null}
