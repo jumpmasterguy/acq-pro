@@ -370,6 +370,9 @@ export async function registerRoutes(
       userProfile: user.userProfile ?? null,
       currentStreak: getDisplayStreak((user as any).currentStreak, (user as any).lastStreakDate),
       longestStreak: (user as any).longestStreak ?? 0,
+      // The phone's Mon-Sun streak strip counts back from this date. Without
+      // it every reload showed the week empty even on a long streak.
+      lastStreakDate: (user as any).lastStreakDate ?? null,
       lastChallengeDate: (user as any).lastChallengeDate ?? null,
       // XP earned outside lessons/quizzes (see toPassportUser in auth.ts). The
       // app adds these to its total; without them a reload showed less XP
