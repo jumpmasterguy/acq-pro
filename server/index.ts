@@ -158,7 +158,29 @@ const apiLimiter = rateLimit({
   skip: (req) => process.env.NODE_ENV === "development",
 });
 
+// Public certificate verification (no sign-in by design). Each lookup scans
+// the users table, so cap it per IP and, as a backstop against a distributed
+// flood, across all IPs. Real auditors do a handful of lookups a day.
+const verifyLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20,             // 20 lookups per minute per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "Too many lookups. Please wait a minute and try again.",
+  skip: (req) => process.env.NODE_ENV === "development",
+});
+const verifyGlobalLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 300,            // 300 lookups per minute across everyone
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: () => "verify-global",
+  message: "Verification is busy. Please try again in a minute.",
+  skip: (req) => process.env.NODE_ENV === "development",
+});
+
 app.use("/api", apiLimiter);
+app.use(["/verify", "/api/verify"], verifyLimiter, verifyGlobalLimiter);
 app.use("/api/auth/register", authLimiter);
 app.use("/api/auth/login", authLimiter);
 app.use("/api/leads", leadsLimiter);

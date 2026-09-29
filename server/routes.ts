@@ -2910,9 +2910,25 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
 
   const CERT_ID_RE = /^ACQ-[2-9A-Z]{4}-[2-9A-Z]{4}$/;
 
+  // Short-lived cache (hits and misses) so repeat lookups of the same ID,
+  // e.g. an auditor refreshing, never touch the database twice a minute.
+  const CERT_CACHE_MS = 60_000;
+  const CERT_CACHE_MAX = 500;
+  const certCache = new Map<string, { at: number; value: Awaited<ReturnType<typeof lookupCertificateUncached>> }>();
+
   async function lookupCertificate(rawId: string) {
     const certId = String(rawId || '').toUpperCase().trim();
+    // Malformed IDs are rejected here, before any cache or database work.
     if (!CERT_ID_RE.test(certId)) return null;
+    const hit = certCache.get(certId);
+    if (hit && Date.now() - hit.at < CERT_CACHE_MS) return hit.value;
+    const value = await lookupCertificateUncached(certId);
+    if (certCache.size >= CERT_CACHE_MAX) certCache.delete(certCache.keys().next().value!);
+    certCache.set(certId, { at: Date.now(), value });
+    return value;
+  }
+
+  async function lookupCertificateUncached(certId: string) {
     const user = await storage.findUserByCertId(certId);
     if (!user) return null;
     const entry = Object.entries(((user as any).moduleCompletions ?? {}) as ModuleCompletions)
@@ -3012,6 +3028,45 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
     return res.json({ valid: true, provider: 'Acqlerate', ...cert });
   });
 
+  const verifyShell = (body: string) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verify a certificate | Acqlerate</title><meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg">
+<style>
+@font-face{font-family:'General Sans';font-weight:500;src:url('/fonts/GeneralSans-Medium.woff2') format('woff2')}
+@font-face{font-family:'General Sans';font-weight:700;src:url('/fonts/GeneralSans-Bold.woff2') format('woff2')}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'General Sans',-apple-system,sans-serif;background:#F1F5F4;color:#0F172A;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:48px 16px}
+a.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#0F172A;font-weight:700;font-size:1.1rem;margin-bottom:28px}
+a.logo span{color:#01696F}
+a.logo img{width:32px;height:32px;border-radius:8px;background:#01696F}
+.card{background:#fff;border:1px solid #D3DFDE;border-top:4px solid #D9B64C;border-radius:14px;padding:32px;max-width:560px;width:100%}
+h1{font-size:1.5rem;margin:14px 0 18px;letter-spacing:-.01em}
+.badge{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:6px}
+.ok{background:#E7F2EC;color:#1F6B43}.no{background:#FAEDE5;color:#A8482A}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th{text-align:left;color:#6B8082;font-weight:500;padding:9px 12px 9px 0;vertical-align:top;width:44%;border-bottom:1px solid #E7EEED}
+td{padding:9px 0;font-weight:500;border-bottom:1px solid #E7EEED}
+p{color:#3D5153;line-height:1.6}.fine{font-size:.82rem;margin-top:18px;color:#6B8082}
+</style></head><body><a class="logo" href="/"><img src="/acqlerate-icon.svg" alt=""><b>Acq<span>lerate</span></b></a><div class="card">${body}</div></body></html>`;
+
+  // GET /verify: public lookup form for anyone holding only the printed ID
+  // (an auditor typing it in). Server-rendered, no sign-in, no JS. Without this
+  // route the bare URL fell through to the React app and its login screen.
+  app.get("/verify", (req: Request, res: Response) => {
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('X-Robots-Tag', 'noindex');
+    const raw = typeof req.query.id === 'string' ? req.query.id.toUpperCase().trim() : '';
+    if (raw && CERT_ID_RE.test(raw)) return res.redirect(302, `/verify/${raw}`);
+    const msg = raw ? `<p style="color:#A8482A;margin-bottom:14px">That does not look like a certificate ID. It looks like <b>ACQ-XXXX-XXXX</b>.</p>` : '';
+    res.status(raw ? 400 : 200).setHeader('Content-Type', 'text/html; charset=utf-8');
+    return res.send(verifyShell(`<div class="badge ok" style="background:#EAF1F1;color:#01696F">Certificate check</div>
+      <h1>Verify a certificate</h1>
+      <p style="margin-bottom:16px">Enter the Certificate ID printed on the certificate. No account needed.</p>
+      ${msg}
+      <form method="get" action="/verify"><input name="id" placeholder="ACQ-XXXX-XXXX" maxlength="13" autocomplete="off" autocapitalize="characters" spellcheck="false" style="width:100%;padding:12px;font:inherit;font-family:ui-monospace,monospace;border:1px solid #D3DFDE;border-radius:8px;margin-bottom:12px">
+      <button type="submit" style="width:100%;padding:12px;font:inherit;font-weight:700;background:#01696F;color:#fff;border:0;border-radius:8px;cursor:pointer">Verify</button></form>`));
+  });
+
   // GET /verify/:certId: the page behind the link printed on every
   // certificate. Server-rendered, so it works for anyone with no app and no JS.
   app.get("/verify/:certId", async (req: Request, res: Response) => {
@@ -3040,26 +3095,7 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('X-Robots-Tag', 'noindex');
-    return res.send(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Verify a certificate | Acqlerate</title><meta name="robots" content="noindex">
-<link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg">
-<style>
-@font-face{font-family:'General Sans';font-weight:500;src:url('/fonts/GeneralSans-Medium.woff2') format('woff2')}
-@font-face{font-family:'General Sans';font-weight:700;src:url('/fonts/GeneralSans-Bold.woff2') format('woff2')}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'General Sans',-apple-system,sans-serif;background:#F1F5F4;color:#0F172A;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:48px 16px}
-a.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#0F172A;font-weight:700;font-size:1.1rem;margin-bottom:28px}
-a.logo span{color:#01696F}
-a.logo img{width:32px;height:32px;border-radius:8px;background:#01696F}
-.card{background:#fff;border:1px solid #D3DFDE;border-top:4px solid #D9B64C;border-radius:14px;padding:32px;max-width:560px;width:100%}
-h1{font-size:1.5rem;margin:14px 0 18px;letter-spacing:-.01em}
-.badge{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:6px}
-.ok{background:#E7F2EC;color:#1F6B43}.no{background:#FAEDE5;color:#A8482A}
-table{width:100%;border-collapse:collapse;font-size:.95rem}
-th{text-align:left;color:#6B8082;font-weight:500;padding:9px 12px 9px 0;vertical-align:top;width:44%;border-bottom:1px solid #E7EEED}
-td{padding:9px 0;font-weight:500;border-bottom:1px solid #E7EEED}
-p{color:#3D5153;line-height:1.6}.fine{font-size:.82rem;margin-top:18px;color:#6B8082}
-</style></head><body><a class="logo" href="/"><img src="/acqlerate-icon.svg" alt=""><b>Acq<span>lerate</span></b></a><div class="card">${body}</div></body></html>`);
+    return res.send(verifyShell(body));
   });
 
   return httpServer;
