@@ -29,7 +29,7 @@ import { registerAdminMobileRoutes } from "./adminMobile";
 import { applySignupReferral, cleanReferralCode, grantProYear } from "./referrals";
 import { dailyChallengeQuestionBank } from "./dailyChallengeQuestions";
 import { buildLeaderboards, type LeaderboardRow } from "./leaderboard";
-import { weekRollPatch } from "@shared/xp";
+import { weekRollPatch, computeUserXp } from "@shared/xp";
 import { renderCertificate } from "./certificate";
 import {
   summarizeProject, aggregateSummaries, createProjectSchema, createFundingModSchema,
@@ -2132,7 +2132,9 @@ export async function registerRoutes(
           avgSessionMinutes,
           closedSessionCount: closedSessions.length,
           idleTimeoutCount,
-          xp: u.xp ?? 0,
+          // Same number the learner sees in the app (shared/xp.ts), not the
+          // legacy users.xp column, which counts 10 per lesson.
+          xp: computeUserXp(u as any),
           completedLessons,
           avgQuizScore: avgQuiz,
           highestSkillLevel: highestSkill,

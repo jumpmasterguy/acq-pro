@@ -1018,7 +1018,7 @@ function AppContent() {
             />
           )}
           {view.type === 'admin' && isAdmin && (
-            <div className={isMobile ? "px-4 pt-3 pb-8" : ""}><AdminPage /></div>
+            <div className={isMobile ? "px-4 pt-1 pb-8" : ""}><AdminPage /></div>
           )}
           {view.type === 'analytics' && isAdmin && (
             <AdminAnalytics onBack={() => setView({ type: 'admin' })} />

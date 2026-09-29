@@ -314,7 +314,7 @@ function Stat({ icon, label, value }: { icon: ReactNode; label: string; value: R
   );
 }
 
-function UserSheet({ id, onClose }: { id: string; onClose: () => void }) {
+export function UserSheet({ id, onClose }: { id: string; onClose: () => void }) {
   const { toast } = useToast();
   const qc = useQueryClient();
   const key = ["/api/admin/users", id, "summary"];
