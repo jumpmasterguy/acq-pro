@@ -87,13 +87,8 @@ const fmtMonth = (iso) => {
   return `${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][m - 1]} ${y}`;
 };
 
-// Slide styling rotates through three palettes so the carousel keeps its rhythm
-// regardless of which posts land in it.
-const PALETTES = [
-  { bg: "linear-gradient(135deg,#0d2137 0%,#0c4e54 100%)", shadow: "rgba(1,105,111,0.25)", ctaBg: "#f5c842", ctaFg: "#0d2137", accent: "#f5c842" },
-  { bg: "linear-gradient(135deg,#1B2D3E 0%,#2d4a6b 100%)", shadow: "rgba(0,0,0,0.2)",        ctaBg: "white",   ctaFg: "#1B2D3E", accent: "#4FC3CB" },
-  { bg: "linear-gradient(135deg,#0d2137 0%,#014a4f 100%)", shadow: "rgba(1,105,111,0.25)", ctaBg: "white",   ctaFg: "#0d2137", accent: "#f5c842" },
-];
+// Slide styling rotates through three palettes (bs-p0..bs-p2, defined in landing.html's CSS) so the
+// carousel keeps its rhythm regardless of which posts land in it. Colors live in CSS, not here.
 
 const audienceLabel = (a) => {
   const s = a.toLowerCase();
@@ -104,42 +99,41 @@ const audienceLabel = (a) => {
   return a || "Acquisition";
 };
 
-function statPanel(post, palette) {
+function statPanel(post) {
   const stats = post.stats.length === 3 ? post.stats : [
     { value: `${post.readMin} min`, label: "Read Time" },
     { value: audienceLabel(post.audience), label: "Written For" },
     { value: fmtMonth(post.datePublished), label: "Published" },
   ];
-  const divider = `<div style="width:1px;height:28px;background:rgba(255,255,255,0.1)"></div>`;
+  const divider = `<div class="bs-div"></div>`;
   const cell = (s, i) => {
-    const size = s.value.length > 7 ? "1.05rem" : s.value.length > 5 ? "1.3rem" : "1.6rem";
-    const color = i === 1 ? palette.accent : "white";
-    return `<div style="text-align:center"><div style="font-size:${size};font-weight:900;color:${color};line-height:1">${esc(s.value)}</div><div style="font-size:0.62rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px">${esc(s.label)}</div></div>`;
+    const size = s.value.length > 7 ? " s" : s.value.length > 5 ? " m" : "";
+    const accent = i === 1 ? " acc" : "";
+    return `<div class="bs-stat"><div class="bs-v${size}${accent}">${esc(s.value)}</div><div class="bs-l">${esc(s.label)}</div></div>`;
   };
-  return `<div class="blog-featured-stats" style="background:rgba(0,0,0,0.18);min-width:160px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:28px 24px;gap:18px;border-left:1px solid rgba(255,255,255,0.07)">
+  return `<div class="blog-featured-stats bs-stats">
             ${stats.map(cell).join(`\n            ${divider}\n            `)}
           </div>`;
 }
 
 function slide(post, i) {
-  const p = PALETTES[i % PALETTES.length];
   const latest = i === 0;
   const badge = latest
-    ? `<span style="background:#f5c842;color:#0d2137;font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:4px 10px;border-radius:4px">🔥 Latest</span>`
-    : `<span style="background:rgba(255,255,255,0.15);color:white;font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:4px 10px;border-radius:4px">${esc(post.tag || audienceLabel(post.audience))}</span>`;
+    ? `<span class="bs-badge bs-badge-latest">🔥 Latest</span>`
+    : `<span class="bs-badge">${esc(post.tag || audienceLabel(post.audience))}</span>`;
   const cta = latest ? "Read the Breakdown →" : "Read the Guide →";
   return `        <!-- Slide ${i}: ${esc(post.headline)} -->
-        <a href="/blog/${post.slug}" class="blog-slide" data-index="${i}" style="display:${latest ? "flex" : "none"};text-decoration:none;background:${p.bg};border-radius:16px;overflow:hidden;transition:box-shadow 0.2s" onmouseover="this.style.boxShadow='0 12px 48px ${p.shadow}'" onmouseout="this.style.boxShadow=''">
-          <div style="padding:36px 40px;flex:1">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+        <a href="/blog/${post.slug}" class="blog-slide bs-p${i % 3}${latest ? " bs-latest" : ""}" data-index="${i}" style="display:${latest ? "flex" : "none"}">
+          <div class="bs-body">
+            <div class="bs-meta">
               ${badge}
-              <span style="font-size:0.72rem;color:rgba(255,255,255,0.4)">${fmtDate(post.datePublished)} · ${post.readMin} min read</span>
+              <span class="bs-date">${fmtDate(post.datePublished)} · ${post.readMin} min read</span>
             </div>
-            <h3 style="font-size:clamp(1.1rem,2.5vw,1.45rem);font-weight:800;color:white;line-height:1.3;letter-spacing:-0.02em;margin:0 0 12px">${esc(post.headline)}</h3>
-            <p style="font-size:0.92rem;color:rgba(255,255,255,0.65);line-height:1.65;margin:0 0 24px">${esc(post.description)}</p>
-            <div style="display:inline-flex;align-items:center;gap:8px;background:${p.ctaBg};color:${p.ctaFg};font-weight:800;font-size:0.85rem;padding:10px 20px;border-radius:9px">${cta}</div>
+            <h3 class="bs-title">${esc(post.headline)}</h3>
+            <p class="bs-desc">${esc(post.description)}</p>
+            <div class="bs-cta">${cta}</div>
           </div>
-          ${statPanel(post, p)}
+          ${statPanel(post)}
         </a>`;
 }
 
