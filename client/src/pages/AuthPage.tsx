@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { readReferralFromUrl, getStoredReferral, clearStoredReferral } from "@/lib/referral";
-import { getTotalLessons } from "@/lib/curriculumMeta";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Eye, EyeOff, Zap, Lock, BookOpen, Award, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Zap, Lock, ArrowLeft } from "lucide-react";
 import { AcqlerateLogo } from "@/components/AcqlerateLogo";
+import { AuthHero, FounderNote } from "@/components/AuthShowcase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -104,13 +104,6 @@ interface AuthPageProps {
   // an unexplained sign-out.
   notice?: string;
 }
-
-const highlights = [
-  { icon: BookOpen, label: `${getTotalLessons()} in-depth lessons` },
-  { icon: Zap, label: "XP tracking & gamification" },
-  { icon: Award, label: "DoD Acquisitions expertise" },
-  { icon: Lock, label: "Secure, private progress" },
-];
 
 export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: AuthPageProps) {
   // The web lands here from marketing, where most arrivals are strangers, so
@@ -443,9 +436,20 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
           light/dark toggle (a "deep field" brand treatment, not the sidebar
           theme) — see claude/auth-page-logo-back-link-2026-09.md for why. */}
       <div
-        className="hidden lg:flex flex-col justify-between w-[45%] p-10 relative overflow-hidden text-white"
+        className="hidden lg:flex flex-col justify-between gap-10 w-[48%] p-10 xl:p-14 relative overflow-hidden text-white"
         style={{ background: "linear-gradient(165deg, #0a1e23 0%, #0e2c30 55%, #0a2226 100%)" }}
       >
+        {/* Faint dot grid, fading toward the edges */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          aria-hidden="true"
+          style={{
+            backgroundImage: "radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)",
+            backgroundSize: "26px 26px",
+            WebkitMaskImage: "radial-gradient(ellipse at 40% 45%, #000 20%, transparent 75%)",
+            maskImage: "radial-gradient(ellipse at 40% 45%, #000 20%, transparent 75%)",
+          }}
+        />
         {/* Decorative hexagon field — echoes the logo's own hex mark, enlarged */}
         <svg
           width="620" height="620" viewBox="0 0 620 620"
@@ -484,45 +488,12 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
           )}
         </div>
 
-        {/* Hero copy */}
-        <div className="space-y-6 relative z-10">
-          <div>
-            <h1 className="text-3xl font-bold leading-tight mb-3 text-white">
-              Master DoD Acquisitions.<br />
-              <span style={{ color: "#2dd4bf" }}>Advance your career.</span>
-            </h1>
-            <p className="text-white/60 text-sm leading-relaxed max-w-sm">
-              The comprehensive training platform for professionals breaking into
-              Defense Program Management — finance, contracts, data, capture, and ops.
-            </p>
-          </div>
+        {/* Hero: headline, rotating "Decoded" card, what you get */}
+        <AuthHero />
 
-          <div className="space-y-3">
-            {highlights.map(({ icon: Icon, label }) => (
-              <div key={label} className="flex items-center gap-3">
-                <div
-                  className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ background: "rgba(45,212,191,0.14)" }}
-                >
-                  <Icon className="w-4 h-4" style={{ color: "#2dd4bf" }} />
-                </div>
-                <span className="text-sm text-white/80">{label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Testimonial */}
-        <div
-          className="rounded-xl p-5 relative z-10"
-          style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}
-        >
-          <p className="text-sm italic mb-3 text-white/80">
-            "Acqlerate gave me exactly what I needed to understand the FAR, DFARS, and how
-            defense budgets actually work — all in one place."
-          </p>
-          <div className="text-xs text-white/45">— Defense PM Candidate</div>
-        </div>
+        {/* Founder note: a true line from the story (replaced an anonymous
+            testimonial that was not a real customer quote) */}
+        <FounderNote />
       </div>
 
       {/* Right panel — auth form */}
@@ -617,7 +588,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
               <div className="space-y-1.5">
                 <h2 className="text-xl font-bold">Start learning for free</h2>
                 <p className="text-sm text-muted-foreground">
-                  Create your account — Module 1 is completely free.
+                  Create your account. Module 1 is completely free.
                 </p>
               </div>
 
@@ -804,7 +775,7 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
               <div className="space-y-1.5">
                 <h2 className="text-xl font-bold">Welcome back</h2>
                 <p className="text-sm text-muted-foreground">
-                  Sign in to continue your learning journey.
+                  Sign in and pick up where you left off. The acronyms waited for you.
                 </p>
               </div>
 
