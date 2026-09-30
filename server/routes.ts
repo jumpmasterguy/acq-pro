@@ -614,7 +614,9 @@ export async function registerRoutes(
     const ok = () => res.json({ ok: true });
     if (!email || !email.includes("@")) return ok();
 
-    const ip = String(req.headers["x-forwarded-for"] ?? req.ip ?? "unknown").split(",")[0].trim();
+    // req.ip honours "trust proxy" (one hop, Railway). The raw X-Forwarded-For
+    // header starts with whatever the client typed, so it can be faked.
+    const ip = req.ip ?? "unknown";
     if (!bumpAndCheck(`e:${email}`, 3) || !bumpAndCheck(`i:${ip}`, 15)) {
       console.warn(`[password-reset] throttled ${email} from ${ip}`);
       return ok();
@@ -647,6 +649,8 @@ export async function registerRoutes(
       await storage.updateUserPassword(match.userId, passwordHash);
       // Burn every outstanding link for this user, not just the one redeemed.
       await storage.consumePasswordResetTokens(match.userId);
+      // A reset usually means "someone else may have my login": sign out every device.
+      await storage.endAllSessionsForUser(match.userId);
       console.log(`[password-reset] password set for user ${match.userId}`);
       return res.json({ ok: true });
     } catch (err: any) {
@@ -1985,7 +1989,8 @@ export async function registerRoutes(
 
   // ─── Public stats ────────────────────────────────────────────────────────
 
-  // GET /api/stats — aggregate counts only. No auth, no PII.
+  // GET /api/stats — aggregate counts only, no PII. Needs a key (STATS_SECRET or
+  // CRON_SECRET) as Bearer header or ?secret=.
   //
   // Feeds the cost ledger's weekly refresh, which runs unattended and has no
   // way to hold an admin session. Returns integers and nothing else; per-user
@@ -1996,7 +2001,28 @@ export async function registerRoutes(
   // arithmetic. Only one of the two layers should filter — if this ever starts
   // filtering, the ledger's user table and cost-per-user denominator must
   // change with it.
-  app.get("/api/stats", async (_req: Request, res: Response) => {
+  // Shared check for the machine-to-machine routes. The weekly ledger task uses
+  // WebFetch, which cannot send headers, so a ?secret= query value is accepted
+  // too; a Bearer header is preferred and is what anything else should use.
+  // Constant-time compare; an unset key never matches.
+  const secretFromRequest = (req: Request): string => {
+    const auth = req.headers.authorization;
+    if (auth?.startsWith("Bearer ")) return auth.slice(7);
+    return typeof req.query.secret === "string" ? req.query.secret : "";
+  };
+  const keyMatches = (given: string, key: string | undefined): boolean => {
+    if (!key) return false;
+    const a = Buffer.from(given), b = Buffer.from(key);
+    return a.length === b.length && crypto.timingSafeEqual(a, b);
+  };
+
+  app.get("/api/stats", async (req: Request, res: Response) => {
+    // Business numbers (users, paying, signups) are not public. Same keys as
+    // /api/stats/seo: STATS_SECRET, or CRON_SECRET.
+    const given = secretFromRequest(req);
+    if (!keyMatches(given, process.env.STATS_SECRET) && !keyMatches(given, process.env.CRON_SECRET)) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
     try {
       const users = await storage.getAllUsers();
       const now = Date.now();
@@ -2758,8 +2784,7 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
   // remaining purpose once boot-time migration was verified working.
 
   app.get("/api/cron/drip", async (req: Request, res: Response) => {
-    const secret = process.env.CRON_SECRET;
-    if (!secret || req.query.secret !== secret) {
+    if (!keyMatches(secretFromRequest(req), process.env.CRON_SECRET)) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
     try {

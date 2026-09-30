@@ -118,6 +118,27 @@ app.use((req, res, next) => {
   next();
 });
 
+// ── CSRF: refuse state-changing requests from other websites ─────────────────
+// The session cookie is SameSite=None (the mobile app and Google sign-in need
+// that), so a browser will attach it to a request started by ANY site. Browsers
+// always send an Origin header on cross-site POST/PUT/PATCH/DELETE, so a
+// request whose Origin is present but not ours is refused. No Origin at all
+// means not a browser page (Stripe webhook, curl, native HTTP): let it through,
+// those paths have their own secrets/signatures.
+app.use((req, res, next) => {
+  if (req.method === "GET" || req.method === "HEAD" || req.method === "OPTIONS") return next();
+  const origin = req.headers.origin;
+  if (origin && origin !== "null" && !ALLOWED_ORIGINS.includes(origin)) {
+    console.warn(`[csrf] blocked ${req.method} ${req.path} from origin ${origin}`);
+    return res.status(403).json({ message: "Forbidden" });
+  }
+  if (origin === "null") {
+    console.warn(`[csrf] blocked ${req.method} ${req.path} from opaque origin`);
+    return res.status(403).json({ message: "Forbidden" });
+  }
+  next();
+});
+
 // ── Global rate limits ────────────────────────────────────────────────────────
 // Auth endpoints — stricter (brute force protection)
 const authLimiter = rateLimit({
@@ -467,7 +488,9 @@ app.use((req, res, next) => {
 
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+    // Server errors can carry database or library details. Log them, but only
+    // show visitors a generic line. 4xx messages (bad JSON, too large) are ours to show.
+    const message = status >= 500 ? "Internal Server Error" : (err.message || "Request error");
 
     console.error("Internal Server Error:", err);
 

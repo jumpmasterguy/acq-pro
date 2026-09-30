@@ -77,6 +77,8 @@ export interface IStorage {
   getLeaderboardRows(): Promise<LeaderboardRow[]>;
   setLeaderboardHidden(userId: string, hidden: boolean): Promise<User | undefined>;
   updateUserPassword(userId: string, passwordHash: string): Promise<User | undefined>;
+  /** Sign this user out everywhere: deletes every stored session that belongs to them. */
+  endAllSessionsForUser(userId: string): Promise<void>;
   // Password reset / first-password tokens. Callers pass the SHA-256 of the
   // token, never the token itself.
   createPasswordResetToken(userId: string, tokenHash: string, expiresAt: string): Promise<void>;
@@ -317,6 +319,15 @@ export class DrizzleStorage implements IStorage {
     return rows[0];
   }
 
+  async endAllSessionsForUser(userId: string): Promise<void> {
+    // connect-pg-simple stores the passport user id at sess.passport.user.
+    try {
+      await this.db.execute(sql`DELETE FROM session WHERE (sess::jsonb -> 'passport' ->> 'user') = ${userId}`);
+    } catch (err: any) {
+      console.error("[sessions] could not end sessions for user:", err.message);
+    }
+  }
+
   // Find or create a user for Google OAuth — links by email if account already exists
   async upsertGoogleUser(data: InsertGoogleUser & { avatarUrl?: string }): Promise<User> {
     // First check by Google ID
@@ -326,11 +337,18 @@ export class DrizzleStorage implements IStorage {
     // Then check by email — existing local-auth account, link Google ID
     const byEmail = await this.getUserByEmail(data.email);
     if (byEmail) {
+      // Signup does not verify email, so a password set on this account may
+      // belong to someone who typed the address without owning it. Signing in
+      // with Google proves the real owner, so any password chosen before that
+      // proof is dropped and old sessions are ended. The owner can set a new
+      // password with "Forgot password?".
+      const hadPassword = Boolean(byEmail.passwordHash);
       const linked = await this.db
         .update(users)
-        .set({ googleId: data.googleId })
+        .set(hadPassword ? { googleId: data.googleId, passwordHash: null } : { googleId: data.googleId })
         .where(eq(users.id, byEmail.id))
         .returning();
+      if (hadPassword) await this.endAllSessionsForUser(byEmail.id);
       return linked[0];
     }
 
@@ -377,11 +395,15 @@ export class DrizzleStorage implements IStorage {
     if (data.email) {
       const byEmail = await this.getUserByEmail(data.email);
       if (byEmail) {
+        // Same reasoning as upsertGoogleUser: the password may predate any proof
+        // of ownership of this address, so drop it and end old sessions.
+        const hadPassword = Boolean(byEmail.passwordHash);
         const linked = await this.db
           .update(users)
-          .set({ appleId: data.appleId })
+          .set(hadPassword ? { appleId: data.appleId, passwordHash: null } : { appleId: data.appleId })
           .where(eq(users.id, byEmail.id))
           .returning();
+        if (hadPassword) await this.endAllSessionsForUser(byEmail.id);
         return linked[0];
       }
     }
@@ -1198,6 +1220,10 @@ export class MemStorage implements IStorage {
     const updated = { ...user, leaderboardHidden: hidden } as User;
     this.users.set(userId, updated);
     return updated;
+  }
+
+  async endAllSessionsForUser(_userId: string): Promise<void> {
+    // In-memory dev store: sessions live in MemoryStore, nothing to purge.
   }
 
   async updateUserPassword(userId: string, passwordHash: string): Promise<User | undefined> {
