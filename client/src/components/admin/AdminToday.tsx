@@ -108,12 +108,12 @@ function localBoundaries() {
 
 function Tile({ icon, label, value, sub, tone }: { icon: ReactNode; label: string; value: ReactNode; sub?: ReactNode; tone: string }) {
   return (
-    <div className="bg-card border border-border rounded-2xl p-3.5 min-w-0">
+    <div className="bg-card border border-border rounded-2xl p-3.5 lg:p-5 min-w-0">
       <div className={`flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide ${tone}`}>
         {icon}<span className="truncate">{label}</span>
       </div>
-      <div className="mt-1 text-2xl font-bold text-foreground tabular-nums leading-tight">{value}</div>
-      {sub && <div className="mt-0.5 text-xs text-muted-foreground leading-snug">{sub}</div>}
+      <div className="mt-1 lg:mt-2 text-2xl lg:text-3xl font-bold text-foreground tabular-nums leading-tight">{value}</div>
+      {sub && <div className="mt-0.5 lg:mt-1 text-xs lg:text-sm text-muted-foreground leading-snug">{sub}</div>}
     </div>
   );
 }
@@ -172,7 +172,7 @@ export default function AdminToday() {
   const d = today.data;
 
   return (
-    <div className="space-y-5 max-w-xl" data-testid="admin-today">
+    <div className="space-y-5 lg:space-y-6 w-full" data-testid="admin-today">
       {/* Refresh line */}
       <div className="flex items-center justify-between">
         <p className="text-xs text-muted-foreground">
@@ -195,7 +195,7 @@ export default function AdminToday() {
 
       {/* Numbers */}
       {d && (
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-4">
           <Tile tone="text-violet-500" icon={<UserPlus className="w-3.5 h-3.5" />} label="New signups" value={d.signups.today}
             sub={`${d.signups.yesterday} yesterday · ${d.signups.last7} this week`} />
           <Tile tone="text-emerald-500" icon={<Activity className="w-3.5 h-3.5" />} label="Active today" value={d.active.today}
@@ -208,11 +208,13 @@ export default function AdminToday() {
         </div>
       )}
       {today.isLoading && (
-        <div className="grid grid-cols-2 gap-2.5">
-          {[0, 1, 2, 3].map(i => <div key={i} className="h-[92px] rounded-2xl bg-muted animate-pulse" />)}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-4">
+          {[0, 1, 2, 3].map(i => <div key={i} className="h-[92px] lg:h-[118px] rounded-2xl bg-muted animate-pulse" />)}
         </div>
       )}
 
+      {/* Desktop: "Needs you" and "Find a user" side by side */}
+      <div className="grid gap-5 lg:grid-cols-2 lg:gap-6 items-start">
       {/* Needs you */}
       {d && (
         <section>
@@ -297,6 +299,7 @@ export default function AdminToday() {
           )}
         </div>
       </section>
+      </div>
 
       {openId && <UserSheet id={openId} onClose={() => setOpenId(null)} />}
     </div>
