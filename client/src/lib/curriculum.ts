@@ -5906,7 +5906,7 @@ export const modules: Module[] = [
             { term: 'Contract Profit', definition: 'The fee earned on a specific contract after all allowable costs are paid. On cost-plus, profit equals fee. On fixed-price, profit equals price minus actual costs.' },
             { term: 'Fixed Fee', definition: 'A set dollar amount paid to the contractor regardless of performance. Typically 7 to 10% on cost-plus contracts.' },
             { term: 'Award Fee', definition: 'Variable fee earned through performance ratings from a government Award Fee Board. Your rating determines how much of the pool you keep.' },
-            { term: 'DSO', definition: 'Days Sales Outstanding. How many days between billing the government and receiving cash. Under 45 days is healthy. Above 60 means the company is fronting money it has not collected yet.' },
+            { term: 'DSO', definition: 'Days Sales Outstanding. How many days of revenue are waiting to turn into cash. Billed DSO counts invoices not yet paid (accounts receivable). Unbilled DSO counts work done but not yet invoiced. Total DSO is both. Under 45 days is healthy. Above 60 means the company is fronting money it has not collected yet.' },
             { term: 'Unallowable Costs', definition: 'Costs the government refuses to reimburse under FAR Part 31. Includes entertainment, lobbying, and advertising. DCAA will find them and require repayment.' },
             { term: 'EBITDA', definition: 'Earnings Before Interest, Taxes, Depreciation, and Amortization. Used in M&A and corporate valuation. PE-backed contractors watch this closely.' },
             {
@@ -6007,7 +6007,7 @@ export const modules: Module[] = [
               items: [
                 { label: 'Gross Margin %', sublabel: 'What is left after direct costs', desc: 'A healthy defense services program runs 25 to 35%. Below 20% and something is wrong with your labor mix or pricing.', color: 'blue' },
                 { label: 'Operating Margin %', sublabel: 'What is left after overhead and G&A', desc: 'Most defense contractors target 8 to 12%. This is what executives report to shareholders.', color: 'teal' },
-                { label: 'DSO', sublabel: 'Days between billing and collecting', desc: 'Under 45 days is healthy on government contracts. Above 60 means cash flow problems.', color: 'amber' },
+                { label: 'DSO', sublabel: 'Days from work to cash (unbilled plus billed)', desc: 'Under 45 days is healthy on government contracts. Above 60 means cash flow problems.', color: 'amber' },
                 { label: 'Fee Earned vs. Fee Available', sublabel: 'Your award fee performance score in dollars', desc: 'Earning 85% or more of the pool is strong. Below 70% and leadership is going to ask what happened.', color: 'violet' },
                 { label: 'Burn Rate vs. Plan', sublabel: 'Are you spending at the right pace?', desc: 'Too fast means overrun risk. Too slow means you might lose budget. Track close to plan every month.', color: 'orange' },
                 { label: 'Unallowable Cost Rate', sublabel: 'What cannot be billed to the government', desc: 'Entertainment, lobbying, advertising. If they land on your contract, DCAA finds them and your company pays them back.', color: 'red' },

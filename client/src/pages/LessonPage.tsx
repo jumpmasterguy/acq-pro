@@ -1251,7 +1251,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                         {block.rows?.map((row, ri) => (
                           <tr key={ri} className={ri % 2 === 0 ? '' : theme.bgTint}>
                             {row.map((cell, ci) => (
-                              <td key={ci} className="px-4 py-2.5 text-sm text-muted-foreground border-b border-border/50 last:border-b-0">
+                              <td key={ci} className={cn("px-4 py-2.5 text-sm leading-relaxed border-b border-border/50 last:border-b-0", ci === 0 ? "text-foreground font-medium" : "text-foreground/85")}>
                                 {cell}
                               </td>
                             ))}
@@ -1298,7 +1298,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
                         {b.rows?.map((row: string[], ri: number) => (
                           <tr key={ri} className={`border-b border-border/50 last:border-0 ${ri % 2 === 0 ? '' : 'bg-muted/20'}`}>
                             {row.map((cell: string, ci: number) => (
-                              <td key={ci} className={`px-4 py-2.5 text-xs leading-relaxed ${ci === 0 ? 'font-semibold' : 'text-muted-foreground'}`}>{cell}</td>
+                              <td key={ci} className={`px-4 py-2.5 text-[13px] leading-relaxed ${ci === 0 ? 'font-semibold text-foreground' : 'text-foreground/85'}`}>{cell}</td>
                             ))}
                           </tr>
                         ))}
@@ -1631,56 +1631,125 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
             }
 
             // ── dso_cash_gap_visual ───────────────────────────────────────────
+            // Two clocks: unbilled (work done, not yet invoiced) then billed
+            // (invoiced, not yet paid). Example numbers must stay consistent:
+            // work Mar 1-31, invoice Apr 8, cash May 8; $9M quarter = $100K/day,
+            // $2.3M unbilled = 23 days, $3.0M billed AR = 30 days, total 53.
             if (block.type === 'dso_cash_gap_visual') {
+              const UNBILLED = '#d97706';
+              const BILLED = '#2563eb';
+              const marks = [
+                { pos: 0, date: 'Mar 1', label: 'First hour of work', color: UNBILLED },
+                { pos: 44.1, date: 'Mar 31', label: 'Period closes', color: UNBILLED },
+                { pos: 55.9, date: 'Apr 8', label: 'Invoice submitted', color: BILLED },
+                { pos: 100, date: 'May 8', label: 'Cash arrives', color: '#059669' },
+              ];
               return (
                 <div key={i} className="space-y-4">
                   {(block as any).heading && <h3 className="font-bold text-base text-foreground">{(block as any).heading}</h3>}
-                  <p className="text-sm text-muted-foreground">Your company pays expenses <strong className="text-foreground">every two weeks</strong>. But billing the government and getting paid are two different events.</p>
+                  <p className="text-sm leading-relaxed text-foreground/85">
+                    DSO (Days Sales Outstanding) runs on <strong className="text-foreground">two clocks</strong>, not one.
+                    The <strong style={{ color: UNBILLED }}>unbilled clock</strong> starts when your people do the work and stops when the invoice goes out.
+                    The <strong style={{ color: BILLED }}>billed clock</strong> starts at the invoice and stops when the cash lands. Together they are <strong className="text-foreground">total DSO</strong>.
+                  </p>
 
-                  <div className="bg-card border border-border rounded-2xl p-5 space-y-4">
-                    {/* Timeline */}
-                    <div className="relative">
-                      <div className="absolute top-5 left-6 right-6 h-0.5 bg-border" />
-                      <div className="flex justify-between relative z-10">
-                        {[
-                          { day: 'Day 0', label: 'Work delivered', emoji: '✅', color: '#3b82f6' },
-                          { day: 'Day 7', label: 'Invoice submitted', emoji: '📄', color: '#f59e0b' },
-                          { day: 'Day 30', label: 'Gov processes invoice', emoji: '🏛️', color: '#8b5cf6' },
-                          { day: 'Day 45-60', label: 'Cash arrives', emoji: '💰', color: '#10b981' },
-                        ].map((evt, ei) => (
-                          <div key={ei} className="flex flex-col items-center gap-2 w-20">
-                            <div className="w-10 h-10 rounded-full bg-card border-2 flex items-center justify-center text-lg" style={{ borderColor: evt.color }}>
-                              {evt.emoji}
-                            </div>
-                            <div className="text-center">
-                              <p className="text-[10px] font-bold" style={{ color: evt.color }}>{evt.day}</p>
-                              <p className="text-[10px] text-muted-foreground leading-tight text-center">{evt.label}</p>
-                            </div>
+                  <div className="bg-card border border-border rounded-2xl p-5 space-y-5">
+                    <p className="text-[11px] font-bold uppercase tracking-wide text-foreground/60">Example (hypothetical): one employee, one month of work, a cost-type contract billed monthly</p>
+
+                    {/* Timeline: 68 days, Mar 1 to May 8 */}
+                    <div className="space-y-2">
+                      <div className="relative h-4 pt-0">
+                        <div className="absolute top-0 h-4 rounded-md bg-foreground/10 flex items-center justify-center" style={{ left: '0%', width: '44.1%' }}>
+                          <span className="text-[11px] font-semibold text-foreground/75">Work performed in March</span>
+                        </div>
+                      </div>
+                      <div className="relative h-3 rounded-full overflow-hidden flex" role="img" aria-label="Unbilled from March 1 to April 8, billed from April 8 to May 8">
+                        <div style={{ width: '55.9%', background: UNBILLED }} />
+                        <div style={{ width: '44.1%', background: BILLED }} />
+                      </div>
+                      <div className="relative h-2">
+                        {marks.map((m, mi) => (
+                          <span key={mi} className="absolute top-0 h-2 w-0.5 bg-foreground/40" style={{ left: `calc(${m.pos}% - 1px)` }} />
+                        ))}
+                      </div>
+                      {/* Phones: a simple 2 x 2 list. Wider: each label sits at its tick. */}
+                      <div className="grid grid-cols-2 gap-3 sm:hidden">
+                        {marks.map((m, mi) => (
+                          <div key={mi}>
+                            <p className="text-xs font-bold" style={{ color: m.color }}>{m.date}</p>
+                            <p className="text-xs text-foreground/80 leading-snug">{m.label}</p>
                           </div>
                         ))}
                       </div>
+                      <div className="relative hidden sm:block h-9">
+                        {marks.map((m, mi) => {
+                          // first and third labels start at their tick; second and last end at theirs
+                          const endAtTick = mi === 1 || mi === 3;
+                          const style = endAtTick ? { right: `${100 - m.pos}%`, textAlign: 'right' as const } : { left: `${m.pos}%` };
+                          return (
+                            <div key={mi} className="absolute top-0 whitespace-nowrap" style={style}>
+                              <p className="text-xs font-bold" style={{ color: m.color }}>{m.date}</p>
+                              <p className="text-xs text-foreground/80 leading-snug">{m.label}</p>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
 
-                    {/* The gap */}
-                    <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
-                      <p className="text-sm font-bold text-red-400 mb-1">The Gap: 45 to 60 days of expenses with no cash in</p>
-                      <p className="text-xs text-muted-foreground leading-relaxed">During that window your company is still paying salaries, benefits, rent, and overhead. Every day of DSO above 45 costs real money. Large contractors track this weekly.</p>
+                    {/* The two clocks */}
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      <div className="rounded-xl border p-4" style={{ borderColor: UNBILLED + '55', background: UNBILLED + '12' }}>
+                        <p className="text-xs font-bold uppercase tracking-wide" style={{ color: UNBILLED }}>Clock 1: Unbilled DSO</p>
+                        <p className="text-sm font-semibold text-foreground mt-1">Work done, no invoice yet</p>
+                        <p className="text-[13px] leading-relaxed text-foreground/85 mt-1">The books close, timesheets and costs get finalized, then the voucher goes out on Apr 8. For the average hour (mid-March) that is <strong className="text-foreground">23 days</strong>. For the hour worked on Mar 1 it is 38.</p>
+                      </div>
+                      <div className="rounded-xl border p-4" style={{ borderColor: BILLED + '55', background: BILLED + '12' }}>
+                        <p className="text-xs font-bold uppercase tracking-wide" style={{ color: BILLED }}>Clock 2: Billed DSO (AR)</p>
+                        <p className="text-sm font-semibold text-foreground mt-1">Invoiced, not paid yet</p>
+                        <p className="text-[13px] leading-relaxed text-foreground/85 mt-1">The invoice sits in accounts receivable until the government pays. In this example that is <strong className="text-foreground">30 days</strong>, Apr 8 to May 8.</p>
+                      </div>
                     </div>
 
-                    {/* DSO benchmarks */}
-                    <div className="grid grid-cols-3 gap-2">
-                      {[
-                        { range: 'Under 35', label: 'Excellent', color: '#10b981', bg: 'bg-emerald-500/10' },
-                        { range: '35 to 45', label: 'Healthy', color: '#3b82f6', bg: 'bg-blue-500/10' },
-                        { range: '45 to 60', label: 'Watch it', color: '#f59e0b', bg: 'bg-amber-500/10' },
-                      ].map((bench, bi) => (
-                        <div key={bi} className={`${bench.bg} rounded-xl p-3 text-center border`} style={{ borderColor: bench.color + '44' }}>
-                          <p className="text-xs font-black" style={{ color: bench.color }}>{bench.range}</p>
-                          <p className="text-[10px] text-muted-foreground">{bench.label}</p>
-                        </div>
-                      ))}
+                    {/* Total */}
+                    <div className="rounded-xl bg-foreground/[0.06] border border-border p-4">
+                      <p className="text-sm font-bold text-foreground">Total DSO: 23 + 30 = 53 days</p>
+                      <p className="text-[13px] leading-relaxed text-foreground/85 mt-1">A report that shows only billed DSO says 30. The company actually waits 53 days, on average, between paying for an hour of work and getting paid for it. Payroll runs every two weeks the whole time.</p>
                     </div>
-                    <p className="text-[10px] text-muted-foreground">DSO above 60 days usually means the government is slow-paying or there are invoice disputes. Above 90 days is a serious cash flow problem.</p>
+
+                    {/* How finance computes it */}
+                    <div className="space-y-2">
+                      <p className="text-xs font-bold uppercase tracking-wide text-foreground/60">How finance computes it (same example, one quarter)</p>
+                      <div className="overflow-x-auto rounded-xl border border-border">
+                        <table className="w-full text-[13px]">
+                          <tbody>
+                            {[
+                              ['Revenue per day', '$9.0M quarter ÷ 90 days', '$100K'],
+                              ['Unbilled DSO', '$2.3M unbilled receivables ÷ $100K', '23 days'],
+                              ['Billed DSO', '$3.0M billed AR ÷ $100K', '30 days'],
+                              ['Total DSO', '$5.3M ÷ $100K', '53 days'],
+                            ].map((r, ri) => (
+                              <tr key={ri} className={cn('border-b border-border/50 last:border-0', ri === 3 && 'font-bold')}>
+                                <td className="px-3 py-2 font-semibold text-foreground">{r[0]}</td>
+                                <td className="px-3 py-2 text-foreground/85">{r[1]}</td>
+                                <td className="px-3 py-2 text-right text-foreground whitespace-nowrap">{r[2]}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    {/* What stretches each clock */}
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      <div>
+                        <p className="text-xs font-bold" style={{ color: UNBILLED }}>What stretches the unbilled clock</p>
+                        <p className="text-[13px] leading-relaxed text-foreground/85 mt-1">Late timesheets, a slow month-end close, rejected vouchers, and work you can't bill yet: unpriced changes, missing funding, a milestone not yet accepted.</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold" style={{ color: BILLED }}>What stretches the billed clock</p>
+                        <p className="text-[13px] leading-relaxed text-foreground/85 mt-1">Invoice errors in WAWF, waiting on acceptance, and payment office backlogs. A PM who knows the invoice was rejected on day 3 saves the company weeks.</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               );
