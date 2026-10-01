@@ -113,7 +113,7 @@
 
     /* tooltips */
     .top .jt { position: relative; border-bottom: 1.5px dotted currentColor; cursor: help; }
-    .top .jt::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--navy); color: #fff; font-size: 0.75rem; font-weight: 500; line-height: 1.45; padding: 8px 11px; border-radius: 7px; white-space: normal; width: max-content; max-width: min(240px, 70vw); text-align: left; pointer-events: none; display: none; z-index: 100; box-shadow: 0 4px 16px rgba(0,0,0,0.25); font-style: normal; }
+    .top .jt::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(calc(-50% + var(--jt-dx, 0px))); background: var(--navy); color: #fff; font-size: 0.75rem; font-weight: 500; line-height: 1.45; padding: 8px 11px; border-radius: 7px; white-space: normal; width: max-content; max-width: min(240px, 70vw); text-align: left; pointer-events: none; display: none; z-index: 100; box-shadow: 0 4px 16px rgba(0,0,0,0.25); font-style: normal; }
     .top .jt::before { content: ''; position: absolute; bottom: calc(100% + 3px); left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--navy); pointer-events: none; display: none; z-index: 100; }
     .top .jt:hover::after, .top .jt:hover::before { display: block; }
     .top .jt-light::after { background: #fff; color: var(--navy); }
@@ -703,7 +703,7 @@
       position: absolute;
       bottom: calc(100% + 8px);
       left: 50%;
-      transform: translateX(-50%);
+      transform: translateX(calc(-50% + var(--jt-dx, 0px)));
       background: #0d2137;
       color: rgba(255,255,255,0.92);
       font-size: 0.72rem;
@@ -2674,6 +2674,28 @@
       });
     });
   })();
+</script>
+<script>
+/* Jargon tooltips are centred over their word. Near a screen edge (a word at
+   the start of a line on a phone) that pushed half the bubble off-screen, so
+   nudge it back inside the viewport before it shows. The arrow stays on the word. */
+(function () {
+  function place(el) {
+    var vw = document.documentElement.clientWidth;
+    var w = Math.min(240, vw * 0.7);
+    var r = el.getBoundingClientRect();
+    var c = r.left + r.width / 2, pad = 10, dx = 0;
+    if (c - w / 2 < pad) dx = pad - (c - w / 2);
+    else if (c + w / 2 > vw - pad) dx = (vw - pad) - (c + w / 2);
+    el.style.setProperty('--jt-dx', Math.round(dx) + 'px');
+  }
+  document.querySelectorAll('.jt').forEach(function (el) {
+    ['pointerenter', 'touchstart', 'focus'].forEach(function (ev) {
+      el.addEventListener(ev, function () { place(el); }, { passive: true });
+    });
+    el.addEventListener('click', function () { place(el); }); /* lets iOS show :hover on tap */
+  });
+})();
 </script>
 </body>
 </html>
