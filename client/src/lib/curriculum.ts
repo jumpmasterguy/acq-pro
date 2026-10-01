@@ -525,7 +525,7 @@ export const modules: Module[] = [
               'Title 10 U.S.C.: Statutory authority for defense acquisitions and armed forces|||Title 10 provides the statutory foundation for DoD\'s authority to conduct acquisitions, organize the acquisition workforce (DAWIA), and govern major defense programs. Key sections: § 2304 (competition requirements), § 2306a (Truth in Negotiations Act/TINA), § 2433 (Nunn-McCurdy), § 4021-4022 (OTAs). When FAR and statute conflict, statute governs.',
               'FAR (Federal Acquisition Regulation): Codified in 48 CFR, governs all federal procurement|||The FAR is updated continuously through FAR cases: proposed rules published in the Federal Register, comment periods, and final rules. Subscription to FAC (Federal Acquisition Circular) notifications is how acquisition professionals stay current. The entire FAR is free at acquisition.gov. No one memorizes it: knowing how to navigate it quickly is the actual skill.',
               'DFARS: Defense-specific supplements; adds 200+ pages of DoD-specific rules|||DFARS clauses are numbered 252.XXX vs FAR\'s 52.XXX. Key DFARS areas: 252.204-7012 (cybersecurity/CMMC), 252.225-7001 (Buy American), 252.215-7004 (excessive pass-through charges), 252.244-7001 (purchasing system). Each military service also has its own supplement (AFARS, NMCARS, AFFARS) adding another layer.',
-              'Revolutionary FAR Overhaul (RFO): the government-wide rewrite of the FAR underway since April 2025, plus a parallel DFARS overhaul run by the Department of War (the renamed DoD)|||Launched by Executive Order 14275, "Restoring Common Sense to Federal Procurement." Phase 1 rolled out interim "class deviations" starting late 2025: many already adopted agency-wide. Phase 2 is formal notice-and-comment rulemaking: the first batch of proposed rules covering 20 FAR parts published June 23, 2026, with the FAR Council aiming to finalize the whole rewrite by the end of 2026. Legacy FAR/DFARS text still governs any part an agency has not yet deviated: check acquisition.gov/far-overhaul for current status before assuming a part has changed.',
+              'Revolutionary FAR Overhaul (RFO): the government-wide rewrite of the FAR underway since April 2025, plus a parallel DFARS overhaul run by the Department of War (the renamed DoD)|||Launched by Executive Order 14275, "Restoring Common Sense to Federal Procurement." Phase 1 rolled out interim "class deviations" starting late 2025: many already adopted agency-wide. Phase 2 is formal notice-and-comment rulemaking: the first set of proposed rules came out June 23, 2026 and the second (16 more FAR parts) on September 18, 2026, with the FAR Council aiming to finalize the whole rewrite by the end of 2026. Legacy FAR/DFARS text still governs any part an agency has not yet deviated: check acquisition.gov/far-overhaul for current status before assuming a part has changed.',
               'DoDI 5000.02: The "bible" for major system acquisitions, defines program phases|||DoDI 5000.02 was replaced by the Adaptive Acquisition Framework (AAF) policy, which now lives across multiple DoDIs (5000.74, 5000.75, 5000.80, 5000.81, 5000.85, 5000.87). The old 5000.02 single-pathway model is gone: but the term "5000 series" still refers collectively to all these pathway-specific instructions.',
               'DODI 5000.74: Governs Defense Acquisition of Services|||DoDI 5000.74 applies to all service acquisitions above $10M and requires a Services Acquisition Strategy for those above $250M. It mandates portfolio reviews and senior official accountability. Services represent the largest share of DoD contract spending by volume: more than $200B annually.',
               'DODI 5000.75: Governs Business Systems acquisitions|||Business systems (financial, HR, logistics, acquisition IT) have unique acquisition considerations because they must comply with functional standards, integrate with existing DoD enterprise systems, and go through Investment Review Board (IRB) oversight. The Business Capability Acquisition Cycle (BCAC) replaces the traditional milestone structure for these programs.',
@@ -2369,10 +2369,10 @@ export const modules: Module[] = [
       },
       {
         id: 'q6',
-        question: 'Which FAR clause replaces dozens of standard DFARS clauses when FAR Part 12 commercial item procedures are used?',
-        options: ['FAR 52.215-2 (Audit and Records)', 'FAR 52.212-4 (Contract Terms and Conditions: Commercial Products) and FAR 52.212-5', 'DFARS 252.204-7012 (Cybersecurity)', 'FAR 52.222-26 (Equal Opportunity)'],
+        question: 'Which FAR clause carries the streamlined commercial terms when FAR Part 12 commercial procedures are used?',
+        options: ['FAR 52.215-2 (Audit and Records)', 'FAR 52.212-4 (Terms and Conditions: Commercial Products and Commercial Services)', 'DFARS 252.204-7012 (Cybersecurity)', 'FAR 52.222-26 (Equal Opportunity)'],
         correct: 1,
-        explanation: 'FAR 52.212-4 and 52.212-5 are the streamlined commercial terms clauses that substitute for the full list of individual standard FAR clauses normally required. This is what makes commercial acquisitions so much faster. Instead of reviewing 30+ clause flowdown requirements, the CO simply incorporates 52.212-4/5, which contain the essential terms in a single, commercial-friendly format.',
+        explanation: 'FAR 52.212-4 holds the standard commercial terms in one commercial-friendly clause, which is a big part of why commercial buys move faster. Older contracts paired it with 52.212-5, a checklist of statute-required clauses. The FAR overhaul Part 12 deviation removed 52.212-5 (and the 52.212-3 representations), so newer solicitations list the required clauses individually. Check which version your contract uses.',
       },
       {
         id: 'q7',
@@ -2772,7 +2772,7 @@ export const modules: Module[] = [
           {
             type: "table",
             heading: "Where Things Stand (Verify Before You Rely On It)",
-            headers: ["Piece", "What It Is", "Status as of September 2026"],
+            headers: ["Piece", "What It Is", "Status as of October 1, 2026"],
             rows: [
               [
                 "FAR model deviations",
@@ -2791,7 +2791,7 @@ export const modules: Module[] = [
               ],
               [
                 "Proposed rules, set 2",
-                "Parts 8, 12, 13, 14, 15, 16, 17, 27, 28, 35, 36, 38, 44, 47, 51, and related Part 52 clauses",
+                "Parts 8, 9, 12, 13, 14, 15, 16, 17, 27, 28, 35, 36, 38, 44, 47, 51, and related Part 52 clauses, in four Federal Register notices",
                 "Published September 18, 2026; comments due October 19, 2026",
               ],
               ["Proposed rules, sets 3 and 4", "The remaining parts", "Still to come"],
@@ -2847,6 +2847,25 @@ export const modules: Module[] = [
                 "Proposed rule shortens timelines, including inventory schedules and settlement proposals",
                 "If you get terminated, the clock is tighter than the one you learned",
               ],
+              [
+                "Commercial clauses",
+                "The Part 12 deviation removed 52.212-3 and 52.212-5. 52.212-4 stays, rewritten in plain language",
+                "A commercial clause checklist built around the 52.212-5 checkboxes no longer matches new solicitations. Read Section I clause by clause",
+              ],
+            ],
+          },
+          {
+            type: "list",
+            heading: "Set 2 Proposals Worth Knowing (September 2026, Not Final Yet)",
+            items: [
+              "Part 15, negotiated buys|||\"Discussions\" would be renamed \"negotiations.\" A CO could keep negotiating with one offeror without reopening with the others, and could accept a late proposal when that is in the government's best interest and won't unduly delay the award.",
+              "Part 16, contract types|||A new Alternate I to 52.216-1 would let offerors propose a different contract type. Pay-per-use \"consumption-based\" pricing would count as firm-fixed-price. Agencies would have to confirm they can actually administer the type they pick.",
+              "Part 17, options|||The general five-year limit on a contract's length would give way to whatever statute or regulation applies.",
+              "Part 13, simplified buys|||A sole-source purchase would need a documented rationale instead of a formal Determination and Findings.",
+              "Parts 38 and 51, deleted|||Schedule ordering moves into GSA's own regulation (GSAR 538, proposed September 22, 2026, comments due October 22).",
+              "Part 9, responsibility|||A CO would presume a contractor nonresponsible after seriously deficient performance, unless it was beyond the contractor's control or has been fixed.",
+              "Part 27, data rights|||Civilian agencies would move to a DoD-style data rights model.",
+              "Until these are final|||They are proposals. The deviation text in your solicitation still governs. Comments on the FAR parts close October 19, 2026.",
             ],
           },
           {
@@ -4615,7 +4634,7 @@ export const modules: Module[] = [
           { term: 'Fee / Profit', definition: 'The contractor\'s profit on a contract. On cost-type contracts, fee is negotiated separately; on fixed-price contracts, profit is embedded in the price. DFARS limits fee rates by contract type.' },
           { term: 'Cost Pool', definition: 'A grouping of indirect costs that are accumulated and then allocated using a common allocation base (e.g., a facilities cost pool allocated based on square footage).' },
           { term: 'Allocation Base', definition: 'The measure used to distribute indirect costs to contracts (e.g., direct labor hours, direct labor dollars, total cost input).' },
-          { term: 'CAS', definition: 'Cost Accounting Standards, 19 standards (48 CFR 9900) governing how defense contractors accumulate, measure, and allocate costs. Under the FY2026 NDAA, the per-contract CAS trigger is $35M and full CAS coverage kicks in at $100M in annual covered contract awards (both figures replaced the older $2.5M and $50M thresholds).' },
+          { term: 'CAS', definition: 'Cost Accounting Standards, 19 standards (48 CFR 9900) governing how defense contractors accumulate, measure, and allocate costs. Under the FY2026 NDAA (sec. 1806), the per-contract CAS trigger is $35M and full CAS coverage kicks in at $100M in annual covered contract awards, replacing the older $2.5M and $50M thresholds. The CAS Board final rule (September 1, 2026) made them effective October 1, 2026. A September 2026 Department of War memo goes further and directs a move from CAS toward commercial accounting (GAAP); that still needs rulemaking.' },
           { term: 'CASB', definition: 'Cost Accounting Standards Board. The federal board that promulgates CAS. Contractors must disclose their accounting practices in a Disclosure Statement (CASB DS-1).' },
           { term: 'Forward Pricing Rate Agreement', definition: 'FPRA. A negotiated agreement between the contractor and the government on indirect cost rates for use in forward pricing of proposals. Eliminates rate negotiation on every proposal.' },
           { term: 'LQA', definition: 'Living Quarters Allowance. An allowance authorized for employees working overseas to help cover housing costs. Paid as a direct cost tied to that specific person\'s assignment.' },
@@ -6959,7 +6978,7 @@ export const modules: Module[] = [
       {
         type: 'callout',
         heading: "Heads Up: FAR Part 16 Is Mid-Rewrite",
-        body: "FAR Part 16 (Types of Contracts) is one of the parts already touched by the Revolutionary FAR Overhaul: it was updated again on July 1, 2026 to implement Executive Order 14402, Promoting Efficiency, Accountability, and Performance in Federal Contracting. The core contract types and risk logic on this page haven't changed, but the FAR 16.XXX citations above reflect the pre-overhaul numbering. Where an agency has adopted the RFO Part 16 deviation, verify current clause numbering at acquisition.gov/far-overhaul before citing a FAR reference in a proposal or acquisition plan.",
+        body: "FAR Part 16 (Types of Contracts) is one of the parts already touched by the Revolutionary FAR Overhaul: it was updated again on July 1, 2026 to implement Executive Order 14402, Promoting Efficiency, Accountability, and Performance in Federal Contracting. The core contract types and risk logic on this page haven't changed, but the FAR 16.XXX citations above reflect the pre-overhaul numbering. Where an agency has adopted the RFO Part 16 deviation, verify current clause numbering at acquisition.gov/far-overhaul before citing a FAR reference in a proposal or acquisition plan. Watch the September 18, 2026 proposed rule (FAR Case 2026-006): it would let offerors propose a different contract type (Alternate I to 52.216-1), treat pay-per-use pricing as firm-fixed-price, and require agencies to confirm they can administer the type they choose. Not final yet.",
       },
       {
         type: 'cpif_share_visual' as any,
@@ -12779,7 +12798,7 @@ export const modules: Module[] = [
             '"Volume II: Management Approach, not to exceed 25 pages"|||Correct. The Management Volume demonstrates the contractor\'s ability to organize, staff, and execute. Key elements: organizational chart, key personnel resumes, program management methodology, risk management approach, quality assurance plan, and subcontractor management strategy.',
             '"Volume III: Past Performance, provide up to 3 references using the government-provided form"|||Correct. Past performance is evaluated using CPARS data and submitted references. Select references that are: (1) recent (within 3-5 years), (2) relevant (similar scope, complexity, contract type), and (3) had excellent CPARS ratings.',
             '"Volume IV: Price/Cost, no page limit, must include completed DD Form 1423 (CDRLs)"|||Correct. The Price/Cost Volume must be complete, consistent with the technical approach, and independently auditable. Key elements: labor category hours by WBS, basis of estimate, direct labor rates, indirect rates, other direct costs, and required government forms.',
-            '"All volumes must be submitted via SAM.gov by 4:00 PM EST on [date]"|||Correct. Proposal submission requirements are strictly enforced. Late proposals are typically rejected. SAM.gov submission requires advance registration and testing, submit a day early to allow for technical issues. Time zone matters, EST vs. EDT can cause a missed deadline.',
+            '"All volumes must be submitted via SAM.gov by 4:00 PM EST on [date]"|||Correct. Proposal submission requirements are strictly enforced. Late proposals are typically rejected. (A September 2026 FAR overhaul proposal would let COs accept a late one when it serves the government and will not delay award. Until that is final, assume late is late.) SAM.gov submission requires advance registration and testing, submit a day early to allow for technical issues. Time zone matters, EST vs. EDT can cause a missed deadline.',
             ]},
             { type: 'warning', body: 'Section L compliance is binary. A proposal violating page limits, font requirements, or missing required forms can be rejected as non-responsive WITHOUT evaluation. The CO generally has no discretion to waive administrative non-compliance.' },
             { type: 'grid', grid: [
@@ -24403,7 +24422,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             type: 'text',
             level: 'advanced',
             heading: 'Total Contract Length and Its Limits',
-            body: 'Service contracts are generally limited to a total of five years including options (with statutory and agency exceptions for certain services and for multi-year contracts under their own rules), and vehicle ordering periods are limited by their own terms. A program that wants ten years of continuous service structures it as two contracts with a recompete between, or as a vehicle with a long ordering period and orders within it. Options cannot extend a contract beyond its stated total, and an extension beyond the total is a new contract requiring competition or a J&A. Government PMs planning a long-lived service should design the sequence of contracts and recompetes across the decade rather than discovering the five-year limit in year four.',
+            body: 'Service contracts are generally limited to a total of five years including options (with statutory and agency exceptions for certain services and for multi-year contracts under their own rules), and vehicle ordering periods are limited by their own terms. A program that wants ten years of continuous service structures it as two contracts with a recompete between, or as a vehicle with a long ordering period and orders within it. Options cannot extend a contract beyond its stated total, and an extension beyond the total is a new contract requiring competition or a J&A. Government PMs planning a long-lived service should design the sequence of contracts and recompetes across the decade rather than discovering the five-year limit in year four. Watch the FAR overhaul: a September 2026 proposed rule (FAR Case 2026-006) would replace the general five-year limit with whatever statute or regulation applies. Until it is final, plan to five.',
           },
           {
             type: 'expandable_list',
