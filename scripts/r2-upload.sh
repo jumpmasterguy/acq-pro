@@ -54,8 +54,23 @@ echo "==> Checking authentication"
 $WRANGLER whoami
 
 echo "==> Ensuring bucket '$BUCKET' exists"
-if ! $WRANGLER r2 bucket create "$BUCKET" 2>/dev/null; then
-  echo "    bucket already exists (or creation refused) — continuing"
+# Only "already exists" is survivable here. Anything else (R2 not enabled on
+# the account, a token without R2 edit) must surface now rather than showing
+# up later as a confusing 403 on the first object.
+if ! create_out="$($WRANGLER r2 bucket create "$BUCKET" 2>&1)"; then
+  if printf '%s' "$create_out" | grep -qi "already exists\|10004"; then
+    echo "    bucket already exists — continuing"
+  else
+    echo "$create_out" >&2
+    echo >&2
+    echo "Bucket creation failed. Two usual causes:" >&2
+    echo "  1. R2 is not enabled on this account yet — enable it once in the" >&2
+    echo "     Cloudflare dashboard under R2, then re-run." >&2
+    echo "  2. The current credentials lack R2 write access. Check with:" >&2
+    echo "       $WRANGLER whoami" >&2
+    echo "     and use an API token with 'Workers R2 Storage: Edit'." >&2
+    exit 1
+  fi
 fi
 
 # Content-Disposition mirrors what the Express routes set today, so browser
