@@ -23,7 +23,7 @@ set -euo pipefail
 BUCKET="${BUCKET:-acqlerate-media}"
 WRANGLER="${WRANGLER:-npx --yes wrangler@4}"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-MANIFEST="$REPO_ROOT/scripts/r2-manifest.txt"
+MANIFEST="${MANIFEST:-$REPO_ROOT/scripts/r2-manifest.txt}"
 
 AUDIO_DIR="$REPO_ROOT/server/assets/audio"
 BOOKS_DIR="$REPO_ROOT/server/assets/lesson-books"
@@ -42,13 +42,50 @@ sha256_of() {
 put() {
   local path="$1" key="$2" ctype="$3"
   shift 3
-  echo "  -> $key ($(du -h "$path" | cut -f1))"
+  # Byte length, not `du`: du reports disk blocks allocated, which reads low
+  # for a cloud-sync placeholder and hides exactly the problem worth seeing.
+  echo "  -> $key ($(( $(wc -c < "$path") / 1048576 )) MB)"
   $WRANGLER r2 object put "$BUCKET/$key" \
     --file="$path" \
     --content-type="$ctype" \
     --cache-control="private, max-age=14400" \
     --remote "$@"
 }
+
+# Runs before anything touches Cloudflare. These objects become what paying
+# members hear and download, so a file that is truncated, a cloud-sync
+# placeholder, or a different version than the manifest must stop the run
+# rather than be uploaded and discovered later.
+echo "==> Checking local files against $(basename "$MANIFEST")"
+mismatch=0
+while read -r key bytes want; do
+  [ "$key" = "KEY" ] && continue
+  case "$key" in
+    audio/*)        path="$AUDIO_DIR/${key#audio/}" ;;
+    lesson-books/*) path="$BOOKS_DIR/${key#lesson-books/}" ;;
+    *)              echo "  UNKNOWN KEY $key"; mismatch=1; continue ;;
+  esac
+  if [ ! -f "$path" ]; then
+    echo "  MISSING  $key"
+    mismatch=1
+    continue
+  fi
+  if [ "$(sha256_of "$path")" != "$want" ]; then
+    echo "  DIFFERS  $key (local $(wc -c < "$path" | tr -d ' ') bytes, manifest $bytes)"
+    mismatch=1
+  fi
+done < "$MANIFEST"
+if [ "$mismatch" != "0" ]; then
+  echo >&2
+  echo "Local files do not match the manifest. Nothing was uploaded." >&2
+  echo "Usual causes:" >&2
+  echo "  - The repo sits in an iCloud/Dropbox/OneDrive folder and some files" >&2
+  echo "    are placeholders that were never fully downloaded." >&2
+  echo "  - This branch has a different version of a file than the manifest." >&2
+  echo "    If that change is intentional, regenerate the manifest first." >&2
+  exit 1
+fi
+echo "    all 20 files match"
 
 echo "==> Checking authentication"
 $WRANGLER whoami
