@@ -18,6 +18,15 @@
   "fetch": {
    "status": "done",
    "at": "2026-09-27T00:00:00Z"
+  },
+  "assemble": {
+   "status": "done",
+   "at": "2026-10-02T09:03:28Z",
+   "file": "/home/runner/work/acq-pro/acq-pro/video-assets/video/hank-heist/draft.mp4"
+  },
+  "social": {
+   "status": "done",
+   "at": "2026-10-02T09:03:28Z"
   }
  }
 }
