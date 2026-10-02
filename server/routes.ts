@@ -19,6 +19,7 @@ import { syncCompletions, moduleOfLesson, certificateName, formatCertDate, build
 import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken, sendPurchaseAdminAlert, sendSubscriptionCancelledAdminAlert, sendPasswordResetEmail, sendPackPurchaseEmail } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
 import { askClaude, aiConfigured, AiError } from "./ai";
+import { r2Configured, signedR2Url } from "./r2";
 import { explainMistake, gradeTeachBack, lessonTextById, COACH_MODELS, CoachError, TEACH_BACK_XP, TEACH_BACK_MIN_CHARS, TEACH_BACK_MAX_CHARS } from "./coach";
 import { costTrackerStorage } from "./costTrackerStorage";
 import { reportCheckoutFailure } from "./stripeHealth";
@@ -2934,7 +2935,10 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
   // doesn't need the "paid, not just trialing" restriction the PDF download
   // does. res.sendFile natively handles Range requests, so seeking/scrubbing
   // in the <audio> element still works against this authenticated route.
-  app.get("/api/audio/:moduleId", requireAuth as any, (req: Request, res: Response) => {
+  // When R2 is configured the bytes come from there instead (see below);
+  // R2 handles Range requests too, and the access check stays here.
+  const AUDIO_LINK_TTL_SECONDS = 2 * 60 * 60;
+  app.get("/api/audio/:moduleId", requireAuth as any, async (req: Request, res: Response) => {
     const moduleId = req.params.moduleId as string;
     const user = (req as any).user as { subscriptionStatus?: string | null; trialEndsAt?: string | null };
 
@@ -2960,6 +2964,24 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
 
     if (!hasFullAccess(user)) {
       return res.status(403).json({ message: 'Upgrade (or start your free trial) to listen to The Debrief.' });
+    }
+
+    // Access is settled above; from here it's only about where the bytes come
+    // from. With R2 configured, hand back a signed link and let the <audio>
+    // element follow it, so a 25 MB recording never passes through Railway.
+    // The link must outlast a listening session: the player keeps re-reading
+    // byte ranges as it plays and seeks, each carrying the original signature,
+    // and the longest recording runs about 75 minutes. no-store stops a cached
+    // redirect from replaying a link after it has expired. Signing is local
+    // and practically can't fail, but if it does, disk is still there.
+    if (r2Configured()) {
+      try {
+        const url = await signedR2Url(`audio/${filename}`, AUDIO_LINK_TTL_SECONDS);
+        res.setHeader('Cache-Control', 'no-store');
+        return res.redirect(302, url);
+      } catch (err) {
+        console.error('[audio] R2 signing failed, serving from disk:', (err as Error).message);
+      }
     }
 
     const filePath = path.join(process.cwd(), 'server', 'assets', 'audio', filename);

@@ -3,6 +3,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { registerRoutes } from "./routes";
+import { r2Origin } from "./r2";
 import { runStripeBootCheck } from "./stripeHealth";
 import { serveStatic } from "./static";
 import { createServer } from "http";
@@ -26,6 +27,8 @@ declare module "http" {
     rawBody: unknown;
   }
 }
+
+const R2_ORIGIN = r2Origin();
 
 // ── Security headers via helmet ──────────────────────────────────────────────
 // Content-Security-Policy is intentionally relaxed for Stripe and Google.
@@ -63,6 +66,12 @@ app.use(
         imgSrc: ["'self'", "data:", "https:"],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        // The Debrief audio redirects from /api/audio to a signed R2 link
+        // (server/r2.ts). Without its own media-src, <audio> falls back to
+        // default-src 'self' and the browser silently refuses the redirect:
+        // the player renders and play does nothing. The iOS and Android apps
+        // load the site remotely, so this policy covers them too.
+        mediaSrc: R2_ORIGIN ? ["'self'", R2_ORIGIN] : ["'self'"],
         // Allow onclick= and other inline event handlers on static HTML pages
         scriptSrcAttr: ["'unsafe-inline'"],
         // Rewrites every http:// subresource to https://. That's correct on
