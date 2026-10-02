@@ -2047,7 +2047,7 @@ export async function registerRoutes(
       const now = Date.now();
       const oneDayMs = 24 * 60 * 60 * 1000;
 
-      let free = 0, trialing = 0, lifetime = 0, paying = 0, dau = 0;
+      let free = 0, trialing = 0, lifetime = 0, paying = 0, compedPro = 0, dau = 0;
 
       // Signups per calendar month, e.g. { "2026-03": 4 }. registeredAt is the
       // signup timestamp on the users table (there is no createdAt column).
@@ -2059,8 +2059,16 @@ export async function registerRoutes(
         switch (u.subscriptionStatus) {
           case "lifetime": lifetime++; break;
           case "trialing": trialing++; break;
-          case "active":   paying++;   break; // Monthly
-          case "annual":   paying++;   break;
+          // Monthly ("active") or Annual. Paying means Stripe is billing them,
+          // which the webhook records as a sub_ subscription id. The admin
+          // "make Pro" grant (comps, team seats provisioned by hand) sets the
+          // same status with no subscription, so those count as compedPro.
+          // Before 2 Oct 2026 they were counted as paying.
+          case "active":
+          case "annual":
+            if (typeof u.subscriptionId === "string" && u.subscriptionId.startsWith("sub_")) paying++;
+            else compedPro++;
+            break;
           default:         free++;
         }
 
@@ -2107,6 +2115,7 @@ export async function registerRoutes(
         trialing,
         lifetime,
         paying,
+        compedPro,
         dau,
         signupsByMonth,
         trialsEndedByMonth,
