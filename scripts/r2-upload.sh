@@ -28,6 +28,15 @@ MANIFEST="$REPO_ROOT/scripts/r2-manifest.txt"
 AUDIO_DIR="$REPO_ROOT/server/assets/audio"
 BOOKS_DIR="$REPO_ROOT/server/assets/lesson-books"
 
+# macOS ships `shasum`, Linux ships `sha256sum`. Pick whichever is here.
+sha256_of() {
+  if command -v sha256sum >/dev/null 2>&1; then
+    sha256sum "$1" | cut -d' ' -f1
+  else
+    shasum -a 256 "$1" | cut -d' ' -f1
+  fi
+}
+
 # --remote is not optional. Without it wrangler writes to local miniflare
 # storage and reports success, leaving the real bucket empty.
 put() {
@@ -69,7 +78,7 @@ if [ "${VERIFY:-0}" = "1" ]; then
   while read -r key bytes want; do
     [ "$key" = "KEY" ] && continue
     $WRANGLER r2 object get "$BUCKET/$key" --file="$tmp/obj" --remote >/dev/null
-    got="$(sha256sum "$tmp/obj" | cut -d' ' -f1)"
+    got="$(sha256_of "$tmp/obj")"
     if [ "$got" = "$want" ]; then
       echo "  ok   $key"
     else
