@@ -1,0 +1,23 @@
+{
+ "slug": "hank-heist",
+ "stages": {
+  "script": {
+   "status": "approved",
+   "at": "2026-09-27T00:00:00Z",
+   "note": "first video, built by hand in the 27 Sep session"
+  },
+  "voices": {
+   "status": "done",
+   "at": "2026-09-27T00:00:00Z",
+   "lines": 22
+  },
+  "shots": {
+   "status": "done",
+   "at": "2026-09-27T00:00:00Z"
+  },
+  "fetch": {
+   "status": "done",
+   "at": "2026-09-27T00:00:00Z"
+  }
+ }
+}
