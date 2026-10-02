@@ -153,6 +153,18 @@ const MOVED_PACK_FILES: Record<string, string> = {
   "evm-formulas-quick-reference.xlsx": "evm-formulas-quick-reference.pdf",
 };
 
+// The welcome email goes out the moment an account is created (email, Apple or
+// Google), and day 0 is marked sent so the daily drip job doesn't send it a
+// second time. Before this, email/password signups got the welcome twice and
+// Google/Apple signups waited up to a day for it.
+function sendWelcomeAtSignup(u: { id: string; email: string; username: string; trialEndsAt?: any; sentEmailDays?: any }): void {
+  const sent = Array.isArray(u.sentEmailDays) ? (u.sentEmailDays as number[]) : [];
+  if (sent.includes(0)) return;
+  sendWelcomeEmail(u.email, u.username, u.trialEndsAt ?? null)
+    .then(() => storage.updateSentEmailDays(u.id, [...sent, 0]))
+    .catch(() => {});
+}
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
@@ -231,7 +243,7 @@ export async function registerRoutes(
     await applySignupReferral(user, req.body?.referralCode, stripe);
 
     // Send welcome email + admin notification (non-blocking)
-    sendWelcomeEmail(user.email, user.username).catch(() => {});
+    sendWelcomeAtSignup(user);
     sendAdminNotification(user.email, user.username, 'email_password').catch(() => {});
 
     // Auto-login after registration
@@ -554,6 +566,7 @@ export async function registerRoutes(
               loginCount: (current.loginCount ?? 0) + 1,
             });
             if (isNewUser && !existing) {
+              sendWelcomeAtSignup(current);
               sendAdminNotification(current.email, current.username, 'apple').catch(() => {});
               await applySignupReferral(current, req.body?.referralCode, stripe);
             }
@@ -697,6 +710,7 @@ export async function registerRoutes(
             });
             // Notify admin only on first Google login (new account)
             if (isNewUser) {
+              sendWelcomeAtSignup(currentUser);
               sendAdminNotification(currentUser.email, currentUser.username, 'google').catch(() => {});
               const state = String(req.query.state ?? "");
               if (state.startsWith("ref:")) await applySignupReferral(currentUser, state.slice(4), stripe);
