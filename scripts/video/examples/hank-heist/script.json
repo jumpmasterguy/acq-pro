@@ -1,0 +1,152 @@
+{
+  "slug": "hank-heist",
+  "schema": 1,
+  "status": "approved",
+  "lesson": {"id": "finance-9", "title": "Revenue Recognition", "module": "Defense Finance module"},
+  "theme": "heist",
+  "character": "H",
+  "title": "He booked $50M. His accountant booked $5M.",
+  "hook": "Every heist needs a mastermind.",
+  "beats": [
+    {"id": "01", "kind": "broll", "spk": "N",
+     "tts": "[dramatic] Every heist... needs a mastermind.", "caption": "Every heist needs a mastermind.",
+     "shot": {"ref": ["H"], "image": "Vertical cinematic shot: a dim office hallway at night, dramatic white backlight from the far end, haze. Three figures walk toward the camera side by side in heist-movie fashion, backlit so they are dark silhouettes; the middle figure is stocky with a buzz cut and loose tie (Hank). Low camera angle, epic and silly.",
+              "motion": "Epic slow-motion heist-movie walk: the three backlit silhouettes stride toward the camera down the hallway; halfway through, the middle stocky figure steps forward into warm light, revealing Hank with a huge smug grin. Slow push-in camera."},
+     "overlay": {"title": ["EVERY HEIST", "NEEDS A MASTERMIND"]}},
+
+    {"id": "02", "kind": "dialogue", "spk": "H",
+     "tts": "[smug] That's me!", "caption": "That's me!",
+     "shot": {"ref": ["H"], "image": "Close-up from the chest up in the same dim office hallway, now lit warmly from the front: Hank grins smugly and points both thumbs at his own chest, eyebrows raised, full of himself. Face clearly visible.",
+              "motion": "Hank jabs both thumbs at his own chest and says smugly, lip-synced to the reference audio: \"That's me!\" then wiggles his eyebrows at the camera. Static close-up."},
+     "overlay": {"namecard": {"name": "HANK", "title": "THE MASTERMIND", "hold": 2.2}},
+     "sfx": [{"kind": "hit", "at": 0.15}]},
+
+    {"id": "03", "kind": "broll", "spk": "N",
+     "tts": "Hank. Small defense company. Just won... fifty MILLION dollars.", "caption": "Hank. Small defense company. Just won fifty million dollars.",
+     "shot": {"ref": ["H"], "image": "Medium shot: Hank sits in his small office behind his desk, lovingly hugging a thick bound contract document against his cheek like a teddy bear, eyes closed, blissful smile. Bright simple office, window, filing cabinet. The contract cover is blank, no writing.",
+              "motion": "Hank blissfully hugs the thick contract, rocks side to side in his desk chair and slowly spins the chair a little, eyes closed, dreamy smile, little sparkles around the contract. Gentle push-in."},
+     "sfx": [{"kind": "whoosh", "at": -0.05}]},
+
+    {"id": "04", "kind": "dialogue", "spk": "H",
+     "tts": "[whispers] Fifty. Million.", "caption": "Fifty. Million.",
+     "shot": {"ref": ["H"], "keyframe_of": "03",
+              "motion": "Hank holds the contract up to his face and whispers to it lovingly, lip-synced to the reference audio: \"Fifty. Million.\" then gives it a big loud kiss. Close-up, static camera."},
+     "cut": {"tail": 1.2},
+     "sfx": [{"kind": "blip", "after_line": 0.25}]},
+
+    {"id": "05", "kind": "broll", "spk": "N",
+     "tts": "His plan? Do... none of the work.", "caption": "His plan? Do... none of the work.",
+     "shot": {"ref": ["H"], "image": "Hank stands in front of a big cork board like a heist mastermind, pointing at it with a pen. On the board: three pinned index cards each showing only a simple drawn icon (a wrench, a checkmark, a puzzle piece), connected with red string. Hank looks back over his shoulder at the camera with a scheming grin. No words or letters anywhere.",
+              "motion": "Hank taps each index card on the cork board with his pen like a heist mastermind, then glances back at the camera with a sly scheming grin and taps his temple. Slow dolly-in."},
+     "sfx": [{"kind": "whoosh", "at": -0.05}]},
+
+    {"id": "06", "kind": "dialogue", "spk": "H",
+     "tts": "[proudly] I've got a CREW!", "caption": "I've got a crew!",
+     "shot": {"ref": ["H"], "keyframe_of": "05",
+              "motion": "Hank spins around to face the camera, throws his arms wide in front of the cork board and proudly announces, lip-synced to the reference audio: \"I've got a CREW!\" Medium shot, static camera."}},
+
+    {"id": "07", "kind": "broll", "spk": "N",
+     "tts": "The engineer builds it. The tester tests it. The integrator integrates it.", "caption": "The engineer builds it. The tester tests it. The integrator integrates it.",
+     "shot": {"ref": [], "no_character": true, "image": "A busy bright engineering workshop: three hard-working characters side by side: an engineer in a yellow hard hat and orange vest tightening a bolt on a big machine, a tester in glasses with a clipboard checking the machine, and an integrator in a purple shirt snapping two large parts together. Sparks and energy, vertical composition.",
+              "motion": "Fast energetic teamwork: the engineer tightens bolts with sparks flying, the tester checks the machine and ticks the clipboard, the integrator snaps the big parts together with a satisfying click; the machine lights up. Quick camera pan across the three of them."},
+     "sfx": [{"kind": "whoosh", "at": -0.05}]},
+
+    {"id": "08", "kind": "broll", "spk": "N",
+     "tts": "And Hank? [flatly] Hank forwards the emails.", "caption": "And Hank? Hank forwards the emails.",
+     "shot": {"ref": ["H"], "image": "Hank leans far back in his office chair with his feet up on the desk, sunglasses pushed up on his head, lazily tapping one key on a laptop with a single finger, totally relaxed and bored. A stack of papers beside him. Medium-wide shot. Screens show no text.",
+              "motion": "Hank, feet up on the desk, lazily taps one laptop key with a single finger, a paper airplane email icon flies off the screen, he yawns hugely and scratches his belly. Static medium shot."},
+     "sfx": [{"kind": "whoosh", "at": -0.05}]},
+
+    {"id": "09", "kind": "dialogue", "spk": "H",
+     "tts": "[shouts] Per my LAST email!", "caption": "Per my last email!",
+     "shot": {"ref": ["H"], "duration": 5, "image": "Vertical shot: Hank sits at a messy office desk facing the camera, leaning back in a desk chair behind a laptop, one finger raised high about to slam the keyboard, mouth open mid-shout with a triumphant expression. Bright simple office behind him with a window and a filing cabinet. Medium shot, framed from the waist up, face clearly visible. No text on any screen or object.",
+              "motion": "Hank shouts his line with huge triumphant energy, lip-synced to the reference audio: \"Per my LAST email!\" As he says LAST he slams his finger down on the laptop key, then throws both arms up in victory and leans back in his chair, grinning. Papers flutter off the desk. Static camera, medium shot."},
+     "cut": {"tail": 0.8},
+     "sfx": [{"kind": "whoosh", "word": "last"}]},
+
+    {"id": "10", "kind": "dialogue", "spk": "H",
+     "tts": "[happily] Fifty million in revenue, BABY!", "caption": "Fifty million in revenue, baby!",
+     "shot": {"ref": ["H"], "image": "Hank stands on top of his office desk holding a champagne bottle high in the air, cork about to pop, huge ecstatic open-mouthed celebration, confetti starting to fall, tie flying. Low angle, medium shot.",
+              "motion": "The champagne cork pops and foam sprays everywhere as Hank, standing on his desk, shouts ecstatically, lip-synced to the reference audio: \"Fifty million in revenue, BABY!\" Confetti rains down. Low angle."},
+     "cut": {"lead": 0.5, "tail": 0.3},
+     "overlay": {"banner": "$50M REVENUE!"},
+     "sfx": [{"kind": "pop", "at": 0.25}, {"kind": "cheer", "at": 0.4}],
+     "freeze": {"dur": 0.55, "label": "*record scratch*"}},
+
+    {"id": "11", "kind": "dialogue", "spk": "A",
+     "tts": "[flatly] Hank. You're not the mastermind.", "caption": "Hank. You're not the mastermind.",
+     "shot": {"ref": ["A", "H"], "image": "The accountant sits at a long conference table facing the camera, completely deadpan, one hand sliding a closed manila folder across the table toward the viewer. Cool, quiet office lighting. Medium close-up, face clearly visible. No text on the folder.",
+              "motion": "The accountant slowly slides the manila folder across the table and says completely deadpan, lip-synced to the reference audio: \"Hank. You're not the mastermind.\" She does not smile or blink. Static medium close-up."},
+     "cut": {"lead": 0.5, "tail": 0.3},
+     "music": "stop_before",
+     "sfx": [{"kind": "slide", "at": 0.1}]},
+
+    {"id": "12", "kind": "dialogue", "spk": "H",
+     "tts": "[nervously] ...I'm not?", "caption": "I'm not?",
+     "shot": {"ref": ["H"], "image": "Close-up of Hank sitting at a conference table, a little party hat still on his head and a champagne glass frozen halfway to his mouth, sweating nervously, eyes wide, confused worried expression. Face clearly visible.",
+              "motion": "Hank freezes with the champagne glass halfway to his mouth, a bead of sweat rolls down, and he asks in a tiny nervous voice, lip-synced to the reference audio: \"...I'm not?\" Slow push-in on his face."},
+     "cut": {"lead": 1.0, "tail": 0.4}},
+
+    {"id": "13", "kind": "broll", "spk": "A", "offscreen": true,
+     "tts": "[flatly] You're the getaway driver.", "caption": "You're the getaway driver.",
+     "shot": {"ref": ["H"], "image": "Hank is squeezed into a comically tiny red clown-sized car in an empty parking lot, knees up to his chin, both hands gripping a tiny steering wheel, sweating, sad face. The car has no license plate text. Vertical shot, car centered.",
+              "motion": "The tiny red car sputters and lurches forward a few feet, backfires with a puff of black smoke and stalls. Hank, squeezed inside, sadly presses the horn, then drops his forehead onto the steering wheel. Static wide shot."},
+     "fit": "full",
+     "overlay": {"namecard": {"name": "HANK", "title": "THE MASTERMIND", "strike_word": "getaway", "new_title": "GETAWAY DRIVER"},
+                 "pop_text": {"text": "honk.", "at": 2.9, "dur": 0.6, "x": 760, "y": 820}},
+     "sfx": [{"kind": "sputter", "at": 0}, {"kind": "backfire", "at": 1.15}, {"kind": "hit", "word": "getaway", "offset": 0.1}, {"kind": "honk", "at": 2.9}]},
+
+    {"id": "14", "kind": "rewind", "spk": "N",
+     "tts": "[rushed] Rewind!", "caption": "Rewind!"},
+
+    {"id": "teach", "kind": "teach",
+     "lines": [
+       {"id": "15", "spk": "N", "tts": "Hank never controlled the work. His crew did.", "caption": "Hank never controlled the work. His crew did."},
+       {"id": "16", "spk": "N", "tts": "That makes him an agent, not a principal. And agents only count their fee.", "caption": "That makes him an agent, not a principal. And agents only count their fee."},
+       {"id": "17", "spk": "N", "tts": "Same cash in the bank. But on paper? His fifty million dollar company...", "caption": "Same cash in the bank. But on paper? His fifty million dollar company..."},
+       {"id": "18", "spk": "N", "tts": "[sighs] is a five million dollar company.", "caption": "is a five million dollar company."}
+     ],
+     "board": {
+       "question": {"lines": ["WHO CONTROLLED", "THE WORK?"], "line": "15"},
+       "evidence": [
+         {"cutout": "crew", "label": "DID THE WORK ✔", "good": true, "word": {"line": "15", "w": "crew"}},
+         {"cutout": "hank_wave", "label": "FORWARDED ✘", "good": false, "word": {"line": "15", "w": "never"}}
+       ],
+       "compare": {"title": "PRINCIPAL  vs  AGENT", "line": "16", "reveal_word": {"line": "16", "w": "agent"}, "fill_word": {"line": "16", "w": "agents"},
+                   "a": {"title": "PRINCIPAL", "l1": "Controls the work", "l2": "Counts the full contract", "big": "$50M", "good": true},
+                   "b": {"title": "AGENT", "l1": "Passes it along", "l2": "Counts only its fee", "big": "$5M", "good": false},
+                   "pin_cutout": "hank_plead"},
+       "punch": {"text": "Same cash in the bank.", "word": {"line": "17", "w": "same"}, "ding": true},
+       "shrink": {"label": "ON PAPER, HANK'S COMPANY:", "from": "$50M", "to": "$5M",
+                  "label_word": {"line": "17", "w": "paper"}, "to_word": {"line": "18", "w": "five"}, "trombone": true}
+     }},
+
+    {"id": "19", "kind": "dialogue", "spk": "H",
+     "tts": "[pleading] Can we rewind again?", "caption": "Can we rewind again?",
+     "shot": {"ref": ["H"], "image": "Close-up of Hank looking straight at the camera, hands clasped together pleading, puppy-dog eyes, desperate hopeful expression, plain soft gray background. Face clearly visible.",
+              "motion": "Hank clasps his hands and begs the camera with puppy-dog eyes, lip-synced to the reference audio: \"Can we rewind again?\" Static close-up."},
+     "cut": {"lead": 0.4, "tail": 0.45}},
+
+    {"id": "20", "kind": "card", "spk": "N",
+     "tts": "Don't be Hank. Direct the work. Own the results. Put it in writing.", "caption": "Don't be Hank. Direct the work. Own the results. Put it in writing.",
+     "stamp": "DON'T BE HANK", "cutout": "hank_plead",
+     "checks": [{"text": "Direct the work", "w": "direct"}, {"text": "Own the results", "w": "own"}, {"text": "Put it in writing", "w": "put"}]},
+
+    {"id": "21", "kind": "cta", "spk": "N",
+     "tts": "Revenue recognition. Defense Finance, on Ack-luh-rate.", "caption": "Revenue recognition. Defense Finance, on Acqlerate.",
+     "title_word": "revenue", "module_word": "defense", "url_word": "on", "cutout": "hank_wave"},
+
+    {"id": "22", "kind": "dialogue", "spk": "H",
+     "tts": "[sheepishly] Learn from my mistakes!", "caption": "Learn from my mistakes!",
+     "shot": {"ref": ["H"], "image": "Medium shot of Hank standing against a plain soft light gray background, giving a sheepish embarrassed little wave to the camera with one hand, rubbing the back of his neck with the other, awkward apologetic smile. Leave empty space in the upper half of the frame.",
+              "motion": "Hank gives a sheepish little wave to the camera, rubbing the back of his neck, and says with an embarrassed smile, lip-synced to the reference audio: \"Learn from my mistakes!\" Static medium shot."},
+     "cut": {"lead": 0.5, "tail": 0.34},
+     "overlay": {"lowerthird": "acqlerate.com"}}
+  ],
+  "social": {
+    "caption": "He booked $50M in revenue. His accountant booked $5M. Same contract.",
+    "hashtags": ["govcon", "defensecontracting", "revenuerecognition", "dontbehank", "acqlerate"],
+    "youtube_title": "He booked $50M in revenue. His accountant booked $5M. (Revenue Recognition for GovCon)",
+    "linkedin": "Hank won a $50M contract and did none of the work. His crew built it; he forwarded emails. So why did his accountant book $5M?\n\nPrincipal vs. agent. If you don't control the work, you only count your fee.\n\nDon't be Hank. Direct the work. Own the results. Put it in writing.\n\nFull lesson: Revenue Recognition, Defense Finance module on acqlerate.com"
+  }
+}

@@ -1,0 +1,167 @@
+name: Video pipeline
+# One workflow, one stage per run. Code lives on main (scripts/video/), everything a video
+# produces lives on the video-assets branch under video/<slug>/ (so the site never redeploys).
+#
+#   script    lesson -> script.json (draft, needs human approval: set "status": "approved")
+#   voices    script.json -> vo/ (ElevenLabs)            [needs status approved]
+#   fetch     jobs.json -> media/ (from Higgsfield's CDN) [jobs.json comes from the Higgsfield runner]
+#   assemble  -> draft.mp4 (+ social captions)            [the review cut]
+#   publish   draft.mp4 -> final/<slug>.mp4
+#
+# The Higgsfield step (keyframes, Seedance clips, voice change) runs in a Claude session with the
+# Higgsfield connector, following scripts/video/SHOTS_RUNNER.md. Everything else runs here.
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: "Stage to run"
+        type: choice
+        options: [script, voices, fetch, assemble, publish, voices+shots-plan]
+        default: assemble
+      slug:
+        description: "Video slug (video/<slug>/). Leave empty with stage=script to take the next one from queue.json"
+        default: ""
+      lesson:
+        description: "Lesson id for stage=script (e.g. finance-9). Empty = from queue.json"
+        default: ""
+      theme:
+        description: "Theme for stage=script"
+        default: ""
+      character:
+        description: "Speaker letter of the main character (characters.json)"
+        default: "H"
+      upload_url:
+        description: "stage=publish only: presigned Higgsfield PUT url (from media_upload). Empty = just copy to final/"
+        default: ""
+  schedule:
+    - cron: "17 6 * * 1"   # Mondays 06:17 UTC: draft the next script in the queue for review
+
+concurrency:
+  group: video-assets-write
+  cancel-in-progress: false
+
+env:
+  VIDEO_ROOT: ${{ github.workspace }}/video-assets/video
+
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check out the video-assets branch
+        run: |
+          git config user.name  "Acqlerate Video Bot"
+          git config user.email "video-bot@acqlerate.com"
+          if git ls-remote --exit-code origin video-assets >/dev/null; then
+            git fetch -q origin video-assets
+            git worktree add -q video-assets -B video-assets origin/video-assets
+          else
+            git worktree add -q --detach video-assets
+            (cd video-assets && git checkout -q --orphan video-assets && git rm -rfq . && mkdir -p video)
+          fi
+          mkdir -p video-assets/video
+
+      - name: Resolve stage + slug
+        id: cfg
+        env:
+          STAGE: ${{ github.event.inputs.stage || 'script' }}
+          SLUG: ${{ github.event.inputs.slug }}
+          LESSON: ${{ github.event.inputs.lesson }}
+          THEME: ${{ github.event.inputs.theme }}
+        run: |
+          set -e
+          if [ "$STAGE" = "script" ] && { [ -z "$SLUG" ] || [ -z "$LESSON" ]; }; then
+            NEXT=$(python3 scripts/video/vp.py next)
+            SLUG=${SLUG:-$(echo "$NEXT" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("slug",""))')}
+            LESSON=${LESSON:-$(echo "$NEXT" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("lesson",""))')}
+            THEME=${THEME:-$(echo "$NEXT" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("theme","heist"))')}
+          fi
+          [ -n "$SLUG" ] || { echo "nothing to do (queue exhausted or no slug given)"; echo "skip=true" >> "$GITHUB_OUTPUT"; exit 0; }
+          case "$SLUG" in *[!A-Za-z0-9._-]*) echo "bad slug"; exit 1;; esac
+          echo "stage=$STAGE" >> "$GITHUB_OUTPUT"; echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
+          echo "lesson=$LESSON" >> "$GITHUB_OUTPUT"; echo "theme=${THEME:-heist}" >> "$GITHUB_OUTPUT"
+          echo "stage=$STAGE slug=$SLUG lesson=$LESSON theme=$THEME"
+
+      # ---------------- script ----------------
+      - name: Export the curriculum
+        if: steps.cfg.outputs.skip != 'true' && steps.cfg.outputs.stage == 'script'
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npx tsx scripts/export-curriculum.ts /tmp/curriculum-export.json
+      - name: Draft the script with Claude
+        if: steps.cfg.outputs.skip != 'true' && steps.cfg.outputs.stage == 'script'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CURRICULUM_JSON: /tmp/curriculum-export.json
+        run: python3 scripts/video/vp.py script "${{ steps.cfg.outputs.slug }}" --lesson "${{ steps.cfg.outputs.lesson }}" --theme "${{ steps.cfg.outputs.theme }}" --character "${{ github.event.inputs.character || 'H' }}"
+
+      # ---------------- voices (+ shots plan + social) ----------------
+      - name: Require an approved script
+        if: steps.cfg.outputs.skip != 'true' && (steps.cfg.outputs.stage == 'voices' || steps.cfg.outputs.stage == 'voices+shots-plan')
+        run: |
+          python3 - <<'EOF'
+          import json, os, sys
+          s = json.load(open(os.path.join(os.environ["VIDEO_ROOT"], "${{ steps.cfg.outputs.slug }}", "script.json")))
+          if s.get("status") != "approved":
+              sys.exit('script.json status is "%s"; set it to "approved" first' % s.get("status"))
+          EOF
+      - name: Voice the lines (ElevenLabs), plan the shots, write captions
+        if: steps.cfg.outputs.skip != 'true' && (steps.cfg.outputs.stage == 'voices' || steps.cfg.outputs.stage == 'voices+shots-plan')
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+        run: python3 scripts/video/vp.py draft "${{ steps.cfg.outputs.slug }}"
+
+      # ---------------- fetch ----------------
+      - name: Download clips from Higgsfield
+        if: steps.cfg.outputs.skip != 'true' && steps.cfg.outputs.stage == 'fetch'
+        run: python3 scripts/video/vp.py fetch "${{ steps.cfg.outputs.slug }}"
+
+      # ---------------- assemble ----------------
+      - name: Install render dependencies
+        if: steps.cfg.outputs.skip != 'true' && steps.cfg.outputs.stage == 'assemble'
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+          pip install -q numpy scipy soundfile playwright pocketsphinx
+          python3 -m playwright install --with-deps chromium >/dev/null
+          (cd scripts/video/pipeline/stage && npm ci --no-audit --no-fund)
+      - name: Render the draft
+        if: steps.cfg.outputs.skip != 'true' && steps.cfg.outputs.stage == 'assemble'
+        run: |
+          python3 scripts/video/vp.py assemble "${{ steps.cfg.outputs.slug }}"
+          python3 scripts/video/vp.py social "${{ steps.cfg.outputs.slug }}"
+          rm -rf "$VIDEO_ROOT/${{ steps.cfg.outputs.slug }}/build"
+      - uses: actions/upload-artifact@v4
+        if: steps.cfg.outputs.skip != 'true' && steps.cfg.outputs.stage == 'assemble'
+        with:
+          name: draft-${{ steps.cfg.outputs.slug }}
+          path: |
+            video-assets/video/${{ steps.cfg.outputs.slug }}/draft.mp4
+            video-assets/video/${{ steps.cfg.outputs.slug }}/social/
+
+      # ---------------- publish ----------------
+      - name: Publish
+        if: steps.cfg.outputs.skip != 'true' && steps.cfg.outputs.stage == 'publish'
+        env:
+          UPLOAD_URL: ${{ github.event.inputs.upload_url }}
+        run: |
+          python3 scripts/video/vp.py publish "${{ steps.cfg.outputs.slug }}" --to final
+          if [ -n "$UPLOAD_URL" ]; then python3 scripts/video/vp.py publish "${{ steps.cfg.outputs.slug }}" --to higgsfield; fi
+
+      # ---------------- save ----------------
+      - name: Commit to video-assets
+        if: steps.cfg.outputs.skip != 'true'
+        run: |
+          cd video-assets
+          rm -rf video/*/build
+          git add -A
+          git commit -qm "${{ steps.cfg.outputs.stage }}: ${{ steps.cfg.outputs.slug }} (run ${{ github.run_number }})" || echo "nothing changed"
+          git push -q origin video-assets
+      - name: Summary
+        if: steps.cfg.outputs.skip != 'true'
+        run: |
+          echo "## ${{ steps.cfg.outputs.stage }} - ${{ steps.cfg.outputs.slug }}" >> "$GITHUB_STEP_SUMMARY"
+          python3 scripts/video/vp.py status "${{ steps.cfg.outputs.slug }}" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f "$VIDEO_ROOT/${{ steps.cfg.outputs.slug }}/script.txt" ]; then echo; echo '```' >> "$GITHUB_STEP_SUMMARY"; cat "$VIDEO_ROOT/${{ steps.cfg.outputs.slug }}/script.txt" >> "$GITHUB_STEP_SUMMARY"; echo '```' >> "$GITHUB_STEP_SUMMARY"; fi

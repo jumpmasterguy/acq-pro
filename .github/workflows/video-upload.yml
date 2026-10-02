@@ -1,18 +1,22 @@
 name: Video upload (to Higgsfield)
-# Manual only. PUTs a file from the video-assets branch to a presigned
-# Higgsfield upload URL (the workspace can't reach their storage directly).
+# Manual only. PUTs files from the video-assets branch to presigned Higgsfield upload URLs
+# (the Claude workspace can't reach their storage directly). One file (path + upload_url)
+# or several (pairs = "path=url path=url ...").
 on:
   workflow_dispatch:
     inputs:
       path:
-        description: "File path on the video-assets branch, e.g. final/hank-heist-v1.mp4"
-        required: true
+        description: "File path on the video-assets branch, e.g. video/hank-heist/vo/pad/02.mp3"
+        default: ""
       upload_url:
         description: "Presigned PUT URL from Higgsfield media_upload"
-        required: true
+        default: ""
+      pairs:
+        description: "Several uploads: space-separated path=url pairs (used when path is empty)"
+        default: ""
       content_type:
-        description: "MIME type"
-        default: "video/mp4"
+        description: "MIME type (empty = by extension)"
+        default: ""
 
 jobs:
   upload:
@@ -24,17 +28,26 @@ jobs:
       - uses: actions/checkout@v6
         with:
           ref: video-assets
-          sparse-checkout: ${{ inputs.path }}
-          sparse-checkout-cone-mode: false
       - name: PUT to Higgsfield
         env:
-          UPLOAD_URL: ${{ inputs.upload_url }}
-          FILE: ${{ inputs.path }}
-          CT: ${{ inputs.content_type }}
+          ONE_PATH: ${{ inputs.path }}
+          ONE_URL: ${{ inputs.upload_url }}
+          PAIRS: ${{ inputs.pairs }}
+          CT_IN: ${{ inputs.content_type }}
         run: |
           set -euo pipefail
-          case "$UPLOAD_URL" in https://*.amazonaws.com/*|https://*.higgsfield.ai/*) ;; *) echo "refusing non-Higgsfield upload URL"; exit 1;; esac
-          ls -la "$FILE"
-          code=$(curl -sS -o /tmp/resp.txt -w '%{http_code}' -X PUT -H "Content-Type: $CT" --data-binary @"$FILE" "$UPLOAD_URL")
-          echo "HTTP $code"; head -c 300 /tmp/resp.txt || true
-          [ "$code" = "200" ]
+          if [ -n "$ONE_PATH" ]; then PAIRS="$ONE_PATH=$ONE_URL"; fi
+          [ -n "$PAIRS" ] || { echo "nothing to upload"; exit 1; }
+          fail=0
+          for pair in $PAIRS; do
+            f="${pair%%=*}"; url="${pair#*=}"
+            case "$url" in https://*.amazonaws.com/*|https://*.higgsfield.ai/*) ;; *) echo "refusing non-Higgsfield upload URL for $f"; exit 1;; esac
+            case "$f" in *..*) echo "bad path $f"; exit 1;; esac
+            ct="$CT_IN"
+            if [ -z "$ct" ]; then case "$f" in *.mp4) ct=video/mp4;; *.mp3) ct=audio/mpeg;; *.wav) ct=audio/wav;; *.png) ct=image/png;; *.jpg|*.jpeg) ct=image/jpeg;; *) ct=application/octet-stream;; esac; fi
+            ls -la "$f"
+            code=$(curl -sS -o /tmp/resp.txt -w '%{http_code}' -X PUT -H "Content-Type: $ct" --data-binary @"$f" "$url")
+            echo "$f -> HTTP $code"; head -c 200 /tmp/resp.txt || true; echo
+            [ "$code" = "200" ] || fail=1
+          done
+          exit $fail

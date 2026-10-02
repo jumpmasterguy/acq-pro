@@ -1,0 +1,12 @@
+{
+  "_doc": "Order in which videos get made. `vp.py next` prints the first entry without a video/<slug>/script.json. Themes rotate; keep Hank as the character until a second one has a reference sheet in characters.json.",
+  "queue": [
+    {"slug": "hank-heist", "lesson": "finance-9", "theme": "heist", "character": "H", "note": "done: first video (revenue recognition)"},
+    {"slug": "hank-mods", "lesson": "contracts-6", "theme": "infomercial", "character": "H", "note": "Modifications, REAs & Claims: Hank does extra work on a handshake"},
+    {"slug": "hank-color-of-money", "lesson": "finance-4", "theme": "heist", "character": "H", "note": "Color of Money: Hank spends the wrong pot"},
+    {"slug": "hank-cor", "lesson": "contracts-3", "theme": "infomercial", "character": "H", "note": "Contract Administration & COR: Hank takes direction from the wrong person"},
+    {"slug": "hank-eac", "lesson": "finance-5", "theme": "heist", "character": "H", "note": "Estimate at Completion: Hank's burn rate"},
+    {"slug": "hank-section-l-m", "lesson": "capture-3", "theme": "infomercial", "character": "H", "note": "Section L vs M: Hank answers the wrong section"},
+    {"slug": "hank-tdl", "lesson": "contracts-9", "theme": "heist", "character": "H", "note": "Technical Direction Letters: Hank's TDL that changed scope"}
+  ]
+}

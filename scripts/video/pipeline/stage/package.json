@@ -1,0 +1,11 @@
+{
+  "name": "acqlerate-video-stage",
+  "private": true,
+  "description": "Fonts + rough.js for the drawn scenes and the caption overlay. `npm ci` here before rendering.",
+  "dependencies": {
+    "@fontsource/caveat": "^5.3.0",
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/permanent-marker": "^5.3.0",
+    "roughjs": "^4.6.6"
+  }
+}

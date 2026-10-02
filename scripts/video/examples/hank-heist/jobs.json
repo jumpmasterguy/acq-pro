@@ -1,0 +1,214 @@
+{
+ "beats": {
+  "01": {
+   "keyframe": {
+    "job": "fe8090bf-de68-4f39-ad3d-a85cfae76a86",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103428_fe8090bf-de68-4f39-ad3d-a85cfae76a86.png"
+   },
+   "video": {
+    "job": "fa57f554-b60b-4fa5-b4ad-a76f950972eb",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103610_fa57f554-b60b-4fa5-b4ad-a76f950972eb.mp4"
+   }
+  },
+  "02": {
+   "keyframe": {
+    "job": "a1a1d921-3f31-4ac6-b6b7-98c701b265cf",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103428_a1a1d921-3f31-4ac6-b6b7-98c701b265cf.png"
+   },
+   "video": {
+    "job": "3e48663d-c645-4564-88a9-81f30385966f",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_104437_3e48663d-c645-4564-88a9-81f30385966f.mp4"
+   },
+   "voiced": {
+    "job": "1c81e68d-7c14-4e4e-9d48-b27bbcf08948",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_124824_1c81e68d-7c14-4e4e-9d48-b27bbcf08948.mp4"
+   }
+  },
+  "03": {
+   "keyframe": {
+    "job": "00db9dc9-e397-4493-8b35-a10070a7b2b8",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103428_00db9dc9-e397-4493-8b35-a10070a7b2b8.png"
+   },
+   "video": {
+    "job": "d59d7f85-79f4-47c7-ae08-6bd4708d35db",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103612_d59d7f85-79f4-47c7-ae08-6bd4708d35db.mp4"
+   }
+  },
+  "04": {
+   "keyframe": {
+    "job": "00db9dc9-e397-4493-8b35-a10070a7b2b8",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103428_00db9dc9-e397-4493-8b35-a10070a7b2b8.png"
+   },
+   "video": {
+    "job": "c8a20b3d-e9fe-4200-9c2b-21fa973e18d6",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_104439_c8a20b3d-e9fe-4200-9c2b-21fa973e18d6.mp4"
+   },
+   "voiced": {
+    "job": "4598c6ea-cdde-4e27-84fc-58da9e9ef23a",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_124827_4598c6ea-cdde-4e27-84fc-58da9e9ef23a.mp4"
+   }
+  },
+  "05": {
+   "keyframe": {
+    "job": "07cd493b-93ee-4b66-8b85-7c3245e19afa",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103428_07cd493b-93ee-4b66-8b85-7c3245e19afa.png"
+   },
+   "video": {
+    "job": "12def8e9-eff3-4a43-94fe-702212efed05",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103610_12def8e9-eff3-4a43-94fe-702212efed05.mp4"
+   }
+  },
+  "06": {
+   "keyframe": {
+    "job": "07cd493b-93ee-4b66-8b85-7c3245e19afa",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103428_07cd493b-93ee-4b66-8b85-7c3245e19afa.png"
+   },
+   "video": {
+    "job": "d3812f23-d4f0-44f5-8987-98cb26a4eb0b",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_104442_d3812f23-d4f0-44f5-8987-98cb26a4eb0b.mp4"
+   },
+   "voiced": {
+    "job": "3280aef9-9b23-44ed-9b15-774eb5cab34a",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_124830_3280aef9-9b23-44ed-9b15-774eb5cab34a.mp4"
+   }
+  },
+  "07": {
+   "keyframe": {
+    "job": "be2aacd7-3d06-4b2a-bf54-a3bb452f2907",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103428_be2aacd7-3d06-4b2a-bf54-a3bb452f2907.png"
+   },
+   "video": {
+    "job": "2272d5f4-e448-4cc2-8046-91664e53773e",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103610_2272d5f4-e448-4cc2-8046-91664e53773e.mp4"
+   }
+  },
+  "08": {
+   "keyframe": {
+    "job": "962ed95d-a289-4b2d-9e28-a0109a4d7a68",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103428_962ed95d-a289-4b2d-9e28-a0109a4d7a68.png"
+   },
+   "video": {
+    "job": "f55e0881-bce0-4356-a08b-fbe1b2f8b0a0",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103623_f55e0881-bce0-4356-a08b-fbe1b2f8b0a0.mp4"
+   }
+  },
+  "09": {
+   "keyframe": {
+    "job": "a52d092a-f5f8-4037-b442-71add4bf37a9",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_101930_a52d092a-f5f8-4037-b442-71add4bf37a9.png"
+   },
+   "video": {
+    "job": "50863d8c-43f2-4a69-8787-ccade12c846c",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_102021_50863d8c-43f2-4a69-8787-ccade12c846c.mp4"
+   },
+   "voiced": {
+    "job": "f946f2a2-cef6-44fa-b8cf-8420dfaff5e7",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_124831_f946f2a2-cef6-44fa-b8cf-8420dfaff5e7.mp4"
+   }
+  },
+  "10": {
+   "keyframe": {
+    "job": "5a327a7a-a92a-43d5-bdf7-593b1c46c2e8",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103428_5a327a7a-a92a-43d5-bdf7-593b1c46c2e8.png"
+   },
+   "video": {
+    "job": "56ca7039-0975-4dbb-a511-fd3da0c04da0",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_104444_56ca7039-0975-4dbb-a511-fd3da0c04da0.mp4"
+   },
+   "voiced": {
+    "job": "6b4552c8-0eb0-41b1-9b4b-cf0484fb33e9",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_124833_6b4552c8-0eb0-41b1-9b4b-cf0484fb33e9.mp4"
+   }
+  },
+  "11": {
+   "keyframe": {
+    "job": "6c20a01c-b458-46e6-86a6-c4aa18d94b45",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103428_6c20a01c-b458-46e6-86a6-c4aa18d94b45.png"
+   },
+   "video": {
+    "job": "4541cdfd-2520-4ec4-b48b-ee5e90966040",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_104451_4541cdfd-2520-4ec4-b48b-ee5e90966040.mp4"
+   },
+   "voiced": {
+    "job": "71b8bd80-dd31-42a5-bce3-19372b19071a",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_124709_71b8bd80-dd31-42a5-bce3-19372b19071a.mp4"
+   }
+  },
+  "12": {
+   "keyframe": {
+    "job": "02bf6622-8b85-4af8-89ec-da88cf239c54",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103428_02bf6622-8b85-4af8-89ec-da88cf239c54.png"
+   },
+   "video": {
+    "job": "d05da31d-b50e-4445-8439-658eabee9fd4",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_104455_d05da31d-b50e-4445-8439-658eabee9fd4.mp4"
+   },
+   "voiced": {
+    "job": "296980f9-07cd-404a-aa24-fa942caa0acc",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_124835_296980f9-07cd-404a-aa24-fa942caa0acc.mp4"
+   }
+  },
+  "13": {
+   "keyframe": {
+    "job": "715af05c-847c-482b-9cd7-b1af549fc655",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103428_715af05c-847c-482b-9cd7-b1af549fc655.png"
+   },
+   "video": {
+    "job": "147bc776-5afb-4075-85a8-2eddc6cfb438",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103623_147bc776-5afb-4075-85a8-2eddc6cfb438.mp4"
+   }
+  },
+  "19": {
+   "keyframe": {
+    "job": "d74705b5-bee2-4dfe-acef-4b062b8a0514",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103428_d74705b5-bee2-4dfe-acef-4b062b8a0514.png"
+   },
+   "video": {
+    "job": "ec6ee23f-22d5-4b66-9952-9d6b446c1ccb",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_104945_ec6ee23f-22d5-4b66-9952-9d6b446c1ccb.mp4"
+   },
+   "voiced": {
+    "job": "3181930b-67a3-4bb7-a90d-9e2258be0160",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_124857_3181930b-67a3-4bb7-a90d-9e2258be0160.mp4"
+   }
+  },
+  "22": {
+   "keyframe": {
+    "job": "7fbe167e-5ad8-468b-9d39-19182daec10a",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103429_7fbe167e-5ad8-468b-9d39-19182daec10a.png"
+   },
+   "video": {
+    "job": "c50f806d-b1a2-4fb9-8037-fb04ba77d6f8",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_104947_c50f806d-b1a2-4fb9-8037-fb04ba77d6f8.mp4"
+   },
+   "voiced": {
+    "job": "78806cda-84e0-4681-9b56-3d6a54863ae0",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_124838_78806cda-84e0-4681-9b56-3d6a54863ae0.mp4"
+   }
+  }
+ },
+ "cutouts": {
+  "hank_wave": {
+   "job": "c0c71e66-0079-40b6-baed-9c3799b69095",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103834_c0c71e66-0079-40b6-baed-9c3799b69095.png"
+  },
+  "hank_plead": {
+   "job": "86826a56-3459-48a8-a4a7-402327cdf038",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103842_86826a56-3459-48a8-a4a7-402327cdf038.png"
+  },
+  "crew": {
+   "job": "dfeae0a4-c4ee-4928-90bf-92a97d7f5196",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103835_dfeae0a4-c4ee-4928-90bf-92a97d7f5196.png"
+  },
+  "hank": {
+   "job": "4e120d40-aaf6-4a89-aa20-c1bc269c74fb",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103831_4e120d40-aaf6-4a89-aa20-c1bc269c74fb.png"
+  },
+  "acct": {
+   "job": "73cb7713-461a-4c4d-beed-f7018964aa2d",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JtvZU7DFoalUsnUmE6INEffBFb/hf_20260927_103836_73cb7713-461a-4c4d-beed-f7018964aa2d.png"
+  }
+ },
+ "credits_spent": 490,
+ "notes": "Reconstructed from the Higgsfield generation history on 2 Oct 2026. Beat 13 (off-screen accountant line) was voiced with seed_audio in the first session; that file lives in vo/ as 13_voice.mp3 on the branch, so no 'voice' entry here."
+}
