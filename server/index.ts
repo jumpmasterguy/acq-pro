@@ -404,6 +404,20 @@ app.use((req, res, next) => {
           )
         `);
       } catch (e: any) { /* table already exists */ }
+      // One row per Stripe checkout opened from /api/stripe/create-checkout-session,
+      // for the founder review's "trials that started checkout"
+      // (server/checkoutStarts.ts).
+      try {
+        await schemaPool.query(`
+          CREATE TABLE IF NOT EXISTS checkout_starts (
+            id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid()::varchar,
+            user_id VARCHAR NOT NULL,
+            plan TEXT,
+            source TEXT,
+            created_at TEXT NOT NULL
+          )
+        `);
+      } catch (e: any) { /* table already exists */ }
       for (const stmt of schemaCols) {
         try { await schemaPool.query(stmt); } catch (e: any) { /* column already exists or already nullable */ }
       }

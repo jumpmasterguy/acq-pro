@@ -23,6 +23,7 @@ import { explainMistake, gradeTeachBack, lessonTextById, COACH_MODELS, CoachErro
 import { costTrackerStorage } from "./costTrackerStorage";
 import { reportCheckoutFailure } from "./stripeHealth";
 import { getSeoStats } from "./searchConsole";
+import { recordCheckoutStart, listCheckoutStarts, teamDealsByMonth, trialCheckoutCounts, CHECKOUT_GRACE_DAYS } from "./checkoutStarts";
 import { sendOpsAlertEmail } from "./email";
 import { issuePasswordReset } from "./passwordReset";
 import { registerAdminMobileRoutes } from "./adminMobile";
@@ -1094,6 +1095,10 @@ export async function registerRoutes(
           allow_promotion_codes: true,
         });
 
+        // For the founder review's "trials that started checkout". Never
+        // throws and isn't awaited, so it can't slow or break checkout.
+        void recordCheckoutStart(userId, priceType, fromIosApp ? "ios-app" : "web");
+
         return res.json({ url: session.url, plan: priceType, amount: planPrice(priceType) });
       } catch (err: any) {
         reportCheckoutFailure("/api/stripe/create-checkout-session", err, { priceType, priceId, userId, userEmail });
@@ -2058,8 +2063,28 @@ export async function registerRoutes(
         }
       }
 
+      // Founder review numbers. Each is null, not zeros, if its source fails,
+      // so a broken lookup can't pass for "nobody did anything".
+      // trialsCheckoutByMonth: trials that ended that month (UTC) whose person
+      // opened a Stripe checkout before the trial ended or within
+      // CHECKOUT_GRACE_DAYS after. Checkouts were only recorded from
+      // checkoutTrackingSince, so earlier months undercount.
+      let trialsEndedByMonth: Record<string, number> | null = null;
+      let trialsCheckoutByMonth: Record<string, number> | null = null;
+      try {
+        ({ trialsEndedByMonth, trialsCheckoutByMonth } =
+          trialCheckoutCounts(users as any, await listCheckoutStarts(), now));
+      } catch (e: any) {
+        console.error("[stats] checkout starts unavailable:", e?.message ?? e);
+      }
+      const teamDeals = await teamDealsByMonth().catch((e: any) => {
+        console.error("[stats] team deals unavailable:", e?.message ?? e);
+        return null;
+      });
+
       // Five minutes is plenty — this is read weekly, not per pageview.
-      res.set("Cache-Control", "public, max-age=300");
+      // private: the response is behind a key, so no shared cache may keep it.
+      res.set("Cache-Control", "private, max-age=300");
 
       res.json({
         asOf: new Date().toISOString(),
@@ -2070,6 +2095,11 @@ export async function registerRoutes(
         paying,
         dau,
         signupsByMonth,
+        trialsEndedByMonth,
+        trialsCheckoutByMonth,
+        checkoutGraceDays: CHECKOUT_GRACE_DAYS,
+        checkoutTrackingSince: "2026-10-02",
+        teamDealsByMonth: teamDeals,
       });
     } catch (err) {
       console.error("[stats] failed", err);
