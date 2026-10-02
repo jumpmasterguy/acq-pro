@@ -18,8 +18,11 @@ REPO = os.environ.get("GITHUB_REPO", "jumpmasterguy/acq-pro")
 def token():
     t = os.environ.get("GITHUB_TOKEN")
     if t: return t
-    root = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True).stdout.strip() or "."
-    for line in Path(root, ".git", "credentials-claude").read_text().splitlines():
+    # in a worktree, .git is a file pointing at the main repo's .git dir
+    common = subprocess.run(["git", "rev-parse", "--git-common-dir"], capture_output=True, text=True).stdout.strip() or ".git"
+    cred = Path(common, "credentials-claude")
+    if not cred.exists(): sys.exit(f"no GitHub token: set GITHUB_TOKEN or create {cred}")
+    for line in cred.read_text().splitlines():
         m = re.match(r"https://(?:[^:@]+:)?([^@]+)@github\.com", line.strip())
         if m: return m.group(1)
     sys.exit("no GitHub token found")
