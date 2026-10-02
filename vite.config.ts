@@ -18,6 +18,17 @@ export default defineConfig({
     emptyOutDir: true,
     minify: 'esbuild',
     target: 'es2020',
+    // The curriculum is far and away the biggest thing here, and it now gets
+    // its own chunk automatically because nothing imports it statically any
+    // more (see client/src/lib/curriculumMeta.ts). Raised so the warning still
+    // means something: it should fire on a NEW large chunk, not on the one we
+    // know about and deliberately load late.
+    chunkSizeWarningLimit: 1200,
+    // No manualChunks here on purpose. Grouping React and Radix into fixed
+    // vendor chunks was measured and made the FIRST visit ~18 KB gzip worse —
+    // pinning a library to a shared chunk stops Rollup pushing the parts only
+    // the admin or lesson screens use into those screens' own chunks. The
+    // cache-across-deploys argument for vendor chunks did not pay for that.
   },
   esbuild: {
     minifyIdentifiers: false,

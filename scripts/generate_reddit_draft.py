@@ -11,9 +11,10 @@ import json
 import urllib.request
 from datetime import datetime
 
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-if not GEMINI_API_KEY:
-    raise SystemExit("GEMINI_API_KEY environment variable is not set. Set it before running this script.")
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
+if not ANTHROPIC_API_KEY:
+    raise SystemExit("ANTHROPIC_API_KEY environment variable is not set. Set it before running this script.")
+CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5")
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 TO_EMAIL = os.environ.get("ADMIN_EMAILS", "lucas.l.cruz.es@gmail.com").split(",")[0].strip()
 APP_URL = os.environ.get("APP_URL", "https://acqlerate.com")
@@ -83,20 +84,25 @@ TOPICS = [
 ]
 
 
-def gemini_generate(prompt: str) -> str:
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+def claude_generate(prompt: str) -> str:
     payload = {
-        "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.75, "maxOutputTokens": 4096},
+        "model": CLAUDE_MODEL,
+        "max_tokens": 4096,
+        "temperature": 0.75,
+        "messages": [{"role": "user", "content": prompt}],
     }
     data = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
+    req = urllib.request.Request("https://api.anthropic.com/v1/messages", data=data, headers={
+        "content-type": "application/json",
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+    })
     try:
-        with urllib.request.urlopen(req, timeout=60) as resp:
+        with urllib.request.urlopen(req, timeout=120) as resp:
             result = json.loads(resp.read())
-            return result["candidates"][0]["content"]["parts"][0]["text"]
+            return "".join(b.get("text", "") for b in result.get("content", []) if b.get("type") == "text")
     except Exception as e:
-        print(f"Gemini error: {e}")
+        print(f"Claude error: {e}")
         sys.exit(1)
 
 
@@ -124,7 +130,7 @@ COMMUNITY QUESTION TO OPEN WITH: {topic['community_question']}
 
 Write only the post body — no title, no subreddit, no username."""
 
-    return gemini_generate(prompt).strip()
+    return claude_generate(prompt).strip()
 
 
 def send_email(post_body: str, topic: dict) -> bool:

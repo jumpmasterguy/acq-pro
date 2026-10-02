@@ -1,4 +1,5 @@
 import { useState } from "react";
+import AdminToday, { UserSheet } from "@/components/admin/AdminToday";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Shield, Users, Crown, UserX, RefreshCw, ChevronDown,
@@ -73,13 +74,17 @@ interface AnalyticsData {
 
 const statusColors: Record<string, string> = {
   lifetime: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400",
+  annual:   "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400",
+  trialing: "bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400",
   active:   "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400",
   free:     "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400",
 };
 
 const statusLabel: Record<string, string> = {
   lifetime: "Lifetime Pro",
+  annual:   "Annual Pro",
   active:   "Monthly Pro",
+  trialing: "Trial",
   free:     "Free",
 };
 
@@ -111,14 +116,16 @@ function formatMinutes(mins: number): string {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-type AdminTab = "users" | "analytics" | "referrals" | "newsletter" | "leads";
+type AdminTab = "today" | "users" | "analytics" | "referrals" | "newsletter" | "leads";
 
 export default function AdminPage() {
   const { toast } = useToast();
   const qc = useQueryClient();
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<AdminTab>("users");
+  // Phone: tapping a person opens the same sheet as the Today tab.
+  const [sheetUserId, setSheetUserId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<AdminTab>("today");
   const [sortField, setSortField] = useState<keyof AnalyticsUser>("xp");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [nlSubject, setNlSubject] = useState("");
@@ -136,6 +143,7 @@ export default function AdminPage() {
         if (!res.ok) throw new Error("Failed to fetch users");
         return res.json();
       },
+      enabled: activeTab === "users" || activeTab === "referrals",
     });
 
   const { data: analytics, isLoading: analyticsLoading, isError: analyticsError, refetch: refetchAnalytics } =
@@ -293,14 +301,14 @@ export default function AdminPage() {
 
   const userStats = {
     total: users.length,
-    pro: users.filter(u => u.subscriptionStatus === "active" || u.subscriptionStatus === "lifetime").length,
-    lifetime: users.filter(u => u.subscriptionStatus === "lifetime").length,
-    free: users.filter(u => u.subscriptionStatus === "free").length,
+    pro: users.filter(u => u.subscriptionStatus === "active" || u.subscriptionStatus === "annual" || u.subscriptionStatus === "lifetime").length,
+    trial: users.filter(u => u.subscriptionStatus === "trialing").length,
+    free: users.filter(u => !["active", "annual", "lifetime", "trialing"].includes(u.subscriptionStatus)).length,
   };
 
   const leadStats = {
     total: leads.length,
-    heroBar: leads.filter(l => l.source === "hero_bar").length,
+    heroBar: leads.filter(l => (l.source ?? "").startsWith("hero_bar")).length,
     exitIntent: leads.filter(l => l.source === "exit_intent").length,
     last7Days: leads.filter(l => {
       const created = new Date(l.createdAt).getTime();
@@ -349,13 +357,147 @@ export default function AdminPage() {
     return <span className="ml-1">{sortDir === "asc" ? "↑" : "↓"}</span>;
   }
 
+  // ── Row helpers (shared by the desktop table and the phone cards) ────────
+  const manageMenu = (user: AdminUser) => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={pendingId === user.id}
+          className="gap-1.5 h-7 text-xs"
+          data-testid={`admin-action-${user.id}`}
+        >
+          {pendingId === user.id ? (
+            <div className="w-3 h-3 border border-primary/30 border-t-primary rounded-full animate-spin" />
+          ) : (
+            <>Manage <ChevronDown className="w-3 h-3" /></>
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-48">
+        <DropdownMenuItem
+          onClick={() => makePro.mutate({ userId: user.id, plan: "lifetime" })}
+          className="gap-2 cursor-pointer"
+          data-testid={`admin-grant-lifetime-${user.id}`}
+        >
+          <Crown className="w-3.5 h-3.5 text-amber-500" />
+          Grant Lifetime Pro
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => makePro.mutate({ userId: user.id, plan: "annual" })}
+          className="gap-2 cursor-pointer"
+          data-testid={`admin-grant-annual-${user.id}`}
+        >
+          <Crown className="w-3.5 h-3.5 text-teal-500" />
+          Make Annual Pro (team seat)
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => makePro.mutate({ userId: user.id, plan: "active" })}
+        >
+          <Crown className="w-3.5 h-3.5" />
+          Make Monthly Pro
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={async () => {
+            await fetch(`/api/admin/users/${user.id}/grant-yearly-pro`, { method: 'POST', credentials: 'include' });
+            qc.invalidateQueries({ queryKey: ["/api/admin/users"] });
+            toast({ title: '1 Year Pro granted', description: `${user.email} has 1 year of Pro access` });
+          }}
+          className="gap-2 cursor-pointer"
+        >
+          <Crown className="w-3.5 h-3.5 text-emerald-500" />
+          Grant 1 Year Pro
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => makePro.mutate({ userId: user.id, plan: "active" })}
+          className="gap-2 cursor-pointer"
+        >
+          <Crown className="w-3.5 h-3.5" />
+          Grant Monthly Pro
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => makePro.mutate({ userId: user.id, plan: "free" })}
+          className="gap-2 cursor-pointer text-destructive focus:text-destructive"
+          data-testid={`admin-revoke-${user.id}`}
+        >
+          <UserX className="w-3.5 h-3.5" />
+          Revoke Pro (→ Free)
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => unlockSkillLevel.mutate({ userId: user.id, level: "intermediate" })}
+          className="gap-2 cursor-pointer"
+          data-testid={`admin-unlock-intermediate-${user.id}`}
+        >
+          <Unlock className="w-3.5 h-3.5 text-blue-500" />
+          Unlock Intermediate (All Modules)
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => unlockSkillLevel.mutate({ userId: user.id, level: "advanced" })}
+          className="gap-2 cursor-pointer"
+          data-testid={`admin-unlock-advanced-${user.id}`}
+        >
+          <Unlock className="w-3.5 h-3.5 text-violet-500" />
+          Unlock Advanced (All Modules)
+        </DropdownMenuItem>
+        {user.isAdmin ? (
+          <DropdownMenuItem
+            onClick={() => toggleAdmin.mutate({ userId: user.id, makeAdmin: false })}
+            className="gap-2 cursor-pointer"
+            data-testid={`admin-remove-admin-${user.id}`}
+          >
+            <ShieldOff className="w-3.5 h-3.5 text-muted-foreground" />
+            Remove Admin
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem
+            onClick={() => toggleAdmin.mutate({ userId: user.id, makeAdmin: true })}
+            className="gap-2 cursor-pointer"
+            data-testid={`admin-make-admin-${user.id}`}
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+            Make Admin
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuItem
+          onClick={() => setConfirmDeleteId(user.id)}
+          className="gap-2 cursor-pointer text-destructive focus:text-destructive font-semibold"
+          data-testid={`admin-delete-${user.id}`}
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+          Delete User
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+
+  const deleteConfirm = (user: AdminUser) => (
+    <div className="flex flex-wrap items-center gap-3">
+                              <span className="text-sm text-destructive font-semibold">Delete <strong>{user.username || user.email}</strong>? This cannot be undone.</span>
+                              <button
+                                onClick={() => deleteUser.mutate(user.id)}
+                                disabled={pendingId === user.id}
+                                className="px-3 py-1 bg-destructive text-white text-xs font-bold rounded-lg hover:bg-destructive/80 transition-colors disabled:opacity-50"
+                              >
+                                {pendingId === user.id ? 'Deleting…' : 'Yes, Delete'}
+                              </button>
+                              <button
+                                onClick={() => setConfirmDeleteId(null)}
+                                className="px-3 py-1 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+  );
+
   // ── Render ───────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-6" data-testid="admin-page">
+    <div className="space-y-5 sm:space-y-6" data-testid="admin-page">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <div className="hidden sm:flex items-center justify-between">
+        {/* Phones already show "Admin" in the top bar. */}
+        <div className="hidden sm:flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
             <Shield className="w-5 h-5 text-primary" />
           </div>
@@ -364,7 +506,7 @@ export default function AdminPage() {
             <p className="text-sm text-muted-foreground">Manage users &amp; engagement analytics</p>
           </div>
         </div>
-        <Button
+        {activeTab !== "today" && <Button
           variant="outline"
           size="sm"
           onClick={() => { refetchUsers(); if (activeTab === "analytics") refetchAnalytics(); if (activeTab === "leads") refetchLeads(); }}
@@ -373,14 +515,28 @@ export default function AdminPage() {
         >
           <RefreshCw className="w-3.5 h-3.5" />
           Refresh
-        </Button>
+        </Button>}
       </div>
 
       {/* Tab Bar */}
-      <div className="flex border-b border-border">
+      <div className="flex border-b border-border overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 max-sm:!mt-0 [scrollbar-width:none]">
+        <button
+          onClick={() => setActiveTab("today")}
+          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
+            activeTab === "today"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+          data-testid="admin-tab-today"
+        >
+          <span className="flex items-center gap-1.5">
+            <Zap className="w-4 h-4" />
+            Today
+          </span>
+        </button>
         <button
           onClick={() => setActiveTab("users")}
-          className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
             activeTab === "users"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground"
@@ -394,7 +550,7 @@ export default function AdminPage() {
         </button>
         <button
           onClick={() => setActiveTab("analytics")}
-          className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
             activeTab === "analytics"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground"
@@ -408,7 +564,7 @@ export default function AdminPage() {
         </button>
         <button
           onClick={() => setActiveTab("referrals")}
-          className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
             activeTab === "referrals"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground"
@@ -421,7 +577,7 @@ export default function AdminPage() {
         </button>
         <button
           onClick={() => setActiveTab("newsletter")}
-          className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
             activeTab === "newsletter"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground"
@@ -435,7 +591,7 @@ export default function AdminPage() {
         </button>
         <button
           onClick={() => setActiveTab("leads")}
-          className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
             activeTab === "leads"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground"
@@ -449,23 +605,26 @@ export default function AdminPage() {
         </button>
       </div>
 
+      {/* ── TODAY TAB (phone-first) ──────────────────────────────────────────── */}
+      {activeTab === "today" && <AdminToday />}
+
       {/* ── USERS TAB ────────────────────────────────────────────────────────── */}
       {activeTab === "users" && (
         <>
           {/* Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-4 gap-2 sm:gap-3">
             {[
-              { label: "Total Users",  value: userStats.total,    icon: Users,  color: "text-blue-500" },
-              { label: "Pro Users",    value: userStats.pro,      icon: Crown,  color: "text-amber-500" },
-              { label: "Lifetime",     value: userStats.lifetime, icon: Crown,  color: "text-emerald-500" },
-              { label: "Free",         value: userStats.free,     icon: UserX,  color: "text-slate-400" },
+              { label: "Total",    value: userStats.total, icon: Users,  color: "text-blue-500" },
+              { label: "Paying",   value: userStats.pro,   icon: Crown,  color: "text-amber-500" },
+              { label: "On trial", value: userStats.trial, icon: Clock,  color: "text-sky-500" },
+              { label: "Free",     value: userStats.free,  icon: UserX,  color: "text-slate-400" },
             ].map(({ label, value, icon: Icon, color }) => (
-              <div key={label} className="bg-card border border-border rounded-xl p-4 space-y-1">
-                <div className={`flex items-center gap-1.5 text-xs font-medium ${color}`}>
-                  <Icon className="w-3.5 h-3.5" />
+              <div key={label} className="bg-card border border-border rounded-xl p-2.5 sm:p-4 space-y-1 min-w-0">
+                <div className={`flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-xs font-medium truncate ${color}`}>
+                  <Icon className="w-3.5 h-3.5 flex-shrink-0" />
                   {label}
                 </div>
-                <div className="text-2xl font-bold text-foreground">{value}</div>
+                <div className="text-xl sm:text-2xl font-bold text-foreground">{value}</div>
               </div>
             ))}
           </div>
@@ -475,10 +634,9 @@ export default function AdminPage() {
             <div className="flex items-start gap-3">
               <Crown className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
               <div className="text-sm">
-                <span className="font-semibold text-foreground">Granting lifetime access:</span>
+                <span className="font-semibold text-foreground">Quick fixes live on Today:</span>
                 <span className="text-muted-foreground ml-1">
-                  Find the user in the table below, click the action button in their row, and select "Grant Lifetime Pro".
-                  This immediately unlocks all content — no payment needed.
+                  Pro days, streaks and reset links are on the Today tab. Use Manage here for plan changes, admin rights and deleting an account.
                 </span>
               </div>
             </div>
@@ -508,7 +666,30 @@ export default function AdminPage() {
               </div>
             )}
             {!usersLoading && !usersError && users.length > 0 && (
-              <div className="overflow-x-auto">
+              <div className="sm:hidden divide-y divide-border" data-testid="admin-users-cards">
+                {users.map(user => (
+                  <div key={user.id} className="px-4 py-3">
+                    <div className="flex items-start gap-3">
+                      <button className="flex-1 min-w-0 text-left" onClick={() => setSheetUserId(user.id)}>
+                        <div className="font-semibold text-sm text-foreground truncate">{user.username || user.email}</div>
+                        <div className="text-xs text-muted-foreground truncate">{user.email}</div>
+                        <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+                          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${statusColors[user.subscriptionStatus] ?? statusColors.free}`}>
+                            {statusLabel[user.subscriptionStatus] ?? user.subscriptionStatus}
+                          </span>
+                          {user.isAdmin && <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium bg-emerald-500/10 text-emerald-600"><ShieldCheck className="w-3 h-3" /> Admin</span>}
+                          <span className="text-[11px] text-muted-foreground">{user.completedLessons} lessons</span>
+                        </div>
+                      </button>
+                      <div className="flex-shrink-0">{manageMenu(user)}</div>
+                    </div>
+                    {confirmDeleteId === user.id && <div className="mt-2.5 rounded-lg bg-destructive/5 border border-destructive/30 p-2.5">{deleteConfirm(user)}</div>}
+                  </div>
+                ))}
+              </div>
+            )}
+            {!usersLoading && !usersError && users.length > 0 && (
+              <div className="hidden sm:block overflow-x-auto">
                 <table className="w-full text-sm" data-testid="admin-users-table">
                   <thead>
                     <tr className="border-b border-border bg-muted/30">
@@ -550,129 +731,13 @@ export default function AdminPage() {
                           {user.completedLessons}
                         </td>
                         <td className="px-5 py-3.5 text-right">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                disabled={pendingId === user.id}
-                                className="gap-1.5 h-7 text-xs"
-                                data-testid={`admin-action-${user.id}`}
-                              >
-                                {pendingId === user.id ? (
-                                  <div className="w-3 h-3 border border-primary/30 border-t-primary rounded-full animate-spin" />
-                                ) : (
-                                  <>Manage <ChevronDown className="w-3 h-3" /></>
-                                )}
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48">
-                              <DropdownMenuItem
-                                onClick={() => makePro.mutate({ userId: user.id, plan: "lifetime" })}
-                                className="gap-2 cursor-pointer"
-                                data-testid={`admin-grant-lifetime-${user.id}`}
-                              >
-                                <Crown className="w-3.5 h-3.5 text-amber-500" />
-                                Grant Lifetime Pro
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => makePro.mutate({ userId: user.id, plan: "active" })}
-                              >
-                                <Crown className="w-3.5 h-3.5" />
-                                Make Monthly Pro
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={async () => {
-                                  await fetch(`/api/admin/users/${user.id}/grant-yearly-pro`, { method: 'POST', credentials: 'include' });
-                                  qc.invalidateQueries({ queryKey: ["/api/admin/users"] });
-                                  toast({ title: '1 Year Pro granted', description: `${user.email} has 1 year of Pro access` });
-                                }}
-                                className="gap-2 cursor-pointer"
-                              >
-                                <Crown className="w-3.5 h-3.5 text-emerald-500" />
-                                Grant 1 Year Pro
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => makePro.mutate({ userId: user.id, plan: "active" })}
-                                className="gap-2 cursor-pointer"
-                              >
-                                <Crown className="w-3.5 h-3.5" />
-                                Grant Monthly Pro
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => makePro.mutate({ userId: user.id, plan: "free" })}
-                                className="gap-2 cursor-pointer text-destructive focus:text-destructive"
-                                data-testid={`admin-revoke-${user.id}`}
-                              >
-                                <UserX className="w-3.5 h-3.5" />
-                                Revoke Pro (→ Free)
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => unlockSkillLevel.mutate({ userId: user.id, level: "intermediate" })}
-                                className="gap-2 cursor-pointer"
-                                data-testid={`admin-unlock-intermediate-${user.id}`}
-                              >
-                                <Unlock className="w-3.5 h-3.5 text-blue-500" />
-                                Unlock Intermediate (All Modules)
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => unlockSkillLevel.mutate({ userId: user.id, level: "advanced" })}
-                                className="gap-2 cursor-pointer"
-                                data-testid={`admin-unlock-advanced-${user.id}`}
-                              >
-                                <Unlock className="w-3.5 h-3.5 text-violet-500" />
-                                Unlock Advanced (All Modules)
-                              </DropdownMenuItem>
-                              {user.isAdmin ? (
-                                <DropdownMenuItem
-                                  onClick={() => toggleAdmin.mutate({ userId: user.id, makeAdmin: false })}
-                                  className="gap-2 cursor-pointer"
-                                  data-testid={`admin-remove-admin-${user.id}`}
-                                >
-                                  <ShieldOff className="w-3.5 h-3.5 text-muted-foreground" />
-                                  Remove Admin
-                                </DropdownMenuItem>
-                              ) : (
-                                <DropdownMenuItem
-                                  onClick={() => toggleAdmin.mutate({ userId: user.id, makeAdmin: true })}
-                                  className="gap-2 cursor-pointer"
-                                  data-testid={`admin-make-admin-${user.id}`}
-                                >
-                                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-                                  Make Admin
-                                </DropdownMenuItem>
-                              )}
-                              <DropdownMenuItem
-                                onClick={() => setConfirmDeleteId(user.id)}
-                                className="gap-2 cursor-pointer text-destructive focus:text-destructive font-semibold"
-                                data-testid={`admin-delete-${user.id}`}
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                                Delete User
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                          {manageMenu(user)}
                         </td>
                       </tr>
                       {confirmDeleteId === user.id && (
                         <tr className="border-b border-destructive/30 bg-destructive/5">
                           <td colSpan={5} className="px-5 py-3">
-                            <div className="flex items-center gap-3">
-                              <span className="text-sm text-destructive font-semibold">Delete <strong>{user.username || user.email}</strong>? This cannot be undone.</span>
-                              <button
-                                onClick={() => deleteUser.mutate(user.id)}
-                                disabled={pendingId === user.id}
-                                className="px-3 py-1 bg-destructive text-white text-xs font-bold rounded-lg hover:bg-destructive/80 transition-colors disabled:opacity-50"
-                              >
-                                {pendingId === user.id ? 'Deleting…' : 'Yes, Delete'}
-                              </button>
-                              <button
-                                onClick={() => setConfirmDeleteId(null)}
-                                className="px-3 py-1 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
-                              >
-                                Cancel
-                              </button>
-                            </div>
+                            {deleteConfirm(user)}
                           </td>
                         </tr>
                       )}
@@ -708,7 +773,7 @@ export default function AdminPage() {
           {analytics && (
             <>
               {/* Platform Summary Cards */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              <div className="grid grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
                 {[
                   { label: "Total Users",   value: analytics.aggregate.totalUsers,   icon: Users,     color: "text-blue-500",    bg: "bg-blue-500/10" },
                   { label: "Pro Users",     value: analytics.aggregate.proUsers,     icon: Crown,     color: "text-amber-500",   bg: "bg-amber-500/10" },
@@ -717,12 +782,12 @@ export default function AdminPage() {
                   { label: "Avg Lessons",   value: analytics.aggregate.avgLessons,   icon: BookOpen,  color: "text-sky-500",     bg: "bg-sky-500/10" },
                   { label: "Avg Mins",      value: formatMinutes(analytics.aggregate.avgMinutes), icon: Clock, color: "text-rose-500", bg: "bg-rose-500/10" },
                 ].map(({ label, value, icon: Icon, color, bg }) => (
-                  <div key={label} className="bg-card border border-border rounded-xl p-4 space-y-2">
-                    <div className={`w-7 h-7 rounded-lg ${bg} flex items-center justify-center`}>
+                  <div key={label} className="bg-card border border-border rounded-xl p-2.5 sm:p-4 space-y-1 sm:space-y-2 min-w-0">
+                    <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg ${bg} flex items-center justify-center`}>
                       <Icon className={`w-3.5 h-3.5 ${color}`} />
                     </div>
-                    <div className="text-xl font-bold text-foreground">{value}</div>
-                    <div className="text-xs text-muted-foreground">{label}</div>
+                    <div className="text-lg sm:text-xl font-bold text-foreground">{value}</div>
+                    <div className="text-[11px] sm:text-xs text-muted-foreground truncate">{label}</div>
                   </div>
                 ))}
               </div>
@@ -732,10 +797,9 @@ export default function AdminPage() {
                 <div className="flex items-start gap-3">
                   <Zap className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
                   <div className="text-sm">
-                    <span className="font-semibold text-foreground">XP Formula: </span>
+                    <span className="font-semibold text-foreground">XP here matches the app: </span>
                     <span className="text-muted-foreground">
-                      Lessons completed × 10 + avg quiz score × 5 + skill level unlocks × 50.
-                      XP is recalculated automatically when users complete lessons, quizzes, and assessments.
+                      100 per lesson, plus a tenth of each quiz score, plus Daily Challenge and Coach XP.
                     </span>
                   </div>
                 </div>
@@ -743,14 +807,30 @@ export default function AdminPage() {
 
               {/* Per-User Analytics Table */}
               <div className="bg-card border border-border rounded-xl overflow-hidden">
-                <div className="px-5 py-3.5 border-b border-border flex items-center justify-between">
-                  <h2 className="text-sm font-semibold text-foreground">User Engagement</h2>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-muted-foreground">{analytics.users.length} users · click column headers to sort</span>
+                <div className="px-4 sm:px-5 py-3.5 border-b border-border flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <h2 className="text-sm font-semibold text-foreground">User Engagement</h2>
+                    <p className="text-xs text-muted-foreground">{analytics.users.length} users<span className="hidden sm:inline"> · click column headers to sort</span></p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <select
+                      value={`${String(sortField)}:${sortDir}`}
+                      onChange={e => { const [f, d] = e.target.value.split(":"); setSortField(f as keyof AnalyticsUser); setSortDir(d as "asc" | "desc"); }}
+                      className="sm:hidden h-8 rounded-lg border border-border bg-background px-2 text-xs text-foreground"
+                      aria-label="Sort users"
+                      data-testid="analytics-sort"
+                    >
+                      <option value="lastLoginAt:desc">Last login</option>
+                      <option value="xp:desc">Most XP</option>
+                      <option value="completedLessons:desc">Most lessons</option>
+                      <option value="totalMinutesActive:desc">Most time</option>
+                      <option value="loginCount:desc">Most logins</option>
+                      <option value="avgQuizScore:desc">Best quiz avg</option>
+                    </select>
                     <Button
                       size="sm"
                       variant="outline"
-                      className="h-7 text-xs gap-1.5"
+                      className="hidden sm:inline-flex h-7 text-xs gap-1.5"
                       onClick={() => backfillLogins.mutate()}
                       disabled={backfillLogins.isPending}
                       title="Fix login records for users who registered before login tracking was added"
@@ -766,7 +846,39 @@ export default function AdminPage() {
                     No users yet.
                   </div>
                 ) : (
-                  <div className="overflow-x-auto">
+                  <>
+                  <div className="sm:hidden divide-y divide-border" data-testid="analytics-cards">
+                    {sortedAnalyticsUsers.map(user => (
+                      <button key={user.id} onClick={() => setSheetUserId(user.id)} className="w-full text-left px-4 py-3 active:bg-muted/50">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <div className="font-semibold text-sm text-foreground truncate">{user.username || user.email}</div>
+                            <div className="text-xs text-muted-foreground truncate">{user.email}</div>
+                          </div>
+                          <div className="text-right flex-shrink-0">
+                            <div className="text-xs font-semibold text-foreground">{user.lastLoginAt ? formatRelativeTime(user.lastLoginAt) : "Never"}</div>
+                            <span className={`inline-flex mt-1 items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${statusColors[user.subscriptionStatus] ?? statusColors.free}`}>
+                              {statusLabel[user.subscriptionStatus] ?? user.subscriptionStatus}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-4 gap-1.5 mt-2 text-center">
+                          {[
+                            { k: "XP", v: user.xp.toLocaleString(), c: "text-violet-600 dark:text-violet-400" },
+                            { k: "Lessons", v: user.completedLessons, c: "text-foreground" },
+                            { k: "Logins", v: user.loginCount, c: "text-foreground" },
+                            { k: "Time", v: formatMinutes(user.totalMinutesActive), c: "text-foreground" },
+                          ].map(({ k, v, c }) => (
+                            <div key={k} className="rounded-lg bg-muted/50 py-1.5">
+                              <div className={`text-sm font-bold tabular-nums ${c}`}>{v}</div>
+                              <div className="text-[10px] text-muted-foreground">{k}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="hidden sm:block overflow-x-auto">
                     <table className="w-full text-sm" data-testid="admin-analytics-table">
                       <thead>
                         <tr className="border-b border-border bg-muted/30">
@@ -903,6 +1015,7 @@ export default function AdminPage() {
                       </tbody>
                     </table>
                   </div>
+                  </>
                 )}
               </div>
 
@@ -927,7 +1040,44 @@ export default function AdminPage() {
             {usersLoading ? (
               <p className="text-sm text-muted-foreground p-5">Loading...</p>
             ) : (
-              <table className="w-full text-sm">
+              <>
+              <div className="sm:hidden divide-y divide-border">
+                {users.filter(u => (u.referralCount ?? 0) > 0).sort((a, b) => (b.referralCount ?? 0) - (a.referralCount ?? 0)).map(u => {
+                  const earned = Math.floor((u.referralCount ?? 0) / 2);
+                  const owes = earned - (u.referralRewardGranted ?? 0);
+                  return (
+                    <div key={u.id} className={`px-4 py-3 ${owes > 0 ? 'bg-amber-50/40 dark:bg-amber-900/10' : ''}`}>
+                      <div className="font-semibold text-sm truncate">{u.username}</div>
+                      <div className="text-xs text-muted-foreground truncate">{u.email}</div>
+                      <div className="flex items-center justify-between gap-2 mt-2">
+                        <div className="text-xs">
+                          <span className="font-bold text-primary">{u.referralCount}</span> referred · {earned} yr{earned !== 1 ? 's' : ''} earned ·{' '}
+                          {owes > 0 ? <span className="font-semibold text-amber-700 dark:text-amber-400">{owes} owed</span> : <span className="text-emerald-600 dark:text-emerald-400">up to date</span>}
+                        </div>
+                        {owes > 0 && (
+                          <button
+                            className="text-xs bg-primary text-primary-foreground px-3 py-1.5 rounded-lg font-semibold disabled:opacity-50 flex-shrink-0"
+                            disabled={pendingId === u.id}
+                            onClick={async () => {
+                              setPendingId(u.id);
+                              try {
+                                await fetch(`/api/admin/users/${u.id}/grant-yearly-pro`, { method: 'POST', credentials: 'include' });
+                                await refetchUsers();
+                                toast({ title: '1 Year Pro granted', description: `${u.email} now has 1 year of Pro access` });
+                              } catch { toast({ title: 'Error', description: 'Failed to grant Pro', variant: 'destructive' }); }
+                              finally { setPendingId(null); }
+                            }}
+                          >
+                            {pendingId === u.id ? 'Granting…' : 'Grant 1 yr'}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+                {users.filter(u => (u.referralCount ?? 0) > 0).length === 0 && <p className="px-4 py-8 text-center text-sm text-muted-foreground">No referrals yet.</p>}
+              </div>
+              <table className="hidden sm:table w-full text-sm">
                 <thead className="bg-muted/40">
                   <tr>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">User</th>
@@ -994,6 +1144,7 @@ export default function AdminPage() {
                   )}
                 </tbody>
               </table>
+              </>
             )}
           </div>
 
@@ -1006,7 +1157,30 @@ export default function AdminPage() {
             {usersLoading ? (
               <p className="text-sm text-muted-foreground p-5">Loading...</p>
             ) : (
-              <table className="w-full text-sm">
+              <>
+              <div className="sm:hidden divide-y divide-border">
+                {users.filter(u => u.referredBy).map(u => {
+                  const referrer = users.find(r => r.referralCode === u.referredBy);
+                  return (
+                    <div key={u.id} className="px-4 py-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="font-semibold text-sm truncate">{u.username}</div>
+                          <div className="text-xs text-muted-foreground truncate">{u.email}</div>
+                        </div>
+                        <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium flex-shrink-0 ${statusColors[u.subscriptionStatus] ?? statusColors.free}`}>
+                          {statusLabel[u.subscriptionStatus] ?? 'Free'}
+                        </span>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1.5">
+                        Via <code className="bg-muted px-1 rounded">{u.referredBy}</code>{referrer ? ` from ${referrer.username}` : ''}
+                      </div>
+                    </div>
+                  );
+                })}
+                {users.filter(u => u.referredBy).length === 0 && <p className="px-4 py-8 text-center text-sm text-muted-foreground">No referred signups yet.</p>}
+              </div>
+              <table className="hidden sm:table w-full text-sm">
                 <thead className="bg-muted/40">
                   <tr>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">User</th>
@@ -1053,6 +1227,7 @@ export default function AdminPage() {
                   )}
                 </tbody>
               </table>
+              </>
             )}
           </div>
 
@@ -1159,7 +1334,7 @@ export default function AdminPage() {
 
           {/* Leads Table */}
           <div className="bg-card border border-border rounded-xl overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-border flex items-center justify-between">
+            <div className="px-4 sm:px-5 py-3.5 border-b border-border flex items-center justify-between">
               <h2 className="text-sm font-semibold text-foreground">All Leads</h2>
               <div className="flex items-center gap-3">
                 <span className="text-xs text-muted-foreground">{leads.length} total</span>
@@ -1199,7 +1374,7 @@ export default function AdminPage() {
                   <thead>
                     <tr className="border-b border-border bg-muted/30">
                       <th className="text-left px-5 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Email</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Source</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide hidden sm:table-cell">Source</th>
                       <th className="text-right px-5 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Captured</th>
                     </tr>
                   </thead>
@@ -1210,13 +1385,16 @@ export default function AdminPage() {
                         className={`border-b border-border last:border-0 hover:bg-muted/20 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}
                         data-testid={`admin-lead-row-${lead.id}`}
                       >
-                        <td className="px-5 py-3.5 font-medium text-foreground">{lead.email}</td>
-                        <td className="px-4 py-3.5">
+                        <td className="px-4 sm:px-5 py-3.5 font-medium text-foreground break-all">
+                          {lead.email}
+                          <div className="sm:hidden text-[11px] font-normal text-muted-foreground mt-0.5">{lead.source ?? "unknown"}</div>
+                        </td>
+                        <td className="px-4 py-3.5 hidden sm:table-cell">
                           <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-muted text-muted-foreground">
                             {lead.source ?? "unknown"}
                           </span>
                         </td>
-                        <td className="px-5 py-3.5 text-right text-muted-foreground">
+                        <td className="px-4 sm:px-5 py-3.5 text-right text-muted-foreground whitespace-nowrap text-xs sm:text-sm">
                           {new Date(lead.createdAt).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}
                         </td>
                       </tr>
@@ -1228,6 +1406,8 @@ export default function AdminPage() {
           </div>
         </>
       )}
+
+      {sheetUserId && <UserSheet id={sheetUserId} onClose={() => setSheetUserId(null)} />}
     </div>
   );
 }

@@ -20,12 +20,23 @@ export default function InstallPrompt() {
         (window.navigator as any).standalone === true;
 
       if (isStandalone) { setIsInstalled(true); return; }
+      // Inside the real app: never offer a home-screen copy.
+      if ((window as any).Capacitor?.isNativePlatform?.()) { setIsInstalled(true); return; }
       if (sessionStorage.getItem("pwa-prompt-dismissed")) { setDismissed(true); return; }
 
       const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 
-      const handler = (e: Event) => {
+      const handler = async (e: Event) => {
         e.preventDefault();
+        // If the Android app is already on this phone, don't offer a second
+        // (web) copy. Chrome knows via related_applications in manifest.json.
+        try {
+          const nav = navigator as any;
+          if (typeof nav.getInstalledRelatedApps === "function") {
+            const apps = await nav.getInstalledRelatedApps();
+            if (Array.isArray(apps) && apps.length > 0) { setIsInstalled(true); return; }
+          }
+        } catch {}
         setDeferredPrompt(e as BeforeInstallPromptEvent);
       };
       window.addEventListener("beforeinstallprompt", handler);

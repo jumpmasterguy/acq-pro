@@ -1,0 +1,56 @@
+name: Video fetch (Higgsfield clips)
+# Manual only. Downloads generated clips/images from Higgsfield's CDN onto the
+# 'video-assets' branch (media/<batch>/) so the editor can assemble them.
+on:
+  workflow_dispatch:
+    inputs:
+      batch:
+        description: "Folder name, e.g. hank-heist-bakeoff"
+        required: true
+      urls:
+        description: "Space-separated list of name=https://... pairs"
+        required: true
+
+concurrency:
+  group: video-assets-write
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - name: Download
+        env:
+          URLS: ${{ inputs.urls }}
+          BATCH: ${{ inputs.batch }}
+        run: |
+          set -euo pipefail
+          case "$BATCH" in *[!A-Za-z0-9._-]*) echo "bad batch name"; exit 1;; esac
+          mkdir -p "/tmp/media/$BATCH"
+          for pair in $URLS; do
+            name="${pair%%=*}"; url="${pair#*=}"
+            case "$name" in *[!A-Za-z0-9._-]*) echo "bad name $name"; exit 1;; esac
+            case "$url" in https://*.cloudfront.net/*|https://*.higgsfield.ai/*) ;; *) echo "refusing non-Higgsfield URL: $url"; exit 1;; esac
+            curl -fsSL --max-time 300 -o "/tmp/media/$BATCH/$name" "$url"
+            echo "$name $(stat -c%s "/tmp/media/$BATCH/$name") bytes"
+          done
+      - name: Save to the video-assets branch
+        env:
+          BATCH: ${{ inputs.batch }}
+        run: |
+          git config user.name  "Acqlerate Video Bot"
+          git config user.email "video-bot@acqlerate.com"
+          git fetch -q origin video-assets
+          git worktree add -q /tmp/va -B video-assets origin/video-assets
+          find /tmp/va -mindepth 1 -maxdepth 1 ! -name .git ! -name vo ! -name media -exec rm -rf {} +
+          mkdir -p /tmp/va/media
+          rm -rf "/tmp/va/media/$BATCH"
+          cp -r "/tmp/media/$BATCH" "/tmp/va/media/$BATCH"
+          cd /tmp/va
+          git add -A
+          git commit -qm "media: $BATCH (run ${{ github.run_number }})" || echo "nothing changed"
+          git push -q origin video-assets

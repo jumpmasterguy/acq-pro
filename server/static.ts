@@ -1,6 +1,7 @@
 import express, { type Express, type Request, type Response } from "express";
 import fs from "fs";
 import path from "path";
+import { applyPricingWindow } from "@shared/pricing";
 
 export function serveStatic(app: Express) {
   const distPath = path.resolve(__dirname, "public");
@@ -19,11 +20,22 @@ export function serveStatic(app: Express) {
     next();
   });
 
-  // Helper: send file with no-cache headers to bust Cloudflare edge cache
+  // Helper: send file with no-cache headers to bust Cloudflare edge cache.
+  // HTML pages that carry both price sets (<!--pricing:legacy/new--> fences,
+  // see shared/pricing.ts) are sent with only the current set, so the
+  // 1 Oct 2026 price change happens on the clock rather than on a deploy.
   const sendNoCache = (res: Response, filePath: string) => {
     res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     res.setHeader("Pragma", "no-cache");
     res.setHeader("Expires", "0");
+    if (filePath.endsWith(".html")) {
+      let html: string;
+      try { html = fs.readFileSync(filePath, "utf8"); } catch { return res.sendFile(filePath); }
+      if (html.includes("<!--pricing:")) {
+        res.type("html");
+        return res.send(applyPricingWindow(html));
+      }
+    }
     return res.sendFile(filePath);
   };
 
@@ -62,6 +74,12 @@ export function serveStatic(app: Express) {
       return sendNoCache(res, filePath);
     }
     return res.redirect("/");
+  });
+
+  // /clp and /clps: the words people type. The CLP half of the page is at
+  // /pdu#clps (the nav calls it "CLPs & PDUs").
+  app.get(["/clp", "/clp/", "/clps", "/clps/"], (_req: Request, res: Response) => {
+    res.redirect(301, "/pdu#clps");
   });
 
   // /products/* — serve product landing pages and success pages
@@ -120,10 +138,17 @@ export function serveStatic(app: Express) {
     'idiqs-task-orders-win-big-in-defenses-contract-powerhouse': 'mastering-idiqs-your-2025-2026-playbook-for-winning-defense-task-orders',
     'defense-pm-your-2026-playbook-for-certs-skills-timeline': 'what-it-actually-takes-to-become-a-defense-program-manager-in-2026',
     'fy26-dod-contracts-pentagons-big-bets-what-they-mean': 'decoding-dods-latest-spends-fy26-contracts-point-to-future-priorities',
+    // The generator's own duplicate, 21 Sep 2026: its 16-topic rotation had no idea
+    // what was already published, so it wrote a 4th cost-plus vs fixed-price post.
+    // Retired in favour of the existing dedicated post; scripts/dupe_guard.py now
+    // blocks this class of post before it is written.
+    'cost-plus-vs-fixed-price-who-really-eats-the-overrun': 'the-contract-choice-fixed-price-vs-cost-plus-in-dod-acquisition',
     // Duplicate-intent merges, 2026-09-13.
     'the-dods-workforce-gap-your-call-to-a-critical-career': 'dods-1102-shortage-your-gateway-to-a-high-impact-career',
     'otas-in-2026-what-the-15b-surge-means-for-your-defense-business': 'dods-ota-surge-in-2026-what-defense-contractors-need-to-know-now',
     'acat-levels-explained': 'acat-levels-your-programs-blueprint-for-oversight-and-management',
+    // Old Section L vs M slug, still in Google's index (GSC 404 report, 22 Sep 2026).
+    'section-l-vs-section-m-proposal': 'the-silent-killer-of-your-defense-proposal-the-section-l-vs-section-m-mismatch',
   };
 
   app.get("/blog/:slug", (req: Request, res: Response) => {
@@ -149,6 +174,11 @@ export function serveStatic(app: Express) {
     res.status(404);
     return sendNoCache(res, path.resolve(distPath, "blog", "index.html"));
   });
+
+  // Every template pack's license note points buyers to acqlerate.com/team.
+  // The team page lives at /teams, so send the shorter URL there instead of
+  // letting it fall through to the app. /team/success is registered above.
+  app.get(["/team", "/team/"], (_req: Request, res: Response) => res.redirect(301, "/teams"));
 
   // Static informational pages
   const staticPages = ['terms', 'privacy', 'teams', 'sitemap', 'pay-guide', 'tools', 'why'];
@@ -197,6 +227,16 @@ export function serveStatic(app: Express) {
       return res.status(404).send("Not found");
     }
     next();
+  });
+
+  // Any other .html reached by its raw path (/landing.html, /blog/x.html,
+  // /products/<pack>/index.html) goes through the same price switch, so no
+  // URL shows both price sets.
+  app.use((req: Request, res: Response, next) => {
+    if (req.method !== "GET" || !req.path.endsWith(".html")) return next();
+    const filePath = path.resolve(distPath, "." + decodeURIComponent(req.path));
+    if (!filePath.startsWith(distPath + path.sep) || !fs.existsSync(filePath)) return next();
+    return sendNoCache(res, filePath);
   });
 
   // Serve all other static assets (JS, CSS, images, etc.)

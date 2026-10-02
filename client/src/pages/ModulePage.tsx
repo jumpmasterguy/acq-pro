@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
-import { modules, type SkillLevel } from "@/lib/curriculum";
+import { modules, type SkillLevel } from "@/lib/curriculumMeta";
 import { getModuleProgress, FREE_MODULES, FREE_PREVIEW_LESSONS } from "@/lib/progress";
 import { getTrackData, sortLessonsByTrack, type CareerTrackId } from "@/lib/careerTracks";
-import { getModuleTheme } from "@/lib/moduleTheme";
+import { getModuleTheme, getModuleFamilyTheme } from "@/lib/moduleTheme";
 import { apiRequest } from "@/lib/queryClient";
 import type { UserProgress } from "@/lib/progress";
 import { ArrowLeft, Clock, CheckCircle, Lock, ChevronRight, BookOpen, Trophy, Target, Award, Download, FileText, Headphones } from "lucide-react";
@@ -11,11 +11,13 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { isNativeApp } from "@/lib/platform";
+import { useDocumentViewer } from "@/components/DocumentViewerProvider";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { moduleGradient } from "@/lib/moduleTheme";
-import { getTotalLessons } from "@/lib/curriculum";
+import { getTotalLessons } from "@/lib/curriculumMeta";
 import { formatClps, moduleClps } from "@shared/moduleClps";
 import { SkillLevelPill, ResourceRow, LessonRow } from "@/components/mobile/ModulePieces";
+import { topPlanName, upgradeCtaSuffix } from "@shared/pricing";
 
 const LEVEL_LABELS: Record<SkillLevel, string> = {
   novice: 'Novice',
@@ -43,6 +45,7 @@ interface ModulePageProps {
 }
 
 export default function ModulePage({ moduleId, progress, onBack, onSelectLesson, onUpgrade, unlockedLevel = 'novice', onOpenAssessment, activeCareer }: ModulePageProps) {
+  const { openDocument } = useDocumentViewer();
   const isMobile = useIsMobile();
   const mod = modules.find(m => m.id === moduleId);
   if (!mod) return null;
@@ -64,10 +67,12 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
   // isActuallyPaid — NOT progress.isPremium, which is also true mid-trial.
   // The Debrief audio stays Pro-only on every module, Module 1 included —
   // it's streamed, not downloaded, so it carries no such risk.
-  const canDownloadPdf = FREE_MODULES.includes(mod.id) || progress.isActuallyPaid;
+  // Downloads are an Annual/Lifetime perk from the 1 Oct 2026 pricing
+  // (shared/pricing.ts): Monthly streams everything but doesn't keep files.
+  const canDownloadPdf = FREE_MODULES.includes(mod.id) || progress.hasTopPlan;
   const canListenAudio = progress.isPremium;
   const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
-  const theme = getModuleTheme(mod.color);
+  const theme = getModuleFamilyTheme(mod.id);
   // Fires once per page visit, on the first play — not on every pause/resume
   // — so a listener replaying a section doesn't inflate the play count.
   const hasLoggedAudioPlay = useRef(false);
@@ -132,7 +137,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
 
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <SkillLevelPill level={unlockedLevel} onDark />
-                {mod.assessment?.length ? (
+                {mod.assessmentCount ? (
                   <button
                     type="button"
                     onClick={onOpenAssessment}
@@ -169,15 +174,16 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
           locked={!canDownloadPdf}
           action={
             canDownloadPdf && mod.pdfUrl ? (
-              <a
-                href={mod.pdfUrl}
+              <button
+                type="button"
+                onClick={() => openDocument({ url: mod.pdfUrl!, title: `Lesson Book: ${mod.title}` })}
                 className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-bold text-white"
                 style={{ background: theme.mobileHex }}
                 data-testid="module-pdf-download"
               >
-                <Download className="h-3 w-3" strokeWidth={2} />
-                Download PDF
-              </a>
+                <FileText className="h-3 w-3" strokeWidth={2} />
+                View PDF
+              </button>
             ) : (
               <button
                 type="button"
@@ -257,7 +263,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                 seq={i + 1}
                 state={state}
                 isLast={i === sortedLessons.length - 1}
-                moduleColor={mod.color}
+                moduleId={mod.id}
                 isFreePreview={isFreePreview && !isAccessible}
                 onOpen={() => (lessonLocked ? onUpgrade() : onSelectLesson(lesson.id))}
               />
@@ -365,7 +371,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                   </a>
                 )}
                 {/* Skill level badge + assessment button */}
-                {mod.assessment?.length ? (
+                {mod.assessmentCount ? (
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 border border-white/25 px-2.5 py-1 text-xs font-bold text-white">
                       {unlockedLevel === 'advanced'
@@ -418,21 +424,20 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
             <p className="text-sm font-semibold">Lesson Book</p>
             <p className="text-xs text-muted-foreground mb-2">The full module as a printable PDF.</p>
             {canDownloadPdf && mod.pdfUrl ? (
-              <a
-                href={mod.pdfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => openDocument({ url: mod.pdfUrl!, title: `Lesson Book: ${mod.title}` })}
                 className={cn('inline-flex items-center gap-1.5 text-xs font-semibold hover:underline', theme.text)}
                 data-testid="download-lesson-book"
               >
-                <Download className="w-3.5 h-3.5" /> Download PDF
-              </a>
+                <FileText className="w-3.5 h-3.5" /> View PDF
+              </button>
             ) : (
               <button
                 onClick={onUpgrade}
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary"
               >
-                <Lock className="w-3.5 h-3.5" /> Unlock to download
+                <Lock className="w-3.5 h-3.5" /> {isNativeApp() ? "Unlock to download" : `Download with ${topPlanName()}`}
               </button>
             )}
           </div>
@@ -509,8 +514,8 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                 const isCompleted = progress.completedLessons.has(lesson.id);
                 const isFreePreview = FREE_PREVIEW_LESSONS.includes(lesson.id);
                 const isLocked = !isAccessible && !isFreePreview;
-                const hasQuiz = (lesson.quiz?.length ?? 0) > 0;
-                const termCount = lesson.keyTerms?.length ?? 0;
+                const hasQuiz = lesson.quizCount > 0;
+                const termCount = lesson.termCount;
 
                 return (
                   <React.Fragment key={lesson.id}>
@@ -606,7 +611,7 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
                         {/* Quiz */}
                         {hasQuiz && (
                           <span className="inline-flex items-center gap-1 text-[11px] font-medium bg-muted/60 text-muted-foreground rounded-full px-2 py-0.5">
-                            ✦ {lesson.quiz!.length} quiz
+                            ✦ {lesson.quizCount} quiz
                           </span>
                         )}
                         {/* Free preview badge */}
@@ -639,11 +644,11 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
           <h3 className="font-semibold mb-2">This Module Requires Pro Access</h3>
           <p className="text-sm text-muted-foreground mb-4">
             Unlock all {modules.reduce((sum, m) => sum + m.lessons.length, 0)} lessons across all modules 
-            with a one-time Pro upgrade.
+            with Pro.
           </p>
           <Button onClick={onUpgrade} data-testid="module-upgrade-btn">
             {/* No price on native — App Store 3.1.1. */}
-            {isNativeApp() ? "Upgrade to Pro" : "Upgrade to Pro — $99 lifetime"}
+            {isNativeApp() ? "Upgrade to Pro" : `Upgrade to Pro, ${upgradeCtaSuffix()}`}
           </Button>
         </div>
       )}

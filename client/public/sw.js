@@ -1,6 +1,9 @@
-// Acqlerate Service Worker v4 — PWA with offline lesson support
-// Cache version bumped on every deploy to bust stale content
-const CACHE_VERSION = 'acqlerate-v4';
+// Acqlerate Service Worker v5 — PWA with offline lesson support
+// Bump CACHE_VERSION whenever a file in APP_SHELL changes (icons, manifest).
+// Images are served cache-first, so without a bump returning visitors keep
+// the old file forever: v4 kept serving the pre-19 Sep flat logo after the
+// 3D icon shipped, because the files kept their names.
+const CACHE_VERSION = 'acqlerate-v5';
 const LESSON_CACHE = 'acqlerate-lessons-v4';
 
 // Core app shell — cached on install for offline access
@@ -20,7 +23,9 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_VERSION).then((cache) => {
       // Pre-cache app shell — failures are non-fatal (some may 404)
       return Promise.allSettled(
-        APP_SHELL.map(url => cache.add(url).catch(() => {}))
+        // cache: 'reload' skips the browser's HTTP cache, so a fresh
+        // install never re-caches a stale copy of an icon.
+        APP_SHELL.map(url => cache.add(new Request(url, { cache: 'reload' })).catch(() => {}))
       );
     }).then(() => self.skipWaiting())
   );
@@ -41,6 +46,10 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
+
+  // ── Audio (Debrief previews, anything streamed with Range): leave to the
+  // browser. A 206 partial response can't go in the Cache API. ──────────────
+  if (url.pathname.startsWith('/audio-preview/') || request.headers.has('range')) return;
 
   // ── API calls: always network-only ──────────────────────────────────────
   if (url.pathname.startsWith('/api/')) {

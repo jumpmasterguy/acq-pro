@@ -10,14 +10,28 @@ import { excludeInternalAccounts } from "./internalAccounts";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { verifyAppleIdentityToken } from "./appleAuth";
 import { registerSchema, loginSchema, userProfileSchema, updateNameSchema } from "@shared/schema";
-import { hasPaidPlan, hasFullAccess } from "@shared/access";
+import { hasPaidPlan, hasFullAccess, isPaidStatus, isTopPlanStatus, canDownloadLessonBooks, PACK_BONUS_PACKS } from "@shared/access";
+import { isNewPricing, topPlanName, planPrice, type PlanType } from "@shared/pricing";
+import { grantPackBonus, packBonusStatus } from "./packBonus";
 import { MODULE_CLPS } from "@shared/moduleClps";
-import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken, sendPurchaseAdminAlert, sendSubscriptionCancelledAdminAlert, sendPasswordResetEmail } from "./email";
+import { MODULE_FUNCTIONAL_AREAS } from "@shared/moduleClps.generated";
+import { syncCompletions, moduleOfLesson, certificateName, formatCertDate, buildLedger, ledgerCsv, type ModuleCompletions } from "./credentials";
+import { sendWelcomeEmail, sendStarterKitEmail, processDripEmails, sendAdminNotification, sendLeadNurtureEmail, sendAdminLeadNotification, verifyUnsubscribeToken, sendPurchaseAdminAlert, sendSubscriptionCancelledAdminAlert, sendPasswordResetEmail, sendPackPurchaseEmail } from "./email";
 import { scanForTimingTraps, type TimingFinding } from "./farTimingScanner";
+import { askClaude, aiConfigured, AiError } from "./ai";
+import { explainMistake, gradeTeachBack, lessonTextById, COACH_MODELS, CoachError, TEACH_BACK_XP, TEACH_BACK_MIN_CHARS, TEACH_BACK_MAX_CHARS } from "./coach";
 import { costTrackerStorage } from "./costTrackerStorage";
 import { reportCheckoutFailure } from "./stripeHealth";
+import { getSeoStats } from "./searchConsole";
+import { recordCheckoutStart, listCheckoutStarts, teamDealsByMonth, trialCheckoutCounts, CHECKOUT_GRACE_DAYS } from "./checkoutStarts";
 import { sendOpsAlertEmail } from "./email";
+import { issuePasswordReset } from "./passwordReset";
+import { registerAdminMobileRoutes } from "./adminMobile";
+import { applySignupReferral, cleanReferralCode, grantProYear } from "./referrals";
 import { dailyChallengeQuestionBank } from "./dailyChallengeQuestions";
+import { buildLeaderboards, type LeaderboardRow } from "./leaderboard";
+import { weekRollPatch, computeUserXp } from "@shared/xp";
+import { renderCertificate } from "./certificate";
 import {
   summarizeProject, aggregateSummaries, createProjectSchema, createFundingModSchema,
   createCostEntrySchema, updateRatesSchema, createTaskOrderSchema, setProjectTaskOrderSchema,
@@ -30,7 +44,14 @@ const stripe = stripeSecretKey
   : null;
 
 const STRIPE_PRICE_LIFETIME = process.env.STRIPE_PRICE_ID_LIFETIME;
+// $5.99 Monthly. Sold until the pricing switch (shared/pricing.ts); anyone
+// subscribed on it keeps it, because Stripe never moves an existing
+// subscription to a new price on its own.
 const STRIPE_PRICE_MONTHLY = process.env.STRIPE_PRICE_ID_MONTHLY;
+// From the switch: $14.99 Monthly, $149 Annual, $999/yr Team (10 Annual seats).
+const STRIPE_PRICE_MONTHLY_2026 = process.env.STRIPE_PRICE_ID_MONTHLY_2026;
+const STRIPE_PRICE_ANNUAL = process.env.STRIPE_PRICE_ID_ANNUAL;
+const STRIPE_PRICE_TEAM_ANNUAL = process.env.STRIPE_PRICE_ID_TEAM_ANNUAL;
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 
 // ── Template pack price IDs (set in Railway env vars) ─────────────────────────
@@ -57,7 +78,8 @@ const PACK_FILES: Record<string, string[]> = {
     "pm-essentials-workbook.xlsx",
     "pm-briefing-deck.pptx",
     // Legacy files kept so download links issued before the Sept 2026
-    // rebuild keep working. Not listed on the product page.
+    // rebuild keep working. Not listed on the product page, the success
+    // page or the delivery email (see PACK_LEGACY_FILES).
     "rfp-compliance-matrix.xlsx",
     "risk-register.xlsx",
     "igce-calculator.xlsx",
@@ -77,12 +99,71 @@ const PACK_FILES: Record<string, string[]> = {
   ],
   "finance-cheat-sheets": [
     "pack-guide.pdf",
-    "ppbe-cycle-one-pager.xlsx",
-    "color-of-money-decision-tree.xlsx",
-    "evm-formulas-quick-reference.xlsx",
+    "ppbe-cycle-one-pager.pdf",
+    "color-of-money-decision-tree.pdf",
+    "evm-formulas-quick-reference.pdf",
     "wrap-rate-breakdown.xlsx",
   ],
 };
+
+// Files still downloadable with an old token but no longer part of the pack.
+// Hidden from the success page and the delivery email so a buyer sees what
+// the product page lists, not files the Pack Guide says were retired.
+const PACK_LEGACY_FILES: Record<string, string[]> = {
+  "pm-essentials": ["rfp-compliance-matrix.xlsx", "risk-register.xlsx", "igce-calculator.xlsx", "stakeholder-raci.xlsx"],
+};
+
+function currentPackFiles(pack: string): string[] {
+  const legacy = PACK_LEGACY_FILES[pack] || [];
+  return (PACK_FILES[pack] || []).filter(f => !legacy.includes(f));
+}
+
+// Short names for the delivery email subject and body.
+const PACK_DISPLAY_NAMES: Record<string, string> = {
+  "pm-essentials":        "PM Essentials",
+  "proposal-toolkit":     "GovCon Proposal Toolkit",
+  "cpars-playbook":       "CPARS Playbook",
+  "finance-cheat-sheets": "Finance Cheat Sheets",
+};
+
+const PACK_FILE_LABELS: Record<string, string> = {
+  "pack-guide.pdf":                  "Pack Guide (PDF, read first)",
+  "pm-essentials-workbook.xlsx":     "PM Essentials Workbook (Excel)",
+  "pm-briefing-deck.pptx":           "PM Briefing Deck (PowerPoint)",
+  "cpars-playbook.xlsx":             "CPARS Playbook Workbook (Excel)",
+  "proposal-compliance-matrix.xlsx": "Proposal Compliance Matrix (Excel)",
+  "section-lm-decoder.xlsx":         "Section L/M Decoder + Phrase Library (Excel)",
+  "win-theme-development.xlsx":      "Win Theme Development (Excel)",
+  "past-performance-template.xlsx":  "Past Performance Write-Up Template (Excel)",
+  "pricing-volume-checklist.xlsx":   "Pricing Checklist + Cost Realism Self-Check (Excel)",
+};
+
+function packFileLabel(f: string): string {
+  return PACK_FILE_LABELS[f]
+    || f.replace(/-/g, " ").replace(/\.xlsx$/, " (Excel)").replace(/\.pptx$/, " (PowerPoint)").replace(/\.pdf$/, " (PDF)");
+}
+
+// Pack files that changed format. Three finance cheat sheets moved from .xlsx
+// to watermarked .pdf in Sept 2026 (scripts/pack3/build_pack3_pdfs.py). Old
+// links in emails, bookmarks and search results redirect to the new file
+// instead of breaking.
+const MOVED_PACK_FILES: Record<string, string> = {
+  "ppbe-cycle-one-pager.xlsx": "ppbe-cycle-one-pager.pdf",
+  "color-of-money-decision-tree.xlsx": "color-of-money-decision-tree.pdf",
+  "evm-formulas-quick-reference.xlsx": "evm-formulas-quick-reference.pdf",
+};
+
+// The welcome email goes out the moment an account is created (email, Apple or
+// Google), and day 0 is marked sent so the daily drip job doesn't send it a
+// second time. Before this, email/password signups got the welcome twice and
+// Google/Apple signups waited up to a day for it.
+function sendWelcomeAtSignup(u: { id: string; email: string; username: string; trialEndsAt?: any; sentEmailDays?: any }): void {
+  const sent = Array.isArray(u.sentEmailDays) ? (u.sentEmailDays as number[]) : [];
+  if (sent.includes(0)) return;
+  sendWelcomeEmail(u.email, u.username, u.trialEndsAt ?? null)
+    .then(() => storage.updateSentEmailDays(u.id, [...sent, 0]))
+    .catch(() => {});
+}
 
 export async function registerRoutes(
   httpServer: Server,
@@ -91,9 +172,41 @@ export async function registerRoutes(
   // Setup passport + sessions (async — creates session table in PostgreSQL)
   await setupAuth(app);
 
-  // Health check — Railway uses this to confirm the app is alive
+  // ─── Health checks ───────────────────────────────────────────────────
+  //
+  // Two of them, deliberately, because they answer different questions.
+  //
+  // /api/health is liveness: is the process up and serving? Railway polls this
+  // (railway.toml healthcheckPath) and restarts the container when it fails,
+  // so it must NOT depend on the database. If it did, a brief Postgres blip
+  // during boot would fail the healthcheck, Railway would restart, and the
+  // restart would hit the same blip - a deploy loop triggered by something
+  // that would have healed on its own.
   app.get("/api/health", (_req, res) => {
     res.json({ status: "ok" });
+  });
+
+  // /api/health/deep is readiness: can the app actually do its job? It makes a
+  // real round trip to Postgres. Nothing restarts on this failing - it exists
+  // so the uptime monitor can tell the difference between "the site is up" and
+  // "the site is up and working".
+  //
+  // This gap was real: every page the monitor checked (/, /app, /blog) is a
+  // static file, and /api/health returned ok without touching anything, so a
+  // dead database showed up as four green checks and no alert.
+  app.get("/api/health/deep", async (_req, res) => {
+    const started = Date.now();
+    try {
+      await storage.ping();
+      return res.json({ status: "ok", database: "ok", ms: Date.now() - started });
+    } catch (err: any) {
+      console.error("[health] database unreachable:", err.message);
+      return res.status(503).json({
+        status: "degraded",
+        database: "unreachable",
+        ms: Date.now() - started,
+      });
+    }
   });
 
   // ─── Auth Routes ───────────────────────────────────────────────────
@@ -119,25 +232,18 @@ export async function registerRoutes(
 
     // Hash password and create user
     const passwordHash = await hashPassword(password);
-    const referredBy = (req.body.referralCode as string) || null;
     const user = await storage.createUser({ username, firstName, lastName, email, passwordHash });
 
     // Generate and save referral code for new user
     const referralCode = storage.generateReferralCode(email);
-    await storage.updateUserFields(user.id, { referralCode, referredBy });
+    await storage.updateUserFields(user.id, { referralCode });
 
-    // If referred, record the referral and potentially reward the referrer
-    if (referredBy) {
-      const { rewarded, referrer } = await storage.recordReferral(referredBy);
-      if (rewarded && referrer) {
-        // Notify referrer they earned a year of pro
-        const { sendReferralRewardEmail } = await import('./email.js') as any;
-        sendReferralRewardEmail?.(referrer.email, referrer.username).catch(() => {});
-      }
-    }
+    // Credit whoever referred them (and reward the referrer every 2 signups).
+    // Awaited so it's done before the response, but it never throws.
+    await applySignupReferral(user, req.body?.referralCode, stripe);
 
     // Send welcome email + admin notification (non-blocking)
-    sendWelcomeEmail(user.email, user.username).catch(() => {});
+    sendWelcomeAtSignup(user);
     sendAdminNotification(user.email, user.username, 'email_password').catch(() => {});
 
     // Auto-login after registration
@@ -277,7 +383,17 @@ export async function registerRoutes(
       userProfile: user.userProfile ?? null,
       currentStreak: getDisplayStreak((user as any).currentStreak, (user as any).lastStreakDate),
       longestStreak: (user as any).longestStreak ?? 0,
+      // The phone's Mon-Sun streak strip counts back from this date. Without
+      // it every reload showed the week empty even on a long streak.
+      lastStreakDate: (user as any).lastStreakDate ?? null,
       lastChallengeDate: (user as any).lastChallengeDate ?? null,
+      // XP earned outside lessons/quizzes (see toPassportUser in auth.ts). The
+      // app adds these to its total; without them a reload showed less XP
+      // than the leaderboards did.
+      dailyChallengeXP: (user as any).dailyChallengeXP ?? 0,
+      briefsXP: (user as any).briefsXP ?? 0,
+      coachXP: (user as any).coachXP ?? 0,
+      teachBackCount: (user as any).teachBackCount ?? 0,
     });
   });
 
@@ -344,10 +460,10 @@ export async function registerRoutes(
     const email = user.email;
     let billingNote = "no subscription";
 
-    if (stripe && user.subscriptionId && user.subscriptionStatus === "active") {
+    if (stripe && user.subscriptionId && (user.subscriptionStatus === "active" || user.subscriptionStatus === "annual")) {
       try {
         await stripe.subscriptions.cancel(user.subscriptionId);
-        billingNote = `monthly subscription ${user.subscriptionId} cancelled in Stripe`;
+        billingNote = `${user.subscriptionStatus === "annual" ? "annual" : "monthly"} subscription ${user.subscriptionId} cancelled in Stripe`;
       } catch (err: any) {
         // Don't block the deletion — but make sure the founder knows to cancel by hand.
         billingNote = `FAILED to cancel subscription ${user.subscriptionId}: ${err?.message ?? err} — cancel it manually in Stripe`;
@@ -355,6 +471,14 @@ export async function registerRoutes(
       }
     } else if (user.subscriptionStatus === "lifetime") {
       billingNote = "lifetime purchase (no recurring billing)";
+    }
+
+    // Tracker data lives in its own tables. Best-effort, logged, never blocks
+    // the account deletion itself.
+    try {
+      await costTrackerStorage.deleteAllForUser(userId);
+    } catch (err: any) {
+      console.error(`[account-delete] cost tracker cleanup failed for ${email}:`, err);
     }
 
     try {
@@ -373,6 +497,7 @@ export async function registerRoutes(
       `Billing: ${billingNote}`,
       user.stripeCustomerId ? `Stripe customer: https://dashboard.stripe.com/customers/${user.stripeCustomerId}` : "",
       `Time (UTC): ${new Date().toISOString()}`,
+      `To finish (Privacy Policy promise): if this address is a contact in Resend, remove it there too.`,
     ].filter(Boolean)).catch(() => {});
 
     req.logout(() => {
@@ -441,7 +566,9 @@ export async function registerRoutes(
               loginCount: (current.loginCount ?? 0) + 1,
             });
             if (isNewUser && !existing) {
+              sendWelcomeAtSignup(current);
               sendAdminNotification(current.email, current.username, 'apple').catch(() => {});
+              await applySignupReferral(current, req.body?.referralCode, stripe);
             }
           }
         } catch (e) {
@@ -501,7 +628,9 @@ export async function registerRoutes(
     const ok = () => res.json({ ok: true });
     if (!email || !email.includes("@")) return ok();
 
-    const ip = String(req.headers["x-forwarded-for"] ?? req.ip ?? "unknown").split(",")[0].trim();
+    // req.ip honours "trust proxy" (one hop, Railway). The raw X-Forwarded-For
+    // header starts with whatever the client typed, so it can be faked.
+    const ip = req.ip ?? "unknown";
     if (!bumpAndCheck(`e:${email}`, 3) || !bumpAndCheck(`i:${ip}`, 15)) {
       console.warn(`[password-reset] throttled ${email} from ${ip}`);
       return ok();
@@ -511,19 +640,7 @@ export async function registerRoutes(
       const user = await storage.getUserByEmail(email);
       if (!user) return ok();
 
-      // Raw token goes in the email and nowhere else; only its hash is stored.
-      const token = crypto.randomBytes(32).toString("hex");
-      const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
-      const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
-
-      await storage.consumePasswordResetTokens(user.id);   // a new link kills the old one
-      await storage.createPasswordResetToken(user.id, tokenHash, expiresAt);
-
-      const appUrl = process.env.APP_URL || "https://acqlerate.com";
-      const resetUrl = `${appUrl}/app#/reset-password?token=${token}`;
-      // A Google-created account has no password hash — this is a first
-      // password, not a reset, and the email says so.
-      await sendPasswordResetEmail(user.email, user.firstName || user.username, resetUrl, !user.passwordHash);
+      await issuePasswordReset(user);
     } catch (err: any) {
       console.error("[password-reset] request failed:", err.message);
     }
@@ -546,6 +663,8 @@ export async function registerRoutes(
       await storage.updateUserPassword(match.userId, passwordHash);
       // Burn every outstanding link for this user, not just the one redeemed.
       await storage.consumePasswordResetTokens(match.userId);
+      // A reset usually means "someone else may have my login": sign out every device.
+      await storage.endAllSessionsForUser(match.userId);
       console.log(`[password-reset] password set for user ${match.userId}`);
       return res.json({ ok: true });
     } catch (err: any) {
@@ -562,7 +681,12 @@ export async function registerRoutes(
     if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
       return res.status(503).json({ message: "Google OAuth is not configured" });
     }
-    passport.authenticate("google", { scope: ["profile", "email"] })(req, res, next);
+    // A referral code rides through Google in the OAuth `state` parameter and
+    // comes back on the callback. (The session can't carry it: passport
+    // regenerates the session at login and drops everything in it. No state
+    // store is configured, so passport-oauth2 passes a string state through.)
+    const ref = cleanReferralCode(req.query.ref);
+    passport.authenticate("google", { scope: ["profile", "email"], ...(ref ? { state: `ref:${ref}` } : {}) } as any)(req, res, next);
   });
 
   // Google OAuth callback — redirect to app after login
@@ -586,7 +710,10 @@ export async function registerRoutes(
             });
             // Notify admin only on first Google login (new account)
             if (isNewUser) {
+              sendWelcomeAtSignup(currentUser);
               sendAdminNotification(currentUser.email, currentUser.username, 'google').catch(() => {});
+              const state = String(req.query.state ?? "");
+              if (state.startsWith("ref:")) await applySignupReferral(currentUser, state.slice(4), stripe);
             }
           }
         } catch (e) {
@@ -628,7 +755,20 @@ export async function registerRoutes(
       }
     }
 
-    const updated = await storage.updateUserProgress(userId, completedLessons, newScores);
+    // Finishing a module's last lesson records its completion date and issues
+    // its certificate ID, once, permanently (server/credentials.ts).
+    const sync = syncCompletions(
+      completedLessons,
+      (currentUser as any).moduleCompletions as ModuleCompletions,
+      scoreOnly === true ? undefined : moduleOfLesson(lessonId),
+    );
+
+    // Recorded from the user as they were BEFORE this lesson or score, so the
+    // XP it earns counts toward this week's leaderboard.
+    const updated = await storage.updateUserProgress(
+      userId, completedLessons, newScores,
+      { ...weekRollPatch(currentUser as any), ...(sync.changed ? { moduleCompletions: sync.completions } : {}) },
+    );
     if (!updated) {
       return res.status(500).json({ message: "Failed to save progress" });
     }
@@ -642,7 +782,14 @@ export async function registerRoutes(
     req.user!.completedLessons = updated.completedLessons ?? [];
     req.user!.quizScores = (updated.quizScores as Record<string, number>) ?? {};
 
-    return res.json({ completedLessons: updated.completedLessons, quizScores: updated.quizScores });
+    (req.user as any).moduleCompletions = (updated as any).moduleCompletions ?? {};
+
+    return res.json({
+      completedLessons: updated.completedLessons,
+      quizScores: updated.quizScores,
+      // Lets the client celebrate "certificate earned" on the lesson that did it.
+      newlyCompletedModules: sync.newlyCompleted.filter((m) => m === moduleOfLesson(lessonId)),
+    });
   });
 
   // ─── Skill Level Routes ────────────────────────────────────────────
@@ -882,9 +1029,29 @@ export async function registerRoutes(
         return res.status(503).json({ message: "Payment processing not configured" });
       }
 
-      const { priceType } = req.body; // 'lifetime' | 'monthly'
+      const priceType = req.body?.priceType as PlanType; // 'monthly' | 'annual' | 'lifetime'
+      // 'ios-app': started from the iPhone app (US App Store link-out, see
+      // client/src/lib/appCheckout.ts). It opens in a browser sheet, so it
+      // must come back to /checkout/return rather than into the web app.
+      const fromIosApp = req.body?.source === "ios-app";
+      // The pricing switch decides what is for sale (shared/pricing.ts):
+      // before it, Monthly $5.99 and Lifetime $99; from it, Monthly $14.99
+      // and Annual $149. A tab left open across the switch gets a clear
+      // message instead of the old price.
+      const newPricing = isNewPricing();
+      if (priceType === "lifetime" && newPricing) {
+        return res.status(410).json({ message: "Lifetime Pro ended on September 30. Annual Pro is $149 a year and includes everything Lifetime did." });
+      }
+      if (priceType === "annual" && !newPricing) {
+        return res.status(400).json({ message: "Annual Pro opens on October 1. Until then, Lifetime Pro is $99 one-time." });
+      }
+      if (priceType !== "monthly" && priceType !== "annual" && priceType !== "lifetime") {
+        return res.status(400).json({ message: "Unknown plan" });
+      }
       const priceId =
-        priceType === "monthly" ? STRIPE_PRICE_MONTHLY : STRIPE_PRICE_LIFETIME;
+        priceType === "annual" ? STRIPE_PRICE_ANNUAL
+        : priceType === "lifetime" ? STRIPE_PRICE_LIFETIME
+        : newPricing ? STRIPE_PRICE_MONTHLY_2026 : STRIPE_PRICE_MONTHLY;
 
       if (!priceId) {
         return res
@@ -918,14 +1085,18 @@ export async function registerRoutes(
         }
 
         // Determine mode
-        const mode = priceType === "monthly" ? "subscription" : "payment";
+        const mode = priceType === "lifetime" ? "payment" : "subscription";
 
         // Build success/cancel URLs — use the app's origin
         const origin =
           process.env.APP_URL ||
           `${req.protocol}://${req.get("host")}`;
-        const successUrl = `${origin}/app#/dashboard?payment=success`;
-        const cancelUrl = `${origin}/app#/upgrade?payment=cancelled`;
+        const successUrl = fromIosApp
+          ? `${origin}/checkout/return?result=success`
+          : `${origin}/app#/dashboard?payment=success`;
+        const cancelUrl = fromIosApp
+          ? `${origin}/checkout/return?result=cancelled`
+          : `${origin}/app#/upgrade?payment=cancelled`;
 
         const session = await stripe.checkout.sessions.create({
           customer: customerId,
@@ -934,17 +1105,63 @@ export async function registerRoutes(
           mode,
           success_url: successUrl,
           cancel_url: cancelUrl,
-          metadata: { userId },
+          metadata: { userId, plan: priceType, source: fromIosApp ? "ios-app" : "web" },
           allow_promotion_codes: true,
         });
 
-        return res.json({ url: session.url });
+        // For the founder review's "trials that started checkout". Never
+        // throws and isn't awaited, so it can't slow or break checkout.
+        void recordCheckoutStart(userId, priceType, fromIosApp ? "ios-app" : "web");
+
+        return res.json({ url: session.url, plan: priceType, amount: planPrice(priceType) });
       } catch (err: any) {
         reportCheckoutFailure("/api/stripe/create-checkout-session", err, { priceType, priceId, userId, userEmail });
         return res.status(500).json({ message: "Payment error — please try again" });
       }
     }
   );
+
+  // ── GET /checkout/return ─────────────────────────────────────────────────
+  // Where a checkout started in the iPhone app lands. It is shown inside the
+  // browser sheet, which does not share the app's sign-in, so it is a plain
+  // page: say what happened and hand the learner back. Access itself is
+  // granted by the webhook; the app re-reads the account when the sheet closes.
+  app.get("/checkout/return", (req: Request, res: Response) => {
+    const result = String(req.query.result ?? "");
+    const portal = result === "portal";
+    const ok = result === "success" || portal;
+    const title = portal ? "All set." : ok ? "You're in. Welcome to Pro." : "No charge made.";
+    const body = portal
+      ? "Your billing changes are saved. Head back to the app."
+      : ok
+        ? "Every module is unlocked. Head back to the app and pick up where you left off."
+        : "Nothing was bought. You can come back to it any time.";
+    res.setHeader("Cache-Control", "no-store");
+    res.type("html").send(`<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>${portal ? "Billing updated" : ok ? "Welcome to Pro" : "Checkout cancelled"} | Acqlerate</title>
+<style>
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#F7F3EC;color:#0D1B2A;
+    padding:24px;box-sizing:border-box;text-align:center}
+  .card{max-width:360px}
+  .badge{width:72px;height:72px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;
+    justify-content:center;font-size:34px;background:${ok ? "#01696F" : "#E7E1D6"};color:#fff}
+  h1{font-size:24px;margin:0 0 10px;letter-spacing:-.02em}
+  p{font-size:16px;line-height:1.55;color:#44505C;margin:0 0 26px}
+  a.btn{display:block;background:#01696F;color:#fff;text-decoration:none;font-weight:700;
+    padding:15px 18px;border-radius:12px;font-size:16px}
+  .hint{margin-top:14px;font-size:13px;color:#7A838C}
+</style></head>
+<body><div class="card">
+  <div class="badge">${ok ? "&#10003;" : "&#8617;"}</div>
+  <h1>${title}</h1>
+  <p>${body}</p>
+  <a class="btn" href="acqlerate://checkout?result=${portal ? "portal" : ok ? "success" : "cancelled"}">Return to Acqlerate</a>
+  <div class="hint">Or tap <strong>Done</strong> at the top of the screen.</div>
+</div></body></html>`);
+  });
 
   // Stripe webhook — handles checkout.session.completed
   app.post(
@@ -983,7 +1200,7 @@ export async function registerRoutes(
               if (pack) {
                 const downloadToken = crypto.randomBytes(32).toString("hex");
                 const email = session.customer_details?.email || session.customer_email || "";
-                await storage.savePurchase({
+                const saved = await storage.savePurchase({
                   userId: userId || undefined,
                   email,
                   pack,
@@ -1003,11 +1220,36 @@ export async function registerRoutes(
                   stripeCustomerId: (session.customer as string) || undefined,
                   stripePaymentIntentId: (session.payment_intent as string) || undefined,
                 });
+
+                // Buyer delivery email + the 30-day Pro bonus the pack pages
+                // promise. Only on the first delivery of this event: a Stripe
+                // retry hits ON CONFLICT DO NOTHING, so `saved` is empty.
+                if (saved && email) {
+                  const bonus = PACK_BONUS_PACKS.includes(pack)
+                    ? await grantPackBonus(email, userId || undefined).catch((err: any) => {
+                        console.error(`[pack-bonus] grant failed for ${email}:`, err?.message);
+                        return "on-signup" as const;
+                      })
+                    : "already-paid" as const;
+                  const origin = process.env.APP_URL || "https://acqlerate.com";
+                  await sendPackPurchaseEmail({
+                    to: email,
+                    packName: PACK_DISPLAY_NAMES[pack] || pack,
+                    files: currentPackFiles(pack).map(f => ({
+                      name: packFileLabel(f),
+                      url: `${origin}/api/packs/download/${downloadToken}/${f}`,
+                    })),
+                    bonus,
+                  });
+                }
               }
             } else if (purchaseType === "team_purchase") {
               // Team Pack — save purchase record + alert admin to manually provision seats.
               // MVP: seats are provisioned by hand, not self-serve, for now.
               const seats = parseInt(session.metadata?.seats || "10", 10);
+              // "annual" = the $999/yr Team subscription (seats get Annual
+              // Pro); anything else = the old $399 one-time Team Pack.
+              const teamPlan = session.metadata?.plan === "annual" ? "annual" : "lifetime";
               const email = session.customer_details?.email || session.customer_email || "";
               const downloadToken = crypto.randomBytes(32).toString("hex");
               await storage.savePurchase({
@@ -1020,22 +1262,47 @@ export async function registerRoutes(
                 downloadToken,
               });
               const { sendTeamPurchaseAdminAlert } = await import("./email.js") as any;
-              await sendTeamPurchaseAdminAlert(email, seats, session.amount_total || 0, session.id).catch(() => {});
+              await sendTeamPurchaseAdminAlert(email, seats, session.amount_total || 0, session.id, teamPlan).catch(() => {});
               console.log(`[webhook] Team purchase saved: ${email} (${seats} seats)`);
             } else if (userId) {
-              // Subscription / lifetime upgrade
+              // Subscription / lifetime upgrade. metadata.plan is set at
+              // checkout; sessions created before it existed fall back to mode.
               const isSubscription = session.mode === "subscription";
+              const plan: PlanType = session.metadata?.plan === "annual" ? "annual"
+                : isSubscription ? "monthly" : "lifetime";
+              const newStatus = plan === "annual" ? "annual" : plan === "monthly" ? "active" : "lifetime";
+              const productName = plan === "annual" ? "Annual Pro" : plan === "monthly" ? "Monthly Pro" : "Lifetime Pro";
               // Read the user first so the alert can say "trial → paid" and show their name.
               const before = await storage.getUser(userId).catch(() => undefined);
               await storage.updateUserSubscription(userId, {
-                subscriptionStatus: isSubscription ? "active" : "lifetime",
+                subscriptionStatus: newStatus,
                 subscriptionId: isSubscription ? (session.subscription as string) : undefined,
                 stripeCustomerId: session.customer as string,
               });
-              console.log(`[webhook] ${isSubscription ? "Monthly" : "Lifetime"} upgrade saved for user ${userId}`);
+              console.log(`[webhook] ${productName} upgrade saved for user ${userId}`);
+              // Moving up from Monthly (to Annual or Lifetime) is a new
+              // Stripe purchase, not a plan change, so the old Monthly
+              // subscription would keep billing. Cancel it. Its deletion
+              // webhook is ignored below because it is no longer the user's
+              // current subscription.
+              const oldSubId = before?.subscriptionId;
+              const newSubId = isSubscription ? (session.subscription as string) : undefined;
+              if (stripe && plan !== "monthly" && oldSubId && oldSubId.startsWith("sub_") && oldSubId !== newSubId
+                  && (before?.subscriptionStatus === "active" || before?.subscriptionStatus === "annual")) {
+                try {
+                  await stripe.subscriptions.cancel(oldSubId);
+                  console.log(`[webhook] Cancelled previous subscription ${oldSubId} for user ${userId} after ${productName} purchase`);
+                } catch (cancelErr: any) {
+                  console.error(`[webhook] Could not cancel previous subscription ${oldSubId}:`, cancelErr?.message);
+                  await sendOpsAlertEmail("Cancel an old subscription by hand", [
+                    `User ${userId} bought ${productName} but their previous subscription ${oldSubId} could not be cancelled automatically.`,
+                    `Error: ${cancelErr?.message || "unknown"}. Cancel it in Stripe so they are not billed twice.`,
+                  ]).catch(() => {});
+                }
+              }
               await sendPurchaseAdminAlert({
-                product: isSubscription ? "Monthly Pro" : "Lifetime Pro",
-                kind: isSubscription ? "monthly" : "lifetime",
+                product: productName,
+                kind: plan,
                 buyerEmail: session.customer_details?.email || session.customer_email || before?.email || "(unknown email)",
                 buyerName: before?.username || undefined,
                 amountPaidCents: session.amount_total || 0,
@@ -1054,18 +1321,38 @@ export async function registerRoutes(
             const customerId = sub.customer as string;
             // Find user by stripeCustomerId
             const allUsers = await storage.getUserByStripeCustomerId(customerId);
-            if (allUsers) {
+            // A subscription that is no longer the user's current plan (a
+            // Monthly replaced by Annual or Lifetime, cancelled above) must
+            // not downgrade them. Lifetime never expires.
+            const staleSub = !!allUsers && (
+              allUsers.subscriptionStatus === "lifetime" ||
+              (!!allUsers.subscriptionId && allUsers.subscriptionId !== sub.id)
+            );
+            if (allUsers && staleSub) {
+              console.log(`[webhook] Subscription ${sub.id} ended but user ${allUsers.id} is on ${allUsers.subscriptionStatus} (${allUsers.subscriptionId || "no sub"}), leaving them as is`);
+            } else if (allUsers) {
+              // Time they still hold from a referral year, pack bonus or trial
+              // outlives the subscription instead of being wiped with it.
+              const keepsTime = !!allUsers.trialEndsAt && new Date(allUsers.trialEndsAt).getTime() > Date.now();
               await storage.updateUserSubscription(allUsers.id, {
-                subscriptionStatus: "free",
+                subscriptionStatus: keepsTime ? "trialing" : "free",
                 subscriptionId: undefined,
               });
-              console.log(`[webhook] Subscription cancelled — user ${allUsers.id} moved to free`);
+              console.log(`[webhook] Subscription cancelled — user ${allUsers.id} moved to ${keepsTime ? `trialing until ${allUsers.trialEndsAt}` : "free"}`);
               await sendSubscriptionCancelledAdminAlert({
                 userEmail: allUsers.email || "(unknown email)",
                 userName: allUsers.username || undefined,
                 stripeCustomerId: customerId,
                 stripeSubscriptionId: sub.id,
               });
+            } else if (sub.metadata?.type === "team_purchase") {
+              // Team seats are provisioned by hand, so they have to be
+              // switched off by hand too. Tell the founder.
+              console.warn(`[webhook] Team subscription ${sub.id} ended — seats need downgrading by hand`);
+              await sendOpsAlertEmail("Team subscription ended: downgrade its seats", [
+                `Team subscription ${sub.id} (customer ${customerId}) has ended.`,
+                "Its 10 seats were set to Annual by hand. Set them back to Free in the admin panel.",
+              ]).catch(() => {});
             } else {
               console.warn(`[webhook] Subscription ${sub.id} cancelled but no user has stripeCustomerId ${customerId}`);
             }
@@ -1102,9 +1389,14 @@ export async function registerRoutes(
         const origin =
           process.env.APP_URL ||
           `${req.protocol}://${req.get("host")}`;
+        // The app lives at /app; the bare root is the marketing homepage, so
+        // the old `${origin}/#/dashboard` sent people back to the sales page.
+        // From the iPhone app the portal opens in a browser sheet, which
+        // returns to the plain /checkout/return page instead.
+        const fromIosApp = req.body?.source === "ios-app";
         const session = await stripe.billingPortal.sessions.create({
           customer: portalCustomerId,
-          return_url: `${origin}/#/dashboard`,
+          return_url: fromIosApp ? `${origin}/checkout/return?result=portal` : `${origin}/app#/dashboard`,
         });
         return res.json({ url: session.url });
       } catch (err: any) {
@@ -1161,14 +1453,17 @@ export async function registerRoutes(
     }
   });
 
-  // POST /api/team/checkout — Team Pack: $399, 10 seats, one-time payment.
+  // POST /api/team/checkout — Team: until the pricing switch, the $399
+  // one-time Team Pack (10 Lifetime seats); from it, $999 a year for 10
+  // Annual seats (a yearly subscription).
   // MVP: seats are provisioned manually (see sendTeamPurchaseAdminAlert) rather
   // than self-serve. This gets a real, working B2B purchase path live now;
   // self-serve seat management is a bigger project for once demand is proven.
   app.post("/api/team/checkout", async (req: Request, res: Response) => {
     if (!stripe) return res.status(503).json({ message: "Payment processing not configured" });
 
-    const priceId = process.env.STRIPE_PRICE_ID_TEAM;
+    const teamAnnual = isNewPricing();
+    const priceId = teamAnnual ? STRIPE_PRICE_TEAM_ANNUAL : process.env.STRIPE_PRICE_ID_TEAM;
     if (!priceId) {
       return res.status(503).json({ message: "Team Pack price not configured yet" });
     }
@@ -1179,14 +1474,18 @@ export async function registerRoutes(
     const customerEmail = email || (req.user as any)?.email;
 
     try {
+      const metadata = { type: "team_purchase", seats: "10", plan: teamAnnual ? "annual" : "lifetime", userId: userId || "" };
       const session = await stripe.checkout.sessions.create({
-        mode: "payment",
+        mode: teamAnnual ? "subscription" : "payment",
         payment_method_types: ["card"],
         line_items: [{ price: priceId, quantity: 1 }],
         ...(customerEmail ? { customer_email: customerEmail } : {}),
         success_url: `${origin}/team/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${origin}/#pricing`,
-        metadata: { type: "team_purchase", seats: "10", userId: userId || "" },
+        metadata,
+        // Copied onto the subscription so its cancellation webhook can tell
+        // a team subscription from an individual one.
+        ...(teamAnnual ? { subscription_data: { metadata } } : {}),
         allow_promotion_codes: true,
       });
       return res.json({ url: session.url });
@@ -1204,21 +1503,34 @@ export async function registerRoutes(
       if (!purchase) {
         return res.json({ status: "pending", message: "Processing your purchase..." });
       }
-      const files = PACK_FILES[purchase.pack] || [];
+      const files = currentPackFiles(purchase.pack);
       const downloadLinks = files.map(f => ({
         filename: f,
-        name: f.replace(/-/g, " ").replace(/\.xlsx$/, " (Excel)").replace(/\.pptx$/, " (PowerPoint)"),
+        name: packFileLabel(f),
         url: `/api/packs/download/${purchase.downloadToken}/${f}`,
       }));
-      return res.json({ status: "complete", pack: purchase.pack, email: purchase.email, downloadLinks });
+      const bonus = PACK_BONUS_PACKS.includes(purchase.pack)
+        ? await packBonusStatus(purchase.email, purchase.userId || undefined).catch(() => "on-signup")
+        : null;
+      return res.json({ status: "complete", pack: purchase.pack, email: purchase.email, downloadLinks, bonus });
     } catch (err: any) {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
 
   // GET /api/packs/download/:token/:filename — secure file download
+  // The free pack's files are public; an old direct link to a moved file
+  // redirects to its replacement. Registered before express.static.
+  app.get("/products/pack3-finance-cheat-sheets/:filename", (req: Request, res: Response, next) => {
+    const moved = MOVED_PACK_FILES[req.params.filename as string];
+    if (!moved) return next();
+    return res.redirect(301, `/products/pack3-finance-cheat-sheets/${moved}`);
+  });
+
   app.get("/api/packs/download/:token/:filename", async (req: Request, res: Response) => {
     const { token, filename } = req.params;
+    const moved = MOVED_PACK_FILES[filename as string];
+    if (moved) return res.redirect(301, `/api/packs/download/${token}/${moved}`);
     const purchase = await storage.getPurchaseByToken(token);
     if (!purchase) return res.status(404).json({ message: "Download link not found" });
 
@@ -1298,7 +1610,8 @@ export async function registerRoutes(
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    const status = plan === "free" ? "free" : plan === "lifetime" ? "lifetime" : "active";
+    // "annual" is how Team seats are provisioned (by hand, see team checkout).
+    const status = plan === "free" ? "free" : plan === "lifetime" ? "lifetime" : plan === "annual" ? "annual" : "active";
     await storage.updateUserSubscription(user.id, { subscriptionStatus: status });
     return res.json({ message: `${user.email} is now ${status}`, userId: user.id });
   });
@@ -1306,10 +1619,17 @@ export async function registerRoutes(
   // POST /api/admin/users/:userId/grant-yearly-pro
   app.post("/api/admin/users/:userId/grant-yearly-pro", requireAuth as any, async (req: Request, res: Response) => {
     if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
-    const { userId } = req.params;
-    const updated = await storage.grantYearlyPro(userId);
-    if (!updated) return res.status(404).json({ message: "User not found" });
-    return res.json({ message: `${updated.email} granted 1 year of Pro access`, userId });
+    const userId = String(req.params.userId);
+    const user = await storage.getUser(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    // Same rules as a referral reward: a real, expiring year (see server/referrals.ts).
+    const result = await grantProYear(user, stripe, "Granted by Acqlerate");
+    const detail =
+      result.kind === "extended" ? `full access until ${result.until?.slice(0, 10)}`
+      : result.kind === "stripe-credit" ? `$${((result.creditCents ?? 0) / 100).toFixed(2)} Stripe credit (12 months of Monthly)`
+      : result.kind === "already-unlimited" ? "already has permanent access, nothing changed"
+      : `not applied: ${result.note}`;
+    return res.status(result.kind === "needs-manual" ? 500 : 200).json({ message: `${user.email}: ${detail}`, userId, result });
   });
 
   // POST /api/admin/users/:userId/toggle-admin — grant or revoke admin access
@@ -1340,14 +1660,15 @@ export async function registerRoutes(
     return res.json({ message: `${updated.email} unlocked at ${level} across all modules`, userId, moduleSkillLevels: updated.moduleSkillLevels });
   });
 
+  // Phone-first admin: Today screen, user lookup and quick actions.
+  registerAdminMobileRoutes(app, { stripe, isAdmin });
+
   // GET /api/admin/growth — lightweight signup counts for dashboard stat card
   app.get("/api/admin/growth", requireAuth as any, async (req: Request, res: Response) => {
     if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
     const allUsers = await storage.getAllUsers();
     const totalUsers = allUsers.length;
-    const proUsers = allUsers.filter((u: any) =>
-      u.subscriptionStatus === "active" || u.subscriptionStatus === "lifetime"
-    ).length;
+    const proUsers = allUsers.filter((u: any) => isPaidStatus(u.subscriptionStatus)).length;
     return res.json({ totalUsers, proUsers, freeUsers: totalUsers - proUsers });
   });
 
@@ -1397,8 +1718,25 @@ export async function registerRoutes(
     if (userId === req.user!.id) return res.status(400).json({ message: "Cannot delete your own account" });
     const user = await storage.getUser(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
+    // Same order as self-service deletion: stop billing first, so a user who
+    // asks us by email to delete them can't keep getting charged.
+    let billingNote = "";
+    if (stripe && user.subscriptionId && (user.subscriptionStatus === "active" || user.subscriptionStatus === "annual") && user.subscriptionId.startsWith("sub_")) {
+      try {
+        await stripe.subscriptions.cancel(user.subscriptionId);
+        billingNote = " (subscription cancelled in Stripe)";
+      } catch (err: any) {
+        billingNote = ` (FAILED to cancel ${user.subscriptionId}: cancel it manually in Stripe)`;
+        console.error(`[admin-delete] ${user.email}${billingNote}`, err?.message ?? err);
+      }
+    }
+    try {
+      await costTrackerStorage.deleteAllForUser(String(userId));
+    } catch (err: any) {
+      console.error(`[admin-delete] cost tracker cleanup failed for ${user.email}:`, err);
+    }
     await storage.deleteUser(userId);
-    return res.json({ message: `${user.email} deleted` });
+    return res.json({ message: `${user.email} deleted${billingNote}` });
   });
 
   // ─── Daily Challenge ──────────────────────────────────────────────────
@@ -1537,6 +1875,53 @@ export async function registerRoutes(
     }
   });
 
+  // ─── Leaderboards ─────────────────────────────────────────────────────────
+  // One read of every user's leaderboard inputs, shared across viewers for a
+  // minute. Boards are weekly, so a minute's staleness is invisible, and it
+  // keeps a busy Monday morning from turning into a full-table scan per tap.
+  let leaderboardCache: { at: number; rows: LeaderboardRow[] } | null = null;
+  const LEADERBOARD_TTL_MS = 60_000;
+
+  app.get("/api/leaderboard", requireAuth as any, async (req: Request, res: Response) => {
+    try {
+      if (!leaderboardCache || Date.now() - leaderboardCache.at > LEADERBOARD_TTL_MS) {
+        leaderboardCache = { at: Date.now(), rows: await storage.getLeaderboardRows() };
+      }
+      // The viewer's own row is read fresh, so their own number moves the
+      // moment they finish a lesson even while everyone else's is cached.
+      const me = await storage.getUser(req.user!.id);
+      const rows = leaderboardCache.rows.filter(r => r.id !== req.user!.id);
+      if (me) {
+        const m = me as any;
+        rows.push({
+          id: m.id, firstName: m.firstName ?? null, lastName: m.lastName ?? null,
+          completedLessons: m.completedLessons ?? [], quizScores: m.quizScores ?? {},
+          challengeHistory: m.challengeHistory ?? [], briefsRead: m.briefsRead ?? [],
+          teachBacks: m.teachBacks ?? [],
+          currentStreak: m.currentStreak ?? 0, lastStreakDate: m.lastStreakDate ?? null,
+          xpWeekOf: m.xpWeekOf ?? null, xpWeekStartXp: m.xpWeekStartXp ?? 0,
+          leaderboardHidden: m.leaderboardHidden ?? false,
+          email: m.email ?? null, isAdmin: m.isAdmin ?? false,
+        });
+      }
+      return res.json(buildLeaderboards(rows, req.user!.id));
+    } catch (err: any) {
+      console.error("[leaderboard] error:", err);
+      return res.status(500).json({ message: "Failed to load leaderboards" });
+    }
+  });
+
+  // POST /api/leaderboard/visibility — Body: { hidden: boolean }
+  app.post("/api/leaderboard/visibility", requireAuth as any, async (req: Request, res: Response) => {
+    const { hidden } = req.body as { hidden?: unknown };
+    if (typeof hidden !== "boolean") return res.status(400).json({ message: "hidden must be true or false" });
+    const updated = await storage.setLeaderboardHidden(req.user!.id, hidden);
+    if (!updated) return res.status(404).json({ message: "User not found" });
+    (req.user as any).leaderboardHidden = hidden;
+    leaderboardCache = null; // hiding should take effect for everyone at once
+    return res.json({ hidden });
+  });
+
   // ─── Activity Tracking ────────────────────────────────────────────────────
 
   // POST /api/track-activity
@@ -1576,6 +1961,7 @@ export async function registerRoutes(
         );
       const challengeXp = sumXpEarned((currentUser as any).challengeHistory);
       const briefXp = sumXpEarned((currentUser as any).briefsRead);
+      const coachXp = sumXpEarned((currentUser as any).teachBacks);
 
       const newXp = Math.round(
         completedCount * 10
@@ -1583,6 +1969,7 @@ export async function registerRoutes(
         + skillUnlocks * 50
         + challengeXp
         + briefXp
+        + coachXp
       );
 
       const newMinutes = (currentUser.totalMinutesActive ?? 0) + Math.max(0, Math.round(minutesActive));
@@ -1621,7 +2008,8 @@ export async function registerRoutes(
 
   // ─── Public stats ────────────────────────────────────────────────────────
 
-  // GET /api/stats — aggregate counts only. No auth, no PII.
+  // GET /api/stats — aggregate counts only, no PII. Needs a key (STATS_SECRET or
+  // CRON_SECRET) as Bearer header or ?secret=.
   //
   // Feeds the cost ledger's weekly refresh, which runs unattended and has no
   // way to hold an admin session. Returns integers and nothing else; per-user
@@ -1632,13 +2020,34 @@ export async function registerRoutes(
   // arithmetic. Only one of the two layers should filter — if this ever starts
   // filtering, the ledger's user table and cost-per-user denominator must
   // change with it.
-  app.get("/api/stats", async (_req: Request, res: Response) => {
+  // Shared check for the machine-to-machine routes. The weekly ledger task uses
+  // WebFetch, which cannot send headers, so a ?secret= query value is accepted
+  // too; a Bearer header is preferred and is what anything else should use.
+  // Constant-time compare; an unset key never matches.
+  const secretFromRequest = (req: Request): string => {
+    const auth = req.headers.authorization;
+    if (auth?.startsWith("Bearer ")) return auth.slice(7);
+    return typeof req.query.secret === "string" ? req.query.secret : "";
+  };
+  const keyMatches = (given: string, key: string | undefined): boolean => {
+    if (!key) return false;
+    const a = Buffer.from(given), b = Buffer.from(key);
+    return a.length === b.length && crypto.timingSafeEqual(a, b);
+  };
+
+  app.get("/api/stats", async (req: Request, res: Response) => {
+    // Business numbers (users, paying, signups) are not public. Same keys as
+    // /api/stats/seo: STATS_SECRET, or CRON_SECRET.
+    const given = secretFromRequest(req);
+    if (!keyMatches(given, process.env.STATS_SECRET) && !keyMatches(given, process.env.CRON_SECRET)) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
     try {
       const users = await storage.getAllUsers();
       const now = Date.now();
       const oneDayMs = 24 * 60 * 60 * 1000;
 
-      let free = 0, trialing = 0, lifetime = 0, paying = 0, dau = 0;
+      let free = 0, trialing = 0, lifetime = 0, paying = 0, compedPro = 0, dau = 0;
 
       // Signups per calendar month, e.g. { "2026-03": 4 }. registeredAt is the
       // signup timestamp on the users table (there is no createdAt column).
@@ -1650,7 +2059,16 @@ export async function registerRoutes(
         switch (u.subscriptionStatus) {
           case "lifetime": lifetime++; break;
           case "trialing": trialing++; break;
-          case "active":   paying++;   break;
+          // Monthly ("active") or Annual. Paying means Stripe is billing them,
+          // which the webhook records as a sub_ subscription id. The admin
+          // "make Pro" grant (comps, team seats provisioned by hand) sets the
+          // same status with no subscription, so those count as compedPro.
+          // Before 2 Oct 2026 they were counted as paying.
+          case "active":
+          case "annual":
+            if (typeof u.subscriptionId === "string" && u.subscriptionId.startsWith("sub_")) paying++;
+            else compedPro++;
+            break;
           default:         free++;
         }
 
@@ -1667,8 +2085,28 @@ export async function registerRoutes(
         }
       }
 
+      // Founder review numbers. Each is null, not zeros, if its source fails,
+      // so a broken lookup can't pass for "nobody did anything".
+      // trialsCheckoutByMonth: trials that ended that month (UTC) whose person
+      // opened a Stripe checkout before the trial ended or within
+      // CHECKOUT_GRACE_DAYS after. Checkouts were only recorded from
+      // checkoutTrackingSince, so earlier months undercount.
+      let trialsEndedByMonth: Record<string, number> | null = null;
+      let trialsCheckoutByMonth: Record<string, number> | null = null;
+      try {
+        ({ trialsEndedByMonth, trialsCheckoutByMonth } =
+          trialCheckoutCounts(users as any, await listCheckoutStarts(), now));
+      } catch (e: any) {
+        console.error("[stats] checkout starts unavailable:", e?.message ?? e);
+      }
+      const teamDeals = await teamDealsByMonth().catch((e: any) => {
+        console.error("[stats] team deals unavailable:", e?.message ?? e);
+        return null;
+      });
+
       // Five minutes is plenty — this is read weekly, not per pageview.
-      res.set("Cache-Control", "public, max-age=300");
+      // private: the response is behind a key, so no shared cache may keep it.
+      res.set("Cache-Control", "private, max-age=300");
 
       res.json({
         asOf: new Date().toISOString(),
@@ -1677,13 +2115,55 @@ export async function registerRoutes(
         trialing,
         lifetime,
         paying,
+        compedPro,
         dau,
         signupsByMonth,
+        trialsEndedByMonth,
+        trialsCheckoutByMonth,
+        checkoutGraceDays: CHECKOUT_GRACE_DAYS,
+        checkoutTrackingSince: "2026-10-02",
+        teamDealsByMonth: teamDeals,
       });
     } catch (err) {
       console.error("[stats] failed", err);
       res.status(500).json({ error: "stats_unavailable" });
     }
+  });
+
+  // GET /api/stats/seo — Search Console totals for the month. Needs a key.
+  //
+  // Feeds the founder review dashboard's "Google clicks" row via the weekly
+  // ledger task. Two keys open it:
+  //   - CRON_SECRET, the same key as /api/cron/drip.
+  //   - STATS_SECRET, a read-only key for the weekly ledger task. That task
+  //     fetches with WebFetch, which can't send headers, so its key has to
+  //     sit in the URL and in the task's prompt. Giving it its own key means
+  //     the one that can email every user (CRON_SECRET) never goes there,
+  //     and rotating CRON_SECRET doesn't break the task.
+  // Send the key as "Authorization: Bearer <key>" (keeps it out of URLs) or
+  // ?secret=<key>. Optional ?month=YYYY-MM for a past month; default is the
+  // current month to date, Pacific Time, matching the Search Console UI.
+  //
+  // Returns { month, startDate, endDate, clicks, impressions, position,
+  // lastSuccessfulPullAt, stale }. If Google fails, it returns the last good
+  // pull for that month with stale: true and an error string. See
+  // server/searchConsole.ts for the env vars and the service-account setup.
+  app.get("/api/stats/seo", async (req: Request, res: Response) => {
+    const auth = req.headers.authorization;
+    const given = auth?.startsWith("Bearer ") ? auth.slice(7)
+      : typeof req.query.secret === "string" ? req.query.secret : "";
+    const matches = (key: string | undefined) => {
+      if (!key) return false; // an unset key never matches
+      const a = Buffer.from(given), b = Buffer.from(key);
+      return a.length === b.length && crypto.timingSafeEqual(a, b);
+    };
+    if (!matches(process.env.CRON_SECRET) && !matches(process.env.STATS_SECRET)) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    res.set("Cache-Control", "no-store");
+    const month = typeof req.query.month === "string" ? req.query.month : undefined;
+    const { status, body } = await getSeoStats(month);
+    res.status(status).json(body);
   });
 
   // ─── Admin Analytics ─────────────────────────────────────────────────────
@@ -1734,7 +2214,9 @@ export async function registerRoutes(
           avgSessionMinutes,
           closedSessionCount: closedSessions.length,
           idleTimeoutCount,
-          xp: u.xp ?? 0,
+          // Same number the learner sees in the app (shared/xp.ts), not the
+          // legacy users.xp column, which counts 10 per lesson.
+          xp: computeUserXp(u as any),
           completedLessons,
           avgQuizScore: avgQuiz,
           highestSkillLevel: highestSkill,
@@ -1746,7 +2228,7 @@ export async function registerRoutes(
       // "Pro" = actually paying (active or lifetime). Trialing users have full
       // access but haven't converted yet — counted separately so this number
       // doesn't overstate real revenue-paying users.
-      const proUsers = allUsers.filter(u => u.subscriptionStatus === 'active' || u.subscriptionStatus === 'lifetime').length;
+      const proUsers = allUsers.filter(u => isPaidStatus(u.subscriptionStatus)).length;
       const trialingUsers = allUsers.filter(u => u.subscriptionStatus === 'trialing').length;
       const dau = allUsers.filter(u => {
         if (!u.lastActiveAt) return false;
@@ -1927,20 +2409,27 @@ export async function registerRoutes(
   // Body: { lessonTitle: string, lessonContext: string, mode: 'eli5' | 'apply' | 'lost' }
   // Returns: { explanation: string }
   app.post("/api/explain", requireAuth as any, async (req: Request, res: Response) => {
-    const { lessonTitle, lessonContext, mode } = req.body;
+    const { lessonTitle, lessonContext, mode, lessonId } = req.body;
     if (!lessonTitle || !lessonContext || !mode) {
       return res.status(400).json({ message: "Missing required fields" });
+    }
+    if (!["eli5", "apply", "lost"].includes(mode)) {
+      return res.status(400).json({ message: "Unknown mode" });
+    }
+    if (!aiConfigured()) {
+      return res.status(503).json({ message: "AI explanations are not configured yet. Add ANTHROPIC_API_KEY in Railway." });
+    }
+    // "How Do I Apply This?" is an Annual/Lifetime perk. Checked before the
+    // usage counter so a locked request doesn't burn one of today's calls.
+    if (mode === "apply" && !isTopPlanStatus((req.user as any).subscriptionStatus)) {
+      return res.status(403).json({ message: `"How Do I Apply This?" comes with ${topPlanName()}.` });
     }
     const usage = await storage.checkAndConsumeAiCall((req.user as any).id);
     if (!usage.allowed) {
       return res.status(429).json({
-        message: `You've used today's AI Study Assistant limit (${usage.limit}/day). Upgrade to Lifetime Pro for unlimited access, or come back tomorrow.`,
+        message: `You've used today's AI Study Assistant limit (${usage.limit}/day). Upgrade to ${topPlanName()} for unlimited access, or come back tomorrow.`,
         limitReached: true,
       });
-    }
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return res.status(503).json({ message: "AI explanations are not configured yet. Add GEMINI_API_KEY in Railway." });
     }
     const PLAIN_ENGLISH_RULES = `PLAIN ENGLISH RULES (non-negotiable):
 - Write like you are talking to a colleague, not writing a memo. No stiff openers like "Excellent question" or "Let's ground ourselves" — just start explaining.
@@ -1948,37 +2437,32 @@ export async function registerRoutes(
 - The first time you use any acronym, spell it out in plain words right there in the sentence — do not assume the reader already knows FAR, RFP, CPIF, IDIQ, T&M, O&M, OEM, GPC, COTS, or any other acronym. If an acronym is not essential to the point you are making, skip it entirely and just describe the thing in plain words.
 - Do not stack multiple acronyms or citations back to back. One new term at a time, explained in the same breath you introduce it.
 - Use short sentences. Prefer concrete, everyday language over formal or academic phrasing.
-- Skip citing specific FAR/DFARS part numbers unless the student would actually need to go look something up — a plain description of the rule is almost always more useful than the citation.`;
+- Skip citing specific FAR/DFARS part numbers unless the student would actually need to go look something up — a plain description of the rule is almost always more useful than the citation.
+- Stick to what the lesson text below says. Don't add dollar figures, dates, thresholds, or regulation numbers that aren't in it.`;
+    // The full lesson when the app sends its id (grounds the answer in what
+    // Acqlerate actually teaches); older app versions send only a snippet.
+    const fullText = await lessonTextById(lessonId);
+    const context = fullText ? `(full lesson text)\n${fullText}` : lessonContext;
 
     const prompts: Record<string, string> = {
-      eli5: `You are a friendly teacher explaining DoD acquisitions to someone who just started learning, like they are a total beginner with zero background. Explain the following lesson topic in simple, plain English — use one real-world analogy a regular person would recognize (not a military or contracting analogy), keep it under 150 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
-      apply: `You are a seasoned DoD acquisition professional coaching a new Program Manager who is still learning the basics. For the following lesson topic, walk through 2-3 concrete, realistic moments where this knowledge would actually come up on the job — described as short stories or scenarios a new PM could picture themselves in, not a checklist of contract types and citations. Only mention a contract type, dollar figure, or regulation by name if it is essential to the scenario, and explain what it means in the same sentence. Keep it under 200 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
-      lost: `You are a patient acquisition mentor. A student is confused about the following topic. First, name in one plain sentence what usually trips people up about it. Then re-explain the whole idea from scratch using a different, simpler approach than a textbook would — a step-by-step walkthrough, a side-by-side comparison, or a concrete everyday example. Keep it under 200 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${lessonContext}`,
+      eli5: `You are a friendly teacher explaining DoD acquisitions to someone who just started learning, like they are a total beginner with zero background. Explain the following lesson topic in simple, plain English — use one real-world analogy a regular person would recognize (not a military or contracting analogy), keep it under 150 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${context}`,
+      apply: `You are a seasoned DoD acquisition professional coaching a new Program Manager who is still learning the basics. For the following lesson topic, walk through 2-3 concrete, realistic moments where this knowledge would actually come up on the job — described as short stories or scenarios a new PM could picture themselves in, not a checklist of contract types and citations. Only mention a contract type, dollar figure, or regulation by name if it is essential to the scenario, and explain what it means in the same sentence. Keep it under 200 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${context}`,
+      lost: `You are a patient acquisition mentor. A student is confused about the following topic. First, name in one plain sentence what usually trips people up about it. Then re-explain the whole idea from scratch using a different, simpler approach than a textbook would — a step-by-step walkthrough, a side-by-side comparison, or a concrete everyday example. Keep it under 200 words.\n\n${PLAIN_ENGLISH_RULES}\n\nLesson: ${lessonTitle}\nContext: ${context}`,
     };
-    // Use raw REST to avoid SDK model-name lock; try models in order of preference
-    const modelNames = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-flash-latest'];
-    let lastErr = '';
-    for (const modelName of modelNames) {
-      try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-        const resp = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts: [{ text: prompts[mode] }] }] }),
-        });
-        const data: any = await resp.json();
-        if (resp.ok) {
-          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
-          if (text) return res.json({ explanation: text });
-        }
-        lastErr = data?.error?.message ?? `HTTP ${resp.status}`;
-        if (resp.status === 429) break; // rate limit — don't try more models
-      } catch (err: any) {
-        lastErr = err?.message ?? 'fetch error';
-      }
+    try {
+      // "How Do I Apply This?" is part of the Acqlerate Coach, so it runs on the
+      // Coach model; ELI5 and I'm Still Lost stay on fast, cheap Haiku.
+      const { text } = await askClaude({
+        feature: `explain:${mode}`,
+        prompt: prompts[mode],
+        maxTokens: 700,
+        ...(mode === "apply" ? { models: COACH_MODELS } : {}),
+      });
+      return res.json({ explanation: text });
+    } catch (err: any) {
+      const status = err instanceof AiError && err.status === 503 ? 503 : 500;
+      return res.status(status).json({ message: `AI explanation failed: ${err?.message ?? 'unknown error'}` });
     }
-    console.error('Gemini explain failed — last error:', lastErr);
-    return res.status(500).json({ message: `AI explanation failed: ${lastErr}` });
   });
 
   // ─── AI List Item Expand ─────────────────────────────────────────────────
@@ -1990,41 +2474,23 @@ export async function registerRoutes(
     if (!item || !lessonTitle) {
       return res.status(400).json({ message: "Missing required fields" });
     }
+    if (!aiConfigured()) return res.status(503).json({ message: "AI is not configured yet." });
     const usage = await storage.checkAndConsumeAiCall((req.user as any).id);
     if (!usage.allowed) {
       return res.status(429).json({
-        message: `You've used today's AI Study Assistant limit (${usage.limit}/day). Upgrade to Lifetime Pro for unlimited access, or come back tomorrow.`,
+        message: `You've used today's AI Study Assistant limit (${usage.limit}/day). Upgrade to ${topPlanName()} for unlimited access, or come back tomorrow.`,
         limitReached: true,
       });
     }
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return res.status(503).json({ message: "GEMINI_API_KEY not configured" });
-    }
     const context = heading ? `Section: ${heading}\nItem: ${item}` : `Item: ${item}`;
     const prompt = `You are a concise DoD acquisitions instructor. Expand on the following bullet point from a lesson titled "${lessonTitle}". Give 2-4 plain-English sentences of practical detail a defense professional would find genuinely useful — a real example or a common mistake beats a regulatory citation. Only include a dollar threshold or a FAR/DFARS citation if it's essential, and if you do, explain what it means in the same sentence rather than stating it bare. Do not repeat the bullet text.\n\nPLAIN ENGLISH RULES: no markdown formatting (no asterisks or bold), no stacking multiple acronyms back to back, spell out any acronym the first time you use it, short sentences, talk like a colleague explaining this over coffee, not a policy memo.\n\n${context}`;
-    const modelNames = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-flash-latest'];
-    let lastErr = '';
-    for (const modelName of modelNames) {
-      try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-        const resp = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-        });
-        const data: any = await resp.json();
-        if (resp.ok) {
-          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
-          if (text) return res.json({ detail: text.trim() });
-        }
-        lastErr = data?.error?.message ?? `HTTP ${resp.status}`;
-        if (resp.status === 429) break;
-      } catch (err: any) {
-        lastErr = err?.message ?? 'fetch error';
-      }
+    try {
+      const { text } = await askClaude({ feature: "expand-item", prompt, maxTokens: 400 });
+      return res.json({ detail: text });
+    } catch (err: any) {
+      const status = err instanceof AiError && err.status === 503 ? 503 : 500;
+      return res.status(status).json({ message: `Failed: ${err?.message ?? 'unknown error'}` });
     }
-    return res.status(500).json({ message: `Failed: ${lastErr}` });
   });
 
   // POST /api/far-translate — FAR/DFARS clause plain-English translator (v2)
@@ -2033,15 +2499,14 @@ export async function registerRoutes(
   app.post("/api/far-translate", requireAuth as any, async (req: Request, res: Response) => {
     const { clause } = req.body as { clause: string };
     if (!clause?.trim()) return res.status(400).json({ message: 'Clause number or keyword required' });
+    if (!aiConfigured()) return res.status(503).json({ message: 'AI not configured' });
     const usage = await storage.checkAndConsumeAiCall((req.user as any).id);
     if (!usage.allowed) {
       return res.status(429).json({
-        message: `You've used today's AI limit (${usage.limit}/day). Upgrade to Lifetime Pro for unlimited access, or come back tomorrow.`,
+        message: `You've used today's AI limit (${usage.limit}/day). Upgrade to ${topPlanName()} for unlimited access, or come back tomorrow.`,
         limitReached: true,
       });
     }
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) return res.status(503).json({ message: 'AI not configured' });
 
     // Run deterministic scanner on the input text
     const findings: TimingFinding[] = scanForTimingTraps(clause.trim());
@@ -2077,63 +2542,89 @@ List every deadline, clock, and trap, one per line, each prefixed with ⏱ for t
 
 If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly. Keep the total response under 250 words. Be direct and practical.`;
 
-    const modelNames = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-flash-latest'];
-    let lastErr = '';
-    for (const modelName of modelNames) {
-      try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-        const resp = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-        });
-        const data: any = await resp.json();
-        if (resp.ok) {
-          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
-          if (text) return res.json({ result: text.trim(), clause: clause.trim() });
-        }
-        lastErr = data?.error?.message ?? `HTTP ${resp.status}`;
-        if (resp.status === 429) break;
-      } catch (err: any) {
-        lastErr = err?.message ?? 'fetch error';
-      }
+    try {
+      const { text } = await askClaude({ feature: "far-translate", prompt, maxTokens: 900 });
+      return res.json({ result: text, clause: clause.trim() });
+    } catch (err: any) {
+      const status = err instanceof AiError && err.status === 503 ? 503 : 500;
+      return res.status(status).json({ message: `Failed: ${err?.message ?? 'unknown error'}` });
     }
-    return res.status(500).json({ message: `Failed: ${lastErr}` });
   });
 
-  // GET /api/ai-health — check Gemini key is working (admin only)
+  // ─── Acqlerate Coach (Annual / Lifetime) ─────────────────────────────────
+  // Explain My Mistake: Annual/Lifetime only; everyone else sees a teaser in
+  // the app. Teach It Back: Annual/Lifetime, plus ONE free try in total for
+  // everyone else. See server/coach.ts.
+  const coachFail = (res: Response, err: any) => {
+    if (err instanceof CoachError) return res.status(err.status).json({ message: err.message });
+    const status = err instanceof AiError && err.status === 503 ? 503 : 500;
+    console.error("[coach] failed:", err?.message ?? err);
+    return res.status(status).json({ message: "The Coach couldn't answer just now. Try again in a moment." });
+  };
+
+  // POST /api/coach/mistake
+  // Body: { lessonId, questionId, question (text), picked (option index) }
+  app.post("/api/coach/mistake", requireAuth as any, async (req: Request, res: Response) => {
+    if (!isTopPlanStatus((req.user as any).subscriptionStatus)) {
+      return res.status(403).json({ message: `Explain My Mistake comes with ${topPlanName()}.`, locked: true });
+    }
+    const { lessonId, questionId, question, picked } = req.body ?? {};
+    if (typeof lessonId !== "string" || typeof questionId !== "string" || typeof question !== "string" || typeof picked !== "number") {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+    if (!aiConfigured()) return res.status(503).json({ message: "AI is not configured yet." });
+    try {
+      const { explanation, cached } = await explainMistake(lessonId, questionId, question, picked);
+      return res.json({ explanation, cached });
+    } catch (err: any) {
+      return coachFail(res, err);
+    }
+  });
+
+  // POST /api/coach/teach-back
+  // Body: { lessonId, answer }. The answer is graded and discarded; only the
+  // result is stored (privacy policy: we keep your score, not your words).
+  app.post("/api/coach/teach-back", requireAuth as any, async (req: Request, res: Response) => {
+    const userId = (req.user as any).id;
+    const { lessonId, answer } = req.body ?? {};
+    if (typeof lessonId !== "string" || typeof answer !== "string") {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+    const text = answer.trim();
+    if (text.length < TEACH_BACK_MIN_CHARS) {
+      return res.status(400).json({ message: "Give it at least a couple of sentences." });
+    }
+    if (text.length > TEACH_BACK_MAX_CHARS) {
+      return res.status(400).json({ message: "Keep it short: 2 to 4 sentences is the point." });
+    }
+    const user = await storage.getUser(userId);
+    if (!user) return res.status(401).json({ message: "Authentication required" });
+    const topPlan = isTopPlanStatus((user as any).subscriptionStatus);
+    const tries = (((user as any).teachBacks as any[]) ?? []).length;
+    if (!topPlan && tries > 0) {
+      return res.status(403).json({ message: `You've used your free Teach It Back. It's unlimited with ${topPlanName()}.`, locked: true });
+    }
+    if (!aiConfigured()) return res.status(503).json({ message: "AI is not configured yet." });
+    try {
+      const result = await gradeTeachBack(lessonId, text);
+      const covered = result.keyPoints.filter(k => k.covered).length;
+      const saved = await storage.recordTeachBack(userId, lessonId, covered, result.keyPoints.length, result.verdict === "pass", TEACH_BACK_XP);
+      return res.json({ ...result, xpAwarded: saved?.xpAwarded ?? 0, freeTry: !topPlan });
+    } catch (err: any) {
+      return coachFail(res, err);
+    }
+  });
+
+  // GET /api/ai-health — check the Anthropic key and model are working (admin only)
   app.get("/api/ai-health", requireAuth as any, async (_req: Request, res: Response) => {
     if (!isAdmin(_req)) return res.status(403).json({ message: "Forbidden" });
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) return res.json({ ok: false, reason: 'GEMINI_API_KEY not set' });
-    // Confirmed working models as of March 2026 via ListModels
-    const modelCandidates = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-flash-latest'];
-    const attempts = modelCandidates.map(m => ({
-      url: `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`,
-      label: `v1beta/${m}`
-    }));
-    const results: Record<string, string> = {};
-    for (const { url } of attempts) {
-      const label = url.replace(/key=[^&]+/, 'key=REDACTED').replace('https://generativelanguage.googleapis.com/', '');
-      try {
-        const resp = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts: [{ text: 'Say OK' }] }] }),
-        });
-        const data: any = await resp.json();
-        if (resp.ok) {
-          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? 'no text';
-          results[label] = `OK: ${text.trim()}`;
-          return res.json({ ok: true, workingEndpoint: label, allResults: results });
-        } else {
-          results[label] = `${resp.status}: ${data?.error?.message?.substring(0, 100) ?? 'unknown'}`;
-        }
-      } catch (err: any) {
-        results[label] = `FETCH_ERR: ${err?.message?.substring(0, 80)}`;
-      }
+    if (!aiConfigured()) return res.json({ ok: false, reason: 'ANTHROPIC_API_KEY not set' });
+    try {
+      const r = await askClaude({ feature: "ai-health", prompt: "Say OK", maxTokens: 10 });
+      return res.json({ ok: true, model: r.model, reply: r.text });
+    } catch (err: any) {
+      return res.json({ ok: false, reason: err?.message ?? 'unknown error' });
     }
-    return res.json({ ok: false, reason: 'No endpoints worked', allResults: results });
   });
 
   // ── Email lead capture (landing page opt-in) ──────────────────────────────
@@ -2220,13 +2711,17 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       const subscriptions = await stripe.subscriptions.list({ limit: 100, status: 'active' });
       const allUsers = await storage.getAllUsers();
 
+      // Annual (and yearly Team) subscriptions count at a twelfth of their price.
       const monthlyCustomers = subscriptions.data.filter(s =>
-        s.items.data.some(i => i.price.recurring?.interval === 'month')
+        s.items.data.some(i => i.price.recurring?.interval === 'month' || i.price.recurring?.interval === 'year')
       );
-      const mrr = monthlyCustomers.reduce((sum, s) => {
-        const monthlyAmount = s.items.data.reduce((a, i) => a + (i.price.unit_amount ?? 0), 0);
+      const mrr = Math.round(monthlyCustomers.reduce((sum, s) => {
+        const monthlyAmount = s.items.data.reduce((a, i) => {
+          const amt = i.price.unit_amount ?? 0;
+          return a + (i.price.recurring?.interval === 'year' ? amt / 12 : amt);
+        }, 0);
         return sum + monthlyAmount;
-      }, 0) / 100; // cents to dollars
+      }, 0)) / 100; // cents to dollars
 
       // Lifetime payments (one-time charges)
       const paymentIntents = await stripe.paymentIntents.list({ limit: 100 });
@@ -2251,7 +2746,7 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       // Free to paid conversion — trialing users have full access but haven't
       // converted yet, so they're excluded from "paid" (see trialingUsers below).
       const totalUsers = allUsers.length;
-      const paidUsers = allUsers.filter(u => u.subscriptionStatus === 'active' || u.subscriptionStatus === 'lifetime').length;
+      const paidUsers = allUsers.filter(u => isPaidStatus(u.subscriptionStatus)).length;
       const trialingUsers = allUsers.filter(u => u.subscriptionStatus === 'trialing').length;
       const conversionRate = totalUsers > 0 ? Math.round((paidUsers / totalUsers) * 100) : 0;
 
@@ -2342,8 +2837,7 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
   // remaining purpose once boot-time migration was verified working.
 
   app.get("/api/cron/drip", async (req: Request, res: Response) => {
-    const secret = process.env.CRON_SECRET;
-    if (!secret || req.query.secret !== secret) {
+    if (!keyMatches(secretFromRequest(req), process.env.CRON_SECRET)) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
     try {
@@ -2359,7 +2853,8 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
           user.username,
           user.registeredAt,
           user.sentEmailDays,
-          user.subscriptionStatus
+          user.subscriptionStatus,
+          user.trialEndsAt
         );
         if (updated.length !== user.sentEmailDays.length) {
           await storage.updateSentEmailDays(user.id, updated);
@@ -2410,8 +2905,9 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
     const filename = LESSON_BOOK_FILES[moduleId];
     if (!filename) return res.status(404).json({ message: 'Module not found' });
 
-    if (!FREE_LESSON_BOOK_MODULES.includes(moduleId) && !hasPaidPlan(user)) {
-      return res.status(403).json({ message: 'Upgrade to a paid plan to download this module\'s Lesson Book.' });
+    // Downloads are an Annual/Lifetime perk (Monthly streams, it doesn't keep).
+    if (!FREE_LESSON_BOOK_MODULES.includes(moduleId) && !canDownloadLessonBooks(user)) {
+      return res.status(403).json({ message: `Lesson Book downloads come with ${topPlanName()}.` });
     }
 
     const filePath = path.join(process.cwd(), 'server', 'assets', 'lesson-books', filename);
@@ -2449,6 +2945,14 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       data:        'module-4-data-analytics.m4a',
       capture:     'module-5-capture-bd.m4a',
       operations:  'module-6-operations-leadership.m4a',
+      business:    'module-7-business-of-defense-contracting.m4a',
+      smallbiz:    'module-8-small-business.m4a',
+      compliance:  'module-9-compliance-stack.m4a',
+      preaward:    'module-10-government-pre-award.m4a',
+      lifecycle:   'module-11-beyond-award.m4a',
+      onramp:      'module-12-startup-on-ramp.m4a',
+      veteran:     'module-13-veteran-transition.m4a',
+      history:     'module-14-why-the-rules-exist.m4a',
     };
 
     const filename = AUDIO_FILES[moduleId];
@@ -2471,48 +2975,208 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
     });
   });
 
-  // ── GET /api/certificate/:moduleId ─────────────────────────────────────────
-  // Generates a PDF Certificate of Completion for an authenticated user.
-  // Only available if user has completed all lessons in the module.
-  app.get("/api/certificate/:moduleId", requireAuth as any, async (req: Request, res: Response) => {
-    const { moduleId } = req.params;
-    const user = (req as any).user as { id: number; username: string; email: string };
+  // ── Certificates, the CLP ledger, and public verification ─────────────────
+  // All read users.module_completions (server/credentials.ts). A user's record
+  // is brought up to date first, so modules finished before records existed
+  // get stamped (marked backfilled) the first time anyone looks.
+  async function freshCompletions(userId: string): Promise<{ user: any; completions: ModuleCompletions } | null> {
+    const user = await storage.getUser(userId);
+    if (!user) return null;
+    const sync = syncCompletions((user as any).completedLessons ?? [], (user as any).moduleCompletions);
+    if (sync.changed) {
+      await storage.updateUserFields(userId, { moduleCompletions: sync.completions });
+    }
+    return { user, completions: sync.completions };
+  }
 
-    // Moved to shared/moduleClps.ts so the client can show the same numbers
-    // it will print here — the mobile Modules list and Module header both
-    // display CLPs, and a second copy would have drifted.
+  const CERT_ID_RE = /^ACQ-[2-9A-Z]{4}-[2-9A-Z]{4}$/;
+
+  // Short-lived cache (hits and misses) so repeat lookups of the same ID,
+  // e.g. an auditor refreshing, never touch the database twice a minute.
+  const CERT_CACHE_MS = 60_000;
+  const CERT_CACHE_MAX = 500;
+  const certCache = new Map<string, { at: number; value: Awaited<ReturnType<typeof lookupCertificateUncached>> }>();
+
+  async function lookupCertificate(rawId: string) {
+    const certId = String(rawId || '').toUpperCase().trim();
+    // Malformed IDs are rejected here, before any cache or database work.
+    if (!CERT_ID_RE.test(certId)) return null;
+    const hit = certCache.get(certId);
+    if (hit && Date.now() - hit.at < CERT_CACHE_MS) return hit.value;
+    const value = await lookupCertificateUncached(certId);
+    if (certCache.size >= CERT_CACHE_MAX) certCache.delete(certCache.keys().next().value!);
+    certCache.set(certId, { at: Date.now(), value });
+    return value;
+  }
+
+  async function lookupCertificateUncached(certId: string) {
+    const user = await storage.findUserByCertId(certId);
+    if (!user) return null;
+    const entry = Object.entries(((user as any).moduleCompletions ?? {}) as ModuleCompletions)
+      .find(([, c]) => c.certId === certId);
+    if (!entry || !MODULE_CLPS[entry[0]]) return null;
+    const [moduleId, rec] = entry;
+    return {
+      certId,
+      name: certificateName(user as any),
+      course: MODULE_CLPS[moduleId].title,
+      clps: MODULE_CLPS[moduleId].clps,
+      functionalAreas: MODULE_FUNCTIONAL_AREAS[moduleId] ?? [],
+      completedOn: formatCertDate(rec.completedAt),
+    };
+  }
+
+  // GET /api/certificate/:moduleId: PDF Certificate of Completion. Issued only
+  // for a finished module, with its recorded completion date and permanent ID.
+  // (It used to issue to anyone who asked, dated the day of download.)
+  app.get("/api/certificate/:moduleId", requireAuth as any, async (req: Request, res: Response) => {
+    const moduleId = String(req.params.moduleId);
+    // Shared with the client so the app shows the same numbers printed here.
     const mod = MODULE_CLPS[moduleId];
     if (!mod) return res.status(404).json({ message: 'Module not found' });
 
-    const { execFile } = await import('child_process');
-    const { promisify } = await import('util');
-    const path = await import('path');
-    const execFileAsync = promisify(execFile);
-
-    const payload = JSON.stringify({
-      name: user.username || 'Defense Professional',
-      module_id: moduleId,
-      module_title: mod.title,
-      clps: mod.clps,
-      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
-      email: user.email || '',
-    });
+    const fresh = await freshCompletions((req.user as any).id);
+    if (!fresh) return res.status(404).json({ message: 'User not found' });
+    const record = fresh.completions[moduleId];
+    if (!record) {
+      return res.status(403).json({ message: 'Finish every lesson in this module to earn its certificate.' });
+    }
 
     try {
-      const scriptPath = path.join(process.cwd(), 'server', 'certificate.py');
-      const { stdout } = await execFileAsync('python3', [scriptPath, payload], {
-        encoding: 'buffer',
-        maxBuffer: 5 * 1024 * 1024,
+      const pdf = await renderCertificate({
+        // Never an email address: Google sign-ups have username = email.
+        name: certificateName(fresh.user),
+        moduleTitle: mod.title,
+        clps: mod.clps,
+        date: formatCertDate(record.completedAt),
+        certId: record.certId,
+        functionalAreas: MODULE_FUNCTIONAL_AREAS[moduleId] ?? [],
       });
 
       const safeName = mod.title.replace(/[^a-z0-9]+/gi, '-').toLowerCase();
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', `attachment; filename="acqlerate-certificate-${safeName}.pdf"`);
-      res.send(stdout);
+      res.send(pdf);
     } catch (err: any) {
       console.error('[certificate] PDF generation failed:', err.message);
       return res.status(500).json({ message: 'Certificate generation failed' });
     }
+  });
+
+  // Annual and Lifetime (the top plans, shared/access.ts), plus admins.
+  const ledgerUnlocked = (u: any) => isTopPlanStatus(u?.subscriptionStatus) || !!u?.isAdmin;
+
+  // GET /api/clp-ledger: every certificate the user holds, plus the two-year
+  // cycle. Annual/Lifetime Pro feature. Other tiers get a summary for the upsell,
+  // never the per-certificate detail or the export. Individual certificates
+  // stay downloadable from each module page on every tier.
+  app.get("/api/clp-ledger", requireAuth as any, async (req: Request, res: Response) => {
+    const fresh = await freshCompletions((req.user as any).id);
+    if (!fresh) return res.status(404).json({ message: 'User not found' });
+    const ledger = buildLedger(fresh.completions);
+    if (!ledgerUnlocked(fresh.user)) {
+      return res.json({
+        locked: true,
+        certificates: ledger.entries.length,
+        totalClps: ledger.totalClps,
+        availableClps: ledger.availableClps,
+        cycleTarget: ledger.cycleTarget,
+        modulesTotal: ledger.modulesTotal,
+      });
+    }
+    return res.json({ locked: false, name: certificateName(fresh.user), ...ledger });
+  });
+
+  // GET /api/clp-ledger.csv: the same ledger as a spreadsheet. Annual/Lifetime only.
+  app.get("/api/clp-ledger.csv", requireAuth as any, async (req: Request, res: Response) => {
+    const fresh = await freshCompletions((req.user as any).id);
+    if (!fresh) return res.status(404).json({ message: 'User not found' });
+    if (!ledgerUnlocked(fresh.user)) {
+      return res.status(403).json({ message: `The CLP ledger export is part of ${topPlanName()}.` });
+    }
+    const csv = ledgerCsv(buildLedger(fresh.completions), certificateName(fresh.user));
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="acqlerate-clp-ledger.csv"');
+    return res.send(csv);
+  });
+
+  // GET /api/verify/:certId: public, no sign-in. Returns only what is printed
+  // on the certificate itself.
+  app.get("/api/verify/:certId", async (req: Request, res: Response) => {
+    const cert = await lookupCertificate(String(req.params.certId));
+    res.setHeader('Cache-Control', 'no-store');
+    if (!cert) return res.status(404).json({ valid: false });
+    return res.json({ valid: true, provider: 'Acqlerate', ...cert });
+  });
+
+  const verifyShell = (body: string) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verify a certificate | Acqlerate</title><meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg">
+<style>
+@font-face{font-family:'General Sans';font-weight:500;src:url('/fonts/GeneralSans-Medium.woff2') format('woff2')}
+@font-face{font-family:'General Sans';font-weight:700;src:url('/fonts/GeneralSans-Bold.woff2') format('woff2')}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'General Sans',-apple-system,sans-serif;background:#F1F5F4;color:#0F172A;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:48px 16px}
+a.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#0F172A;font-weight:700;font-size:1.1rem;margin-bottom:28px}
+a.logo span{color:#01696F}
+a.logo img{width:32px;height:32px;border-radius:8px;background:#01696F}
+.card{background:#fff;border:1px solid #D3DFDE;border-top:4px solid #D9B64C;border-radius:14px;padding:32px;max-width:560px;width:100%}
+h1{font-size:1.5rem;margin:14px 0 18px;letter-spacing:-.01em}
+.badge{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:6px}
+.ok{background:#E7F2EC;color:#1F6B43}.no{background:#FAEDE5;color:#A8482A}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th{text-align:left;color:#6B8082;font-weight:500;padding:9px 12px 9px 0;vertical-align:top;width:44%;border-bottom:1px solid #E7EEED}
+td{padding:9px 0;font-weight:500;border-bottom:1px solid #E7EEED}
+p{color:#3D5153;line-height:1.6}.fine{font-size:.82rem;margin-top:18px;color:#6B8082}
+</style></head><body><a class="logo" href="/"><img src="/acqlerate-icon.svg" alt=""><b>Acq<span>lerate</span></b></a><div class="card">${body}</div></body></html>`;
+
+  // GET /verify: public lookup form for anyone holding only the printed ID
+  // (an auditor typing it in). Server-rendered, no sign-in, no JS. Without this
+  // route the bare URL fell through to the React app and its login screen.
+  app.get("/verify", (req: Request, res: Response) => {
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('X-Robots-Tag', 'noindex');
+    const raw = typeof req.query.id === 'string' ? req.query.id.toUpperCase().trim() : '';
+    if (raw && CERT_ID_RE.test(raw)) return res.redirect(302, `/verify/${raw}`);
+    const msg = raw ? `<p style="color:#A8482A;margin-bottom:14px">That does not look like a certificate ID. It looks like <b>ACQ-XXXX-XXXX</b>.</p>` : '';
+    res.status(raw ? 400 : 200).setHeader('Content-Type', 'text/html; charset=utf-8');
+    return res.send(verifyShell(`<div class="badge ok" style="background:#EAF1F1;color:#01696F">Certificate check</div>
+      <h1>Verify a certificate</h1>
+      <p style="margin-bottom:16px">Enter the Certificate ID printed on the certificate. No account needed.</p>
+      ${msg}
+      <form method="get" action="/verify"><input name="id" placeholder="ACQ-XXXX-XXXX" maxlength="13" autocomplete="off" autocapitalize="characters" spellcheck="false" style="width:100%;padding:12px;font:inherit;font-family:ui-monospace,monospace;border:1px solid #D3DFDE;border-radius:8px;margin-bottom:12px">
+      <button type="submit" style="width:100%;padding:12px;font:inherit;font-weight:700;background:#01696F;color:#fff;border:0;border-radius:8px;cursor:pointer">Verify</button></form>`));
+  });
+
+  // GET /verify/:certId: the page behind the link printed on every
+  // certificate. Server-rendered, so it works for anyone with no app and no JS.
+  app.get("/verify/:certId", async (req: Request, res: Response) => {
+    const cert = await lookupCertificate(String(req.params.certId));
+    const esc = (v: string) => v.replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]!));
+    let body: string;
+    if (cert) {
+      const rows: [string, string][] = [
+        ['Awarded to', cert.name],
+        ['Course', cert.course],
+        ['Completed', cert.completedOn],
+        ['Instruction hours / CLPs', cert.clps.toFixed(1)],
+        ['DAWIA functional areas', cert.functionalAreas.join(', ')],
+        ['Certificate ID', cert.certId],
+      ];
+      body = `<div class="badge ok">&#10003; Valid certificate</div>
+        <h1>Certificate of Completion</h1>
+        <table>${rows.map(([k, v]) => `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`).join('')}</table>
+        <p class="fine">Issued by Acqlerate for self-paced online training. Acqlerate is not affiliated with WarU, DoD, or any government agency. The learner self-reports this training in their own portal.</p>`;
+    } else {
+      body = `<div class="badge no">No match</div>
+        <h1>We could not find that certificate</h1>
+        <p>Check the ID against the printed certificate. It looks like <b>ACQ-XXXX-XXXX</b> and never uses the characters 0, 1, O, I, or L.</p>`;
+    }
+    res.status(cert ? 200 : 404);
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('X-Robots-Tag', 'noindex');
+    return res.send(verifyShell(body));
   });
 
   return httpServer;

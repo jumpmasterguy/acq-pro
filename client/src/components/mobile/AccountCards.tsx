@@ -3,10 +3,10 @@
  * wrapper every other card uses.
  */
 
-import type { ReactNode } from 'react';
+import type { ReactNode, KeyboardEvent } from 'react';
 import { Zap } from 'lucide-react';
-import { modules } from '@/lib/curriculum';
-import { getModuleTheme } from '@/lib/moduleTheme';
+import { modules } from '@/lib/curriculumMeta';
+import { getModuleTheme, getModuleFamilyTheme } from '@/lib/moduleTheme';
 import { getModuleProgress } from '@/lib/progress';
 import { moduleClps } from '@shared/moduleClps';
 import { SkillLevelPill } from './ModulePieces';
@@ -57,7 +57,10 @@ export function LevelHero({
   lessonsDone,
   dayStreak,
   clpsEarned,
+  onOpenRoad,
 }: {
+  /** Opens the level road. The whole card becomes the tap target. */
+  onOpenRoad?: () => void;
   level: number;
   title: string;
   xp: number;
@@ -77,8 +80,15 @@ export function LevelHero({
   return (
     <div
       className="rounded-2xl p-5 text-white"
-      style={{ background: 'var(--acq-gradient-hero)' }}
+      style={{ background: 'var(--acq-gradient-hero)', cursor: onOpenRoad ? 'pointer' : undefined }}
       data-testid="account-level-hero"
+      {...(onOpenRoad ? {
+        role: 'button',
+        tabIndex: 0,
+        'aria-label': `Level ${level}, ${title}. Open your road to SES`,
+        onClick: onOpenRoad,
+        onKeyDown: (e: KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenRoad(); } },
+      } : {})}
     >
       <div className="flex items-center gap-3.5">
         <span
@@ -93,6 +103,14 @@ export function LevelHero({
             {xp} XP · {toNext} XP to {nextTitle}
           </div>
         </div>
+        {onOpenRoad && (
+          <span
+            className="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold"
+            style={{ background: 'rgba(255,255,255,.14)', color: 'var(--acq-gold-bright)' }}
+          >
+            Road ›
+          </span>
+        )}
       </div>
 
       <div
@@ -130,7 +148,7 @@ export function ModuleStanding({
     <>
       <div className="flex flex-col gap-3">
         {modules.map((mod, i) => {
-          const theme = getModuleTheme(mod.color);
+          const theme = getModuleFamilyTheme(mod.id);
           const pct = getModuleProgress(mod.id, mod.lessons.map(l => l.id), completedLessons);
           return (
             <div key={mod.id} className="flex items-center gap-3">
@@ -165,7 +183,7 @@ export function ModuleStanding({
 
       <p className="mt-3.5 text-xs leading-[1.5]" style={{ color: 'var(--acq-text-muted)' }}>
         Finish a module to unlock its Certificate of Completion. Self-report it as External Training
-        in your WarU portal. All six modules together are worth{' '}
+        in your WarU portal. All {modules.length} modules together are worth{' '}
         {modules.reduce((sum, m) => sum + moduleClps(m.id), 0).toFixed(1)} CLPs.
       </p>
     </>

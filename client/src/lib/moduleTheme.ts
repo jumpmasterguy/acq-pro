@@ -243,3 +243,136 @@ export const MODULE_THEME: Record<ModuleColorKey, ModuleTheme> = {
 export function getModuleTheme(colorKey: string | undefined): ModuleTheme {
   return MODULE_THEME[colorKey as ModuleColorKey] ?? MODULE_THEME.slate;
 }
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Subject families
+//
+// The 14 module colours above were assigned one per module, which means colour
+// carries no information: a learner cannot tell what a hue means, so the eye
+// learns to ignore it. Modules are therefore grouped into five subject
+// families, and the family owns the colour. Three weeks in, a learner knows
+// purple means contracts without anyone explaining it.
+//
+// Five rather than fourteen is a legibility limit, not a style choice. The
+// hexes below were checked pairwise for colour-vision separation (OKLab dE) in
+// both light and dark mode against the real surface colours. All ten pairs
+// pass; magenta against green sits in the acceptable band only because colour
+// is never the sole signal (every tile also carries an icon and a text label).
+// If a hue is ever swapped, re-run that check rather than trusting the eye.
+// Roughly 1 in 12 men has some colour vision deficiency.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export type ModuleFamily = 'foundations' | 'money' | 'contracts' | 'winning' | 'program';
+
+/** Which family each module belongs to. Keyed by module id from curriculum.ts. */
+export const MODULE_FAMILY: Record<string, ModuleFamily> = {
+  // How the system works, end to end
+  foundations: 'foundations',
+  preaward: 'foundations',
+  lifecycle: 'foundations',
+  onramp: 'foundations',
+  history: 'foundations',
+  // Where the dollars come from and go
+  finance: 'money',
+  business: 'money',
+  // The rules and the paperwork that binds
+  contracts: 'contracts',
+  compliance: 'contracts',
+  // Going after work and landing it
+  capture: 'winning',
+  smallbiz: 'winning',
+  veteran: 'winning',
+  // Executing it once you have it
+  data: 'program',
+  operations: 'program',
+};
+
+/** Short label shown on module tiles and in the sidebar legend. */
+export const FAMILY_LABEL: Record<ModuleFamily, string> = {
+  foundations: 'Foundations',
+  money: 'Money',
+  contracts: 'Contracts',
+  winning: 'Winning work',
+  program: 'Run the program',
+};
+
+export const FAMILY_THEME: Record<ModuleFamily, ModuleTheme> = {
+  foundations: {
+    hex: '#3D8FD1',
+    headerGrad: 'from-[#3D8FD1] to-[#2A6B9E] dark:from-[#2A6B9E] dark:to-[#1D4C70] border-[#3D8FD1]/50',
+    border: 'border-[#3D8FD1]/25 dark:border-[#4A9AE0]/30',
+    hoverBorder: 'hover:border-[#3D8FD1]/60',
+    text: 'text-[#3D8FD1] dark:text-[#4A9AE0]',
+    bgTint: 'bg-[#3D8FD1]/10',
+    borderTint: 'border-[#3D8FD1]/30',
+    progressBar: '[&>div]:bg-[#3D8FD1]',
+    mobileHex: '#3D8FD1',
+    gradientFrom: '#4A9AE0',
+    gradientTo: '#2A6B9E',
+  },
+  money: {
+    hex: '#2E8B57',
+    headerGrad: 'from-[#2E8B57] to-[#216640] dark:from-[#216640] dark:to-[#17482D] border-[#2E8B57]/50',
+    border: 'border-[#2E8B57]/25 dark:border-[#41A56B]/30',
+    hoverBorder: 'hover:border-[#2E8B57]/60',
+    text: 'text-[#2E8B57] dark:text-[#41A56B]',
+    bgTint: 'bg-[#2E8B57]/10',
+    borderTint: 'border-[#2E8B57]/30',
+    progressBar: '[&>div]:bg-[#2E8B57]',
+    mobileHex: '#2E8B57',
+    gradientFrom: '#41A56B',
+    gradientTo: '#216640',
+  },
+  contracts: {
+    hex: '#5E3596',
+    headerGrad: 'from-[#5E3596] to-[#45276E] dark:from-[#45276E] dark:to-[#2F1A4D] border-[#5E3596]/50',
+    border: 'border-[#5E3596]/25 dark:border-[#8E63D6]/30',
+    hoverBorder: 'hover:border-[#5E3596]/60',
+    text: 'text-[#5E3596] dark:text-[#8E63D6]',
+    bgTint: 'bg-[#5E3596]/10',
+    borderTint: 'border-[#5E3596]/30',
+    progressBar: '[&>div]:bg-[#5E3596]',
+    mobileHex: '#5E3596',
+    gradientFrom: '#8E63D6',
+    gradientTo: '#45276E',
+  },
+  winning: {
+    hex: '#D1571A',
+    headerGrad: 'from-[#D1571A] to-[#A04314] dark:from-[#A04314] dark:to-[#73300E] border-[#D1571A]/50',
+    border: 'border-[#D1571A]/25 dark:border-[#DC7129]/30',
+    hoverBorder: 'hover:border-[#D1571A]/60',
+    text: 'text-[#D1571A] dark:text-[#DC7129]',
+    bgTint: 'bg-[#D1571A]/10',
+    borderTint: 'border-[#D1571A]/30',
+    progressBar: '[&>div]:bg-[#D1571A]',
+    mobileHex: '#D1571A',
+    gradientFrom: '#DC7129',
+    gradientTo: '#A04314',
+  },
+  program: {
+    hex: '#B0327A',
+    headerGrad: 'from-[#B0327A] to-[#85255C] dark:from-[#85255C] dark:to-[#5C1940] border-[#B0327A]/50',
+    border: 'border-[#B0327A]/25 dark:border-[#D2519A]/30',
+    hoverBorder: 'hover:border-[#B0327A]/60',
+    text: 'text-[#B0327A] dark:text-[#D2519A]',
+    bgTint: 'bg-[#B0327A]/10',
+    borderTint: 'border-[#B0327A]/30',
+    progressBar: '[&>div]:bg-[#B0327A]',
+    mobileHex: '#B0327A',
+    gradientFrom: '#D2519A',
+    gradientTo: '#85255C',
+  },
+};
+
+export function getModuleFamily(moduleId: string): ModuleFamily {
+  return MODULE_FAMILY[moduleId] ?? 'foundations';
+}
+
+/**
+ * A module's theme, by family. Prefer this over getModuleTheme(mod.color) for
+ * anything module-level, so every surface agrees on what colour a module is.
+ */
+export function getModuleFamilyTheme(moduleId: string): ModuleTheme {
+  return FAMILY_THEME[getModuleFamily(moduleId)];
+}

@@ -17,7 +17,7 @@
 // Without acq:stat the panel falls back to read time / audience / month, so a post
 // published by the automated pipeline still gets a complete slide.
 
-import { readFileSync, writeFileSync, readdirSync, statSync } from "fs";
+import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "fs";
 import { join, dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
@@ -87,13 +87,8 @@ const fmtMonth = (iso) => {
   return `${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][m - 1]} ${y}`;
 };
 
-// Slide styling rotates through three palettes so the carousel keeps its rhythm
-// regardless of which posts land in it.
-const PALETTES = [
-  { bg: "linear-gradient(135deg,#0d2137 0%,#0c4e54 100%)", shadow: "rgba(1,105,111,0.25)", ctaBg: "#f5c842", ctaFg: "#0d2137", accent: "#f5c842" },
-  { bg: "linear-gradient(135deg,#1B2D3E 0%,#2d4a6b 100%)", shadow: "rgba(0,0,0,0.2)",        ctaBg: "white",   ctaFg: "#1B2D3E", accent: "#4FC3CB" },
-  { bg: "linear-gradient(135deg,#0d2137 0%,#014a4f 100%)", shadow: "rgba(1,105,111,0.25)", ctaBg: "white",   ctaFg: "#0d2137", accent: "#f5c842" },
-];
+// Slide styling rotates through three palettes (bs-p0..bs-p2, defined in landing.html's CSS) so the
+// carousel keeps its rhythm regardless of which posts land in it. Colors live in CSS, not here.
 
 const audienceLabel = (a) => {
   const s = a.toLowerCase();
@@ -104,42 +99,41 @@ const audienceLabel = (a) => {
   return a || "Acquisition";
 };
 
-function statPanel(post, palette) {
+function statPanel(post) {
   const stats = post.stats.length === 3 ? post.stats : [
     { value: `${post.readMin} min`, label: "Read Time" },
     { value: audienceLabel(post.audience), label: "Written For" },
     { value: fmtMonth(post.datePublished), label: "Published" },
   ];
-  const divider = `<div style="width:1px;height:28px;background:rgba(255,255,255,0.1)"></div>`;
+  const divider = `<div class="bs-div"></div>`;
   const cell = (s, i) => {
-    const size = s.value.length > 7 ? "1.05rem" : s.value.length > 5 ? "1.3rem" : "1.6rem";
-    const color = i === 1 ? palette.accent : "white";
-    return `<div style="text-align:center"><div style="font-size:${size};font-weight:900;color:${color};line-height:1">${esc(s.value)}</div><div style="font-size:0.62rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px">${esc(s.label)}</div></div>`;
+    const size = s.value.length > 7 ? " s" : s.value.length > 5 ? " m" : "";
+    const accent = i === 1 ? " acc" : "";
+    return `<div class="bs-stat"><div class="bs-v${size}${accent}">${esc(s.value)}</div><div class="bs-l">${esc(s.label)}</div></div>`;
   };
-  return `<div class="blog-featured-stats" style="background:rgba(0,0,0,0.18);min-width:160px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:28px 24px;gap:18px;border-left:1px solid rgba(255,255,255,0.07)">
+  return `<div class="blog-featured-stats bs-stats">
             ${stats.map(cell).join(`\n            ${divider}\n            `)}
           </div>`;
 }
 
 function slide(post, i) {
-  const p = PALETTES[i % PALETTES.length];
   const latest = i === 0;
   const badge = latest
-    ? `<span style="background:#f5c842;color:#0d2137;font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:4px 10px;border-radius:4px">🔥 Latest</span>`
-    : `<span style="background:rgba(255,255,255,0.15);color:white;font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:4px 10px;border-radius:4px">${esc(post.tag || audienceLabel(post.audience))}</span>`;
+    ? `<span class="bs-badge bs-badge-latest">🔥 Latest</span>`
+    : `<span class="bs-badge">${esc(post.tag || audienceLabel(post.audience))}</span>`;
   const cta = latest ? "Read the Breakdown →" : "Read the Guide →";
   return `        <!-- Slide ${i}: ${esc(post.headline)} -->
-        <a href="/blog/${post.slug}" class="blog-slide" data-index="${i}" style="display:${latest ? "flex" : "none"};text-decoration:none;background:${p.bg};border-radius:16px;overflow:hidden;transition:box-shadow 0.2s" onmouseover="this.style.boxShadow='0 12px 48px ${p.shadow}'" onmouseout="this.style.boxShadow=''">
-          <div style="padding:36px 40px;flex:1">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+        <a href="/blog/${post.slug}" class="blog-slide bs-p${i % 3}${latest ? " bs-latest" : ""}" data-index="${i}" style="display:${latest ? "flex" : "none"}">
+          <div class="bs-body">
+            <div class="bs-meta">
               ${badge}
-              <span style="font-size:0.72rem;color:rgba(255,255,255,0.4)">${fmtDate(post.datePublished)} · ${post.readMin} min read</span>
+              <span class="bs-date">${fmtDate(post.datePublished)} · ${post.readMin} min read</span>
             </div>
-            <h3 style="font-size:clamp(1.1rem,2.5vw,1.45rem);font-weight:800;color:white;line-height:1.3;letter-spacing:-0.02em;margin:0 0 12px">${esc(post.headline)}</h3>
-            <p style="font-size:0.92rem;color:rgba(255,255,255,0.65);line-height:1.65;margin:0 0 24px">${esc(post.description)}</p>
-            <div style="display:inline-flex;align-items:center;gap:8px;background:${p.ctaBg};color:${p.ctaFg};font-weight:800;font-size:0.85rem;padding:10px 20px;border-radius:9px">${cta}</div>
+            <h3 class="bs-title">${esc(post.headline)}</h3>
+            <p class="bs-desc">${esc(post.description)}</p>
+            <div class="bs-cta">${cta}</div>
           </div>
-          ${statPanel(post, p)}
+          ${statPanel(post)}
         </a>`;
 }
 
@@ -185,7 +179,235 @@ const nextSitemap = `<?xml version="1.0" encoding="UTF-8"?>
 const sitemapChanged = nextSitemap !== sitemap;
 if (sitemapChanged) writeFileSync(SITEMAP, nextSitemap);
 
+
+function htmlFiles(dir) {
+  const out = [];
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    if (e.name === "node_modules" || e.name.startsWith(".")) continue;
+    const full = join(dir, e.name);
+    if (e.isDirectory()) out.push(...htmlFiles(full));
+    else if (e.name.endsWith(".html")) out.push(full);
+  }
+  return out;
+}
+
+function sourceFiles(dir) {
+  const out = [];
+  if (!existsSync(dir)) return out;
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    if (e.name === "node_modules" || e.name.startsWith(".")) continue;
+    const full = join(dir, e.name);
+    if (e.isDirectory()) out.push(...sourceFiles(full));
+    // curriculum.ts is the source of truth; these two exist to describe the
+    // stale phrasings, so scanning them would flag their own patterns.
+    else if (/\.(ts|tsx|js|mjs|py)$/.test(e.name) &&
+             !["curriculum.ts", "sync-blog.mjs", "curriculum_counts.py",
+               "gen-module-clps.mjs", "moduleClps.ts"].includes(e.name))
+      out.push(full);
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+// 3. Module/lesson counts
+//
+// "N modules, M lessons" appears in published post CTAs, on the tools page and
+// in the app. It has gone stale twice: a July commit fixed "34+ lessons" to 42,
+// and by September the truth was 122 lessons across 14 modules while 34 posts,
+// the sign-in page and three generators still said six and 42.
+//
+// So the counts are derived here from curriculum.ts (same lesson-ID regex
+// validate-curriculum.js uses) and rewritten in the static HTML on every
+// build, which means published posts self-heal. Source files under client/src,
+// server/ and scripts/ are NOT rewritten (editing source during a build is a
+// bad habit); instead any stale figure there fails the build, so drift is
+// caught rather than shipped.
+// ---------------------------------------------------------------------------
+const NUM_WORDS = ["Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten",
+                   "Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen",
+                   "Eighteen","Nineteen","Twenty"];
+
+// One source: shared/courseTotals.generated.json, written from curriculum.ts
+// by scripts/gen-module-clps.mjs (which runs first in every build).
+function curriculumCounts() {
+  const file = join(ROOT, "shared", "courseTotals.generated.json");
+  let t;
+  try { t = JSON.parse(readFileSync(file, "utf8")); }
+  catch { console.error("sync-blog: shared/courseTotals.generated.json missing. Run node scripts/gen-module-clps.mjs"); process.exit(1); }
+  return { ...t, word: t.modulesWord };
+}
+
+const CC = curriculumCounts();
+
+// ---------------------------------------------------------------------------
+// Placeholders. Any number on a page written as
+//     <span data-count="lessons">123</span>
+// is refreshed from the curriculum on every build. The number inside is just
+// the last value, so the page still reads correctly if the build step is
+// skipped. Keys:
+//   modules, modules-word ("Fourteen"), modules-word-lower, lessons, minutes,
+//   hours, clps (44.2), clps-whole (44, for "over 44 CLPs"),
+//   lessons:<moduleId>, clps:<moduleId>,
+//   pdus:<area>, modules:<area>  (PMI Talent Triangle: ba, ww, ps)
+// ---------------------------------------------------------------------------
+function markerValue(key) {
+  const [k, mod] = key.split(":");
+  if (mod && (k === "pdus" || k === "modules")) {       // Talent Triangle: pdus:ba, modules:ww ...
+    const t = CC.triangle?.[mod];
+    if (!t) return undefined;
+    return k === "pdus" ? t.pdus.toFixed(1) : String(t.modules);
+  }
+  if (mod) {
+    const m = CC.perModule[mod];
+    if (!m) return undefined;
+    if (k === "lessons") return String(m.lessons);
+    if (k === "clps") return m.clps.toFixed(1);
+    return undefined;
+  }
+  return {
+    modules: String(CC.modules), "modules-word": CC.modulesWord,
+    "modules-word-lower": CC.modulesWord.toLowerCase(), lessons: String(CC.lessons),
+    minutes: String(CC.minutes), hours: CC.hours.toFixed(1), clps: CC.clps.toFixed(1),
+    "clps-whole": String(CC.clpsWhole), "avg-minutes": String(CC.avgMinutes),
+  }[k];
+}
+const badMarkers = [];
+function fillMarkers(text, file) {
+  return text.replace(/(<span data-count="([^"]+)">)[^<]*(<\/span>)/g, (all, open, key, close) => {
+    const v = markerValue(key);
+    if (v === undefined) { badMarkers.push(`${file.replace(ROOT + "/", "")}: unknown data-count="${key}"`); return all; }
+    return open + v + close;
+  });
+}
+
+// Narrow, formulaic phrasings only. Each is emitted by a generator or was
+// copied from one, so these patterns cannot collide with prose that happens to
+// contain a number. Module 1's own "9 lessons" is deliberately untouched.
+function fixCounts(text) {
+  const w = CC.word, W = w.toLowerCase(), n = CC.modules, L = CC.lessons;
+  return text
+    // blog + article CTAs: "Start Free. Six Modules, 42 Lessons"
+    // "Start Free — Six Modules, 42 Lessons" and the "Start Free." variant.
+    // Normalised to a period on the way past: house style has no em dashes,
+    // and strip_em_dashes() in the generator only catches number-dash-number.
+    .replace(/Start Free\s*[.,—–-]?\s*(?:One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen|Fourteen|Fifteen|Sixteen|Seventeen|Eighteen|Nineteen|Twenty|\d+) Modules?, \d+\+? Lessons/g,
+             `Start Free. ${w} Modules, ${L} Lessons`)
+    // "Six modules. 34+ lessons." / "Fourteen modules. 122 lessons."
+    .replace(/\b(?:One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen|Fourteen|Fifteen|Sixteen|Seventeen|Eighteen|Nineteen|Twenty) modules\. \d+\+? lessons\./g,
+             `${w} modules. ${L} lessons.`)
+    // "All 6 modules — 42 lessons"
+    .replace(/\bAll \d+ modules (—|-) \d+\+? lessons/g, `All ${n} modules $1 ${L} lessons`)
+    // bare "all 6 modules" / "All 6 modules"
+    .replace(/\b(all|All) \d+ modules\b/g, (_, a) => `${a} ${n} modules`)
+    // prose "Six modules covering" / "six modules together"
+    .replace(/\b(One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen|Fourteen) (modules? (?:covering|together|and))/g,
+             (_, __, rest) => `${w} ${rest}`)
+    .replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen) (modules? (?:covering|together|and))/g,
+             (_, __, rest) => `${W} ${rest}`)
+    // Any three-digit lesson figure is a curriculum total ("14 modules, 122
+    // lessons", "all 122 lessons", "(122 lessons)"). Module-level figures are
+    // one or two digits, so Module 1's own lesson count is never touched.
+    // Added Sep 2026 after a 122 -> 123 bump slipped past the module-keyed
+    // patterns above on the PDU page.
+    .replace(/\b1\d{2}(\+?) (lessons|Lessons)\b/g, (_, plus, word) => `${L}${plus} ${word}`);
+}
+
+// Course-level CLP/PDU totals inside <script> JSON-LD and <meta> tags, where a
+// <span> marker cannot go. Marketing pages only: blog posts talk about other
+// people's CLP numbers ("80 CLPs every two years") and are left alone.
+function fixTotals(text) {
+  return text
+    .replace(/\b(more than|over|Over) \d{2} (CLPs|PDUs)\b/g, (_, a, u) => `${a} ${CC.clpsWhole} ${u}`)
+    .replace(/(~|roughly )\d{2}\.\d (CLPs|PDUs)\b/g, (_, a, u) => `${a}${CC.clps.toFixed(1)} ${u}`);
+}
+const isBlog = (f) => f.includes(`${join("client", "public", "blog")}/`);
+
+let countFixes = 0;
+for (const file of htmlFiles(join(ROOT, "client", "public"))) {
+  const before = readFileSync(file, "utf8");
+  let after = fillMarkers(fixCounts(before), file);
+  if (!isBlog(file)) after = fixTotals(after);
+  if (after !== before) {
+    writeFileSync(file, after);
+    countFixes++;
+  }
+}
+
+// Fail the build on any course total on a marketing page that is not a
+// marker. Strip the markers, and whatever totals remain were typed by hand
+// and will go stale the next time a lesson is added.
+const unmarked = [];
+for (const file of htmlFiles(join(ROOT, "client", "public"))) {
+  if (isBlog(file)) continue;
+  const html = readFileSync(file, "utf8")
+    .replace(/<script[\s\S]*?<\/script>/g, "")      // JSON-LD: rewritten by fixCounts/fixTotals
+    .replace(/<(meta|title)[^>]*>([\s\S]*?<\/title>)?/g, "")
+    .replace(/<span data-count="[^"]+">[^<]*<\/span>/g, "#");
+  const text = html.replace(/<[^>]+>/g, " ");
+  // \s+ not " ": a stat tile puts the number and its label in separate
+  // boxes ("122" / "Lessons"), which reads as "122   Lessons" once tags go.
+  // The single-space version let two such tiles ship 122 after the count
+  // moved to 123 (27 Sep 2026).
+  const checks = [
+    /\b1\d{2}\+?\s+lessons\b/gi,                        // course lesson total
+    /\b(all\s+)?1\d\s+modules\b/gi,                       // course module total (10-19)
+    /\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\s+modules\b/gi,
+    /\b\d{1,2}\.\d\s+(CLPs|PDUs)\b/gi,                     // any CLP/PDU figure
+    /\b(more than|over|up to)\s+\d{2}(\s+PMI)?\s+(CLPs|PDUs)\b/gi,
+  ];
+  // Number-only cells in the CLP/PDU tables and stat tiles: the label sits in
+  // another element, so the text patterns above can't see them.
+  for (const m of html.matchAll(/class="(pdu-value|pdu-total-value|pdu-num|num|hero-stat-num)"[^>]*>(?!~?#)~?(\d{2,}|\d+\.\d)[^<]*</g))   // 2+ digits or a decimal; "3 Skill Levels" is not a total
+    unmarked.push(`${file.replace(ROOT + "/", "")}: ${m[0]}`);
+  for (const re of checks) for (const m of text.matchAll(re))
+    unmarked.push(`${file.replace(ROOT + "/", "")}: "${m[0]}"`);
+  for (const m of html.matchAll(/<td class="pdu-num">(?!~?#)[^<]*<\/td>/g))
+    unmarked.push(`${file.replace(ROOT + "/", "")}: ${m[0]}`);
+}
+if (badMarkers.length || unmarked.length) {
+  console.error(`\nsync-blog: course totals typed by hand on a page. Wrap each number in a ` +
+                `marker so it updates itself, e.g. <span data-count="lessons">${CC.lessons}</span> ` +
+                `(keys are listed at the top of scripts/sync-blog.mjs):`);
+  for (const s of [...new Set([...badMarkers, ...unmarked])]) console.error(`  ${s}`);
+  process.exit(1);
+}
+
+// Fail the build on a stale figure in source we do not rewrite.
+const STALE = [
+  /Start Free[.,—-]?\s*(?:Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen) Modules/,
+  /\b(?:Six|six) modules\b(?! covering| together)/,
+  /\ball \d+ modules\b/i,
+  /\b\d+\+? in-depth lessons\b/,
+  /\b1[0-9]{2}\+? lessons\b/,
+];
+const sourceDirs = [join(ROOT, "client", "src"), join(ROOT, "server"),
+                    join(ROOT, "scripts"), join(ROOT, "content_strategy")];
+const stale = [];
+for (const dir of sourceDirs) {
+  for (const file of sourceFiles(dir)) {
+    const text = readFileSync(file, "utf8");
+    for (const re of STALE) {
+      // Every match, not just the first: a file can hold a correct figure
+      // followed by a stale one (server/email.ts did, Sep 2026).
+      for (const m of text.matchAll(new RegExp(re.source, re.flags.includes("g") ? re.flags : re.flags + "g"))) {
+        // a figure that already agrees with the curriculum is fine
+        if (m[0].includes(String(CC.modules)) || m[0].includes(String(CC.lessons))) continue;
+        stale.push(`${file.replace(ROOT + "/", "")}: ${m[0]}`);
+      }
+    }
+  }
+}
+if (stale.length) {
+  console.error(`\nsync-blog: stale module/lesson counts in source ` +
+                `(curriculum says ${CC.modules} modules, ${CC.lessons} lessons):`);
+  for (const s of [...new Set(stale)]) console.error(`  ${s}`);
+  console.error("Use the curriculum as the source: getTotalLessons()/modules.length in the " +
+                "client, scripts/curriculum_counts.py in the generators.");
+  process.exit(1);
+}
+
 console.log(
   `sync-blog: ${posts.length} posts · carousel → ${posts.slice(0, CAROUSEL_SIZE).map((p) => p.slug).join(", ")}` +
-  ` · landing.html ${landingChanged ? "updated" : "unchanged"} · sitemap.xml ${sitemapChanged ? "updated" : "unchanged"} (${kept.length + blogBlocks.length} URLs)`
+  ` · landing.html ${landingChanged ? "updated" : "unchanged"} · sitemap.xml ${sitemapChanged ? "updated" : "unchanged"} (${kept.length + blogBlocks.length} URLs)` +
+  ` · counts ${CC.modules} modules/${CC.lessons} lessons (${countFixes} file${countFixes === 1 ? "" : "s"} rewritten)`
 );

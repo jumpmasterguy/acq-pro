@@ -3,19 +3,10 @@
 <head>
   <meta charset="UTF-8" />
 
-  <!-- Google Analytics 4 — G-SW42SFY999 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SW42SFY999"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-SW42SFY999', {
-      page_title: document.title,
-      page_location: window.location.href,
-    });
-  </script>
+  <!-- Cookie consent + Google Analytics: see /consent.js -->
+  <script src="/consent.js"></script>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Free Acquisition Tools & Resources — Acqlerate</title>
   <meta name="description" content="Free acquisition tools for KOs, program managers, and defense contractors — organized by role, with plain-English guides on how to actually use them." />
   <link rel="canonical" href="https://acqlerate.com/tools" />
@@ -45,361 +36,271 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --navy: #0D1B2A;
-      --navy-mid: #1B2D3E;
-      --navy-alt: #0d2137;
-      --teal: #01696F;
-      --teal-dark: #0C4E54;
-      --teal-light: #E6F2F3;
-      --teal-mid: #4F98A3;
-      --gold: #F5C842;
-      --gold-dark: #B88600;
-      --gold-bg: #FEF9E7;
-      --text: #1A1A1A;
-      --text-muted: #6B7280;
-      --text-faint: #9CA3AF;
-      --border: #E5E7EB;
-      --bg: #FFFFFF;
-      --surface: #F7F9FB;
+    /* General Sans: same font files the main page uses */
+    @font-face { font-family: 'General Sans'; font-weight: 400; src: url('/fonts/GeneralSans-Regular.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'General Sans'; font-weight: 500; src: url('/fonts/GeneralSans-Medium.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'General Sans'; font-weight: 600; src: url('/fonts/GeneralSans-Semibold.woff2') format('woff2'); font-display: swap; }
+    @font-face { font-family: 'General Sans'; font-weight: 700; src: url('/fonts/GeneralSans-Bold.woff2') format('woff2'); font-display: swap; }
 
-      /* Role badge colors */
-      --role-ko: #01696F;
-      --role-pm: #0D1B2A;
-      --role-contractor: #B88600;
-      --role-bd: #6B21A8;
-      --role-all: #4B5563;
+    /* Tokens copied from the main page (landing.html .top / .v2) so the two pages stay one system */
+    :root {
+      --bg: #F1F5F4; --surface: #FFFFFF; --surface-2: #E7EEED;
+      --ink: #0F172A; --ink-2: #3D5153; --ink-3: #56696B; --line: #D3DFDE; --line-2: #E1E9E8;
+      --brand: #01696F; --brand-dark: #0C4E54; --brand-2: #E0EDEC; --brand-bright: #4FC3CB;
+      --navy: #0F172A; --navy-2: #0C2B33; --navy-3: #0F3D42; --footer-navy: #0D1B2A;
+      --gold: #D9B64C; --gold-ink: #7A5F14; --gold-tint: #FBF7EC; --gold-edge: #E7D69B;
+      --font: 'General Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --wrap: 1120px; --gutter: clamp(16px, 4vw, 40px);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: var(--font);
       font-size: 16px;
       line-height: 1.6;
-      color: var(--text);
+      color: var(--ink);
       background: var(--bg);
       -webkit-font-smoothing: antialiased;
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
     }
+    .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gutter); }
+    a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 
-    /* ─── NAV ─── */
+    /* ─── BUTTONS ─── */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font); font-weight: 600; font-size: 0.95rem; padding: 13px 22px; border-radius: 10px; text-decoration: none; border: 1.5px solid transparent; cursor: pointer; line-height: 1; white-space: nowrap; transition: transform 0.12s, background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s; }
+    .btn:active { transform: translateY(1px); }
+    .btn-brand { background: var(--brand); color: #fff; box-shadow: 0 6px 18px -8px var(--brand); }
+    .btn-brand:hover { background: var(--brand-dark); }
+    .btn-brand:disabled { opacity: 0.7; cursor: default; }
+    .btn-gold { background: var(--gold); color: var(--navy); }
+    .btn-gold:hover { background: #E3C56A; }
+    .btn-outline { background: #fff; color: var(--ink); border-color: var(--line); }
+    .btn-outline:hover { border-color: var(--brand); color: var(--brand); }
+    .btn-ghost-light { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.25); }
+    .btn-ghost-light:hover { background: rgba(255,255,255,0.16); }
+    .btn-sm { font-size: 0.85rem; padding: 9px 16px; }
+
+    /* ─── NAV (same as main page) ─── */
     nav {
       position: sticky; top: 0; z-index: 200;
-      background: rgba(255,255,255,0.96);
+      background: rgba(255,255,255,0.94);
       backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
+      border-bottom: 1px solid var(--line);
+      /* Clear the status bar / notch. Zero in a desktop browser. */
+      padding-top: env(safe-area-inset-top);
     }
-    .nav-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between;
-      height: 60px;
-    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
     .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .nav-logo-icon {
-      width: 36px; height: 36px; background: var(--teal); border-radius: 9px;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .nav-logo-icon svg { width: 22px; height: 22px; }
-    .nav-logo-text { font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
-    .nav-logo-text span { color: var(--teal); }
-    .nav-actions { display: flex; align-items: center; gap: 12px; }
-    .nav-blog-pill {
-      display: inline-flex; align-items: center; gap: 7px;
-      background: rgba(1,105,111,0.08); border: 1px solid rgba(1,105,111,0.25);
-      color: var(--teal); font-size: 0.85rem; font-weight: 600;
-      padding: 6px 14px; border-radius: 20px; text-decoration: none;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .nav-blog-pill:hover { background: rgba(1,105,111,0.15); border-color: rgba(1,105,111,0.45); }
-    .nav-blog-badge {
-      background: var(--teal); color: white; font-size: 0.65rem;
-      font-weight: 700; padding: 1px 6px; border-radius: 10px;
-      letter-spacing: 0.04em; text-transform: uppercase;
-    }
-    .btn-ghost {
-      background: none; border: 1px solid var(--border); cursor: pointer;
-      color: var(--text-muted); font-size: 0.9rem; font-weight: 500;
-      padding: 7px 16px; border-radius: 8px; text-decoration: none;
-      transition: color 0.15s, background 0.15s;
-    }
-    .btn-ghost:hover { color: var(--text); background: var(--surface); }
-    .btn-primary {
-      background: var(--teal); color: white; border: none; cursor: pointer;
-      font-size: 0.9rem; font-weight: 600; padding: 9px 20px;
-      border-radius: 9px; text-decoration: none;
-      transition: background 0.15s, transform 0.1s;
-      display: inline-flex; align-items: center; gap: 6px;
-    }
-    .btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); }
+    .nav-logo-icon { width: 34px; height: 34px; border-radius: 9px; background: var(--brand); overflow: hidden; flex-shrink: 0; }
+    .nav-logo-icon img { width: 100%; height: 100%; display: block; }
+    .nav-logo-text { font-size: 1.15rem; font-weight: 700; color: var(--navy); letter-spacing: -0.02em; }
+    .nav-logo-text span { color: var(--brand); }
+    .nav-links { display: flex; align-items: center; gap: 2px; }
+    .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--ink-2); text-decoration: none; padding: 8px 12px; border-radius: 8px; }
+    .nav-links a:hover { color: var(--brand); background: var(--brand-2); }
+    .nav-links a.active { color: var(--brand); background: var(--brand-2); font-weight: 600; }
+    .nav-cta { display: flex; align-items: center; gap: 8px; }
+    .nav-cta a { white-space: nowrap; }
+    @media (max-width: 800px) { .nav-links, .nav-signin { display: none; } }
 
-    /* ─── HERO ─── */
+    /* Inside the Acqlerate app: the visitor is already signed in, so the
+       marketing header gives way to a way back into the app. Toggled by the
+       script at the end of <body>. */
+    .app-back {
+      display: none; align-items: center; gap: 6px;
+      color: var(--brand); font-weight: 700; font-size: 0.95rem;
+      text-decoration: none; padding: 8px 4px;
+    }
+    html.in-app .app-back { display: inline-flex; }
+    html.in-app .nav-logo,
+    html.in-app .nav-links,
+    html.in-app .nav-cta,
+    html.in-app .bottom-cta,
+    html.in-app .signup-only { display: none !important; }
+
+    /* ─── HERO (same gradient + glows as main page) ─── */
     .hero {
-      background: var(--navy-alt);
-      padding: 72px 2rem 64px;
-      text-align: center;
+      background: linear-gradient(110deg, var(--navy-2) 0%, var(--navy-3) 60%, #0C4E54 100%);
+      color: #fff;
+      padding: clamp(48px, 7vw, 88px) 0 clamp(48px, 7vw, 80px);
+      position: relative; overflow: hidden;
     }
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(1,105,111,0.2); border: 1px solid rgba(79,152,163,0.4);
-      color: #7ECFD6; font-size: 0.75rem; font-weight: 700;
-      padding: 5px 14px; border-radius: 100px; margin-bottom: 24px;
-      letter-spacing: 0.08em; text-transform: uppercase;
+    .hero::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(600px 400px at 85% 20%, rgba(79,195,203,0.18), transparent 60%), radial-gradient(500px 300px at 10% 90%, rgba(217,182,76,0.10), transparent 60%);
     }
-    .hero h1 {
-      font-size: clamp(2rem, 4.5vw, 3.2rem);
-      font-weight: 800; color: white; letter-spacing: -0.03em;
-      line-height: 1.12; max-width: 800px; margin: 0 auto 20px;
-    }
-    .hero h1 em { font-style: normal; color: #4FC3CB; }
-    .hero-sub {
-      font-size: clamp(0.95rem, 2vw, 1.1rem);
-      color: rgba(255,255,255,0.7);
-      max-width: 600px; margin: 0 auto;
-      line-height: 1.7;
-    }
+    .hero .wrap { position: relative; }
+    .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+    .hero-kicker { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); color: rgba(255,255,255,0.85); font-size: 0.78rem; font-weight: 600; padding: 6px 12px; border-radius: 99px; margin-bottom: 20px; }
+    .hero-kicker i { width: 7px; height: 7px; border-radius: 50%; background: var(--brand-bright); }
+    .hero h1 { font-size: clamp(2.1rem, 4.4vw, 3.2rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.12; color: #fff; }
+    .hero h1 em { font-style: normal; color: var(--brand-bright); }
+    .hero .lede { font-size: clamp(1.02rem, 1.3vw, 1.15rem); line-height: 1.65; max-width: 560px; margin-top: 14px; color: rgba(255,255,255,0.78); }
+    .hero-ctas { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
 
-    /* ─── FILTER TABS ─── */
+    /* FAR Clause Translator: a card in the hero, like the product mock on the main page */
+    .far-card { scroll-margin-top: 90px; background: var(--surface); color: var(--ink); border-radius: 16px; padding: 22px 22px 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.35); }
+    .far-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+    .far-tile { width: 40px; height: 40px; border-radius: 10px; display: inline-grid; place-items: center; font-size: 20px; flex-shrink: 0; background: var(--gold-tint); border: 1px solid var(--gold-edge); }
+    .far-head h2 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+    .far-chip { font-size: 0.72rem; font-weight: 600; color: var(--brand-dark); background: var(--brand-2); padding: 4px 10px; border-radius: 99px; }
+    .far-desc { font-size: 0.92rem; line-height: 1.55; color: var(--ink-2); margin-bottom: 14px; }
+    .far-row { display: flex; gap: 10px; }
+    .far-input { flex: 1; min-width: 0; height: 46px; padding: 0 14px; border-radius: 10px; border: 1.5px solid var(--line); background: #fff; font-family: var(--font); font-size: 0.95rem; color: var(--ink); outline: none; }
+    .far-input::placeholder { color: #8A9B9D; }
+    .far-input:focus { border-color: var(--brand); }
+    .far-row .btn { height: 46px; padding: 0 20px; }
+    .far-result { display: none; margin-top: 14px; }
+    .far-out { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; max-height: 340px; overflow-y: auto; }
+    .far-out-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--brand); margin-bottom: 10px; }
+    .far-out-body { font-size: 0.9rem; line-height: 1.65; color: var(--ink-2); }
+    .far-out-body strong { color: var(--brand-dark); font-weight: 700; }
+    .far-alert { border-radius: 12px; padding: 14px 16px; font-size: 0.9rem; line-height: 1.55; }
+    .far-alert a { color: var(--brand); font-weight: 600; }
+    .far-alert.info { background: var(--gold-tint); border: 1px solid var(--gold-edge); color: var(--gold-ink); }
+    .far-alert.error { background: #FEF2F2; border: 1px solid #F5C6C6; color: #991B1B; }
+    .far-note { font-size: 0.78rem; line-height: 1.5; color: var(--ink-3); margin-top: 12px; }
+
+    /* ─── ROLE FILTER (pills, like the main page chips) ─── */
     .filter-bar {
-      position: sticky; top: 60px; z-index: 100;
-      background: rgba(255,255,255,0.97);
+      position: sticky; top: calc(65px + env(safe-area-inset-top)); z-index: 100;
+      background: rgba(255,255,255,0.95);
       backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
+      border-bottom: 1px solid var(--line);
     }
     .filter-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: flex; gap: 0; overflow-x: auto;
+      display: flex; gap: 8px; overflow-x: auto; padding-top: 12px; padding-bottom: 12px;
       scrollbar-width: none;
     }
     .filter-inner::-webkit-scrollbar { display: none; }
     .filter-tab {
-      flex-shrink: 0;
-      background: none; border: none; cursor: pointer;
-      font-family: inherit; font-size: 0.875rem; font-weight: 600;
-      color: var(--text-muted); padding: 14px 20px;
-      border-bottom: 2px solid transparent;
-      transition: color 0.15s, border-color 0.15s;
-      white-space: nowrap;
+      flex-shrink: 0; cursor: pointer; white-space: nowrap;
+      font-family: var(--font); font-size: 0.88rem; font-weight: 600;
+      color: var(--ink-2); background: var(--bg); border: 1px solid var(--line);
+      padding: 8px 16px; border-radius: 99px;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
     }
-    .filter-tab:hover { color: var(--text); }
-    .filter-tab.active { color: var(--teal); border-bottom-color: var(--teal); }
+    .filter-tab:hover { border-color: var(--brand); color: var(--brand); }
+    .filter-tab.active { background: var(--brand); border-color: var(--brand); color: #fff; }
 
     /* ─── MAIN CONTENT ─── */
-    .content-wrap {
-      max-width: 1100px; margin: 0 auto;
-      padding: 52px 2rem 80px;
-    }
+    .content-wrap { padding-top: clamp(40px, 5vw, 56px); padding-bottom: 88px; scroll-margin-top: 130px; }
 
     /* ─── CATEGORY SECTION ─── */
-    .cat-section { margin-bottom: 64px; }
-    .cat-header {
-      display: flex; align-items: center; gap: 14px;
-      margin-bottom: 24px;
-    }
+    .cat-section { margin-bottom: 56px; }
+    .cat-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
     .cat-number {
-      flex-shrink: 0;
-      width: 36px; height: 36px; border-radius: 10px;
-      background: var(--navy); color: white;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.8rem; font-weight: 800; letter-spacing: 0.02em;
+      flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%;
+      background: var(--brand); color: #fff;
+      display: inline-grid; place-items: center;
+      font-size: 0.85rem; font-weight: 700;
     }
-    .cat-title {
-      font-size: 1.2rem; font-weight: 800; color: var(--text);
-      letter-spacing: -0.02em;
-    }
-    .cat-divider {
-      flex: 1; height: 1px; background: var(--border);
-    }
+    .cat-title { font-size: clamp(1.25rem, 2vw, 1.5rem); font-weight: 700; color: var(--ink); letter-spacing: -0.02em; line-height: 1.2; }
+    .cat-divider { flex: 1; height: 1px; background: var(--line); }
 
     /* ─── TOOL CARD ─── */
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 18px;
-    }
+    .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
     .tool-card {
-      background: white;
-      border: 1.5px solid var(--border);
-      border-radius: 14px;
-      padding: 22px 20px 18px;
-      display: flex; flex-direction: column; gap: 12px;
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      background: #fff; border: 1px solid var(--line); border-radius: 16px;
+      padding: 22px; display: flex; flex-direction: column; gap: 12px;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.12s;
     }
-    .tool-card:hover {
-      border-color: var(--teal-mid);
-      box-shadow: 0 4px 20px rgba(1,105,111,0.09);
-      transform: translateY(-2px);
-    }
+    .tool-card:hover { border-color: var(--brand); box-shadow: 0 8px 24px -12px rgba(1,105,111,0.35); transform: translateY(-1px); }
+    .tool-card.featured { border-color: var(--brand); box-shadow: 0 8px 24px -12px rgba(1,105,111,0.35); }
     .tool-card.hidden { display: none; }
-
-    .tool-card-top {
-      display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
-    }
-    .tool-name {
-      font-size: 1rem; font-weight: 700; color: var(--text);
-      letter-spacing: -0.01em; line-height: 1.3;
-    }
-    .tool-name .tool-sub {
-      font-size: 0.78rem; font-weight: 500; color: var(--text-muted);
-      display: block; margin-top: 2px;
-    }
+    .tool-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .tool-name { font-size: 1.05rem; font-weight: 700; color: var(--ink); letter-spacing: -0.01em; line-height: 1.3; }
+    .tool-name .tool-sub { font-size: 0.8rem; font-weight: 500; color: var(--ink-3); display: block; margin-top: 2px; letter-spacing: 0; }
     .tool-free-label {
-      flex-shrink: 0;
-      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
-      padding: 3px 9px; border-radius: 100px;
-      background: #ECFDF5; color: #065F46; border: 1px solid #6EE7B7;
+      flex-shrink: 0; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 3px 9px; border-radius: 99px;
+      background: #ECFDF5; color: #065F46;
     }
-    .tool-free-label.paid {
-      background: #FFF8ED; color: #92400E; border-color: #FBD38D;
-    }
+    .tool-free-label.paid { background: var(--gold-tint); color: var(--gold-ink); }
+    .tool-desc { font-size: 0.92rem; color: var(--ink-2); line-height: 1.6; flex: 1; }
 
-    .tool-desc {
-      font-size: 0.875rem; color: var(--text-muted);
-      line-height: 1.6; flex: 1;
-    }
+    .tool-roles { display: flex; flex-wrap: wrap; gap: 6px; }
+    .role-badge { font-size: 0.75rem; font-weight: 600; padding: 4px 11px; border-radius: 99px; background: var(--surface-2); color: var(--ink-2); }
+    .role-badge.ko { background: var(--brand-2); color: var(--brand-dark); }
+    .role-badge.pm { background: #E8F1FA; color: #2A6B9E; }
+    .role-badge.contractor { background: var(--gold-tint); color: var(--gold-ink); box-shadow: inset 0 0 0 1px var(--gold-edge); }
+    .role-badge.bd { background: #EFEBF5; color: #5E3596; }
+    .role-badge.all { background: var(--surface-2); color: var(--ink-2); }
+    .role-badge.small-biz { background: #FAEEE8; color: #A8440F; }
+    .role-badge.schedule { background: #EAF3EE; color: #226B43; }
+    .role-badge.gov { background: var(--surface-2); color: var(--ink-2); }
+    .role-badge.tech { background: #F7EAF2; color: #8E2862; }
 
-    .tool-roles {
-      display: flex; flex-wrap: wrap; gap: 6px;
+    .tool-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding-top: 14px; border-top: 1px solid var(--line-2); }
+    .tool-link, .tool-learn {
+      display: inline-flex; align-items: center; gap: 5px; text-decoration: none;
+      font-family: var(--font); font-weight: 600; font-size: 0.85rem; line-height: 1;
+      padding: 9px 16px; border-radius: 10px; border: 1.5px solid transparent;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
     }
-    .role-badge {
-      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.03em;
-      padding: 3px 10px; border-radius: 100px;
-      color: white;
-    }
-    .role-badge.ko { background: var(--role-ko); }
-    .role-badge.pm { background: var(--role-pm); }
-    .role-badge.contractor { background: var(--role-contractor); }
-    .role-badge.bd { background: var(--role-bd); }
-    .role-badge.all { background: var(--role-all); }
-    .role-badge.small-biz { background: #1D4ED8; }
-    .role-badge.schedule { background: #0891B2; }
-    .role-badge.gov { background: #374151; }
-    .role-badge.tech { background: #7C3AED; }
+    .tool-link { background: var(--brand); color: #fff; }
+    .tool-link:hover { background: var(--brand-dark); }
+    .tool-learn { background: #fff; color: var(--ink); border-color: var(--line); }
+    .tool-learn:hover { border-color: var(--brand); color: var(--brand); }
 
-    .tool-actions {
-      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-      padding-top: 4px; border-top: 1px solid var(--border);
-    }
-    .tool-link {
-      display: inline-flex; align-items: center; gap: 5px;
-      font-size: 0.82rem; font-weight: 600; color: var(--teal);
-      text-decoration: none; padding: 6px 12px;
-      border: 1.5px solid var(--teal-light); border-radius: 7px;
-      background: var(--teal-light);
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .tool-link:hover { background: #cce8ea; border-color: var(--teal-mid); }
-    .tool-learn {
-      display: inline-flex; align-items: center; gap: 4px;
-      font-size: 0.78rem; font-weight: 600; color: var(--text-muted);
-      text-decoration: none; padding: 6px 10px;
-      border: 1.5px solid var(--border); border-radius: 7px;
-      background: white;
-      transition: color 0.15s, border-color 0.15s;
-    }
-    .tool-learn:hover { color: var(--navy); border-color: var(--navy); }
-
-    /* ─── AI CALLOUT BOX ─── */
+    /* ─── AI CALLOUT (hero gradient) ─── */
     .ai-callout {
-      margin-top: 28px;
-      background: linear-gradient(135deg, #0D1B2A 0%, #0C3A40 100%);
-      border: 1.5px solid rgba(79,152,163,0.4);
-      border-radius: 16px;
-      padding: 28px 28px 24px;
+      margin-top: 28px; position: relative; overflow: hidden;
+      background: linear-gradient(110deg, var(--navy-2) 0%, var(--navy-3) 60%, #0C4E54 100%);
+      border-radius: 16px; padding: clamp(22px, 3vw, 30px);
       display: flex; gap: 18px; align-items: flex-start;
     }
+    .ai-callout::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(400px 260px at 90% 10%, rgba(79,195,203,0.16), transparent 60%); }
     .ai-callout-icon {
-      flex-shrink: 0;
-      width: 44px; height: 44px;
-      background: rgba(245,200,66,0.15);
-      border: 1.5px solid rgba(245,200,66,0.3);
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem;
+      position: relative; flex-shrink: 0; width: 44px; height: 44px;
+      background: var(--gold-tint); border: 1px solid var(--gold-edge); border-radius: 12px;
+      display: grid; place-items: center; font-size: 1.3rem;
     }
-    .ai-callout-body { flex: 1; }
-    .ai-callout-body p {
-      font-size: 0.95rem; color: rgba(255,255,255,0.85);
-      line-height: 1.7;
-    }
-    .ai-callout-body strong { color: var(--gold); }
+    .ai-callout-body { position: relative; flex: 1; }
+    .ai-callout-body p { font-size: 0.97rem; color: rgba(255,255,255,0.82); line-height: 1.7; }
+    .ai-callout-body strong { color: var(--gold); font-weight: 700; }
 
-    /* ─── BOTTOM CTA ─── */
-    .bottom-cta {
-      background: var(--navy-alt);
-      padding: 80px 2rem;
-      text-align: center;
-    }
-    .bottom-cta h2 {
-      font-size: clamp(1.7rem, 3.5vw, 2.4rem);
-      font-weight: 800; color: white; letter-spacing: -0.025em;
-      max-width: 680px; margin: 0 auto 18px; line-height: 1.2;
-    }
-    .bottom-cta p {
-      font-size: 1rem; color: rgba(255,255,255,0.6);
-      max-width: 540px; margin: 0 auto 40px; line-height: 1.7;
-    }
-    .bottom-cta-btns {
-      display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
-    }
-    .btn-teal-lg {
-      background: var(--teal); color: white; border: none; cursor: pointer;
-      font-size: 1rem; font-weight: 700; padding: 14px 32px;
-      border-radius: 10px; text-decoration: none;
-      transition: background 0.15s, transform 0.1s;
-      box-shadow: 0 4px 20px rgba(1,105,111,0.4);
-    }
-    .btn-teal-lg:hover { background: var(--teal-dark); transform: translateY(-2px); }
-    .btn-ghost-lg {
-      background: rgba(255,255,255,0.07); color: white;
-      border: 1.5px solid rgba(255,255,255,0.2); cursor: pointer;
-      font-size: 1rem; font-weight: 600; padding: 14px 32px;
-      border-radius: 10px; text-decoration: none;
-      transition: background 0.15s, transform 0.1s;
-    }
-    .btn-ghost-lg:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+    /* ─── BOTTOM CTA (same as the main page's final CTA) ─── */
+    .bottom-cta { background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%); text-align: center; padding: clamp(56px, 7vw, 80px) var(--gutter); }
+    .bottom-cta h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 700; color: #fff; letter-spacing: -0.02em; line-height: 1.15; max-width: 680px; margin: 0 auto 16px; }
+    .bottom-cta p { font-size: 1rem; color: rgba(255,255,255,0.75); max-width: 540px; margin: 0 auto 36px; line-height: 1.7; }
+    .bottom-cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: #fff; color: var(--brand-dark); padding: 14px 32px; font-size: 1rem; font-weight: 700; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+    .btn-white-outline { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.3); padding: 14px 32px; font-size: 1rem; }
+    .btn-white-outline:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
 
-    /* ─── FOOTER ─── */
-    footer {
-      background: var(--navy); padding: 40px 2rem 28px;
-      border-top: 1px solid rgba(255,255,255,0.07);
-    }
-    .footer-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 16px;
-    }
-    .footer-brand { font-size: 1rem; font-weight: 800; color: white; letter-spacing: -0.02em; }
-    .footer-brand span { color: var(--teal-mid); }
+    /* ─── FOOTER (same as the main page) ─── */
+    footer { background: var(--footer-navy); padding: 40px 2rem 28px; border-top: 1px solid rgba(255,255,255,0.07); }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .footer-brand { font-size: 1rem; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+    .footer-brand span { color: #4F98A3; }
     .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
-    .footer-links a {
-      font-size: 0.82rem; color: rgba(255,255,255,0.4);
-      text-decoration: none; transition: color 0.15s;
-    }
+    .footer-links a { font-size: 0.82rem; color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.15s; }
     .footer-links a:hover { color: rgba(255,255,255,0.7); }
-    .footer-copy {
-      font-size: 0.78rem; color: rgba(255,255,255,0.25);
-      width: 100%; margin-top: 16px;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding-top: 16px;
-      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
-    }
+    .footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.25); width: 100%; margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .footer-copy a { color: rgba(255,255,255,0.25); text-decoration: none; }
+    .footer-copy a:hover { color: rgba(255,255,255,0.45); }
 
     /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; }
+    }
     @media (max-width: 768px) {
-      .filter-tab { padding: 12px 14px; font-size: 0.82rem; }
       .tools-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
-      nav { padding: 0 1rem; }
-      .nav-actions .btn-ghost { display: none; }
-      .hero { padding: 52px 1.25rem 48px; }
-      .content-wrap { padding: 36px 1.25rem 60px; }
-      .cat-section { margin-bottom: 48px; }
+      .cat-section { margin-bottom: 44px; }
       .ai-callout { flex-direction: column; gap: 14px; }
-      .bottom-cta { padding: 60px 1.25rem; }
-      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .far-card { padding: 18px 16px 16px; }
+      .far-row { flex-direction: column; }
+      .far-row .btn { width: 100%; }
+      .far-input { flex: none; width: 100%; }
+      footer { padding: 36px 1.25rem 24px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 20px; }
+      .footer-links { gap: 12px 16px; }
     }
   </style>
 </head>
@@ -407,66 +308,77 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-inner">
+  <div class="wrap nav-inner">
+    <a href="/app" class="app-back" id="app-back">&#8249; Back to Acqlerate</a>
     <a href="/" class="nav-logo">
-      <div class="nav-logo-icon">
-        <img src="/acqlerate-icon.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit">
-      </div>
+      <span class="nav-logo-icon"><img src="/acqlerate-icon.svg" alt="" /></span>
       <span class="nav-logo-text">Acq<span>lerate</span></span>
     </a>
-    <div class="nav-actions">
-      <a href="/tools" class="nav-ghost-sm" style="font-size:0.82rem;color:var(--text);text-decoration:none;padding:8px 14px;border-radius:8px;font-weight:600">Tools</a>
-      <a href="/blog" class="nav-blog-pill">
-        Blog <span class="nav-blog-badge">FREE</span>
-      </a>
-      <a href="https://app.acqlerate.com/sign-in" class="btn-ghost">Sign In</a>
-      <a href="https://app.acqlerate.com/sign-up" class="btn-primary">Start Free →</a>
+    <div class="nav-links">
+      <a href="/#modules">Curriculum</a>
+      <a href="/pdu">CLPs &amp; PDUs</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/blog">Blog</a>
+      <a href="/tools" class="active" aria-current="page">Tools</a>
+      <a href="/why">Our Story</a>
+    </div>
+    <div class="nav-cta">
+      <a href="/app#/auth?mode=login" class="btn btn-sm nav-signin" style="color:var(--ink-2)">Sign In</a>
+      <a href="/app#/auth" class="btn btn-brand btn-sm">Start Free →</a>
     </div>
   </div>
 </nav>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-eyebrow">Free Reference</div>
-  <h1>Tools &amp; Resources for<br><em>Acquisition Professionals</em></h1>
-  <p class="hero-sub">The best free government tools — organized by what you're trying to do, with plain-English explanations of how to use them.</p>
-</section>
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-kicker"><i></i> Free reference</div>
+        <h1>Tools &amp; Resources for <em>Acquisition Professionals</em></h1>
+        <p class="lede">The best free government tools, organized by what you're trying to do, with plain-English explanations of how to use them.</p>
+        <div class="hero-ctas">
+          <a href="#tools-list" class="btn btn-gold">Browse the tools ↓</a>
+          <a href="/app#/auth" class="btn btn-ghost-light signup-only">Start learning free</a>
+        </div>
+      </div>
 
-<!-- FAR CLAUSE TRANSLATOR -->
-<section id="far-translator" style="background:#0a1628;border-bottom:1px solid rgba(255,255,255,0.07);padding:40px 1.25rem;">
-  <div style="max-width:700px;margin:0 auto;">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-      <span style="font-size:1.5rem;">⚡</span>
-      <h2 style="margin:0;font-size:1.2rem;font-weight:800;color:#fff;">FAR Clause Translator</h2>
-      <span style="font-size:11px;font-weight:700;background:#01696f22;color:#4FC3CB;border:1px solid #4FC3CB44;padding:2px 10px;border-radius:20px;">AI-Powered</span>
+      <!-- FAR CLAUSE TRANSLATOR -->
+      <section class="far-card" id="far-translator" aria-label="FAR Clause Translator">
+        <div class="far-head">
+          <span class="far-tile" aria-hidden="true">⚡</span>
+          <h2>FAR Clause Translator</h2>
+          <span class="far-chip">AI-Powered</span>
+        </div>
+        <p class="far-desc">Type any FAR/DFARS clause number or topic and get a plain-English breakdown in seconds. No law degree required.</p>
+        <div class="far-row">
+          <input id="far-input" class="far-input" type="text" placeholder="e.g. FAR 52.212-4 or cost-plus contract" aria-label="FAR or DFARS clause number or topic"
+            onkeydown="if(event.key==='Enter')translateFAR()" />
+          <button onclick="translateFAR()" id="far-btn" class="btn btn-brand">Translate</button>
+        </div>
+        <div id="far-result" class="far-result"></div>
+        <p class="far-note">Powered by Acqlerate AI. Requires a free account. Results are for educational purposes only, not legal advice.</p>
+      </section>
     </div>
-    <p style="color:#94a3b8;font-size:0.875rem;margin:0 0 18px;">Type any FAR/DFARS clause number or topic — get a plain-English breakdown in seconds. No law degree required.</p>
-    <div style="display:flex;gap:10px;">
-      <input id="far-input" type="text" placeholder="e.g. FAR 52.212-4, DFARS 252.204-7012, cost-plus contract..." 
-        style="flex:1;background:#0d1f3c;border:1px solid #1e3a5f;border-radius:10px;padding:12px 16px;color:#fff;font-size:0.9rem;outline:none;"
-        onkeydown="if(event.key==='Enter')translateFAR()" />
-      <button onclick="translateFAR()" id="far-btn"
-        style="background:#01696f;color:#fff;border:none;border-radius:10px;padding:12px 22px;font-weight:700;font-size:0.9rem;cursor:pointer;white-space:nowrap;">
-        Translate
-      </button>
-    </div>
-    <div id="far-result" style="margin-top:16px;display:none;"></div>
-    <p style="color:#4a6274;font-size:11px;margin-top:10px;">Powered by Acqlerate AI &mdash; requires free account. Results are for educational purposes only, not legal advice.</p>
   </div>
-</section>
+</header>
 
 <script>
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 async function translateFAR() {
   const input = document.getElementById('far-input');
   const result = document.getElementById('far-result');
   const btn = document.getElementById('far-btn');
   const clause = input.value.trim();
   if (!clause) return;
-  
+
   btn.textContent = 'Translating...';
   btn.disabled = true;
   result.style.display = 'none';
-  
+
   try {
     const resp = await fetch('/api/far-translate', {
       method: 'POST',
@@ -475,32 +387,32 @@ async function translateFAR() {
       body: JSON.stringify({ clause }),
     });
     const data = await resp.json();
-    
+
     if (!resp.ok) {
       if (resp.status === 401) {
-        result.innerHTML = `<div style="background:#1e1a2e;border:1px solid #7c3aed44;border-radius:12px;padding:16px;color:#a78bfa;"><strong>Sign in required</strong> &mdash; <a href="/app" style="color:#4FC3CB;">Create a free account</a> to use the FAR Translator.</div>`;
+        result.innerHTML = '<div class="far-alert info"><strong>Sign in required.</strong> <a href="/app">Create a free account</a> to use the FAR Translator.</div>';
       } else {
-        result.innerHTML = `<div style="background:#1e0a0a;border:1px solid #7f1d1d44;border-radius:12px;padding:16px;color:#fca5a5;">${data.message || 'Something went wrong.'}</div>`;
+        result.innerHTML = '<div class="far-alert error">' + esc(data.message || 'Something went wrong.') + '</div>';
       }
     } else {
       // Format markdown-style bold headings
-      const formatted = data.result
-        .replace(/\*\*(.+?)\*\*/g, '<strong style="color:#4FC3CB;">$1</strong>')
+      const formatted = esc(data.result)
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\n•/g, '<br>&bull;')
         .replace(/\n-/g, '<br>&bull;')
         .replace(/\n/g, '<br>');
-      result.innerHTML = `
-        <div style="background:#0d1f3c;border:1px solid #1e3a5f;border-radius:12px;padding:20px;">
-          <div style="font-size:11px;font-weight:700;color:#4FC3CB;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">Plain-English Translation: ${data.clause}</div>
-          <div style="color:#cbd5e1;font-size:0.875rem;line-height:1.7;">${formatted}</div>
-        </div>`;
+      result.innerHTML =
+        '<div class="far-out">' +
+          '<div class="far-out-label">Plain-English Translation: ' + esc(data.clause) + '</div>' +
+          '<div class="far-out-body">' + formatted + '</div>' +
+        '</div>';
     }
     result.style.display = 'block';
-  } catch(e) {
-    result.innerHTML = `<div style="color:#fca5a5;">Network error. Try again.</div>`;
+  } catch (e) {
+    result.innerHTML = '<div class="far-alert error">Network error. Try again.</div>';
     result.style.display = 'block';
   }
-  
+
   btn.textContent = 'Translate';
   btn.disabled = false;
 }
@@ -513,7 +425,7 @@ if (window.location.hash === '#far-translator') {
 
 <!-- ROLE FILTER TABS -->
 <div class="filter-bar" id="filter-bar">
-  <div class="filter-inner">
+  <div class="wrap filter-inner">
     <button class="filter-tab active" data-role="all">All</button>
     <button class="filter-tab" data-role="ko">Contracting Specialists &amp; KOs</button>
     <button class="filter-tab" data-role="pm">Program Managers</button>
@@ -522,7 +434,7 @@ if (window.location.hash === '#far-translator') {
 </div>
 
 <!-- MAIN CONTENT -->
-<div class="content-wrap">
+<div class="content-wrap wrap" id="tools-list">
 
   <!-- 1. REGISTRATION & ENTITY MANAGEMENT -->
   <div class="cat-section" id="cat-registration">
@@ -549,7 +461,7 @@ if (window.location.hash === '#far-translator') {
         </div>
         <div class="tool-actions">
           <a href="https://sam.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
-          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Contracts Module →</a>
+          <a href="/app#/module/contracts" class="tool-learn">Learn in Contracts Module →</a>
         </div>
       </div>
 
@@ -602,7 +514,7 @@ if (window.location.hash === '#far-translator') {
         </div>
         <div class="tool-actions">
           <a href="https://sam.gov/search/opportunities" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
-          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Capture Module →</a>
+          <a href="/app#/module/capture" class="tool-learn">Learn in Capture Module →</a>
         </div>
       </div>
 
@@ -622,7 +534,7 @@ if (window.location.hash === '#far-translator') {
         </div>
         <div class="tool-actions">
           <a href="https://usaspending.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
-          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Capture + Finance →</a>
+          <a href="/app#/module/capture" class="tool-learn">Learn in Capture + Finance →</a>
         </div>
       </div>
 
@@ -696,7 +608,7 @@ if (window.location.hash === '#far-translator') {
         </div>
         <div class="tool-actions">
           <a href="https://calc.gsa.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
-          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Finance Module →</a>
+          <a href="/app#/module/finance" class="tool-learn">Learn in Finance Module →</a>
         </div>
       </div>
 
@@ -717,7 +629,7 @@ if (window.location.hash === '#far-translator') {
         </div>
         <div class="tool-actions">
           <a href="https://www.bls.gov/oes/" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
-          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Finance Module →</a>
+          <a href="/app#/module/finance" class="tool-learn">Learn in Finance Module →</a>
         </div>
       </div>
 
@@ -771,7 +683,7 @@ if (window.location.hash === '#far-translator') {
         </div>
         <div class="tool-actions">
           <a href="https://www.ecfr.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
-          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Contracts Module →</a>
+          <a href="/app#/module/contracts" class="tool-learn">Learn in Contracts Module →</a>
         </div>
       </div>
 
@@ -881,7 +793,7 @@ if (window.location.hash === '#far-translator') {
         </div>
         <div class="tool-actions">
           <a href="https://usaspending.gov" target="_blank" rel="noopener" class="tool-link">Open Tool →</a>
-          <a href="https://app.acqlerate.com" class="tool-learn">Learn in Capture Module →</a>
+          <a href="/app#/module/capture" class="tool-learn">Learn in Capture Module →</a>
         </div>
       </div>
 
@@ -1000,7 +912,7 @@ if (window.location.hash === '#far-translator') {
       </div>
 
       <!-- Acqlerate -->
-      <div class="tool-card" data-roles="all" style="border-color: var(--teal); box-shadow: 0 4px 20px rgba(1,105,111,0.12);">
+      <div class="tool-card featured" data-roles="all">
         <div class="tool-card-top">
           <div>
             <div class="tool-name">Acqlerate
@@ -1009,12 +921,12 @@ if (window.location.hash === '#far-translator') {
           </div>
           <span class="tool-free-label">Free to Start</span>
         </div>
-        <p class="tool-desc">Plain-English acquisition education for every role — KOs, PMs, contractors, and BD teams. Six modules covering the full acquisition lifecycle. Earns CLPs (self-reportable) and PMI PDUs. Module 1 is completely free, no credit card required.</p>
+        <p class="tool-desc">Plain-English acquisition education for every role — KOs, PMs, contractors, and BD teams. <span data-count="modules-word">Fourteen</span> modules covering the full acquisition lifecycle. Earns CLPs (self-reportable) and PMI PDUs. Module 1 is completely free, no credit card required.</p>
         <div class="tool-roles">
           <span class="role-badge all">All Roles</span>
         </div>
         <div class="tool-actions">
-          <a href="https://app.acqlerate.com/sign-up" class="tool-link" style="background: var(--teal); color: white; border-color: var(--teal);">Start Free →</a>
+          <a href="/app#/auth" class="tool-link signup-only">Start Free →</a>
         </div>
       </div>
 
@@ -1107,10 +1019,10 @@ if (window.location.hash === '#far-translator') {
 <!-- BOTTOM CTA -->
 <section class="bottom-cta">
   <h2>The tools are only as powerful as the person using them.</h2>
-  <p>Acqlerate teaches you the acquisition system in plain English — so when you pick up these tools, you know exactly what you're doing with them.</p>
+  <p>Acqlerate teaches you the acquisition system in plain English, so when you pick up these tools, you know exactly what you're doing with them.</p>
   <div class="bottom-cta-btns">
-    <a href="https://app.acqlerate.com/sign-up" class="btn-teal-lg">Start Learning Free →</a>
-    <a href="/blog" class="btn-ghost-lg">Browse the Blog</a>
+    <a href="/app#/auth" class="btn btn-white">Start Learning Free →</a>
+    <a href="/blog" class="btn btn-white-outline">Browse the Blog</a>
   </div>
 </section>
 
@@ -1119,18 +1031,22 @@ if (window.location.hash === '#far-translator') {
   <div class="footer-inner">
     <div class="footer-brand">Acq<span>lerate</span></div>
     <div class="footer-links">
-      <a href="/">Home</a>
-      <a href="/tools">Tools</a>
+      <a href="/app#/auth?mode=login">Sign In</a>
+      <a href="/#modules">Curriculum</a>
+      <a href="/#pricing">Pricing</a>
       <a href="/blog">Blog</a>
-      <a href="https://app.acqlerate.com/sign-up">Start Free</a>
-      <a href="/privacy.html">Privacy</a>
-      <a href="/terms.html">Terms</a>
+      <a href="/tools">Tools</a>
+      <a href="/why">Our Story</a>
     </div>
   </div>
   <div class="footer-inner">
     <div class="footer-copy">
-      <span>&copy; 2025 Acqlerate. All rights reserved.</span>
-      <span>Built for acquisition professionals.</span>
+      <span>© 2026 Acqlerate. All rights reserved. Not affiliated with WarU, DoD, or any government agency.</span>
+      <span style="display:flex;gap:16px;">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+        <a href="/sitemap.xml">Sitemap</a>
+      </span>
     </div>
   </div>
 </footer>
@@ -1189,5 +1105,24 @@ if (window.location.hash === '#far-translator') {
   })();
 </script>
 
+<script>
+  (function () {
+    var inApp = false;
+    try { inApp = localStorage.getItem('acq:native') === '1'; } catch (e) {}
+    if (/[?&]app=1\b/.test(location.search)) inApp = true;
+    try { if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) inApp = true; } catch (e) {}
+    if (!inApp) return;
+    document.documentElement.classList.add('in-app');
+    // Back to wherever in the app they came from; straight to the app if
+    // they arrived some other way.
+    var back = document.getElementById('app-back');
+    if (back) back.addEventListener('click', function (e) {
+      if (document.referrer.indexOf(location.origin + '/app') === 0 && history.length > 1) {
+        e.preventDefault();
+        history.back();
+      }
+    });
+  })();
+</script>
 </body>
 </html>

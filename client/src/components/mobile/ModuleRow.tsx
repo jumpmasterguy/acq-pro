@@ -2,9 +2,9 @@
  * A module row on the Modules list: seq tile, title, meta, progress, status.
  */
 
-import type { Module } from '@/lib/curriculum';
-import { formatDuration, getModuleTotalMinutes } from '@/lib/curriculum';
-import { getModuleTheme, moduleGradient } from '@/lib/moduleTheme';
+import type { ModuleMeta } from '@/lib/curriculumMeta';
+import { formatDuration, getModuleTotalMinutes } from '@/lib/curriculumMeta';
+import { getModuleTheme, moduleGradient, getModuleFamilyTheme } from '@/lib/moduleTheme';
 import { formatClps, moduleClps } from '@shared/moduleClps';
 
 export function ModuleRow({
@@ -14,13 +14,13 @@ export function ModuleRow({
   locked,
   onOpen,
 }: {
-  module: Module;
+  module: ModuleMeta;
   seq: number;
   pct: number;
   locked: boolean;
   onOpen: () => void;
 }) {
-  const theme = getModuleTheme(mod.color);
+  const theme = getModuleFamilyTheme(mod.id);
 
   // Locked wins over progress — a locked module shouldn't advertise a percent.
   const status = locked

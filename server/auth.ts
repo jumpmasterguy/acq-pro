@@ -56,6 +56,9 @@ declare global {
       lastStreakDate: string | null;
       dailyChallengeXP: number;
       briefsXP: number;
+      coachXP: number;
+      teachBackCount: number;
+      leaderboardHidden: boolean;
     }
   }
 }
@@ -323,6 +326,15 @@ export function toPassportUser(user: User): Express.User {
       (sum, entry) => sum + (entry?.xpEarned ?? 0),
       0
     ),
+    // Acqlerate Coach Teach It Back XP, same treatment as briefsXP.
+    coachXP: (((user as any).teachBacks as any[]) ?? []).reduce(
+      (sum, entry) => sum + (entry?.xpEarned ?? 0),
+      0
+    ),
+    // Lessons attempted. Non-Annual plans get one free try, so the app needs
+    // to know whether it has been used.
+    teachBackCount: (((user as any).teachBacks as any[]) ?? []).length,
+    leaderboardHidden: (user as any).leaderboardHidden ?? false,
   };
 }
 

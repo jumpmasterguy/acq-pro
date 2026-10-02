@@ -1,0 +1,111 @@
+/* Acqlerate print stylesheet for the Finance Cheat Sheets PDFs.
+ *
+ * Colour jobs follow claude/brand-and-style-notes.md:
+ *   structure  navy #0F172A through grey  (text, rules, backgrounds)
+ *   brand      teal #01696F               (logo and chrome only)
+ *   categories the five family hues        (chart series, never decoration)
+ *   gold       #D9B64C                    (reserved; not used on these sheets)
+ */
+
+@font-face { font-family: 'General Sans'; font-weight: 400; src: url('{{FONT_DIR}}/GeneralSans-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'General Sans'; font-weight: 500; src: url('{{FONT_DIR}}/GeneralSans-Medium.woff2') format('woff2'); }
+@font-face { font-family: 'General Sans'; font-weight: 600; src: url('{{FONT_DIR}}/GeneralSans-Semibold.woff2') format('woff2'); }
+@font-face { font-family: 'General Sans'; font-weight: 700; src: url('{{FONT_DIR}}/GeneralSans-Bold.woff2') format('woff2'); }
+
+:root {
+  --navy: #0F172A;
+  --ink: #1E293B;
+  --muted: #475569;
+  --faint: #64748B;
+  --rule: #D5DEE6;
+  --soft: #F3F6F8;
+  --teal: #01696F;
+  --teal-soft: #E6F2F2;
+  --blue: #3D8FD1;
+  --green: #2E8B57;
+  --purple: #5E3596;
+  --orange: #D1571A;
+  --magenta: #B0327A;
+  --red: #B42318;
+}
+
+@page { margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'General Sans', 'Helvetica Neue', Arial, sans-serif;
+  color: var(--ink);
+  font-size: 9pt;
+  line-height: 1.38;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.page {
+  position: relative;
+  overflow: hidden;
+  page-break-after: always;
+  break-after: page;
+  background: #fff;
+}
+.page:last-child { page-break-after: auto; break-after: auto; }
+.page.landscape { width: 11in; height: 8.5in; padding: 0.42in 0.5in 0.62in; }
+.page.portrait  { width: 8.5in; height: 11in; padding: 0.5in 0.55in 0.7in; }
+
+/* Watermark: above the content so it survives on every card, at a strength
+   that never competes with the text. Tiled, so cropping cannot remove it. */
+.watermark {
+  position: absolute; inset: 0; z-index: 50; pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='260'><g transform='rotate(-28 210 130)' font-family='General Sans, Arial, sans-serif' font-weight='700' font-size='30' fill='%230F172A' fill-opacity='0.045'><text x='40' y='120'>Acqlerate</text><text x='250' y='250' font-size='16' font-weight='600'>acqlerate.com</text></g></svg>");
+  background-repeat: repeat;
+}
+
+/* ── Header lockup ─────────────────────────────────────────────── */
+.masthead { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.3in; }
+.lockup { display: flex; align-items: center; gap: 7px; text-decoration: none; }
+.lockup img { width: 26px; height: 26px; display: block; }
+.lockup .word { font-weight: 700; font-size: 15pt; letter-spacing: -0.02em; color: var(--navy); line-height: 1; }
+.lockup .word span { color: var(--teal); }
+.lockup.small img { width: 16px; height: 16px; }
+.lockup.small .word { font-size: 9.5pt; }
+
+.eyebrow { font-size: 7pt; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); }
+h1 { font-size: 22pt; line-height: 1.08; letter-spacing: -0.02em; margin: 3px 0 3px; color: var(--navy); font-weight: 700; }
+h2 { font-size: 11.5pt; margin: 0 0 5px; color: var(--navy); font-weight: 700; letter-spacing: -0.01em; }
+h3 { font-size: 9.5pt; margin: 0 0 3px; color: var(--navy); font-weight: 700; }
+.lede { font-size: 10pt; color: var(--muted); margin: 0; max-width: 6.6in; }
+.meta { text-align: right; font-size: 7.5pt; color: var(--faint); line-height: 1.5; }
+.meta b { color: var(--navy); font-weight: 600; }
+.topline { height: 3px; background: var(--teal); border-radius: 2px; margin: 10px 0 12px; }
+
+p { margin: 0 0 5px; }
+ul { margin: 0; padding-left: 13px; }
+li { margin: 0 0 3px; }
+b, strong { font-weight: 600; color: var(--navy); }
+.small { font-size: 7.5pt; }
+.muted { color: var(--muted); }
+.mono { font-variant-numeric: tabular-nums; }
+
+.card { border: 1px solid var(--rule); border-radius: 8px; padding: 9px 11px; background: #fff; }
+.card.soft { background: var(--soft); border-color: transparent; }
+.card.teal { background: var(--teal-soft); border-color: transparent; }
+.card.warn { background: #FDF2EE; border-color: #F4C7B4; }
+
+table { border-collapse: collapse; width: 100%; }
+th { text-align: left; font-size: 7pt; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); padding: 4px 6px; border-bottom: 1.5px solid var(--navy); }
+td { padding: 4.5px 6px; border-bottom: 1px solid var(--rule); vertical-align: top; font-size: 8.2pt; }
+tr:last-child td { border-bottom: none; }
+td.k { font-weight: 700; color: var(--navy); white-space: nowrap; }
+
+.pill { display: inline-block; font-size: 6.8pt; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 1.5px 6px; border-radius: 99px; color: #fff; }
+
+/* ── Footer ────────────────────────────────────────────────────── */
+.footer {
+  position: absolute; left: 0.5in; right: 0.5in; bottom: 0.26in;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  font-size: 6.8pt; color: var(--faint);
+  border-top: 1px solid var(--rule); padding-top: 6px;
+}
+.page.portrait .footer { left: 0.55in; right: 0.55in; }
+.footer .sources { flex: 1; text-align: center; }
+.footer .pg { white-space: nowrap; }

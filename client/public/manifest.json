@@ -1,5 +1,5 @@
 {
-  "name": "Acqlerate — Defense Acquisitions Academy",
+  "name": "Acqlerate: Plain-English DoD Acquisition Training",
   "short_name": "Acqlerate",
   "description": "Master DoD acquisitions: finance, contracts, capture management, and program operations.",
   "start_url": "/app",
@@ -71,5 +71,13 @@
         }
       ]
     }
-  ]
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "com.acqlerate.app",
+      "url": "https://play.google.com/store/apps/details?id=com.acqlerate.app"
+    }
+  ],
+  "prefer_related_applications": false
 }

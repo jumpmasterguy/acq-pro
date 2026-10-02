@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, Component } from "react";
+import { useState, useEffect, useCallback, useRef, Component, lazy, Suspense } from "react";
 import type { ReactNode } from "react";
 import { Router } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
@@ -6,12 +6,14 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calculateXP } from "@/lib/progress";
-import { hasFullAccess, hasPaidPlan, trialDaysRemaining } from "@shared/access";
+import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calculateXP, ladderFor } from "@/lib/progress";
+import { hasFullAccess, hasPaidPlan, isTopPlanStatus, trialDaysRemaining } from "@shared/access";
 import { isNativeApp, getPlatform } from "@/lib/platform";
-import { modules } from "@/lib/curriculum";
-import { getModuleTheme } from "@/lib/moduleTheme";
-import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator, Flame } from "lucide-react";
+import { useActiveTrack } from "@/lib/careerTracks";
+import { modules, prefetchCurriculum } from "@/lib/curriculumMeta";
+import { getModuleTheme, getModuleFamilyTheme, getModuleFamily, FAMILY_LABEL, FAMILY_THEME, type ModuleFamily } from "@/lib/moduleTheme";
+import { moduleClps, formatClps, totalClps } from "@shared/moduleClps";
+import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator, Flame, Loader2 } from "lucide-react";
 import { SIDEBAR_RESOURCES } from "@/lib/resources";
 import { FAR_TRANSLATOR, TOOLS_DIRECTORY } from "@/lib/toolsDirectory";
 import { AcqlerateLogo } from "@/components/AcqlerateLogo";
@@ -20,12 +22,35 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { MobileShell, type MobileTab, type MobileHeader } from "@/components/mobile/MobileShell";
 
 // ── Error Boundary — catches render crashes and shows a recovery UI ─────────
+// Pages are loaded on demand now, which introduces a failure the app did not
+// have before: a deploy while someone is mid-session replaces every file with a
+// new content-hashed name, so their next click asks for a page that no longer
+// exists at that URL. The browser reports it as a failed dynamic import.
+//
+// Re-rendering cannot fix that — the URL is gone for good. Reloading can, since
+// it fetches a fresh index.html with the new names. The sessionStorage flag
+// keeps one bad load from becoming a reload loop if the cause is something else.
+const CHUNK_RELOAD_KEY = 'acq:chunk-reloaded';
+
+function isChunkLoadError(error: Error): boolean {
+  const msg = `${error?.name ?? ''} ${error?.message ?? ''}`;
+  return /dynamically imported module|Importing a module script failed|ChunkLoadError|Loading chunk .* failed|error loading dynamically/i.test(msg);
+}
+
 class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   constructor(props: { children: ReactNode }) {
     super(props);
     this.state = { error: null };
   }
   static getDerivedStateFromError(error: Error) { return { error }; }
+  componentDidCatch(error: Error) {
+    if (!isChunkLoadError(error)) return;
+    try {
+      if (sessionStorage.getItem(CHUNK_RELOAD_KEY)) return;
+      sessionStorage.setItem(CHUNK_RELOAD_KEY, '1');
+    } catch { /* private mode: reload once and accept the small loop risk */ }
+    window.location.reload();
+  }
   render() {
     if (this.state.error) {
       return (
@@ -56,7 +81,7 @@ function PWAInstallLink() {
       onClick={() => {
         try { window.dispatchEvent(new Event('pwa-install-request')); } catch {}
       }}
-      className="text-[10px] text-primary/60 hover:text-primary transition-colors"
+      className="text-[12px] font-medium text-primary hover:underline transition-colors"
     >
       Install App
     </button>
@@ -67,23 +92,51 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Dashboard from "@/pages/Dashboard";
 import ModulePage from "@/pages/ModulePage";
-import ModulesPage from "@/pages/ModulesPage";
+import ModulesPage, { type ModulesPageMode } from "@/pages/ModulesPage";
 import ResourcesPage from "@/pages/ResourcesPage";
-import LessonPage from "@/pages/LessonPage";
 import UpgradePage from "@/pages/UpgradePage";
 import MyAccountPage from "@/pages/MyAccountPage";
 import AuthPage, { type AuthUser, type SkillLevel, type UserProfile } from "@/pages/AuthPage";
-import AdminPage from "@/pages/AdminPage";
-import AdminAnalytics from "@/pages/AdminAnalytics";
-import PDUTracker from "@/pages/PDUTracker";
-import CostTrackerIntroPage from "@/pages/cost/CostTrackerIntroPage";
-import CostProjectsPage from "@/pages/cost/CostProjectsPage";
-import CostProjectDetailPage from "@/pages/cost/CostProjectDetailPage";
-import CostRatesPage from "@/pages/cost/CostRatesPage";
-import CostTaskOrdersPage from "@/pages/cost/CostTaskOrdersPage";
-import CostTaskOrderDetailPage from "@/pages/cost/CostTaskOrderDetailPage";
-import { ModuleAssessment } from "@/components/ModuleAssessment";
+import { LazyModuleAssessment } from "@/components/LazyModuleAssessment";
+import { LevelRoadSheet } from "@/components/LevelRoad";
+import { DocumentViewerProvider } from "@/components/DocumentViewerProvider";
 import OnboardingFlow from "@/components/OnboardingFlow";
+
+// ── Pages loaded on demand ─────────────────────────────────────────────────
+//
+// These are either big or rarely opened, and keeping them out of the first
+// download is most of why the app now starts in a quarter of the bytes it did.
+//
+//   LessonPage   the second-largest file in the app, and it pulls in the full
+//                curriculum — which is the 3 MB the split was really about.
+//   AdminPage    two people will ever open these.
+//   AdminAnalytics
+//   PDUTracker   useful, but not on anyone's first visit.
+//   Cost*        a whole sub-application most learners never touch.
+//
+// Everything reachable in the first few clicks — dashboard, modules, lessons
+// list, upgrade, account — stays in the main bundle on purpose, so the common
+// path never waits on a second request.
+const LessonPage = lazy(() => import("@/pages/LessonPage"));
+const AdminPage = lazy(() => import("@/pages/AdminPage"));
+const AdminAnalytics = lazy(() => import("@/pages/AdminAnalytics"));
+const PDUTracker = lazy(() => import("@/pages/PDUTracker"));
+const CertificatesPage = lazy(() => import("@/pages/CertificatesPage"));
+const CostTrackerIntroPage = lazy(() => import("@/pages/cost/CostTrackerIntroPage"));
+const CostProjectsPage = lazy(() => import("@/pages/cost/CostProjectsPage"));
+const CostProjectDetailPage = lazy(() => import("@/pages/cost/CostProjectDetailPage"));
+const CostRatesPage = lazy(() => import("@/pages/cost/CostRatesPage"));
+const CostTaskOrdersPage = lazy(() => import("@/pages/cost/CostTaskOrdersPage"));
+const CostTaskOrderDetailPage = lazy(() => import("@/pages/cost/CostTaskOrderDetailPage"));
+
+/** Sidebar accent classes per subject family. Static strings for Tailwind's JIT. */
+const FAMILY_SIDEBAR: Record<ModuleFamily, { dot: string; lessonHover: string; activeLesson: string; activeLessonText: string }> = {
+  foundations: { dot: 'bg-[#3D8FD1]', lessonHover: 'hover:bg-[#3D8FD1]/10', activeLesson: 'bg-[#3D8FD1]/15', activeLessonText: 'text-[#4A9AE0]' },
+  money:       { dot: 'bg-[#2E8B57]', lessonHover: 'hover:bg-[#2E8B57]/10', activeLesson: 'bg-[#2E8B57]/15', activeLessonText: 'text-[#41A56B]' },
+  contracts:   { dot: 'bg-[#5E3596]', lessonHover: 'hover:bg-[#5E3596]/10', activeLesson: 'bg-[#5E3596]/15', activeLessonText: 'text-[#8E63D6]' },
+  winning:     { dot: 'bg-[#D1571A]', lessonHover: 'hover:bg-[#D1571A]/10', activeLesson: 'bg-[#D1571A]/15', activeLessonText: 'text-[#DC7129]' },
+  program:     { dot: 'bg-[#B0327A]', lessonHover: 'hover:bg-[#B0327A]/10', activeLesson: 'bg-[#B0327A]/15', activeLessonText: 'text-[#D2519A]' },
+};
 import { apiRequest } from "@/lib/queryClient";
 
 // View types
@@ -94,7 +147,7 @@ type View =
   // Mobile-only screens. The desktop shell reaches modules through the
   // sidebar tree and resources through its collapsible sections, so these
   // two views exist to give the bottom tab bar a Learn and a Resources tab.
-  | { type: 'modules' }
+  | { type: 'modules'; family?: ModuleFamily; mode?: ModulesPageMode }
   | { type: 'resources' }
   | { type: 'module'; moduleId: string; activeCareer?: string }
   | { type: 'lesson'; lessonId: string; activeCareer?: string }
@@ -103,6 +156,7 @@ type View =
   | { type: 'admin' }
   | { type: 'analytics' }
   | { type: 'pdu' }
+  | { type: 'certificates' }
   | { type: 'costTrackerIntro' }
   | { type: 'costProjects' }
   | { type: 'costProject'; projectId: string }
@@ -119,12 +173,14 @@ type AuthState =
 function buildProgressFromUser(user: AuthUser) {
   const isPremium = hasFullAccess(user);
   const isActuallyPaid = hasPaidPlan(user);
+  const hasTopPlan = isTopPlanStatus(user.subscriptionStatus);
   return {
     completedLessons: new Set<string>(user.completedLessons ?? []),
     quizScores: user.quizScores ?? {},
     unlockedModules: new Set<string>(['foundations']),
     isPremium,
     isActuallyPaid,
+    hasTopPlan,
     xp: 0,
   };
 }
@@ -142,12 +198,15 @@ function loadSavedView(): View | null {
     const raw = sessionStorage.getItem(VIEW_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as View;
-    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin', 'analytics', 'pdu', 'costProjects', 'costRates', 'costTaskOrders'];
+    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin', 'analytics', 'pdu', 'certificates', 'costProjects', 'costRates', 'costTaskOrders'];
     if (!valid.includes(parsed.type)) return null;
     // Validate lesson ID still exists in curriculum
     if (parsed.type === 'lesson') {
-      const { modules: allMods } = require('@/lib/curriculum');
-      const exists = allMods.some((m: any) => m.lessons.some((l: any) => l.id === (parsed as any).lessonId));
+      // This used to call require(), which does not exist in the bundled app —
+      // it threw every time, the catch below swallowed it, and "resume where
+      // you left off" silently never worked. `modules` is already imported at
+      // the top of this file, and the lesson IDs live in the light index.
+      const exists = modules.some(m => m.lessons.some(l => l.id === (parsed as any).lessonId));
       if (!exists) return { type: 'dashboard' };
     }
     return parsed;
@@ -182,6 +241,19 @@ function parseHashView(): View | null {
   if (hash.startsWith('#/dashboard')) return { type: 'dashboard' };
   if (hash.startsWith('#/cost')) return { type: 'costTrackerIntro' };
   return null;
+}
+
+/**
+ * Shown while a lazily-loaded page fetches its code. Deliberately plain: the
+ * pages behind it are a few hundred milliseconds away at worst, and a busy
+ * skeleton that flashes and vanishes reads as jank rather than progress.
+ */
+function PageLoading() {
+  return (
+    <div className="flex min-h-[40vh] items-center justify-center">
+      <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+    </div>
+  );
 }
 
 function AppContent() {
@@ -245,6 +317,48 @@ function AppContent() {
   const [resourcesExpanded, setResourcesExpanded] = useState(false);
   const [toolsExpanded, setToolsExpanded] = useState(false);
   const [authState, setAuthState] = useState<AuthState>({ status: 'loading' });
+  // Level titles depend on the career track (GS scale vs. industry titles).
+  const activeTrack = useActiveTrack();
+
+  // In the app, index.html covers the screen with an exact copy of the native
+  // launch screen until we know where to send you. Fade it the moment the
+  // session check resolves, straight onto sign-in or home, so there is one
+  // launch image and never a second, smaller one in between.
+  useEffect(() => {
+    if (authState.status === 'loading') return;
+    const el = document.getElementById('boot-splash');
+    if (!el) return;
+    el.classList.add('leaving');
+    const t = setTimeout(() => {
+      el.remove();
+      document.documentElement.classList.remove('native-boot');
+    }, 240);
+    return () => clearTimeout(t);
+  }, [authState.status]);
+
+  // The app rendered, so whatever the last reload was for is behind us. Give
+  // the next deploy a fresh reload budget.
+  useEffect(() => {
+    try { sessionStorage.removeItem(CHUNK_RELOAD_KEY); } catch {}
+  }, []);
+
+  // Once someone is signed in they are going to open a lesson, so pull the
+  // lesson bodies down in the background while they read the dashboard. This
+  // is the whole point of splitting them out: the cost is paid during idle
+  // time instead of in front of the first screen. requestIdleCallback keeps
+  // it off the critical path; Safari does not have it, hence the timeout.
+  const signedIn = authState.status === 'authenticated';
+  useEffect(() => {
+    if (!signedIn) return;
+    const go = () => { prefetchCurriculum(); };
+    const ric = (window as any).requestIdleCallback;
+    if (typeof ric === 'function') {
+      const id = ric(go, { timeout: 4000 });
+      return () => (window as any).cancelIdleCallback?.(id);
+    }
+    const t = setTimeout(go, 1500);
+    return () => clearTimeout(t);
+  }, [signedIn]);
   // Set when the server ends a session for inactivity (server/auth.ts idle
   // timeout) and the client notices via a 401 on the next heartbeat — shown
   // on the login screen so it doesn't look like an unexplained sign-out.
@@ -257,6 +371,11 @@ function AppContent() {
   const [streak, setStreak] = useState({ currentStreak: 0, longestStreak: 0 });
   // XP from briefs completed since this session's user object was loaded.
   const [sessionBriefXp, setSessionBriefXp] = useState(0);
+  // Acqlerate Coach, same optimistic pattern as briefs: XP from a Teach It
+  // Back passed this session, and how many lessons were attempted this session
+  // (non-Annual plans get one free try in total).
+  const [sessionCoachXp, setSessionCoachXp] = useState(0);
+  const [sessionTeachBacks, setSessionTeachBacks] = useState(0);
 
   // Derived progress from server auth
   const isPremium =
@@ -267,6 +386,8 @@ function AppContent() {
   // hasn't actually paid, so they should still see the upgrade CTA/countdown.
   const isActuallyPaid =
     authState.status === 'authenticated' && hasPaidPlan(authState.user);
+  const hasTopPlan =
+    authState.status === 'authenticated' && isTopPlanStatus(authState.user.subscriptionStatus);
   const completedLessons =
     authState.status === 'authenticated'
       ? new Set<string>(authState.user.completedLessons ?? [])
@@ -287,6 +408,10 @@ function AppContent() {
   // value already includes it.
   const briefsXP =
     authState.status === 'authenticated' ? authState.user.briefsXP ?? 0 : 0;
+  const coachXP =
+    authState.status === 'authenticated' ? authState.user.coachXP ?? 0 : 0;
+  const teachBackCount =
+    (authState.status === 'authenticated' ? authState.user.teachBackCount ?? 0 : 0) + sessionTeachBacks;
 
   const progress = {
     completedLessons,
@@ -294,7 +419,8 @@ function AppContent() {
     unlockedModules: new Set<string>(['foundations']),
     isPremium,
     isActuallyPaid,
-    xp: calculateXP(completedLessons, quizScores, dailyChallengeXP, briefsXP + sessionBriefXp),
+    hasTopPlan,
+    xp: calculateXP(completedLessons, quizScores, dailyChallengeXP, briefsXP + sessionBriefXp, coachXP + sessionCoachXp),
   };
 
   // Streak — fetched here rather than only in Dashboard. The mobile top bar
@@ -314,14 +440,16 @@ function AppContent() {
       .catch(() => {});
   }, [authState.status]);
 
-  // Admin, Analytics, PDU and the Cost Tracker have no home in the four-tab
-  // map, so they stay desktop-only. A saved view (sessionStorage) or a resize
+  // PDU and the Cost Tracker have no home in the four-tab map, so they stay
+  // desktop-only. Admin (and Analytics behind it) live under the Account tab
+  // for admins, with a back button in the header. A saved view (sessionStorage) or a resize
   // could otherwise strand a phone on a screen it can't navigate away from.
   // Must sit above the auth/onboarding early returns — it's a hook.
   useEffect(() => {
     if (!isMobile) return;
     const MOBILE_VIEWS: View['type'][] = [
       'dashboard', 'modules', 'module', 'lesson', 'upgrade', 'account', 'resources', 'auth', 'onboarding',
+      'certificates', 'admin', 'analytics',
     ];
     if (!MOBILE_VIEWS.includes(view.type)) setView({ type: 'dashboard' });
   }, [isMobile, view.type]);
@@ -511,6 +639,27 @@ function AppContent() {
     }
   }, [authState.status]);
 
+  // After a checkout started in the iPhone app (browser sheet, see
+  // lib/appCheckout.ts): the webhook grants Pro on Stripe's word, which can
+  // land a second or two after the sheet closes. Re-read the account a few
+  // times; the moment it is paid, take the learner to their unlocked home.
+  const refreshAfterAppCheckout = useCallback(async (): Promise<boolean> => {
+    for (let attempt = 0; attempt < 6; attempt++) {
+      if (attempt > 0) await new Promise(r => setTimeout(r, 1500));
+      try {
+        const res = await apiRequest("GET", "/api/auth/me");
+        if (!res.ok) continue;
+        const user: AuthUser = await res.json();
+        if (hasPaidPlan(user)) {
+          setAuthState({ status: 'authenticated', user });
+          setView({ type: 'dashboard' });
+          return true;
+        }
+      } catch { /* offline for a moment: try again */ }
+    }
+    return false;
+  }, []);
+
   // GA4 helper
   const track = (event: string, params?: Record<string, any>) => {
     try { (window as any).trackEvent?.(event, params); } catch {}
@@ -690,16 +839,9 @@ function AppContent() {
   const xp = progress.xp;
   const completedCount = completedLessons.size;
 
-  const ALL_LEVELS = [
-    { level: 1, title: 'Acquisition Trainee',    threshold: 0,    nextXP: 200,  desc: 'Just getting started. Learning the landscape.' },
-    { level: 2, title: 'GS-9 Analyst',           threshold: 200,  nextXP: 500,  desc: 'Building foundational knowledge. You know the players and the process.' },
-    { level: 3, title: 'GS-11 Professional',      threshold: 500,  nextXP: 1000, desc: 'Solid understanding of contracts, finance basics, and acquisition vehicles.' },
-    { level: 4, title: 'GS-12 Specialist',        threshold: 1000, nextXP: 1800, desc: 'Deep functional knowledge. You can navigate a program review without a cheat sheet.' },
-    { level: 5, title: 'GS-13 Senior Manager',    threshold: 1800, nextXP: 3000, desc: 'Multi-domain fluency. Source selection, EVM, modifications — you handle it.' },
-    { level: 6, title: 'GS-14 Program Manager',   threshold: 3000, nextXP: 5000, desc: 'Senior PM territory. Leading programs, coaching others, managing the enterprise.' },
-    { level: 7, title: 'SES-Level Executive',     threshold: 5000, nextXP: 9999, desc: 'The full picture — strategy, policy, leadership, and acquisition mastery.' },
-  ];
-  const currentLevel = getLevel(xp);
+  // One set of ladders for the whole app: client/src/lib/progress.ts.
+  const ALL_LEVELS = ladderFor(activeTrack);
+  const currentLevel = getLevel(xp, activeTrack);
 
   // ── Mobile shell wiring ───────────────────────────────────────────────────
   // Admin, Analytics, PDU and the Cost Tracker have no home in the four-tab
@@ -708,7 +850,7 @@ function AppContent() {
   // Which tab lights up. Module, Lesson and Pro access all live under Learn.
   const mobileTab: MobileTab =
     view.type === 'resources' ? 'resources'
-    : view.type === 'account' ? 'account'
+    : (view.type === 'account' || view.type === 'admin' || view.type === 'analytics') ? 'account'
     : (view.type === 'modules' || view.type === 'module' || view.type === 'lesson' || view.type === 'upgrade') ? 'modules'
     : 'home';
 
@@ -718,11 +860,15 @@ function AppContent() {
       case 'dashboard':
         return { kind: 'logo' };
       case 'modules':
-        return { kind: 'title', title: 'Modules' };
+        return { kind: 'title', title: view.family ? FAMILY_LABEL[view.family] : view.mode === 'subject' ? 'All modules' : 'My Path' };
       case 'resources':
         return { kind: 'title', title: 'Resources & tools' };
       case 'account':
         return { kind: 'title', title: 'My Account' };
+      case 'admin':
+        return { kind: 'back', title: 'Admin', onBack: () => setView({ type: 'account' }) };
+      case 'analytics':
+        return { kind: 'back', title: 'Analytics', onBack: () => setView({ type: 'admin' }) };
       case 'upgrade':
         return { kind: 'back', title: 'Pro access', onBack: () => setView({ type: 'modules' }) };
       case 'module': {
@@ -755,7 +901,7 @@ function AppContent() {
   const lessonModuleHex = (() => {
     if (view.type !== 'lesson') return 'var(--acq-teal)';
     const parent = modules.find(m => m.lessons.some(l => l.id === (view as any).lessonId));
-    return parent ? getModuleTheme(parent.color).mobileHex : 'var(--acq-teal)';
+    return parent ? getModuleFamilyTheme(parent.id).mobileHex : 'var(--acq-teal)';
   })();
 
   // Drives the scroll-to-top reset on navigation.
@@ -776,11 +922,10 @@ function AppContent() {
               onEditProfile={handleEditProfile}
               isAdmin={isAdmin}
               onStreakUpdate={(s) => setStreak(s)}
-              onBriefXpEarned={(amount) => setSessionBriefXp(x => x + amount)}
               firstName={authState.status === 'authenticated' ? authState.user.firstName : null}
               lastName={authState.status === 'authenticated' ? authState.user.lastName : null}
               lastStreakDate={authState.status === 'authenticated' ? authState.user.lastStreakDate ?? null : null}
-              onOpenModules={() => setView({ type: 'modules' })}
+              onOpenModules={() => setView({ type: 'modules', mode: 'subject' })}
               onOpenAccount={() => setView({ type: 'account' })}
             />
           )}
@@ -818,16 +963,27 @@ function AppContent() {
                 onNextLesson={handleNextLesson}
                 unlockedLevel={unlockedLevel}
                 onOpenAssessment={parentMod ? () => setAssessmentModuleId(parentMod.id) : undefined}
-                isLifetime={authState.status === 'authenticated' && authState.user.subscriptionStatus === 'lifetime'}
+                isLifetime={hasTopPlan}
                 activeCareer={(view as any).activeCareer ?? null}
+                teachBackCount={teachBackCount}
+                onTeachBack={(xpAwarded) => {
+                  setSessionTeachBacks(n => n + 1);
+                  if (xpAwarded > 0) setSessionCoachXp(x => x + xpAwarded);
+                }}
+                onUpgrade={() => setView({ type: 'upgrade' })}
               />
             );
           })()}
           {view.type === 'modules' && (
             <ModulesPage
               progress={progress}
-              onSelectModule={(id) => setView({ type: 'module', moduleId: id })}
+              onSelectModule={handleSelectModule}
               onUpgrade={handleUpgrade}
+              family={view.family}
+              onSelectFamily={(f) => setView(f ? { type: 'modules', family: f } : { type: 'modules', mode: 'subject' })}
+              mode={view.mode}
+              onSelectMode={(m) => setView(m === 'subject' ? { type: 'modules', mode: 'subject' } : { type: 'modules' })}
+              onOpenAccount={() => setView({ type: 'account' })}
             />
           )}
           {view.type === 'resources' && (
@@ -840,6 +996,7 @@ function AppContent() {
               trialDaysLeft={trialDaysLeft}
               userEmail={authState.status === 'authenticated' ? authState.user.email : undefined}
               onSignOut={handleSignOut}
+              onAfterAppCheckout={refreshAfterAppCheckout}
             />
           )}
           {view.type === 'account' && authState.status === 'authenticated' && (
@@ -847,6 +1004,8 @@ function AppContent() {
               user={authState.user}
               onBack={() => setView({ type: 'dashboard' })}
               onUpgrade={() => setView({ type: 'upgrade' })}
+              onOpenCertificates={() => setView({ type: 'certificates' })}
+              onOpenAdmin={isAdmin ? () => setView({ type: 'admin' }) : undefined}
               onNameUpdated={handleNameUpdated}
               onAccountDeleted={handleAccountDeleted}
               xp={progress.xp}
@@ -858,7 +1017,7 @@ function AppContent() {
             />
           )}
           {view.type === 'admin' && isAdmin && (
-            <AdminPage />
+            <div className={isMobile ? "px-4 pt-1 pb-8" : ""}><AdminPage /></div>
           )}
           {view.type === 'analytics' && isAdmin && (
             <AdminAnalytics onBack={() => setView({ type: 'admin' })} />
@@ -867,6 +1026,12 @@ function AppContent() {
             <PDUTracker
               onBack={() => setView({ type: 'dashboard' })}
               completedLessons={Array.from(completedLessons)}
+            />
+          )}
+          {view.type === 'certificates' && (
+            <CertificatesPage
+              onBack={() => setView({ type: 'dashboard' })}
+              onUpgrade={() => setView({ type: 'upgrade' })}
             />
           )}
           {view.type === 'costTrackerIntro' && (
@@ -927,7 +1092,7 @@ function AppContent() {
         onScrollProgress={view.type === 'lesson' ? setReadPct : undefined}
         readingBar={view.type === 'lesson' ? { pct: readPct, color: lessonModuleHex } : null}
       >
-        <ErrorBoundary>{pageContent}</ErrorBoundary>
+        <ErrorBoundary><Suspense fallback={<PageLoading />}>{pageContent}</Suspense></ErrorBoundary>
       </MobileShell>
     ) : (
     <div className="min-h-screen bg-background flex">
@@ -941,7 +1106,7 @@ function AppContent() {
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed left-0 top-0 h-full w-64 bg-sidebar text-sidebar-foreground border-r border-sidebar-border z-40 flex flex-col transition-transform duration-300 safe-top",
+        "fixed left-0 top-0 h-full w-72 bg-sidebar text-sidebar-foreground border-r border-sidebar-border z-40 flex flex-col transition-transform duration-300 safe-top",
         sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
       )}>
         {/* Logo — opens the real acqlerate.com marketing site in a new tab
@@ -963,388 +1128,168 @@ function AppContent() {
           </button>
         </div>
 
-        {/* User + XP badge */}
-        <div className="px-4 py-3 border-b border-sidebar-border space-y-2">
-          <div className="flex items-center gap-2 px-1">
-            <div className="w-7 h-7 rounded-full bg-sidebar-primary/20 flex items-center justify-center flex-shrink-0">
-              <User className="w-3.5 h-3.5 text-sidebar-primary" />
-            </div>
-            <div className="min-w-0">
-              <div className="text-xs font-semibold text-sidebar-foreground truncate">{user.username}</div>
-              <div className="text-[10px] text-sidebar-foreground/50 truncate">{user.email}</div>
-            </div>
-            {isPremium && (
-              <span className="ml-auto flex-shrink-0 text-[9px] font-bold bg-sidebar-primary/20 text-sidebar-primary rounded-full px-1.5 py-0.5">PRO</span>
-            )}
-          </div>
-          <button
-            onClick={() => setShowLevels(true)}
-            className="w-full bg-sidebar-accent border border-sidebar-primary/25 rounded-lg px-3 py-2 flex items-center gap-2 hover:border-sidebar-primary/50 hover:shadow-sm transition-all cursor-pointer text-left"
-            data-testid="xp-level-card"
-          >
-            <Zap className="w-3.5 h-3.5 text-sidebar-primary flex-shrink-0 fill-sidebar-primary/20" />
-            <div className="flex-1 min-w-0">
-              <div className="text-[10px] text-sidebar-foreground/50">Level {currentLevel.level}</div>
-              <div className="text-xs font-bold text-sidebar-foreground">{currentLevel.title}</div>
-            </div>
-            <div className="flex flex-col items-end">
-              <div className="text-[10px] font-bold text-sidebar-primary">{xp} XP</div>
-              <div className="text-[9px] text-sidebar-foreground/40">{completedCount} done</div>
-            </div>
-          </button>
-
-          {/* Burn Rate Streak — Acqlerate's take on a daily streak. In real
-              acquisitions, burn rate is how fast a program spends its
-              funding; here it's how fast you're spending daily reps. Named
-              "...Streak" explicitly so it reads as a streak, not just a rate. */}
-          {streak.currentStreak > 0 ? (
-            <div
-              className="w-full flex items-center gap-2 rounded-lg px-3 py-1.5 bg-orange-500/10 border border-orange-500/30"
-              title="Burn Rate Streak: your consecutive days active. In acquisitions, burn rate tracks how fast a program spends its funding — here, it tracks how fast you're spending daily reps. Don't let it hit zero."
-              data-testid="burn-rate-badge"
-            >
-              <Flame className="w-3.5 h-3.5 text-orange-400 flex-shrink-0 fill-orange-400/30" />
-              <span className="text-xs font-bold text-orange-300 flex-1 truncate">
-                {streak.currentStreak}-day burn rate streak
-              </span>
-              {streak.currentStreak >= 7 && (
-                <span className="text-[9px] font-bold text-amber-400 flex-shrink-0">🏆 {streak.longestStreak}d best</span>
-              )}
-            </div>
-          ) : (
-            <button
-              onClick={() => { setView({ type: 'costTrackerIntro' }); setSidebarOpen(false); }}
-              className="w-full flex items-center gap-2 rounded-lg px-3 py-1.5 bg-primary/10 border border-primary/30 hover:bg-primary/15 hover:border-primary/50 transition-all text-left"
-              title="See how the Spend Plan Tracker keeps every funding mod and burn rate in one place."
-              data-testid="burn-rate-badge"
-            >
-              <Calculator className="w-3.5 h-3.5 text-primary flex-shrink-0" />
-              <span className="text-xs font-bold text-primary">Try our spend plan tracker</span>
-              <ChevronRight className="w-3.5 h-3.5 text-primary/60 flex-shrink-0 ml-auto" />
-            </button>
-          )}
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-          <button
-            onClick={() => { setView({ type: 'dashboard' }); setSidebarOpen(false); }}
-            className={cn(
-              "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all border",
-              view.type === 'dashboard'
-                ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
-                : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
-            )}
-            data-testid="nav-dashboard"
-          >
-            <LayoutDashboard className={cn("w-4 h-4", view.type === 'dashboard' && "text-sidebar-primary")} />
-            Dashboard
-          </button>
-
-          {isAdmin && (
-            <button
-              onClick={() => { setView({ type: 'admin' }); setSidebarOpen(false); }}
-              className={cn(
-                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all border",
-                view.type === 'admin'
-                  ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
-                  : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
-              )}
-              data-testid="nav-admin"
-            >
-              <ShieldCheck className={cn("w-4 h-4", view.type === 'admin' && "text-sidebar-primary")} />
-              Admin Panel
-            </button>
-          )}
-          {isAdmin && (
-            <button
-              onClick={() => { setView({ type: 'analytics' }); setSidebarOpen(false); }}
-              className={cn(
-                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all border",
-                view.type === 'analytics'
-                  ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
-                  : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
-              )}
-              data-testid="nav-analytics"
-            >
-              <BarChart3 className={cn("w-4 h-4", view.type === 'analytics' && "text-sidebar-primary")} />
-              Analytics
-            </button>
-          )}
-
-          <div className="text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/55 px-3 pt-3 pb-1.5">
-            Modules
-          </div>
-
-          {modules.map((mod) => {
-            const isModActive = view.type === 'module' && (view as any).moduleId === mod.id;
-            const activeLessonId = view.type === 'lesson' ? (view as any).lessonId : null;
-            const isLessonInMod = mod.lessons.some(l => l.id === activeLessonId);
-            const lessonIds = mod.lessons.map(l => l.id);
-            const progressPct = getModuleProgress(mod.id, lessonIds, progress.completedLessons);
-            const isAccessible = FREE_MODULES.includes(mod.id) || progress.isPremium;
-            const hasPreview = mod.lessons.some(l => FREE_PREVIEW_LESSONS.includes(l.id));
-
-            // Auto-expand if a lesson in this module is active
-            const isExpanded = expandedModules.has(mod.id) || isLessonInMod || isModActive;
-
-            const toggleExpand = (e: React.MouseEvent) => {
-              e.stopPropagation();
-              setExpandedModules(prev => {
-                const next = new Set(prev);
-                if (next.has(mod.id)) next.delete(mod.id); else next.add(mod.id);
-                return next;
-              });
-            };
-
-            // Module accent colors
-            const moduleColors: Record<string, { accent: string; dot: string; lessonHover: string; activeLesson: string; activeLessonText: string }> = {
-              foundations: { accent: '#3b82f6', dot: 'bg-blue-500',    lessonHover: 'hover:bg-blue-500/10',   activeLesson: 'bg-blue-500/15',   activeLessonText: 'text-blue-400' },
-              finance:     { accent: '#f59e0b', dot: 'bg-amber-400',   lessonHover: 'hover:bg-amber-400/10',  activeLesson: 'bg-amber-400/15',  activeLessonText: 'text-amber-400' },
-              contracts:   { accent: '#6366f1', dot: 'bg-indigo-400',  lessonHover: 'hover:bg-indigo-400/10', activeLesson: 'bg-indigo-400/15', activeLessonText: 'text-indigo-400' },
-              data:        { accent: '#14b8a6', dot: 'bg-teal-400',    lessonHover: 'hover:bg-teal-400/10',   activeLesson: 'bg-teal-400/15',   activeLessonText: 'text-teal-400' },
-              capture:     { accent: '#f97316', dot: 'bg-orange-400',  lessonHover: 'hover:bg-orange-400/10', activeLesson: 'bg-orange-400/15', activeLessonText: 'text-orange-400' },
-              operations:  { accent: '#8b5cf6', dot: 'bg-violet-400',  lessonHover: 'hover:bg-violet-400/10', activeLesson: 'bg-violet-400/15', activeLessonText: 'text-violet-400' },
-            };
-            const mc = moduleColors[mod.id] ?? moduleColors.foundations;
-
-            return (
-              <div key={mod.id}>
-                {/* Module header row */}
-                <div
-                  className={cn(
-                    "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all cursor-pointer select-none border",
-                    (isModActive || isLessonInMod)
-                      ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
-                      : "text-sidebar-foreground/85 border-sidebar-border hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground hover:-translate-y-px"
-                  )}
-                  style={(isModActive || isLessonInMod) ? { borderLeft: `3px solid ${mc.accent}` } : undefined}
-                  onClick={(e) => {
-                    setView({ type: 'module', moduleId: mod.id });
-                    setSidebarOpen(false);
-                    // Also expand
-                    setExpandedModules(prev => { const n = new Set(prev); n.add(mod.id); return n; });
-                  }}
-                  data-testid={`sidebar-${mod.id}`}
-                >
-                  <span className="text-sm flex-shrink-0">{mod.icon}</span>
-                  <span className="flex-1 text-left text-xs font-medium leading-tight">{mod.title}</span>
-                  {/* Progress / lock badge */}
-                  {!isAccessible && hasPreview ? (
-                    <span className="text-[10px] font-bold text-emerald-400 flex-shrink-0 bg-emerald-400/10 border border-emerald-400/30 rounded-full px-1.5 py-0.5">Free</span>
-                  ) : !isAccessible ? (
-                    <span className="text-[10px] text-sidebar-foreground/55 flex-shrink-0">🔒</span>
-                  ) : progressPct === 100 ? (
-                    <span className="text-[10px] flex-shrink-0 bg-green-500/15 border border-green-500/40 rounded-full w-4 h-4 flex items-center justify-center text-green-400">✓</span>
-                  ) : progressPct > 0 ? (
-                    <span
-                      className="text-[10px] font-bold flex-shrink-0 rounded-full px-1.5 py-0.5 border"
-                      style={{ color: mc.accent, borderColor: mc.accent + '55', backgroundColor: mc.accent + '15' }}
-                    >
-                      {progressPct}%
-                    </span>
-                  ) : null}
-                  {/* Chevron toggle */}
-                  <button
-                    onClick={toggleExpand}
-                    className="flex-shrink-0 text-sidebar-foreground/55 hover:text-sidebar-foreground transition-colors p-0.5 rounded"
-                    aria-label={isExpanded ? 'Collapse' : 'Expand'}
-                  >
-                    <ChevronDown className={cn("w-3 h-3 transition-transform duration-200", isExpanded && "rotate-180")} />
-                  </button>
-                </div>
-
-                {/* Lesson list */}
-                {isExpanded && (
-                  <div className="ml-3 mt-0.5 mb-1 border-l-2 pl-2.5 space-y-0.5" style={{ borderColor: mc.accent + '55' }}>
-                    {mod.lessons.map((lesson) => {
-                      const isActive = lesson.id === activeLessonId;
-                      const isDone = progress.completedLessons.has(lesson.id);
-                      const isPreview = FREE_PREVIEW_LESSONS.includes(lesson.id);
-                      const canAccess = isAccessible || isPreview;
-
-                      return (
-                        <button
-                          key={lesson.id}
-                          onClick={() => {
-                            if (!canAccess) { setView({ type: 'upgrade' }); setSidebarOpen(false); return; }
-                            setView({ type: 'lesson', lessonId: lesson.id });
-                            setSidebarOpen(false);
-                          }}
-                          className={cn(
-                            "w-full text-left text-[11px] px-2 py-1.5 rounded-md transition-colors flex items-center gap-1.5 leading-tight group",
-                            isActive
-                              ? mc.activeLesson + ' ' + mc.activeLessonText + ' font-semibold'
-                              : canAccess
-                                ? 'text-sidebar-foreground/85 ' + mc.lessonHover + ' hover:text-sidebar-foreground'
-                                : 'text-sidebar-foreground/45 cursor-default'
-                          )}
-                        >
-                          {/* Status dot */}
-                          <span className={cn(
-                            "w-1.5 h-1.5 rounded-full flex-shrink-0 transition-colors",
-                            isActive ? mc.dot
-                              : isDone ? 'bg-green-500'
-                              : 'bg-sidebar-foreground/40'
-                          )} />
-                          <span className="flex-1 truncate">{lesson.title}</span>
-                          {!canAccess && <span className="text-[9px] flex-shrink-0">🔒</span>}
-                          {isDone && !isActive && <span className="text-[9px] text-green-400 flex-shrink-0">✓</span>}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-
-          {/* Downloadable Resources */}
-          {SIDEBAR_RESOURCES.length > 0 && (
-            <div className="pt-3">
-              <button
-                onClick={() => setResourcesExpanded(v => !v)}
-                className={cn(
-                  "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all select-none border",
-                  resourcesExpanded
-                    ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border"
-                    : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
-                )}
-                data-testid="sidebar-resources-toggle"
-              >
-                <FolderOpen className="w-4 h-4 flex-shrink-0" />
-                <span className="flex-1 text-left text-xs font-medium">Resources</span>
-                <span className="text-[10px] text-sidebar-foreground/40">{SIDEBAR_RESOURCES.length}</span>
-                <ChevronDown className={cn("w-3.5 h-3.5 flex-shrink-0 transition-transform", resourcesExpanded && "rotate-180")} />
-              </button>
-              {resourcesExpanded && (
-                <div className="pl-2 pr-1 pt-1 space-y-1">
-                  {SIDEBAR_RESOURCES.map((res, ri) => {
-                    const locked = res.proOnly && !progress.isPremium;
-                    const commonClass = "flex items-start gap-2 px-3 py-2 rounded-lg transition-colors group";
-                    if (locked) {
-                      return (
-                        <button
-                          key={ri}
-                          onClick={() => { handleUpgrade(); setSidebarOpen(false); }}
-                          className={cn(commonClass, "w-full text-left text-sidebar-foreground/45 hover:bg-sidebar-accent hover:text-sidebar-foreground/70")}
-                          data-testid={`sidebar-resource-${ri}`}
-                        >
-                          <Lock className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 opacity-70" />
-                          <div className="flex-1 min-w-0">
-                            <div className="text-[11px] font-semibold leading-tight">{res.title}</div>
-                            <div className="text-[10.5px] leading-snug mt-0.5 opacity-80">{res.description}</div>
-                            <div className="text-[10px] font-bold text-primary mt-1">Unlock with Pro →</div>
-                          </div>
-                        </button>
-                      );
-                    }
-                    return (
-                      <a
-                        key={ri}
-                        href={res.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={cn(commonClass, "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground")}
-                        data-testid={`sidebar-resource-${ri}`}
-                      >
-                        <Download className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-primary opacity-80 group-hover:opacity-100" />
-                        <div className="flex-1 min-w-0">
-                          <div className="text-[11px] font-semibold leading-tight text-sidebar-foreground/90">{res.title}</div>
-                          <div className="text-[10.5px] text-sidebar-foreground/65 leading-snug mt-0.5">{res.description}</div>
-                        </div>
-                      </a>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Tools Directory */}
-          <div className="pt-1">
-            <button
-              onClick={() => setToolsExpanded(v => !v)}
-              className={cn(
-                "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all select-none border",
-                toolsExpanded
-                  ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border"
-                  : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
-              )}
-              data-testid="sidebar-tools-toggle"
-            >
-              <Wrench className="w-4 h-4 flex-shrink-0" />
-              <span className="flex-1 text-left text-xs font-medium">Tools</span>
-              <ChevronDown className={cn("w-3.5 h-3.5 flex-shrink-0 transition-transform", toolsExpanded && "rotate-180")} />
-            </button>
-            {toolsExpanded && (
-              <div className="pl-2 pr-1 pt-1 space-y-2 max-h-80 overflow-y-auto">
-                {/* FAR Translator — pinned, distinctly styled */}
-                <a
-                  href={FAR_TRANSLATOR.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-start gap-2 px-3 py-2.5 rounded-lg bg-primary/10 border border-primary/25 hover:bg-primary/15 transition-colors group"
-                  data-testid="sidebar-far-translator"
-                >
-                  <Sparkles className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-primary" />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-[11px] font-bold text-primary leading-tight">{FAR_TRANSLATOR.name}</div>
-                    <div className="text-[10px] text-sidebar-foreground/50 leading-tight mt-0.5">{FAR_TRANSLATOR.description}</div>
-                  </div>
-                </a>
-                {/* Cost & Burn Rate Tracker — pinned, internal page */}
+        {/* Navigation. Four destinations rather than a wall of fourteen modules.
+            The module tree nobody scanned now lives on My Path; the space it
+            freed carries what a learner actually wants permanently on screen:
+            where they are, whether the streak is alive, the five subject
+            families as a colour legend, and the next CLP certificate. */}
+        <nav className="flex-1 px-3 py-4 overflow-y-auto space-y-4">
+          <div className="space-y-1">
+            {([
+              { key: 'dashboard', label: 'Dashboard', Icon: LayoutDashboard, go: () => setView({ type: 'dashboard' }) },
+              { key: 'modules',   label: 'My Path',   Icon: BookOpen,        go: () => setView({ type: 'modules' }) },
+              { key: 'resources', label: 'Resources', Icon: FolderOpen,      go: () => setView({ type: 'resources' }) },
+              { key: 'account',   label: 'Account',   Icon: User,            go: () => setView({ type: 'account' }) },
+            ] as const).map(({ key, label, Icon, go }) => {
+              const active = view.type === key;
+              return (
                 <button
-                  onClick={() => setView({ type: 'costProjects' })}
-                  className="w-full flex items-start gap-2 px-3 py-2.5 rounded-lg bg-primary/10 border border-primary/25 hover:bg-primary/15 transition-colors group text-left"
-                  data-testid="sidebar-cost-tracker"
+                  key={key}
+                  onClick={() => { go(); setSidebarOpen(false); }}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all border",
+                    active
+                      ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
+                      : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
+                  )}
+                  data-testid={`nav-${key}`}
                 >
-                  <Calculator className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-primary" />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-[11px] font-bold text-primary leading-tight">Cost &amp; Burn Rate Tracker</div>
-                    <div className="text-[10px] text-sidebar-foreground/50 leading-tight mt-0.5">Track funding, mods, and spend across your projects — persists between visits.</div>
+                  <Icon className={cn("w-4 h-4", active && "text-sidebar-primary")} />
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Your progress */}
+          {(() => {
+            const nextLvl = ALL_LEVELS.find(l => l.threshold > xp);
+            const floor = ALL_LEVELS.filter(l => l.threshold <= xp).slice(-1)[0]?.threshold ?? 0;
+            const pct = nextLvl ? Math.max(2, Math.min(100, Math.round(((xp - floor) / (nextLvl.threshold - floor)) * 100))) : 100;
+            return (
+              <div className="pt-3 border-t border-sidebar-border space-y-1.5" data-testid="sidebar-progress">
+                <div className="text-[11px] font-bold uppercase tracking-widest text-sidebar-foreground/55 px-1">Your progress</div>
+                <button
+                  onClick={() => setShowLevels(true)}
+                  className="w-full text-left px-1 space-y-1.5 group"
+                  data-testid="xp-level-card"
+                >
+                  <div className="text-sm font-bold text-sidebar-foreground group-hover:text-sidebar-primary transition-colors">
+                    Lv {currentLevel.level} &middot; {currentLevel.title}
+                  </div>
+                  <div className="h-1.5 rounded-full bg-sidebar-foreground/10 overflow-hidden">
+                    <div className="h-full bg-sidebar-primary rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
+                  </div>
+                  <div className="text-xs text-sidebar-foreground/60">
+                    {nextLvl ? `${xp} / ${nextLvl.threshold} XP to ${nextLvl.title}` : `${xp} XP &middot; max level`}
                   </div>
                 </button>
-
-                {TOOLS_DIRECTORY.map((cat, ci) => (
-                  <div key={ci}>
-                    <div className="text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/35 px-3 pt-1.5 pb-1">
-                      {cat.title}
-                    </div>
-                    {cat.tools.map((tool, ti) => (
-                      <a
-                        key={ti}
-                        href={tool.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors group"
-                        data-testid={`sidebar-tool-${ci}-${ti}`}
-                      >
-                        <span className="text-[11px] font-medium leading-tight truncate">{tool.name}</span>
-                        <ExternalLink className="w-3 h-3 flex-shrink-0 opacity-0 group-hover:opacity-60" />
-                      </a>
-                    ))}
-                  </div>
-                ))}
-                <a
-                  href="/tools"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 px-3 py-2 mt-1 rounded-lg text-[11px] font-semibold text-primary hover:bg-primary/10 transition-colors"
-                >
-                  View full Tools page
-                  <ExternalLink className="w-3 h-3" />
-                </a>
+                <div className="flex items-center gap-1.5 px-1 pt-0.5">
+                  <Flame className={cn("w-3.5 h-3.5 flex-shrink-0", streak.currentStreak > 0 ? "text-orange-400 fill-orange-400/30" : "text-sidebar-foreground/30")} />
+                  <span className="text-[12px] text-sidebar-foreground/60 truncate">
+                    {streak.currentStreak > 0
+                      ? `${streak.currentStreak}-day streak`
+                      : 'Streak: start today'}
+                  </span>
+                </div>
               </div>
-            )}
+            );
+          })()}
+
+          {/* Jump to: doubles as the colour legend, which is how the family
+              system gets learned without anyone explaining it. */}
+          <div className="pt-3 border-t border-sidebar-border space-y-1" data-testid="family-legend">
+            <div className="text-[11px] font-bold uppercase tracking-widest text-sidebar-foreground/55 px-1 mb-1.5">Jump to</div>
+            {(['foundations', 'money', 'contracts', 'winning', 'program'] as ModuleFamily[]).map(fam => {
+              const inFam = modules.filter(m => getModuleFamily(m.id) === fam);
+              if (inFam.length === 0) return null;
+              return (
+                <button
+                  key={fam}
+                  onClick={() => { setView({ type: 'modules', family: fam }); setSidebarOpen(false); }}
+                  className="w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-left hover:bg-sidebar-accent transition-colors"
+                  style={{ borderLeft: `3px solid ${FAMILY_THEME[fam].hex}` }}
+                  data-testid={`family-${fam}`}
+                >
+                  <span className="text-[13px] leading-none flex-shrink-0">{inFam[0].icon}</span>
+                  <span className="text-[13px] text-sidebar-foreground/90 truncate flex-1">{FAMILY_LABEL[fam]}</span>
+                  <span className="text-[12px] tabular-nums text-sidebar-foreground/40 flex-shrink-0">{inFam.length}</span>
+                </button>
+              );
+            })}
           </div>
+
+          {/* CLP credit. This is why a DAWIA professional is paying: 80 points
+              every two years. Shown as the NEXT certificate rather than a
+              running total, because a total reads "0.0 of 43.8" on day one,
+              which is the same zero-state failure as a sleeping streak tile.
+              A reward four lessons out pulls; one forty hours out does not.
+              Figures derive from the curriculum, so this cannot drift. */}
+          {(() => {
+            const nextMod = modules.find(m => m.lessons.some(l => !progress.completedLessons.has(l.id)));
+            const earned = modules
+              .filter(m => m.lessons.every(l => progress.completedLessons.has(l.id)))
+              .reduce((sum, m) => sum + moduleClps(m.id), 0);
+            // The whole block opens My Certificates (the CLP ledger).
+            const open = () => { setView({ type: 'certificates' }); setSidebarOpen(false); };
+            if (!nextMod) {
+              return (
+                <button onClick={open} className="w-full text-left rounded-lg px-3 py-2 bg-amber-500/[0.12] border border-amber-500/35 space-y-1 hover:bg-amber-500/[0.18] transition-colors" data-testid="clp-tracker">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[12px] leading-none">&#127891;</span>
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-amber-700 dark:text-amber-300">CLP credit</span>
+                    <span className="ml-auto text-xs font-bold text-amber-500">{formatClps(earned)} earned</span>
+                  </div>
+                  <div className="text-xs text-amber-800 dark:text-amber-200/90">Every module finished. My certificates &rarr;</div>
+                </button>
+              );
+            }
+            const done = nextMod.lessons.filter(l => progress.completedLessons.has(l.id)).length;
+            const left = nextMod.lessons.length - done;
+            const pct = Math.round((done / nextMod.lessons.length) * 100);
+            return (
+              <button onClick={open} className="w-full text-left rounded-lg px-3 py-2 bg-amber-500/[0.12] border border-amber-500/35 space-y-1.5 hover:bg-amber-500/[0.18] transition-colors" data-testid="clp-tracker">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[12px] leading-none">&#127891;</span>
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-amber-700 dark:text-amber-300">CLP credit</span>
+                  {earned > 0 && <span className="ml-auto text-xs font-bold text-amber-500">{formatClps(earned)} earned</span>}
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs leading-none flex-shrink-0">{nextMod.icon}</span>
+                  <span className="text-[13px] font-bold text-amber-900 dark:text-amber-50 truncate flex-1">{nextMod.title}</span>
+                  <span className="text-[13px] font-bold text-amber-500 flex-shrink-0">{moduleClps(nextMod.id).toFixed(1)}</span>
+                </div>
+                <div className="h-1 rounded-full bg-amber-900/15 dark:bg-amber-200/15 overflow-hidden">
+                  <div className="h-full bg-amber-500 rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
+                </div>
+                <div className="text-xs text-amber-800 dark:text-amber-200/90">
+                  {left} more {left === 1 ? 'lesson' : 'lessons'} to this certificate
+                </div>
+                <div className="text-xs text-amber-800/80 dark:text-amber-200/70 flex justify-between gap-2">
+                  <span>{formatClps(totalClps())} available &middot; 80 per 2-year cycle</span>
+                  <span className="font-semibold whitespace-nowrap">My certificates &rarr;</span>
+                </div>
+              </button>
+            );
+          })()}
+
+          {/* Spend plan tracker keeps its entry point, one line instead of a card. */}
+          <button
+            onClick={() => { setView({ type: 'costTrackerIntro' }); setSidebarOpen(false); }}
+            className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-sidebar-accent transition-colors text-left"
+            data-testid="burn-rate-badge"
+          >
+            <Calculator className="w-4 h-4 text-primary flex-shrink-0" />
+            <span className="text-[13px] font-semibold text-primary flex-1 truncate">Spend plan tracker</span>
+            <ChevronRight className="w-3.5 h-3.5 text-primary/50 flex-shrink-0" />
+          </button>
         </nav>
 
         {/* Bottom */}
         <div className="px-3 py-4 border-t border-sidebar-border space-y-1">
           {trialDaysLeft !== null && (
             <div
-              className="w-full px-3 py-1.5 rounded-lg text-[11px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 text-center"
+              className="w-full px-3 py-1.5 rounded-lg text-[13px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 text-center"
               data-testid="trial-days-remaining"
             >
               {trialDaysLeft === 0
@@ -1362,52 +1307,69 @@ function AppContent() {
               {trialDaysLeft !== null ? "Keep Full Access" : "Upgrade to Pro"}
             </button>
           )}
+          {/* Admin surfaces live behind the identity row rather than in a
+              learner's main nav, where platform-wide signup counts were the
+              second thing a paying customer read. */}
+          {isAdmin && (
+            <div className="flex items-center gap-3 px-3 pb-1">
+              <button
+                onClick={() => { setView({ type: 'admin' }); setSidebarOpen(false); }}
+                className="flex items-center gap-1.5 text-[12px] font-medium text-sidebar-foreground/90 hover:text-sidebar-foreground transition-colors"
+                data-testid="nav-admin"
+              >
+                <ShieldCheck className="w-3.5 h-3.5" /> Admin
+              </button>
+              <button
+                onClick={() => { setView({ type: 'analytics' }); setSidebarOpen(false); }}
+                className="flex items-center gap-1.5 text-[12px] font-medium text-sidebar-foreground/90 hover:text-sidebar-foreground transition-colors"
+                data-testid="nav-analytics"
+              >
+                <BarChart3 className="w-3.5 h-3.5" /> Analytics
+              </button>
+            </div>
+          )}
           <button
             onClick={() => { setView({ type: 'account' }); setSidebarOpen(false); }}
-            className={cn(
-              "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all border",
-              view.type === 'account'
-                ? "bg-sidebar-accent text-sidebar-foreground border-sidebar-accent-border shadow-sm"
-                : "text-sidebar-foreground/70 border-transparent hover:bg-sidebar-accent hover:border-sidebar-accent-border hover:text-sidebar-foreground"
-            )}
-            data-testid="nav-account"
+            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-sidebar-accent transition-colors text-left"
+            data-testid="sidebar-identity"
           >
-            <User className={cn("w-4 h-4", view.type === 'account' && "text-sidebar-primary")} />
-            My Account
+            <div className="w-8 h-8 rounded-full bg-sidebar-primary/20 flex items-center justify-center flex-shrink-0">
+              <User className="w-4 h-4 text-sidebar-primary" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-sm font-semibold text-sidebar-foreground truncate">{user.username}</div>
+              <div className="text-[12px] text-sidebar-foreground/80 truncate">
+                {isPremium ? 'Pro' : 'Free'}{isAdmin ? ' · Admin' : ''}
+              </div>
+            </div>
           </button>
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-sidebar-foreground/50 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
             data-testid="nav-signout"
           >
-            <LogOut className="w-3.5 h-3.5" />
+            <LogOut className="w-4 h-4" />
             Sign Out
           </button>
           <div className="flex gap-3 px-3 pt-2 pb-1">
-            <a href="/privacy" className="text-[10px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Privacy</a>
-            <a href="/terms" className="text-[10px] text-sidebar-foreground/30 hover:text-sidebar-foreground/60 transition-colors">Terms</a>
+            <a href="/privacy" className="text-[12px] text-sidebar-foreground/75 hover:text-sidebar-foreground transition-colors">Privacy</a>
+            <a href="/terms" className="text-[12px] text-sidebar-foreground/75 hover:text-sidebar-foreground transition-colors">Terms</a>
+            {/* public/consent.js listens for clicks on [data-acq-cookie-settings] */}
+            <button type="button" data-acq-cookie-settings className="text-[12px] text-sidebar-foreground/75 hover:text-sidebar-foreground transition-colors">Cookies</button>
             <PWAInstallLink />
           </div>
         </div>
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 md:ml-64 flex flex-col min-h-screen min-w-0 relative">
-        {/* Background: hex grid + radial glow */}
-        <div aria-hidden="true" className="pointer-events-none fixed md:left-64 inset-y-0 right-0 z-0 overflow-hidden">
+      <div className="flex-1 md:ml-72 flex flex-col min-h-screen min-w-0 relative">
+        {/* Background: soft radial glow only. The hex grid that used to sit
+            here fought every card on top of it and dated the page. */}
+        <div aria-hidden="true" className="pointer-events-none fixed md:left-72 inset-y-0 right-0 z-0 overflow-hidden">
           {/* Radial teal glow top-right */}
           <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full opacity-[0.07] dark:opacity-[0.12]" style={{background: 'radial-gradient(circle, #01696f 0%, transparent 70%)'}} />
           {/* Radial teal glow bottom-left */}
           <div className="absolute -bottom-32 -left-16 w-[400px] h-[400px] rounded-full opacity-[0.05] dark:opacity-[0.08]" style={{background: 'radial-gradient(circle, #01696f 0%, transparent 70%)'}} />
-          {/* Hex grid overlay */}
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 opacity-[0.06] dark:opacity-[0.05]">
-            <defs>
-              <pattern id="hex-bg" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse">
-                <polygon points="30,3 57,18 57,34 30,49 3,34 3,18" fill="none" stroke="#01696f" strokeWidth="1.2" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#hex-bg)" />
-          </svg>
         </div>
         {/* Top Bar */}
         <header className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-20 flex items-center justify-between px-4 md:px-6 safe-top" style={{minHeight: '3.5rem'}}>
@@ -1439,7 +1401,7 @@ function AppContent() {
 
         {/* Page Content */}
         <main className="flex-1 min-w-0 p-4 md:p-6 max-w-6xl mx-auto w-full relative z-10">
-        <ErrorBoundary>{pageContent}</ErrorBoundary>
+        <ErrorBoundary><Suspense fallback={<PageLoading />}>{pageContent}</Suspense></ErrorBoundary>
         </main>
       </div>
     </div>
@@ -1448,12 +1410,12 @@ function AppContent() {
     {/* Module Assessment Modal */}
     {assessmentModuleId && authState.status === 'authenticated' && (() => {
       const assessMod = modules.find(m => m.id === assessmentModuleId);
-      if (!assessMod || !assessMod.assessment?.length) return null;
+      if (!assessMod || !assessMod.assessmentCount) return null;
       const skillLevels = authState.user.moduleSkillLevels ?? {};
       const currentLevel = (skillLevels[assessmentModuleId] as SkillLevel) ?? 'novice';
       return (
-        <ModuleAssessment
-          module={assessMod}
+        <LazyModuleAssessment
+          moduleId={assessmentModuleId}
           currentLevel={currentLevel}
           onClose={() => setAssessmentModuleId(null)}
           onLevelUnlocked={(moduleId, newLevel) => {
@@ -1478,113 +1440,8 @@ function AppContent() {
     {/* PWA install prompt */}
     <InstallPrompt />
 
-    {/* ── Level Progression Modal ── */}
-    {showLevels && (
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-        onClick={() => setShowLevels(false)}
-      >
-        <div
-          className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
-          onClick={e => e.stopPropagation()}
-        >
-          {/* Header */}
-          <div className="bg-gradient-to-r from-primary/20 to-primary/5 border-b border-border px-6 py-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1">Your Progression</div>
-                <h2 className="text-lg font-bold text-foreground">Acqlerate Career Levels</h2>
-              </div>
-              <button onClick={() => setShowLevels(false)} className="text-muted-foreground hover:text-foreground transition-colors">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            {/* Current XP progress to next level */}
-            {(() => {
-              const nextLevel = ALL_LEVELS.find(l => l.threshold > xp);
-              const xpToNext = nextLevel ? nextLevel.threshold - xp : 0;
-              const progress = nextLevel
-                ? ((xp - currentLevel.threshold) / (nextLevel.threshold - currentLevel.threshold)) * 100
-                : 100;
-              return (
-                <div className="mt-4">
-                  <div className="flex justify-between text-xs text-muted-foreground mb-1.5">
-                    <span className="font-semibold text-foreground">{currentLevel.title}</span>
-                    <span>{nextLevel ? `${xpToNext} XP to Level ${nextLevel.level}` : 'Max level reached'}</span>
-                  </div>
-                  <div className="h-2 bg-muted rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary rounded-full transition-all duration-500"
-                      style={{ width: `${Math.min(100, progress)}%` }}
-                    />
-                  </div>
-                  <div className="text-[10px] text-muted-foreground mt-1">{xp} XP earned</div>
-                </div>
-              );
-            })()}
-          </div>
-
-          {/* Level list */}
-          <div className="p-4 space-y-2 max-h-[60vh] overflow-y-auto">
-            {ALL_LEVELS.map((lvl) => {
-              const isCurrentLevel = lvl.level === currentLevel.level;
-              const isUnlocked = xp >= lvl.threshold;
-              const isNext = !isUnlocked && ALL_LEVELS.find(l => xp >= l.threshold)?.level === lvl.level - 1;
-              return (
-                <div
-                  key={lvl.level}
-                  className={cn(
-                    "flex items-start gap-3 rounded-xl px-4 py-3 border transition-all",
-                    isCurrentLevel
-                      ? "bg-primary/10 border-primary/40 ring-1 ring-primary/30"
-                      : isUnlocked
-                      ? "bg-muted/30 border-transparent"
-                      : "opacity-50 border-transparent"
-                  )}
-                >
-                  {/* Level number badge */}
-                  <div className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5",
-                    isCurrentLevel ? "bg-primary text-primary-foreground"
-                    : isUnlocked ? "bg-muted text-muted-foreground"
-                    : "bg-muted/50 text-muted-foreground/50"
-                  )}>
-                    {isUnlocked ? lvl.level : <Lock className="w-3 h-3" />}
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className={cn(
-                        "text-sm font-bold",
-                        isCurrentLevel ? "text-primary" : isUnlocked ? "text-foreground" : "text-muted-foreground"
-                      )}>
-                        {lvl.title}
-                      </span>
-                      {isCurrentLevel && (
-                        <span className="text-[9px] font-bold bg-primary/20 text-primary rounded-full px-2 py-0.5 uppercase tracking-wide">You are here</span>
-                      )}
-                      {isNext && (
-                        <span className="text-[9px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 rounded-full px-2 py-0.5 uppercase tracking-wide">Next</span>
-                      )}
-                    </div>
-                    <div className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{lvl.desc}</div>
-                    <div className="text-[10px] text-muted-foreground/60 mt-1">
-                      {lvl.threshold === 0 ? 'Starting level' : `Unlocks at ${lvl.threshold} XP`}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="px-6 py-4 border-t border-border bg-muted/20">
-            <p className="text-[11px] text-muted-foreground text-center">
-              Complete lessons and quizzes to earn XP. Each lesson = 10 XP. Perfect quiz score = bonus 5 XP.
-            </p>
-          </div>
-        </div>
-      </div>
-    )}
+    {/* ── Level road ── the same board the Account screen opens on phones. */}
+    {showLevels && <LevelRoadSheet xp={xp} track={activeTrack} onClose={() => setShowLevels(false)} />}
   </ErrorBoundary>
   );
 }
@@ -1595,7 +1452,9 @@ function App() {
       <TooltipProvider>
         <Toaster />
         <Router hook={useHashLocation}>
-          <AppContent />
+          <DocumentViewerProvider>
+            <AppContent />
+          </DocumentViewerProvider>
         </Router>
       </TooltipProvider>
     </QueryClientProvider>

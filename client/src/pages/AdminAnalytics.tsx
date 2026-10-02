@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { ArrowLeft, TrendingUp, Users, BookOpen, DollarSign, Percent, BarChart3, RefreshCw, ExternalLink, Download, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { modules } from "@/lib/curriculum";
+import { modules } from "@/lib/curriculumMeta";
 
 interface AdminAnalyticsProps {
   onBack: () => void;
@@ -323,7 +323,7 @@ export default function AdminAnalytics({ onBack }: AdminAnalyticsProps) {
                       <td className="px-3 py-2 text-xs text-foreground max-w-[180px] truncate">{u.email}</td>
                       <td className="px-3 py-2">
                         <span className={`text-xs font-semibold px-1.5 py-0.5 rounded ${
-                          u.subscriptionStatus === 'lifetime' ? 'bg-yellow-500/20 text-yellow-400' :
+                          u.subscriptionStatus === 'lifetime' || u.subscriptionStatus === 'annual' ? 'bg-yellow-500/20 text-yellow-400' :
                           u.subscriptionStatus === 'active' ? 'bg-primary/20 text-primary' :
                           'bg-muted text-muted-foreground'
                         }`}>

@@ -1,6 +1,8 @@
 import { type User, type InsertUser, type InsertGoogleUser, type InsertAppleUser, users, emailLeads, type Lead, passwordResetTokens } from "@shared/schema";
-import { computeTrialEndsAt, hasFullAccess } from "@shared/access";
+import { computeTrialEndsAt, computePackBonusEndsAt, hasFullAccess, PACK_BONUS_PACKS, PACK_BONUS_CLAIM_WINDOW_DAYS } from "@shared/access";
 import { randomUUID } from "crypto";
+import { weekRollPatch } from "@shared/xp";
+import type { LeaderboardRow } from "./leaderboard";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { eq, sql } from "drizzle-orm";
 import { Pool } from "pg";
@@ -37,9 +39,13 @@ export function getDisplayStreak(currentStreak: number | null | undefined, lastS
 // ─── Interface ─────────────────────────────────────────────────────────────
 
 export interface IStorage {
+  /** Cheapest possible round trip to the real datastore. Throws if it can't. */
+  ping(): Promise<void>;
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
+  // Case-insensitive match. Signups keep the email as typed; Stripe may not.
+  getUserByEmailInsensitive(email: string): Promise<User | undefined>;
   getUserByGoogleId(googleId: string): Promise<User | undefined>;
   getUserByAppleId(appleId: string): Promise<User | undefined>;
   getUserByStripeCustomerId(customerId: string): Promise<User | undefined>;
@@ -63,9 +69,16 @@ export interface IStorage {
   updateUserProgress(
     userId: string,
     completedLessons: string[],
-    quizScores: Record<string, number>
+    quizScores: Record<string, number>,
+    /** Written in the same update, e.g. the week's starting XP (weekRollPatch). */
+    extra?: Record<string, unknown>
   ): Promise<User | undefined>;
+  /** Everyone's leaderboard inputs, in one read. See server/leaderboard.ts. */
+  getLeaderboardRows(): Promise<LeaderboardRow[]>;
+  setLeaderboardHidden(userId: string, hidden: boolean): Promise<User | undefined>;
   updateUserPassword(userId: string, passwordHash: string): Promise<User | undefined>;
+  /** Sign this user out everywhere: deletes every stored session that belongs to them. */
+  endAllSessionsForUser(userId: string): Promise<void>;
   // Password reset / first-password tokens. Callers pass the SHA-256 of the
   // token, never the token itself.
   createPasswordResetToken(userId: string, tokenHash: string, expiresAt: string): Promise<void>;
@@ -103,7 +116,17 @@ export interface IStorage {
   // awarded:false and writes nothing, so XP cannot be farmed by reopening it.
   completeBrief(userId: string, briefId: string, score: number, xpEarned: number): Promise<{ user: User; awarded: boolean; briefsRead: string[] } | undefined>;
   getBriefsRead(userId: string): Promise<string[]>;
+  // Acqlerate Coach cache: AI answers that are identical for everyone.
+  getCoachCache(key: string): Promise<unknown | null>;
+  putCoachCache(key: string, kind: string, lessonId: string | null, payload: unknown, model: string | null): Promise<void>;
+  // Records one Teach It Back attempt (the result, never the learner's text).
+  // Awards XP once per lesson, the first time it's passed.
+  recordTeachBack(userId: string, lessonId: string, covered: number, total: number, passed: boolean, xpForPass: number): Promise<{ user: User; xpAwarded: number } | undefined>;
   checkAndConsumeAiCall(userId: string): Promise<{ allowed: boolean; remaining: number | null; limit: number | null }>;
+  /** The user holding this certificate ID, for the public verify page. */
+  findUserByCertId(certId: string): Promise<User | undefined>;
+  /** Both implementations had this; the interface never declared it. */
+  updateUserFields(userId: string, fields: Record<string, any>): Promise<void>;
   runAiUsageMigration(): Promise<{ ok: boolean; detail: string }>;
   saveLead(email: string, source?: string): Promise<Lead>;
   getAllLeads(): Promise<Lead[]>;
@@ -112,8 +135,10 @@ export interface IStorage {
   getPurchaseBySessionId(sessionId: string): Promise<Purchase | undefined>;
   getPurchaseByToken(token: string): Promise<Purchase | undefined>;
   incrementDownloadCount(purchaseId: string): Promise<void>;
-  getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[]; subscriptionStatus: string }>>;
+  getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[]; subscriptionStatus: string; trialEndsAt: string | null }>>;
   updateSentEmailDays(userId: string, days: number[]): Promise<void>;
+  // Template-pack bonus: put a user on a full-access trial ending at trialEndsAt.
+  setTrialEndsAt(userId: string, trialEndsAt: string): Promise<User | undefined>;
   // Email unsubscribes (marketing/newsletter/drip opt-out)
   isUnsubscribed(email: string): Promise<boolean>;
   setUnsubscribed(email: string): Promise<void>;
@@ -121,6 +146,45 @@ export interface IStorage {
 }
 
 // ─── Postgres Storage (production) ─────────────────────────────────────────
+
+export interface TeachBackEntry {
+  lessonId: string;
+  attempts: number;
+  passed: boolean;
+  bestCovered: number;
+  total: number;
+  xpEarned: number;
+  firstPassedAt: string | null;
+  lastAt: string;
+}
+
+/** Shared by both storages: fold one attempt into the user's teach_backs list. */
+function nextTeachBacks(
+  current: unknown,
+  lessonId: string,
+  covered: number,
+  total: number,
+  passed: boolean,
+  xpForPass: number,
+): { entries: TeachBackEntry[]; xpAwarded: number } {
+  const entries = (Array.isArray(current) ? [...current] : []) as TeachBackEntry[];
+  const today = new Date().toISOString().slice(0, 10);
+  const i = entries.findIndex(e => e?.lessonId === lessonId);
+  const prev = i >= 0 ? entries[i] : null;
+  const xpAwarded = passed && !(prev?.passed) ? xpForPass : 0;
+  const next: TeachBackEntry = {
+    lessonId,
+    attempts: (prev?.attempts ?? 0) + 1,
+    passed: Boolean(prev?.passed) || passed,
+    bestCovered: Math.max(prev?.bestCovered ?? 0, covered),
+    total,
+    xpEarned: (prev?.xpEarned ?? 0) + xpAwarded,
+    firstPassedAt: prev?.firstPassedAt ?? (passed ? today : null),
+    lastAt: today,
+  };
+  if (i >= 0) entries[i] = next; else entries.push(next);
+  return { entries, xpAwarded };
+}
 
 export class DrizzleStorage implements IStorage {
   private db: ReturnType<typeof drizzle>;
@@ -135,6 +199,10 @@ export class DrizzleStorage implements IStorage {
     this.db = drizzle(pool);
   }
 
+  async ping(): Promise<void> {
+    await this.db.execute(sql`SELECT 1`);
+  }
+
   async getUser(id: string): Promise<User | undefined> {
     const result = await this.db.select().from(users).where(eq(users.id, id)).limit(1);
     return result[0];
@@ -147,6 +215,11 @@ export class DrizzleStorage implements IStorage {
 
   async getUserByEmail(email: string): Promise<User | undefined> {
     const result = await this.db.select().from(users).where(eq(users.email, email)).limit(1);
+    return result[0];
+  }
+
+  async getUserByEmailInsensitive(email: string): Promise<User | undefined> {
+    const result = await this.db.select().from(users).where(sql`lower(${users.email}) = lower(${email})`).limit(1);
     return result[0];
   }
 
@@ -170,6 +243,24 @@ export class DrizzleStorage implements IStorage {
   }
 
   async deleteUser(userId: string): Promise<void> {
+    // Rows that only exist because of this account go with it, so the Privacy
+    // Policy's promise holds. Each cleanup is best-effort: a failure is logged
+    // but never blocks deleting the account itself. Kept on purpose: purchase
+    // rows (tax/accounting records) and the unsubscribe list (so an opt-out
+    // is still honored if the address ever comes back).
+    const [row] = await this.db.select({ email: users.email }).from(users).where(eq(users.id, userId));
+    try {
+      await this.db.delete(passwordResetTokens).where(eq(passwordResetTokens.userId, userId));
+    } catch (err) {
+      console.error(`[account-delete] reset-token cleanup failed for ${userId}:`, err);
+    }
+    if (row?.email) {
+      try {
+        await this.db.delete(emailLeads).where(sql`lower(${emailLeads.email}) = lower(${row.email})`);
+      } catch (err) {
+        console.error(`[account-delete] lead cleanup failed for ${userId}:`, err);
+      }
+    }
     await this.db.delete(users).where(eq(users.id, userId));
   }
 
@@ -187,29 +278,29 @@ export class DrizzleStorage implements IStorage {
     return result[0];
   }
 
-  // Record a successful referral signup — increment referrer's count, check reward threshold
+  // Record a successful referral signup: bump the referrer's count and, when
+  // it crosses the next multiple of 2, claim one reward. This only counts and
+  // claims. What the reward actually gives (a year of access, or a Stripe
+  // credit for a Monthly subscriber) is decided in server/referrals.ts, so the
+  // referrer's real subscription status and Stripe id are never overwritten.
+  // Both writes are single atomic UPDATEs, so two signups landing at the same
+  // moment can't lose a count or claim the same reward twice.
   async recordReferral(referralCode: string): Promise<{ rewarded: boolean; referrer: User | undefined }> {
     const referrer = await this.getUserByReferralCode(referralCode);
     if (!referrer) return { rewarded: false, referrer: undefined };
 
-    const newCount = (referrer.referralCount ?? 0) + 1;
-    const rewardsEarned = Math.floor(newCount / 2); // every 2 referrals = 1 reward
-    const alreadyGranted = referrer.referralRewardGranted ?? 0;
-    const shouldReward = rewardsEarned > alreadyGranted;
+    const [counted] = await this.db.update(users)
+      .set({ referralCount: sql`${users.referralCount} + 1` } as any)
+      .where(eq(users.id, referrer.id))
+      .returning();
+    if (!counted) return { rewarded: false, referrer: undefined };
 
-    const updates: any = { referralCount: newCount };
-    if (shouldReward) {
-      updates.referralRewardGranted = rewardsEarned;
-      // Grant 1 year of pro access (set expiry date 1 year from now)
-      const expiry = new Date();
-      expiry.setFullYear(expiry.getFullYear() + 1);
-      updates.subscriptionStatus = 'active';
-      updates.subscriptionId = `referral_reward_${Date.now()}`;
-    }
-
-    await this.db.update(users).set(updates).where(eq(users.id, referrer.id));
-    const updated = await this.getUser(referrer.id);
-    return { rewarded: shouldReward, referrer: updated };
+    const rewardsEarned = Math.floor((counted.referralCount ?? 0) / 2); // every 2 referrals = 1 reward
+    const [claimed] = await this.db.update(users)
+      .set({ referralRewardGranted: rewardsEarned } as any)
+      .where(sql`${users.id} = ${referrer.id} AND ${users.referralRewardGranted} < ${rewardsEarned}`)
+      .returning();
+    return { rewarded: !!claimed, referrer: claimed ?? counted };
   }
 
   // Update arbitrary user fields (for internal use)
@@ -217,16 +308,24 @@ export class DrizzleStorage implements IStorage {
     await this.db.update(users).set(fields as any).where(eq(users.id, userId));
   }
 
-  // Admin: grant yearly pro to a user manually
-  async grantYearlyPro(userId: string): Promise<User | undefined> {
-    const result = await this.db.update(users)
-      .set({
-        subscriptionStatus: 'active',
-        subscriptionId: `yearly_pro_${Date.now()}`,
-      } as any)
-      .where(eq(users.id, userId))
-      .returning();
-    return result[0];
+  async findUserByCertId(certId: string): Promise<User | undefined> {
+    // jsonb_each over module_completions: fine at this scale, and it keeps
+    // the record in one column instead of a second table to keep in sync.
+    const rows = await this.db
+      .select()
+      .from(users)
+      .where(sql`EXISTS (SELECT 1 FROM jsonb_each(${users.moduleCompletions}) e WHERE e.value->>'certId' = ${certId})`)
+      .limit(1);
+    return rows[0];
+  }
+
+  async endAllSessionsForUser(userId: string): Promise<void> {
+    // connect-pg-simple stores the passport user id at sess.passport.user.
+    try {
+      await this.db.execute(sql`DELETE FROM session WHERE (sess::jsonb -> 'passport' ->> 'user') = ${userId}`);
+    } catch (err: any) {
+      console.error("[sessions] could not end sessions for user:", err.message);
+    }
   }
 
   // Find or create a user for Google OAuth — links by email if account already exists
@@ -238,11 +337,18 @@ export class DrizzleStorage implements IStorage {
     // Then check by email — existing local-auth account, link Google ID
     const byEmail = await this.getUserByEmail(data.email);
     if (byEmail) {
+      // Signup does not verify email, so a password set on this account may
+      // belong to someone who typed the address without owning it. Signing in
+      // with Google proves the real owner, so any password chosen before that
+      // proof is dropped and old sessions are ended. The owner can set a new
+      // password with "Forgot password?".
+      const hadPassword = Boolean(byEmail.passwordHash);
       const linked = await this.db
         .update(users)
-        .set({ googleId: data.googleId })
+        .set(hadPassword ? { googleId: data.googleId, passwordHash: null } : { googleId: data.googleId })
         .where(eq(users.id, byEmail.id))
         .returning();
+      if (hadPassword) await this.endAllSessionsForUser(byEmail.id);
       return linked[0];
     }
 
@@ -260,7 +366,7 @@ export class DrizzleStorage implements IStorage {
         passwordHash: null,
         stripeCustomerId: null,
         subscriptionStatus: "trialing",
-        trialEndsAt: computeTrialEndsAt(),
+        trialEndsAt: await this.initialTrialEndsAt(data.email),
         subscriptionId: null,
         completedLessons: [],
         quizScores: {},
@@ -289,11 +395,15 @@ export class DrizzleStorage implements IStorage {
     if (data.email) {
       const byEmail = await this.getUserByEmail(data.email);
       if (byEmail) {
+        // Same reasoning as upsertGoogleUser: the password may predate any proof
+        // of ownership of this address, so drop it and end old sessions.
+        const hadPassword = Boolean(byEmail.passwordHash);
         const linked = await this.db
           .update(users)
-          .set({ appleId: data.appleId })
+          .set(hadPassword ? { appleId: data.appleId, passwordHash: null } : { appleId: data.appleId })
           .where(eq(users.id, byEmail.id))
           .returning();
+        if (hadPassword) await this.endAllSessionsForUser(byEmail.id);
         return linked[0];
       }
     }
@@ -311,7 +421,7 @@ export class DrizzleStorage implements IStorage {
         passwordHash: null,
         stripeCustomerId: null,
         subscriptionStatus: "trialing",
-        trialEndsAt: computeTrialEndsAt(),
+        trialEndsAt: await this.initialTrialEndsAt(data.email),
         subscriptionId: null,
         completedLessons: [],
         quizScores: {},
@@ -335,7 +445,7 @@ export class DrizzleStorage implements IStorage {
         ...insertUser,
         stripeCustomerId: null,
         subscriptionStatus: "trialing",
-        trialEndsAt: computeTrialEndsAt(),
+        trialEndsAt: await this.initialTrialEndsAt(insertUser.email),
         subscriptionId: null,
         completedLessons: [],
         quizScores: {},
@@ -375,11 +485,45 @@ export class DrizzleStorage implements IStorage {
   async updateUserProgress(
     userId: string,
     completedLessons: string[],
-    quizScores: Record<string, number>
+    quizScores: Record<string, number>,
+    extra: Record<string, unknown> = {}
   ): Promise<User | undefined> {
     const result = await this.db
       .update(users)
-      .set({ completedLessons, quizScores })
+      .set({ completedLessons, quizScores, ...extra } as any)
+      .where(eq(users.id, userId))
+      .returning();
+    return result[0];
+  }
+
+  async getLeaderboardRows(): Promise<LeaderboardRow[]> {
+    // Only the columns the boards need — never email, never anything else.
+    const rows = await this.db
+      .select({
+        id: users.id,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        completedLessons: users.completedLessons,
+        quizScores: users.quizScores,
+        challengeHistory: users.challengeHistory,
+        briefsRead: users.briefsRead,
+        teachBacks: users.teachBacks,
+        currentStreak: users.currentStreak,
+        lastStreakDate: users.lastStreakDate,
+        xpWeekOf: users.xpWeekOf,
+        xpWeekStartXp: users.xpWeekStartXp,
+        leaderboardHidden: users.leaderboardHidden,
+        email: users.email,
+        isAdmin: users.isAdmin,
+      })
+      .from(users);
+    return rows as LeaderboardRow[];
+  }
+
+  async setLeaderboardHidden(userId: string, hidden: boolean): Promise<User | undefined> {
+    const result = await this.db
+      .update(users)
+      .set({ leaderboardHidden: hidden } as any)
       .where(eq(users.id, userId))
       .returning();
     return result[0];
@@ -518,7 +662,7 @@ export class DrizzleStorage implements IStorage {
   }
 
   // AI Study Assistant gating — enforces the tier limits sold on the pricing page:
-  // free = 5/day, active (Monthly Pro) = 30/day, lifetime = unlimited.
+  // free = 5/day, active (Monthly Pro) = 30/day, annual and lifetime = unlimited.
   // NOTE: depends on the ai_calls_today/ai_calls_date columns existing in the DB.
   // See /api/admin/migrate-status and /api/admin/run-migration — verify those
   // return success BEFORE trusting this in production again.
@@ -527,7 +671,7 @@ export class DrizzleStorage implements IStorage {
     if (!user) return { allowed: false, remaining: 0, limit: 0 };
 
     const status = (user as any).subscriptionStatus ?? 'free';
-    if (status === 'lifetime') return { allowed: true, remaining: null, limit: null }; // unlimited
+    if (status === 'lifetime' || status === 'annual') return { allowed: true, remaining: null, limit: null }; // unlimited
 
     // Trialing users get the paid (Monthly Pro) limit for as long as their
     // trial clock is still running; once it lapses they fall back to Free
@@ -603,12 +747,14 @@ export class DrizzleStorage implements IStorage {
     // Already completed today — no-op. `awarded: false` lets the route tell
     // the client the truth instead of claiming fresh XP was just earned.
     if ((user as any).lastChallengeDate === todayStr) return { user, awarded: false };
+    // Before the push below: it mutates the array inside `user`.
+    const weekRoll = weekRollPatch(user as any);
     const history = ((user as any).challengeHistory ?? []) as any[];
     history.push({ date: todayStr, score, xpEarned });
     const newXp = (user.xp ?? 0) + xpEarned;
     const result = await this.db
       .update(users)
-      .set({ lastChallengeDate: todayStr, challengeHistory: history, xp: newXp } as any)
+      .set({ lastChallengeDate: todayStr, challengeHistory: history, xp: newXp, ...weekRoll } as any)
       .where(eq(users.id, userId))
       .returning();
     await this.updateUserStreak(userId);
@@ -636,11 +782,12 @@ export class DrizzleStorage implements IStorage {
     if (already) {
       return { user, awarded: false, briefsRead: entries.map(e => e.id) };
     }
+    const weekRoll = weekRollPatch(user as any);
     entries.push({ id: briefId, date: new Date().toISOString().slice(0, 10), score, xpEarned });
     const newXp = (user.xp ?? 0) + xpEarned;
     const result = await this.db
       .update(users)
-      .set({ briefsRead: entries, xp: newXp } as any)
+      .set({ briefsRead: entries, xp: newXp, ...weekRoll } as any)
       .where(eq(users.id, userId))
       .returning();
     // Reading a brief is real activity, so it keeps the burn-rate streak alive
@@ -648,6 +795,52 @@ export class DrizzleStorage implements IStorage {
     await this.updateUserStreak(userId);
     const updatedUser = await this.getUser(userId);
     return { user: updatedUser ?? result[0], awarded: true, briefsRead: entries.map(e => e.id) };
+  }
+
+  private coachTableReady = false;
+  private async ensureCoachTable(): Promise<void> {
+    if (this.coachTableReady) return;
+    await this.db.execute(sql`CREATE TABLE IF NOT EXISTS coach_cache (
+      key TEXT PRIMARY KEY, kind TEXT NOT NULL, lesson_id TEXT, payload JSONB NOT NULL,
+      model TEXT, created_at TEXT NOT NULL DEFAULT now()::text)`);
+    this.coachTableReady = true;
+  }
+
+  async getCoachCache(key: string): Promise<unknown | null> {
+    await this.ensureCoachTable();
+    const res: any = await this.db.execute(sql`SELECT payload FROM coach_cache WHERE key = ${key} LIMIT 1`);
+    const rows = Array.isArray(res) ? res : res?.rows;
+    return rows?.[0]?.payload ?? null;
+  }
+
+  async putCoachCache(key: string, kind: string, lessonId: string | null, payload: unknown, model: string | null): Promise<void> {
+    await this.ensureCoachTable();
+    await this.db.execute(sql`INSERT INTO coach_cache (key, kind, lesson_id, payload, model)
+      VALUES (${key}, ${kind}, ${lessonId}, ${JSON.stringify(payload)}::jsonb, ${model})
+      ON CONFLICT (key) DO NOTHING`);
+  }
+
+  async recordTeachBack(
+    userId: string,
+    lessonId: string,
+    covered: number,
+    total: number,
+    passed: boolean,
+    xpForPass: number,
+  ): Promise<{ user: User; xpAwarded: number } | undefined> {
+    const user = await this.getUser(userId);
+    if (!user) return undefined;
+    const { entries, xpAwarded } = nextTeachBacks((user as any).teachBacks, lessonId, covered, total, passed, xpForPass);
+    const weekRoll = xpAwarded > 0 ? weekRollPatch(user as any) : {};
+    const result = await this.db
+      .update(users)
+      .set({ teachBacks: entries, xp: (user.xp ?? 0) + xpAwarded, ...weekRoll } as any)
+      .where(eq(users.id, userId))
+      .returning();
+    // Teaching a lesson back is real activity, same as a brief.
+    if (xpAwarded > 0) await this.updateUserStreak(userId);
+    const updatedUser = await this.getUser(userId);
+    return { user: updatedUser ?? result[0], xpAwarded };
   }
 
   async saveUserProfile(userId: string, profile: Record<string, any>): Promise<User | undefined> {
@@ -672,6 +865,26 @@ export class DrizzleStorage implements IStorage {
   }
 
   // ── Template pack purchases ──────────────────────────────────────────────
+  // These queries use raw pg, which returns snake_case columns
+  // (download_token, user_id). The rest of the code reads the camelCase
+  // Purchase type, so map every row. Without this the success page built its
+  // download links from an undefined token and every link 404'd.
+  private rowToPurchase(r: any): Purchase | undefined {
+    if (!r) return undefined;
+    return {
+      id: r.id,
+      userId: r.user_id ?? null,
+      email: r.email,
+      pack: r.pack,
+      stripeSessionId: r.stripe_session_id,
+      stripePaymentIntent: r.stripe_payment_intent ?? null,
+      amountPaid: r.amount_paid,
+      downloadToken: r.download_token,
+      downloadCount: r.download_count,
+      createdAt: r.created_at,
+    } as Purchase;
+  }
+
   async savePurchase(data: { userId?: string; email: string; pack: string; stripeSessionId: string; stripePaymentIntent: string; amountPaid: number; downloadToken: string; }): Promise<Purchase> {
     const { Pool } = require('pg');
     const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
@@ -683,7 +896,7 @@ export class DrizzleStorage implements IStorage {
       [data.userId || null, data.email, data.pack, data.stripeSessionId, data.stripePaymentIntent, data.amountPaid, data.downloadToken]
     );
     await pool.end();
-    return res.rows[0] as Purchase;
+    return this.rowToPurchase(res.rows[0]) as Purchase;
   }
 
   async getPurchaseBySessionId(sessionId: string): Promise<Purchase | undefined> {
@@ -691,7 +904,7 @@ export class DrizzleStorage implements IStorage {
     const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
     const res = await pool.query('SELECT * FROM purchases WHERE stripe_session_id = $1 LIMIT 1', [sessionId]);
     await pool.end();
-    return res.rows[0] as Purchase | undefined;
+    return this.rowToPurchase(res.rows[0]);
   }
 
   async getPurchaseByToken(token: string): Promise<Purchase | undefined> {
@@ -699,7 +912,7 @@ export class DrizzleStorage implements IStorage {
     const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
     const res = await pool.query('SELECT * FROM purchases WHERE download_token = $1 LIMIT 1', [token]);
     await pool.end();
-    return res.rows[0] as Purchase | undefined;
+    return this.rowToPurchase(res.rows[0]);
   }
 
   async incrementDownloadCount(purchaseId: string): Promise<void> {
@@ -709,7 +922,7 @@ export class DrizzleStorage implements IStorage {
     await pool.end();
   }
 
-  async getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[]; subscriptionStatus: string }>> {
+  async getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[]; subscriptionStatus: string; trialEndsAt: string | null }>> {
     const rows = await this.db.select({
       id: users.id,
       email: users.email,
@@ -717,6 +930,7 @@ export class DrizzleStorage implements IStorage {
       registeredAt: users.registeredAt,
       sentEmailDays: users.sentEmailDays,
       subscriptionStatus: users.subscriptionStatus,
+      trialEndsAt: users.trialEndsAt,
     }).from(users);
     return rows.map(r => ({
       ...r,
@@ -726,6 +940,40 @@ export class DrizzleStorage implements IStorage {
 
   async updateSentEmailDays(userId: string, days: number[]): Promise<void> {
     await this.db.update(users).set({ sentEmailDays: days }).where(eq(users.id, userId));
+  }
+
+  async setTrialEndsAt(userId: string, trialEndsAt: string): Promise<User | undefined> {
+    const result = await this.db
+      .update(users)
+      .set({ subscriptionStatus: "trialing", trialEndsAt })
+      .where(eq(users.id, userId))
+      .returning();
+    return result[0];
+  }
+
+  // Trial length for a brand-new account. Normally TRIAL_DAYS; 30 days when
+  // this email bought a paid template pack recently (the pack pages promise
+  // "30 days of Pro"). Never throws: a lookup failure falls back to the normal
+  // trial so signup always works.
+  private async initialTrialEndsAt(email?: string | null): Promise<string> {
+    const standard = computeTrialEndsAt();
+    if (!email) return standard;
+    try {
+      const res: any = await this.db.execute(sql`
+        SELECT 1 FROM purchases
+        WHERE lower(email) = lower(${email})
+          AND pack IN (${sql.join(PACK_BONUS_PACKS.map(p => sql`${p}`), sql`, `)})
+          AND created_at::timestamptz >= now() - make_interval(days => ${PACK_BONUS_CLAIM_WINDOW_DAYS})
+        LIMIT 1`);
+      const rows = Array.isArray(res) ? res : res?.rows;
+      if (rows && rows.length > 0) {
+        console.log(`[pack-bonus] ${email} bought a pack; starting with ${computePackBonusEndsAt()} trial end`);
+        return computePackBonusEndsAt();
+      }
+    } catch (err: any) {
+      console.error("[pack-bonus] purchase lookup at signup failed:", err?.message);
+    }
+    return standard;
   }
 
   // ── Email unsubscribes ─────────────────────────────────────────────────
@@ -776,6 +1024,10 @@ export class MemStorage implements IStorage {
     this.users = new Map();
   }
 
+  async ping(): Promise<void> {
+    // In-memory: nothing to reach, so nothing can be unreachable.
+  }
+
   async getUser(id: string): Promise<User | undefined> {
     return this.users.get(id);
   }
@@ -788,6 +1040,11 @@ export class MemStorage implements IStorage {
   async getUserByEmail(email: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find((u) => u.email === email);
   }
+  async getUserByEmailInsensitive(email: string): Promise<User | undefined> {
+    const e = email.trim().toLowerCase();
+    return Array.from(this.users.values()).find(u => (u.email || "").toLowerCase() === e);
+  }
+
 
   async getUserByGoogleId(googleId: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find((u) => u.googleId === googleId);
@@ -927,13 +1184,46 @@ export class MemStorage implements IStorage {
   async updateUserProgress(
     userId: string,
     completedLessons: string[],
-    quizScores: Record<string, number>
+    quizScores: Record<string, number>,
+    extra: Record<string, unknown> = {}
   ): Promise<User | undefined> {
     const user = this.users.get(userId);
     if (!user) return undefined;
-    const updated = { ...user, completedLessons, quizScores };
+    const updated = { ...user, completedLessons, quizScores, ...extra } as User;
     this.users.set(userId, updated);
     return updated;
+  }
+
+  async getLeaderboardRows(): Promise<LeaderboardRow[]> {
+    return Array.from(this.users.values()).map((u: any) => ({
+      id: u.id,
+      firstName: u.firstName ?? null,
+      lastName: u.lastName ?? null,
+      completedLessons: u.completedLessons ?? [],
+      quizScores: u.quizScores ?? {},
+      challengeHistory: u.challengeHistory ?? [],
+      briefsRead: u.briefsRead ?? [],
+      teachBacks: u.teachBacks ?? [],
+      currentStreak: u.currentStreak ?? 0,
+      lastStreakDate: u.lastStreakDate ?? null,
+      xpWeekOf: u.xpWeekOf ?? null,
+      xpWeekStartXp: u.xpWeekStartXp ?? 0,
+      leaderboardHidden: u.leaderboardHidden ?? false,
+      email: u.email ?? null,
+      isAdmin: u.isAdmin ?? false,
+    }));
+  }
+
+  async setLeaderboardHidden(userId: string, hidden: boolean): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const updated = { ...user, leaderboardHidden: hidden } as User;
+    this.users.set(userId, updated);
+    return updated;
+  }
+
+  async endAllSessionsForUser(_userId: string): Promise<void> {
+    // In-memory dev store: sessions live in MemoryStore, nothing to purge.
   }
 
   async updateUserPassword(userId: string, passwordHash: string): Promise<User | undefined> {
@@ -1061,8 +1351,9 @@ export class MemStorage implements IStorage {
     if (entries.some(e => e?.id === briefId)) {
       return { user, awarded: false, briefsRead: entries.map(e => e.id) };
     }
+    const weekRoll = weekRollPatch(user as any);
     entries.push({ id: briefId, date: new Date().toISOString().slice(0, 10), score, xpEarned });
-    const updated = { ...user, briefsRead: entries, xp: (user.xp ?? 0) + xpEarned } as any;
+    const updated = { ...user, briefsRead: entries, xp: (user.xp ?? 0) + xpEarned, ...weekRoll } as any;
     this.users.set(userId, updated);
     return { user: updated, awarded: true, briefsRead: entries.map(e => e.id) };
   }
@@ -1107,11 +1398,7 @@ export class MemStorage implements IStorage {
     const shouldReward = rewardsEarned > alreadyGranted;
 
     const updates: any = { referralCount: newCount };
-    if (shouldReward) {
-      updates.referralRewardGranted = rewardsEarned;
-      updates.subscriptionStatus = 'active';
-      updates.subscriptionId = `referral_reward_${Date.now()}`;
-    }
+    if (shouldReward) updates.referralRewardGranted = rewardsEarned; // the grant itself: server/referrals.ts
 
     const updated = { ...referrer, ...updates } as User;
     this.users.set(referrer.id, updated);
@@ -1124,16 +1411,12 @@ export class MemStorage implements IStorage {
     this.users.set(userId, { ...user, ...fields } as User);
   }
 
-  async grantYearlyPro(userId: string): Promise<User | undefined> {
-    const user = this.users.get(userId);
-    if (!user) return undefined;
-    const updated = {
-      ...user,
-      subscriptionStatus: 'active',
-      subscriptionId: `yearly_pro_${Date.now()}`,
-    } as User;
-    this.users.set(userId, updated);
-    return updated;
+  async findUserByCertId(certId: string): Promise<User | undefined> {
+    for (const u of Array.from(this.users.values())) {
+      const comps = ((u as any).moduleCompletions ?? {}) as Record<string, { certId: string }>;
+      if (Object.values(comps).some((c) => c.certId === certId)) return u;
+    }
+    return undefined;
   }
 
   async updateUserStreak(userId: string): Promise<User | undefined> {
@@ -1161,13 +1444,15 @@ export class MemStorage implements IStorage {
     const todayStr = new Date().toISOString().slice(0, 10);
     if ((user as any).lastChallengeDate === todayStr) return { user, awarded: false };
 
-    const history = ((user as any).challengeHistory ?? []) as any[];
+    const weekRoll = weekRollPatch(user as any);
+    const history = [...(((user as any).challengeHistory ?? []) as any[])];
     history.push({ date: todayStr, score, xpEarned });
     const withChallenge = {
       ...user,
       lastChallengeDate: todayStr,
       challengeHistory: history,
       xp: (user.xp ?? 0) + xpEarned,
+      ...weekRoll,
     } as User;
     this.users.set(userId, withChallenge);
 
@@ -1195,7 +1480,7 @@ export class MemStorage implements IStorage {
   async getPurchaseByToken(_: string): Promise<Purchase | undefined> { return undefined; }
   async incrementDownloadCount(_: string): Promise<void> {}
 
-  async getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[]; subscriptionStatus: string }>> {
+  async getUsersForDrip(): Promise<Array<{ id: string; email: string; username: string; registeredAt: string; sentEmailDays: number[]; subscriptionStatus: string; trialEndsAt: string | null }>> {
     return Array.from(this.users.values()).map(u => ({
       id: u.id,
       email: u.email,
@@ -1203,6 +1488,7 @@ export class MemStorage implements IStorage {
       registeredAt: u.registeredAt ?? new Date().toISOString(),
       sentEmailDays: Array.isArray(u.sentEmailDays) ? (u.sentEmailDays as number[]) : [],
       subscriptionStatus: (u as any).subscriptionStatus ?? 'free',
+      trialEndsAt: (u as any).trialEndsAt ?? null,
     }));
   }
 
@@ -1211,7 +1497,29 @@ export class MemStorage implements IStorage {
     if (user) this.users.set(userId, { ...user, sentEmailDays: days });
   }
 
+  async setTrialEndsAt(userId: string, trialEndsAt: string): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const updated = { ...user, subscriptionStatus: "trialing", trialEndsAt };
+    this.users.set(userId, updated);
+    return updated;
+  }
+
   private unsubscribed = new Set<string>();
+  private coachCache = new Map<string, unknown>();
+  async getCoachCache(key: string): Promise<unknown | null> { return this.coachCache.get(key) ?? null; }
+  async putCoachCache(key: string, _kind: string, _lessonId: string | null, payload: unknown): Promise<void> {
+    if (!this.coachCache.has(key)) this.coachCache.set(key, payload);
+  }
+  async recordTeachBack(userId: string, lessonId: string, covered: number, total: number, passed: boolean, xpForPass: number): Promise<{ user: User; xpAwarded: number } | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    const { entries, xpAwarded } = nextTeachBacks((user as any).teachBacks, lessonId, covered, total, passed, xpForPass);
+    const weekRoll = xpAwarded > 0 ? weekRollPatch(user as any) : {};
+    const updated = { ...user, teachBacks: entries, xp: (user.xp ?? 0) + xpAwarded, ...weekRoll } as User;
+    this.users.set(userId, updated);
+    return { user: updated, xpAwarded };
+  }
   async isUnsubscribed(email: string): Promise<boolean> { return this.unsubscribed.has(email.trim().toLowerCase()); }
   async setUnsubscribed(email: string): Promise<void> { this.unsubscribed.add(email.trim().toLowerCase()); }
   async getUnsubscribedSet(): Promise<Set<string>> { return new Set(this.unsubscribed); }

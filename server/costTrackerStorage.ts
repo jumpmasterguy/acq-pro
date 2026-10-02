@@ -41,6 +41,15 @@ export interface ICostTrackerStorage {
 
   getRates(userId: string): Promise<RatesConfig>;
   updateRates(userId: string, data: Omit<RatesConfig, "userId" | "updatedAt">): Promise<RatesConfig>;
+
+  /**
+   * Hard-deletes everything this user ever entered in the tracker, including
+   * rows the UI only archived. Called when an account is deleted, so the
+   * Privacy Policy's "deleting your account removes your data" is true for
+   * tracker data too (it lives in its own tables, keyed by user id, and
+   * deleting the users row alone left it orphaned).
+   */
+  deleteAllForUser(userId: string): Promise<void>;
 }
 
 // ─── Postgres (raw SQL, self-provisioning) ──────────────────────────────────
@@ -293,6 +302,15 @@ class PgCostTrackerStorage implements ICostTrackerStorage {
     });
   }
 
+  async deleteAllForUser(userId: string): Promise<void> {
+    await this.withPool(async (pool) => {
+      // Projects first: funding mods and cost entries go with them (ON DELETE CASCADE).
+      await pool.query(`DELETE FROM cost_projects WHERE user_id = $1`, [userId]);
+      await pool.query(`DELETE FROM cost_task_orders WHERE user_id = $1`, [userId]);
+      await pool.query(`DELETE FROM cost_rates WHERE user_id = $1`, [userId]);
+    });
+  }
+
   async getRates(userId: string): Promise<RatesConfig> {
     return this.withPool(async (pool) => {
       const res = await pool.query(`SELECT * FROM cost_rates WHERE user_id = $1`, [userId]);
@@ -416,6 +434,15 @@ class MemCostTrackerStorage implements ICostTrackerStorage {
     const r: RatesConfig = { userId, updatedAt: new Date().toISOString(), ...data };
     this.rates.set(userId, r);
     return r;
+  }
+  async deleteAllForUser(userId: string): Promise<void> {
+    const projectIds = new Set<string>();
+    this.projects.forEach((p, id) => { if (p.userId === userId) projectIds.add(id); });
+    this.mods.forEach((m, id) => { if (projectIds.has(m.projectId)) this.mods.delete(id); });
+    this.entries.forEach((e, id) => { if (projectIds.has(e.projectId)) this.entries.delete(id); });
+    projectIds.forEach((id) => this.projects.delete(id));
+    this.taskOrders.forEach((t, id) => { if (t.userId === userId) this.taskOrders.delete(id); });
+    this.rates.delete(userId);
   }
 }
 

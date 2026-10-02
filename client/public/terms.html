@@ -3,110 +3,274 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Terms of Service — Acqlerate</title>
-  <meta name="description" content="Acqlerate Terms of Service — plain-English terms for using the Defense Acquisitions Academy." />
+  <title>Terms of Service | Acqlerate</title>
+  <meta name="description" content="Acqlerate Terms of Service: plain-English terms for using the platform, plans and refunds, the template license, and your rights." />
   <meta name="robots" content="noindex" />
+  <link rel="canonical" href="https://acqlerate.com/terms" />
   <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/acqlerate-icon.svg" />
+  <!-- Cookie consent + Google Analytics: see /consent.js -->
+  <script src="/consent.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F7F6F2; color: #1A1A1A; line-height: 1.7; }
-    nav { background: #0C2340; padding: 16px 2rem; display: flex; align-items: center; justify-content: space-between; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F7F6F2; color: #1A1A1A; line-height: 1.7; overflow-wrap: break-word; }
+    nav { background: #0C2340; padding: 16px 2rem; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     nav a.logo { font-size: 1.1rem; font-weight: 800; color: white; text-decoration: none; letter-spacing: -0.02em; }
     nav a.logo span { color: #4FC3CB; }
-    nav a.back { font-size: 0.85rem; color: rgba(255,255,255,0.6); text-decoration: none; }
+    nav a.back { font-size: 0.85rem; color: rgba(255,255,255,0.7); text-decoration: none; padding: 8px 0; }
     nav a.back:hover { color: white; }
-    .container { max-width: 720px; margin: 0 auto; padding: 56px 2rem 80px; }
-    .page-header { margin-bottom: 40px; padding-bottom: 28px; border-bottom: 2px solid #E5E7EB; }
+    .container { max-width: 760px; margin: 0 auto; padding: 56px 2rem 80px; }
+    .page-header { margin-bottom: 32px; padding-bottom: 28px; border-bottom: 2px solid #E5E7EB; }
     .page-header h1 { font-size: 1.75rem; font-weight: 800; color: #0C2340; letter-spacing: -0.025em; margin-bottom: 8px; }
-    .page-header p { font-size: 0.9rem; color: #6B7280; }
+    .page-header p { font-size: 0.95rem; color: #4B5563; }
     .effective { display: inline-block; background: #E6F2F3; color: #01696F; font-size: 0.78rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; }
-    h2 { font-size: 1.1rem; font-weight: 800; color: #0C2340; margin: 36px 0 12px; }
+    h2 { font-size: 1.15rem; font-weight: 800; color: #0C2340; margin: 44px 0 12px; scroll-margin-top: 16px; }
+    h3 { font-size: 0.98rem; font-weight: 700; color: #0C2340; margin: 24px 0 8px; }
     p { font-size: 0.95rem; color: #374151; margin-bottom: 14px; }
     ul { font-size: 0.95rem; color: #374151; margin: 0 0 14px 20px; }
     ul li { margin-bottom: 6px; }
-    .callout { background: #FFF8E1; border-left: 4px solid #C8972A; border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 24px 0; font-size: 0.9rem; color: #374151; }
     a { color: #01696F; }
-    footer-note { display: block; font-size: 0.8rem; color: #9CA3AF; margin-top: 48px; padding-top: 24px; border-top: 1px solid #E5E7EB; }
+    strong { color: #1F2937; }
+    .callout { background: #FFF8E1; border-left: 4px solid #C8972A; border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 24px 0; font-size: 0.92rem; color: #374151; }
+    .callout.teal { background: #E6F2F3; border-left-color: #01696F; }
+    .callout.teal strong { color: #01696F; }
+    .callout ul { margin-top: 6px; margin-bottom: 0; }
+    .toc { background: white; border: 1px solid #E5E7EB; border-radius: 10px; padding: 16px 20px; margin: 0 0 8px; }
+    .toc p { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6B7280; margin-bottom: 8px; }
+    .toc ol { font-size: 0.9rem; margin-left: 20px; columns: 2; column-gap: 28px; }
+    .toc li { margin-bottom: 4px; break-inside: avoid; }
+    .toc a { text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .data-table { width: 100%; border-collapse: collapse; margin: 12px 0 24px; font-size: 0.875rem; background: white; border-radius: 8px; overflow: hidden; }
+    .data-table th { text-align: left; background: #0C2340; color: white; padding: 10px 14px; font-weight: 700; }
+    .data-table td { padding: 10px 14px; border-bottom: 1px solid #E5E7EB; color: #374151; vertical-align: top; }
+    .data-table tr:nth-child(even) td { background: #F9FAFB; }
+    .data-table td:first-child { font-weight: 600; color: #1F2937; width: 28%; }
+    .footer-note { font-size: 0.8rem; color: #6B7280; margin-top: 56px; padding-top: 24px; border-top: 1px solid #E5E7EB; }
+    @media (max-width: 640px) {
+      nav { padding: 14px 16px; }
+      .container { padding: 36px 16px 64px; }
+      .page-header h1 { font-size: 1.5rem; }
+      .toc ol { columns: 1; }
+      .data-table, .data-table tbody, .data-table tr, .data-table td { display: block; width: 100%; }
+      .data-table thead { display: none; }
+      .data-table tr { border-bottom: 1px solid #E5E7EB; padding: 10px 14px; }
+      .data-table tr:nth-child(even) td { background: transparent; }
+      .data-table tr:nth-child(even) { background: #F9FAFB; }
+      .data-table td { border: 0; padding: 2px 0; }
+      .data-table td:first-child { width: 100%; margin-bottom: 2px; }
+      .data-table td[data-label]:not(:first-child)::before { content: attr(data-label) ": "; font-weight: 600; color: #6B7280; }
+    }
   </style>
 </head>
 <body>
 <nav>
   <a href="/" class="logo">Acq<span>lerate</span></a>
-  <a href="/" class="back">← Back to home</a>
+  <a href="/" class="back">&larr; Back to home</a>
 </nav>
 
-<div class="container">
+<main class="container">
   <div class="page-header">
-    <span class="effective">Effective July 12, 2026</span>
+    <!--pricing:legacy--><span class="effective">Effective September 27, 2026</span><!--/pricing:legacy--><!--pricing:new--><span class="effective">Effective October 1, 2026</span><!--/pricing:new-->
     <h1>Terms of Service</h1>
-    <p>These terms govern your use of Acqlerate and its services. We've written them in plain English — the same standard we apply to everything else. If you have questions, email us at <a href="mailto:hello@acqlerate.com">hello@acqlerate.com</a>.</p>
+    <p>These are the rules for using Acqlerate. We wrote them in plain English, the same standard we hold every lesson to. If anything here is unclear, email <a href="mailto:hello@acqlerate.com">hello@acqlerate.com</a> and a real person will answer.</p>
   </div>
 
-  <h2>1. Who we are</h2>
-  <p>Acqlerate is a self-paced online academy focused on DoD acquisition education. We are a private educational platform and are not affiliated with, endorsed by, or a part of the Department of Defense, Defense Acquisition University (DAU), or any government agency.</p>
+  <div class="callout teal">
+    <strong>The short version</strong>
+    <ul>
+      <li>Use Acqlerate to learn. Don't share your account or republish our content.</li>
+      <li>Every paid purchase comes with a 30-day money-back guarantee. No questions asked.</li>
+      <li>Template packs are licensed for one program or contract. Customize them all you like.</li>
+      <li>Our content and AI answers are educational. Always check the official source before making a real procurement decision.</li>
+      <li>Don't put classified information or CUI anywhere on Acqlerate.</li>
+    </ul>
+  </div>
 
-  <h2>2. What you're agreeing to</h2>
-  <p>By creating an account or using Acqlerate, you agree to these Terms. If you don't agree, don't use the service. That's the whole deal.</p>
+  <div class="toc" role="navigation" aria-label="Contents">
+    <p>On this page</p>
+    <ol>
+      <li><a href="#who">Who we are</a></li>
+      <li><a href="#agreeing">Agreeing to these terms</a></li>
+      <li><a href="#account">Your account</a></li>
+      <li><a href="#service">What Acqlerate provides</a></li>
+      <li><a href="#plans">Plans and prices</a></li>
+      <li><a href="#refunds">30-day money-back guarantee</a></li>
+      <li><a href="#team-pack">Team Pack</a></li>
+      <li><a href="#template-license">Template pack license</a></li>
+      <li><a href="#referrals">Referral program</a></li>
+      <li><a href="#acceptable-use">Acceptable use</a></li>
+      <li><a href="#your-content">Your content</a></li>
+      <li><a href="#ai">AI features</a></li>
+      <li><a href="#ip">Our content and brand</a></li>
+      <li><a href="#certificates">Certificates of completion</a></li>
+      <li><a href="#apps">Mobile apps</a></li>
+      <li><a href="#warranty">No guarantees about content</a></li>
+      <li><a href="#liability">Limits on our liability</a></li>
+      <li><a href="#ending">Ending your account</a></li>
+      <li><a href="#changes">Changes</a></li>
+      <li><a href="#law">Governing law and disputes</a></li>
+      <li><a href="#general">The fine print</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ol>
+  </div>
 
-  <h2>3. Your account</h2>
+  <h2 id="who">1. Who we are</h2>
+  <p>Acqlerate is a self-paced online academy for defense acquisition, contracting, finance, and program management. It's run by <strong>Lucas Cruz</strong>, an individual based in Spain. "We," "us," and "Acqlerate" in these terms mean Acqlerate and the person running it.</p>
+  <p>Acqlerate is private and independent. We are not affiliated with, endorsed by, or part of the Department of Defense (also called the Department of War), the Defense Acquisition University (DAU), or any government agency.</p>
+
+  <h2 id="agreeing">2. Agreeing to these terms</h2>
+  <p>By creating an account, buying something, or using Acqlerate, you agree to these terms and to our <a href="/privacy">Privacy Policy</a>. If you don't agree, please don't use the service. That's the whole deal.</p>
+  <p>If you're buying or using Acqlerate for an organization (for example a Team Pack or a template pack for your company), you're confirming you're allowed to agree to these terms on its behalf.</p>
+
+  <h2 id="account">3. Your account</h2>
   <ul>
-    <li>You must provide an accurate email address to create an account.</li>
-    <li>You're responsible for keeping your account credentials secure.</li>
-    <li>You may not share your account with others or use another person's account.</li>
-    <li>You must be at least 18 years old to use Acqlerate.</li>
+    <li>You must be at least 18.</li>
+    <li>Give us a real email address and your real name. Your name goes on your certificates.</li>
+    <li>One account per person. Don't share your login or use someone else's.</li>
+    <li>Keep your password safe, and tell us right away if you think someone else has gotten into your account.</li>
   </ul>
 
-  <h2>4. What Acqlerate provides</h2>
-  <p>Acqlerate provides self-paced online courses, quizzes, key term libraries, an AI study assistant, and certificates of completion. Content covers DoD acquisition, contracting, finance, program management, and related topics.</p>
+  <h2 id="service">4. What Acqlerate provides</h2>
+  <p>Self-paced lessons, quizzes and assessments, a key terms library, daily challenges, weekly acquisition briefs, "The Debrief" audio episodes, the Acqlerate Coach and other AI study features, a FAR translator, the Cost &amp; Burn Rate Tracker, certificates of completion, leaderboards, and downloadable template packs.</p>
+  <p>We're always improving the platform, so features will be added, changed, and occasionally retired. We won't take away the core course content you paid for.</p>
   <div class="callout">
-    <strong>Important for DoD users:</strong> Acqlerate is external training. Certificates can be self-reported as Continuous Learning Points (CLPs) in your DAU portal (CAPPMIS, eDACM, or FAITAS). We make no guarantee that any specific agency, contracting officer, or supervisor will accept or credit our certificates — that decision rests with your organization and the applicable DAU/DAWIA policy.
+    <strong>For DoD users:</strong> Acqlerate is external training. You can self-report certificates as Continuous Learning Points (CLPs) in your component's training record system. Whether a particular agency, supervisor, or program office accepts or credits them is up to your organization and the DAU/DAWIA policy that applies to you. We can't guarantee it.
   </div>
 
-  <h2>5. Paid subscriptions and one-time purchases</h2>
+  <h2 id="plans">5. Plans and prices</h2>
+  <table class="data-table">
+    <thead><tr><th>Plan</th><th>How it works</th></tr></thead>
+    <tbody>
+      <tr><td>Free</td><td data-label="How it works">Free forever. Includes part of the course and a limited number of AI requests per day.</td></tr>
+      <tr><td>14-day free trial</td><td data-label="How it works">Every new account gets Pro access to every module for 14 days. No card needed. When the trial ends you move to the Free plan automatically. We never charge you unless you choose to buy.</td></tr>
+<!--pricing:legacy-->
+      <tr><td>Monthly Pro ($5.99/month)</td><td data-label="How it works">Renews automatically every month until you cancel. Cancel any time on acqlerate.com under My Account, Manage billing. You keep Pro until the end of the month you've paid for. From October 1, 2026, Monthly Pro is $14.99/month for new subscribers. If you subscribe before then, you keep $5.99 for as long as your subscription stays active.</td></tr>
+      <tr><td>Lifetime Pro ($99, one time)</td><td data-label="How it works">One payment for all current and future course content, including Lesson Book PDF downloads, for as long as Acqlerate runs. Sold through September 30, 2026.</td></tr>
+      <tr><td>Team Pack ($399, one time)</td><td data-label="How it works">10 Lifetime Pro seats. Sold through September 30, 2026. See <a href="#team-pack">Team Pack</a> below.</td></tr>
+<!--/pricing:legacy--><!--pricing:new-->
+      <tr><td>Monthly Pro ($14.99/month)</td><td data-label="How it works">Renews automatically every month until you cancel. Cancel any time on acqlerate.com under My Account, Manage billing. You keep Pro until the end of the month you've paid for. Monthly Pro streams every lesson and audio lesson but doesn't include Lesson Book PDF downloads. If you subscribed at $5.99/month before October 1, 2026, you keep $5.99 for as long as that subscription stays active.</td></tr>
+      <tr><td>Annual Pro ($149/year)</td><td data-label="How it works">Renews automatically every year until you cancel. Includes Lesson Book PDF downloads, the CLP ledger, and the Acqlerate Coach. Cancel any time under My Account, Manage billing, and you keep Annual Pro until the end of the year you've paid for.</td></tr>
+      <tr><td>Team ($999/year)</td><td data-label="How it works">10 Annual Pro seats, renewing yearly. See <a href="#team-pack">Team</a> below.</td></tr>
+      <tr><td>Lifetime Pro and Team Pack (no longer sold)</td><td data-label="How it works">If you bought Lifetime Pro ($99) or a Team Pack ($399) before October 1, 2026, you keep everything you bought: all current and future course content, including Lesson Book PDF downloads, for as long as Acqlerate runs.</td></tr>
+<!--/pricing:new-->
+      <tr><td>Template packs</td><td data-label="How it works">One-time purchase of downloadable templates. Paid packs include 30 days of access to every module, no card needed. It's applied to the email you buy with (sign up with that email within 90 days of buying to claim it). See the <a href="#template-license">template license</a>.</td></tr>
+    </tbody>
+  </table>
   <ul>
-    <li><strong>Monthly Pro ($5.99/month):</strong> Billed monthly. Cancel any time. Cancellation stops future charges; no refund is issued for the current billing period.</li>
-    <li><strong>Lifetime Pro ($99 one-time):</strong> A single payment for permanent access to all current and future content. Non-refundable after 14 days from purchase.</li>
-    <li><strong>Template Packs:</strong> One-time purchases. Non-refundable.</li>
-    <li>All payments are processed by Stripe. Acqlerate never stores your credit card information.</li>
-    <li>We reserve the right to change pricing. Existing subscribers will receive 30 days' notice before any price increase takes effect.</li>
+    <li>Prices are in US dollars. The price shown at checkout is the total you pay.</li>
+    <li>All payments are processed by Stripe. We never see or store your card details.</li>
+    <li>We may change prices. If you're on <!--pricing:legacy-->Monthly Pro<!--/pricing:legacy--><!--pricing:new-->Monthly or Annual Pro<!--/pricing:new-->, we'll email you at least 30 days before a new price applies to you, so you can cancel first if you want. Price changes never affect one-time purchases you've already made.</li>
+    <li>Promo codes, when offered, have to be used at checkout and can't be applied after the fact.</li>
+    <li>The mobile apps don't sell anything. All purchases happen on acqlerate.com.</li>
+  </ul>
+  <p>"Lifetime" means for the life of the Acqlerate service. If we ever have to shut Acqlerate down, we'll give you at least 30 days' notice by email so you can download your certificates and templates.</p>
+
+  <h2 id="refunds">6. 30-day money-back guarantee</h2>
+  <p>If Acqlerate isn't worth it to you, email <a href="mailto:hello@acqlerate.com">hello@acqlerate.com</a> within 30 days of your purchase and we'll refund it in full. No questions asked. This covers <!--pricing:legacy-->Lifetime Pro, the Team Pack<!--/pricing:legacy--><!--pricing:new-->Annual Pro, Team<!--/pricing:new-->, and every paid template pack.</p>
+  <ul>
+    <li><strong>Monthly Pro:</strong> the guarantee covers your first payment. After that, cancel any time and you won't be charged again, but we don't refund partial months.</li><!--pricing:new-->
+    <li><strong>Annual Pro and Team:</strong> the guarantee covers your first payment. After that, cancel any time and you won't be renewed, but we don't refund partial years.</li><!--/pricing:new-->
+    <li><strong>Template packs:</strong> a refund ends your license to the files, so please delete your copies.</li>
+    <li><strong>If something breaks on our end</strong> and we can't fix it within 72 hours, we'll refund you even after 30 days.</li>
+  </ul>
+  <p>If you're a consumer in the EU or UK, the law also gives you a 14-day right to withdraw from online purchases. Our 30-day guarantee is longer and simpler, so you'll never need to rely on it, but it doesn't take any of your legal rights away.</p>
+
+  <h2 id="team-pack">7. <!--pricing:legacy-->Team Pack<!--/pricing:legacy--><!--pricing:new-->Team<!--/pricing:new--></h2>
+  <ul>
+    <!--pricing:legacy--><li>A Team Pack gives your organization 10 Lifetime Pro seats. After you buy, we'll email you within one business day to set up each teammate's sign-in.</li><!--/pricing:legacy--><!--pricing:new--><li>Team gives your organization 10 Annual Pro seats for $999 a year, renewing yearly until you cancel. After you buy, we'll email you within one business day to set up each teammate's sign-in. If you cancel, the seats move to the Free plan at the end of the year you've paid for.</li>
+    <li>Team Packs bought before October 1, 2026 keep their 10 Lifetime Pro seats.</li><!--/pricing:new-->
+    <li>Each seat is for one named person. Seats can't be shared or rotated between people.</li>
+    <li>If someone leaves your team, email us and we'll help move their seat to a new person.</li>
+    <li><!--pricing:legacy-->A Team Pack<!--/pricing:legacy--><!--pricing:new-->Team<!--/pricing:new--> covers course access. It doesn't include template packs or a company-wide template license.</li>
   </ul>
 
-  <h2>6. Refund policy</h2>
-  <p>If something is broken on our end and we can't fix it within 72 hours, we'll issue a full refund — no questions asked. For all other situations, refunds are at our discretion. We're a small team; reach out and we'll work something out if the circumstances are reasonable.</p>
-
-  <h2>7. Acceptable use</h2>
-  <p>You may use Acqlerate for your own professional development. You may not:</p>
+  <h2 id="template-license">8. Template pack license</h2>
+  <p>Our templates are built to be adapted, so this license is about who uses them, not how you edit them.</p>
+  <h3>You can</h3>
   <ul>
-    <li>Share account access with others</li>
-    <li>Reproduce, republish, or resell course content</li>
-    <li>Use the platform to train others commercially without written permission</li>
-    <li>Attempt to reverse-engineer, scrape, or extract course content systematically</li>
-    <li>Use the AI study assistant to generate content for external publication or resale</li>
+    <li>Use a paid pack for <strong>one program or one contract</strong> within your organization.</li>
+    <li>Edit anything: text, layout, formulas, colors, and branding. Add your logo and fill in your data.</li>
+    <li>Share the files with the people working on that program or contract, and use them in deliverables you send to your customer.</li>
+  </ul>
+  <h3>You can't (without a team license from us)</h3>
+  <ul>
+    <li>Roll the templates out across your company or use them on more programs or contracts.</li>
+    <li>Share them outside your organization.</li>
+    <li>Sell, redistribute, or republish them, including as part of your own template library, training course, or product.</li>
+  </ul>
+  <p>Need them for more programs or your whole company? Email <a href="mailto:hello@acqlerate.com">hello@acqlerate.com</a> for a team license. Whatever you enter into the templates is yours.</p>
+  <p><strong>Free packs</strong> (like the Defense Finance Cheat Sheets) can be used and shared freely inside your organization. Just don't sell them or pass them off as your own.</p>
+
+  <h2 id="referrals">9. Referral program</h2>
+  <ul>
+    <li>Share your personal link from My Account. Every two new people who create an account through it (by email, Google, or Apple) earns you a year of Pro.</li>
+    <li>What "a year of Pro" looks like depends on your plan. On the Free plan or a trial, you get access to every module for 365 days, added on top of any time you already have. <!--pricing:legacy-->On Monthly Pro, you get a credit that covers your next 12 monthly payments.<!--/pricing:legacy--><!--pricing:new-->On Monthly or Annual Pro, you get a Stripe credit worth one year of your plan, so your next year of payments costs nothing.<!--/pricing:new--> If you already have Lifetime Pro, there's nothing to add, but thank you.</li>
+    <li>Referrals have to be real people who didn't already have an account. Self-referrals, fake accounts, and other gaming don't count, and we may remove rewards earned that way.</li>
+    <li>Rewards have no cash value and can't be transferred.</li>
+    <li>We may change or end the program at any time. Rewards you've already earned stay yours.</li>
   </ul>
 
-  <h2>8. Intellectual property</h2>
-  <p>All course content, curriculum, lesson text, quizzes, templates, and materials on Acqlerate are the property of Acqlerate. The underlying DoD frameworks, FAR/DFARS text, and other government publications referenced in our content are public domain.</p>
+  <h2 id="acceptable-use">10. Acceptable use</h2>
+  <p>Use Acqlerate for your own learning and professional development. Please don't:</p>
+  <ul>
+    <li>Share your account or let others use it.</li>
+    <li>Copy, republish, or resell course content, or use it to teach a paid course of your own without our written permission.</li>
+    <li>Scrape, bulk-download, or systematically extract content, or use it to train an AI model.</li>
+    <li>Use the AI features to produce content for publication or resale.</li>
+    <li>Cheat the leaderboards with scripts, bots, or multiple accounts.</li>
+    <li>Try to break into, overload, or reverse-engineer the platform, or get around its limits.</li>
+    <li>Enter classified information, CUI, export-controlled data, or anything you don't have the right to share.</li>
+    <li>Use Acqlerate for anything illegal.</li>
+  </ul>
 
-  <h2>9. Certificates of Completion</h2>
-  <p>Certificates are generated automatically upon completion of a module. They document your participation in self-paced external training. Acqlerate is not an accredited institution. Certificates are not academic credentials and should not be represented as such.</p>
+  <h2 id="your-content">11. Your content</h2>
+  <p>What you enter into Acqlerate (your onboarding answers, Cost &amp; Burn Rate Tracker data, and anything you type into the AI features) stays yours. You give us permission to store and process it only as needed to run the service for you, as described in our <a href="/privacy">Privacy Policy</a>.</p>
+  <p>You're responsible for what you enter. Use made-up or publicly available figures for practice, not real program or company data you're not allowed to share.</p>
 
-  <h2>10. Disclaimer of warranties</h2>
-  <p>Acqlerate is provided "as is." We work hard to keep content accurate and current (including reflecting regulatory changes like FAR threshold updates), but we make no guarantee that every piece of content is error-free or current at the moment you read it. Don't make consequential procurement decisions based solely on what you read here — always verify against official sources.</p>
+  <h2 id="ai">12. AI features</h2>
+  <p>The Acqlerate Coach (Teach It Back, Explain My Mistake, How Do I Apply This?), the AI explain buttons, and the FAR translator use Anthropic's Claude models to write answers and to grade Teach It Back. AI can be wrong, oversimplify, or be out of date, even when it sounds confident. A Teach It Back grade is a study aid, not a certification or an assessment of your work. Treat its answers as a study aid, not legal, contracting, or financial advice, and check the actual FAR, DFARS, or your contracting officer before relying on anything. Daily limits depend on your plan.</p>
 
-  <h2>11. Limitation of liability</h2>
-  <p>To the maximum extent permitted by law, Acqlerate's liability to you for any claim arising out of your use of the platform is limited to the amount you paid us in the 12 months before the claim. We are not liable for indirect, incidental, or consequential damages.</p>
+  <h2 id="ip">13. Our content and brand</h2>
+  <p>The lessons, quizzes, audio, graphics, templates, and everything else we created for Acqlerate belong to us, as do the Acqlerate name and logo. The FAR, DFARS, and other US government publications we reference are public domain. If you send us feedback or ideas, we're free to use them without owing you anything (though we'll gladly say thanks).</p>
 
-  <h2>12. Changes to these terms</h2>
-  <p>We may update these terms. If we make material changes, we'll notify you by email and update the effective date above. Continued use of Acqlerate after notice constitutes acceptance.</p>
+  <h2 id="certificates">14. Certificates of completion</h2>
+  <p>Certificates are generated automatically when you complete a module. They document your participation in self-paced external training. Acqlerate isn't an accredited institution, and certificates aren't academic credentials, so please don't present them as one.</p>
 
-  <h2>13. Governing law</h2>
-  <p>These terms are governed by the laws of the State of Virginia, without regard to conflict of law principles.</p>
+  <h2 id="apps">15. Mobile apps</h2>
+  <p>Our mobile apps are free and give you the same account and content as the website. If you use the iOS app, Apple's standard Licensed Application End User License Agreement also applies. We, not Apple or Google, are responsible for the apps, their content, and support.</p>
 
-  <h2>14. Contact</h2>
-  <p>Questions? <a href="mailto:hello@acqlerate.com">hello@acqlerate.com</a></p>
+  <h2 id="warranty">16. No guarantees about content</h2>
+  <p>Acqlerate is provided "as is." We work hard to keep content accurate and current (including regulatory changes like FAR threshold updates and the FAR overhaul), but we can't promise every piece is error-free or up to date the moment you read it. Nothing on Acqlerate is legal advice. Don't make a consequential procurement decision based only on what you read here. Always check the official source.</p>
 
-  <footer-note>© 2026 Acqlerate. All rights reserved. · <a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Service</a></footer-note>
-</div>
+  <h2 id="liability">17. Limits on our liability</h2>
+  <p>To the extent the law allows, our total liability to you for any claim related to Acqlerate is limited to what you paid us in the 12 months before the claim, and we aren't liable for indirect or consequential losses (like lost profits or a lost bid).</p>
+  <p>Nothing in these terms limits liability that can't legally be limited, such as for fraud, gross negligence, or intentional misconduct, or your rights as a consumer under the law of the country you live in.</p>
+
+  <h2 id="ending">18. Ending your account</h2>
+  <p><strong>You</strong> can delete your account any time from My Account, on the website or in the app. Deleting cancels any Monthly Pro subscription. It doesn't refund past payments, except under the <a href="#refunds">guarantee</a>.</p>
+  <p><strong>We</strong> may suspend or close an account that seriously or repeatedly breaks these terms (for example account sharing, scraping, or fraud). Where it's reasonable, we'll warn you first and give you a chance to fix it. Accounts closed for breaking these terms don't get a refund.</p>
+
+  <h2 id="changes">19. Changes</h2>
+  <p>We may update these terms as Acqlerate grows. When we do, we'll update the date at the top. For significant changes, we'll email account holders at least 14 days before they take effect. If you keep using Acqlerate after that, the new terms apply. If you don't like them, you can cancel or delete your account before they kick in.</p>
+
+  <h2 id="law">20. Governing law and disputes</h2>
+  <p>If there's a problem, email us first. Most things get sorted in a reply or two.</p>
+  <p>These terms are governed by the laws of Spain, and disputes go to the courts of Spain. If you're a consumer, you also keep the protection of the mandatory consumer laws of the country where you live, and you can bring a claim in your local courts.</p>
+
+  <h2 id="general">21. The fine print</h2>
+  <ul>
+    <li>These terms and the <a href="/privacy">Privacy Policy</a> are the full agreement between you and us about Acqlerate.</li>
+    <li>If one part turns out to be unenforceable, the rest still applies.</li>
+    <li>If we don't enforce something right away, we haven't given up the right to enforce it later.</li>
+    <li>You can't transfer your account or these terms to someone else. We may transfer them if Acqlerate is sold or reorganized, and we'll tell you if that happens.</li>
+  </ul>
+
+  <h2 id="contact">22. Contact</h2>
+  <p>Questions, refunds, team licenses, or anything else: <a href="mailto:hello@acqlerate.com">hello@acqlerate.com</a>.</p>
+
+  <p class="footer-note">&copy; 2026 Acqlerate &middot; <a href="/privacy">Privacy Policy</a> &middot; <a href="/terms">Terms of Service</a> &middot; <!--pricing:legacy-->Previous version effective July 12, 2026<!--/pricing:legacy--><!--pricing:new-->Previous version effective September 27, 2026<!--/pricing:new--></p>
+</main>
 </body>
 </html>

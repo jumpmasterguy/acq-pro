@@ -58,6 +58,13 @@ export const users = pgTable("users", {
   currentStreak: integer("current_streak").notNull().default(0),
   longestStreak: integer("longest_streak").notNull().default(0),
   lastStreakDate: text("last_streak_date"),  // YYYY-MM-DD of last activity
+  // Leaderboards. The week's starting XP is recorded by the first XP-earning
+  // action of each week (see weekRollPatch in shared/xp.ts), so weekly XP is
+  // just "XP now minus this". Monday UTC, YYYY-MM-DD.
+  xpWeekOf: text("xp_week_of"),
+  xpWeekStartXp: integer("xp_week_start_xp").notNull().default(0),
+  // On by default, shown as "First L."; the learner can hide from Account.
+  leaderboardHidden: boolean("leaderboard_hidden").notNull().default(false),
   // Daily challenge tracking
   lastChallengeDate: text("last_challenge_date"), // YYYY-MM-DD of last completed challenge
   challengeHistory: jsonb("challenge_history").notNull().default(sql`'[]'::jsonb`), // [{date, score, xpEarned}]
@@ -65,11 +72,19 @@ export const users = pgTable("users", {
   // check for: [{id, date, score, xpEarned}]. Keyed by brief id rather than
   // date, because briefs are weekly and a user can work through the archive.
   briefsRead: jsonb("briefs_read").notNull().default(sql`'[]'::jsonb`),
+  // Acqlerate Coach "Teach It Back" — one entry per lesson attempted (never
+  // the learner's own text, only the result): [{lessonId, attempts, passed,
+  // bestCovered, total, xpEarned, firstPassedAt, lastAt}]. xpEarned is 25 once
+  // the lesson is passed, 0 before; summed into XP like briefsRead.
+  teachBacks: jsonb("teach_backs").notNull().default(sql`'[]'::jsonb`),
   // "The Debrief" audio listens — keyed by module id, not a growing log,
   // since all we need per module is "has this user ever played it" (for
   // unique-listener counts) and "how many times" (for a play counter).
   // { [moduleId]: { firstPlayedAt: string, playCount: number } }
   audioListens: jsonb("audio_listens").notNull().default(sql`'{}'::jsonb`),
+  // One permanent record per finished module: completion date + certificate
+  // ID. See server/credentials.ts. { [moduleId]: { completedAt, certId, backfilled? } }
+  moduleCompletions: jsonb("module_completions").notNull().default(sql`'{}'::jsonb`),
   // AI Study Assistant usage tracking — resets daily, limits enforced per subscription tier
   aiCallsToday: integer("ai_calls_today").notNull().default(0),
   aiCallsDate: text("ai_calls_date"), // YYYY-MM-DD the counter above applies to

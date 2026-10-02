@@ -1,0 +1,143 @@
+{
+ "_doc": "Cast of the 'Don't Be ...' videos. Keyed by the speaker letter used in script.json. Voice IDs: ElevenLabs is used for the narrator and for the reference lines Seedance acts to; Higgsfield preset voices are swapped in with voice_change so the character sounds identical in every clip. Reference images are Higgsfield image jobs (character sheets); cutouts are the same with the background removed, used on the drawn boards.",
+ "style": "stylized 3D animated feature-film look: rounded appealing shapes, slightly exaggerated proportions, soft lighting, expressive cartoon face",
+ "N": {
+  "name": "Narrator",
+  "role": "Narrator, movie-trailer energy",
+  "elevenlabs": {
+   "prefer": [
+    "Brian",
+    "Adam",
+    "Daniel",
+    "Bill"
+   ],
+   "stability": 0.0
+  },
+  "tempo": 1.12,
+  "caption_color": "#ffd24a"
+ },
+ "H": {
+  "name": "Hank",
+  "tag": "HANK",
+  "role": "Hank, overconfident small-business owner",
+  "description": "a stocky man in his mid-50s, gray buzz cut, big square jaw, huge overconfident grin, white dress shirt with sleeves rolled up, loosened navy blue tie, charcoal slacks, dark shoes",
+  "elevenlabs": {
+   "prefer": [
+    "Roger",
+    "Chris",
+    "Eric",
+    "Will"
+   ],
+   "stability": 0.0
+  },
+  "higgsfield_voice": {
+   "voice_id": "e6f9b893-51b1-51d3-afe9-9e0482cb7ac1",
+   "voice_type": "preset",
+   "name": "Benji"
+  },
+  "ref_image_job": "ee268d0b-27d9-4e4a-899a-4e231563c219",
+  "cutouts": {
+   "hank": {
+    "job": "4e120d40-aaf6-4a89-aa20-c1bc269c74fb",
+    "file": "hank_cut.png",
+    "crop": {
+     "full": [
+      0,
+      0,
+      768,
+      1376
+     ],
+     "body": [
+      0,
+      0,
+      768,
+      1376
+     ]
+    }
+   },
+   "hank_wave": {
+    "job": "c0c71e66-0079-40b6-baed-9c3799b69095",
+    "file": "hank_wave_cut.png",
+    "crop": {
+     "full": [
+      0,
+      0,
+      768,
+      1376
+     ],
+     "body": [
+      40,
+      180,
+      700,
+      1020
+     ]
+    }
+   },
+   "hank_plead": {
+    "job": "86826a56-3459-48a8-a4a7-402327cdf038",
+    "file": "hank_plead_cut.png",
+    "crop": {
+     "face": [
+      150,
+      60,
+      470,
+      470
+     ],
+     "portrait": [
+      60,
+      20,
+      648,
+      648
+     ]
+    }
+   }
+  },
+  "caption_color": "#7fdcff",
+  "tag_color": "#1b6f8f"
+ },
+ "A": {
+  "name": "The Accountant",
+  "tag": "ACCOUNTANT",
+  "role": "Accountant, bone-dry deadpan",
+  "description": "a woman in her 40s, dark hair in a tight bun, rectangular glasses, teal blazer over a white blouse, dark trousers, completely deadpan unimpressed expression",
+  "elevenlabs": {
+   "prefer": [
+    "Alice",
+    "Matilda",
+    "Jessica",
+    "Sarah"
+   ],
+   "stability": 0.5
+  },
+  "higgsfield_voice": {
+   "voice_id": "0c51919f-0756-5f8d-8169-026a339d8fd7",
+   "voice_type": "preset",
+   "name": "Vera"
+  },
+  "ref_image_job": "1a650225-0ff7-4ad5-a6f1-1eb563b6a039",
+  "cutouts": {
+   "acct": {
+    "job": "73cb7713-461a-4c4d-beed-f7018964aa2d",
+    "file": "acct_cut.png"
+   }
+  },
+  "caption_color": "#ffb3a8",
+  "tag_color": "#b3402f"
+ },
+ "extras": {
+  "crew": {
+   "job": "dfeae0a4-c4ee-4928-90bf-92a97d7f5196",
+   "file": "crew_cut.png",
+   "note": "engineer, tester, integrator (background removed)",
+   "crop": {
+    "body": [
+     0,
+     420,
+     768,
+     820
+    ]
+   }
+  }
+ },
+ "_crops": "crop boxes are [x,y,w,h] in the 768x1376 cutout image: 'body' for the evidence slots on the teaching board, 'face' for the small pin, 'portrait' for the square card photo, 'full' for the end card"
+}

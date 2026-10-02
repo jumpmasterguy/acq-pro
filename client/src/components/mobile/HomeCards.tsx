@@ -4,9 +4,9 @@
  */
 
 import { Play, ChevronRight, Zap } from 'lucide-react';
-import type { Module } from '@/lib/curriculum';
-import { getModuleTheme, moduleGradient } from '@/lib/moduleTheme';
-import { formatDuration, getModuleTotalMinutes } from '@/lib/curriculum';
+import type { ModuleMeta } from '@/lib/curriculumMeta';
+import { getModuleTheme, moduleGradient, getModuleFamilyTheme } from '@/lib/moduleTheme';
+import { formatDuration, getModuleTotalMinutes } from '@/lib/curriculumMeta';
 
 // ── Greeting ────────────────────────────────────────────────────────────────
 
@@ -83,7 +83,7 @@ export function UpNextCard({
   modulePct,
   onContinue,
 }: {
-  module: Module;
+  module: ModuleMeta;
   lessonTitle: string;
   lessonIndex: number;
   lessonCount: number;
@@ -91,7 +91,7 @@ export function UpNextCard({
   modulePct: number;
   onContinue: () => void;
 }) {
-  const theme = getModuleTheme(module.color);
+  const theme = getModuleFamilyTheme(module.id);
 
   return (
     <button
@@ -325,11 +325,11 @@ export function ModuleCarousel({
   doneLessons,
   totalLessons,
 }: {
-  modules: Module[];
-  seqOf: (m: Module) => number;
-  pctOf: (m: Module) => number;
-  lockedOf: (m: Module) => boolean;
-  onOpen: (m: Module) => void;
+  modules: ModuleMeta[];
+  seqOf: (m: ModuleMeta) => number;
+  pctOf: (m: ModuleMeta) => number;
+  lockedOf: (m: ModuleMeta) => boolean;
+  onOpen: (m: ModuleMeta) => void;
   onSeeAll: () => void;
   doneLessons: number;
   totalLessons: number;
@@ -354,13 +354,18 @@ export function ModuleCarousel({
         </button>
       </div>
 
-      {/* Bleeds into the screen's 16px gutter so tiles run to the edge */}
+      {/* Bleeds into the screen's 16px gutter so tiles run to the edge as you
+          scroll. scroll-pl-4 is what keeps the FIRST tile lined up with every
+          other card on the screen: scroll snapping aligns to the scrollport's
+          border edge and ignores padding, so mandatory snap was pulling the row
+          16px left on load and parking tile one hard against the screen edge.
+          scroll-padding-left tells snapping where the content actually starts. */}
       <div
-        className="acq-scroll -mx-4 mt-3 flex gap-3 overflow-x-auto px-4"
+        className="acq-scroll -mx-4 mt-3 flex gap-3 overflow-x-auto px-4 scroll-pl-4"
         style={{ scrollSnapType: 'x mandatory' }}
       >
         {mods.map((m) => {
-          const theme = getModuleTheme(m.color);
+          const theme = getModuleFamilyTheme(m.id);
           const pct = pctOf(m);
           const locked = lockedOf(m);
           return (

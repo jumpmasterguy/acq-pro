@@ -28,7 +28,8 @@ declare module "http" {
 }
 
 // ── Security headers via helmet ──────────────────────────────────────────────
-// Content-Security-Policy is intentionally relaxed for Stripe, Google, Gemini.
+// Content-Security-Policy is intentionally relaxed for Stripe and Google.
+// (AI calls go server-to-server to Anthropic, so the browser never needs it.)
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -38,7 +39,7 @@ app.use(
           "'self'",
           "'unsafe-inline'",          // React dev + inline GA4 snippet
           "https://js.stripe.com",
-          "https://www.googletagmanager.com",
+          "https://*.googletagmanager.com",
           "https://accounts.google.com",
         ],
         frameSrc: [
@@ -51,8 +52,12 @@ app.use(
           "'self'",
           "https://api.stripe.com",
           "https://checkout.stripe.com",
-          "https://generativelanguage.googleapis.com",
-          "https://www.google-analytics.com",
+          // GA4 (only loaded with consent, see client/public/consent.js). GA4
+          // also posts to region1.google-analytics.com and analytics.google.com,
+          // which the old single-host entry blocked. Google's recommended set:
+          "https://*.google-analytics.com",
+          "https://*.analytics.google.com",
+          "https://*.googletagmanager.com",
           "https://accounts.google.com",
         ],
         imgSrc: ["'self'", "data:", "https:"],
@@ -113,6 +118,27 @@ app.use((req, res, next) => {
   next();
 });
 
+// ── CSRF: refuse state-changing requests from other websites ─────────────────
+// The session cookie is SameSite=None (the mobile app and Google sign-in need
+// that), so a browser will attach it to a request started by ANY site. Browsers
+// always send an Origin header on cross-site POST/PUT/PATCH/DELETE, so a
+// request whose Origin is present but not ours is refused. No Origin at all
+// means not a browser page (Stripe webhook, curl, native HTTP): let it through,
+// those paths have their own secrets/signatures.
+app.use((req, res, next) => {
+  if (req.method === "GET" || req.method === "HEAD" || req.method === "OPTIONS") return next();
+  const origin = req.headers.origin;
+  if (origin && origin !== "null" && !ALLOWED_ORIGINS.includes(origin)) {
+    console.warn(`[csrf] blocked ${req.method} ${req.path} from origin ${origin}`);
+    return res.status(403).json({ message: "Forbidden" });
+  }
+  if (origin === "null") {
+    console.warn(`[csrf] blocked ${req.method} ${req.path} from opaque origin`);
+    return res.status(403).json({ message: "Forbidden" });
+  }
+  next();
+});
+
 // ── Global rate limits ────────────────────────────────────────────────────────
 // Auth endpoints — stricter (brute force protection)
 const authLimiter = rateLimit({
@@ -124,7 +150,7 @@ const authLimiter = rateLimit({
   skip: (req) => process.env.NODE_ENV === "development",
 });
 
-// AI endpoints — protect Gemini API quota
+// AI endpoints — protect AI spend (Anthropic bills per call)
 const aiLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
   max: 30,             // 30 AI requests per minute per IP
@@ -153,12 +179,36 @@ const apiLimiter = rateLimit({
   skip: (req) => process.env.NODE_ENV === "development",
 });
 
+// Public certificate verification (no sign-in by design). Each lookup scans
+// the users table, so cap it per IP and, as a backstop against a distributed
+// flood, across all IPs. Real auditors do a handful of lookups a day.
+const verifyLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20,             // 20 lookups per minute per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "Too many lookups. Please wait a minute and try again.",
+  skip: (req) => process.env.NODE_ENV === "development",
+});
+const verifyGlobalLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 300,            // 300 lookups per minute across everyone
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: () => "verify-global",
+  message: "Verification is busy. Please try again in a minute.",
+  skip: (req) => process.env.NODE_ENV === "development",
+});
+
 app.use("/api", apiLimiter);
+app.use(["/verify", "/api/verify"], verifyLimiter, verifyGlobalLimiter);
 app.use("/api/auth/register", authLimiter);
 app.use("/api/auth/login", authLimiter);
 app.use("/api/leads", leadsLimiter);
 app.use("/api/expand-item", aiLimiter);
 app.use("/api/explain", aiLimiter);
+app.use("/api/far-translate", aiLimiter);
+app.use("/api/coach", aiLimiter);
 
 app.use(
   express.json({
@@ -196,8 +246,12 @@ app.use((req, res, next) => {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      // Only error bodies are logged. Success bodies carry personal data
+      // (/api/auth/me returns email, name and progress; admin routes return
+      // every user), and the Privacy Policy says server logs don't hold that.
+      // Error bodies are short messages like "Invalid email or password".
+      if (capturedJsonResponse && res.statusCode >= 400) {
+        logLine += ` :: ${JSON.stringify(capturedJsonResponse).slice(0, 300)}`;
       }
 
       log(logLine);
@@ -245,11 +299,17 @@ app.use((req, res, next) => {
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS current_streak INTEGER NOT NULL DEFAULT 0`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS longest_streak INTEGER NOT NULL DEFAULT 0`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_streak_date TEXT`,
+        // Leaderboards: start-of-week XP snapshot + opt-out (shared/xp.ts)
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS xp_week_of TEXT`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS xp_week_start_xp INTEGER NOT NULL DEFAULT 0`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS leaderboard_hidden BOOLEAN NOT NULL DEFAULT FALSE`,
         // Daily challenge tracking
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS last_challenge_date TEXT`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS challenge_history JSONB NOT NULL DEFAULT '[]'::JSONB`,
         // Acquisition This Week brief completions: [{id, date, score, xpEarned}]
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS briefs_read JSONB NOT NULL DEFAULT '[]'::JSONB`,
+        // Acqlerate Coach "Teach It Back" results (see shared/schema.ts)
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS teach_backs JSONB NOT NULL DEFAULT '[]'::JSONB`,
         // AI Study Assistant usage tracking
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS ai_calls_today INTEGER NOT NULL DEFAULT 0`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS ai_calls_date TEXT`,
@@ -259,6 +319,7 @@ app.use((req, res, next) => {
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS login_history JSONB NOT NULL DEFAULT '[]'::JSONB`,
         // "The Debrief" audio listen tracking, keyed by module id
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS audio_listens JSONB NOT NULL DEFAULT '{}'::JSONB`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS module_completions JSONB NOT NULL DEFAULT '{}'::JSONB`,
         // My Account — split name fields (see shared/schema.ts for why
         // username sticks around). Columns first, then a one-time backfill
         // for every pre-existing row (new signups set these directly, so
@@ -310,6 +371,50 @@ app.use((req, res, next) => {
             expires_at TEXT NOT NULL,
             used_at TEXT,
             created_at TEXT NOT NULL DEFAULT now()::text
+          )
+        `);
+      } catch (e: any) { /* table already exists */ }
+      // Acqlerate Coach: AI answers that are the same for everyone (a given
+      // wrong quiz pick, a lesson's key points), written once and reused.
+      // server/coach.ts; storage also creates it lazily if this ever misses.
+      try {
+        await schemaPool.query(`
+          CREATE TABLE IF NOT EXISTS coach_cache (
+            key TEXT PRIMARY KEY,
+            kind TEXT NOT NULL,
+            lesson_id TEXT,
+            payload JSONB NOT NULL,
+            model TEXT,
+            created_at TEXT NOT NULL DEFAULT now()::text
+          )
+        `);
+      } catch (e: any) { /* table already exists */ }
+      // Last good Search Console pull per month, for /api/stats/seo
+      // (server/searchConsole.ts) to fall back on when Google is unreachable.
+      try {
+        await schemaPool.query(`
+          CREATE TABLE IF NOT EXISTS seo_stats_pulls (
+            month TEXT PRIMARY KEY,
+            start_date TEXT NOT NULL,
+            end_date TEXT NOT NULL,
+            clicks INTEGER NOT NULL,
+            impressions INTEGER NOT NULL,
+            avg_position DOUBLE PRECISION,
+            pulled_at TEXT NOT NULL
+          )
+        `);
+      } catch (e: any) { /* table already exists */ }
+      // One row per Stripe checkout opened from /api/stripe/create-checkout-session,
+      // for the founder review's "trials that started checkout"
+      // (server/checkoutStarts.ts).
+      try {
+        await schemaPool.query(`
+          CREATE TABLE IF NOT EXISTS checkout_starts (
+            id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid()::varchar,
+            user_id VARCHAR NOT NULL,
+            plan TEXT,
+            source TEXT,
+            created_at TEXT NOT NULL
           )
         `);
       } catch (e: any) { /* table already exists */ }
@@ -397,7 +502,9 @@ app.use((req, res, next) => {
 
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+    // Server errors can carry database or library details. Log them, but only
+    // show visitors a generic line. 4xx messages (bad JSON, too large) are ours to show.
+    const message = status >= 500 ? "Internal Server Error" : (err.message || "Request error");
 
     console.error("Internal Server Error:", err);
 
@@ -465,6 +572,7 @@ function startDripScheduler() {
           user.registeredAt,
           user.sentEmailDays,
           user.subscriptionStatus,
+          user.trialEndsAt,
         );
         if (updated.length !== user.sentEmailDays.length) {
           await storage.updateSentEmailDays(user.id, updated);

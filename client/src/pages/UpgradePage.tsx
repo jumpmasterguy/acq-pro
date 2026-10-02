@@ -1,16 +1,18 @@
-import { useState } from "react";
-import { modules, getTotalLessons } from "@/lib/curriculum";
+import { useEffect, useState } from "react";
+import { modules, getTotalLessons } from "@/lib/curriculumMeta";
 import { ArrowLeft, CheckCircle, Shield, Award, Zap, Lock, CreditCard, ExternalLink, Globe, Star, RotateCcw, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { isNativeApp } from "@/lib/platform";
+import { getCheckoutMode, openAppCheckout, type CheckoutMode } from "@/lib/appCheckout";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FREE_MODULES } from "@/lib/progress";
-import { getModuleTheme, moduleGradient } from "@/lib/moduleTheme";
+import { getModuleTheme, moduleGradient, getModuleFamilyTheme } from "@/lib/moduleTheme";
 import { formatClps, moduleClps } from "@shared/moduleClps";
+import { isNewPricing, planPrice, PRICES, LEGACY_PRICES } from "@shared/pricing";
 
 interface UpgradePageProps {
   onBack: () => void;
@@ -20,53 +22,150 @@ interface UpgradePageProps {
   userEmail?: string;
   /** Native's "Already upgraded? Sign out and back in". */
   onSignOut?: () => void;
+  /**
+   * After an in-app checkout sheet closes: re-read the account until Pro
+   * shows up (the Stripe webhook can lag a second or two). Resolves true
+   * once the account is paid.
+   */
+  onAfterAppCheckout?: () => Promise<boolean>;
 }
 
-export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 'your email', onSignOut }: UpgradePageProps) {
+export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 'your email', onSignOut, onAfterAppCheckout }: UpgradePageProps) {
   const isMobile = useIsMobile();
   const totalLessons = getTotalLessons();
-  const [loadingLifetime, setLoadingLifetime] = useState(false);
+  const [loadingTop, setLoadingTop] = useState(false);
   const [loadingMonthly, setLoadingMonthly] = useState(false);
+  // Which price set is live (shared/pricing.ts). Until midnight Eastern on
+  // 1 Oct 2026: Monthly $5.99 + Lifetime $99. From then: Monthly $14.99 +
+  // Annual $149. Read once per render of the page; the server re-checks at
+  // checkout, so a tab left open across the switch can't buy the old price.
+  const newPricing = isNewPricing();
+  const topPlan = newPricing ? "annual" as const : "lifetime" as const;
   const nativeApp = isNativeApp();
   const { toast } = useToast();
+  // Whether this device may sell Pro, and how (lib/appCheckout.ts). In the
+  // app this waits on the App Store's answer, so it starts as "can't".
+  const [checkoutMode, setCheckoutMode] = useState<CheckoutMode>(nativeApp ? 'none' : 'web');
+  useEffect(() => { void getCheckoutMode().then(setCheckoutMode); }, []);
+  const canBuy = checkoutMode !== 'none';
+  const [confirming, setConfirming] = useState(false);
+  const [unconfirmed, setUnconfirmed] = useState(false);
 
   const freeFeatures = [
-    "Module 1: Foundations (full access, 9 lessons)",
+    "Module 1: Foundations (full access, 10 lessons)",
     "1 free preview lesson in every other module",
     "Progress tracking",
     "Key terms & glossary",
   ];
 
+  // The headline Annual/Lifetime perk. Listed first so it's the first thing
+  // people read on the top plan.
+  const COACH_FEATURE =
+    "\u2605 Acqlerate Coach: Teach It Back grades how well you can explain each lesson, Explain My Mistake shows why a wrong answer was so tempting, and How Do I Apply This? puts it on the job";
+
   const monthlyFeatures = [
-    `All ${modules.length} modules — every domain covered`,
-    `${totalLessons}+ in-depth lessons with real DoD content`,
+    `All ${modules.length} modules, every domain covered`,
+    `${totalLessons} lessons with real DoD content`,
     "All quiz questions with detailed explanations",
     "Key terms glossary for every lesson",
     "Career roadmap for gov & contractor tracks",
-    "\"The Debrief\" — audio lessons for every module (stream anytime)",
-    "AI Study Assistant — limited",
+    "\"The Debrief\": audio lessons for every module (stream anytime)",
+    "A certificate for every module you finish",
+    "AI explain-it-simpler buttons (30 a day)",
     "Cancel anytime",
   ];
 
+  // Shown under Monthly, greyed out, so the difference is visible at a glance.
+  const monthlyExcluded = [
+    "Lesson Book PDF downloads",
+    "CLP ledger and portal export",
+    "Acqlerate Coach: Teach It Back, Explain My Mistake, How Do I Apply This?",
+  ];
+
+  const annualFeatures = [
+    COACH_FEATURE,
+    "\u2605 Lesson Book PDFs: download every module to keep, print, and mark up",
+    "\u2605 CLP ledger: every certificate in one place, your 2-year cycle tracked, one-tap copy for CAPPMIS, eDACM, and FAITAS, and a spreadsheet export",
+    `All ${modules.length} modules, every domain covered`,
+    `${totalLessons} lessons with real DoD content`,
+    "All quiz questions with detailed explanations",
+    "Key terms glossary for every lesson",
+    "Formulas, tables & quick-reference content",
+    "Career roadmap for gov & contractor tracks",
+    "\"The Debrief\": audio lessons for every module (stream anytime)",
+    "Unlimited AI explain-it-simpler buttons",
+    "Every new lesson and module while you're subscribed",
+    "Priority email support",
+  ];
+
   const lifetimeFeatures = [
-    `All ${modules.length} modules — every domain covered`,
-    `${totalLessons}+ in-depth lessons with real DoD content`,
+    COACH_FEATURE,
+    "\u2605 Lesson Book PDFs: download every module to keep, print, and mark up",
+    "\u2605 CLP ledger: every certificate in one place, your 2-year cycle tracked, one-tap copy for CAPPMIS, eDACM, and FAITAS, and a spreadsheet export",
+    `All ${modules.length} modules, every domain covered`,
+    `${totalLessons} lessons with real DoD content`,
     "All quiz questions with detailed explanations",
     "Key terms glossary for every lesson",
     "Formulas, tables & quick-reference content",
     "Career roadmap for gov & contractor tracks",
     "Salary benchmarks & certification guidance",
-    "\"The Debrief\" — audio lessons for every module (stream anytime)",
-    "AI Study Assistant — unlimited",
+    "\"The Debrief\": audio lessons for every module (stream anytime)",
+    "Unlimited AI explain-it-simpler buttons",
     "Lifetime content updates as regulations change",
     "Priority email support",
-    "\u2605 \"How Do I Apply This?\" AI — exclusive to Lifetime",
   ];
 
   const premiumModules = modules.filter(m => !m.free);
 
-  const handleCheckout = async (priceType: "lifetime" | "monthly") => {
-    const setLoading = priceType === "lifetime" ? setLoadingLifetime : setLoadingMonthly;
+  const topFeatures = newPricing ? annualFeatures : lifetimeFeatures;
+  const top = newPricing
+    ? { name: "Annual Pro", price: `$${PRICES.annual}`, unit: "/year", note: `$${(PRICES.annual / 12).toFixed(2)} a month, billed yearly. Two months free vs. Monthly.`, badge: "Best Value", cta: "Get Annual Access →" }
+    : { name: "Lifetime Pro", price: `$${LEGACY_PRICES.lifetime}`, unit: "one-time", note: "Pay once, own it forever. Last day to buy: September 30.", badge: "Ends Sept 30", cta: "Get Lifetime Access →" };
+  const monthly = newPricing
+    ? { price: `$${PRICES.monthly}`, note: "Cancel anytime" }
+    : { price: `$${LEGACY_PRICES.monthly}`, note: `Subscribe by Sept 30 and keep $${LEGACY_PRICES.monthly} for as long as you stay. New price from Oct 1: $${PRICES.monthly}.` };
+
+  // iPhone on the US App Store: checkout in the browser sheet, then confirm.
+  const handleAppCheckout = async (priceType: "annual" | "lifetime" | "monthly") => {
+    const setLoading = priceType === "monthly" ? setLoadingMonthly : setLoadingTop;
+    setLoading(true);
+    setUnconfirmed(false);
+    try {
+      try {
+        (window as any).trackEvent?.('begin_checkout', {
+          currency: 'USD', value: planPrice(priceType),
+          items: [{ item_name: `Acqlerate Pro ${priceType}`, price: planPrice(priceType) }],
+        });
+      } catch {}
+      await openAppCheckout(priceType);
+      setLoading(false);
+      setConfirming(true);
+      const paid = await (onAfterAppCheckout?.() ?? Promise.resolve(false));
+      // Not paid yet can mean they backed out, or the payment is still
+      // settling. Offer a re-check rather than guessing which.
+      if (!paid) setUnconfirmed(true);
+    } catch (err: any) {
+      toast({
+        title: "Checkout error",
+        description: err.message || "Unable to start checkout. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+      setConfirming(false);
+    }
+  };
+
+  const recheck = async () => {
+    setConfirming(true);
+    const paid = await (onAfterAppCheckout?.() ?? Promise.resolve(false));
+    setConfirming(false);
+    setUnconfirmed(!paid);
+  };
+
+  const handleCheckout = async (priceType: "annual" | "lifetime" | "monthly") => {
+    if (checkoutMode === 'ios-us') return handleAppCheckout(priceType);
+    const setLoading = priceType === "monthly" ? setLoadingMonthly : setLoadingTop;
     setLoading(true);
     try {
       const res = await apiRequest("POST", "/api/stripe/create-checkout-session", { priceType });
@@ -77,8 +176,8 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
         try {
           (window as any).trackEvent?.('begin_checkout', {
             currency: 'USD',
-            value: priceType === 'lifetime' ? 99 : 5.99,
-            items: [{ item_name: `Acqlerate Pro ${priceType}`, price: priceType === 'lifetime' ? 99 : 5.99 }],
+            value: planPrice(priceType),
+            items: [{ item_name: `Acqlerate Pro ${priceType}`, price: planPrice(priceType) }],
           });
         } catch {}
         window.location.href = data.url;
@@ -138,9 +237,9 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
             Unlock the Full Academy
           </h1>
           <p className="mt-1.5 text-sm leading-[1.5]" style={{ color: 'var(--acq-text-muted)' }}>
-            {nativeApp
-              ? 'Every module, lesson, quiz, and resource. Pro access is set up on acqlerate.com, then works here automatically.'
-              : 'Get access to every module, lesson, quiz, and resource — everything you need to launch or advance your DoD acquisitions career.'}
+            {canBuy
+              ? 'Get access to every module, lesson, quiz, and resource — everything you need to launch or advance your DoD acquisitions career.'
+              : 'Every module, lesson, quiz, and resource. If Pro is already on your account, it works here too.'}
           </p>
           {trialDaysLeft !== null && (
             <span
@@ -155,14 +254,14 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
           )}
         </div>
 
-        {/* Native can't take payment, so it explains where to. On the web a
-            phone is a perfectly legal place to sell, so mobile web keeps the
-            real plans and Stripe checkout. */}
-        {!nativeApp && (
+        {/* Real plans wherever this device may sell: any browser, and the
+            iPhone app on the US App Store (checkout opens in the browser
+            sheet). See lib/appCheckout.ts for the store rules. */}
+        {canBuy && (
           <div className="flex flex-col gap-2.5">
             {[
-              { id: 'monthly' as const, name: 'Monthly Pro', price: '$5.99', unit: '/month', note: 'Cancel anytime', loading: loadingMonthly },
-              { id: 'lifetime' as const, name: 'Lifetime Pro', price: '$99', unit: 'one-time', note: 'Pay once, own it forever', loading: loadingLifetime },
+              { id: topPlan, name: top.name, price: top.price, unit: top.unit, note: top.note, loading: loadingTop, badge: top.badge },
+              { id: 'monthly' as const, name: 'Monthly Pro', price: monthly.price, unit: '/month', note: monthly.note, loading: loadingMonthly, badge: null as string | null },
             ].map(plan => (
               <div
                 key={plan.id}
@@ -173,8 +272,18 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
                   boxShadow: 'var(--acq-shadow-sm)',
                 }}
               >
-                <div className="text-sm font-semibold" style={{ color: 'var(--acq-text-heading)' }}>
-                  {plan.name}
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-sm font-semibold" style={{ color: 'var(--acq-text-heading)' }}>
+                    {plan.name}
+                  </span>
+                  {plan.badge && (
+                    <span
+                      className="rounded-full px-2 py-0.5 text-[11px] font-bold"
+                      style={{ background: 'var(--acq-surface-brand-wash)', color: 'var(--acq-text-brand)' }}
+                    >
+                      {plan.badge}
+                    </span>
+                  )}
                 </div>
                 <div className="mt-0.5 flex items-end gap-1">
                   <span className="acq-tnum text-3xl font-bold" style={{ color: 'var(--acq-text-heading)' }}>
@@ -183,10 +292,15 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
                   <span className="mb-1 text-sm" style={{ color: 'var(--acq-text-muted)' }}>{plan.unit}</span>
                 </div>
                 <div className="text-xs" style={{ color: 'var(--acq-text-muted)' }}>{plan.note}</div>
+                <div className="mt-1 text-xs font-semibold" style={{ color: 'var(--acq-text-brand)' }}>
+                  {plan.id === 'monthly'
+                    ? 'Streams everything. No PDF downloads.'
+                    : 'Includes Lesson Book PDF downloads and the CLP ledger.'}
+                </div>
                 <button
                   type="button"
                   onClick={() => handleCheckout(plan.id)}
-                  disabled={loadingLifetime || loadingMonthly}
+                  disabled={loadingTop || loadingMonthly}
                   className="mt-3.5 flex h-12 w-full items-center justify-center gap-2 rounded-[10px] text-[15px] font-semibold text-white disabled:opacity-50"
                   style={{ background: 'var(--acq-teal)' }}
                   data-testid={`mobile-checkout-${plan.id}`}
@@ -199,8 +313,42 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
           </div>
         )}
 
-        {/* How to upgrade */}
-        {nativeApp && (
+        {/* After an in-app checkout: confirming, or not confirmed yet. */}
+        {(confirming || unconfirmed) && (
+          <div
+            className="flex items-center gap-3 rounded-[14px] p-4"
+            style={{ background: 'var(--acq-surface-sunken)' }}
+            role="status"
+            data-testid="app-checkout-status"
+          >
+            {confirming ? (
+              <>
+                <Loader2 className="h-4 w-4 shrink-0 animate-spin" style={{ color: 'var(--acq-text-muted)' }} />
+                <span className="text-sm" style={{ color: 'var(--acq-text-body)' }}>Checking your account…</span>
+              </>
+            ) : (
+              <>
+                <span className="min-w-0 flex-1 text-sm leading-[1.45]" style={{ color: 'var(--acq-text-body)' }}>
+                  Didn't finish checkout? No charge was made. If you did pay, it can take a minute to show up.
+                </span>
+                <button
+                  type="button"
+                  onClick={recheck}
+                  className="shrink-0 rounded-lg px-3 py-2 text-xs font-bold text-white"
+                  style={{ background: 'var(--acq-teal)' }}
+                  data-testid="app-checkout-recheck"
+                >
+                  Check again
+                </button>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Where this device may not sell: no directions to buy elsewhere
+            (outside the US App Store Apple forbids exactly that), just the
+            way in for people who already have Pro on their account. */}
+        {nativeApp && !canBuy && (
         <section
           className="rounded-[14px] p-4"
           style={{
@@ -213,25 +361,12 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
             className="mb-3 text-xs font-bold uppercase tracking-[0.06em]"
             style={{ color: 'var(--acq-text-muted)' }}
           >
-            How to upgrade
+            Already have Pro?
           </h2>
-          <ol className="flex flex-col gap-3">
-            {[
-              <>On a computer or in your browser, go to <strong>acqlerate.com</strong> and sign in with {userEmail}.</>,
-              <>Choose Monthly Pro or Lifetime Pro. Both come with a 30-day money-back guarantee.</>,
-              <>Come back to the app. Sign out and back in and all 6 modules unlock.</>,
-            ].map((text, i) => (
-              <li key={i} className="flex gap-3 text-sm leading-[1.5]" style={{ color: 'var(--acq-text-body)' }}>
-                <span
-                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold"
-                  style={{ background: 'var(--acq-surface-brand-wash)', color: 'var(--acq-text-brand)' }}
-                >
-                  {i + 1}
-                </span>
-                <span className="min-w-0 flex-1">{text}</span>
-              </li>
-            ))}
-          </ol>
+          <p className="text-sm leading-[1.5]" style={{ color: 'var(--acq-text-body)' }}>
+            Pro belongs to your account, so it works everywhere you sign in as {userEmail}.
+            If it isn't showing here yet, sign out and back in.
+          </p>
           <button
             type="button"
             onClick={onSignOut}
@@ -255,9 +390,9 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
           </h2>
           <div className="flex flex-col gap-2">
             {lockedModules.map(mod => {
-              const theme = getModuleTheme(mod.color);
+              const theme = getModuleFamilyTheme(mod.id);
               const seq = modules.findIndex(m => m.id === mod.id) + 1;
-              const quizCount = mod.lessons.reduce((n, l) => n + (l.quiz?.length ?? 0), 0);
+              const quizCount = mod.lessons.reduce((n, l) => n + l.quizCount, 0);
               return (
                 <div
                   key={mod.id}
@@ -336,6 +471,17 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
         )}
       </div>
 
+      {/* Price change notice, shown until the switch (web only: no prices on native) */}
+      {!newPricing && !nativeApp && (
+        <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm" data-testid="price-change-notice">
+          <strong>Prices change October 1.</strong>{" "}
+          <span className="text-muted-foreground">
+            Lifetime Pro ($99 once) is sold through September 30, then it's replaced by Annual Pro at $149 a year.
+            Monthly goes to $14.99, but if you subscribe at $5.99 before then, you keep $5.99 for as long as you stay.
+          </span>
+        </div>
+      )}
+
       {/* Pricing Cards — 3 columns, matching landing page layout */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
 
@@ -369,27 +515,27 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
           </Button>
         </div>
 
-        {/* ── Monthly (featured / center) ── */}
-        <div className="bg-primary/5 dark:bg-primary/10 border-2 border-primary rounded-xl p-5 flex flex-col relative">
-          <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-            <span className="bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 whitespace-nowrap shadow-sm">
-              <Star className="w-3 h-3" />
-              Most Popular
-            </span>
-          </div>
+        {/* ── Monthly ── */}
+        <div className="bg-card border border-border rounded-xl p-5 flex flex-col relative">
           <div className="text-base font-semibold mb-1">Monthly Pro</div>
           {!nativeApp && <>
             <div className="flex items-end gap-1 mb-0.5">
-              <span className="text-3xl font-bold">$5.99</span>
+              <span className="text-3xl font-bold">{monthly.price}</span>
               <span className="text-muted-foreground text-sm mb-1">/month</span>
             </div>
-            <div className="text-xs text-muted-foreground mb-4">Cancel anytime</div>
+            <div className="text-xs text-muted-foreground mb-4">{monthly.note}</div>
           </>}
           <ul className="space-y-2 mb-5 flex-1">
             {monthlyFeatures.map((f, i) => (
               <li key={i} className="flex items-start gap-2 text-sm">
                 <CheckCircle className="w-3.5 h-3.5 text-green-500 flex-shrink-0 mt-0.5" />
                 {f}
+              </li>
+            ))}
+            {monthlyExcluded.map((f, i) => (
+              <li key={`x${i}`} className="flex items-start gap-2 text-sm text-muted-foreground/70">
+                <Lock className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                <span>{f} <span className="text-xs">({newPricing ? "Annual" : "Lifetime"} only)</span></span>
               </li>
             ))}
           </ul>
@@ -412,13 +558,14 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
           ) : (
             <div className="mt-auto space-y-2">
               <Button
+                variant="outline"
                 className="w-full gap-1.5"
                 onClick={() => handleCheckout("monthly")}
-                disabled={loadingLifetime || loadingMonthly}
+                disabled={loadingTop || loadingMonthly}
                 data-testid="upgrade-monthly"
               >
                 {loadingMonthly ? (
-                  <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                  <span className="w-4 h-4 border-2 border-border border-t-foreground rounded-full animate-spin" />
                 ) : (
                   <Zap className="w-4 h-4" />
                 )}
@@ -431,23 +578,26 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
           )}
         </div>
 
-        {/* ── Lifetime ── */}
-        <div className="bg-card border border-border rounded-xl p-5 flex flex-col relative">
-          <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-            <span className="bg-background border border-border text-foreground text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap shadow-sm">
-              Best Value
-            </span>
-          </div>
-          <div className="text-base font-semibold mb-1">Lifetime Pro</div>
+        {/* ── Top plan: Lifetime until the switch, Annual from it (featured) ── */}
+        <div className="bg-primary/5 dark:bg-primary/10 border-2 border-primary rounded-xl p-5 flex flex-col relative">
+          {!nativeApp && (
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+              <span className="bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 whitespace-nowrap shadow-sm">
+                <Star className="w-3 h-3" />
+                {top.badge}
+              </span>
+            </div>
+          )}
+          <div className="text-base font-semibold mb-1">{top.name}</div>
           {!nativeApp && <>
             <div className="flex items-end gap-1 mb-0.5">
-              <span className="text-3xl font-bold">$99</span>
-              <span className="text-muted-foreground text-sm mb-1">one-time</span>
+              <span className="text-3xl font-bold">{top.price}</span>
+              <span className="text-muted-foreground text-sm mb-1">{top.unit}</span>
             </div>
-            <div className="text-xs text-muted-foreground mb-4">Pay once, own it forever</div>
+            <div className="text-xs text-muted-foreground mb-4">{top.note}</div>
           </>}
           <ul className="space-y-2 mb-5 flex-1">
-            {lifetimeFeatures.map((f, i) => {
+            {topFeatures.map((f, i) => {
               const isExclusive = f.startsWith('\u2605');
               return (
                 <li key={i} className={cn(
@@ -484,21 +634,20 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
           ) : (
             <div className="mt-auto space-y-2">
               <Button
-                variant="outline"
                 className="w-full gap-1.5"
-                onClick={() => handleCheckout("lifetime")}
-                disabled={loadingLifetime || loadingMonthly}
-                data-testid="upgrade-lifetime"
+                onClick={() => handleCheckout(topPlan)}
+                disabled={loadingTop || loadingMonthly}
+                data-testid={`upgrade-${topPlan}`}
               >
-                {loadingLifetime ? (
-                  <span className="w-4 h-4 border-2 border-border border-t-foreground rounded-full animate-spin" />
+                {loadingTop ? (
+                  <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
                 ) : (
                   <CreditCard className="w-4 h-4" />
                 )}
-                Get Lifetime Access →
+                {top.cta}
               </Button>
               <p className="text-xs text-muted-foreground text-center">
-                Secured by Stripe · 30-day guarantee
+                Secured by Stripe · 30-day guarantee{newPricing ? " · Cancel anytime" : ""}
               </p>
             </div>
           )}
@@ -529,7 +678,7 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
               <div>
                 <div className="font-semibold text-sm">{mod.title}</div>
                 <div className="text-xs text-muted-foreground mt-0.5">
-                  {mod.lessons.length} lessons · {mod.lessons.reduce((sum, l) => sum + (l.quiz?.length ?? 0), 0)} quiz questions
+                  {mod.lessons.length} lessons · {mod.lessons.reduce((sum, l) => sum + l.quizCount, 0)} quiz questions
                 </div>
               </div>
             </div>

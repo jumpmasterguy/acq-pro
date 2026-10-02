@@ -1,5 +1,9 @@
 import { useState, useEffect, type ReactNode } from "react";
-import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap, Trash2, AlertTriangle, Award, LogOut, Moon, Gift } from "lucide-react";
+import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap, Trash2, AlertTriangle, Award, LogOut, Moon, Gift, Trophy, MessageCircleHeart, ShieldCheck } from "lucide-react";
+import { ContactUs } from "@/components/ContactUs";
+import { getCheckoutMode, openAppBillingPortal, type CheckoutMode } from "@/lib/appCheckout";
+import { LevelRoadSheet } from "@/components/LevelRoad";
+import { LeaderboardVisibilityRow } from "@/components/Leaderboard";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription,
@@ -10,8 +14,8 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { hasPaidPlan, trialDaysRemaining } from "@shared/access";
-import { CAREER_TRACK_DATA, getTrackStats, type CareerTrackId } from "@/lib/careerTracks";
-import { formatDuration } from "@/lib/curriculum";
+import { CAREER_TRACK_DATA, getTrackStats, setActiveTrack, type CareerTrackId } from "@/lib/careerTracks";
+import { formatDuration } from "@/lib/curriculumMeta";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { isNativeApp } from "@/lib/platform";
@@ -24,6 +28,10 @@ interface MyAccountPageProps {
   user: AuthUser;
   onBack: () => void;
   onUpgrade: () => void;
+  /** Opens My Certificates (the CLP ledger). On phones this is the only way in. */
+  onOpenCertificates?: () => void;
+  /** Admins only: opens the Admin screen (Today, user lookup). Phones have no sidebar. */
+  onOpenAdmin?: () => void;
   onNameUpdated: (firstName: string, lastName: string, username: string) => void;
   onAccountDeleted: () => void;
   // ── Mobile Account ────────────────────────────────────────────────────────
@@ -37,15 +45,6 @@ interface MyAccountPageProps {
   onThemeChange?: (mode: 'light' | 'dark' | 'system') => void;
 }
 
-/**
- * XP at which each level begins — the lower bound getLevel() checks against.
- * Needed to draw the progress bar as "how far through this level", rather
- * than "how far from zero".
- */
-const LEVEL_FLOOR: Record<number, number> = {
-  1: 0, 2: 200, 3: 500, 4: 1000, 5: 1800, 6: 3000, 7: 5000,
-};
-
 // Same localStorage key + default Dashboard.tsx already uses for the career
 // filter bar — the path switcher here is a second way to change the same
 // setting, so it has to read/write the exact same place to stay in sync.
@@ -56,6 +55,7 @@ const SUBSCRIPTION_LABELS: Record<string, { label: string; tone: string }> = {
   free: { label: 'Free', tone: 'bg-muted text-muted-foreground' },
   trialing: { label: 'Free Trial', tone: 'bg-amber-500/10 text-amber-700 dark:text-amber-400' },
   active: { label: 'Pro (Monthly)', tone: 'bg-primary/15 text-primary' },
+  annual: { label: 'Pro (Annual)', tone: 'bg-yellow-500/15 text-yellow-600 dark:text-yellow-400' },
   lifetime: { label: 'Pro (Lifetime)', tone: 'bg-yellow-500/15 text-yellow-600 dark:text-yellow-400' },
 };
 
@@ -71,11 +71,15 @@ function Section({ icon: Icon, title, children }: { icon: any; title: string; ch
   );
 }
 
-export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, onAccountDeleted,
+export default function MyAccountPage({ user, onBack, onUpgrade, onOpenCertificates, onOpenAdmin, onNameUpdated, onAccountDeleted,
   xp = 0, completedLessons = new Set<string>(), streak = 0, onSignOut, themeMode = 'system', onThemeChange }: MyAccountPageProps) {
   const isMobile = useIsMobile();
   const nativeApp = isNativeApp();
   const { toast } = useToast();
+  // Whether this device may sell or manage Pro (lib/appCheckout.ts).
+  const [checkoutMode, setCheckoutMode] = useState<CheckoutMode>(nativeApp ? 'none' : 'web');
+  useEffect(() => { void getCheckoutMode().then(setCheckoutMode); }, []);
+  const canSell = checkoutMode !== 'none';
   const [firstName, setFirstName] = useState(user.firstName ?? "");
   const [lastName, setLastName] = useState(user.lastName ?? "");
   const [saving, setSaving] = useState(false);
@@ -83,6 +87,7 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
   const [referral, setReferral] = useState<{ referralCode: string; referralCount: number; rewardsEarned: number; referralLink: string; nextRewardAt: number } | null>(null);
   const [referralCopied, setReferralCopied] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [showRoad, setShowRoad] = useState(false);
   const [deleteText, setDeleteText] = useState("");
   const [deleting, setDeleting] = useState(false);
   const [activeCareer, setActiveCareer] = useState<CareerTrackId>(() => {
@@ -114,6 +119,7 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
   const handleManageBilling = async () => {
     setPortalLoading(true);
     try {
+      if (checkoutMode === 'ios-us') { await openAppBillingPortal(); return; }
       const res = await apiRequest("POST", "/api/stripe/portal", {});
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Portal unavailable");
@@ -149,7 +155,7 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
   const handleSelectPath = (id: CareerTrackId) => {
     if (id === activeCareer) return;
     setActiveCareer(id);
-    try { localStorage.setItem(ACTIVE_CAREER_KEY, id); } catch {}
+    setActiveTrack(id); // also tells the sidebar, whose level title depends on the track
     const track = CAREER_TRACK_DATA.find(t => t.id === id);
     toast({ title: `Switched to ${track?.label ?? id}`, description: "Your Dashboard will reorder lessons to match on your next visit." });
   };
@@ -186,14 +192,31 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
 
   // ── Mobile Account ────────────────────────────────────────────────────────
   if (isMobile) {
-    const level = getLevel(xp);
-    const nextLevel = getLevel(level.nextXP);
-    const levelFloor = LEVEL_FLOOR[level.level] ?? 0;
+    // Titles follow the chosen path: GS scale for government, industry titles otherwise.
+    const level = getLevel(xp, activeCareer);
+    const nextLevel = getLevel(level.nextXP, activeCareer);
+    // Where this level starts, so the bar shows progress through the level,
+    // not from zero. From the shared table in lib/progress.ts.
+    const levelFloor = level.threshold;
     const span = Math.max(1, level.nextXP - levelFloor);
     const levelPct = Math.min(100, Math.round(((xp - levelFloor) / span) * 100));
 
     return (
       <div className="flex flex-col gap-4 px-4 pb-8 pt-4" data-testid="account-page-mobile">
+        {onOpenAdmin && (
+          <button
+            onClick={onOpenAdmin}
+            className="w-full flex items-center gap-3 rounded-2xl px-4 py-3 bg-violet-500/[0.10] border border-violet-500/30 text-left"
+            data-testid="account-open-admin"
+          >
+            <ShieldCheck className="w-5 h-5 text-violet-600 dark:text-violet-400 flex-shrink-0" />
+            <span className="flex-1">
+              <span className="block text-sm font-bold">Admin</span>
+              <span className="block text-xs text-muted-foreground">Today's numbers, find a user, quick fixes</span>
+            </span>
+            <span className="text-violet-600 dark:text-violet-400 text-sm font-semibold">&rarr;</span>
+          </button>
+        )}
         <LevelHero
           level={level.level}
           title={level.title}
@@ -204,13 +227,29 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
           lessonsDone={completedLessons.size}
           dayStreak={streak}
           clpsEarned={earnedClps(completedLessons)}
+          onOpenRoad={() => setShowRoad(true)}
         />
+        {showRoad && <LevelRoadSheet xp={xp} track={activeCareer} onClose={() => setShowRoad(false)} />}
 
         <AccountSection icon={Award} title="Module standing">
           <ModuleStanding
             completedLessons={completedLessons}
             skillLevels={(user.moduleSkillLevels ?? {}) as Record<string, string>}
           />
+          {onOpenCertificates && (
+            <button
+              onClick={onOpenCertificates}
+              className="mt-3 w-full flex items-center gap-3 rounded-lg px-3 py-2.5 bg-amber-500/[0.12] border border-amber-500/35 text-left"
+              data-testid="account-certificates"
+            >
+              <span className="text-lg leading-none">&#127891;</span>
+              <span className="flex-1">
+                <span className="block text-sm font-bold">My certificates</span>
+                <span className="block text-xs text-muted-foreground">Your CLP ledger, with IDs you can verify</span>
+              </span>
+              <span className="text-amber-600 dark:text-amber-400 text-sm font-semibold">&rarr;</span>
+            </button>
+          )}
         </AccountSection>
 
         <AccountSection icon={UserCircle} title="Name">
@@ -300,32 +339,46 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
               </span>
             )}
           </div>
-          {/* Native can't take payment, so it explains where to. On the web the
-              billing portal and the priced upgrade page are both fair game. */}
-          {nativeApp ? (
+          {/* What this device may offer depends on its store (lib/appCheckout.ts).
+              Where the app may not sell, it also may not point people to buy
+              elsewhere, so it says only what is true on the account. */}
+          {canSell ? (
+            paid ? (
+              <p className="mt-2 text-xs leading-[1.5]" style={{ color: 'var(--acq-text-muted)' }}>
+                Manage billing, payment method and cancellation in the customer portal.
+              </p>
+            ) : null
+          ) : (
             <p className="mt-2 text-xs leading-[1.5]" style={{ color: 'var(--acq-text-muted)' }}>
-              Plans are managed on acqlerate.com, not in the app. Upgrade there and sign back in here
-              to unlock every module.
+              {paid
+                ? 'Your plan is active on your account and works wherever you sign in.'
+                : 'Pro belongs to your account, so if it is already on it, it works here too.'}
             </p>
-          ) : paid ? (
-            <p className="mt-2 text-xs leading-[1.5]" style={{ color: 'var(--acq-text-muted)' }}>
-              Manage billing, payment method and cancellation in the customer portal.
-            </p>
-          ) : null}
-          <button
-            type="button"
-            onClick={paid && !nativeApp ? handleManageBilling : onUpgrade}
-            className="mt-3 flex h-10 items-center gap-1.5 rounded-lg border px-3 text-[13px] font-semibold"
-            style={{ borderColor: 'var(--acq-border-default)', color: 'var(--acq-text-body)' }}
-            data-testid="account-upgrade"
-          >
-            {portalLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Zap className="h-3.5 w-3.5" />}
-            {paid && !nativeApp ? 'Manage billing' : 'How to upgrade'}
-          </button>
+          )}
+          {(canSell || !paid) && (
+            <button
+              type="button"
+              onClick={paid && canSell ? handleManageBilling : onUpgrade}
+              className="mt-3 flex h-10 items-center gap-1.5 rounded-lg border px-3 text-[13px] font-semibold"
+              style={{ borderColor: 'var(--acq-border-default)', color: 'var(--acq-text-body)' }}
+              data-testid="account-upgrade"
+            >
+              {portalLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Zap className="h-3.5 w-3.5" />}
+              {paid && canSell ? 'Manage billing' : canSell ? 'Upgrade to Pro' : 'What Pro includes'}
+            </button>
+          )}
         </AccountSection>
 
         {/* Theme — not in the handoff, but the mobile top bar has no toggle and
             the app otherwise follows the OS with no way to override it. */}
+        <AccountSection icon={Trophy} title="Leaderboards">
+          <LeaderboardVisibilityRow />
+        </AccountSection>
+
+        <AccountSection icon={MessageCircleHeart} title="Talk to a human">
+          <ContactUs />
+        </AccountSection>
+
         <AccountSection icon={Moon} title="Appearance">
           <div className="flex gap-2">
             {(['light', 'dark', 'system'] as const).map(mode => (
@@ -372,6 +425,15 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
           <Trash2 className="h-3.5 w-3.5" strokeWidth={2} />
           Delete account
         </button>
+
+        {/* Privacy links. The app has no sidebar footer on phones, and the
+            stores expect the privacy policy to be reachable in-app. Cookie
+            settings opens the consent choice (public/consent.js). */}
+        <div className="flex justify-center gap-5 pb-2 text-xs" style={{ color: 'var(--acq-text-muted)' }}>
+          <a href="/privacy" className="hover:underline">Privacy</a>
+          <a href="/terms" className="hover:underline">Terms</a>
+          <button type="button" data-acq-cookie-settings className="hover:underline">Cookie settings</button>
+        </div>
 
         {deleteDialog}
       </div>
@@ -497,6 +559,10 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
         </div>
       </Section>
 
+      <Section icon={Trophy} title="Leaderboards">
+        <LeaderboardVisibilityRow />
+      </Section>
+
       {/* Referrals */}
       {referral && (
         <Section icon={Gift} title="Refer & Earn Pro">
@@ -534,10 +600,14 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onNameUpdated, 
       )}
 
       {/* Danger zone */}
+      <Section icon={MessageCircleHeart} title="Talk to a human">
+        <ContactUs />
+      </Section>
+
       <Section icon={AlertTriangle} title="Delete Account">
         <p className="text-sm text-muted-foreground mb-3">
           Permanently deletes your account, progress, streaks and XP.
-          {user.subscriptionStatus === 'active' && ' Your monthly subscription is cancelled immediately.'}
+          {(user.subscriptionStatus === 'active' || user.subscriptionStatus === 'annual') && ' Your subscription is cancelled immediately.'}
           {' '}This cannot be undone.
         </p>
         <Button size="sm" variant="outline" className="gap-1.5 border-destructive/40 text-destructive hover:bg-destructive/10" onClick={() => { setDeleteText(""); setDeleteOpen(true); }} data-testid="delete-account">

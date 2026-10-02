@@ -4,6 +4,10 @@ Builds 3 product landing pages + publishes 3 comparison articles.
 Product pages are served at /products/{pack-slug} as static HTML.
 """
 import json, re, subprocess
+import sys
+from pathlib import Path as _P
+sys.path.insert(0, str(_P(__file__).parent.parent / "scripts"))
+from curriculum_counts import counts as curriculum_counts
 from pathlib import Path
 from datetime import date
 
@@ -43,7 +47,7 @@ FOOTER = """<footer>
       <a href="/app#/upgrade">Pricing</a>
       <a href="mailto:lucas@acqlerate.com">Contact</a>
     </div>
-    <div class="footer-copy">© 2026 Acqlerate. Defense Acquisitions Academy.</div>
+    <div class="footer-copy">© 2026 Acqlerate. Plain-English DoD acquisition training. Not affiliated with WarU, DoD, or any government agency.</div>
   </div>
 </footer>"""
 
@@ -108,10 +112,10 @@ PACKS = [
         "description": "Defense finance has its own language — color of money, wrap rates, EVM formulas, PPBE phases. These cheat sheets distill the most important concepts into print-ready reference cards you can keep at your desk. No fluff.",
         "audience": "Program managers, financial analysts, resource managers, and defense contractors dealing with cost-type contracts",
         "files": [
-            {"name": "PPBE Cycle One-Pager", "ext": "xlsx", "desc": "All 4 phases — Planning, Programming, Budgeting, Execution — on one landscape page with owners, outputs, timeline.", "file": "ppbe-cycle-one-pager.xlsx"},
-            {"name": "Color of Money Decision Tree", "ext": "xlsx", "desc": "Flow chart + quick reference table for O&M, Procurement, RDT&E, MILPERS, MILCON. ADA violation risk flags.", "file": "color-of-money-decision-tree.xlsx"},
-            {"name": "EVM Formulas Quick Reference", "ext": "xlsx", "desc": "All EVM metrics, 4 EAC methods, traffic-light interpretation guide, CPR format reference. Print and pin to your wall.", "file": "evm-formulas-quick-reference.xlsx"},
-            {"name": "Wrap Rate Breakdown Calculator", "ext": "xlsx", "desc": "Live wrap rate calculator with fringe/OH/G&A/fee buildup. Includes contractor type benchmark comparison.", "file": "wrap-rate-breakdown.xlsx"},
+            {"name": "PPBE Cycle on One Page", "ext": "pdf", "desc": "One budget followed from first planning meeting to last day on contract, drawn as a timeline, plus the four budgets DoD is always working at once.", "file": "ppbe-cycle-one-pager.pdf"},
+            {"name": "Color of Money Decision Tree", "ext": "pdf", "desc": "A four-question flowchart that picks the right appropriation, plus periods of availability, current thresholds and RDT&E budget activity codes.", "file": "color-of-money-decision-tree.pdf"},
+            {"name": "EVM Formulas Quick Reference", "ext": "pdf", "desc": "Every EVM formula, four EAC methods and how to read them, the IPMDAR, current EVM thresholds and a worked example. Print it and pin it up.", "file": "evm-formulas-quick-reference.pdf"},
+            {"name": "Wrap Rate Calculator", "ext": "xlsx", "desc": "Live wrap rate calculator with the fringe, overhead, G&A and fee build-up, plus typical wrap rates by contractor type and business unit.", "file": "wrap-rate-breakdown.xlsx"},
         ],
         "testimonial": "\"Printed the EVM quick reference and pinned it above my monitor. Referenced it every day during my first CPR review.\"",
         "testimonial_attr": "— Junior PM, Army program office",
@@ -245,6 +249,7 @@ def build_product_page(pack: dict) -> str:
 
 
 def publish_comparison_articles():
+    CC = curriculum_counts()
     """Publish the 3 comparison articles to the blog."""
     comparison_files = list(ARTICLES_DIR.glob("pillar-comparison-*.json"))
     published = []
@@ -315,7 +320,7 @@ def publish_comparison_articles():
     <!-- Bottom CTA -->
     <div style="background:linear-gradient(135deg,#01696F 0%,#0C4E54 100%);border-radius:16px;padding:32px;margin-top:48px;color:white;">
       <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:10px;color:white">Start Learning DoD Acquisition — Free</h3>
-      <p style="font-size:0.95rem;opacity:0.9;margin-bottom:20px">Six modules. 34+ lessons. Novice through advanced. The <strong>{mod['title']}</strong> module covers everything in this guide.</p>
+      <p style="font-size:0.95rem;opacity:0.9;margin-bottom:20px">{CC["modules_word"]} modules. {CC["lessons"]} lessons. Novice through advanced. The <strong>{mod['title']}</strong> module covers everything in this guide.</p>
       <a href="/app#/auth" style="display:inline-block;background:white;color:#01696F;font-weight:800;font-size:0.95rem;padding:12px 24px;border-radius:10px;text-decoration:none;margin-right:12px">Start Free →</a>
       <a href="/app#/upgrade" style="display:inline-block;color:rgba(255,255,255,0.85);font-weight:600;font-size:0.9rem;padding:12px 0;text-decoration:none">See all modules →</a>
     </div>

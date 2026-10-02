@@ -33,6 +33,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
+        <!-- Links the app to acqlerate.com so the site can tell the app is installed
+             and stop offering "Add to home screen" (which made a second icon). -->
+        <meta-data
+            android:name="asset_statements"
+            android:resource="@string/asset_statements" />
     </application>
 
     <!-- Permissions -->

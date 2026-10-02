@@ -1,7 +1,7 @@
 import { useMemo, useRef, useContext, createContext, Fragment } from "react";
 import type { ReactNode } from "react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import type { KeyTerm } from "@/lib/curriculum";
+import type { KeyTerm } from "@/lib/curriculumMeta";
 
 /**
  * Renders body text with the first occurrence of each lesson key term

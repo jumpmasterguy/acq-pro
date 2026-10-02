@@ -21,7 +21,7 @@ type Expected = {
   env: string;            // env var name holding the price ID
   label: string;          // human name, used in logs/emails
   amountCents: number;    // what the website says the customer pays
-  recurring: "month" | null; // null = one-time payment
+  recurring: "month" | "year" | null; // null = one-time payment
 };
 
 // Keep this table in sync with what the marketing pages show. If a price
@@ -30,6 +30,12 @@ export const EXPECTED_PRICES: Expected[] = [
   { env: "STRIPE_PRICE_ID_LIFETIME",           label: "Pro Lifetime",          amountCents: 9900,  recurring: null },
   { env: "STRIPE_PRICE_ID_MONTHLY",            label: "Pro Monthly",           amountCents: 599,   recurring: "month" },
   { env: "STRIPE_PRICE_ID_TEAM",               label: "Team Pack (10 seats)",  amountCents: 39900, recurring: null },
+  // From the 1 Oct 2026 pricing switch (shared/pricing.ts). The three above
+  // stay: $5.99 subscribers keep their price, and Lifetime/Team Pack are
+  // sold until the switch.
+  { env: "STRIPE_PRICE_ID_MONTHLY_2026",       label: "Pro Monthly (from Oct 2026)", amountCents: 1499,  recurring: "month" },
+  { env: "STRIPE_PRICE_ID_ANNUAL",             label: "Pro Annual",            amountCents: 14900, recurring: "year" },
+  { env: "STRIPE_PRICE_ID_TEAM_ANNUAL",        label: "Team (10 Annual seats)", amountCents: 99900, recurring: "year" },
   { env: "STRIPE_PRICE_PACK_PM_ESSENTIALS",    label: "PM Essentials pack",    amountCents: 2400,  recurring: null },
   { env: "STRIPE_PRICE_PACK_PROPOSAL_TOOLKIT", label: "Proposal Toolkit pack", amountCents: 3400,  recurring: null },
   { env: "STRIPE_PRICE_PACK_CPARS_PLAYBOOK",   label: "CPARS Playbook pack",   amountCents: 3400,  recurring: null },

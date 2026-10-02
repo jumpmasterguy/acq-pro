@@ -4,19 +4,58 @@
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Acqlerate — Defense Acquisitions Academy</title>
 
-    <!-- Google Analytics 4 -->
-    <!-- Google Analytics 4 — G-SW42SFY999 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SW42SFY999"></script>
+    <!-- ── In-app launch continuation ──────────────────────────────────────
+         The native launch screen hands over to this page, and this page's
+         first job is to look EXACTLY like it — same teal, same artwork, same
+         size and position — until the app knows whether you are signed in.
+         Before, the handover showed a 40px logo and a spinner on beige: a
+         second, smaller icon between launch and sign-in.
+
+         Android: the launcher foreground, drawn in a 288px box, which is
+         how Android draws windowSplashScreenAnimatedIcon (styles.xml).
+         iOS: the launch storyboard's image, cover-fit, which is what its
+         scaleAspectFill image view does.
+
+         Only ever shown inside the app. A website visitor never matches. -->
+    <style>
+      #boot-splash { display: none; }
+      html.native-boot, html.native-boot body { background: #01696F; }
+      html.native-boot #boot-splash {
+        display: block; position: fixed; inset: 0; z-index: 2147483000;
+        background: #01696F; transition: opacity 220ms ease-out;
+      }
+      #boot-splash.leaving { opacity: 0; }
+      #boot-splash .android {
+        position: absolute; left: 50%; top: 50%;
+        width: 288px; height: 288px; margin: -144px 0 0 -144px;
+      }
+      #boot-splash .ios {
+        position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      }
+    </style>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-SW42SFY999', {
-        send_page_view: true,
-      });
-      // Helper to fire GA4 events from React
+      (function () {
+        var ua = navigator.userAgent || '';
+        // Any one of three signals: the tag the app adds to its user agent
+        // (capacitor.config.ts appendUserAgent), the flag main.tsx stores on
+        // every native launch, or Capacitor's bridge if it is already here.
+        var inApp = /AcqlerateApp/.test(ua);
+        try { inApp = inApp || localStorage.getItem('acq:native') === '1'; } catch (e) {}
+        try { inApp = inApp || !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()); } catch (e) {}
+        if (!inApp) return;
+        var root = document.documentElement;
+        root.classList.add('native-boot');
+        root.setAttribute('data-boot', /Android/i.test(ua) ? 'android' : 'ios');
+      })();
+    </script>
+    <title>Acqlerate: Plain-English DoD Acquisition Training</title>
+
+    <!-- Cookie consent + Google Analytics: see /consent.js (defines gtag) -->
+    <script src="/consent.js"></script>
+    <script>
+      // Helper to fire GA4 events from React. Queued in dataLayer; only sent
+      // if the visitor has analytics consent (consent.js).
       window.trackEvent = function(eventName, params) {
         if (typeof gtag === 'function') {
           gtag('event', eventName, params || {});
@@ -47,16 +86,80 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Acqlerate — Defense Acquisitions Academy" />
-    <meta property="og:description" content="Master DoD acquisitions: finance, contracts, capture management, and operations." />
-    <meta property="og:image" content="/icon-512x512.png" />
+    <meta property="og:title" content="Acqlerate: Plain-English DoD Acquisition Training" />
+    <meta property="og:description" content="Plain-English DoD acquisition training, one short lesson at a time: finance, contracts, capture and program management. Quizzes that stick, CLP credit, built by a DoD PM." />
+    <meta name="twitter:description" content="Plain-English DoD acquisition training, one short lesson at a time: finance, contracts, capture and program management. Quizzes that stick, CLP credit, built by a DoD PM." />
+    <!-- Absolute URL: LinkedIn and other scrapers do not resolve relative og:image
+         paths reliably. Card is rendered by scripts/og/make_og_image.py. -->
+    <meta property="og:image" content="https://acqlerate.com/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="627" />
+    <meta property="og:image:alt" content="Acqlerate: Stop winging it. Learn the system." />
+    <meta property="og:url" content="https://acqlerate.com/app" />
+    <meta property="og:site_name" content="Acqlerate" />
     <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://acqlerate.com/og-image.jpg" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fira+Code:wght@300..700&family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Oxanium:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   </head>
   <body>
+    <div id="boot-splash" aria-hidden="true"></div>
+    <script>
+      (function () {
+        var root = document.documentElement;
+        if (!root.classList.contains('native-boot')) return;
+        // A real <img>, not a CSS background: the page's load event waits for
+        // it, and Android keeps the native launch screen up until that event
+        // (MainActivity), so the artwork is always painted before handover.
+        var img = document.createElement('img');
+        var android = root.getAttribute('data-boot') === 'android';
+        img.className = android ? 'android' : 'ios';
+        img.src = android ? '/launch/android-mark.png' : '/launch/ios-splash.png';
+        img.alt = '';
+        document.getElementById('boot-splash').appendChild(img);
+
+        // Tell the app its launch screen can step aside: this page's identical
+        // copy has its artwork decoded and ready to paint. The app then swaps
+        // them only once this page is actually on screen (MainActivity on
+        // Android, MainViewController on iOS), so there is never a blank
+        // frame between the two. Android does not draw the page while its
+        // launch screen is held, so requestAnimationFrame may never fire
+        // there; the short timer covers that.
+        var told = false;
+        function ready() {
+          if (told) return;
+          told = true;
+          try {
+            var C = window.Capacitor;
+            var p = C && C.Plugins && C.Plugins.Launch && C.Plugins.Launch.ready
+              ? C.Plugins.Launch.ready()
+              : C && C.nativePromise ? C.nativePromise('Launch', 'ready') : null;
+            if (p && p.catch) p.catch(function () {}); // older app: no plugin, falls back natively
+          } catch (e) {}
+        }
+        function afterPaint() {
+          var t = window.setTimeout(ready, 120);
+          window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () { window.clearTimeout(t); ready(); });
+          });
+        }
+        img.onload = function () {
+          if (img.decode) img.decode().then(afterPaint, afterPaint);
+          else afterPaint();
+        };
+        img.onerror = ready;
+        if (img.complete && img.naturalWidth) img.onload();
+        // Failsafe: if the app never starts, do not hide its error behind this.
+        window.setTimeout(function () {
+          var el = document.getElementById('boot-splash');
+          if (el) el.remove();
+          root.classList.remove('native-boot');
+        }, 10000);
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
