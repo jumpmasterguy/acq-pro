@@ -1465,7 +1465,7 @@ export const modules: Module[] = [
           {
             type: 'text',
             heading: 'What Is an IDIQ?',
-            body: 'An IDIQ (Indefinite Delivery, Indefinite Quantity) contract is a vehicle. An umbrella agreement that pre-qualifies one or more contractors to do a certain category of work for a defined period, up to a ceiling dollar amount.\n\nThink of an IDIQ like a staffing agency agreement: the government says "we\'ve pre-approved these firms to do this type of work at these rates, for up to $500M over 5 years." Then, when the government has a specific need, it issues a task order to one of those firms. Without having to run a full competition from scratch each time.\n\nThe IDIQ itself guarantees the contractor a minimum amount of work (often nominal. Sometimes as little as $1) and sets the maximum ceiling. The government is not obligated to spend the full ceiling. Actual revenue only flows when task orders are issued.',
+            body: 'An IDIQ (Indefinite Delivery, Indefinite Quantity) contract is a vehicle. An umbrella agreement that pre-qualifies one or more contractors to do a certain category of work for a defined period, up to a ceiling dollar amount.\n\nThink of an IDIQ like a staffing agency agreement: the government says "we\'ve pre-approved these firms to do this type of work at these rates, for up to $500M over 5 years." Then, when the government has a specific need, it issues a task order to one of those firms. Without having to run a full competition from scratch each time.\n\nThe IDIQ itself guarantees the contractor a minimum amount of work (small, but FAR 16.504 requires it to be more than nominal) and sets the maximum ceiling. The government is not obligated to spend the full ceiling. Actual revenue only flows when task orders are issued.',
           },
           {
             type: 'callout',
@@ -1579,11 +1579,11 @@ export const modules: Module[] = [
             options: [
               '$200M: the full ceiling value|||Incorrect. The ceiling is the maximum total value of all task orders that can be placed over the contract life: it does not guarantee any particular contractor that amount. Each contractor is guaranteed only the minimum and must compete for every task order.',
               '$40M: their proportional share among 5 awardees|||Incorrect. IDIQ contracts do not split the ceiling equally. The $200M ceiling is a government-side limit on total spending. Each awardee competes for individual task orders. One contractor could win 90% of orders; another could win nothing beyond the minimum guarantee.',
-              'Only the minimum guarantee (often nominal, sometimes as little as $1)|||Correct. At IDIQ award, a contractor is legally guaranteed only the minimum, which by law must be at least $1 but in practice is often a few thousand dollars for large GWACs. Everything beyond that minimum requires winning individual task order competitions.',
+              'Only the minimum guarantee (small, but more than nominal)|||Correct. At IDIQ award, a contractor is legally guaranteed only the minimum. FAR 16.504 requires it to be more than a nominal amount, but no more than the government is fairly certain to order. In practice it is often a few thousand dollars on large GWACs. Everything beyond that minimum requires winning individual task order competitions.',
               'Nothing until the IDIQ is exercised by the ordering agency|||Incorrect, but partially right conceptually. The government commits to a minimum guarantee at IDIQ award. Beyond that minimum, the contractor receives nothing until they win a task order competition. The minimum guarantee is the only legally committed obligation.',
             ],
             correct: 2,
-            explanation: 'Winning an IDIQ position guarantees only the minimum order (often nominal. Sometimes $1). The ceiling value represents the maximum the government can spend, but actual revenue only flows when task orders are issued and won. This is why sustained BD effort after IDIQ award is critical.',
+            explanation: 'Winning an IDIQ position guarantees only the minimum order (small, but required to be more than nominal). The ceiling value represents the maximum the government can spend, but actual revenue only flows when task orders are issued and won. This is why sustained BD effort after IDIQ award is critical.',
           },
           {
             id: 'q3',
@@ -7527,8 +7527,8 @@ export const modules: Module[] = [
       { term: 'GWAC', definition: 'Government-Wide Acquisition Contract. An IDIQ available for use by multiple federal agencies, awarded by a lead agency.' },
       { term: 'Ordering Period', definition: 'The time window during which task orders may be placed under an IDIQ contract (distinct from the period of performance on individual TOs).' },
       { term: 'Ceiling', definition: 'The maximum dollar value of all orders that may be placed under an IDIQ contract.' },
-      { term: 'Minimum Guarantee', definition: 'The minimum value the government is obligated to order under an IDIQ. Typically a nominal amount ($1,000–$25,000).' },
-      { term: 'Fair Opportunity', definition: 'The requirement under FAR 16.505 to provide each MAC-IDIQ awardee a fair opportunity to compete for each task order over $3,500.' },
+      { term: 'Minimum Guarantee', definition: 'The minimum value the government is obligated to order under an IDIQ. FAR 16.504 requires it to be more than a nominal amount, but no more than the government is fairly certain to order. Often a few thousand dollars.' },
+      { term: 'Fair Opportunity', definition: 'The requirement under FAR 16.505 to provide each MAC-IDIQ awardee a fair opportunity to compete for each task order over the micro-purchase threshold (currently $15,000).' },
       { term: 'BPA', definition: 'Blanket Purchase Agreement. A simplified ordering agreement under GSA Schedule or open market, similar in concept to an IDIQ but without minimum/maximum guarantees.' },
         ],
         content: [
@@ -7563,7 +7563,7 @@ export const modules: Module[] = [
       {
         type: 'callout',
         heading: "The Fair Opportunity Requirement",
-        body: "FAR 16.505 requires that for MAC-IDIQ task orders over $3,500, all awardees must receive a fair opportunity to compete: meaning each must receive notice of the opportunity and a reasonable time to respond. Six narrow exceptions allow sole-source task orders: urgency, only one awardee is capable, follow-on to a prototype, logical follow-on, minimum guarantee, and national security. Bypassing fair opportunity without a valid exception is illegal and a common IG finding."
+        body: "FAR 16.505 requires that for MAC-IDIQ task orders over the micro-purchase threshold (currently $15,000), all awardees must receive a fair opportunity to compete: meaning each must receive notice of the opportunity and a reasonable time to respond. Six narrow exceptions allow sole-source task orders: urgency, only one awardee is capable, follow-on to a prototype, logical follow-on, minimum guarantee, and national security. Bypassing fair opportunity without a valid exception is illegal and a common IG finding."
       },
       {
         type: 'idiq_structure_visual' as any,
@@ -7595,7 +7595,7 @@ export const modules: Module[] = [
       type: 'text' as const,
       level: 'intermediate' as const,
       heading: 'IDIQ Management: Ceiling, Scope, and Competition',
-      body: `Mid-career PMs working IDIQs and GWACs need to hold three constraints in their head simultaneously: the ceiling, the scope, and the competition rules.\n\n**The ceiling** sets the max dollar value of all orders combined. You can't exceed it without a base contract mod. The minimum guarantee is small: the government is not obligated to give you any specific amount above that.\n\n**Scope** limits what work can actually go on the vehicle. Task orders must be within the IDIQ's defined scope. Ordering outside scope is an improper action: it's a protest magnet and an IG finding. Some programs try to stretch scope to use a preferred vehicle. Competitors notice.\n\n**Competition** requirements mean most IDIQs require fair opportunity for any order above $3,500. The most common mistake at this level: picking a vehicle because it's familiar rather than because it's the right fit: then forcing the requirement to fit the scope.`,
+      body: `Mid-career PMs working IDIQs and GWACs need to hold three constraints in their head simultaneously: the ceiling, the scope, and the competition rules.\n\n**The ceiling** sets the max dollar value of all orders combined. You can't exceed it without a base contract mod. The minimum guarantee is small: the government is not obligated to give you any specific amount above that.\n\n**Scope** limits what work can actually go on the vehicle. Task orders must be within the IDIQ's defined scope. Ordering outside scope is an improper action: it's a protest magnet and an IG finding. Some programs try to stretch scope to use a preferred vehicle. Competitors notice.\n\n**Competition** requirements mean most IDIQs require fair opportunity for any order above the micro-purchase threshold (currently $15,000). The most common mistake at this level: picking a vehicle because it's familiar rather than because it's the right fit: then forcing the requirement to fit the scope.`,
         },
         {
       type: 'callout' as const,
@@ -7646,16 +7646,16 @@ export const modules: Module[] = [
       {
         id: 'q2',
         question: "What is the minimum guarantee on an IDIQ contract, and why does it exist?",
-        options: ['50% of the contract ceiling, to ensure the contractor recovers setup costs', 'A nominal amount (typically $1K–$25K) obligated at award, protecting the contractor from a zero-value contract', 'The amount needed to fund the first task order', 'The government\'s estimated annual spend, used for market research'],
+        options: ['50% of the contract ceiling, to ensure the contractor recovers setup costs', 'A small amount, more than nominal, obligated at award, protecting the contractor from a zero-value contract', 'The amount needed to fund the first task order', 'The government\'s estimated annual spend, used for market research'],
         correct: 1,
-        explanation: "The minimum guarantee is a nominal amount (typically $1,000–$25,000) obligated at contract award that represents the government's only guaranteed obligation under the IDIQ. It protects the contractor from the scenario where no task orders are ever placed. Above the minimum, the government has no obligation to order any specific amount up to the ceiling."
+        explanation: "The minimum guarantee is a small amount, required by FAR 16.504 to be more than nominal, obligated at contract award that represents the government's only guaranteed obligation under the IDIQ. It protects the contractor from the scenario where no task orders are ever placed. Above the minimum, the government has no obligation to order any specific amount up to the ceiling."
       },
       {
         id: 'q3',
         question: "FAR 16.505 requires \"fair opportunity\" for MAC-IDIQ task orders above what threshold?",
-        options: ['$100,000', '$350,000', '$3,500', '$1,000,000'],
+        options: ['$100,000', '$350,000', '$15,000 (the micro-purchase threshold)', '$1,000,000'],
         correct: 2,
-        explanation: "FAR 16.505 requires that all MAC-IDIQ awardees receive fair opportunity to compete for task orders exceeding $3,500. Below this threshold, the contracting officer may place orders without following the fair opportunity procedures. This relatively low threshold means nearly all meaningful task orders require fair opportunity competition."
+        explanation: "FAR 16.505 requires that all MAC-IDIQ awardees receive fair opportunity to compete for task orders exceeding the micro-purchase threshold, currently $15,000. Below it, the contracting officer may place orders without following the fair opportunity procedures. This low threshold means nearly all meaningful task orders require fair opportunity competition."
       },
       {
         id: 'q4',
@@ -7865,7 +7865,7 @@ export const modules: Module[] = [
         options: [
           'The government may award to any awardee at its sole discretion|||Incorrect for MAIDIQ. Under FAR 16.505, Multiple Award IDIQ contracts require a \'fair opportunity\' process for task orders over the threshold. Every awardee must be given a fair opportunity to compete. Sole discretion applies only to Single Award IDIQs.',
           'All awardees must receive a fair opportunity to be considered|||Correct. FAR 16.505(b)(1) requires fair opportunity procedures for task orders over the threshold. Each MAIDIQ awardee must be notified, given the opportunity to submit a proposal, and evaluated using the criteria established in the base IDIQ.',
-          'Task orders under $150,000 require full and open competition|||Incorrect. Task orders under $150,000 are often exempt from fair opportunity requirements, the CO may award at their discretion. It\'s orders OVER $3,500 (and especially over $150,000 for civilian agencies, $6M for DoD) that trigger increasing fair opportunity formality.',
+          'Task orders under $150,000 require full and open competition|||Incorrect. Fair opportunity applies to every task order over the micro-purchase threshold (currently $15,000), not full and open competition. The process gets more formal as orders grow, especially above the simplified acquisition threshold and for the largest orders.',
           'The incumbent contractor receives right of first refusal|||Incorrect. There is no statutory right of first refusal for incumbent contractors on MAIDIQ task orders. All awardees must receive fair opportunity. While past performance is a legitimate evaluation factor, it does not give the incumbent a contractual preference.',
         ],
         correct: 1,
