@@ -192,14 +192,19 @@ table.form td.k { font-weight: 700; color: var(--navy); }
   <h2 class="first">How to Read This Page</h2>
   <ul class="read">
     <li><b>CLIN 0001</b> is fully funded: Firm Price and Funded Amount are identical ($771,600). The full value of this line has been obligated up front.</li>
-    <li><b>CLIN 0002</b> is incrementally funded: Firm Price is $706,800, but only $530,100 has actually been obligated so far, 75.0% of the total. That is not a coincidence for this example: it is deliberately set at the FAR 52.232-22 notification threshold.</li>
+    <li><b>CLIN 0002</b> is incrementally funded: Firm Price is $706,800, but only $530,100 has been obligated so far. That is exactly nine of its twelve months ($58,900 &times; 9), so the money covers work through 30 June 2026 and not a day more. DoD can only do this on a fixed-price line in narrow cases, such as a year or less of severable services like this one (DFARS 232.703-1).</li>
     <li><b>CLIN 0003</b> (Travel) is fully funded like CLIN 0001, showing that funding status is set per CLIN, not per contract.</li>
     <li><b>ACRN AA</b> covers CLINs 0001 and 0003, meaning they draw from the same funding action. <b>ACRN AB</b> is a separate funding line covering CLIN 0002 only, likely a different fiscal year or a later funding modification.</li>
   </ul>
 
+  <div class="callout watch">
+    <span class="h">The clause that makes this real</span>
+    An incrementally funded fixed-price contract at DoD carries DFARS 252.232-7007, Limitation of Government's Obligation. Two rules matter. First, the contractor must warn the CO in writing at least 90 days before what it has earned on the line reaches about 85% of the funded amount. Second, the contractor is not authorized to keep working past the funded amount, and the government doesn't owe it anything if it does. Here, 85% of $530,100 is $450,585, which billing reaches around 20 May 2026. Count back 90 days: the letter is due around 20 February, month five of twelve. Don't mix it up with FAR 52.232-22, Limitation of Funds. That one is for cost-reimbursement contracts and has its own trigger: costs expected in the next 60 days pushing past 75% of the funded amount.
+  </div>
+
   <div class="callout lucas">
     <span class="h">From Lucas</span>
-    CLIN 0002 is the one to watch on this page. A PM tracking the $706,800 ceiling thinks there's plenty of room left. A PM tracking the real number, the $530,100 Funded Amount, already knows they've hit the 75% threshold. The written Limitation of Funds notification to the CO is due now, not after the money runs out. Ceiling tells you what's possible. Funded Amount tells you what's real. Track funded. Every time.
+    CLIN 0002 is the one to watch on this page. A PM tracking the $706,800 price thinks there's plenty of room. A PM tracking the $530,100 actually funded knows the money runs out at the end of June, and that the warning letter was due back in February. If you're writing that letter in June, you're four months late and about to work for free. Price tells you what's possible. Funded tells you what's real. Track funded. Every time.
   </div>
   {{FOOTER}}
 </section>

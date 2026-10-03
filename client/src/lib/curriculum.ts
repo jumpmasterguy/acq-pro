@@ -4345,8 +4345,8 @@ export const modules: Module[] = [
             url: '/examples/example-contract-funding-page.pdf',
             images: [
               { src: '/examples/img/funding-page-1.png', caption: 'Section B never stands alone. This UCF table shows where the pricing page fits inside the other twelve lettered sections of a negotiated federal contract, Section C is the work, Section F is the schedule, Section B is the price tag.' },
-              { src: '/examples/img/funding-page-3.png', caption: 'This is what a real Section B actually looks like: each CLIN carries its SOW reference, Product Service Code, Pricing Arrangement, ACRN, PR Number, and CIN, not just a price. CLIN 0002 here is funded at 75% of its firm price, which makes it incrementally funded: the contractor can only perform up to the funds allotted. (The 75% notice in FAR 52.232-22, Limitation of Funds, applies to cost-reimbursement work, not fixed-price lines like this one.)' },
-              { src: '/examples/img/funding-page-5.png', caption: 'That 75% gap on CLIN 0002 is not decorative. Ceiling tells you what is possible. Funded Amount tells you what is real, and that is the number a PM tracks.' },
+              { src: '/examples/img/funding-page-3.png', caption: 'This is what a real Section B actually looks like: each CLIN carries its SOW reference, Product Service Code, Pricing Arrangement, ACRN, PR Number, and CIN, not just a price. CLIN 0002 here is funded for 9 of its 12 months, which makes it incrementally funded: the contractor can only perform up to the funds allotted. On a DoD fixed-price line like this one the clause is DFARS 252.232-7007, Limitation of Government\'s Obligation (warn the CO at least 90 days before billings reach about 85% of the funded amount), not FAR 52.232-22, which covers cost-reimbursement work.' },
+              { src: '/examples/img/funding-page-5.png', caption: 'That unfunded quarter of CLIN 0002 is not decorative: the warning letter to the CO is due months before the money runs out. Ceiling tells you what is possible. Funded Amount tells you what is real, and that is the number a PM tracks.' },
             ],
           },
         ],
@@ -6658,8 +6658,8 @@ export const modules: Module[] = [
             url: '/examples/example-contract-funding-page.pdf',
             images: [
               { src: '/examples/img/funding-page-1.png', caption: 'Section B never stands alone. This UCF table shows where the pricing page fits inside the other twelve lettered sections of a negotiated federal contract, Section C is the work, Section F is the schedule, Section B is the price tag.' },
-              { src: '/examples/img/funding-page-3.png', caption: 'This is what a real Section B actually looks like: each CLIN carries its SOW reference, Product Service Code, Pricing Arrangement, ACRN, PR Number, and CIN, not just a price. CLIN 0002 here is funded at 75% of its firm price, which makes it incrementally funded: the contractor can only perform up to the funds allotted. (The 75% notice in FAR 52.232-22, Limitation of Funds, applies to cost-reimbursement work, not fixed-price lines like this one.)' },
-              { src: '/examples/img/funding-page-5.png', caption: 'That 75% gap on CLIN 0002 is not decorative. Ceiling tells you what is possible. Funded Amount tells you what is real, and that is the number a PM tracks.' },
+              { src: '/examples/img/funding-page-3.png', caption: 'This is what a real Section B actually looks like: each CLIN carries its SOW reference, Product Service Code, Pricing Arrangement, ACRN, PR Number, and CIN, not just a price. CLIN 0002 here is funded for 9 of its 12 months, which makes it incrementally funded: the contractor can only perform up to the funds allotted. On a DoD fixed-price line like this one the clause is DFARS 252.232-7007, Limitation of Government\'s Obligation (warn the CO at least 90 days before billings reach about 85% of the funded amount), not FAR 52.232-22, which covers cost-reimbursement work.' },
+              { src: '/examples/img/funding-page-5.png', caption: 'That unfunded quarter of CLIN 0002 is not decorative: the warning letter to the CO is due months before the money runs out. Ceiling tells you what is possible. Funded Amount tells you what is real, and that is the number a PM tracks.' },
             ],
           },
         ],
