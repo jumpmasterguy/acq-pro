@@ -1468,12 +1468,16 @@ export class MemStorage implements IStorage {
     return updated;
   }
 
+  // Kept in memory so local dev shows leads in the admin People list.
+  private leads: Lead[] = [];
+
   async saveLead(email: string, source = 'landing_page'): Promise<Lead> {
     const lead: Lead = { id: randomUUID(), email, source, createdAt: new Date().toISOString() };
+    this.leads.push(lead);
     return lead;
   }
 
-  async getAllLeads(): Promise<Lead[]> { return []; }
+  async getAllLeads(): Promise<Lead[]> { return [...this.leads]; }
 
   async savePurchase(data: any): Promise<Purchase> { throw new Error("Not implemented in MemStorage"); }
   async getPurchaseBySessionId(_: string): Promise<Purchase | undefined> { return undefined; }

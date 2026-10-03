@@ -1,40 +1,14 @@
 import { useState } from "react";
 import AdminToday, { UserSheet } from "@/components/admin/AdminToday";
+import AdminPeople from "@/components/admin/AdminPeople";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  Shield, Users, Crown, UserX, RefreshCw, ChevronDown,
-  BarChart2, Clock, Zap, TrendingUp, Activity, Star,
-  BookOpen, Target, LogIn, Trash2, Share2, Mail, Send, Eye,
-  ShieldCheck, ShieldOff, Unlock, Download,
-} from "lucide-react";
+import { Shield, Users, Crown, RefreshCw, BarChart2, Clock, Zap, Activity, BookOpen, Target, LogIn, Mail, Send, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { displayStatus } from "@shared/access";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
-
-interface AdminUser {
-  id: string;
-  username: string;
-  email: string;
-  subscriptionStatus: string;
-  trialEndsAt?: string | null;
-  completedLessons: number;
-  referralCode: string | null;
-  referredBy: string | null;
-  referralCount: number;
-  referralRewardGranted: number;
-  isAdmin: boolean;
-  moduleSkillLevels: Record<string, string>;
-}
 
 interface AnalyticsUser {
   id: string;
@@ -59,13 +33,6 @@ interface AnalyticsAggregate {
   avgXp: number;
   avgLessons: number;
   avgMinutes: number;
-}
-
-interface AdminLead {
-  id: string;
-  email: string;
-  source: string | null;
-  createdAt: string;
 }
 
 interface AnalyticsData {
@@ -121,13 +88,11 @@ function formatMinutes(mins: number): string {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-type AdminTab = "today" | "users" | "analytics" | "referrals" | "newsletter" | "leads";
+type AdminTab = "today" | "people" | "analytics" | "newsletter";
 
 export default function AdminPage() {
   const { toast } = useToast();
   const qc = useQueryClient();
-  const [pendingId, setPendingId] = useState<string | null>(null);
-  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   // Phone: tapping a person opens the same sheet as the Today tab.
   const [sheetUserId, setSheetUserId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<AdminTab>("today");
@@ -140,17 +105,6 @@ export default function AdminPage() {
 
   // ── Queries ─────────────────────────────────────────────────────────────
 
-  const { data: users = [], isLoading: usersLoading, isError: usersError, refetch: refetchUsers } =
-    useQuery<AdminUser[]>({
-      queryKey: ["/api/admin/users"],
-      queryFn: async () => {
-        const res = await apiRequest("GET", "/api/admin/users");
-        if (!res.ok) throw new Error("Failed to fetch users");
-        return res.json();
-      },
-      enabled: activeTab === "users" || activeTab === "referrals",
-    });
-
   const { data: analytics, isLoading: analyticsLoading, isError: analyticsError, refetch: refetchAnalytics } =
     useQuery<AnalyticsData>({
       queryKey: ["/api/admin/analytics"],
@@ -162,80 +116,7 @@ export default function AdminPage() {
       enabled: activeTab === "analytics",
     });
 
-  const { data: leads = [], isLoading: leadsLoading, isError: leadsError, refetch: refetchLeads } =
-    useQuery<AdminLead[]>({
-      queryKey: ["/api/admin/leads"],
-      queryFn: async () => {
-        const res = await apiRequest("GET", "/api/admin/leads");
-        if (!res.ok) throw new Error("Failed to fetch leads");
-        return res.json();
-      },
-      enabled: activeTab === "leads",
-    });
-
   // ── Mutations ────────────────────────────────────────────────────────────
-
-  const makePro = useMutation({
-    mutationFn: async ({ userId, plan }: { userId: string; plan: string }) => {
-      const res = await apiRequest("POST", "/api/admin/make-pro", { userId, plan });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ message: "Request failed" }));
-        throw new Error(err.message);
-      }
-      return res.json();
-    },
-    onMutate: ({ userId }) => setPendingId(userId),
-    onSettled: () => setPendingId(null),
-    onSuccess: (data) => {
-      toast({ title: "User updated", description: data.message });
-      qc.invalidateQueries({ queryKey: ["/api/admin/users"] });
-      qc.invalidateQueries({ queryKey: ["/api/admin/analytics"] });
-    },
-    onError: (err: Error) => {
-      toast({ title: "Update failed", description: err.message, variant: "destructive" });
-    },
-  });
-
-  const toggleAdmin = useMutation({
-    mutationFn: async ({ userId, makeAdmin }: { userId: string; makeAdmin: boolean }) => {
-      const res = await apiRequest("POST", `/api/admin/users/${userId}/toggle-admin`, { makeAdmin });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ message: "Request failed" }));
-        throw new Error(err.message);
-      }
-      return res.json();
-    },
-    onMutate: ({ userId }) => setPendingId(userId),
-    onSettled: () => setPendingId(null),
-    onSuccess: (data) => {
-      toast({ title: "Admin status updated", description: data.message });
-      qc.invalidateQueries({ queryKey: ["/api/admin/users"] });
-    },
-    onError: (err: Error) => {
-      toast({ title: "Update failed", description: err.message, variant: "destructive" });
-    },
-  });
-
-  const unlockSkillLevel = useMutation({
-    mutationFn: async ({ userId, level }: { userId: string; level: "intermediate" | "advanced" }) => {
-      const res = await apiRequest("POST", `/api/admin/users/${userId}/unlock-skill-level`, { level });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ message: "Request failed" }));
-        throw new Error(err.message);
-      }
-      return res.json();
-    },
-    onMutate: ({ userId }) => setPendingId(userId),
-    onSettled: () => setPendingId(null),
-    onSuccess: (data) => {
-      toast({ title: "Skill level unlocked", description: data.message });
-      qc.invalidateQueries({ queryKey: ["/api/admin/users"] });
-      qc.invalidateQueries({ queryKey: ["/api/admin/analytics"] });
-    },
-    onError: (err: Error) => {
-      toast({ title: "Unlock failed", description: err.message, variant: "destructive" });
-    },
-  });
 
   const backfillLogins = useMutation({
     mutationFn: async () => {
@@ -249,27 +130,6 @@ export default function AdminPage() {
     },
     onError: (err: Error) => {
       toast({ title: "Backfill failed", description: err.message, variant: "destructive" });
-    },
-  });
-
-  const deleteUser = useMutation({
-    mutationFn: async (userId: string) => {
-      const res = await apiRequest("DELETE", `/api/admin/users/${userId}`);
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ message: "Delete failed" }));
-        throw new Error(err.message);
-      }
-      return res.json();
-    },
-    onMutate: (userId) => setPendingId(userId),
-    onSettled: () => { setPendingId(null); setConfirmDeleteId(null); },
-    onSuccess: (data) => {
-      toast({ title: "User deleted", description: data.message });
-      qc.invalidateQueries({ queryKey: ["/api/admin/users"] });
-      qc.invalidateQueries({ queryKey: ["/api/admin/analytics"] });
-    },
-    onError: (err: Error) => {
-      toast({ title: "Delete failed", description: err.message, variant: "destructive" });
     },
   });
 
@@ -304,37 +164,6 @@ export default function AdminPage() {
 
   // ── Computed ─────────────────────────────────────────────────────────────
 
-  const userStats = {
-    total: users.length,
-    pro: users.filter(u => u.subscriptionStatus === "active" || u.subscriptionStatus === "annual" || u.subscriptionStatus === "lifetime").length,
-    trial: users.filter(u => displayStatus(u) === "trialing").length,
-    free: users.filter(u => ["free", "trial_ended"].includes(displayStatus(u))).length,
-  };
-
-  const leadStats = {
-    total: leads.length,
-    heroBar: leads.filter(l => (l.source ?? "").startsWith("hero_bar")).length,
-    exitIntent: leads.filter(l => l.source === "exit_intent").length,
-    last7Days: leads.filter(l => {
-      const created = new Date(l.createdAt).getTime();
-      return !isNaN(created) && created >= Date.now() - 7 * 24 * 60 * 60 * 1000;
-    }).length,
-  };
-
-  const sortedLeads = [...leads].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-  function exportLeadsCsv() {
-    const header = "email,source,created_at\n";
-    const rows = sortedLeads.map(l => `${l.email},${l.source ?? ""},${l.createdAt}`).join("\n");
-    const blob = new Blob([header + rows], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `acqlerate-leads-${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
   const sortedAnalyticsUsers = analytics
     ? [...analytics.users].sort((a, b) => {
         const av = a[sortField] ?? 0;
@@ -362,139 +191,6 @@ export default function AdminPage() {
     return <span className="ml-1">{sortDir === "asc" ? "↑" : "↓"}</span>;
   }
 
-  // ── Row helpers (shared by the desktop table and the phone cards) ────────
-  const manageMenu = (user: AdminUser) => (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          disabled={pendingId === user.id}
-          className="gap-1.5 h-7 text-xs"
-          data-testid={`admin-action-${user.id}`}
-        >
-          {pendingId === user.id ? (
-            <div className="w-3 h-3 border border-primary/30 border-t-primary rounded-full animate-spin" />
-          ) : (
-            <>Manage <ChevronDown className="w-3 h-3" /></>
-          )}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuItem
-          onClick={() => makePro.mutate({ userId: user.id, plan: "lifetime" })}
-          className="gap-2 cursor-pointer"
-          data-testid={`admin-grant-lifetime-${user.id}`}
-        >
-          <Crown className="w-3.5 h-3.5 text-amber-500" />
-          Grant Lifetime Pro
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => makePro.mutate({ userId: user.id, plan: "annual" })}
-          className="gap-2 cursor-pointer"
-          data-testid={`admin-grant-annual-${user.id}`}
-        >
-          <Crown className="w-3.5 h-3.5 text-teal-500" />
-          Make Annual Pro (team seat)
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => makePro.mutate({ userId: user.id, plan: "active" })}
-        >
-          <Crown className="w-3.5 h-3.5" />
-          Make Monthly Pro
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={async () => {
-            await fetch(`/api/admin/users/${user.id}/grant-yearly-pro`, { method: 'POST', credentials: 'include' });
-            qc.invalidateQueries({ queryKey: ["/api/admin/users"] });
-            toast({ title: '1 Year Pro granted', description: `${user.email} has 1 year of Pro access` });
-          }}
-          className="gap-2 cursor-pointer"
-        >
-          <Crown className="w-3.5 h-3.5 text-emerald-500" />
-          Grant 1 Year Pro
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => makePro.mutate({ userId: user.id, plan: "active" })}
-          className="gap-2 cursor-pointer"
-        >
-          <Crown className="w-3.5 h-3.5" />
-          Grant Monthly Pro
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => makePro.mutate({ userId: user.id, plan: "free" })}
-          className="gap-2 cursor-pointer text-destructive focus:text-destructive"
-          data-testid={`admin-revoke-${user.id}`}
-        >
-          <UserX className="w-3.5 h-3.5" />
-          Revoke Pro (→ Free)
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => unlockSkillLevel.mutate({ userId: user.id, level: "intermediate" })}
-          className="gap-2 cursor-pointer"
-          data-testid={`admin-unlock-intermediate-${user.id}`}
-        >
-          <Unlock className="w-3.5 h-3.5 text-blue-500" />
-          Unlock Intermediate (All Modules)
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => unlockSkillLevel.mutate({ userId: user.id, level: "advanced" })}
-          className="gap-2 cursor-pointer"
-          data-testid={`admin-unlock-advanced-${user.id}`}
-        >
-          <Unlock className="w-3.5 h-3.5 text-violet-500" />
-          Unlock Advanced (All Modules)
-        </DropdownMenuItem>
-        {user.isAdmin ? (
-          <DropdownMenuItem
-            onClick={() => toggleAdmin.mutate({ userId: user.id, makeAdmin: false })}
-            className="gap-2 cursor-pointer"
-            data-testid={`admin-remove-admin-${user.id}`}
-          >
-            <ShieldOff className="w-3.5 h-3.5 text-muted-foreground" />
-            Remove Admin
-          </DropdownMenuItem>
-        ) : (
-          <DropdownMenuItem
-            onClick={() => toggleAdmin.mutate({ userId: user.id, makeAdmin: true })}
-            className="gap-2 cursor-pointer"
-            data-testid={`admin-make-admin-${user.id}`}
-          >
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-            Make Admin
-          </DropdownMenuItem>
-        )}
-        <DropdownMenuItem
-          onClick={() => setConfirmDeleteId(user.id)}
-          className="gap-2 cursor-pointer text-destructive focus:text-destructive font-semibold"
-          data-testid={`admin-delete-${user.id}`}
-        >
-          <Trash2 className="w-3.5 h-3.5" />
-          Delete User
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-
-  const deleteConfirm = (user: AdminUser) => (
-    <div className="flex flex-wrap items-center gap-3">
-                              <span className="text-sm text-destructive font-semibold">Delete <strong>{user.username || user.email}</strong>? This cannot be undone.</span>
-                              <button
-                                onClick={() => deleteUser.mutate(user.id)}
-                                disabled={pendingId === user.id}
-                                className="px-3 py-1 bg-destructive text-white text-xs font-bold rounded-lg hover:bg-destructive/80 transition-colors disabled:opacity-50"
-                              >
-                                {pendingId === user.id ? 'Deleting…' : 'Yes, Delete'}
-                              </button>
-                              <button
-                                onClick={() => setConfirmDeleteId(null)}
-                                className="px-3 py-1 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
-                              >
-                                Cancel
-                              </button>
-                            </div>
-  );
-
   // ── Render ───────────────────────────────────────────────────────────────
 
   return (
@@ -508,13 +204,13 @@ export default function AdminPage() {
           </div>
           <div>
             <h1 className="text-xl font-bold text-foreground">Admin Panel</h1>
-            <p className="text-sm text-muted-foreground">Manage users &amp; engagement analytics</p>
+            <p className="text-sm text-muted-foreground">Today, people, numbers and email</p>
           </div>
         </div>
-        {activeTab !== "today" && <Button
+        {activeTab === "analytics" && <Button
           variant="outline"
           size="sm"
-          onClick={() => { refetchUsers(); if (activeTab === "analytics") refetchAnalytics(); if (activeTab === "leads") refetchLeads(); }}
+          onClick={() => refetchAnalytics()}
           className="gap-2"
           data-testid="admin-refresh"
         >
@@ -525,240 +221,30 @@ export default function AdminPage() {
 
       {/* Tab Bar */}
       <div className="flex border-b border-border overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 max-sm:!mt-0 [scrollbar-width:none]">
-        <button
-          onClick={() => setActiveTab("today")}
-          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
-            activeTab === "today"
-              ? "border-primary text-primary"
-              : "border-transparent text-muted-foreground hover:text-foreground"
-          }`}
-          data-testid="admin-tab-today"
-        >
-          <span className="flex items-center gap-1.5">
-            <Zap className="w-4 h-4" />
-            Today
-          </span>
-        </button>
-        <button
-          onClick={() => setActiveTab("users")}
-          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
-            activeTab === "users"
-              ? "border-primary text-primary"
-              : "border-transparent text-muted-foreground hover:text-foreground"
-          }`}
-          data-testid="admin-tab-users"
-        >
-          <span className="flex items-center gap-1.5">
-            <Users className="w-4 h-4" />
-            Users
-          </span>
-        </button>
-        <button
-          onClick={() => setActiveTab("analytics")}
-          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
-            activeTab === "analytics"
-              ? "border-primary text-primary"
-              : "border-transparent text-muted-foreground hover:text-foreground"
-          }`}
-          data-testid="admin-tab-analytics"
-        >
-          <span className="flex items-center gap-1.5">
-            <BarChart2 className="w-4 h-4" />
-            Analytics
-          </span>
-        </button>
-        <button
-          onClick={() => setActiveTab("referrals")}
-          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
-            activeTab === "referrals"
-              ? "border-primary text-primary"
-              : "border-transparent text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <span className="flex items-center gap-1.5">
-            <Share2 className="w-4 h-4" />
-            Referrals
-          </span>
-        </button>
-        <button
-          onClick={() => setActiveTab("newsletter")}
-          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
-            activeTab === "newsletter"
-              ? "border-primary text-primary"
-              : "border-transparent text-muted-foreground hover:text-foreground"
-          }`}
-          data-testid="admin-tab-newsletter"
-        >
-          <span className="flex items-center gap-1.5">
-            <Mail className="w-4 h-4" />
-            Newsletter
-          </span>
-        </button>
-        <button
-          onClick={() => setActiveTab("leads")}
-          className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
-            activeTab === "leads"
-              ? "border-primary text-primary"
-              : "border-transparent text-muted-foreground hover:text-foreground"
-          }`}
-          data-testid="admin-tab-leads"
-        >
-          <span className="flex items-center gap-1.5">
-            <Download className="w-4 h-4" />
-            Leads
-          </span>
-        </button>
+        {([
+          { key: "today", label: "Today", icon: Zap },
+          { key: "people", label: "People", icon: Users },
+          { key: "analytics", label: "Analytics", icon: BarChart2 },
+          { key: "newsletter", label: "Newsletter", icon: Mail },
+        ] as const).map(({ key, label, icon: Icon }) => (
+          <button
+            key={key}
+            onClick={() => setActiveTab(key)}
+            className={`px-3.5 sm:px-5 py-2.5 text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors border-b-2 -mb-px ${
+              activeTab === key ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+            data-testid={`admin-tab-${key}`}
+          >
+            <span className="flex items-center gap-1.5"><Icon className="w-4 h-4" />{label}</span>
+          </button>
+        ))}
       </div>
 
       {/* ── TODAY TAB (phone-first) ──────────────────────────────────────────── */}
       {activeTab === "today" && <AdminToday />}
 
-      {/* ── USERS TAB ────────────────────────────────────────────────────────── */}
-      {activeTab === "users" && (
-        <>
-          {/* Stats */}
-          <div className="grid grid-cols-4 gap-2 sm:gap-3">
-            {[
-              { label: "Total",    value: userStats.total, icon: Users,  color: "text-blue-500" },
-              { label: "Paying",   value: userStats.pro,   icon: Crown,  color: "text-amber-500" },
-              { label: "On trial", value: userStats.trial, icon: Clock,  color: "text-sky-500" },
-              { label: "Free",     value: userStats.free,  icon: UserX,  color: "text-slate-400" },
-            ].map(({ label, value, icon: Icon, color }) => (
-              <div key={label} className="bg-card border border-border rounded-xl p-2.5 sm:p-4 space-y-1 min-w-0">
-                <div className={`flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-xs font-medium truncate ${color}`}>
-                  <Icon className="w-3.5 h-3.5 flex-shrink-0" />
-                  {label}
-                </div>
-                <div className="text-xl sm:text-2xl font-bold text-foreground">{value}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Grant lifetime tip */}
-          <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
-            <div className="flex items-start gap-3">
-              <Crown className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-              <div className="text-sm">
-                <span className="font-semibold text-foreground">Quick fixes live on Today:</span>
-                <span className="text-muted-foreground ml-1">
-                  Pro days, streaks and reset links are on the Today tab. Use Manage here for plan changes, admin rights and deleting an account.
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Users Table */}
-          <div className="bg-card border border-border rounded-xl overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-border flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-foreground">All Users</h2>
-              <span className="text-xs text-muted-foreground">{users.length} total</span>
-            </div>
-
-            {usersLoading && (
-              <div className="flex items-center justify-center py-16 text-muted-foreground text-sm gap-2">
-                <div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-                Loading users…
-              </div>
-            )}
-            {usersError && (
-              <div className="flex items-center justify-center py-16 text-destructive text-sm">
-                Failed to load users. Make sure ADMIN_EMAILS is set in Railway.
-              </div>
-            )}
-            {!usersLoading && !usersError && users.length === 0 && (
-              <div className="flex items-center justify-center py-16 text-muted-foreground text-sm">
-                No users yet.
-              </div>
-            )}
-            {!usersLoading && !usersError && users.length > 0 && (
-              <div className="sm:hidden divide-y divide-border" data-testid="admin-users-cards">
-                {users.map(user => (
-                  <div key={user.id} className="px-4 py-3">
-                    <div className="flex items-start gap-3">
-                      <button className="flex-1 min-w-0 text-left" onClick={() => setSheetUserId(user.id)}>
-                        <div className="font-semibold text-sm text-foreground truncate">{user.username || user.email}</div>
-                        <div className="text-xs text-muted-foreground truncate">{user.email}</div>
-                        <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-                          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${statusColors[displayStatus(user)] ?? statusColors.free}`}>
-                            {statusLabel[displayStatus(user)] ?? displayStatus(user)}
-                          </span>
-                          {user.isAdmin && <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium bg-emerald-500/10 text-emerald-600"><ShieldCheck className="w-3 h-3" /> Admin</span>}
-                          <span className="text-[11px] text-muted-foreground">{user.completedLessons} lessons</span>
-                        </div>
-                      </button>
-                      <div className="flex-shrink-0">{manageMenu(user)}</div>
-                    </div>
-                    {confirmDeleteId === user.id && <div className="mt-2.5 rounded-lg bg-destructive/5 border border-destructive/30 p-2.5">{deleteConfirm(user)}</div>}
-                  </div>
-                ))}
-              </div>
-            )}
-            {!usersLoading && !usersError && users.length > 0 && (
-              <div className="hidden sm:block overflow-x-auto">
-                <table className="w-full text-sm" data-testid="admin-users-table">
-                  <thead>
-                    <tr className="border-b border-border bg-muted/30">
-                      <th className="text-left px-5 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">User</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide hidden sm:table-cell">Email</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide hidden md:table-cell">Lessons</th>
-                      <th className="text-right px-5 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map((user, i) => (
-                      <>
-                      <tr
-                        key={user.id}
-                        className={`border-b border-border last:border-0 hover:bg-muted/20 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}
-                        data-testid={`admin-user-row-${user.id}`}
-                      >
-                        <td className="px-5 py-3.5">
-                          <div className="font-medium text-foreground">{user.username}</div>
-                          <div className="text-xs text-muted-foreground sm:hidden truncate max-w-[140px]">{user.email}</div>
-                        </td>
-                        <td className="px-4 py-3.5 hidden sm:table-cell text-muted-foreground truncate max-w-[180px]">
-                          {user.email}
-                        </td>
-                        <td className="px-4 py-3.5">
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[displayStatus(user)] ?? statusColors.free}`}>
-                              {statusLabel[displayStatus(user)] ?? displayStatus(user)}
-                            </span>
-                            {user.isAdmin && (
-                              <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-500/10 text-emerald-600">
-                                <ShieldCheck className="w-3 h-3" /> Admin
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-4 py-3.5 text-right text-muted-foreground hidden md:table-cell">
-                          {user.completedLessons}
-                        </td>
-                        <td className="px-5 py-3.5 text-right">
-                          {manageMenu(user)}
-                        </td>
-                      </tr>
-                      {confirmDeleteId === user.id && (
-                        <tr className="border-b border-destructive/30 bg-destructive/5">
-                          <td colSpan={5} className="px-5 py-3">
-                            {deleteConfirm(user)}
-                          </td>
-                        </tr>
-                      )}
-                      </>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-
-          <p className="text-xs text-muted-foreground text-center pb-2">
-            Admin access is gated to emails listed in the <code className="bg-muted px-1 rounded">ADMIN_EMAILS</code> Railway variable.
-          </p>
-        </>
-      )}
+      {/* ── PEOPLE: users, trials, leads and referrals in one list ───────────── */}
+      {activeTab === "people" && <AdminPeople />}
 
       {/* ── ANALYTICS TAB ────────────────────────────────────────────────────── */}
       {activeTab === "analytics" && (
@@ -1032,213 +518,6 @@ export default function AdminPage() {
         </>
       )}
 
-      {/* ── REFERRALS TAB ─────────────────────────────────────────────────────── */}
-      {activeTab === "referrals" && (
-        <div className="space-y-6 pt-2">
-
-          {/* Referrers — who has sent people */}
-          <div className="bg-card border border-border rounded-xl overflow-hidden">
-            <div className="px-5 py-4 border-b border-border">
-              <h3 className="font-semibold text-sm">Who Has Referred People</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">Users who have at least 1 signup from their referral link. Every 2 signups = 1 year Pro.</p>
-            </div>
-            {usersLoading ? (
-              <p className="text-sm text-muted-foreground p-5">Loading...</p>
-            ) : (
-              <>
-              <div className="sm:hidden divide-y divide-border">
-                {users.filter(u => (u.referralCount ?? 0) > 0).sort((a, b) => (b.referralCount ?? 0) - (a.referralCount ?? 0)).map(u => {
-                  const earned = Math.floor((u.referralCount ?? 0) / 2);
-                  const owes = earned - (u.referralRewardGranted ?? 0);
-                  return (
-                    <div key={u.id} className={`px-4 py-3 ${owes > 0 ? 'bg-amber-50/40 dark:bg-amber-900/10' : ''}`}>
-                      <div className="font-semibold text-sm truncate">{u.username}</div>
-                      <div className="text-xs text-muted-foreground truncate">{u.email}</div>
-                      <div className="flex items-center justify-between gap-2 mt-2">
-                        <div className="text-xs">
-                          <span className="font-bold text-primary">{u.referralCount}</span> referred · {earned} yr{earned !== 1 ? 's' : ''} earned ·{' '}
-                          {owes > 0 ? <span className="font-semibold text-amber-700 dark:text-amber-400">{owes} owed</span> : <span className="text-emerald-600 dark:text-emerald-400">up to date</span>}
-                        </div>
-                        {owes > 0 && (
-                          <button
-                            className="text-xs bg-primary text-primary-foreground px-3 py-1.5 rounded-lg font-semibold disabled:opacity-50 flex-shrink-0"
-                            disabled={pendingId === u.id}
-                            onClick={async () => {
-                              setPendingId(u.id);
-                              try {
-                                await fetch(`/api/admin/users/${u.id}/grant-yearly-pro`, { method: 'POST', credentials: 'include' });
-                                await refetchUsers();
-                                toast({ title: '1 Year Pro granted', description: `${u.email} now has 1 year of Pro access` });
-                              } catch { toast({ title: 'Error', description: 'Failed to grant Pro', variant: 'destructive' }); }
-                              finally { setPendingId(null); }
-                            }}
-                          >
-                            {pendingId === u.id ? 'Granting…' : 'Grant 1 yr'}
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-                {users.filter(u => (u.referralCount ?? 0) > 0).length === 0 && <p className="px-4 py-8 text-center text-sm text-muted-foreground">No referrals yet.</p>}
-              </div>
-              <table className="hidden sm:table w-full text-sm">
-                <thead className="bg-muted/40">
-                  <tr>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">User</th>
-                    <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Referrals</th>
-                    <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Rewards Earned</th>
-                    <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Rewards Granted</th>
-                    <th className="text-right px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {users
-                    .filter(u => (u.referralCount ?? 0) > 0)
-                    .sort((a, b) => (b.referralCount ?? 0) - (a.referralCount ?? 0))
-                    .map(u => {
-                      const earned = Math.floor((u.referralCount ?? 0) / 2);
-                      const granted = u.referralRewardGranted ?? 0;
-                      const owes = earned - granted;
-                      return (
-                        <tr key={u.id} className={`hover:bg-muted/20 transition-colors ${owes > 0 ? 'bg-amber-50/40 dark:bg-amber-900/10' : ''}`}>
-                          <td className="px-4 py-3.5">
-                            <div className="font-medium">{u.username}</div>
-                            <div className="text-xs text-muted-foreground">{u.email}</div>
-                          </td>
-                          <td className="px-4 py-3.5 text-center">
-                            <span className="font-bold text-primary">{u.referralCount}</span>
-                          </td>
-                          <td className="px-4 py-3.5 text-center">
-                            <span className={`font-semibold ${earned > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-muted-foreground'}`}>
-                              {earned} yr{earned !== 1 ? 's' : ''}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3.5 text-center">
-                            {owes > 0 ? (
-                              <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 rounded-full">
-                                ⚠ {owes} owed
-                              </span>
-                            ) : (
-                              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">✓ Up to date</span>
-                            )}
-                          </td>
-                          <td className="px-4 py-3.5 text-right">
-                            <button
-                              className="text-xs bg-primary text-primary-foreground px-3 py-1.5 rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50"
-                              disabled={pendingId === u.id}
-                              onClick={async () => {
-                                setPendingId(u.id);
-                                try {
-                                  await fetch(`/api/admin/users/${u.id}/grant-yearly-pro`, { method: 'POST', credentials: 'include' });
-                                  await refetchUsers();
-                                  toast({ title: '1 Year Pro granted', description: `${u.email} now has 1 year of Pro access` });
-                                } catch { toast({ title: 'Error', description: 'Failed to grant Pro', variant: 'destructive' }); }
-                                finally { setPendingId(null); }
-                              }}
-                            >
-                              {pendingId === u.id ? 'Granting…' : 'Grant 1 Yr Pro'}
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  }
-                  {users.filter(u => (u.referralCount ?? 0) > 0).length === 0 && (
-                    <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-muted-foreground">No referrals yet.</td></tr>
-                  )}
-                </tbody>
-              </table>
-              </>
-            )}
-          </div>
-
-          {/* Referred users — who signed up via a code */}
-          <div className="bg-card border border-border rounded-xl overflow-hidden">
-            <div className="px-5 py-4 border-b border-border">
-              <h3 className="font-semibold text-sm">Who Signed Up Via Referral</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">Users who joined using someone else's referral code.</p>
-            </div>
-            {usersLoading ? (
-              <p className="text-sm text-muted-foreground p-5">Loading...</p>
-            ) : (
-              <>
-              <div className="sm:hidden divide-y divide-border">
-                {users.filter(u => u.referredBy).map(u => {
-                  const referrer = users.find(r => r.referralCode === u.referredBy);
-                  return (
-                    <div key={u.id} className="px-4 py-3">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="min-w-0">
-                          <div className="font-semibold text-sm truncate">{u.username}</div>
-                          <div className="text-xs text-muted-foreground truncate">{u.email}</div>
-                        </div>
-                        <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium flex-shrink-0 ${statusColors[displayStatus(u)] ?? statusColors.free}`}>
-                          {statusLabel[displayStatus(u)] ?? 'Free'}
-                        </span>
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1.5">
-                        Via <code className="bg-muted px-1 rounded">{u.referredBy}</code>{referrer ? ` from ${referrer.username}` : ''}
-                      </div>
-                    </div>
-                  );
-                })}
-                {users.filter(u => u.referredBy).length === 0 && <p className="px-4 py-8 text-center text-sm text-muted-foreground">No referred signups yet.</p>}
-              </div>
-              <table className="hidden sm:table w-full text-sm">
-                <thead className="bg-muted/40">
-                  <tr>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">User</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Plan</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Referred By Code</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Referrer</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {users
-                    .filter(u => u.referredBy)
-                    .map(u => {
-                      const referrer = users.find(r => r.referralCode === u.referredBy);
-                      return (
-                        <tr key={u.id} className="hover:bg-muted/20 transition-colors">
-                          <td className="px-4 py-3.5">
-                            <div className="font-medium">{u.username}</div>
-                            <div className="text-xs text-muted-foreground">{u.email}</div>
-                          </td>
-                          <td className="px-4 py-3.5">
-                            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[displayStatus(u)] ?? statusColors.free}`}>
-                              {statusLabel[displayStatus(u)] ?? 'Free'}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3.5">
-                            <code className="text-xs bg-muted px-1.5 py-0.5 rounded">{u.referredBy}</code>
-                          </td>
-                          <td className="px-4 py-3.5">
-                            {referrer ? (
-                              <div>
-                                <div className="text-sm font-medium">{referrer.username}</div>
-                                <div className="text-xs text-muted-foreground">{referrer.email}</div>
-                              </div>
-                            ) : (
-                              <span className="text-xs text-muted-foreground">Unknown</span>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })
-                  }
-                  {users.filter(u => u.referredBy).length === 0 && (
-                    <tr><td colSpan={4} className="px-4 py-8 text-center text-sm text-muted-foreground">No referred signups yet.</td></tr>
-                  )}
-                </tbody>
-              </table>
-              </>
-            )}
-          </div>
-
-        </div>
-      )}
-
       {/* ── NEWSLETTER TAB ───────────────────────────────────────────────────── */}
       {activeTab === "newsletter" && (
         <div className="space-y-5">
@@ -1300,116 +579,6 @@ export default function AdminPage() {
             )}
           </div>
         </div>
-      )}
-
-      {/* ── LEADS TAB ─────────────────────────────────────────────────────────── */}
-      {activeTab === "leads" && (
-        <>
-          {/* Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {[
-              { label: "Total Leads",  value: leadStats.total,      icon: Download, color: "text-blue-500" },
-              { label: "Last 7 Days",   value: leadStats.last7Days,  icon: TrendingUp, color: "text-emerald-500" },
-              { label: "Hero Bar",      value: leadStats.heroBar,    icon: Target, color: "text-amber-500" },
-              { label: "Exit Intent",   value: leadStats.exitIntent, icon: Zap, color: "text-slate-400" },
-            ].map(({ label, value, icon: Icon, color }) => (
-              <div key={label} className="bg-card border border-border rounded-xl p-4 space-y-1">
-                <div className={`flex items-center gap-1.5 text-xs font-medium ${color}`}>
-                  <Icon className="w-3.5 h-3.5" />
-                  {label}
-                </div>
-                <div className="text-2xl font-bold text-foreground">{value}</div>
-              </div>
-            ))}
-          </div>
-
-          <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
-            <div className="flex items-start gap-3">
-              <Mail className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-              <div className="text-sm">
-                <span className="font-semibold text-foreground">Starter Kit opt-ins:</span>
-                <span className="text-muted-foreground ml-1">
-                  These are homepage email captures for the Acquisition Starter Kit. Both PDF editions are sent
-                  automatically and delivered instantly on the page — no account signup required. Use this list to follow up
-                  directly or export for outreach.
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Leads Table */}
-          <div className="bg-card border border-border rounded-xl overflow-hidden">
-            <div className="px-4 sm:px-5 py-3.5 border-b border-border flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-foreground">All Leads</h2>
-              <div className="flex items-center gap-3">
-                <span className="text-xs text-muted-foreground">{leads.length} total</span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={leads.length === 0}
-                  onClick={exportLeadsCsv}
-                  className="gap-1.5 h-7 px-2.5 text-xs"
-                  data-testid="admin-leads-export"
-                >
-                  <Download className="w-3 h-3" />
-                  Export CSV
-                </Button>
-              </div>
-            </div>
-
-            {leadsLoading && (
-              <div className="flex items-center justify-center py-16 text-muted-foreground text-sm gap-2">
-                <div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-                Loading leads…
-              </div>
-            )}
-            {leadsError && (
-              <div className="flex items-center justify-center py-16 text-destructive text-sm">
-                Failed to load leads. Make sure ADMIN_EMAILS is set in Railway.
-              </div>
-            )}
-            {!leadsLoading && !leadsError && leads.length === 0 && (
-              <div className="flex items-center justify-center py-16 text-muted-foreground text-sm">
-                No leads yet.
-              </div>
-            )}
-            {!leadsLoading && !leadsError && leads.length > 0 && (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm" data-testid="admin-leads-table">
-                  <thead>
-                    <tr className="border-b border-border bg-muted/30">
-                      <th className="text-left px-5 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Email</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide hidden sm:table-cell">Source</th>
-                      <th className="text-right px-5 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Captured</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {sortedLeads.map((lead, i) => (
-                      <tr
-                        key={lead.id}
-                        className={`border-b border-border last:border-0 hover:bg-muted/20 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}
-                        data-testid={`admin-lead-row-${lead.id}`}
-                      >
-                        <td className="px-4 sm:px-5 py-3.5 font-medium text-foreground break-all">
-                          {lead.email}
-                          <div className="sm:hidden text-[11px] font-normal text-muted-foreground mt-0.5">{lead.source ?? "unknown"}</div>
-                        </td>
-                        <td className="px-4 py-3.5 hidden sm:table-cell">
-                          <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-muted text-muted-foreground">
-                            {lead.source ?? "unknown"}
-                          </span>
-                        </td>
-                        <td className="px-4 sm:px-5 py-3.5 text-right text-muted-foreground whitespace-nowrap text-xs sm:text-sm">
-                          {new Date(lead.createdAt).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        </>
       )}
 
       {sheetUserId && <UserSheet id={sheetUserId} onClose={() => setSheetUserId(null)} />}

@@ -7,7 +7,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   UserPlus, Activity, DollarSign, Crown, AlertTriangle, CreditCard, Hourglass,
   Mail, Search, RefreshCw, ChevronRight, Flame, KeyRound, ExternalLink, Gift,
-  BookOpen, Zap, Clock, Inbox,
+  BookOpen, Zap, Clock, Inbox, Unlock, LifeBuoy, ChevronDown,
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -35,6 +35,7 @@ interface UserSummary {
   lastActiveAt: string | null; loginCount: number; minutesActive: number; lessonsDone: number;
   modulesDone: number; xp: number; streak: number; longestStreak: number; lastStreakDate: string | null;
   referralCount: number; referredBy: string | null; isAdmin: boolean; isInternal: boolean;
+  unlockedLevel: "novice" | "intermediate" | "advanced";
   stripeUrl: string | null; subscriptionIsStripe: boolean;
 }
 
@@ -48,7 +49,7 @@ function toMs(v: string | null | undefined): number {
   return new Date(s).getTime();
 }
 
-function ago(v: string | null | undefined): string {
+export function ago(v: string | null | undefined): string {
   const t = toMs(v);
   if (!Number.isFinite(t)) return "never";
   const m = Math.round((Date.now() - t) / 60000);
@@ -61,7 +62,7 @@ function ago(v: string | null | undefined): string {
   return new Date(t).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }
 
-function shortDate(v: string | null | undefined): string {
+export function shortDate(v: string | null | undefined): string {
   const t = toMs(v);
   return Number.isFinite(t) ? new Date(t).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "n/a";
 }
@@ -83,7 +84,7 @@ function openExternal(url: string) {
 }
 
 /** A ready-to-send email in Lucas's voice. He can edit before sending. */
-function mailto(email: string, kind: AttentionKind | "hello", firstName?: string | null) {
+export function mailto(email: string, kind: AttentionKind | "hello", firstName?: string | null) {
   const hi = firstName ? `Hi ${firstName},` : "Hi there,";
   const sign = "\n\nLucas\nAcqlerate";
   const t: Record<string, [string, string]> = {
@@ -125,7 +126,7 @@ const KIND_STYLE: Record<AttentionKind, { icon: ReactNode; ring: string }> = {
   lead: { icon: <Inbox className="w-4 h-4 text-emerald-500" />, ring: "bg-emerald-500/10" },
 };
 
-function UserRow({ name, email, right, onClick, testId }: { name: string; email: string; right: ReactNode; onClick: () => void; testId?: string }) {
+export function UserRow({ name, email, right, onClick, testId }: { name: string; email: string; right: ReactNode; onClick: () => void; testId?: string }) {
   return (
     <button onClick={onClick} data-testid={testId} className="w-full flex items-center gap-3 px-3.5 py-3 text-left hover:bg-muted/50 active:bg-muted transition-colors">
       <div className="w-9 h-9 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold flex-shrink-0">
@@ -321,7 +322,9 @@ export function UserSheet({ id, onClose }: { id: string; onClose: () => void }) 
   const { toast } = useToast();
   const qc = useQueryClient();
   const key = ["/api/admin/users", id, "summary"];
-  const [confirmDays, setConfirmDays] = useState<number | null>(null);
+  // Anything that changes an account takes two taps: the first arms it.
+  const [armed, setArmed] = useState<string | null>(null);
+  const [showMore, setShowMore] = useState(false);
   const [streakInput, setStreakInput] = useState<string>("");
 
   const { data: u, isLoading, isError } = useQuery<UserSummary>({
@@ -340,18 +343,53 @@ export function UserSheet({ id, onClose }: { id: string; onClose: () => void }) 
       if (data.user) qc.setQueryData(key, data.user);
       qc.invalidateQueries({ queryKey: ["/api/admin/today"] });
       qc.invalidateQueries({ queryKey: ["/api/admin/users"] });
+      qc.invalidateQueries({ queryKey: ["/api/admin/people"] });
       toast({ title: "Done", description: data.message });
-      setConfirmDays(null);
+      setArmed(null);
     },
     onError: (err: any) => {
       if (err?.body?.user) qc.setQueryData(key, err.body.user);
       toast({ title: "Not changed", description: err.message, variant: "destructive" });
-      setConfirmDays(null);
+      setArmed(null);
     },
   });
 
-  const busy = act.isPending;
+  const remove = useMutation({
+    mutationFn: async () => jsonOrThrow(await apiRequest("DELETE", `/api/admin/users/${id}`)),
+    onSuccess: (data: { message?: string }) => {
+      qc.invalidateQueries({ queryKey: ["/api/admin/people"] });
+      qc.invalidateQueries({ queryKey: ["/api/admin/today"] });
+      qc.invalidateQueries({ queryKey: ["/api/admin/users"] });
+      toast({ title: "Deleted", description: data?.message ?? "User deleted." });
+      onClose();
+    },
+    onError: (err: any) => {
+      toast({ title: "Not deleted", description: err.message, variant: "destructive" });
+      setArmed(null);
+    },
+  });
+
+  const busy = act.isPending || remove.isPending;
+  /** Two-tap button: first tap arms, second runs. */
+  const twoTap = (key: string, label: string, run: () => void, opts: { disabled?: boolean; danger?: boolean; testId?: string } = {}) => {
+    const on = armed === key;
+    return (
+      <button
+        key={key}
+        disabled={busy || opts.disabled}
+        onClick={() => (on ? run() : setArmed(key))}
+        className={`min-h-10 px-2 py-2 rounded-xl text-xs font-bold leading-tight transition-colors disabled:opacity-40 ${
+          on ? (opts.danger ? "bg-red-600 text-white" : "bg-amber-500 text-white")
+             : opts.danger ? "border border-red-500/40 text-red-600 hover:bg-red-500/10" : "border border-border text-foreground hover:bg-muted"}`}
+        data-testid={opts.testId ?? key}
+      >
+        {on ? "Tap to confirm" : label}
+      </button>
+    );
+  };
   const paying = u ? ["active", "annual", "lifetime"].includes(u.status) : false;
+  const billedByStripe = !!u && u.subscriptionIsStripe && ["active", "annual"].includes(u.status);
+  const levelRank = { novice: 0, intermediate: 1, advanced: 2 } as const;
 
   return (
     <Sheet
@@ -392,7 +430,7 @@ export function UserSheet({ id, onClose }: { id: string; onClose: () => void }) 
 
             {/* Give Pro */}
             <div className="rounded-2xl border border-border p-3.5">
-              <div className="flex items-center gap-1.5 text-sm font-bold text-foreground"><Gift className="w-4 h-4 text-amber-500" /> Give Pro</div>
+              <div className="flex items-center gap-1.5 text-sm font-bold text-foreground"><Gift className="w-4 h-4 text-amber-500" /> Access: give time</div>
               <p className="text-xs text-muted-foreground mt-0.5">
                 {u.status === "lifetime" ? "Lifetime already. They're set for life (literally)."
                   : paying ? `Paying ${u.plan}. "1 year" adds a year of credit to their Stripe billing.`
@@ -400,23 +438,47 @@ export function UserSheet({ id, onClose }: { id: string; onClose: () => void }) 
               </p>
               {u.status !== "lifetime" && (
                 <div className="grid grid-cols-3 gap-2 mt-2.5">
-                  {[7, 30, 365].map(days => {
-                    const disabled = busy || (paying && days !== 365);
-                    const confirming = confirmDays === days;
-                    return (
-                      <button
-                        key={days}
-                        disabled={disabled}
-                        onClick={() => confirming ? act.mutate({ path: "give-access", body: { days } }) : setConfirmDays(days)}
-                        className={`h-10 rounded-xl text-xs font-bold transition-colors disabled:opacity-40 ${confirming ? "bg-amber-500 text-white" : "border border-border text-foreground hover:bg-muted"}`}
-                        data-testid={`give-${days}`}
-                      >
-                        {confirming ? "Tap to confirm" : days === 365 ? "+1 year" : `+${days} days`}
-                      </button>
-                    );
-                  })}
+                  {[7, 30, 365].map(days =>
+                    twoTap(`give-${days}`, days === 365 ? "+1 year" : `+${days} days`,
+                      () => act.mutate({ path: "give-access", body: { days } }),
+                      { disabled: paying && days !== 365 }))}
                 </div>
               )}
+            </div>
+
+            {/* Set plan */}
+            <div className="rounded-2xl border border-border p-3.5">
+              <div className="flex items-center gap-1.5 text-sm font-bold text-foreground"><Crown className="w-4 h-4 text-teal-500" /> Access: set plan</div>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {billedByStripe
+                  ? `Pays through Stripe (${u.plan}). Change or cancel it in Stripe so billing matches.`
+                  : "Free of charge, no end date. Annual is how team seats are set up."}
+              </p>
+              {!billedByStripe && (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2.5">
+                  {twoTap("plan-monthly", "Monthly", () => act.mutate({ path: "set-plan", body: { plan: "monthly" } }), { disabled: u.status === "active" })}
+                  {twoTap("plan-annual", "Annual (team seat)", () => act.mutate({ path: "set-plan", body: { plan: "annual" } }), { disabled: u.status === "annual" })}
+                  {twoTap("plan-lifetime", "Lifetime", () => act.mutate({ path: "set-plan", body: { plan: "lifetime" } }), { disabled: u.status === "lifetime" })}
+                  {twoTap("plan-free", "Remove Pro", () => act.mutate({ path: "set-plan", body: { plan: "free" } }), { disabled: !u.hasAccess, danger: true })}
+                </div>
+              )}
+            </div>
+
+            {/* Help */}
+            <div className="flex items-center gap-1.5 pt-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+              <LifeBuoy className="w-3.5 h-3.5" /> Help
+            </div>
+
+            {/* Unlock levels */}
+            <div className="rounded-2xl border border-border p-3.5">
+              <div className="flex items-center gap-1.5 text-sm font-bold text-foreground"><Unlock className="w-4 h-4 text-blue-500" /> Unlock levels</div>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Skips the gate check in every module. Highest open now: <span className="font-semibold capitalize">{u.unlockedLevel}</span>.
+              </p>
+              <div className="grid grid-cols-2 gap-2 mt-2.5">
+                {twoTap("unlock-intermediate", "Intermediate", () => act.mutate({ path: "unlock-level", body: { level: "intermediate" } }), { disabled: levelRank[u.unlockedLevel] >= 1 })}
+                {twoTap("unlock-advanced", "Advanced", () => act.mutate({ path: "unlock-level", body: { level: "advanced" } }), { disabled: levelRank[u.unlockedLevel] >= 2 })}
+              </div>
             </div>
 
             {/* Streak */}
@@ -465,6 +527,26 @@ export function UserSheet({ id, onClose }: { id: string; onClose: () => void }) 
                 <ExternalLink className="w-3.5 h-3.5" /> Open in Stripe (refunds, receipts, billing)
               </button>
             )}
+
+            {/* Rare */}
+            <div className="border-t border-border pt-3">
+              <button onClick={() => { setShowMore(v => !v); setArmed(null); }}
+                className="w-full flex items-center justify-between text-xs font-semibold text-muted-foreground" data-testid="user-more">
+                More (admin access, delete)
+                <ChevronDown className={`w-4 h-4 transition-transform ${showMore ? "rotate-180" : ""}`} />
+              </button>
+              {showMore && (
+                <div className="grid grid-cols-2 gap-2 mt-2.5">
+                  {u.isAdmin
+                    ? twoTap("admin-off", "Remove admin", () => act.mutate({ path: "set-admin", body: { admin: false } }))
+                    : twoTap("admin-on", "Make admin", () => act.mutate({ path: "set-admin", body: { admin: true } }))}
+                  {twoTap("delete", "Delete user", () => remove.mutate(), { danger: true })}
+                  <p className="col-span-2 text-[11px] text-muted-foreground leading-snug">
+                    Delete removes their account and progress for good, and cancels any Stripe subscription first.
+                  </p>
+                </div>
+              )}
+            </div>
           </>
         )}
       </div>
