@@ -181,7 +181,7 @@ export function serveStatic(app: Express) {
   app.get(["/team", "/team/"], (_req: Request, res: Response) => res.redirect(301, "/teams"));
 
   // Static informational pages
-  const staticPages = ['terms', 'privacy', 'teams', 'sitemap', 'pay-guide', 'tools', 'why'];
+  const staticPages = ['terms', 'privacy', 'teams', 'sitemap', 'pay-guide', 'tools', 'why', 'support'];
   staticPages.forEach(page => {
     app.get([`/${page}`, `/${page}/`], (_req: Request, res: Response) => {
       const filePath = path.resolve(distPath, `${page}.html`);
