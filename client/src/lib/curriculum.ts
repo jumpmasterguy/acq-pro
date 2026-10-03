@@ -3872,9 +3872,9 @@ export const modules: Module[] = [
           {
             type: 'table_visual' as any,
             heading: "LCAT Structure: How a Contractor Builds a Labor Proposal",
-            headers: ['LCAT Title', 'Skill Level Indicators', 'Typical Direct Labor Rate ($/hr)', 'Fully Burdened Rate Example'],
+            headers: ['LCAT Title', 'Skill Level Indicators', 'Example Direct Labor Rate ($/hr)', 'Fully Burdened Rate (example, 2.5× wrap)'],
             rows: [
-              ['Program Manager I', 'BS + 5 yrs; manages subteams; no independent authority', '$65-85/hr', '$165-215/hr (1.5-2.5x wrap)'],
+              ['Program Manager I', 'BS + 5 yrs; manages subteams; no independent authority', '$65-85/hr', '$165-215/hr'],
               ['Program Manager II', 'BS + 10 yrs or MS + 8 yrs; manages programs <$50M', '$90-120/hr', '$225-300/hr'],
               ['Program Manager III', 'BS + 15 yrs or MS + 12 yrs; manages programs >$50M; strategic decisions', '$130-175/hr', '$325-440/hr'],
               ['Systems Engineer II', 'BS + 4-7 yrs; requirements analysis, design trade studies', '$70-90/hr', '$175-225/hr'],
@@ -4641,10 +4641,10 @@ export const modules: Module[] = [
         keyTerms: [
           { term: 'Direct Cost', definition: 'A cost that can be specifically identified with a single final cost objective (a contract). Examples: direct labor hours, direct materials, travel directly supporting a contract.' },
           { term: 'Indirect Cost', definition: 'A cost that cannot be directly attributed to a single contract and must be allocated across multiple cost objectives. Examples: facility rent, HR, finance, IT infrastructure.' },
-          { term: 'Fringe Benefits Rate', definition: 'The rate applied to direct labor to cover employee benefits. Health insurance, retirement, FICA, paid leave. Typically 25-35% of direct labor.' },
+          { term: 'Fringe Benefits Rate', definition: 'The rate applied to direct labor to cover employee benefits. Health insurance, retirement, FICA, paid leave. Rates vary by company and by what each one puts in the pool. For scale, US private employers spend about 43 cents on benefits for every $1 of wages (BLS, June 2026).' },
           { term: 'Overhead Rate', definition: 'Indirect costs allocated to direct labor or direct costs within a specific organizational unit (division, department). Covers facilities, supervision, equipment, and indirect labor.' },
           { term: 'G&A Rate', definition: 'General and Administrative rate. Company-wide indirect costs covering executive management, corporate HR, legal, finance, and business development. Applied to total cost input.' },
-          { term: 'Wrap Rate', definition: 'The total billing rate for one hour of labor, combining direct labor + fringe + overhead + G&A + fee. The all-in cost of one hour of contractor work.' },
+          { term: 'Wrap Rate', definition: 'The multiplier from an hour of direct labor (the salary rate) to the fully loaded rate: fringe, overhead and G&A, and often fee. A $50 salary rate with a 2.0 wrap bills at $100. Companies differ on whether fee is included, so always ask which. There is no official typical wrap rate.' },
           { term: 'Fee / Profit', definition: 'The contractor\'s profit on a contract. On cost-type contracts, fee is negotiated separately; on fixed-price contracts, profit is embedded in the price. DFARS limits fee rates by contract type.' },
           { term: 'Cost Pool', definition: 'A grouping of indirect costs that are accumulated and then allocated using a common allocation base (e.g., a facilities cost pool allocated based on square footage).' },
           { term: 'Allocation Base', definition: 'The measure used to distribute indirect costs to contracts (e.g., direct labor hours, direct labor dollars, total cost input).' },
@@ -4679,7 +4679,7 @@ export const modules: Module[] = [
           {
             type: 'wrap_rate_visual' as any,
             heading: 'Building a Wrap Rate from the Ground Up',
-            explanation: 'This is why government contracts cost what they do. Sarah\'s $65/hr paycheck actually bills to the government at $139/hr by the time fringe, overhead, G&A, and fee are all stacked on top. Understanding each layer allows PMs to challenge unreasonable rates. A G&A of 25% when industry average is 12-15% is a red flag worth questioning.',
+            explanation: 'This is why government contracts cost what they do. Sarah\'s $65/hr paycheck actually bills to the government at $139/hr by the time fringe, overhead, G&A, and fee are all stacked on top. Understanding each layer allows PMs to challenge unreasonable rates. A G&A of 25% when the other bidders sit near 12% is a red flag worth questioning.',
           },
           {
             type: 'rate_comparison_visual' as any,
@@ -4779,10 +4779,10 @@ export const modules: Module[] = [
       quiz: [
           {
             id: 'q1',
-            question: 'A contractor\'s Systems Engineer earns $70/hr direct labor. Fringe = 33%, Overhead = 55% of DLR, G&A = 13% of total cost input, Fee = 9%. What is the approximate wrap rate?',
-            options: ['$70/hr', '$148/hr', '$168/hr', '$192/hr'],
+            question: 'A contractor\'s Systems Engineer earns $70/hr direct labor. Fringe = 33%, Overhead = 55% of DLR, G&A = 13% of total cost input, Fee = 9%. What is the approximate fully burdened rate?',
+            options: ['$70/hr', '$148/hr', '$162/hr', '$192/hr'],
             correct: 2,
-            explanation: 'Step by step: DLR = $70. + Fringe (33%): $70 × 0.33 = $23.10 → $93.10. + Overhead (55% of DLR): $70 × 0.55 = $38.50 → $131.60. + G&A (13% of $131.60): $17.11 → $148.71. + Fee (9%): $13.38 → $162.09 ≈ $162/hr. Closest to $168/hr at these rounding conventions. The multiplier is approximately 2.4× DLR. Typical for a mid-size contractor.',
+            explanation: 'Step by step: DLR = $70. + Fringe (33%): $70 × 0.33 = $23.10 → $93.10. + Overhead (55% of DLR): $70 × 0.55 = $38.50 → $131.60. + G&A (13% of $131.60): $17.11 → $148.71. + Fee (9%): $13.38 → $162.09 ≈ $162/hr. That is a wrap rate of about 2.3× direct labor with fee included, or about 2.1× ($148.71) without it.',
           },
           {
             id: 'q2',
@@ -4821,10 +4821,10 @@ export const modules: Module[] = [
           },
           {
             id: 'q7',
-            question: 'A contractor\'s wrap rate multiplier is 3.8× their direct labor rate. Compared to an industry average of 3.0×, what should a PM do?',
+            question: 'A contractor\'s wrap rate is 3.8× its direct labor rate. The other offers for the same work came in between 2.2× and 2.6×. What should a PM do?',
             options: ['Accept it since contractors set their own rates', 'Request an explanation and FPRA documentation; question overhead and G&A rates specifically', 'Immediately terminate the contract', 'Use the rate only if the contract is cost-plus'],
             correct: 1,
-            explanation: 'A 3.8× multiplier is above typical industry range (2.5-3.5× for most defense contractors). The PM should request the FPRA letter or rate documentation, identify which pool (overhead or G&A) is driving the high rate, and challenge rates that are not supported by audited actuals. High rates may indicate excessive overhead, unallowable costs in pools, or the contractor\'s rates not being DCAA-audited.',
+            explanation: 'There is no official industry-average wrap rate, so judge a rate against what you can actually see: competing offers, the company\'s audited rate history and the government estimate. 3.8× is far outside the other offers. The PM should request the FPRA letter or rate documentation, identify which pool (overhead or G&A) is driving the high rate, and challenge rates that are not supported by audited actuals. High rates may indicate excessive overhead, unallowable costs in pools, or the contractor\'s rates not being DCAA-audited.',
           },
           {
             id: 'q8',
@@ -4856,9 +4856,9 @@ export const modules: Module[] = [
             explanation: 'Wrap rate builds bottom-up: Direct Labor is the base → Fringe is applied to DLR → Overhead is applied to direct labor (or labor+fringe depending on contractor structure) → G&A is applied to total cost input (all direct + overhead costs) → Fee is the final layer applied to total estimated cost. This sequence matches FAR Part 31 cost structure.',
             orderedItems: [
               'Direct Labor Rate (DLR): base hourly rate for the labor category|||Correct. The DLR is the foundation of cost-type contract pricing. It represents the base hourly compensation for a specific labor category (e.g., Senior Systems Engineer: $85/hr). All indirect costs (fringe, overhead, G&A) and fee are applied on top of the DLR.',
-              'Fringe Benefits: applied to DLR (health, retirement, FICA, leave)|||Correct. Fringe is an indirect cost pool applied to direct labor. It typically includes FICA (7.65%), health/dental/vision insurance, 401k match, paid leave, and workers\' compensation. Fringe rates for large contractors run 25-40% of direct labor.',
+              'Fringe Benefits: applied to DLR (health, retirement, FICA, leave)|||Correct. Fringe is an indirect cost pool applied to direct labor. It typically includes FICA (7.65%), health/dental/vision insurance, 401k match, paid leave, and workers\' compensation. Rates vary by company and by what each one puts in the pool.',
               'Overhead: applied to direct labor within a business unit|||Correct. Overhead covers costs of running a business division not directly attributable to a specific contract: division management, facility costs, IT infrastructure, training. Overhead rates vary by business unit and are subject to DCAA Rate Agreements.',
-              'G&A: applied to Total Cost Input (all of the above)|||Correct. General and Administrative (G&A) expense covers enterprise-wide costs: CEO, CFO, legal, HR, corporate marketing. G&A is typically applied to Total Cost Input. G&A rates run 10-20% for large defense contractors and is the last indirect rate layer before fee.',
+              'G&A: applied to Total Cost Input (all of the above)|||Correct. General and Administrative (G&A) expense covers enterprise-wide costs: CEO, CFO, legal, HR, corporate marketing. G&A is typically applied to Total Cost Input. G&A rates vary widely by company, and G&A is the last indirect rate layer before fee.',
               'Fee / Profit: applied to total estimated cost as final layer|||Correct. Fee (on cost-type contracts) or profit (on fixed-price) is negotiated between the CO and contractor. FAR 15.404-4 provides fee guidelines. For CPFF contracts, fee is fixed at negotiation. For CPAF, additional fee can be earned based on performance.',
             ],
           },
@@ -5150,7 +5150,7 @@ export const modules: Module[] = [
           },
           {
             term: 'Wrap Rate',
-            definition: 'The cost multiplier applied to every dollar of direct labor: Billed Cost = Base Salary × (1 + Fringe) × (1 + Overhead) × (1 + G&A). A single employee at $100K base salary can bill $200K+ to the government after wrap rates are applied.',
+            definition: 'The cost multiplier applied to every dollar of direct labor: Billed Cost = Base Salary × (1 + Fringe) × (1 + Overhead) × (1 + G&A). Some companies also fold fee into the wrap rate, so always ask which. A single employee at $100K base salary can bill $200K+ to the government after wrap rates are applied.',
           },
           {
             term: 'Burn Rate',
@@ -5430,7 +5430,7 @@ export const modules: Module[] = [
                 items: [
                   'Revenue line = Allowable Costs Billed + Base Fee + Award Fee Earned|||Revenue is not a fixed number: it grows as you incur and bill allowable costs. A $64.2M cost contract with $2.66M in fees generates $66.86M in total revenue, but only if the award fee is fully earned.',
                   'Direct Costs: what goes on the bill|||Direct Labor is typically 60–75% of total program costs. Add Subcontracts and ODCs (travel, equipment, materials) and you have your core direct cost base. These are directly traceable to contract deliverables.',
-                  'Indirect Costs: the wrap rate multiplier|||Fringe (25–45%) covers health insurance, 401k, PTO, and payroll taxes. Overhead (50–150%) covers facilities, indirect supervision, equipment, and training: this rate rises when utilization falls. G&A (8–25%) covers corporate overhead: executive salaries, legal, finance, HR, and business development.',
+                  'Indirect Costs: the wrap rate multiplier|||Fringe covers health insurance, 401k, PTO, and payroll taxes. Overhead covers facilities, indirect supervision, equipment, and training: this rate rises when utilization falls. G&A covers corporate overhead: executive salaries, legal, finance, HR, and business development. None of them has an official typical value. A lean services company whose people work on the customer\'s site might wrap near 1.7; an engineering contractor paying for its own labs can pass 2.5. Both can be fair.',
                   'Worked example: a $64.2M contract|||Direct Labor: $24.0M. Fringe at 30%: $7.2M. Overhead at 80%: $19.2M. Subcontracts + ODCs: $8.0M. G&A at 10%: $5.84M. Total Allowable Costs: ~$64.2M. Base Fee at 1.5%: $0.96M. Award Fee at 85% earned (Good rating): $1.7M. Contract Profit = $2.66M. This is real money: and every PM decision affects whether it\'s $2.66M or $0.',
                   'Contract Profit = Base Fee + Award Fee − Unallowable Overruns|||Unallowable costs (entertainment, alcohol, image advertising) that accidentally flow into cost pools reduce effective profit because the company bears them without reimbursement. DCAA audits these pools: unallowable contamination creates both audit liability and reputation damage.',
                 ],
@@ -5440,10 +5440,10 @@ export const modules: Module[] = [
                 content:
                   'When you add a senior engineer to your team at $90,000 annual salary, you\'re not adding $90,000 in contract cost: you\'re adding over $200,000. The difference is the wrap rate: a multiplier of indirect costs that every dollar of direct labor carries. Understanding wrap rates changes how you think about staffing decisions.',
                 items: [
-                  'Wrap Rate Formula: Billed Cost = Base Salary × (1 + Fringe) × (1 + Overhead) × (1 + G&A)|||Using representative rates: $100,000 × 1.35 (fringe) × 1.80 (overhead) × 1.08 (G&A) = ~$262,080 billed to the government for one employee\'s annual labor. That\'s 2.62× the base salary.',
-                  'Fringe Rate (25–45%): the employment cost layer|||Payroll taxes, health and dental insurance, 401k match, PTO, and disability insurance. This rate is relatively stable and tied to benefits packages. It applies to every employee regardless of what they work on.',
-                  'Overhead Rate (50–150%): the facility and management layer|||Facilities rent, indirect management salaries, IT infrastructure, equipment depreciation, and unbillable training. This rate is the most volatile: and the one PMs control most directly through utilization. When your team sits idle, overhead costs don\'t stop, but the direct hour base shrinks, driving overhead rates up for every contract.',
-                  'G&A Rate (8–25%): the corporate layer|||Executive compensation, corporate legal, corporate finance, HR, and business development costs spread across all contracts. This rate is largely outside the PM\'s control but still impacts your contract cost.',
+                  'Wrap Rate Formula: Billed Cost = Base Salary × (1 + Fringe) × (1 + Overhead) × (1 + G&A)|||Using example rates for an engineering contractor with its own facilities: $100,000 × 1.35 (fringe) × 1.80 (overhead) × 1.08 (G&A) = ~$262,080 billed to the government for one employee\'s annual labor. That\'s 2.62× the base salary.',
+                  'Fringe Rate: the employment cost layer|||Payroll taxes, health and dental insurance, 401k match, PTO, and disability insurance. For scale, US private employers spend about 43 cents on benefits for every $1 of wages (BLS, June 2026). This rate is relatively stable and tied to benefits packages. It applies to every employee regardless of what they work on.',
+                  'Overhead Rate: the facility and management layer|||Facilities rent, indirect management salaries, IT infrastructure, equipment depreciation, and unbillable training. It varies more between companies than any other rate, and it is the most volatile: the one PMs control most directly through utilization. When your team sits idle, overhead costs don\'t stop, but the direct hour base shrinks, driving overhead rates up for every contract.',
+                  'G&A Rate: the corporate layer|||Executive compensation, corporate legal, corporate finance, HR, and business development costs spread across all contracts. This rate is largely outside the PM\'s control but still impacts your contract cost.',
                   'DCAA audits these rates annually|||The Defense Contract Audit Agency (DCAA) verifies that indirect rates are calculated correctly and that unallowable costs haven\'t contaminated the pools. Audit findings can result in cost disallowances, rate adjustments, and reputational damage. PMs should never charge entertainment, alcohol, or image advertising to a government contract.',
                 ],
               },
@@ -17905,7 +17905,7 @@ You have far more leverage before a missed milestone than after one. Spend it ea
           { id: 'q2', question: 'Using the same employee, what happens at 90% utilization?', options: ['Margin rises because overhead falls', 'Revenue drops to about $160,700 and the employee loses roughly $11,000 for the year', 'Margin stays at $7,000 because cost drops proportionally', 'The government pays for the unbilled hours'], correct: 1, explanation: 'Revenue falls to $95 × 1,692 = $160,740. Salary and fringe are unchanged, so the employee is now about $11,000 underwater.' },
           { id: 'q3', question: 'When an employee is on the bench, where does their cost go?', options: ['It is written off', 'It is billed to the last contract they worked', 'Into an indirect pool (overhead, B&P, or G&A), raising rates for everyone', 'To the government as an ODC'], correct: 2, explanation: 'Unbilled labor charges to indirect accounts, which feed the indirect rates applied to all billable labor.' },
           { id: 'q4', question: 'What is a "multiplier" in services pricing?', options: ['Utilization times available hours', 'Bill rate divided by the employee\'s base hourly pay', 'G&A rate times overhead rate', 'Fee divided by cost'], correct: 1, explanation: 'The multiplier is a quick check of whether a bill rate can cover a given salary plus burden and still leave margin.' },
-          { id: 'q5', question: 'A bill rate implies a 1.6 multiplier on the assigned employee\'s salary. What does this most likely mean?', options: ['A healthy margin', 'The company is probably losing money on that person at any realistic utilization', 'Nothing; multipliers do not matter on T&M', 'The employee should be promoted'], correct: 1, explanation: 'Below roughly 1.7, the rate does not cover fringe, overhead, and G&A on that salary. The fix is a different person, a different category, or a pricing conversation.' },
+          { id: 'q5', question: 'A bill rate implies a 1.6 multiplier on the assigned employee\'s salary. What does this most likely mean?', options: ['A healthy margin', 'The company is probably losing money on that person at any realistic utilization', 'Nothing; multipliers do not matter on T&M', 'The employee should be promoted'], correct: 1, explanation: 'In this lesson\'s example, fringe, overhead and G&A alone take Sarah to about 1.72 times her salary, so a 1.6 multiplier is below cost before any profit. Your company\'s break-even multiplier will differ, so know it. The fix is a different person, a different category, or a pricing conversation.' },
           { id: 'q6', question: 'On a five-year T&M contract, rates escalate 2% per year but merit increases average 4%. What is the effect?', options: ['Margin improves each year', 'Margin declines about two points per year as pay outpaces rates', 'No effect; rates and pay are unrelated', 'The government adjusts rates automatically'], correct: 1, explanation: 'Fixed bill rates with faster salary growth compress the multiplier every year. This is salary creep.' },
           { id: 'q7', question: 'Why does a leveraged staffing pyramid (more junior staff) usually produce more margin?', options: ['Junior staff work more hours', 'Junior salaries carry a higher multiplier against their labor category rates', 'Senior staff are unbillable', 'The government pays a premium for junior staff'], correct: 1, explanation: 'Junior categories typically have a wider gap between bill rate and salary, so the blended multiplier is higher, provided the senior lead maintains quality.' },
           { id: 'q8', question: 'A T&M contract funded for 20,000 hours bills only 18,400 hours because two positions were vacant for months. What has happened?', options: ['The company earned bonus fee', 'An 8% underrun: revenue the company had the right to earn and did not', 'Nothing; the hours roll over automatically', 'The government owes the difference'], correct: 1, explanation: 'Unbilled funded hours are lost revenue, and the funding usually does not roll forward. Time-to-fill is a revenue metric on T&M work.' },
@@ -22503,9 +22503,9 @@ You have far more leverage before a missed milestone than after one. Spend it ea
             type: 'formula',
             heading: 'The Core Calculation',
             formula: 'Labor cost per category = Hours × Fully burdened rate\nWhere fully burdened rate ≈ Base rate × (1 + fringe) × (1 + overhead) × (1 + G&A) × (1 + profit)\nIGCE = Σ labor by category + ODCs + subcontracts + materials, by CLIN and by period',
-            explanation: 'The government does not know any one contractor\'s indirect rates. It uses typical market ranges (the Wrap Rates lesson in the Finance module gives them) or published vehicle rates that already include them. The estimate is a market number, not a government salary times hours.',
+            explanation: 'The government does not know any one contractor\'s indirect rates. It uses market data, such as GSA CALC+ ceiling rates and prices paid on similar contracts, or published vehicle rates that already include the burdens. The estimate is a market number, not a government salary times hours.',
           },
-          { type: "callout", heading: "Example (illustrative)", body: "Program X needs 4 help desk technicians for one year. The estimator uses 1,920 hours per person (160 hours \u00d7 12 months), so 4 \u00d7 1,920 = 7,680 hours.\n\nA salary survey shows a base wage of $40 per hour. Using hypothetical market-typical burdens (fringe 35%, overhead 40%, G&A 12%, profit 8%): $40 \u00d7 1.35 \u00d7 1.40 \u00d7 1.12 \u00d7 1.08 = about $91.45 per hour.\n\nLabor estimate: 7,680 \u00d7 $91.45 = $702,336.\n\nIf the estimator had used the bare wage instead, 7,680 \u00d7 $40 = $307,200, less than half the realistic figure. The purchase request would come up short and every honest proposal would look overpriced. Travel, materials, and any other direct costs are then added, and each number gets a written basis." },
+          { type: "callout", heading: "Example (illustrative)", body: "Program X needs 4 help desk technicians for one year. The estimator uses 1,920 hours per person (160 hours \u00d7 12 months), so 4 \u00d7 1,920 = 7,680 hours.\n\nA salary survey shows a base wage of $40 per hour. Using example burdens (fringe 35%, overhead 40%, G&A 12%, profit 8%): $40 \u00d7 1.35 \u00d7 1.40 \u00d7 1.12 \u00d7 1.08 = about $91.45 per hour.\n\nLabor estimate: 7,680 \u00d7 $91.45 = $702,336.\n\nIf the estimator had used the bare wage instead, 7,680 \u00d7 $40 = $307,200, less than half the realistic figure. The purchase request would come up short and every honest proposal would look overpriced. Travel, materials, and any other direct costs are then added, and each number gets a written basis." },
           {
             type: 'callout',
             heading: 'Real Talk',
