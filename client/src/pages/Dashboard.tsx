@@ -397,7 +397,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
   });
   const [activeSubject, setActiveSubject] = useState<SubjectGroupId>('acquisition_foundations');
   const [bonusExpanded, setBonusExpanded] = useState(false);
-  const [adminStats, setAdminStats] = useState<{ totalUsers: number; proUsers: number; freeUsers: number } | null>(null);
+  const [adminStats, setAdminStats] = useState<{ totalUsers: number; paying: number; trialing: number } | null>(null);
   const [startHereDismissed, setStartHereDismissed] = useState(() => {
     try { return localStorage.getItem('acq_start_here_dismissed') === '1'; } catch { return false; }
   });
@@ -549,7 +549,7 @@ export default function Dashboard({ progress, onSelectModule, onSelectLesson, on
     { icon: <Target className="w-5 h-5 text-primary" />, value: progress.isPremium ? modules.length : FREE_MODULES.length, label: 'Modules unlocked', sub: `of ${modules.length} available` },
     { icon: <TrendingUp className="w-5 h-5 text-cyan-500" />, value: `${Math.round((completedCount / totalLessons) * 100)}%`, label: 'Overall progress', sub: `${totalLessons - completedCount} remaining` },
     ...(isAdmin && adminStats ? [
-      { icon: <Users className="w-5 h-5 text-violet-500" />, value: adminStats.totalUsers, label: 'Total signups', sub: `${adminStats.proUsers} paid · ${adminStats.freeUsers} free` },
+      { icon: <Users className="w-5 h-5 text-violet-500" />, value: adminStats.totalUsers, label: 'Total signups', sub: `${adminStats.paying} paying · ${adminStats.trialing} on trial` },
     ] : []),
   ];
 

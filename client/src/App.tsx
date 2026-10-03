@@ -13,7 +13,7 @@ import { useActiveTrack } from "@/lib/careerTracks";
 import { modules, prefetchCurriculum } from "@/lib/curriculumMeta";
 import { getModuleTheme, getModuleFamilyTheme, getModuleFamily, FAMILY_LABEL, FAMILY_THEME, type ModuleFamily } from "@/lib/moduleTheme";
 import { moduleClps, formatClps, totalClps } from "@shared/moduleClps";
-import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, BarChart3, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator, Flame, Loader2 } from "lucide-react";
+import { LayoutDashboard, BookOpen, Award, LogOut, Sun, Moon, Menu, X, Zap, User, ShieldCheck, ChevronRight, ChevronDown, Lock, Download, FolderOpen, Wrench, Sparkles, ExternalLink, Calculator, Flame, Loader2 } from "lucide-react";
 import { SIDEBAR_RESOURCES } from "@/lib/resources";
 import { FAR_TRANSLATOR, TOOLS_DIRECTORY } from "@/lib/toolsDirectory";
 import { AcqlerateLogo } from "@/components/AcqlerateLogo";
@@ -109,8 +109,7 @@ import OnboardingFlow from "@/components/OnboardingFlow";
 //
 //   LessonPage   the second-largest file in the app, and it pulls in the full
 //                curriculum — which is the 3 MB the split was really about.
-//   AdminPage    two people will ever open these.
-//   AdminAnalytics
+//   AdminPage    two people will ever open this.
 //   PDUTracker   useful, but not on anyone's first visit.
 //   Cost*        a whole sub-application most learners never touch.
 //
@@ -119,7 +118,6 @@ import OnboardingFlow from "@/components/OnboardingFlow";
 // path never waits on a second request.
 const LessonPage = lazy(() => import("@/pages/LessonPage"));
 const AdminPage = lazy(() => import("@/pages/AdminPage"));
-const AdminAnalytics = lazy(() => import("@/pages/AdminAnalytics"));
 const PDUTracker = lazy(() => import("@/pages/PDUTracker"));
 const CertificatesPage = lazy(() => import("@/pages/CertificatesPage"));
 const CostTrackerIntroPage = lazy(() => import("@/pages/cost/CostTrackerIntroPage"));
@@ -154,7 +152,6 @@ type View =
   | { type: 'upgrade' }
   | { type: 'account' }
   | { type: 'admin' }
-  | { type: 'analytics' }
   | { type: 'pdu' }
   | { type: 'certificates' }
   | { type: 'costTrackerIntro' }
@@ -198,7 +195,7 @@ function loadSavedView(): View | null {
     const raw = sessionStorage.getItem(VIEW_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as View;
-    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin', 'analytics', 'pdu', 'certificates', 'costProjects', 'costRates', 'costTaskOrders'];
+    const valid: View['type'][] = ['dashboard', 'module', 'lesson', 'upgrade', 'admin', 'pdu', 'certificates', 'costProjects', 'costRates', 'costTaskOrders'];
     if (!valid.includes(parsed.type)) return null;
     // Validate lesson ID still exists in curriculum
     if (parsed.type === 'lesson') {
@@ -449,7 +446,7 @@ function AppContent() {
     if (!isMobile) return;
     const MOBILE_VIEWS: View['type'][] = [
       'dashboard', 'modules', 'module', 'lesson', 'upgrade', 'account', 'resources', 'auth', 'onboarding',
-      'certificates', 'admin', 'analytics',
+      'certificates', 'admin',
     ];
     if (!MOBILE_VIEWS.includes(view.type)) setView({ type: 'dashboard' });
   }, [isMobile, view.type]);
@@ -582,8 +579,6 @@ function AppContent() {
             if (saved && saved.type !== 'auth') {
               // If saved view was admin but user lost admin, fall back to dashboard
               if (saved.type === 'admin' && !user.isAdmin) {
-                setView({ type: 'dashboard' });
-              } else if (saved.type === 'analytics' && !user.isAdmin) {
                 setView({ type: 'dashboard' });
               } else {
                 setView(saved);
@@ -850,7 +845,7 @@ function AppContent() {
   // Which tab lights up. Module, Lesson and Pro access all live under Learn.
   const mobileTab: MobileTab =
     view.type === 'resources' ? 'resources'
-    : (view.type === 'account' || view.type === 'admin' || view.type === 'analytics') ? 'account'
+    : (view.type === 'account' || view.type === 'admin') ? 'account'
     : (view.type === 'modules' || view.type === 'module' || view.type === 'lesson' || view.type === 'upgrade') ? 'modules'
     : 'home';
 
@@ -867,8 +862,6 @@ function AppContent() {
         return { kind: 'title', title: 'My Account' };
       case 'admin':
         return { kind: 'back', title: 'Admin', onBack: () => setView({ type: 'account' }) };
-      case 'analytics':
-        return { kind: 'back', title: 'Analytics', onBack: () => setView({ type: 'admin' }) };
       case 'upgrade':
         return { kind: 'back', title: 'Pro access', onBack: () => setView({ type: 'modules' }) };
       case 'module': {
@@ -1018,9 +1011,6 @@ function AppContent() {
           )}
           {view.type === 'admin' && isAdmin && (
             <div className={isMobile ? "px-4 pt-1 pb-8" : ""}><AdminPage /></div>
-          )}
-          {view.type === 'analytics' && isAdmin && (
-            <AdminAnalytics onBack={() => setView({ type: 'admin' })} />
           )}
           {view.type === 'pdu' && (
             <PDUTracker
@@ -1318,13 +1308,6 @@ function AppContent() {
                 data-testid="nav-admin"
               >
                 <ShieldCheck className="w-3.5 h-3.5" /> Admin
-              </button>
-              <button
-                onClick={() => { setView({ type: 'analytics' }); setSidebarOpen(false); }}
-                className="flex items-center gap-1.5 text-[12px] font-medium text-sidebar-foreground/90 hover:text-sidebar-foreground transition-colors"
-                data-testid="nav-analytics"
-              >
-                <BarChart3 className="w-3.5 h-3.5" /> Analytics
               </button>
             </div>
           )}

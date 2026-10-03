@@ -22,7 +22,8 @@ interface TodayData {
   generatedAt: string;
   signups: { today: number; yesterday: number; last7: number; total: number };
   active: { today: number; last7: number };
-  plans: { paid: number; trialing: number };
+  /** paying = Stripe is billing them; comped = free Pro grants, team seats and comped Lifetime */
+  plans: { paying: number; comped: number; trialing: number };
   revenue: { monthToDate: number; mrr: number; newSubs7d: number } | null;
   stripeNote: string | null;
   attention: AttentionItem[];
@@ -67,15 +68,15 @@ export function shortDate(v: string | null | undefined): string {
   return Number.isFinite(t) ? new Date(t).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "n/a";
 }
 
-const money = (n: number) => `$${n.toLocaleString(undefined, { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 })}`;
+export const money = (n: number) => `$${n.toLocaleString(undefined, { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 })}`;
 
-async function jsonOrThrow(res: Response) {
+export async function jsonOrThrow(res: Response) {
   const body = await res.json().catch(() => ({}));
   if (!res.ok) throw Object.assign(new Error(body?.message || "Request failed"), { body });
   return body;
 }
 
-function openExternal(url: string) {
+export function openExternal(url: string) {
   if (isNativeApp()) {
     import("@capacitor/browser").then(({ Browser }) => Browser.open({ url })).catch(() => window.open(url, "_blank"));
   } else {
@@ -98,7 +99,7 @@ export function mailto(email: string, kind: AttentionKind | "hello", firstName?:
   return `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body + sign)}`;
 }
 
-function localBoundaries() {
+export function localBoundaries() {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const month = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -107,7 +108,7 @@ function localBoundaries() {
 
 // ─── Small pieces ───────────────────────────────────────────────────────────
 
-function Tile({ icon, label, value, sub, tone }: { icon: ReactNode; label: string; value: ReactNode; sub?: ReactNode; tone: string }) {
+export function Tile({ icon, label, value, sub, tone }: { icon: ReactNode; label: string; value: ReactNode; sub?: ReactNode; tone: string }) {
   return (
     <div className="bg-card border border-border rounded-2xl p-3.5 lg:p-5 min-w-0">
       <div className={`flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide ${tone}`}>
@@ -204,8 +205,8 @@ export default function AdminToday() {
           <Tile tone="text-amber-500" icon={<DollarSign className="w-3.5 h-3.5" />} label="This month"
             value={d.revenue ? money(d.revenue.monthToDate) : "n/a"}
             sub={d.revenue ? `${money(d.revenue.mrr)} monthly recurring` : d.stripeNote} />
-          <Tile tone="text-sky-500" icon={<Crown className="w-3.5 h-3.5" />} label="Paying" value={d.plans.paid}
-            sub={`${d.plans.trialing} on trial${d.revenue ? ` · ${d.revenue.newSubs7d} new this week` : ""}`} />
+          <Tile tone="text-sky-500" icon={<Crown className="w-3.5 h-3.5" />} label="Paying" value={d.plans.paying}
+            sub={`${d.plans.trialing} on trial · ${d.plans.comped} comped${d.revenue ? ` · ${d.revenue.newSubs7d} new this week` : ""}`} />
         </div>
       )}
       {today.isLoading && (

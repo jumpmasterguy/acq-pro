@@ -8,6 +8,7 @@
 //   POST /api/admin/users/:id/give-access     +7 / +30 / +365 days of Pro
 //   POST /api/admin/users/:id/send-reset      email them a password link
 //   POST /api/admin/users/:id/set-streak      put a lost streak back
+//   GET  /api/admin/numbers                   money, plans, signups, engagement
 //   GET  /api/admin/people                    everyone + leads, for the People list
 //   POST /api/admin/users/:id/set-plan        Monthly / Annual / Lifetime / Free (comps only)
 //   POST /api/admin/users/:id/unlock-level    skip the gate: intermediate / advanced
@@ -26,18 +27,13 @@ import { requireAuth } from "./auth";
 import { isInternalAccount, excludeInternalAccounts } from "./internalAccounts";
 import { extendAccessDays, grantProYear } from "./referrals";
 import { issuePasswordReset } from "./passwordReset";
+import { countUsers, engagement, stripeSnapshot, parseTs } from "./adminStats";
+import { listCheckoutStarts, trialCheckoutCounts, CHECKOUT_GRACE_DAYS } from "./checkoutStarts";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const GIVE_DAYS = [7, 30, 365] as const;
 
-/** Postgres `now()::text` ("2026-09-28 10:11:12.3+00") or ISO → ms, or NaN. */
-export function parseTs(v: unknown): number {
-  if (typeof v !== "string" || !v) return NaN;
-  let s = v.trim();
-  if (/^\d{4}-\d{2}-\d{2} /.test(s)) s = s.replace(" ", "T");
-  s = s.replace(/([+-]\d{2})$/, "$1:00");
-  return new Date(s).getTime();
-}
+export { parseTs };
 
 /** A client-sent boundary (their local midnight / 1st of month), sanity-checked. */
 function boundary(raw: unknown, fallback: number, maxAgeDays: number): number {
@@ -117,11 +113,6 @@ type Attention = {
   at?: string;
 };
 
-async function stripeCustomerEmail(c: string | Stripe.Customer | Stripe.DeletedCustomer | null): Promise<string> {
-  if (c && typeof c === "object" && !("deleted" in c && c.deleted)) return (c as Stripe.Customer).email ?? "";
-  return "";
-}
-
 export function registerAdminMobileRoutes(
   app: Express,
   deps: { stripe: Stripe | null; isAdmin: (req: Request) => boolean },
@@ -147,21 +138,13 @@ export function registerAdminMobileRoutes(
     const all = await storage.getAllUsers();
     const users = excludeInternalAccounts(all);
     const reg = (u: User) => parseTs(u.registeredAt);
-    const act = (u: User) => parseTs(u.lastActiveAt ?? u.lastLoginAt);
-
-    const signups = {
-      today: users.filter(u => reg(u) >= todayStart).length,
-      yesterday: users.filter(u => reg(u) >= yesterdayStart && reg(u) < todayStart).length,
-      last7: users.filter(u => reg(u) >= weekAgo).length,
-      total: users.length,
-    };
-    const active = {
-      today: users.filter(u => act(u) >= todayStart).length,
-      last7: users.filter(u => act(u) >= weekAgo).length,
-    };
+    const counts = countUsers(all, { now, todayStart });
+    const signups = { today: counts.signups.today, yesterday: counts.signups.yesterday, last7: counts.signups.last7, total: counts.total };
+    const active = { today: counts.active.today, last7: counts.active.last7 };
     const plans = {
-      paid: users.filter(u => isPaidStatus(u.subscriptionStatus)).length,
-      trialing: users.filter(u => u.subscriptionStatus === "trialing" && hasFullAccess(u)).length,
+      paying: counts.plans.paying,
+      comped: counts.plans.comped + counts.plans.lifetime,
+      trialing: counts.plans.trialing,
     };
 
     const attention: Attention[] = [];
@@ -200,53 +183,29 @@ export function registerAdminMobileRoutes(
     let stripeNote: string | null = stripe ? null : "Stripe isn't connected on this server.";
     if (stripe) {
       try {
+        const snap = await stripeSnapshot(stripe, { monthStart, now });
         const byEmail = new Map(all.map(u => [u.email.toLowerCase(), u]));
-        const monthSec = Math.floor(monthStart / 1000);
-        const weekSec = Math.floor(weekAgo / 1000);
-        let cents = 0;
-        let n = 0;
-        for await (const c of stripe.charges.list({ created: { gte: monthSec }, limit: 100 })) {
-          if (c.paid && c.status === "succeeded" && c.currency === "usd") cents += c.amount - (c.amount_refunded ?? 0);
-          if (++n >= 1000) break;
-        }
-
-        let mrrCents = 0;
-        let newSubs = 0;
-        n = 0;
-        for await (const s of stripe.subscriptions.list({ status: "active", limit: 100, expand: ["data.customer"] })) {
-          for (const i of s.items.data) {
-            const amt = (i.price.unit_amount ?? 0) * (i.quantity ?? 1);
-            mrrCents += i.price.recurring?.interval === "year" ? amt / 12 : amt;
-          }
-          if (s.created >= weekSec) newSubs++;
-          if (s.cancel_at_period_end || s.cancel_at) {
-            const email = await stripeCustomerEmail(s.customer as any);
-            const u = byEmail.get(email.toLowerCase());
-            const endSec = s.cancel_at ?? (s.items.data[0] as any)?.current_period_end ?? null;
-            attention.push({
-              kind: "cancelling",
-              title: `${u ? displayName(u) : email || "A subscriber"} cancelled`,
-              detail: endSec ? `Access ends ${new Date(endSec * 1000).toISOString().slice(0, 10)}. Worth a "what could we do better?" email.` : "Still active until the period ends.",
-              email,
-              userId: u?.id,
-            });
-          }
-          if (++n >= 500) break;
-        }
-
-        for await (const s of stripe.subscriptions.list({ status: "past_due", limit: 100, expand: ["data.customer"] })) {
-          const email = await stripeCustomerEmail(s.customer as any);
-          const u = byEmail.get(email.toLowerCase());
+        for (const c of snap.cancelling) {
+          const u = byEmail.get(c.email.toLowerCase());
           attention.push({
-            kind: "past_due",
-            title: `Payment failed: ${u ? displayName(u) : email || "a subscriber"}`,
-            detail: "Stripe is retrying the card. A friendly heads-up email often fixes it.",
-            email,
+            kind: "cancelling",
+            title: `${u ? displayName(u) : c.email || "A subscriber"} cancelled`,
+            detail: c.endsAt ? `Access ends ${c.endsAt.slice(0, 10)}. Worth a "what could we do better?" email.` : "Still active until the period ends.",
+            email: c.email,
             userId: u?.id,
           });
         }
-
-        revenue = { monthToDate: Math.round(cents) / 100, mrr: Math.round(mrrCents) / 100, newSubs7d: newSubs };
+        for (const p of snap.pastDue) {
+          const u = byEmail.get(p.email.toLowerCase());
+          attention.push({
+            kind: "past_due",
+            title: `Payment failed: ${u ? displayName(u) : p.email || "a subscriber"}`,
+            detail: "Stripe is retrying the card. A friendly heads-up email often fixes it.",
+            email: p.email,
+            userId: u?.id,
+          });
+        }
+        revenue = { monthToDate: snap.monthToDate, mrr: snap.mrr, newSubs7d: snap.newSubs7d };
       } catch (err: any) {
         console.error("[admin/today] stripe:", err?.message ?? err);
         stripeNote = "Couldn't reach Stripe just now. Pull down to try again.";
@@ -378,6 +337,50 @@ export function registerAdminMobileRoutes(
     console.log(`[admin] ${req.user!.email} set streak ${streak} → ${u.email}`);
     const note = lastStreakDate === today ? "" : " They keep it by doing one lesson today.";
     return reply(res, id, `${displayName(u)}'s streak is now ${streak} days.${note}`);
+  });
+
+  // ── Numbers: the whole business on one screen ──────────────────────────
+  // Same functions as Today and the founder review (server/adminStats.ts).
+  app.get("/api/admin/numbers", requireAuth as any, async (req: Request, res: Response) => {
+    if (!guard(req, res)) return;
+    const now = Date.now();
+    const utcMidnight = new Date(new Date().toISOString().slice(0, 10)).getTime();
+    const todayStart = boundary(req.query.todayStart, utcMidnight, 2);
+    const d = new Date();
+    const monthStart = boundary(req.query.monthStart, Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1), 32);
+
+    const all = await storage.getAllUsers();
+    const counts = countUsers(all, { now, todayStart });
+    const usage = engagement(all);
+
+    // Trials that ended this month and last, and how many opened checkout.
+    let trials: { month: string; ended: number; checkout: number }[] | null = null;
+    try {
+      const { trialsEndedByMonth, trialsCheckoutByMonth } =
+        trialCheckoutCounts(excludeInternalAccounts(all) as any, await listCheckoutStarts(), now);
+      const thisMonth = new Date(now).toISOString().slice(0, 7);
+      const last = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() - 1, 1)).toISOString().slice(0, 7);
+      trials = [thisMonth, last].map(m => ({ month: m, ended: trialsEndedByMonth[m] ?? 0, checkout: trialsCheckoutByMonth[m] ?? 0 }));
+    } catch (err: any) {
+      console.error("[admin/numbers] checkout starts:", err?.message ?? err);
+    }
+
+    let money: { monthToDate: number; last12Months: number; mrr: number; activeSubscriptions: number; newSubs7d: number } | null = null;
+    let stripeNote: string | null = stripe ? null : "Stripe isn't connected on this server.";
+    if (stripe) {
+      try {
+        const snap = await stripeSnapshot(stripe, { monthStart, now });
+        money = { monthToDate: snap.monthToDate, last12Months: snap.last12Months, mrr: snap.mrr, activeSubscriptions: snap.activeSubscriptions, newSubs7d: snap.newSubs7d };
+      } catch (err: any) {
+        console.error("[admin/numbers] stripe:", err?.message ?? err);
+        stripeNote = "Couldn't reach Stripe just now. Tap refresh to try again.";
+      }
+    }
+
+    return res.json({
+      generatedAt: new Date().toISOString(),
+      counts, usage, trials, checkoutGraceDays: CHECKOUT_GRACE_DAYS, money, stripeNote,
+    });
   });
 
   // ── People: one list for users, trials, leads and referrals ─────────────

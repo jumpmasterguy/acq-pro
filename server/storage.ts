@@ -1156,7 +1156,9 @@ export class MemStorage implements IStorage {
       quizScores: {},
       moduleSkillLevels: {},
       moduleAssessmentScores: {},
-    };
+      // The database fills this in itself; dev storage has to do it by hand.
+      registeredAt: new Date().toISOString(),
+    } as any;
     this.users.set(id, user);
     return user;
   }

@@ -23,6 +23,7 @@ import { explainMistake, gradeTeachBack, lessonTextById, COACH_MODELS, CoachErro
 import { costTrackerStorage } from "./costTrackerStorage";
 import { reportCheckoutFailure } from "./stripeHealth";
 import { getSeoStats } from "./searchConsole";
+import { countUsers } from "./adminStats";
 import { recordCheckoutStart, listCheckoutStarts, teamDealsByMonth, trialCheckoutCounts, CHECKOUT_GRACE_DAYS } from "./checkoutStarts";
 import { sendOpsAlertEmail } from "./email";
 import { issuePasswordReset } from "./passwordReset";
@@ -1563,26 +1564,6 @@ export async function registerRoutes(
     return Boolean(req.user.isAdmin);
   }
 
-  // List all users — admin only
-  app.get("/api/admin/users", requireAuth as any, async (req: Request, res: Response) => {
-    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
-    const users = await storage.getAllUsers();
-    return res.json(users.map(u => ({
-      id: u.id,
-      username: u.username,
-      email: u.email,
-      subscriptionStatus: u.subscriptionStatus,
-      trialEndsAt: (u as any).trialEndsAt ?? null,
-      completedLessons: (u.completedLessons ?? []).length,
-      referralCode: u.referralCode ?? null,
-      referredBy: u.referredBy ?? null,
-      referralCount: u.referralCount ?? 0,
-      referralRewardGranted: u.referralRewardGranted ?? 0,
-      isAdmin: Boolean(u.isAdmin),
-      moduleSkillLevels: (u.moduleSkillLevels as Record<string, string>) ?? {},
-    })));
-  });
-
   // Reset password — admin only
   app.post("/api/admin/reset-password", requireAuth as any, async (req: Request, res: Response) => {
     if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
@@ -1595,98 +1576,14 @@ export async function registerRoutes(
     return res.json({ message: `Password reset for ${email}` });
   });
 
-  // Grant/revoke Pro — admin only (by user id or email)
-  app.post("/api/admin/make-pro", requireAuth as any, async (req: Request, res: Response) => {
-    if (!isAdmin(req)) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-    const { email, userId, plan } = req.body;
-    let user;
-    if (userId) {
-      user = await storage.getUser(userId);
-    } else if (email) {
-      user = await storage.getUserByEmail(email);
-    }
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    // "annual" is how Team seats are provisioned (by hand, see team checkout).
-    const status = plan === "free" ? "free" : plan === "lifetime" ? "lifetime" : plan === "annual" ? "annual" : "active";
-    await storage.updateUserSubscription(user.id, { subscriptionStatus: status });
-    return res.json({ message: `${user.email} is now ${status}`, userId: user.id });
-  });
-
-  // POST /api/admin/users/:userId/grant-yearly-pro
-  app.post("/api/admin/users/:userId/grant-yearly-pro", requireAuth as any, async (req: Request, res: Response) => {
-    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
-    const userId = String(req.params.userId);
-    const user = await storage.getUser(userId);
-    if (!user) return res.status(404).json({ message: "User not found" });
-    // Same rules as a referral reward: a real, expiring year (see server/referrals.ts).
-    const result = await grantProYear(user, stripe, "Granted by Acqlerate");
-    const detail =
-      result.kind === "extended" ? `full access until ${result.until?.slice(0, 10)}`
-      : result.kind === "stripe-credit" ? `$${((result.creditCents ?? 0) / 100).toFixed(2)} Stripe credit (12 months of Monthly)`
-      : result.kind === "already-unlimited" ? "already has permanent access, nothing changed"
-      : `not applied: ${result.note}`;
-    return res.status(result.kind === "needs-manual" ? 500 : 200).json({ message: `${user.email}: ${detail}`, userId, result });
-  });
-
-  // POST /api/admin/users/:userId/toggle-admin — grant or revoke admin access
-  app.post("/api/admin/users/:userId/toggle-admin", requireAuth as any, async (req: Request, res: Response) => {
-    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
-    const { userId } = req.params;
-    const { makeAdmin } = req.body as { makeAdmin: boolean };
-    const target = await storage.getUser(userId);
-    if (!target) return res.status(404).json({ message: "User not found" });
-    const updated = await storage.setUserAdmin(userId, Boolean(makeAdmin));
-    if (!updated) return res.status(500).json({ message: "Failed to update admin status" });
-    return res.json({ message: `${updated.email} is ${makeAdmin ? "now" : "no longer"} an admin`, userId, isAdmin: updated.isAdmin });
-  });
-
-  // POST /api/admin/users/:userId/unlock-skill-level — bypass the assessment gate and unlock
-  // intermediate or advanced content across every module for this user
-  app.post("/api/admin/users/:userId/unlock-skill-level", requireAuth as any, async (req: Request, res: Response) => {
-    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
-    const { userId } = req.params;
-    const { level } = req.body as { level: "intermediate" | "advanced" };
-    if (level !== "intermediate" && level !== "advanced") {
-      return res.status(400).json({ message: "level must be 'intermediate' or 'advanced'" });
-    }
-    const target = await storage.getUser(userId);
-    if (!target) return res.status(404).json({ message: "User not found" });
-    const updated = await storage.unlockAllSkillLevels(userId, level);
-    if (!updated) return res.status(500).json({ message: "Failed to unlock skill level" });
-    return res.json({ message: `${updated.email} unlocked at ${level} across all modules`, userId, moduleSkillLevels: updated.moduleSkillLevels });
-  });
-
   // Phone-first admin: Today screen, user lookup and quick actions.
   registerAdminMobileRoutes(app, { stripe, isAdmin });
 
-  // GET /api/admin/growth — lightweight signup counts for dashboard stat card
+  // GET /api/admin/growth — signup counts for the admin card on the dashboard
   app.get("/api/admin/growth", requireAuth as any, async (req: Request, res: Response) => {
     if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
-    const allUsers = await storage.getAllUsers();
-    const totalUsers = allUsers.length;
-    const proUsers = allUsers.filter((u: any) => isPaidStatus(u.subscriptionStatus)).length;
-    return res.json({ totalUsers, proUsers, freeUsers: totalUsers - proUsers });
-  });
-
-  // GET /api/admin/referrals — referral stats overview
-  app.get("/api/admin/referrals", requireAuth as any, async (req: Request, res: Response) => {
-    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
-    const allUsers = await storage.getAllUsers();
-    const stats = allUsers
-      .filter((u: any) => (u.referralCount ?? 0) > 0 || (u.referralCode))
-      .map((u: any) => ({
-        email: u.email,
-        referralCode: u.referralCode,
-        referralCount: u.referralCount ?? 0,
-        rewardsGranted: u.referralRewardGranted ?? 0,
-        rewardsEarned: Math.floor((u.referralCount ?? 0) / 2),
-      }))
-      .sort((a: any, b: any) => b.referralCount - a.referralCount);
-    return res.json({ stats, totalReferrals: stats.reduce((s: number, u: any) => s + u.referralCount, 0) });
+    const c = countUsers(await storage.getAllUsers());
+    return res.json({ totalUsers: c.total, paying: c.plans.paying, trialing: c.plans.trialing });
   });
 
   // GET /api/my-referral — get current user's referral code and stats
@@ -2013,7 +1910,7 @@ export async function registerRoutes(
   //
   // Feeds the cost ledger's weekly refresh, which runs unattended and has no
   // way to hold an admin session. Returns integers and nothing else; per-user
-  // data stays behind requireAuth + isAdmin on /api/admin/analytics.
+  // data stays behind requireAuth + isAdmin on /api/admin/people and /api/admin/numbers.
   //
   // Deliberately does NOT apply excludeInternalAccounts: the ledger wants the
   // true registered total and nets out the internal accounts in its own
@@ -2045,46 +1942,14 @@ export async function registerRoutes(
     try {
       const users = await storage.getAllUsers();
       const now = Date.now();
-      const oneDayMs = 24 * 60 * 60 * 1000;
-
-      let free = 0, trialing = 0, lifetime = 0, paying = 0, compedPro = 0, dau = 0;
-
-      // Signups per calendar month, e.g. { "2026-03": 4 }. registeredAt is the
-      // signup timestamp on the users table (there is no createdAt column).
-      // This is what lets the ledger backfill user growth from March 2026
-      // instead of starting its series the day it was built.
-      const signupsByMonth: Record<string, number> = {};
-
-      for (const u of users) {
-        switch (u.subscriptionStatus) {
-          case "lifetime": lifetime++; break;
-          // An expired trial stays 'trialing' in the DB; count it as free.
-          case "trialing": if (isTrialActive(u as any)) trialing++; else free++; break;
-          // Monthly ("active") or Annual. Paying means Stripe is billing them,
-          // which the webhook records as a sub_ subscription id. The admin
-          // "make Pro" grant (comps, team seats provisioned by hand) sets the
-          // same status with no subscription, so those count as compedPro.
-          // Before 2 Oct 2026 they were counted as paying.
-          case "active":
-          case "annual":
-            if (typeof u.subscriptionId === "string" && u.subscriptionId.startsWith("sub_")) paying++;
-            else compedPro++;
-            break;
-          default:         free++;
-        }
-
-        const lastSeen = u.lastActiveAt ?? u.lastLoginAt;
-        if (lastSeen && now - new Date(lastSeen).getTime() < oneDayMs) dau++;
-
-        const registered = (u as any).registeredAt;
-        if (registered) {
-          const d = new Date(registered);
-          if (!isNaN(d.getTime())) {
-            const key = d.toISOString().slice(0, 7);
-            signupsByMonth[key] = (signupsByMonth[key] ?? 0) + 1;
-          }
-        }
-      }
+      // Same counting as Today and Numbers (server/adminStats.ts), but over
+      // everyone: the ledger nets out internal accounts itself (note above).
+      // "free" still includes expired trials (also given alone as trialEnded).
+      const counts = countUsers(users, { now, includeInternal: true });
+      const { paying, comped: compedPro, lifetime, trialing, trialEnded } = counts.plans;
+      const free = counts.plans.free + trialEnded;
+      const dau = counts.active.last24h;
+      const signupsByMonth = counts.signups.byMonth;
 
       // Founder review numbers. Each is null, not zeros, if its source fails,
       // so a broken lookup can't pass for "nobody did anything".
@@ -2111,8 +1976,9 @@ export async function registerRoutes(
 
       res.json({
         asOf: new Date().toISOString(),
-        totalUsers: users.length,
+        totalUsers: counts.total,
         free,
+        trialEnded,
         trialing,
         lifetime,
         paying,
@@ -2168,116 +2034,6 @@ export async function registerRoutes(
   });
 
   // ─── Admin Analytics ─────────────────────────────────────────────────────
-
-  // GET /api/admin/analytics — aggregate + per-user engagement stats
-  app.get("/api/admin/analytics", requireAuth as any, async (req: Request, res: Response) => {
-    if (!isAdmin(req)) return res.status(403).json({ message: "Forbidden" });
-
-    try {
-      // Lucas's own admin/testing accounts are not users — see
-      // server/internalAccounts.ts — so every metric below (login time,
-      // audio listens, DAU, XP, lessons) reflects real users only.
-      const allUsers = excludeInternalAccounts(await storage.getAllUsers());
-      const now = Date.now();
-      const oneDayMs = 24 * 60 * 60 * 1000;
-
-      // Per-user stats
-      const userStats = allUsers.map(u => {
-        const completedLessons = (u.completedLessons ?? []).length;
-        const quizScores = (u.quizScores as Record<string, number>) ?? {};
-        const quizValues = Object.values(quizScores);
-        const avgQuiz = quizValues.length > 0
-          ? Math.round(quizValues.reduce((a, b) => a + b, 0) / quizValues.length)
-          : 0;
-        const skillLevels = (u.moduleSkillLevels as Record<string, string>) ?? {};
-        const highestSkill = Object.values(skillLevels).includes('advanced') ? 'advanced'
-          : Object.values(skillLevels).includes('intermediate') ? 'intermediate'
-          : 'novice';
-        // Per-session length, from closed sessions in loginHistory (see
-        // shared/schema.ts) — distinct from totalMinutesActive, which is a
-        // lifetime cumulative total, not a per-login figure.
-        const loginHistory = ((u as any).loginHistory ?? []) as Array<{ durationMinutes?: number; endReason?: string }>;
-        const closedSessions = loginHistory.filter(s => typeof s.durationMinutes === 'number');
-        const avgSessionMinutes = closedSessions.length > 0
-          ? Math.round(closedSessions.reduce((sum, s) => sum + (s.durationMinutes ?? 0), 0) / closedSessions.length)
-          : null;
-        const idleTimeoutCount = closedSessions.filter(s => s.endReason === 'idle_timeout').length;
-        return {
-          id: u.id,
-          username: u.username,
-          email: u.email,
-          subscriptionStatus: u.subscriptionStatus,
-          trialEndsAt: (u as any).trialEndsAt ?? null,
-          lastLoginAt: u.lastLoginAt ?? null,
-          lastActiveAt: u.lastActiveAt ?? null,
-          loginCount: u.loginCount ?? 0,
-          totalMinutesActive: u.totalMinutesActive ?? 0,
-          avgSessionMinutes,
-          closedSessionCount: closedSessions.length,
-          idleTimeoutCount,
-          // Same number the learner sees in the app (shared/xp.ts), not the
-          // legacy users.xp column, which counts 10 per lesson.
-          xp: computeUserXp(u as any),
-          completedLessons,
-          avgQuizScore: avgQuiz,
-          highestSkillLevel: highestSkill,
-        };
-      });
-
-      // Platform aggregate
-      const totalUsers = allUsers.length;
-      // "Pro" = actually paying (active or lifetime). Trialing users have full
-      // access but haven't converted yet — counted separately so this number
-      // doesn't overstate real revenue-paying users.
-      const proUsers = allUsers.filter(u => isPaidStatus(u.subscriptionStatus)).length;
-      const trialingUsers = allUsers.filter(u => isTrialActive(u as any)).length;
-      const dau = allUsers.filter(u => {
-        if (!u.lastActiveAt) return false;
-        return now - new Date(u.lastActiveAt).getTime() < oneDayMs;
-      }).length;
-      const totalXp = userStats.reduce((sum, u) => sum + u.xp, 0);
-      const avgXp = totalUsers > 0 ? Math.round(totalXp / totalUsers) : 0;
-      const avgLessons = totalUsers > 0
-        ? Math.round(userStats.reduce((sum, u) => sum + u.completedLessons, 0) / totalUsers)
-        : 0;
-      const avgMinutes = totalUsers > 0
-        ? Math.round(userStats.reduce((sum, u) => sum + u.totalMinutesActive, 0) / totalUsers)
-        : 0;
-      // Platform-wide average login duration — weighted by session, not by
-      // user, so someone with 20 short sessions doesn't count the same as
-      // someone with 1. Pulled from closed sessions across all users.
-      const allClosedSessions = userStats.reduce((sum, u) => sum + u.closedSessionCount, 0);
-      const avgSessionMinutes = allClosedSessions > 0
-        ? Math.round(
-            userStats.reduce((sum, u) => sum + (u.avgSessionMinutes ?? 0) * u.closedSessionCount, 0) / allClosedSessions
-          )
-        : null;
-
-      // "The Debrief" audio listens — total plays and unique listeners per
-      // module, tallied from each user's audioListens map (shared/schema.ts).
-      const audioTotals: Record<string, { totalPlays: number; uniqueListeners: number }> = {};
-      allUsers.forEach(u => {
-        const listens = ((u as any).audioListens ?? {}) as Record<string, { playCount?: number }>;
-        Object.entries(listens).forEach(([moduleId, entry]) => {
-          if (!audioTotals[moduleId]) audioTotals[moduleId] = { totalPlays: 0, uniqueListeners: 0 };
-          audioTotals[moduleId].totalPlays += entry?.playCount ?? 0;
-          audioTotals[moduleId].uniqueListeners += 1;
-        });
-      });
-      const audioStats = Object.entries(audioTotals)
-        .map(([moduleId, stats]) => ({ moduleId, ...stats }))
-        .sort((a, b) => b.totalPlays - a.totalPlays);
-
-      return res.json({
-        aggregate: { totalUsers, proUsers, trialingUsers, dau, avgXp, avgLessons, avgMinutes, avgSessionMinutes, closedSessionCount: allClosedSessions },
-        users: userStats,
-        audioStats,
-      });
-    } catch (err: any) {
-      console.error('[admin/analytics] error:', err);
-      return res.status(500).json({ message: 'Failed to load analytics' });
-    }
-  });
 
   // ─── CSV Exports ─────────────────────────────────────────────────────────
   // Raw data behind the Analytics page, as downloadable CSVs — for pulling
@@ -2700,89 +2456,6 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
     if (!isAdmin(req)) return res.status(403).json({ message: 'Forbidden' });
     const leads = await storage.getAllLeads();
     return res.json(leads);
-  });
-
-  // ── Admin: Stripe Revenue Dashboard ──────────────────────────────────────────────
-  app.get("/api/admin/revenue", requireAuth as any, async (req: Request, res: Response) => {
-    if (!isAdmin(req)) return res.status(403).json({ message: 'Forbidden' });
-    if (!stripe) return res.status(503).json({ message: 'Stripe not configured' });
-
-    try {
-      // Fetch active subscriptions
-      const subscriptions = await stripe.subscriptions.list({ limit: 100, status: 'active' });
-      const allUsers = await storage.getAllUsers();
-
-      // Annual (and yearly Team) subscriptions count at a twelfth of their price.
-      const monthlyCustomers = subscriptions.data.filter(s =>
-        s.items.data.some(i => i.price.recurring?.interval === 'month' || i.price.recurring?.interval === 'year')
-      );
-      const mrr = Math.round(monthlyCustomers.reduce((sum, s) => {
-        const monthlyAmount = s.items.data.reduce((a, i) => {
-          const amt = i.price.unit_amount ?? 0;
-          return a + (i.price.recurring?.interval === 'year' ? amt / 12 : amt);
-        }, 0);
-        return sum + monthlyAmount;
-      }, 0)) / 100; // cents to dollars
-
-      // Lifetime payments (one-time charges)
-      const paymentIntents = await stripe.paymentIntents.list({ limit: 100 });
-      const lifetimeSales = paymentIntents.data.filter(p => p.status === 'succeeded');
-      const lifetimeRevenue = lifetimeSales.reduce((sum, p) => sum + p.amount, 0) / 100;
-
-      // Signups by day (last 30 days from DB)
-      const now = new Date();
-      const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-      const recentSignups = allUsers.filter(u => {
-        const reg = new Date(u.registeredAt ?? u.lastLoginAt ?? '');
-        return reg >= thirtyDaysAgo;
-      });
-
-      // Signups by day (group)
-      const signupsByDay: Record<string, number> = {};
-      recentSignups.forEach(u => {
-        const day = (u.registeredAt ?? u.lastLoginAt ?? '').slice(0, 10);
-        if (day) signupsByDay[day] = (signupsByDay[day] ?? 0) + 1;
-      });
-
-      // Free to paid conversion — trialing users have full access but haven't
-      // converted yet, so they're excluded from "paid" (see trialingUsers below).
-      const totalUsers = allUsers.length;
-      const paidUsers = allUsers.filter(u => isPaidStatus(u.subscriptionStatus)).length;
-      const trialingUsers = allUsers.filter(u => isTrialActive(u as any)).length;
-      const conversionRate = totalUsers > 0 ? Math.round((paidUsers / totalUsers) * 100) : 0;
-
-      // Lesson completion rates
-      const lessonCompletionCounts: Record<string, number> = {};
-      allUsers.forEach(u => {
-        (u.completedLessons ?? []).forEach((lid: string) => {
-          lessonCompletionCounts[lid] = (lessonCompletionCounts[lid] ?? 0) + 1;
-        });
-      });
-      const topLessons = Object.entries(lessonCompletionCounts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 10)
-        .map(([id, count]) => ({ id, count, pct: Math.round((count / totalUsers) * 100) }));
-
-      return res.json({
-        mrr: Math.round(mrr * 100) / 100,
-        arr: Math.round(mrr * 12 * 100) / 100,
-        lifetimeRevenue: Math.round(lifetimeRevenue * 100) / 100,
-        totalRevenue: Math.round((mrr + lifetimeRevenue) * 100) / 100,
-        activeSubscriptions: monthlyCustomers.length,
-        lifetimeSalesCount: lifetimeSales.length,
-        totalUsers,
-        paidUsers,
-        trialingUsers,
-        freeUsers: totalUsers - paidUsers - trialingUsers,
-        conversionRate,
-        signupsByDay,
-        topLessons,
-        recentSignups30d: recentSignups.length,
-      });
-    } catch (err: any) {
-      console.error('[admin/revenue] error:', err);
-      return res.status(500).json({ message: err.message });
-    }
   });
 
   // ── Drip email cron endpoint ──────────────────────────────────────────────
