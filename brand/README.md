@@ -107,3 +107,25 @@ Also derived here:
 from the favicon again.
 
 Regenerate rasters from these masters; don't hand-edit the PNGs.
+
+## PDFs (October 2026)
+
+Every PDF Acqlerate hands out uses the real logo, never the name set as text in
+spaced capitals, and carries a faint logo watermark on every page.
+
+| File | Use |
+|---|---|
+| `acqlerate-lockup-light-print.png` | Icon + "Acq" navy / "lerate" teal, 4x, for light PDF pages. |
+| `acqlerate-lockup-dark-print.png` | Icon + "Acq" white / "lerate" #4FC3CB, 4x, for navy PDF pages. |
+| `acqlerate-watermark.png` / `-dark.png` | Those lockups at 7% opacity: the page watermark. |
+| `acqlerate-lockup-light.png` | The 2x lockup the Excel builders size by pixel (`scripts/pack3/make_lockup_png.py`). Leave it. |
+
+- `scripts/brand/make_brand_pngs.py` renders the print lockups and watermarks from
+  `acqlerate-icon.svg` and General Sans Bold.
+- `scripts/brand/pdf_brand.py` stamps the watermark (centred, 56% of page width,
+  above the content, dark variant on navy pages). Every generator calls it:
+  `scripts/generate_lesson_book.py`, `scripts/pack-guides/build_pack_guides.py`,
+  `scripts/pack3/build_pack3_pdfs.py`, `scripts/starter-kit/build_starter_kits.py`.
+- `scripts/brand/fix_legacy_pdfs.py` was the one-time fix for the PDFs with no
+  generator (onboarding playbook, pay guide, the six `examples/`).
+- The certificate (`server/certificate.ts`) draws its own lockup and mark watermark.

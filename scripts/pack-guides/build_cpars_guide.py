@@ -2,15 +2,18 @@
 # standalone HTML file, so an absolute /acqlerate-icon.svg URL would not resolve;
 # and the mark must never be redrawn by hand here — read the master raster.
 import base64 as _b64, pathlib as _pl
-_ICON_PNG = _pl.Path(__file__).parent / "brand" / "acqlerate-icon-256.png"
+_BRAND = _pl.Path(__file__).resolve().parents[2] / "brand"
+_ICON_PNG = _BRAND / "acqlerate-icon-256.png"
+# Full logo (icon + two-tone wordmark) from scripts/brand/make_brand_pngs.py. On navy the
+# "lerate" half is #4FC3CB; the old text wordmark used dark teal, which nearly vanished.
+LOCKUP_DARK = "data:image/png;base64," + _b64.b64encode((_BRAND / "acqlerate-lockup-dark-print.png").read_bytes()).decode()
 ICON_SVG = ('<img alt="" style="width:100%;height:100%;display:block;border-radius:inherit" src="data:image/png;base64,'
             + _b64.b64encode(_ICON_PNG.read_bytes()).decode() + '">')
 
 def header(page_num, title="CPARS Playbook"):
     return f'''<div class="header-bar">
     <div class="left">
-      <div class="icon-badge sm">{ICON_SVG}</div>
-      <span class="wordmark-text on-dark sm">Acq<span class="lerate">lerate</span></span>
+      <img class="lockup-sm" alt="Acqlerate" src="{LOCKUP_DARK}">
       <span style="color:#5C6B7A">|</span>
       <span class="title">{title}</span>
     </div>
@@ -50,6 +53,8 @@ HEAD = '''<!DOCTYPE html>
   .wordmark-text.on-dark { color: white; }
   .wordmark-text.on-light { color: var(--navy); }
   .wordmark-text.sm { font-size: 13px; }
+  .lockup { height: 40px; width: auto; display: block; }
+  .lockup-sm { height: 22px; width: auto; display: block; }
 
   .cover { background: var(--navy); color: white; padding: 0.7in 0.75in; }
   .pack-chip { display: inline-block; background: var(--teal); color: white; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; padding: 5px 12px; border-radius: 20px; text-transform: uppercase; }
@@ -103,7 +108,7 @@ def page(n,tag,ttl,what,why,inside,steps,analogy=None):
     return f"""<div class="page content">{header(n+2)}<div class="body-area"><div class="tool-tag">{tag}</div><h3 class="tool-title">{ttl}</h3><h4 class="sub">What It Is</h4><p>{what}</p>{an}<h4 class="sub">Why It Matters</h4><p>{why}</p><h4 class="sub">What's Inside</h4><ul class="tight">{ins}</ul><h4 class="sub">How to Use It</h4>{st}</div>{FOOTER}</div>"""
 
 
-cover=f"""<div class="page cover"><span class="pack-chip">Pack 4</span><div class="wordmark-row"><div class="icon-badge">{ICON_SVG}</div><span class="wordmark-text on-dark">Acq<span class="lerate">lerate</span></span></div><h1>CPARS Playbook</h1><p class="subtitle">How ratings get decided, and how to earn the one you want</p><div class="divider"></div><div class="included-label">What's Included</div><div class="included-grid"><div class="included-item"><span class="dot"></span>Rating Decoder</div><div class="included-item"><span class="dot"></span>Interim Check-In</div><div class="included-item"><span class="dot"></span>Evidence Log</div><div class="included-item"><span class="dot"></span>Rebuttal Builder</div><div class="included-item"><span class="dot"></span>Self-Assessment</div></div><div class="cover-footer"><span>acqlerate.com</span><span>September 2026 Edition &middot; FAR 42.15</span></div></div>"""
+cover=f"""<div class="page cover"><span class="pack-chip">Pack 4</span><div class="wordmark-row"><img class="lockup" alt="Acqlerate" src="{LOCKUP_DARK}"></div><h1>CPARS Playbook</h1><p class="subtitle">How ratings get decided, and how to earn the one you want</p><div class="divider"></div><div class="included-label">What's Included</div><div class="included-grid"><div class="included-item"><span class="dot"></span>Rating Decoder</div><div class="included-item"><span class="dot"></span>Interim Check-In</div><div class="included-item"><span class="dot"></span>Evidence Log</div><div class="included-item"><span class="dot"></span>Rebuttal Builder</div><div class="included-item"><span class="dot"></span>Self-Assessment</div></div><div class="cover-footer"><span>acqlerate.com</span><span>September 2026 Edition &middot; FAR 42.15</span></div></div>"""
 welcome=f"""<div class="page content">{header(2)}<div class="body-area"><h2 class="section-title">Satisfactory Loses Recompetes</h2>
 <p>Here is how a CPARS rating actually happens. Near the end of the period, your COR or Assessing Official opens the system and has to write a rating in each area, on a five-point scale, with a narrative that justifies it. They are doing this for several contracts. They are working from memory and whatever is in their email.</p>
 <p>Satisfactory means you met the contract. It is the default, because meeting the contract is what the file usually shows. Very Good and Exceptional require the Assessing Official to write down specific instances where you exceeded a requirement to the Government's benefit. If you never gave them those instances in writing, during the period, they cannot write them down, and you get Satisfactory.</p>

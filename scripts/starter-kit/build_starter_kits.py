@@ -11,7 +11,7 @@ always serves the current file, so rebuilding updates everyone.
 
 Same pipeline and design as the Finance Cheat Sheets (scripts/pack3): headless
 Chromium via Playwright, the General Sans brand font, the master SVG icon, a
-tiled watermark, and PDF permissions that allow printing but not editing.
+logo watermark, and PDF permissions that allow printing but not editing.
 
 Course counts (modules, lessons, CLPs) come from shared/courseTotals.generated.json,
 which `npm run build` regenerates from curriculum.ts. Run a build first if the
@@ -31,6 +31,9 @@ import sys
 from pathlib import Path
 
 import pikepdf
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "brand"))
+from pdf_brand import stamp as brand_stamp  # noqa: E402
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -120,7 +123,7 @@ def protect(src: Path, dst: Path, title: str, subject: str) -> None:
         pdf.docinfo["/Subject"] = subject
         pdf.docinfo["/Author"] = "Acqlerate"
         pdf.docinfo["/Creator"] = "Acqlerate (acqlerate.com)"
-        pdf.docinfo["/Keywords"] = "Acqlerate, defense acquisition, starter kit, acqlerate.com"
+        pdf.docinfo["/Keywords"] = "Acqlerate, defense acquisition, starter kit, acqlerate.com, acqlerate-watermark-v1"
         with pdf.open_metadata() as meta:
             meta["dc:title"] = title
             meta["dc:creator"] = ["Acqlerate"]
@@ -153,6 +156,7 @@ def build(names: list[str], scratch: Path) -> None:
             raw = scratch / f"{name}.raw.pdf"
             page.pdf(path=str(raw), width="8.5in", height="11in", print_background=True,
                      margin={"top": "0", "right": "0", "bottom": "0", "left": "0"})
+            brand_stamp(raw)  # logo watermark on every page, before encryption
             protect(raw, OUT / fname, title, subject)
             with pikepdf.open(OUT / fname) as pdf:
                 print(f"built {fname}: {len(pdf.pages)} pages")

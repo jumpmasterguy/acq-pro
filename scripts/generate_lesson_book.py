@@ -382,6 +382,24 @@ with open(_ICON_PNG, "rb") as _fh:
     LOGO_SVG = ('<img alt="" style="width:100%;height:100%;display:block" '
                 'src="data:image/png;base64,' + base64.b64encode(_fh.read()).decode() + '">')
 
+# The full logo (icon + two-tone "Acq"/"lerate" wordmark), rendered from the master
+# icon and General Sans by scripts/brand/make_brand_pngs.py. Never set the name as
+# spaced capitals: the cover and the running head both use these lockups.
+_BRAND_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "brand")
+
+
+def _png_uri(name: str) -> str:
+    with open(os.path.join(_BRAND_DIR, name), "rb") as fh:
+        return "data:image/png;base64," + base64.b64encode(fh.read()).decode()
+
+
+LOCKUP_DARK = _png_uri("acqlerate-lockup-dark-print.png")
+LOCKUP_LIGHT = _png_uri("acqlerate-lockup-light-print.png")
+
+# Every page gets the faint logo watermark after WeasyPrint writes the file.
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "brand"))
+from pdf_brand import stamp as brand_stamp  # noqa: E402
+
 
 def build_html(mod: dict) -> str:
     num = MODULE_NUMBERS.get(mod["id"], 0)
@@ -389,7 +407,7 @@ def build_html(mod: dict) -> str:
     total_min = sum(minutes(l.get("duration")) for l in lessons)
     # The @top-center content string is CSS, not HTML: entities are not parsed,
     # so this needs the real character and no escaping.
-    running = f'ACQLERATE \u00b7 MODULE {num}: {mod["title"].upper()}'.replace('"', "'")
+    running_title = f'Module {num}: {mod["title"]}'
 
     toc = "".join(
         f'<div class="toc-row"><span class="toc-n">{i:02d}</span>'
@@ -429,7 +447,7 @@ def build_html(mod: dict) -> str:
             + "</section>"
         )
 
-    css = CSS_TEMPLATE.replace("__RUNNING__", running)
+    css = CSS_TEMPLATE
     return f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <title>{esc(mod['title'])} — Acqlerate Lesson Book</title>
@@ -437,8 +455,7 @@ def build_html(mod: dict) -> str:
 <body>
 <div class="cover">
   <div class="cover-inner">
-    <div class="logo">{LOGO_SVG}</div>
-    <div class="brand">ACQLERATE</div>
+    <img class="cover-lockup" alt="Acqlerate" src="{LOCKUP_DARK}">
     <div class="cover-mod">MODULE {num}</div>
     <h1 class="cover-t">{esc(mod['title'])}</h1>
     <p class="cover-s">{esc(mod.get('description', ''))}</p>
@@ -447,6 +464,7 @@ def build_html(mod: dict) -> str:
       &nbsp;&middot;&nbsp; Lesson Book Edition</div>
   </div>
 </div>
+<div class="running-head"><img alt="Acqlerate" src="{LOCKUP_LIGHT}"><span>{esc(running_title)}</span></div>
 <div class="toc">
   <h2 class="toc-h">Course Lessons</h2>
   {toc}
@@ -460,11 +478,7 @@ CSS_TEMPLATE = f"""
 @page {{
   size: letter;
   margin: 26mm 22mm 22mm 22mm;
-  @top-center {{
-    content: "__RUNNING__";
-    font-family: "Liberation Sans", sans-serif; font-size: 8pt; letter-spacing: 0.08em;
-    color: {LIGHT};
-  }}
+  @top-center {{ content: element(runninghead); }}
   @bottom-center {{
     content: counter(page);
     font-family: "Liberation Serif", serif; font-size: 9pt; color: {LIGHT};
@@ -483,8 +497,11 @@ strong {{ font-weight: bold; }}
   page-break-after: always; position: relative;
 }}
 .cover-inner {{ position: absolute; left: 26mm; right: 26mm; top: 34%; }}
-.logo {{ width: 62px; height: 62px; margin-bottom: 16pt; }}
-.brand {{ font-family: "Liberation Sans", sans-serif; font-size: 13pt; letter-spacing: 0.22em; color: {GOLD}; margin-bottom: 26pt; }}
+.cover-lockup {{ height: 46px; width: auto; display: block; margin-bottom: 30pt; }}
+.running-head {{ position: running(runninghead); display: flex; align-items: center; gap: 7pt;
+  font-family: "Liberation Sans", sans-serif; font-size: 8pt; letter-spacing: 0.08em;
+  text-transform: uppercase; color: {LIGHT}; white-space: nowrap; }}
+.running-head img {{ height: 13pt; width: auto; display: block; }}
 .cover-mod {{ font-family: "Liberation Sans", sans-serif; font-size: 12pt; letter-spacing: 0.12em; color: {COVER_META}; margin-bottom: 6pt; }}
 .cover-t {{ font-family: "Liberation Sans", sans-serif; font-size: 34pt; font-weight: bold; color: #ffffff; line-height: 1.12; margin: 0 0 14pt; }}
 .cover-s {{ font-style: italic; font-size: 13pt; color: {COVER_SUB}; line-height: 1.45; margin: 0 0 22pt; max-width: 118mm; }}
@@ -629,6 +646,7 @@ def main() -> int:
         else:
             path = os.path.join(args.out, name)
             HTML(string=doc).write_pdf(path)
+            brand_stamp(path)
         size = os.path.getsize(path)
         print(f"{mod['id']:12s} -> {path}  ({size/1024:.0f} KB)")
     return 0

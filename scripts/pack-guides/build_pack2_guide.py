@@ -2,15 +2,18 @@
 # standalone HTML file, so an absolute /acqlerate-icon.svg URL would not resolve;
 # and the mark must never be redrawn by hand here — read the master raster.
 import base64 as _b64, pathlib as _pl
-_ICON_PNG = _pl.Path(__file__).parent / "brand" / "acqlerate-icon-256.png"
+_BRAND = _pl.Path(__file__).resolve().parents[2] / "brand"
+_ICON_PNG = _BRAND / "acqlerate-icon-256.png"
+# Full logo (icon + two-tone wordmark) from scripts/brand/make_brand_pngs.py. On navy the
+# "lerate" half is #4FC3CB; the old text wordmark used dark teal, which nearly vanished.
+LOCKUP_DARK = "data:image/png;base64," + _b64.b64encode((_BRAND / "acqlerate-lockup-dark-print.png").read_bytes()).decode()
 ICON_SVG = ('<img alt="" style="width:100%;height:100%;display:block;border-radius:inherit" src="data:image/png;base64,'
             + _b64.b64encode(_ICON_PNG.read_bytes()).decode() + '">')
 
 def header(page_num, title="GovCon Proposal Toolkit"):
     return f'''<div class="header-bar">
     <div class="left">
-      <div class="icon-badge sm">{ICON_SVG}</div>
-      <span class="wordmark-text on-dark sm">Acq<span class="lerate">lerate</span></span>
+      <img class="lockup-sm" alt="Acqlerate" src="{LOCKUP_DARK}">
       <span style="color:#5C6B7A">|</span>
       <span class="title">{title}</span>
     </div>
@@ -50,6 +53,8 @@ HEAD = '''<!DOCTYPE html>
   .wordmark-text.on-dark { color: white; }
   .wordmark-text.on-light { color: var(--navy); }
   .wordmark-text.sm { font-size: 13px; }
+  .lockup { height: 40px; width: auto; display: block; }
+  .lockup-sm { height: 22px; width: auto; display: block; }
 
   .cover { background: var(--navy); color: white; padding: 0.7in 0.75in; }
   .pack-chip { display: inline-block; background: var(--teal); color: white; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; padding: 5px 12px; border-radius: 20px; text-transform: uppercase; }
@@ -102,7 +107,7 @@ def page(n,tag,ttl,what,why,inside,steps,analogy=None):
     st=''.join(f'<div class="step"><div class="step-num">{i+1}</div><div class="step-body"><b>{h}</b><span>{d}</span></div></div>' for i,(h,d) in enumerate(steps))
     return f"""<div class="page content">{header(n+3)}<div class="body-area"><div class="tool-tag">{tag}</div><h3 class="tool-title">{ttl}</h3><h4 class="sub">What It Is</h4><p>{what}</p>{an}<h4 class="sub">Why It Matters</h4><p>{why}</p><h4 class="sub">What's Inside</h4><ul class="tight">{ins}</ul><h4 class="sub">How to Use It</h4>{st}</div>{FOOTER}</div>"""
 
-cover=f"""<div class="page cover"><span class="pack-chip">Pack 2</span><div class="wordmark-row"><div class="icon-badge">{ICON_SVG}</div><span class="wordmark-text on-dark">Acq<span class="lerate">lerate</span></span></div><h1>GovCon Proposal Toolkit</h1><p class="subtitle">Five tools that separate winning proposals from losing ones</p><div class="divider"></div><div class="included-label">What's Included</div><div class="included-grid"><div class="included-item"><span class="dot"></span>Proposal Compliance Matrix</div><div class="included-item"><span class="dot"></span>Past Performance Template</div><div class="included-item"><span class="dot"></span>Section L/M Decoder + Phrase Library</div><div class="included-item"><span class="dot"></span>Pricing Checklist + Cost Realism Self-Check</div><div class="included-item"><span class="dot"></span>Win Theme Tracker</div></div><div class="cover-footer"><span>acqlerate.com</span><span>September 2026 Edition &middot; FAC 2025-06</span></div></div>"""
+cover=f"""<div class="page cover"><span class="pack-chip">Pack 2</span><div class="wordmark-row"><img class="lockup" alt="Acqlerate" src="{LOCKUP_DARK}"></div><h1>GovCon Proposal Toolkit</h1><p class="subtitle">Five tools that separate winning proposals from losing ones</p><div class="divider"></div><div class="included-label">What's Included</div><div class="included-grid"><div class="included-item"><span class="dot"></span>Proposal Compliance Matrix</div><div class="included-item"><span class="dot"></span>Past Performance Template</div><div class="included-item"><span class="dot"></span>Section L/M Decoder + Phrase Library</div><div class="included-item"><span class="dot"></span>Pricing Checklist + Cost Realism Self-Check</div><div class="included-item"><span class="dot"></span>Win Theme Tracker</div></div><div class="cover-footer"><span>acqlerate.com</span><span>September 2026 Edition &middot; FAC 2025-06</span></div></div>"""
 
 welcome=f"""<div class="page content">{header(2)}<div class="body-area"><h2 class="section-title">Why Most Proposals Lose Before They're Written</h2>
 <p>Here is the uncomfortable truth about government proposals: the best proposals don't win because of great writing. They win because the team understood the customer's priorities before the RFP dropped and organized the response to address every evaluation criterion directly.</p>

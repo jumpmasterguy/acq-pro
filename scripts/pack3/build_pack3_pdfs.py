@@ -12,7 +12,7 @@ Rendering is headless Chromium via Playwright: real CSS, the brand font, and the
 master SVG icon all render exactly as they do on the site. WeasyPrint cannot
 draw the icon's gradients (see claude/brand-sweep-pages-diagrams-pdfs-2026-09-19.md).
 
-Every page carries a tiled Acqlerate watermark above the content, and the file
+Every page carries the Acqlerate logo watermark (scripts/brand/pdf_brand.py), and the file
 is saved with permissions that allow printing but not editing or copying, so a
 forwarded copy keeps its branding. The owner password is random per build; to
 change a sheet, edit its template here and rebuild rather than editing the PDF.
@@ -28,6 +28,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import pikepdf
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "brand"))
+from pdf_brand import stamp as brand_stamp  # noqa: E402
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -241,7 +244,7 @@ def protect(src: Path, dst: Path, title: str, subject: str) -> None:
         pdf.docinfo["/Subject"] = subject
         pdf.docinfo["/Author"] = "Acqlerate"
         pdf.docinfo["/Creator"] = "Acqlerate (acqlerate.com)"
-        pdf.docinfo["/Keywords"] = "Acqlerate, defense acquisition, DoD finance, acqlerate.com"
+        pdf.docinfo["/Keywords"] = "Acqlerate, defense acquisition, DoD finance, acqlerate.com, acqlerate-watermark-v1"
         with pdf.open_metadata() as meta:
             meta["dc:title"] = title
             meta["dc:creator"] = ["Acqlerate"]
@@ -272,6 +275,7 @@ def build(names: list[str], scratch: Path) -> list[Path]:
             raw = scratch / f"{name}.raw.pdf"
             page.pdf(path=str(raw), width=w, height=h, print_background=True,
                      margin={"top": "0", "right": "0", "bottom": "0", "left": "0"})
+            brand_stamp(raw)  # logo watermark on every page, before encryption
             for d in OUT_DIRS:
                 d.mkdir(parents=True, exist_ok=True)
                 protect(raw, d / fname, title, subject)

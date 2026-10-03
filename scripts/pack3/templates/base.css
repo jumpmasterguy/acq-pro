@@ -54,11 +54,9 @@ body {
 
 /* Watermark: above the content so it survives on every card, at a strength
    that never competes with the text. Tiled, so cropping cannot remove it. */
-.watermark {
-  position: absolute; inset: 0; z-index: 50; pointer-events: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='260'><g transform='rotate(-28 210 130)' font-family='General Sans, Arial, sans-serif' font-weight='700' font-size='30' fill='%230F172A' fill-opacity='0.045'><text x='40' y='120'>Acqlerate</text><text x='250' y='250' font-size='16' font-weight='600'>acqlerate.com</text></g></svg>");
-  background-repeat: repeat;
-}
+/* The tiled text watermark was replaced (Oct 2026) by the logo watermark that
+   scripts/brand/pdf_brand.py stamps on every page after rendering. */
+.watermark { display: none; }
 
 /* ── Header lockup ─────────────────────────────────────────────── */
 .masthead { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.3in; }

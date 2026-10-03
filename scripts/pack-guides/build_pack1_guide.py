@@ -2,15 +2,18 @@
 # standalone HTML file, so an absolute /acqlerate-icon.svg URL would not resolve;
 # and the mark must never be redrawn by hand here — read the master raster.
 import base64 as _b64, pathlib as _pl
-_ICON_PNG = _pl.Path(__file__).parent / "brand" / "acqlerate-icon-256.png"
+_BRAND = _pl.Path(__file__).resolve().parents[2] / "brand"
+_ICON_PNG = _BRAND / "acqlerate-icon-256.png"
+# Full logo (icon + two-tone wordmark) from scripts/brand/make_brand_pngs.py. On navy the
+# "lerate" half is #4FC3CB; the old text wordmark used dark teal, which nearly vanished.
+LOCKUP_DARK = "data:image/png;base64," + _b64.b64encode((_BRAND / "acqlerate-lockup-dark-print.png").read_bytes()).decode()
 ICON_SVG = ('<img alt="" style="width:100%;height:100%;display:block;border-radius:inherit" src="data:image/png;base64,'
             + _b64.b64encode(_ICON_PNG.read_bytes()).decode() + '">')
 
 def header(page_num, title="PM Essentials: Your First 90 Days"):
     return f'''<div class="header-bar">
     <div class="left">
-      <div class="icon-badge sm">{ICON_SVG}</div>
-      <span class="wordmark-text on-dark sm">Acq<span class="lerate">lerate</span></span>
+      <img class="lockup-sm" alt="Acqlerate" src="{LOCKUP_DARK}">
       <span style="color:#5C6B7A">|</span>
       <span class="title">{title}</span>
     </div>
@@ -50,6 +53,8 @@ HEAD = '''<!DOCTYPE html>
   .wordmark-text.on-dark { color: white; }
   .wordmark-text.on-light { color: var(--navy); }
   .wordmark-text.sm { font-size: 13px; }
+  .lockup { height: 40px; width: auto; display: block; }
+  .lockup-sm { height: 22px; width: auto; display: block; }
 
   .cover { background: var(--navy); color: white; padding: 0.7in 0.75in; }
   .pack-chip { display: inline-block; background: var(--teal); color: white; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; padding: 5px 12px; border-radius: 20px; text-transform: uppercase; }
@@ -99,8 +104,7 @@ HEAD = '''<!DOCTYPE html>
 cover = f'''<div class="page cover">
   <span class="pack-chip">Pack 1</span>
   <div class="wordmark-row">
-    <div class="icon-badge">{ICON_SVG}</div>
-    <span class="wordmark-text on-dark">Acq<span class="lerate">lerate</span></span>
+    <img class="lockup" alt="Acqlerate" src="{LOCKUP_DARK}">
   </div>
   <h1>PM Essentials: Your First 90 Days</h1>
   <p class="subtitle">One workbook that builds its own program status report</p>
