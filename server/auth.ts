@@ -44,6 +44,7 @@ declare global {
       subscriptionStatus: string;
       trialEndsAt: string | null;
       registeredAt: string | null;
+      aiConsentAt: string | null;
       stripeCustomerId: string | null;
       subscriptionId: string | null;
       completedLessons: string[];
@@ -299,6 +300,8 @@ export function toPassportUser(user: User): Express.User {
     // screens tell comped Pro time from a trial (isCompedTime).
     trialEndsAt: user.trialEndsAt ?? null,
     registeredAt: user.registeredAt ?? null,
+    // Consent to send their text to Anthropic for AI features (5.1.2(i)).
+    aiConsentAt: (user as any).aiConsentAt ?? null,
     stripeCustomerId: user.stripeCustomerId,
     subscriptionId: user.subscriptionId,
     completedLessons: user.completedLessons ?? [],

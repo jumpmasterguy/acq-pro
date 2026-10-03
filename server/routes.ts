@@ -8,7 +8,7 @@ import fs from "fs";
 import { storage, getDisplayStreak } from "./storage";
 import { excludeInternalAccounts } from "./internalAccounts";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
-import { verifyAppleIdentityToken } from "./appleAuth";
+import { verifyAppleIdentityToken, exchangeAppleAuthorizationCode, revokeAppleToken, appleRevokeConfigured } from "./appleAuth";
 import { registerSchema, loginSchema, userProfileSchema, updateNameSchema } from "@shared/schema";
 import { hasPaidPlan, hasFullAccess, isPaidStatus, isTrialActive, isTopPlanStatus, canDownloadLessonBooks, PACK_BONUS_PACKS } from "@shared/access";
 import { isNewPricing, topPlanName, planPrice, type PlanType } from "@shared/pricing";
@@ -272,6 +272,7 @@ export async function registerRoutes(
         subscriptionStatus: user.subscriptionStatus,
         trialEndsAt: (user as any).trialEndsAt ?? null,
         registeredAt: (user as any).registeredAt ?? null,
+        aiConsentAt: (user as any).aiConsentAt ?? null,
         completedLessons: user.completedLessons ?? [],
         quizScores: user.quizScores ?? {},
         isAdmin: isAdmin(req),
@@ -331,6 +332,7 @@ export async function registerRoutes(
             subscriptionStatus: user.subscriptionStatus,
             trialEndsAt: (user as any).trialEndsAt ?? null,
             registeredAt: (user as any).registeredAt ?? null,
+            aiConsentAt: (user as any).aiConsentAt ?? null,
             completedLessons: user.completedLessons ?? [],
             quizScores: user.quizScores ?? {},
             isAdmin: isAdmin(req),
@@ -379,6 +381,7 @@ export async function registerRoutes(
       subscriptionStatus: user.subscriptionStatus,
       trialEndsAt: (user as any).trialEndsAt ?? null,
       registeredAt: (user as any).registeredAt ?? null,
+      aiConsentAt: (user as any).aiConsentAt ?? null,
       completedLessons: user.completedLessons ?? [],
       quizScores: user.quizScores ?? {},
       isAdmin: isAdmin(req),
@@ -477,6 +480,18 @@ export async function registerRoutes(
       billingNote = "lifetime purchase (no recurring billing)";
     }
 
+    // Sign in with Apple: revoke our link at Apple (Guideline 5.1.1(v)).
+    // Best-effort; never blocks deletion.
+    let appleNote = "";
+    if ((user as any).appleId) {
+      const full = await storage.getUser(userId).catch(() => undefined);
+      const token = (full as any)?.appleRefreshToken as string | undefined;
+      appleNote = !appleRevokeConfigured()
+        ? "Sign in with Apple NOT revoked: APPLE_TEAM_ID / APPLE_KEY_ID / APPLE_PRIVATE_KEY not set"
+        : !token ? "Sign in with Apple NOT revoked: no token on file (signed in before revocation was set up)"
+        : (await revokeAppleToken(token)) ? "Sign in with Apple revoked" : "Sign in with Apple revoke FAILED (see logs)";
+    }
+
     // Tracker data lives in its own tables. Best-effort, logged, never blocks
     // the account deletion itself.
     try {
@@ -499,6 +514,7 @@ export async function registerRoutes(
       `Name: ${(user as any).firstName ?? ""} ${(user as any).lastName ?? ""}`.trim(),
       `Plan at deletion: ${user.subscriptionStatus}`,
       `Billing: ${billingNote}`,
+      appleNote,
       user.stripeCustomerId ? `Stripe customer: https://dashboard.stripe.com/customers/${user.stripeCustomerId}` : "",
       `Time (UTC): ${new Date().toISOString()}`,
       `To finish (Privacy Policy promise): if this address is a contact in Resend, remove it there too.`,
@@ -546,6 +562,7 @@ export async function registerRoutes(
         || email.split("@")[0];
 
       const existing = await storage.getUserByAppleId(identity.appleId);
+      const authorizationCode = String(req.body?.authorizationCode ?? "");
       const user = await storage.upsertAppleUser({
         appleId: identity.appleId,
         email,
@@ -578,6 +595,13 @@ export async function registerRoutes(
         } catch (e) {
           console.error('[analytics] apple login tracking error:', e);
         }
+        // Keep a token we can revoke if they delete their account (5.1.1(v)).
+        // Off the critical path: sign-in never waits on Apple for this.
+        if (authorizationCode && appleRevokeConfigured()) {
+          exchangeAppleAuthorizationCode(authorizationCode)
+            .then(t => t ? storage.updateUserFields(user.id, { appleRefreshToken: t }) : undefined)
+            .catch(() => {});
+        }
         if (identity.isPrivateEmail) {
           // Worth knowing in the logs: mail to this address only lands if the
           // sending domains are registered under Sign in with Apple for Email
@@ -593,6 +617,7 @@ export async function registerRoutes(
           subscriptionStatus: user.subscriptionStatus,
           trialEndsAt: (user as any).trialEndsAt ?? null,
           registeredAt: (user as any).registeredAt ?? null,
+          aiConsentAt: (user as any).aiConsentAt ?? null,
           completedLessons: user.completedLessons ?? [],
           quizScores: user.quizScores ?? {},
           isAdmin: isAdmin(req),
@@ -2169,6 +2194,24 @@ export async function registerRoutes(
   // POST /api/explain
   // Body: { lessonTitle: string, lessonContext: string, mode: 'eli5' | 'apply' | 'lost' }
   // Returns: { explanation: string }
+  // ── AI consent (App Store Guideline 5.1.2(i)) ───────────────────────────
+  // Every AI feature sends text to Anthropic (Claude). Nothing goes there until
+  // the user has said yes once; they can turn it off in My Account. The app
+  // asks with a sheet that names Anthropic and what is sent (AiConsentHost).
+  const needsAiConsent = (req: Request, res: Response): boolean => {
+    if ((req.user as any)?.aiConsentAt) return false;
+    res.status(428).json({ message: "Turn on AI features first.", needsAiConsent: true });
+    return true;
+  };
+
+  app.post("/api/ai-consent", requireAuth as any, async (req: Request, res: Response) => {
+    const consent = req.body?.consent === true;
+    const at = consent ? new Date().toISOString() : null;
+    await storage.updateUserFields((req.user as any).id, { aiConsentAt: at } as any);
+    console.log(`[ai-consent] ${(req.user as any).email} ${consent ? "granted" : "withdrawn"}`);
+    return res.json({ aiConsentAt: at });
+  });
+
   app.post("/api/explain", requireAuth as any, async (req: Request, res: Response) => {
     const { lessonTitle, lessonContext, mode, lessonId } = req.body;
     if (!lessonTitle || !lessonContext || !mode) {
@@ -2177,6 +2220,7 @@ export async function registerRoutes(
     if (!["eli5", "apply", "lost"].includes(mode)) {
       return res.status(400).json({ message: "Unknown mode" });
     }
+    if (needsAiConsent(req, res)) return;
     if (!aiConfigured()) {
       return res.status(503).json({ message: "AI explanations are not configured yet. Add ANTHROPIC_API_KEY in Railway." });
     }
@@ -2333,6 +2377,7 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
     if (typeof lessonId !== "string" || typeof questionId !== "string" || typeof question !== "string" || typeof picked !== "number") {
       return res.status(400).json({ message: "Missing required fields" });
     }
+    if (needsAiConsent(req, res)) return;
     if (!aiConfigured()) return res.status(503).json({ message: "AI is not configured yet." });
     try {
       const { explanation, cached } = await explainMistake(lessonId, questionId, question, picked);
@@ -2358,6 +2403,7 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
     if (text.length > TEACH_BACK_MAX_CHARS) {
       return res.status(400).json({ message: "Keep it short: 2 to 4 sentences is the point." });
     }
+    if (needsAiConsent(req, res)) return;
     const user = await storage.getUser(userId);
     if (!user) return res.status(401).json({ message: "Authentication required" });
     const topPlan = isTopPlanStatus((user as any).subscriptionStatus);

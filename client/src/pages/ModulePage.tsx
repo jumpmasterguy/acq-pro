@@ -77,6 +77,17 @@ export default function ModulePage({ moduleId, progress, onBack, onSelectLesson,
   // — so a listener replaying a section doesn't inflate the play count.
   const hasLoggedAudioPlay = useRef(false);
   const handleAudioPlay = () => {
+    // Lock screen and Control Center show what is playing (the app keeps
+    // audio running in the background, see AppDelegate.swift).
+    try {
+      if ('mediaSession' in navigator && typeof (window as any).MediaMetadata === 'function') {
+        navigator.mediaSession.metadata = new (window as any).MediaMetadata({
+          title: `The Debrief: ${mod.title}`,
+          artist: 'Acqlerate',
+          artwork: [{ src: 'https://acqlerate.com/icon-512x512.png', sizes: '512x512', type: 'image/png' }],
+        });
+      }
+    } catch { /* lock-screen info is a nicety */ }
     if (hasLoggedAudioPlay.current) return;
     hasLoggedAudioPlay.current = true;
     apiRequest("POST", "/api/audio/play", { moduleId: mod.id }).catch(() => {

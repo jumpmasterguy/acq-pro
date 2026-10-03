@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calculateXP, ladderFor } from "@/lib/progress";
 import { hasFullAccess, hasPaidPlan, isTopPlanStatus, trialDaysRemaining, isCompedTime } from "@shared/access";
-import { isNativeApp, getPlatform } from "@/lib/platform";
+import { isNativeApp, getPlatform, openSitePageInApp } from "@/lib/platform";
 import { useActiveTrack } from "@/lib/careerTracks";
 import { modules, prefetchCurriculum } from "@/lib/curriculumMeta";
 import { getModuleTheme, getModuleFamilyTheme, getModuleFamily, FAMILY_LABEL, FAMILY_THEME, type ModuleFamily } from "@/lib/moduleTheme";
@@ -97,6 +97,8 @@ import ResourcesPage from "@/pages/ResourcesPage";
 import UpgradePage from "@/pages/UpgradePage";
 import MyAccountPage from "@/pages/MyAccountPage";
 import AuthPage, { type AuthUser, type SkillLevel, type UserProfile } from "@/pages/AuthPage";
+import AiConsentHost from "@/components/AiConsentHost";
+import { setAiConsentFromUser } from "@/lib/aiConsent";
 import { LazyModuleAssessment } from "@/components/LazyModuleAssessment";
 import { LevelRoadSheet } from "@/components/LevelRoad";
 import { DocumentViewerProvider } from "@/components/DocumentViewerProvider";
@@ -360,6 +362,7 @@ function AppContent() {
   // timeout) and the client notices via a 401 on the next heartbeat — shown
   // on the login screen so it doesn't look like an unexplained sign-out.
   const [idleSignOutNotice, setIdleSignOutNotice] = useState(false);
+  const [deletedNotice, setDeletedNotice] = useState(false);
   // Module assessment modal state
   const [assessmentModuleId, setAssessmentModuleId] = useState<string | null>(null);
   const [showLevels, setShowLevels] = useState(false);
@@ -377,6 +380,9 @@ function AppContent() {
   // Derived progress from server auth
   const isPremium =
     authState.status === 'authenticated' && hasFullAccess(authState.user);
+  // Keep the AI-consent flag (lib/aiConsent.ts) in step with the signed-in user.
+  const aiConsentAt = authState.status === 'authenticated' ? authState.user.aiConsentAt ?? null : null;
+  useEffect(() => { setAiConsentFromUser(aiConsentAt); }, [aiConsentAt]);
   const trialDaysLeft =
     authState.status === 'authenticated' ? trialDaysRemaining(authState.user) : null;
   // Same clock as a trial, but time Lucas gave them (or a reward): say "Pro".
@@ -666,6 +672,7 @@ function AppContent() {
   const handleAuthenticated = (user: AuthUser) => {
     setAuthState({ status: 'authenticated', user });
     setIdleSignOutNotice(false);
+    setDeletedNotice(false);
     const profile = user.userProfile as UserProfile | null | undefined;
     if (!profile?.completedOnboarding) {
       track('sign_up', { method: user.googleId ? 'google' : 'email' });
@@ -733,9 +740,17 @@ function AppContent() {
   }, []);
 
   // Server has already deleted the row and destroyed the session; just leave.
+  // In the app, stay on the sign-in screen with a confirmation: the marketing
+  // homepage is not part of the app (prices and checkout, no way back), and
+  // App Review always tests account deletion.
   const handleAccountDeleted = useCallback(() => {
     clearSavedView();
     setAuthState({ status: 'unauthenticated' });
+    if (isNativeApp()) {
+      setDeletedNotice(true);
+      setView({ type: 'auth' });
+      return;
+    }
     window.location.href = 'https://acqlerate.com/?account=deleted';
   }, []);
 
@@ -811,7 +826,9 @@ function AppContent() {
         // back, and its sticky header sits under the status bar because that
         // page was never built to run full-screen.
         onBack={view.type === 'auth' && !isNativeApp() ? () => { window.location.href = 'https://acqlerate.com/'; } : undefined}
-        notice={idleSignOutNotice ? "You were signed out after 30 minutes of inactivity. Log back in to continue." : undefined}
+        notice={deletedNotice
+          ? "Your account and progress have been deleted. Thanks for learning with us."
+          : idleSignOutNotice ? "You were signed out after 30 minutes of inactivity. Log back in to continue." : undefined}
       />
     );
   }
@@ -1342,8 +1359,8 @@ function AppContent() {
             Sign Out
           </button>
           <div className="flex gap-3 px-3 pt-2 pb-1">
-            <a href="/privacy" className="text-[12px] text-sidebar-foreground/75 hover:text-sidebar-foreground transition-colors">Privacy</a>
-            <a href="/terms" className="text-[12px] text-sidebar-foreground/75 hover:text-sidebar-foreground transition-colors">Terms</a>
+            <a href="/privacy" onClick={e => openSitePageInApp(e, '/privacy')} className="text-[12px] text-sidebar-foreground/75 hover:text-sidebar-foreground transition-colors">Privacy</a>
+            <a href="/terms" onClick={e => openSitePageInApp(e, '/terms')} className="text-[12px] text-sidebar-foreground/75 hover:text-sidebar-foreground transition-colors">Terms</a>
             {/* public/consent.js listens for clicks on [data-acq-cookie-settings] */}
             <button type="button" data-acq-cookie-settings className="text-[12px] text-sidebar-foreground/75 hover:text-sidebar-foreground transition-colors">Cookies</button>
             <PWAInstallLink />
@@ -1446,6 +1463,8 @@ function App() {
             <AppContent />
           </DocumentViewerProvider>
         </Router>
+        {/* "Turn on AI features?" sheet, opened by ensureAiConsent(). */}
+        <AiConsentHost />
       </TooltipProvider>
     </QueryClientProvider>
   );

@@ -24,6 +24,12 @@
  *   - Tokens that unlock something (Stripe session_id, reset-link token,
  *     email) are stripped from the URL GA receives.
  *
+ *   - Inside the iPhone/Android app (user agent contains "AcqlerateApp", set
+ *     by capacitor.config.ts appendUserAgent) Google Analytics never loads and
+ *     no banner shows. App Store Guideline 5.1.1(ii) needs consent for usage
+ *     data in apps, and the app's own numbers already come from our server.
+ *     gtag() still exists so event calls are harmless no-ops.
+ *
  * window.acqConsent.open()  shows the choice again (used by Cookie settings)
  * window.acqConsent.get()   'granted' | 'denied' | null (no choice yet)
  */
@@ -42,6 +48,11 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){ window.dataLayer.push(arguments); }
   if (typeof window.gtag !== "function") window.gtag = gtag;
+
+  if (/AcqlerateApp/.test(navigator.userAgent || "")) {
+    window.acqConsent = { open: function () {}, get: function () { return "denied"; }, inApp: true };
+    return;
+  }
 
   function readChoice() {
     try {

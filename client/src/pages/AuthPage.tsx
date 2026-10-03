@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest, API_BASE } from "@/lib/queryClient";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { isNativeApp, getPlatform } from "@/lib/platform";
+import { isNativeApp, getPlatform, openSitePageInApp } from "@/lib/platform";
 
 // Apple's wordmark for the Sign in with Apple button. Apple's Human Interface
 // Guidelines require their own mark and one of their approved labels, at their
@@ -75,6 +75,8 @@ export interface AuthUser {
   subscriptionStatus: string;
   trialEndsAt?: string | null;
   registeredAt?: string | null;
+  /** When they agreed to send text to Anthropic for AI features; null = not. */
+  aiConsentAt?: string | null;
   completedLessons: string[];
   quizScores: Record<string, number>;
   isAdmin?: boolean;
@@ -221,6 +223,9 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
 
       const res = await apiRequest("POST", "/api/auth/apple", {
         identityToken: r.identityToken,
+        // One-time code the server trades for a token it can revoke if the
+        // account is deleted (App Store Guideline 5.1.1(v)).
+        authorizationCode: (r as any).authorizationCode ?? "",
         givenName: r.givenName ?? "",
         familyName: r.familyName ?? "",
         ...(referralCode ? { referralCode } : {}),
@@ -763,9 +768,9 @@ export default function AuthPage({ onAuthenticated, darkMode, onBack, notice }: 
                   destination. App Store review checks that they resolve. */}
               <p className="text-xs text-muted-foreground text-center">
                 By creating an account, you agree to our{" "}
-                <a href="/terms" target="_blank" rel="noopener noreferrer" className="underline">Terms of Service</a>{" "}
+                <a href="/terms" target="_blank" rel="noopener noreferrer" onClick={e => openSitePageInApp(e, '/terms')} className="underline">Terms of Service</a>{" "}
                 and{" "}
-                <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline">Privacy Policy</a>.
+                <a href="/privacy" target="_blank" rel="noopener noreferrer" onClick={e => openSitePageInApp(e, '/privacy')} className="underline">Privacy Policy</a>.
               </p>
             </form>
           )}

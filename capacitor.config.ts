@@ -24,6 +24,11 @@ const config: CapacitorConfig = {
     // does handle the insets.
     url: 'https://acqlerate.com/app',
     cleartext: false,
+    // Bundled page shown when the site can't be reached (no signal, or the
+    // server is down), instead of a blank web view. Lives in client/public,
+    // so it is copied into the app by `npx cap sync`. App Review tests with
+    // the network off.
+    errorPath: 'offline.html',
     // Hosts the webview is allowed to navigate to itself. Anything not listed
     // here (and not the server host above) is handed to the system browser,
     // which is what broke Google sign-in: the flow left for Safari, completed

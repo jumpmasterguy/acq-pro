@@ -283,6 +283,7 @@ app.use((req, res, next) => {
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id TEXT`,
         // Sign in with Apple column (nullable, unique)
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS apple_id TEXT`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS apple_refresh_token TEXT`,
         // Make password_hash nullable for Google OAuth users
         `ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL`,
         // Onboarding / learning path profile
@@ -310,6 +311,7 @@ app.use((req, res, next) => {
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS briefs_read JSONB NOT NULL DEFAULT '[]'::JSONB`,
         // Acqlerate Coach "Teach It Back" results (see shared/schema.ts)
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS teach_backs JSONB NOT NULL DEFAULT '[]'::JSONB`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS ai_consent_at TEXT`,
         // AI Study Assistant usage tracking
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS ai_calls_today INTEGER NOT NULL DEFAULT 0`,
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS ai_calls_date TEXT`,

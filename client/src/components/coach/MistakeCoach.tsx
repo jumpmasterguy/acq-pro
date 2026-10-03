@@ -8,6 +8,7 @@ import { useState } from "react";
 import { GraduationCap, Lock, Loader2 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { topPlanName } from "@shared/pricing";
+import { ensureAiConsent, setAiConsentFromUser } from "@/lib/aiConsent";
 
 interface Explanation { tempting: string; wrong: string; tell: string }
 
@@ -43,13 +44,16 @@ export function MistakeCoach({ lessonId, questionId, questionText, picked, hasTo
   }
 
   const load = async () => {
+    // Nothing goes to Anthropic until the person has said yes (lib/aiConsent.ts).
+    if (!(await ensureAiConsent())) return;
     setState("loading");
     try {
       const res = await apiRequest("POST", "/api/coach/mistake", { lessonId, questionId, question: questionText, picked });
       const json = await res.json();
       setData(json.explanation);
       setState("done");
-    } catch {
+    } catch (e: any) {
+      if (String(e?.message ?? "").startsWith("428")) setAiConsentFromUser(null);
       setState("error");
     }
   };

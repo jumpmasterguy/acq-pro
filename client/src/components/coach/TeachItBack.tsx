@@ -8,6 +8,7 @@ import { useState } from "react";
 import { GraduationCap, Lock, Loader2, Check, Circle, RotateCcw } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { topPlanName } from "@shared/pricing";
+import { ensureAiConsent, setAiConsentFromUser } from "@/lib/aiConsent";
 
 const MIN = 40;
 const MAX = 1500;
@@ -81,6 +82,8 @@ export function TeachItBack({ lessonId, hasTopPlan, teachBackCount, onResult, on
   }
 
   const submit = async () => {
+    // Nothing goes to Anthropic until the person has said yes (lib/aiConsent.ts).
+    if (!(await ensureAiConsent())) return;
     setState("loading");
     setError(null);
     try {
@@ -91,6 +94,7 @@ export function TeachItBack({ lessonId, hasTopPlan, teachBackCount, onResult, on
       onResult?.(json.xpAwarded ?? 0);
     } catch (e: any) {
       const msg = String(e?.message ?? "");
+      if (msg.startsWith("428")) setAiConsentFromUser(null);
       const body = msg.replace(/^\d+:\s*/, "");
       let friendly = "The Coach couldn't grade that just now. Try again in a moment.";
       try { friendly = JSON.parse(body).message ?? friendly; } catch { /* not JSON */ }

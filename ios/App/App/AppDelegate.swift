@@ -1,6 +1,7 @@
 import UIKit
 import Capacitor
 import StoreKit
+import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -8,7 +9,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // The Debrief is long-form audio. With the "audio" background mode in
+        // Info.plist and a playback session, it keeps playing with the screen
+        // locked or the app in the background, and ignores the silent switch,
+        // like any podcast app. Without this iOS stops it the moment the
+        // screen locks.
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio)
+        } catch {
+            print("[audio] could not set playback session: \(error)")
+        }
         return true
     }
 

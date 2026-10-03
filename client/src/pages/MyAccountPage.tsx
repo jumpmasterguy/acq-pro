@@ -1,9 +1,10 @@
 import { useState, useEffect, type ReactNode } from "react";
-import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap, Trash2, AlertTriangle, Award, LogOut, Moon, Gift, Trophy, MessageCircleHeart, ShieldCheck } from "lucide-react";
+import { ArrowLeft, UserCircle, Mail, Compass, CreditCard, CheckCircle, Loader2, Zap, Trash2, AlertTriangle, Award, LogOut, Moon, Gift, Trophy, MessageCircleHeart, ShieldCheck, Sparkles } from "lucide-react";
 import { ContactUs } from "@/components/ContactUs";
 import { getCheckoutMode, openAppBillingPortal, type CheckoutMode } from "@/lib/appCheckout";
 import { LevelRoadSheet } from "@/components/LevelRoad";
 import { LeaderboardVisibilityRow } from "@/components/Leaderboard";
+import { AiConsentRow } from "@/components/AiConsentHost";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription,
@@ -18,7 +19,7 @@ import { CAREER_TRACK_DATA, getTrackStats, setActiveTrack, type CareerTrackId } 
 import { formatDuration } from "@/lib/curriculumMeta";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { isNativeApp } from "@/lib/platform";
+import { isNativeApp, openSitePageInApp } from "@/lib/platform";
 import { getLevel } from "@/lib/progress";
 import { AccountSection, LevelHero, ModuleStanding, earnedClps } from "@/components/mobile/AccountCards";
 import { EmojiOptionCard } from "@/components/mobile/OptionCard";
@@ -373,6 +374,10 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onOpenCertifica
 
         {/* Theme — not in the handoff, but the mobile top bar has no toggle and
             the app otherwise follows the OS with no way to override it. */}
+        <AccountSection icon={Sparkles} title="AI features">
+          <AiConsentRow />
+        </AccountSection>
+
         <AccountSection icon={Trophy} title="Leaderboards">
           <LeaderboardVisibilityRow />
         </AccountSection>
@@ -432,9 +437,10 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onOpenCertifica
             stores expect the privacy policy to be reachable in-app. Cookie
             settings opens the consent choice (public/consent.js). */}
         <div className="flex justify-center gap-5 pb-2 text-xs" style={{ color: 'var(--acq-text-muted)' }}>
-          <a href="/privacy" className="hover:underline">Privacy</a>
-          <a href="/terms" className="hover:underline">Terms</a>
-          <button type="button" data-acq-cookie-settings className="hover:underline">Cookie settings</button>
+          <a href="/privacy" onClick={e => openSitePageInApp(e, '/privacy')} className="hover:underline">Privacy</a>
+          <a href="/terms" onClick={e => openSitePageInApp(e, '/terms')} className="hover:underline">Terms</a>
+          {/* The app loads no analytics (public/consent.js), so nothing to set. */}
+          {!nativeApp && <button type="button" data-acq-cookie-settings className="hover:underline">Cookie settings</button>}
         </div>
 
         {deleteDialog}
@@ -559,6 +565,10 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onOpenCertifica
             </Button>
           )}
         </div>
+      </Section>
+
+      <Section icon={Sparkles} title="AI features">
+        <AiConsentRow />
       </Section>
 
       <Section icon={Trophy} title="Leaderboards">

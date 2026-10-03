@@ -22,6 +22,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { TermTapProvider } from "@/components/AcronymText";
 import { KeyTermSheet, QuizOption, LessonFooter } from "@/components/mobile/LessonPieces";
 import { topPlanName } from "@shared/pricing";
+import { ensureAiConsent, isConsentResponse, setAiConsentFromUser } from "@/lib/aiConsent";
 import { MistakeCoach } from "@/components/coach/MistakeCoach";
 import { TeachItBack } from "@/components/coach/TeachItBack";
 
@@ -840,6 +841,8 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
     if (!lesson) return;
     // If same mode clicked again, toggle off
     if (aiMode === mode && aiResult) { setAiMode(null); setAiResult(null); return; }
+    // Nothing goes to Anthropic until the person has said yes (lib/aiConsent.ts).
+    if (!(await ensureAiConsent())) return;
     setAiMode(mode);
     setAiResult(null);
     setAiError(null);
@@ -860,6 +863,7 @@ export default function LessonPage({ lessonId, progress, onBack, onComplete, onN
       });
       clearTimeout(timeoutId);
       const data = await res.json();
+      if (isConsentResponse(res.status, data)) setAiConsentFromUser(null);
       if (data.explanation) setAiResult(data.explanation);
       else setAiError(data.message ?? 'Something went wrong.');
     } catch (e: any) {

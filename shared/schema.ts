@@ -22,6 +22,9 @@ export const users = pgTable("users", {
   // they signed in with Apple. Separate from googleId on purpose: one person
   // can arrive by both routes and we link rather than duplicate.
   appleId: text("apple_id").unique(),
+  // Refresh token from Apple, kept only so account deletion can revoke the
+  // Sign in with Apple link (server/appleAuth.ts). Never sent to the client.
+  appleRefreshToken: text("apple_refresh_token"),
   // Stripe
   stripeCustomerId: text("stripe_customer_id"),
   subscriptionStatus: text("subscription_status").notNull().default("free"), // 'free' | 'trialing' | 'active' | 'lifetime'
@@ -77,6 +80,9 @@ export const users = pgTable("users", {
   // bestCovered, total, xpEarned, firstPassedAt, lastAt}]. xpEarned is 25 once
   // the lesson is passed, 0 before; summed into XP like briefsRead.
   teachBacks: jsonb("teach_backs").notNull().default(sql`'[]'::jsonb`),
+  // When the user agreed to send their text to Anthropic for the AI features
+  // (App Store Guideline 5.1.2(i)). Null = not agreed, or turned off.
+  aiConsentAt: text("ai_consent_at"),
   // "The Debrief" audio listens — keyed by module id, not a growing log,
   // since all we need per module is "has this user ever played it" (for
   // unique-listener counts) and "how many times" (for a play counter).

@@ -427,8 +427,10 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, compedTime =
           </div>
         </div>
 
-        {/* Guarantee */}
-        <div
+        {/* Guarantee. Only where this device can buy: on an app store that
+            can't sell, a refund promise points at a purchase made elsewhere,
+            which App Review reads as steering (Guideline 3.1.1). */}
+        {canBuy && <div
           className="rounded-[14px] p-[18px] text-center"
           style={{ background: 'var(--acq-surface-sunken)' }}
         >
@@ -438,9 +440,9 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, compedTime =
           </div>
           <p className="mt-1 text-xs leading-[1.5]" style={{ color: 'var(--acq-text-muted)' }}>
             If Acqlerate doesn't help you feel more confident about DoD acquisitions in 30 days,
-            we'll refund your purchase — no questions asked.
+            we'll refund your purchase. No questions asked.
           </p>
-        </div>
+        </div>}
       </div>
     );
   }
@@ -700,7 +702,7 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, compedTime =
         <p className="text-sm font-medium mb-1">30-Day Money-Back Guarantee</p>
         <p className="text-xs text-muted-foreground">
           If Acqlerate doesn&apos;t help you feel more confident about DoD acquisitions in 30 days,
-          we&apos;ll refund your purchase — no questions asked.
+          we&apos;ll refund your purchase. No questions asked.
         </p>
       </div>
     </div>

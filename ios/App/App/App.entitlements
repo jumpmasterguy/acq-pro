@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Sign in with Apple (AuthPage.tsx handleAppleSignIn). Without this the
+	     native sheet fails with error 1000 on a real build. The App ID
+	     com.acqlerate.app must have the capability too; Xcode's automatic
+	     signing adds it when this file is present. -->
+	<key>com.apple.developer.applesignin</key>
+	<array>
+		<string>Default</string>
+	</array>
+</dict>
+</plist>

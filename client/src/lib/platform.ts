@@ -32,3 +32,20 @@ export function getTabBarStyle(): 'ios' | 'android' {
   if (p !== 'web') return p;
   return /android/i.test(navigator.userAgent) ? 'android' : 'ios';
 }
+
+/**
+ * Click handler for links to our own website pages (Privacy, Terms) that must
+ * not load inside the app's web view. In the app, the web view would show the
+ * page with no way back, and its logo links to the marketing homepage (prices
+ * and checkout, which App Review does not allow outside the US storefront).
+ * So the app opens them in the Safari sheet, which has its own Done button.
+ * On the web the link behaves normally.
+ */
+export function openSitePageInApp(e: { preventDefault: () => void }, path: string): void {
+  if (!isNativeApp()) return;
+  e.preventDefault();
+  const url = path.startsWith('http') ? path : `https://acqlerate.com${path}`;
+  import('@capacitor/browser')
+    .then(({ Browser }) => Browser.open({ url, presentationStyle: 'popover' }))
+    .catch(() => { window.open(url, '_blank'); });
+}
