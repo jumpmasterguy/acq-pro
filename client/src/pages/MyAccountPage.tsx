@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { hasPaidPlan, trialDaysRemaining } from "@shared/access";
+import { hasPaidPlan, trialDaysRemaining, displayStatus } from "@shared/access";
 import { CAREER_TRACK_DATA, getTrackStats, setActiveTrack, type CareerTrackId } from "@/lib/careerTracks";
 import { formatDuration } from "@/lib/curriculumMeta";
 import { cn } from "@/lib/utils";
@@ -186,7 +186,7 @@ export default function MyAccountPage({ user, onBack, onUpgrade, onOpenCertifica
       </AlertDialog>
   );
 
-  const sub = SUBSCRIPTION_LABELS[user.subscriptionStatus] ?? SUBSCRIPTION_LABELS.free;
+  const sub = SUBSCRIPTION_LABELS[displayStatus(user)] ?? SUBSCRIPTION_LABELS.free;
   const paid = hasPaidPlan(user);
   const daysLeft = trialDaysRemaining(user);
 

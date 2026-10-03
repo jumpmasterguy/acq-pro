@@ -66,6 +66,18 @@ export function isTrialActive(user: TrialFields | null | undefined): boolean {
   return new Date(user.trialEndsAt).getTime() > Date.now();
 }
 
+/**
+ * The status to SHOW a person. The DB keeps 'trialing' after the trial runs
+ * out (expiry is computed on read, see the top of this file), so anything
+ * that labels or counts users must go through this, not subscriptionStatus.
+ * Returns 'trial_ended' for an expired, unconverted trial.
+ */
+export function displayStatus(user: TrialFields | null | undefined): string {
+  const s = user?.subscriptionStatus || "free";
+  if (s === "trialing" && !isTrialActive(user)) return "trial_ended";
+  return s;
+}
+
 /** Whole days left in the trial, floored at 0. Null if not on an active trial. */
 export function trialDaysRemaining(user: TrialFields | null | undefined): number | null {
   if (!isTrialActive(user)) return null;

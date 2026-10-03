@@ -10,7 +10,7 @@ import { excludeInternalAccounts } from "./internalAccounts";
 import { setupAuth, hashPassword, requireAuth, toPassportUser } from "./auth";
 import { verifyAppleIdentityToken } from "./appleAuth";
 import { registerSchema, loginSchema, userProfileSchema, updateNameSchema } from "@shared/schema";
-import { hasPaidPlan, hasFullAccess, isPaidStatus, isTopPlanStatus, canDownloadLessonBooks, PACK_BONUS_PACKS } from "@shared/access";
+import { hasPaidPlan, hasFullAccess, isPaidStatus, isTrialActive, isTopPlanStatus, canDownloadLessonBooks, PACK_BONUS_PACKS } from "@shared/access";
 import { isNewPricing, topPlanName, planPrice, type PlanType } from "@shared/pricing";
 import { grantPackBonus, packBonusStatus } from "./packBonus";
 import { MODULE_CLPS } from "@shared/moduleClps";
@@ -2058,7 +2058,8 @@ export async function registerRoutes(
       for (const u of users) {
         switch (u.subscriptionStatus) {
           case "lifetime": lifetime++; break;
-          case "trialing": trialing++; break;
+          // An expired trial stays 'trialing' in the DB; count it as free.
+          case "trialing": if (isTrialActive(u as any)) trialing++; else free++; break;
           // Monthly ("active") or Annual. Paying means Stripe is billing them,
           // which the webhook records as a sub_ subscription id. The admin
           // "make Pro" grant (comps, team seats provisioned by hand) sets the
@@ -2229,7 +2230,7 @@ export async function registerRoutes(
       // access but haven't converted yet — counted separately so this number
       // doesn't overstate real revenue-paying users.
       const proUsers = allUsers.filter(u => isPaidStatus(u.subscriptionStatus)).length;
-      const trialingUsers = allUsers.filter(u => u.subscriptionStatus === 'trialing').length;
+      const trialingUsers = allUsers.filter(u => isTrialActive(u as any)).length;
       const dau = allUsers.filter(u => {
         if (!u.lastActiveAt) return false;
         return now - new Date(u.lastActiveAt).getTime() < oneDayMs;
@@ -2747,7 +2748,7 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
       // converted yet, so they're excluded from "paid" (see trialingUsers below).
       const totalUsers = allUsers.length;
       const paidUsers = allUsers.filter(u => isPaidStatus(u.subscriptionStatus)).length;
-      const trialingUsers = allUsers.filter(u => u.subscriptionStatus === 'trialing').length;
+      const trialingUsers = allUsers.filter(u => isTrialActive(u as any)).length;
       const conversionRate = totalUsers > 0 ? Math.round((paidUsers / totalUsers) * 100) : 0;
 
       // Lesson completion rates

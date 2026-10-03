@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { displayStatus } from "@shared/access";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +26,7 @@ interface AdminUser {
   username: string;
   email: string;
   subscriptionStatus: string;
+  trialEndsAt?: string | null;
   completedLessons: number;
   referralCode: string | null;
   referredBy: string | null;
@@ -39,6 +41,7 @@ interface AnalyticsUser {
   username: string;
   email: string;
   subscriptionStatus: string;
+  trialEndsAt?: string | null;
   lastLoginAt: string | null;
   lastActiveAt: string | null;
   loginCount: number;
@@ -76,6 +79,7 @@ const statusColors: Record<string, string> = {
   lifetime: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400",
   annual:   "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400",
   trialing: "bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400",
+  trial_ended: "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400",
   active:   "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400",
   free:     "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400",
 };
@@ -85,6 +89,7 @@ const statusLabel: Record<string, string> = {
   annual:   "Annual Pro",
   active:   "Monthly Pro",
   trialing: "Trial",
+  trial_ended: "Trial ended",
   free:     "Free",
 };
 
@@ -302,8 +307,8 @@ export default function AdminPage() {
   const userStats = {
     total: users.length,
     pro: users.filter(u => u.subscriptionStatus === "active" || u.subscriptionStatus === "annual" || u.subscriptionStatus === "lifetime").length,
-    trial: users.filter(u => u.subscriptionStatus === "trialing").length,
-    free: users.filter(u => !["active", "annual", "lifetime", "trialing"].includes(u.subscriptionStatus)).length,
+    trial: users.filter(u => displayStatus(u) === "trialing").length,
+    free: users.filter(u => ["free", "trial_ended"].includes(displayStatus(u))).length,
   };
 
   const leadStats = {
@@ -674,8 +679,8 @@ export default function AdminPage() {
                         <div className="font-semibold text-sm text-foreground truncate">{user.username || user.email}</div>
                         <div className="text-xs text-muted-foreground truncate">{user.email}</div>
                         <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-                          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${statusColors[user.subscriptionStatus] ?? statusColors.free}`}>
-                            {statusLabel[user.subscriptionStatus] ?? user.subscriptionStatus}
+                          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${statusColors[displayStatus(user)] ?? statusColors.free}`}>
+                            {statusLabel[displayStatus(user)] ?? displayStatus(user)}
                           </span>
                           {user.isAdmin && <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium bg-emerald-500/10 text-emerald-600"><ShieldCheck className="w-3 h-3" /> Admin</span>}
                           <span className="text-[11px] text-muted-foreground">{user.completedLessons} lessons</span>
@@ -717,8 +722,8 @@ export default function AdminPage() {
                         </td>
                         <td className="px-4 py-3.5">
                           <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[user.subscriptionStatus] ?? statusColors.free}`}>
-                              {statusLabel[user.subscriptionStatus] ?? user.subscriptionStatus}
+                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[displayStatus(user)] ?? statusColors.free}`}>
+                              {statusLabel[displayStatus(user)] ?? displayStatus(user)}
                             </span>
                             {user.isAdmin && (
                               <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-500/10 text-emerald-600">
@@ -857,8 +862,8 @@ export default function AdminPage() {
                           </div>
                           <div className="text-right flex-shrink-0">
                             <div className="text-xs font-semibold text-foreground">{user.lastLoginAt ? formatRelativeTime(user.lastLoginAt) : "Never"}</div>
-                            <span className={`inline-flex mt-1 items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${statusColors[user.subscriptionStatus] ?? statusColors.free}`}>
-                              {statusLabel[user.subscriptionStatus] ?? user.subscriptionStatus}
+                            <span className={`inline-flex mt-1 items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${statusColors[displayStatus(user)] ?? statusColors.free}`}>
+                              {statusLabel[displayStatus(user)] ?? displayStatus(user)}
                             </span>
                           </div>
                         </div>
@@ -940,8 +945,8 @@ export default function AdminPage() {
 
                             {/* Plan */}
                             <td className="px-4 py-3.5 hidden sm:table-cell">
-                              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[user.subscriptionStatus] ?? statusColors.free}`}>
-                                {statusLabel[user.subscriptionStatus] ?? user.subscriptionStatus}
+                              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[displayStatus(user)] ?? statusColors.free}`}>
+                                {statusLabel[displayStatus(user)] ?? displayStatus(user)}
                               </span>
                             </td>
 
@@ -1168,8 +1173,8 @@ export default function AdminPage() {
                           <div className="font-semibold text-sm truncate">{u.username}</div>
                           <div className="text-xs text-muted-foreground truncate">{u.email}</div>
                         </div>
-                        <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium flex-shrink-0 ${statusColors[u.subscriptionStatus] ?? statusColors.free}`}>
-                          {statusLabel[u.subscriptionStatus] ?? 'Free'}
+                        <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium flex-shrink-0 ${statusColors[displayStatus(u)] ?? statusColors.free}`}>
+                          {statusLabel[displayStatus(u)] ?? 'Free'}
                         </span>
                       </div>
                       <div className="text-xs text-muted-foreground mt-1.5">
@@ -1201,8 +1206,8 @@ export default function AdminPage() {
                             <div className="text-xs text-muted-foreground">{u.email}</div>
                           </td>
                           <td className="px-4 py-3.5">
-                            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[u.subscriptionStatus] ?? statusColors.free}`}>
-                              {statusLabel[u.subscriptionStatus] ?? 'Free'}
+                            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[displayStatus(u)] ?? statusColors.free}`}>
+                              {statusLabel[displayStatus(u)] ?? 'Free'}
                             </span>
                           </td>
                           <td className="px-4 py-3.5">
