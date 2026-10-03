@@ -451,6 +451,71 @@ def strip_em_dashes(text: str) -> str:
     return re.sub(r",\s*,", ",", text)
 
 
+# The model is told to write HTML, but on 3 Oct 2026 it wrote everything after
+# the TL;DR in Markdown and the post went live with "## " and "**" showing.
+# md_to_html converts any Markdown blocks it finds; find_raw_markdown is the
+# last gate before publishing, so a miss stops the run instead of going live.
+
+def _md_inline(s: str) -> str:
+    s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", s)
+    s = re.sub(r"(?<![\w*])\*(?!\s)(.+?)(?<!\s)\*(?![\w*])", r"<em>\1</em>", s)
+    s = re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+|/[^)\s]*)\)", r'<a href="\2">\1</a>', s)
+    return s
+
+
+def md_to_html(body: str) -> str:
+    """Convert Markdown blocks to HTML; blocks that start with a tag pass through."""
+    out = []
+    for block in re.split(r"\n\s*\n", body.strip()):
+        if block.lstrip().startswith("<"):
+            out.append(block)
+            continue
+        html, items, kind, para = [], [], None, []
+
+        def flush():
+            nonlocal items, kind, para
+            if para:
+                html.append(f"<p>{_md_inline(' '.join(para))}</p>")
+                para = []
+            if items:
+                html.append(f"<{kind}>\n" + "\n".join(f"<li>{_md_inline(i)}</li>" for i in items) + f"\n</{kind}>")
+                items, kind = [], None
+
+        for line in block.split("\n"):
+            t = line.strip()
+            h = re.match(r"^(#{2,4})\s+(.*)$", t)
+            ul = re.match(r"^[-*+]\s+(.*)$", t)
+            ol = re.match(r"^\d+[.)]\s+(.*)$", t)
+            if h:
+                flush()
+                n = len(h.group(1))
+                html.append(f"<h{n}>{_md_inline(h.group(2).rstrip('#').strip())}</h{n}>")
+            elif ul or ol:
+                want = "ul" if ul else "ol"
+                if para or (kind and kind != want):
+                    flush()
+                kind = want
+                items.append((ul or ol).group(1))
+            elif t:
+                if items:
+                    flush()
+                para.append(t)
+        flush()
+        out.append("\n".join(html))
+    return "\n\n".join(out)
+
+
+def find_raw_markdown(html: str) -> list:
+    """Return lines that still look like Markdown (ignores <svg>, <script>, <style>)."""
+    text = re.sub(r"<(svg|script|style)\b.*?</\1>", "", html, flags=re.S | re.I)
+    bad = []
+    for line in text.split("\n"):
+        t = line.strip()
+        if re.match(r"^#{1,6}\s", t) or re.search(r"\*\*\S", t) or re.match(r"^[-*]\s+\S", t):
+            bad.append(t[:80])
+    return bad
+
+
 def build_comparison_table(title: str, headers: list, rows: list) -> str:
     head_cells = "".join(f"<th>{h}</th>" for h in headers)
     body_rows  = ""
@@ -645,7 +710,8 @@ Start with the title on line 1, deck on line 2, then the body HTML."""
     body = re.sub(r'<h1[^>]*>.*?</h1>', '', body, flags=re.DOTALL | re.IGNORECASE)
 
     body = render_diagram_blocks(body)
-    
+    body = md_to_html(body)
+
     # If title/deck look wrong (too long or contain HTML), regenerate
     if len(title) > 120 or '<' in title:
         title_raw = claude_generate(f"Write ONE blog post title under 85 characters for this content. Return ONLY the title, no quotes:\n\n{body[:400]}")
@@ -1024,7 +1090,9 @@ def selftest() -> int:
                  "```diagram\n"
                  '{"kind":"compare","caption":"Stub caption.","columns":['
                  '{"heading":"A","lines":["one","two"]},{"heading":"B","lines":["three"]}]}\n'
-                 "```\n<p>More text.</p>")
+                 "```\n<p>More text.</p>\n\n"
+                 "## Markdown Section\nSome **bold** text.\n\n"
+                 "- **Item.** one\n- two\n\n1. first\n2. second")
     prompts = []
     claude_generate = lambda prompt: (prompts.append(prompt), fake_body)[1]
     pools = {"news": TOPIC_POOL_NEWS, "demand": TOPIC_POOL_DEMAND,
@@ -1042,6 +1110,8 @@ def selftest() -> int:
                     slug = slugify(title) or "selftest"
                     html = assemble_post(title, deck, body, topic, "2026-01-01", slug, get_read_time(body))
                     assert "<svg" in html and title in html, "assembled page is missing parts"
+                    assert "<strong>bold</strong>" in html and "<ol>" in html, "markdown not converted"
+                    assert not find_raw_markdown(html), f"raw markdown left: {find_raw_markdown(html)[:2]}"
                 except Exception as e:
                     failures.append(f"{where}: {type(e).__name__}: {e}")
     finally:
@@ -1153,6 +1223,13 @@ guessing. Do not state a figure you did not find."""
     # 4. Assemble full HTML with all required elements
     print("Assembling post...")
     post_html = strip_em_dashes(assemble_post(title, deck, body_html, topic, pub_date, slug, read_time))
+
+    leftover = find_raw_markdown(post_html)
+    if leftover:
+        print("\nRaw Markdown survived conversion, not publishing:")
+        for line in leftover[:10]:
+            print(f"  - {line}")
+        return 1
 
     if held:
         HELD_DIR.mkdir(exist_ok=True)
