@@ -271,6 +271,7 @@ export async function registerRoutes(
         email: user.email,
         subscriptionStatus: user.subscriptionStatus,
         trialEndsAt: (user as any).trialEndsAt ?? null,
+        registeredAt: (user as any).registeredAt ?? null,
         completedLessons: user.completedLessons ?? [],
         quizScores: user.quizScores ?? {},
         isAdmin: isAdmin(req),
@@ -329,6 +330,7 @@ export async function registerRoutes(
             email: user.email,
             subscriptionStatus: user.subscriptionStatus,
             trialEndsAt: (user as any).trialEndsAt ?? null,
+            registeredAt: (user as any).registeredAt ?? null,
             completedLessons: user.completedLessons ?? [],
             quizScores: user.quizScores ?? {},
             isAdmin: isAdmin(req),
@@ -376,6 +378,7 @@ export async function registerRoutes(
       email: user.email,
       subscriptionStatus: user.subscriptionStatus,
       trialEndsAt: (user as any).trialEndsAt ?? null,
+      registeredAt: (user as any).registeredAt ?? null,
       completedLessons: user.completedLessons ?? [],
       quizScores: user.quizScores ?? {},
       isAdmin: isAdmin(req),
@@ -589,6 +592,7 @@ export async function registerRoutes(
           email: user.email,
           subscriptionStatus: user.subscriptionStatus,
           trialEndsAt: (user as any).trialEndsAt ?? null,
+          registeredAt: (user as any).registeredAt ?? null,
           completedLessons: user.completedLessons ?? [],
           quizScores: user.quizScores ?? {},
           isAdmin: isAdmin(req),
@@ -2462,47 +2466,6 @@ If the input is not a real FAR/DFARS clause or acquisition topic, say so clearly
   // Called by Railway cron (or any scheduler) every hour via:
   //   GET /api/cron/drip?secret=<CRON_SECRET>
   // Set CRON_SECRET in Railway env vars to protect this endpoint.
-  // ── Newsletter broadcast endpoint ─────────────────────────────────────────
-  // POST /api/admin/newsletter — send a newsletter to all users
-  // Body: { subject: string, previewText: string, html: string, testOnly?: boolean }
-  app.post("/api/admin/newsletter", requireAuth as any, async (req: Request, res: Response) => {
-    if (!isAdmin(req)) return res.status(403).json({ message: 'Forbidden' });
-    const { subject, previewText, html, testOnly } = req.body;
-    if (!subject || !html) return res.status(400).json({ message: 'subject and html required' });
-    try {
-      const emailModule = await import('./email.js') as any;
-      const sendNewsletterIssue = emailModule.sendNewsletterIssue;
-      const allUsers = await storage.getAllUsers();
-      const unsubscribed = await storage.getUnsubscribedSet();
-      const recipients = excludeInternalAccounts(allUsers)
-        .filter((u: any) => {
-          if (!u.email) return false;
-          const lower = u.email.toLowerCase();
-          if (unsubscribed.has(lower)) return false;
-          return true;
-        })
-        .map((u: any) => u.email);
-
-      if (testOnly) {
-        await sendNewsletterIssue('lucas.l.cruz.es@gmail.com', subject, previewText || '', html);
-        return res.json({ sent: 1, preview: true });
-      }
-
-      let sent = 0;
-      for (const email of recipients) {
-        try {
-          await sendNewsletterIssue(email, subject, previewText || '', html);
-          sent++;
-        } catch (e: any) {
-          console.error(`[newsletter] failed for ${email}:`, e.message);
-        }
-      }
-      return res.json({ sent, total: recipients.length });
-    } catch (err: any) {
-      console.error('[newsletter] error:', err);
-      return res.status(500).json({ message: err.message });
-    }
-  });
 
   // One-off, idempotent migration runner — protected by CRON_SECRET.
   // NOTE: /api/admin/run-migration was removed — the boot-time schemaCols

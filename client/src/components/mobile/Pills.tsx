@@ -74,7 +74,7 @@ export function XpPill({ xp, onPress }: { xp: number; onPress?: () => void }) {
  * Day zero keeps the app's existing "Trial ends today" rather than rendering
  * "0 days left in trial".
  */
-export function TrialPill({ daysLeft }: { daysLeft: number }) {
+export function TrialPill({ daysLeft, comped = false }: { daysLeft: number; comped?: boolean }) {
   return (
     <span
       className="acq-tnum inline-flex items-center rounded-full px-[9px] py-0.5 text-[11px] font-bold"
@@ -84,7 +84,9 @@ export function TrialPill({ daysLeft }: { daysLeft: number }) {
       }}
       data-testid="mobile-trial-pill"
     >
-      {daysLeft === 0 ? 'Trial ends today' : `${daysLeft} days left in trial`}
+      {comped
+        ? (daysLeft === 0 ? 'Pro ends today' : `${daysLeft} days of Pro left`)
+        : (daysLeft === 0 ? 'Trial ends today' : `${daysLeft} days left in trial`)}
     </span>
   );
 }

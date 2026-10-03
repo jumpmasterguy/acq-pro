@@ -24,9 +24,11 @@ interface MobileTopBarProps {
   onStreakPress: () => void;
   /** Gold pill, Home only. null when the user isn't trialing. */
   trialDaysLeft?: number | null;
+  /** Time Lucas gave them (or a reward), not a trial: the pill says "Pro". */
+  compedTime?: boolean;
 }
 
-export function MobileTopBar({ header, streak, onStreakPress, trialDaysLeft }: MobileTopBarProps) {
+export function MobileTopBar({ header, streak, onStreakPress, trialDaysLeft, compedTime }: MobileTopBarProps) {
   const showTrial = header.kind === 'logo' && trialDaysLeft !== null && trialDaysLeft !== undefined;
 
   return (
@@ -76,7 +78,7 @@ export function MobileTopBar({ header, streak, onStreakPress, trialDaysLeft }: M
         )}
 
         <div className="flex shrink-0 items-center gap-2">
-          {showTrial && <TrialPill daysLeft={trialDaysLeft as number} />}
+          {showTrial && <TrialPill daysLeft={trialDaysLeft as number} comped={compedTime} />}
           <StreakPill streak={streak} onPress={onStreakPress} />
         </div>
       </div>

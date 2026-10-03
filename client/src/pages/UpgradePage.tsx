@@ -18,6 +18,8 @@ interface UpgradePageProps {
   onBack: () => void;
   onUpgrade: () => void; // retained for compatibility but Stripe takes over
   trialDaysLeft?: number | null;
+  /** Their days left are Pro time they were given, not a trial. */
+  compedTime?: boolean;
   /** Shown in the native "sign in with {email}" step. */
   userEmail?: string;
   /** Native's "Already upgraded? Sign out and back in". */
@@ -30,7 +32,7 @@ interface UpgradePageProps {
   onAfterAppCheckout?: () => Promise<boolean>;
 }
 
-export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 'your email', onSignOut, onAfterAppCheckout }: UpgradePageProps) {
+export default function UpgradePage({ onBack, trialDaysLeft = null, compedTime = false, userEmail = 'your email', onSignOut, onAfterAppCheckout }: UpgradePageProps) {
   const isMobile = useIsMobile();
   const totalLessons = getTotalLessons();
   const [loadingTop, setLoadingTop] = useState(false);
@@ -247,9 +249,11 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
               style={{ background: 'var(--acq-surface-gold-wash)', color: 'var(--acq-text-gold)' }}
             >
               <span aria-hidden="true">⚡</span>
-              {trialDaysLeft === 0
-                ? 'Your free trial ends today'
-                : `${trialDaysLeft} days left in your free trial`}
+              {compedTime
+                ? (trialDaysLeft === 0 ? 'Your Pro access ends today' : `${trialDaysLeft} days of Pro left`)
+                : trialDaysLeft === 0
+                  ? 'Your free trial ends today'
+                  : `${trialDaysLeft} days left in your free trial`}
             </span>
           )}
         </div>
@@ -464,9 +468,13 @@ export default function UpgradePage({ onBack, trialDaysLeft = null, userEmail = 
         {trialDaysLeft !== null && (
           <div className="mt-4 inline-flex items-center gap-2 bg-amber-500/10 text-amber-700 dark:text-amber-400 text-xs font-semibold px-3 py-1.5 rounded-full">
             <Zap className="w-3.5 h-3.5" />
-            {trialDaysLeft === 0
-              ? "Your free trial ends today — lock in full access before it reverts to the free tier"
-              : `${trialDaysLeft} day${trialDaysLeft === 1 ? '' : 's'} left in your free trial`}
+            {compedTime
+              ? (trialDaysLeft === 0
+                  ? "Your Pro access ends today. Lock it in before it goes back to the free tier"
+                  : `${trialDaysLeft} day${trialDaysLeft === 1 ? '' : 's'} of Pro left`)
+              : trialDaysLeft === 0
+                ? "Your free trial ends today. Lock in full access before it goes back to the free tier"
+                : `${trialDaysLeft} day${trialDaysLeft === 1 ? '' : 's'} left in your free trial`}
           </div>
         )}
       </div>

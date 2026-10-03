@@ -34,12 +34,14 @@ interface NumbersData {
 }
 
 // Order = the path people take: in on trial, then pay, comp, or drop to free.
-const SEGMENTS: { key: Bucket | "compedAll"; label: string; color: string }[] = [
+// An expired trial counts as Free (it is Free); how many of those tried
+// first is the note under the bar.
+type Seg = "paying" | "compedAll" | "trialing" | "freeAll";
+const SEGMENTS: { key: Seg; label: string; color: string }[] = [
   { key: "paying", label: "Paying", color: "bg-emerald-500" },
   { key: "compedAll", label: "Comped & Lifetime", color: "bg-amber-400" },
   { key: "trialing", label: "On trial", color: "bg-sky-500" },
-  { key: "trialEnded", label: "Trial ended", color: "bg-slate-400" },
-  { key: "free", label: "Free", color: "bg-slate-200 dark:bg-slate-700" },
+  { key: "freeAll", label: "Free", color: "bg-slate-300 dark:bg-slate-600" },
 ];
 
 const lessonInfo = new Map(getAllLessons().map(({ lesson, module }) => [lesson.id, { title: lesson.title, module: module.title }]));
@@ -72,7 +74,10 @@ export default function AdminNumbers() {
   });
 
   const plans = d?.counts.plans;
-  const segValue = (k: Bucket | "compedAll") => !plans ? 0 : k === "compedAll" ? plans.comped + plans.lifetime : plans[k];
+  const segValue = (k: Seg) => !plans ? 0
+    : k === "compedAll" ? plans.comped + plans.lifetime
+    : k === "freeAll" ? plans.free + plans.trialEnded
+    : plans[k];
   const maxDay = Math.max(1, ...(d?.counts.signups.byDay ?? []).map(x => x.count));
 
   return (
@@ -125,7 +130,7 @@ export default function AdminNumbers() {
                   <div key={s.key} className={s.color} style={{ width: `${(segValue(s.key) / Math.max(1, d.counts.total)) * 100}%` }} />
                 ))}
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-x-4 gap-y-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-2">
                 {SEGMENTS.map(s => (
                   <div key={s.key} className="flex items-center gap-2 min-w-0" data-testid={`numbers-plan-${s.key}`}>
                     <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${s.color}`} />
@@ -136,6 +141,7 @@ export default function AdminNumbers() {
               </div>
               <p className="text-[11px] text-muted-foreground leading-snug">
                 Paying means Stripe bills them. Comped covers free Pro grants, hand-made team seats and Lifetime accounts.
+                {" "}{plans.trialEnded} of the Free people finished a trial without buying.
               </p>
             </div>
           </Section>

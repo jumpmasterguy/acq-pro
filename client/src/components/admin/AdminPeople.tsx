@@ -12,23 +12,28 @@ import { UserSheet, ago, shortDate, mailto } from "./AdminToday";
 
 interface Person {
   id: string; name: string; email: string; status: string; plan: string; hasAccess: boolean;
+  /** Same bucket as Numbers: paying | comped | lifetime | trialing | trialEnded | free */
+  bucket: string;
   trialEndsAt: string | null; registeredAt: string | null; lastActiveAt: string | null;
   lessons: number; xp: number; referralCount: number; referredBy: string | null;
   isAdmin: boolean; isInternal: boolean;
 }
 interface Lead { email: string; source: string | null; createdAt: string | null }
 
-type Filter = "all" | "trial" | "trial_ended" | "paying" | "free" | "referrals" | "leads";
+type Filter = "all" | "trial" | "paying" | "comped" | "free" | "trial_ended" | "referrals" | "leads";
 type SortKey = "active" | "newest" | "lessons" | "xp";
-
-const PAID = ["active", "annual", "lifetime"];
 
 const FILTERS: { key: Filter; label: string; test: (p: Person) => boolean }[] = [
   { key: "all", label: "All", test: () => true },
-  { key: "trial", label: "On trial", test: p => p.status === "trialing" },
-  { key: "trial_ended", label: "Trial ended", test: p => p.status === "trial_ended" },
-  { key: "paying", label: "Paying", test: p => PAID.includes(p.status) },
-  { key: "free", label: "Free", test: p => p.status === "free" },
+  { key: "trial", label: "On trial", test: p => p.bucket === "trialing" },
+  // Same split as Numbers: paying = Stripe bills them; comped = free Pro of
+  // any kind (time you gave, plans set by hand, team seats, Lifetime).
+  { key: "paying", label: "Paying", test: p => p.bucket === "paying" },
+  { key: "comped", label: "Comped", test: p => p.bucket === "comped" || p.bucket === "lifetime" },
+  // An expired trial is Free in every way that matters; the second chip is
+  // the follow-up list: people who tried everything and didn't buy.
+  { key: "free", label: "Free", test: p => p.bucket === "free" || p.bucket === "trialEnded" },
+  { key: "trial_ended", label: "Free after trial", test: p => p.bucket === "trialEnded" },
   { key: "referrals", label: "Referrals", test: p => p.referralCount > 0 || !!p.referredBy },
 ];
 
@@ -37,13 +42,14 @@ const BADGE: Record<string, string> = {
   annual: "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400",
   active: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400",
   trialing: "bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400",
-  trial_ended: "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400",
+  comped: "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400",
+  trial_ended: "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400",
   free: "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400",
   lead: "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400",
 };
 const LABEL: Record<string, string> = {
-  lifetime: "Lifetime", annual: "Annual", active: "Monthly", trialing: "Trial",
-  trial_ended: "Trial ended", free: "Free", lead: "Lead",
+  lifetime: "Lifetime", annual: "Annual", active: "Monthly", trialing: "Trial", comped: "Comped",
+  trial_ended: "Free", free: "Free", lead: "Lead",
 };
 
 function ms(v: string | null): number {
@@ -61,6 +67,13 @@ function Badge({ status }: { status: string }) {
 }
 
 function trialNote(p: Person): string | null {
+  if (p.status === "trial_ended" && p.trialEndsAt) {
+    return `trial ended ${new Date(ms(p.trialEndsAt)).toLocaleDateString(undefined, { month: "short", day: "numeric" })}`;
+  }
+  if (p.status === "comped" && p.trialEndsAt) {
+    return `until ${new Date(ms(p.trialEndsAt)).toLocaleDateString(undefined, { month: "short", day: "numeric" })}`;
+  }
+  if (["active", "annual", "lifetime"].includes(p.status) && p.bucket !== "paying") return "no charge";
   if (p.status !== "trialing" || !p.trialEndsAt) return null;
   const days = Math.max(0, Math.ceil((ms(p.trialEndsAt) - Date.now()) / 864e5));
   return days <= 1 ? "ends today" : `${days}d left`;

@@ -963,46 +963,6 @@ export async function sendTrialEndingEmail(to: string, username: string): Promis
   });
   console.log(`[email] Trial-ending sent to ${to}`);
 }
-// ─── Newsletter broadcast ────────────────────────────────────────────────────
-
-const NEWSLETTER_SIGNATURE = `
-<table cellpadding="0" cellspacing="0" style="margin-top:32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
-<tr>
-<td style="border-top:1px solid #eae0ce;padding-top:14px">
-<p style="margin:0 0 2px;font-size:15px;font-weight:700;color:#1a1a1a">Lucas Cruz</p>
-<p style="margin:0 0 10px;font-size:13px;color:#6e6659">Founder, Acqlerate</p>
-<p style="margin:0;font-size:13px">
-<a href="https://acqlerate.com" style="color:#01696f;text-decoration:none;font-weight:600">acqlerate.com</a>
-<span style="color:#c4ccd4"> &nbsp;|&nbsp; </span>
-<a href="https://www.linkedin.com/company/acqlerate/" style="color:#01696f;text-decoration:none;font-weight:600">LinkedIn</a>
-<span style="color:#c4ccd4"> &nbsp;|&nbsp; </span>
-<a href="https://www.facebook.com/share/1D7GysBxX2/" style="color:#01696f;text-decoration:none;font-weight:600">Facebook</a>
-</p>
-</td>
-</tr>
-</table>`;
-
-export async function sendNewsletterIssue(
-  to: string,
-  subject: string,
-  previewText: string,
-  html: string
-): Promise<void> {
-  if (!resend) { console.warn('[newsletter] Resend not configured'); return; }
-
-  // Wrap the html in the email shell if it's a partial, appending the signature to the body
-  const fullHtml = html.includes('<!DOCTYPE') ? html : emailShell(previewText, html + NEWSLETTER_SIGNATURE, to);
-
-  await resend.emails.send({
-    from: FROM,
-    to,
-    replyTo: "hello@acqlerate.com",
-    subject,
-    html: fullHtml,
-  });
-  console.log(`[newsletter] Sent to ${to}`);
-}
-
 
 const EMAIL_SEQUENCE: Array<{
   day: number;

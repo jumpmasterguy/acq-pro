@@ -20,14 +20,14 @@
 import type { Express, Request, Response } from "express";
 import type Stripe from "stripe";
 import type { User } from "@shared/schema";
-import { hasFullAccess, isPaidStatus, displayStatus } from "@shared/access";
+import { hasFullAccess, isPaidStatus, displayStatus, isCompedTime } from "@shared/access";
 import { computeUserXp } from "@shared/xp";
 import { storage, getDisplayStreak } from "./storage";
 import { requireAuth } from "./auth";
 import { isInternalAccount, excludeInternalAccounts } from "./internalAccounts";
 import { extendAccessDays, grantProYear } from "./referrals";
 import { issuePasswordReset } from "./passwordReset";
-import { countUsers, engagement, stripeSnapshot, parseTs } from "./adminStats";
+import { countUsers, engagement, stripeSnapshot, parseTs, planBucket } from "./adminStats";
 import { listCheckoutStarts, trialCheckoutCounts, CHECKOUT_GRACE_DAYS } from "./checkoutStarts";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -54,7 +54,8 @@ function planLabel(u: User): string {
     case "active": return "Monthly";
     case "annual": return "Annual";
     case "lifetime": return "Lifetime";
-    case "trialing": return hasFullAccess(u) ? "Trial" : "Free (trial ended)";
+    // An expired trial is Free; the card shows when the trial ended.
+    case "trialing": return !hasFullAccess(u) ? "Free" : isCompedTime(u) ? "Comped" : "Trial";
     default: return "Free";
   }
 }
@@ -155,9 +156,10 @@ export function registerAdminMobileRoutes(
       const end = parseTs(u.trialEndsAt);
       if (!(end > now && end - now <= 3 * DAY_MS)) continue;
       const days = Math.max(1, Math.ceil((end - now) / DAY_MS));
+      const what = isCompedTime(u) ? "comped Pro" : "trial";
       attention.push({
         kind: "trial_ending",
-        title: `${displayName(u)}: trial ends in ${days} day${days === 1 ? "" : "s"}`,
+        title: `${displayName(u)}: ${what} ends in ${days} day${days === 1 ? "" : "s"}`,
         detail: `${(u.completedLessons ?? []).length} lessons done`,
         email: u.email,
         userId: u.id,
@@ -394,6 +396,7 @@ export function registerAdminMobileRoutes(
       name: displayName(u),
       email: u.email,
       status: displayStatus(u),
+      bucket: planBucket(u),
       plan: planLabel(u),
       hasAccess: hasFullAccess(u),
       trialEndsAt: u.subscriptionStatus === "trialing" ? u.trialEndsAt ?? null : null,

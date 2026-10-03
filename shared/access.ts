@@ -28,6 +28,17 @@ export function isTopPlanStatus(status: string | null | undefined): boolean {
 export interface TrialFields {
   subscriptionStatus?: string | null;
   trialEndsAt?: string | null;
+  /** Signup time. Needed to tell a plain trial from comped time (isCompedTime). */
+  registeredAt?: string | null;
+}
+
+/** ISO or Postgres text ("2026-09-28 10:11:12.3+00") → ms, or NaN. */
+function toMs(v: string | null | undefined): number {
+  if (!v) return NaN;
+  let s = v.trim();
+  if (/^\d{4}-\d{2}-\d{2} /.test(s)) s = s.replace(" ", "T");
+  s = s.replace(/([+-]\d{2})$/, "$1:00");
+  return new Date(s).getTime();
 }
 
 /** Full-catalog access: all 6 modules, AI assistant at the paid limit, etc. */
@@ -70,12 +81,32 @@ export function isTrialActive(user: TrialFields | null | undefined): boolean {
  * The status to SHOW a person. The DB keeps 'trialing' after the trial runs
  * out (expiry is computed on read, see the top of this file), so anything
  * that labels or counts users must go through this, not subscriptionStatus.
- * Returns 'trial_ended' for an expired, unconverted trial.
+ * Returns 'comped' for running access beyond the standard trial (isCompedTime),
+ * and 'trial_ended' for an expired, unconverted trial. Screens show that
+ * as "Free" (it is Free); the separate value lets admin list who tried first.
+ * The DB is not flipped to 'free' at expiry on purpose: the day-14 "trial ends
+ * today" email (server/email.ts) only goes to accounts still 'trialing'.
  */
 export function displayStatus(user: TrialFields | null | undefined): string {
   const s = user?.subscriptionStatus || "free";
   if (s === "trialing" && !isTrialActive(user)) return "trial_ended";
+  if (s === "trialing" && isCompedTime(user)) return "comped";
   return s;
+}
+
+/**
+ * True when someone's running access goes past their standard 14-day trial:
+ * time Lucas gave them in admin, a referral reward, a template-pack bonus, or
+ * time left after cancelling. All of those reuse the trial clock (status
+ * 'trialing' + trialEndsAt), so this is how screens tell "comped" from "trial".
+ * Works for past grants too; no extra column needed.
+ */
+export function isCompedTime(user: TrialFields | null | undefined): boolean {
+  if (!isTrialActive(user)) return false;
+  const reg = toMs(user!.registeredAt);
+  if (!Number.isFinite(reg)) return false;
+  const standardEnd = reg + TRIAL_DAYS * 24 * 60 * 60 * 1000;
+  return toMs(user!.trialEndsAt) > standardEnd + 60 * 60 * 1000;
 }
 
 /** Whole days left in the trial, floored at 0. Null if not on an active trial. */

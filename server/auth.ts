@@ -42,6 +42,8 @@ declare global {
       lastName: string | null;
       email: string;
       subscriptionStatus: string;
+      trialEndsAt: string | null;
+      registeredAt: string | null;
       stripeCustomerId: string | null;
       subscriptionId: string | null;
       completedLessons: string[];
@@ -290,6 +292,13 @@ export function toPassportUser(user: User): Express.User {
     lastName: user.lastName ?? null,
     email: user.email,
     subscriptionStatus: user.subscriptionStatus,
+    // Same class of bug as the fields further down: without these, every
+    // req.user had no trial end date, so hasFullAccess(req.user) treated every
+    // trial as expired (The Debrief returned 403 to trial users, and
+    // /api/auth/me sent trialEndsAt: null to the app). registeredAt lets
+    // screens tell comped Pro time from a trial (isCompedTime).
+    trialEndsAt: user.trialEndsAt ?? null,
+    registeredAt: user.registeredAt ?? null,
     stripeCustomerId: user.stripeCustomerId,
     subscriptionId: user.subscriptionId,
     completedLessons: user.completedLessons ?? [],

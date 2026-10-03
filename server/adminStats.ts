@@ -16,7 +16,7 @@
 
 import type Stripe from "stripe";
 import type { User } from "@shared/schema";
-import { isTrialActive } from "@shared/access";
+import { isTrialActive, isCompedTime } from "@shared/access";
 import { excludeInternalAccounts } from "./internalAccounts";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -43,7 +43,10 @@ export function planBucket(u: User): PlanBucket {
       // Stripe subscription; those are comps, not revenue.
       return (u.subscriptionId ?? "").startsWith("sub_") ? "paying" : "comped";
     case "trialing":
-      return isTrialActive(u as any) ? "trialing" : "trialEnded";
+      // Time given beyond the 14-day trial (admin gift, referral, pack bonus)
+      // is comped access, not a trial.
+      if (!isTrialActive(u as any)) return "trialEnded";
+      return isCompedTime(u as any) ? "comped" : "trialing";
     default:
       return "free";
   }

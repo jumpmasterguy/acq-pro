@@ -27,6 +27,7 @@ interface MobileShellProps {
   streak: number;
   onStreakPress: () => void;
   trialDaysLeft?: number | null;
+  compedTime?: boolean;
   /**
    * Changes on every navigation so the scroll area can reset to the top.
    * Without this, opening a lesson from halfway down a module page drops you
@@ -47,6 +48,7 @@ export function MobileShell({
   streak,
   onStreakPress,
   trialDaysLeft,
+  compedTime,
   scrollKey,
   onScrollProgress,
   readingBar,
@@ -89,6 +91,7 @@ export function MobileShell({
         streak={streak}
         onStreakPress={onStreakPress}
         trialDaysLeft={trialDaysLeft}
+        compedTime={compedTime}
       />
 
       {readingBar && (

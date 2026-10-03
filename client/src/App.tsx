@@ -7,7 +7,7 @@ import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { FREE_MODULES, FREE_PREVIEW_LESSONS, getModuleProgress, getLevel, calculateXP, ladderFor } from "@/lib/progress";
-import { hasFullAccess, hasPaidPlan, isTopPlanStatus, trialDaysRemaining } from "@shared/access";
+import { hasFullAccess, hasPaidPlan, isTopPlanStatus, trialDaysRemaining, isCompedTime } from "@shared/access";
 import { isNativeApp, getPlatform } from "@/lib/platform";
 import { useActiveTrack } from "@/lib/careerTracks";
 import { modules, prefetchCurriculum } from "@/lib/curriculumMeta";
@@ -379,6 +379,9 @@ function AppContent() {
     authState.status === 'authenticated' && hasFullAccess(authState.user);
   const trialDaysLeft =
     authState.status === 'authenticated' ? trialDaysRemaining(authState.user) : null;
+  // Same clock as a trial, but time Lucas gave them (or a reward): say "Pro".
+  const compedTime =
+    authState.status === 'authenticated' && isCompedTime(authState.user);
   // Distinct from isPremium: a trialing user has full access right now but
   // hasn't actually paid, so they should still see the upgrade CTA/countdown.
   const isActuallyPaid =
@@ -987,6 +990,7 @@ function AppContent() {
               onBack={() => setView({ type: 'dashboard' })}
               onUpgrade={handleUpgrade}
               trialDaysLeft={trialDaysLeft}
+              compedTime={compedTime}
               userEmail={authState.status === 'authenticated' ? authState.user.email : undefined}
               onSignOut={handleSignOut}
               onAfterAppCheckout={refreshAfterAppCheckout}
@@ -1078,6 +1082,7 @@ function AppContent() {
         streak={streak.currentStreak}
         onStreakPress={() => setView({ type: 'account' })}
         trialDaysLeft={view.type === 'dashboard' ? trialDaysLeft : null}
+        compedTime={compedTime}
         scrollKey={mobileScrollKey}
         onScrollProgress={view.type === 'lesson' ? setReadPct : undefined}
         readingBar={view.type === 'lesson' ? { pct: readPct, color: lessonModuleHex } : null}
@@ -1282,9 +1287,11 @@ function AppContent() {
               className="w-full px-3 py-1.5 rounded-lg text-[13px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 text-center"
               data-testid="trial-days-remaining"
             >
-              {trialDaysLeft === 0
-                ? "Trial ends today"
-                : `${trialDaysLeft} day${trialDaysLeft === 1 ? '' : 's'} left in your free trial`}
+              {compedTime
+                ? (trialDaysLeft === 0 ? "Pro access ends today" : `${trialDaysLeft} day${trialDaysLeft === 1 ? '' : 's'} of Pro left`)
+                : trialDaysLeft === 0
+                  ? "Trial ends today"
+                  : `${trialDaysLeft} day${trialDaysLeft === 1 ? '' : 's'} left in your free trial`}
             </div>
           )}
           {!isActuallyPaid && !isNativeApp() && (

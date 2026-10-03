@@ -54,6 +54,8 @@ const DEFAULT_CAREER: CareerTrackId = 'contractor_pm';
 const SUBSCRIPTION_LABELS: Record<string, { label: string; tone: string }> = {
   free: { label: 'Free', tone: 'bg-muted text-muted-foreground' },
   trialing: { label: 'Free Trial', tone: 'bg-amber-500/10 text-amber-700 dark:text-amber-400' },
+  // Pro time given to them (admin gift, referral reward, pack bonus).
+  comped: { label: 'Pro', tone: 'bg-primary/15 text-primary' },
   active: { label: 'Pro (Monthly)', tone: 'bg-primary/15 text-primary' },
   annual: { label: 'Pro (Annual)', tone: 'bg-yellow-500/15 text-yellow-600 dark:text-yellow-400' },
   lifetime: { label: 'Pro (Lifetime)', tone: 'bg-yellow-500/15 text-yellow-600 dark:text-yellow-400' },

@@ -410,6 +410,7 @@ export function UserSheet({ id, onClose }: { id: string; onClose: () => void }) 
                 {u.plan}
               </span>
               {u.accessUntil && u.hasAccess && <span className="text-xs text-muted-foreground">until {shortDate(u.accessUntil)}</span>}
+              {u.accessUntil && !u.hasAccess && <span className="text-xs text-muted-foreground">trial ended {shortDate(u.accessUntil)}</span>}
               {u.isAdmin && <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-600">Admin</span>}
               {u.isInternal && !u.isAdmin && <span className="text-xs text-muted-foreground">(your test account)</span>}
             </div>
