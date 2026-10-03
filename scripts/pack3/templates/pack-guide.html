@@ -1,17 +1,12 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><title>Defense Finance Cheat Sheets: Pack Guide</title>
 <style>{{CSS}}
-.cover { display: flex; flex-direction: column; }
-.cover h1 { font-size: 34pt; line-height: 1.02; }
-.cover .lede { font-size: 12pt; margin-top: 8px; max-width: 5.6in; }
-.tools { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 0.5in; }
-.tool { border: 1px solid var(--rule); border-radius: 10px; padding: 11px 13px; position: relative; }
-.tool .fmt { position: absolute; top: 11px; right: 12px; }
-.tool h3 { font-size: 11pt; margin: 0 0 3px; padding-right: 50px; }
-.tool p { font-size: 8.4pt; color: var(--muted); margin: 0; }
-.tool .bar { height: 3px; border-radius: 2px; margin: -11px -13px 9px; }
-.pill.pdf { background: var(--navy); } .pill.xls { background: var(--green); }
-.new li { font-size: 8.6pt; margin-bottom: 4px; }
+/* Cover: the standard Acqlerate cover, with a one-line description under each tool */
+.inside ol { row-gap: 9px; }
+.inside li .t .d { display: block; font-size: 8pt; color: rgba(255,255,255,0.62); line-height: 1.35; margin-top: 1px; }
+.inside li .p { font-size: 7pt; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.new { margin-top: 4px; }
+.new li { font-size: 8.8pt; margin-bottom: 4px; }
 .page h2.big { font-size: 15pt; margin-bottom: 6px; }
 .tp { margin-top: 12px; }
 .tp .head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
@@ -35,21 +30,30 @@
   <div class="watermark"></div>
   <div class="masthead">
     <div class="lockup"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
-    <div class="meta"><div class="eyebrow" style="margin-bottom:3px">Pack guide</div><b>{{EDITION}} edition</b></div>
+    <div class="edition"><b>{{EDITION}} edition</b><br>Pack guide</div>
   </div>
 
-  <div class="eyebrow" style="margin-top:1.35in">Free pack</div>
-  <h1 style="margin-top:4px">Defense Finance<br>Cheat Sheets</h1>
+  <div class="rule"></div>
+  <div class="eyebrow" style="margin-top:14px">Pack 3 · Free pack</div>
+  <h1>Defense Finance<br>Cheat Sheets</h1>
   <p class="lede">Four tools that make defense money make sense. Keep them open in the budget drill, the program review, and the meeting where someone says "color of money" like it explains itself.</p>
 
-  <div class="tools">
-    <div class="tool"><div class="bar" style="background:var(--blue)"></div><span class="pill pdf fmt">PDF</span><h3>PPBE Cycle on One Page</h3><p>One budget followed from first planning meeting to last day on contract, drawn as a timeline.</p></div>
-    <div class="tool"><div class="bar" style="background:var(--magenta)"></div><span class="pill pdf fmt">PDF</span><h3>Color of Money Decision Tree</h3><p>Four questions that pick the right appropriation, plus periods, thresholds and RDT&amp;E codes.</p></div>
-    <div class="tool"><div class="bar" style="background:var(--purple)"></div><span class="pill pdf fmt">PDF</span><h3>EVM Formulas Quick Reference</h3><p>Every formula, four EAC methods, how to read them, and a worked example.</p></div>
-    <div class="tool"><div class="bar" style="background:var(--green)"></div><span class="pill xls fmt">Excel</span><h3>Wrap Rate Calculator</h3><p>A live rate build-up plus typical wrap rates by contractor type and business unit.</p></div>
+  <div class="inside">
+    <h2>What's included</h2>
+    <ol>
+      <li><span class="n">01</span><span class="t">PPBE Cycle on One Page<span class="d">One budget followed from first planning meeting to last day on contract, drawn as a timeline.</span></span><span class="p">PDF</span></li>
+      <li><span class="n">03</span><span class="t">EVM Formulas Quick Reference<span class="d">Every formula, four EAC methods, how to read them, and a worked example.</span></span><span class="p">PDF</span></li>
+      <li><span class="n">02</span><span class="t">Color of Money Decision Tree<span class="d">Four questions that pick the right appropriation, plus periods, thresholds and RDT&amp;E codes.</span></span><span class="p">PDF</span></li>
+      <li><span class="n">04</span><span class="t">Wrap Rate Calculator<span class="d">A live rate build-up plus typical wrap rates by contractor type and business unit.</span></span><span class="p">Excel</span></li>
+    </ol>
   </div>
+  <div class="fine"><span>Free to share unaltered, branding intact.</span><span>Educational reference, not official DoD guidance. acqlerate.com</span></div>
+</section>
 
-  <div class="card soft" style="margin-top:0.45in">
+<!-- ═════════════ PAGE 2: WHAT IS NEW + WHY + TOOL 1 ═════════════ -->
+<section class="page portrait">
+  <div class="watermark"></div>
+  <div class="card soft" style="margin-bottom:14px">
     <h2>What is new in this edition</h2>
     <ul class="new">
       <li><b>Three sheets are now print-ready PDFs.</b> PPBE is redrawn as a timeline, and Color of Money is a real flowchart.</li>
@@ -59,17 +63,6 @@
       <li><b>Wrap rates:</b> large primes are split by business unit, because one company can run a 1.7x services unit and a 2.9x systems division, and every row's wrap rate now matches its own rates.</li>
     </ul>
   </div>
-
-  <div class="footer">
-    <div class="lockup small"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
-    <div class="sources">Free to share unaltered, branding intact. Educational reference, not official DoD guidance.</div>
-    <div class="pg">acqlerate.com · 1</div>
-  </div>
-</section>
-
-<!-- ═════════════ PAGE 2: WHY + TOOLS 1–2 ═════════════ -->
-<section class="page portrait">
-  <div class="watermark"></div>
   <h2 class="big">Why defense finance confuses everyone</h2>
   <p style="font-size:9.2pt">Several kinds of money, each with its own rules. A budget cycle that takes two years before a dollar reaches a contract. Cost accounting rules that would make a CPA reach for the aspirin. And enough acronyms to fill a DD Form nobody has seen since 1987.</p>
   <p style="font-size:9.2pt">Underneath, it follows a logic. Color of money exists because Congress wants to control how money is spent. EVM exists because the government needs to know a program is in trouble before it is finished. PPBE exists because you cannot build an aircraft carrier on a one-year plan. Each tool in this pack explains one of those logics on a page you can keep open.</p>
@@ -86,9 +79,17 @@
     <div class="lesson">Goes with <b>Module 2, Lesson 1: The PPBE Cycle</b></div>
   </div>
 
-  <div class="divider"></div>
+  <div class="footer">
+    <div class="lockup small"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+    <div class="sources">Defense Finance Cheat Sheets · Pack guide · {{EDITION}} edition</div>
+    <div class="pg">acqlerate.com · 2</div>
+  </div>
+</section>
 
-  <div class="tp">
+<!-- ═════════════ PAGE 3: TOOLS 2–4 ═════════════ -->
+<section class="page portrait">
+  <div class="watermark"></div>
+  <div class="tp" style="margin-top:0">
     <div class="head"><span class="n">Tool 2 · PDF</span><h2>Color of Money Decision Tree</h2></div>
     <p>Which appropriation pays for a thing, decided by four questions asked in order. Page 2 has the periods of availability, the thresholds, and the RDT&amp;E budget activity codes.</p>
     <div class="analogy"><b>The analogy</b>Three bank accounts: one for the mortgage, one for groceries, one for the kitchen remodel. You cannot pay the electric bill from the remodel account, even when it has money in it. In DoD, mixing them up is not a bookkeeping error. It can be an Antideficiency Act violation, and those are personal.</div>
@@ -100,17 +101,9 @@
     <div class="lesson">Goes with <b>Module 2, Lesson 4: Color of Money by Service</b></div>
   </div>
 
-  <div class="footer">
-    <div class="lockup small"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
-    <div class="sources">Defense Finance Cheat Sheets · Pack guide · {{EDITION}} edition</div>
-    <div class="pg">acqlerate.com · 2</div>
-  </div>
-</section>
+  <div class="divider"></div>
 
-<!-- ═════════════ PAGE 3: TOOLS 3–4 ═════════════ -->
-<section class="page portrait">
-  <div class="watermark"></div>
-  <div class="tp" style="margin-top:0">
+  <div class="tp">
     <div class="head"><span class="n">Tool 3 · PDF</span><h2>EVM Formulas Quick Reference</h2></div>
     <p>Earned value management is how DoD tells whether a contract is on track for cost and schedule. Page 1 has the formulas and the four ways to estimate the final cost. Page 2 explains how to read them and walks through a worked example.</p>
     <div class="analogy"><b>The analogy</b>A road trip where you check the fuel gauge and the map at the same time. Fuel burned tells you one thing, miles covered tells you another. EVM compares both to where you planned to be, which is how you find out about the detour before you run out of gas.</div>

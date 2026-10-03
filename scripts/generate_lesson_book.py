@@ -2,10 +2,12 @@
 """
 Generate Acqlerate Lesson Book PDFs from the curriculum.
 
-The six original module PDFs were produced with WeasyPrint from HTML; this
-script reproduces that design exactly (fonts, palette, page furniture) so new
-modules are indistinguishable from the originals, and it handles every content
-block type the curriculum uses today.
+The books are rendered with WeasyPrint from HTML in the shared Acqlerate print
+style (scripts/print/acq-print.css, from the Acqlerate Design System): General
+Sans throughout, navy for structure, teal for brand chrome, the warm parchment
+and stone neutrals for rules, washes and secondary text, the navy hero cover and
+the standard footer. Gold is reserved for XP in the app and is not used in print.
+The generator handles every content block type the curriculum uses today.
 
 Usage:
     npx tsx scripts/export-curriculum.ts          # writes /tmp/curriculum-export.json
@@ -14,8 +16,10 @@ Usage:
         --out server/assets/lesson-books \
         --modules business,smallbiz            # omit to build every module
 
-Requires: pip install weasyprint  (plus the Liberation fonts, which are the
-default serif/sans on most Linux images and are what the originals used).
+Requires: pip install weasyprint (v53+, which embeds the General Sans woff2
+files from client/public/fonts directly). The few symbols General Sans lacks
+(arrows, the quiz check mark) fall back to DejaVu Sans. Emoji never print:
+status lights become brand-coloured dots and decorative icons are dropped.
 """
 from __future__ import annotations
 
@@ -26,23 +30,35 @@ import json
 import os
 import re
 import sys
+from pathlib import Path
 
-# ── Palette, lifted from the original PDFs so new books match exactly ────────
-NAVY        = "#0b2545"
-COVER_MID   = "#2c4a78"
-GOLD        = "#d9b64c"
-BODY        = "#1c2430"
-MUTED       = "#454f61"
-LIGHT       = "#8a93a6"
-PANEL       = "#f4f6fa"
-PANEL_ALT   = "#f7f8fb"
-CORRECT_BG  = "#eaf3ea"
-CORRECT_FG  = "#245c2e"
-COVER_SUB   = "#cdd8ea"
-COVER_META  = "#9db3d6"
-COVER_FOOT  = "#7d8fb3"
-TEAL        = "#01696f"
-RULE        = "#d7dde8"
+# ── Palette: Acqlerate Design System tokens, exactly as in acq-print.css ─────
+NAVY         = "#0D1B2A"   # acq-navy: headings and structure
+INK          = "#1A1A1A"   # text-body
+MUTED        = "#4F4A44"   # text-secondary (stone-600)
+FAINT        = "#6E6659"   # text-muted (stone-500)
+RULE         = "#EAE0CE"   # border-subtle (parchment-200)
+RULE_STRONG  = "#D9CBB3"   # border-default (parchment-300)
+SOFT         = "#FAF6EE"   # surface-page (parchment-50)
+TEAL         = "#01696F"   # brand: eyebrows, accents, rules
+TEAL_SOFT    = "#E6F2F3"   # surface-brand-wash
+CYAN         = "#4FC3CB"   # teal's stand-in on navy only
+HERO         = "linear-gradient(135deg, #0D2137 0%, #123047 55%, #0A1B2D 100%)"
+WARN_WASH    = "#FDF2EE"   # status: warning callouts
+WARN_RULE    = "#F4C7B4"
+WARN_INK     = "#B4410F"
+SUCCESS_WASH = "#ECFDF5"   # status: the correct quiz answer
+SUCCESS_INK  = "#065F46"
+
+# General Sans, the brand face, straight from the site's own font files.
+_ROOT = Path(__file__).resolve().parents[1]
+FONT_DIR = _ROOT / "client" / "public" / "fonts"
+FONT_FACES = "\n".join(
+    f"@font-face {{ font-family: 'General Sans'; font-weight: {w}; font-style: normal; "
+    f"src: url('{(FONT_DIR / f'GeneralSans-{n}.woff2').as_uri()}') format('woff2'); }}"
+    for w, n in ((400, "Regular"), (500, "Medium"), (600, "Semibold"), (700, "Bold"))
+)
+SANS = "'General Sans', 'DejaVu Sans', sans-serif"
 
 MODULE_NUMBERS = {
     "foundations": 1, "finance": 2, "contracts": 3, "data": 4, "capture": 5,
@@ -83,6 +99,41 @@ def rich(text: str) -> str:
     """Escape, then honour the **bold** markers the lesson copy uses."""
     out = esc(text)
     return re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", out, flags=re.S)
+
+
+# Emoji have no place in a printed book: they fall back to a colour emoji font
+# that looks nothing like the rest of the page. The risk-matrix traffic lights
+# become flat brand-coloured dots; purely decorative icons are dropped.
+STATUS_DOTS = {"🟢": "#2E8B57", "🟡": "#E0B23A", "🟠": "#D1571A", "🔴": "#B42318"}
+_ICON = re.compile(r"[\U0001F000-\U0001FAFF☀-➿️‍]")
+
+
+def is_icon(s) -> bool:
+    """True when a field holds only emoji/symbol characters (a decorative icon)."""
+    s = str(s or "").strip()
+    return bool(s) and not _ICON.sub("", s).strip()
+
+
+def print_symbols(doc: str) -> str:
+    for ch, color in STATUS_DOTS.items():
+        doc = doc.replace(ch, f'<span class="dot" style="background:{color}"></span>')
+    doc = doc.replace("‑", "-")      # non-breaking hyphen: General Sans has none
+    return _ICON.sub("", doc)
+
+
+def join_parts(parts: list[str]) -> str:
+    """Join a visual block's text fields for print without em dashes: a space
+    after a finished sentence, a middle dot between fragments."""
+    out = ""
+    for p in parts:
+        p = p.strip()
+        if not out:
+            out = p
+        elif out[-1] in ".!?:)":
+            out += " " + p
+        else:
+            out += " · " + p
+    return out
 
 
 def bullet(raw) -> str:
@@ -158,7 +209,7 @@ def render_block(b: dict) -> str:
         for s in b.get("stats", []) or []:
             cells.append(
                 '<div class="stat">'
-                f'<div class="stat-v">{esc(s.get("value", ""))}</div>'
+                + ("" if is_icon(s.get("value")) else f'<div class="stat-v">{esc(s.get("value", ""))}</div>') +
                 f'<div class="stat-l">{esc(s.get("label", ""))}</div>'
                 + (f'<div class="stat-s">{esc(s["sub"])}</div>' if s.get("sub") else "")
                 + "</div>"
@@ -244,9 +295,10 @@ def render_block(b: dict) -> str:
                 out.append(bullet(entry))
                 continue
             label = next((entry[k] for k in LABELS if entry.get(k)), "")
-            parts = [str(entry[k]) for k in DESCS if entry.get(k) and not isinstance(entry[k], (list, dict))]
+            parts = [str(entry[k]) for k in DESCS
+                     if entry.get(k) and not isinstance(entry[k], (list, dict)) and not is_icon(entry[k])]
             line = f"<strong>{esc(label)}</strong> " if label else ""
-            line += rich(" — ".join(parts)) if parts else ""
+            line += rich(join_parts(parts)) if parts else ""
             nested = ""
             for nk in ("steps", "items", "content"):
                 if isinstance(entry.get(nk), list) and entry[nk]:
@@ -405,9 +457,8 @@ def build_html(mod: dict) -> str:
     num = MODULE_NUMBERS.get(mod["id"], 0)
     lessons = mod.get("lessons") or []
     total_min = sum(minutes(l.get("duration")) for l in lessons)
-    # The @top-center content string is CSS, not HTML: entities are not parsed,
-    # so this needs the real character and no escaping.
-    running_title = f'Module {num}: {mod["title"]}'
+    # The footer label is a running element (HTML), so it is escaped like any text.
+    running_title = f'Module {num}: {mod["title"]} · Lesson Book'
 
     toc = "".join(
         f'<div class="toc-row"><span class="toc-n">{i:02d}</span>'
@@ -450,21 +501,22 @@ def build_html(mod: dict) -> str:
     css = CSS_TEMPLATE
     return f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
-<title>{esc(mod['title'])} — Acqlerate Lesson Book</title>
+<title>{esc(mod['title'])} | Acqlerate Lesson Book</title>
 <style>{css}</style></head>
 <body>
+<div class="foot-logo"><img alt="Acqlerate" src="{LOCKUP_LIGHT}"></div>
+<div class="foot-label">{esc(running_title)}</div>
 <div class="cover">
-  <div class="cover-inner">
-    <img class="cover-lockup" alt="Acqlerate" src="{LOCKUP_DARK}">
-    <div class="cover-mod">MODULE {num}</div>
+  <img class="cover-lockup" alt="Acqlerate" src="{LOCKUP_DARK}">
+  <div class="cover-main">
+    <div class="cover-rule"></div>
+    <div class="cover-mod">Module {num}</div>
     <h1 class="cover-t">{esc(mod['title'])}</h1>
     <p class="cover-s">{esc(mod.get('description', ''))}</p>
-    <div class="cover-rule"></div>
-    <div class="cover-meta">{len(lessons)} Lessons &nbsp;&middot;&nbsp; ~{total_min} Minutes
-      &nbsp;&middot;&nbsp; Lesson Book Edition</div>
   </div>
+  <div class="cover-fine"><span>{len(lessons)} Lessons &nbsp;&middot;&nbsp; ~{total_min} Minutes
+      &nbsp;&middot;&nbsp; Lesson Book Edition</span><span>acqlerate.com</span></div>
 </div>
-<div class="running-head"><img alt="Acqlerate" src="{LOCKUP_LIGHT}"><span>{esc(running_title)}</span></div>
 <div class="toc">
   <h2 class="toc-h">Course Lessons</h2>
   {toc}
@@ -475,141 +527,182 @@ def build_html(mod: dict) -> str:
 
 
 CSS_TEMPLATE = f"""
+{FONT_FACES}
+
+/* Pages: no top header; the shared Acqlerate footer on every page after the cover
+   (thin rule, small lockup, module label, acqlerate.com and the page number). */
 @page {{
   size: letter;
-  margin: 26mm 22mm 22mm 22mm;
-  @top-center {{ content: element(runninghead); }}
+  margin: 0.62in 0.9in 0.8in 0.9in;
+  font-family: {SANS}; font-size: 7pt; color: {FAINT};
+  @bottom-left {{
+    content: element(footlogo); width: 1.1in;
+    margin-top: 0.3in; border-top: 0.75pt solid {RULE}; padding-top: 5pt; vertical-align: top;
+  }}
   @bottom-center {{
-    content: counter(page);
-    font-family: "Liberation Serif", serif; font-size: 9pt; color: {LIGHT};
+    content: element(footlabel); width: 4.5in;
+    margin-top: 0.3in; border-top: 0.75pt solid {RULE}; padding-top: 5pt; vertical-align: top;
+  }}
+  @bottom-right {{
+    content: "acqlerate.com \\00B7  " counter(page); width: 1.1in; text-align: right; white-space: nowrap;
+    font-family: {SANS}; font-size: 7pt; color: {FAINT};
+    margin-top: 0.3in; border-top: 0.75pt solid {RULE}; padding-top: 5pt; vertical-align: top; line-height: 12pt;
   }}
 }}
-@page :first {{ margin: 0; @top-center {{ content: ""; }} @bottom-center {{ content: ""; }} }}
-
-body {{ font-family: "Liberation Serif", serif; font-size: 11pt; line-height: 1.5; color: {BODY}; }}
-p {{ margin: 0 0 9pt; text-align: left; }}
-strong {{ font-weight: bold; }}
-
-/* Cover */
-.cover {{
-  page: first; height: 100vh; width: 100%;
-  background: linear-gradient(160deg, {NAVY} 0%, {COVER_MID} 60%, {NAVY} 100%);
-  page-break-after: always; position: relative;
+@page :first {{
+  margin: 0;
+  @bottom-left {{ content: none; border: none; }}
+  @bottom-center {{ content: none; border: none; }}
+  @bottom-right {{ content: none; border: none; }}
 }}
-.cover-inner {{ position: absolute; left: 26mm; right: 26mm; top: 34%; }}
-.cover-lockup {{ height: 46px; width: auto; display: block; margin-bottom: 30pt; }}
-.running-head {{ position: running(runninghead); display: flex; align-items: center; gap: 7pt;
-  font-family: "Liberation Sans", sans-serif; font-size: 8pt; letter-spacing: 0.08em;
-  text-transform: uppercase; color: {LIGHT}; white-space: nowrap; }}
-.running-head img {{ height: 13pt; width: auto; display: block; }}
-.cover-mod {{ font-family: "Liberation Sans", sans-serif; font-size: 12pt; letter-spacing: 0.12em; color: {COVER_META}; margin-bottom: 6pt; }}
-.cover-t {{ font-family: "Liberation Sans", sans-serif; font-size: 34pt; font-weight: bold; color: #ffffff; line-height: 1.12; margin: 0 0 14pt; }}
-.cover-s {{ font-style: italic; font-size: 13pt; color: {COVER_SUB}; line-height: 1.45; margin: 0 0 22pt; max-width: 118mm; }}
-.cover-rule {{ height: 1px; background: rgba(255,255,255,0.28); width: 112mm; margin-bottom: 10pt; }}
-.cover-meta {{ font-family: "Liberation Sans", sans-serif; font-size: 9pt; color: {COVER_FOOT}; }}
+.foot-logo {{ position: running(footlogo); }}
+.foot-logo img {{ height: 12pt; width: auto; display: block; }}
+.foot-label {{ position: running(footlabel); font-family: {SANS}; font-size: 7pt; color: {FAINT};
+  text-align: center; line-height: 12pt; white-space: nowrap; }}
+
+html {{ font-family: {SANS}; }}
+body {{ font-family: {SANS}; font-size: 10pt; line-height: 1.55; color: {INK}; margin: 0; }}
+p {{ margin: 0 0 8pt; text-align: left; }}
+strong, b {{ font-weight: 600; color: {NAVY}; }}
+
+/* Cover: the same navy hero cover as every Acqlerate PDF */
+.cover {{
+  height: 100vh; width: 100%; position: relative; overflow: hidden;
+  background: {HERO}; color: #ffffff; page-break-after: always;
+}}
+.cover-lockup {{ position: absolute; top: 0.5in; left: 0.62in; height: 21pt; width: auto; display: block; }}
+.cover-main {{ position: absolute; top: 2.2in; left: 0.62in; right: 0.62in; }}
+.cover-rule {{ width: 42pt; height: 2.25pt; background: {CYAN}; border-radius: 1.5pt; margin-bottom: 11pt; }}
+.cover-mod {{ font-family: {SANS}; font-size: 8pt; font-weight: 700; letter-spacing: 0.07em;
+  text-transform: uppercase; color: {CYAN}; margin-bottom: 8pt; }}
+.cover-t {{ font-family: {SANS}; font-size: 36pt; font-weight: 700; color: #ffffff; line-height: 1.04;
+  letter-spacing: -0.025em; margin: 0 0 14pt; max-width: 6.6in; }}
+.cover-s {{ font-family: {SANS}; font-size: 12pt; font-weight: 400; color: rgba(255,255,255,0.82);
+  line-height: 1.45; margin: 0; max-width: 5.9in; }}
+.cover-fine {{ position: absolute; left: 0.62in; right: 0.62in; bottom: 0.5in;
+  display: flex; justify-content: space-between; border-top: 0.75pt solid rgba(255,255,255,0.16);
+  padding-top: 8pt; font-family: {SANS}; font-size: 7.6pt; color: rgba(255,255,255,0.68); }}
+
+/* Tracked uppercase labels stay at 0.07em (acq-print.css uses up to 0.14em in
+   Chromium): with WeasyPrint, from 0.08em up, PDF text extraction (search, copy,
+   screen readers) starts splitting words such as "B OTH" or "SOFTWARE ,". */
 
 /* Contents */
 .toc {{ page-break-after: always; }}
-.toc-h {{ font-family: "Liberation Sans", sans-serif; font-size: 20pt; color: {NAVY}; margin: 0 0 4pt; }}
-.toc {{ }}
-.toc-h + .toc-row {{ margin-top: 10pt; }}
-.toc-h {{ border-bottom: 2.2pt solid {NAVY}; padding-bottom: 8pt; }}
-.toc-row {{ display: flex; align-items: baseline; gap: 8pt; padding: 6pt 0; border-bottom: 0.5pt dotted {RULE}; }}
-.toc-n {{ font-family: "Liberation Sans", sans-serif; font-size: 10pt; font-weight: bold; color: {GOLD}; width: 22pt; }}
-.toc-t {{ font-family: "Liberation Sans", sans-serif; font-size: 10.5pt; color: {BODY}; flex: 1; }}
-.toc-d {{ font-family: "Liberation Sans", sans-serif; font-size: 9pt; color: {LIGHT}; }}
+.toc-h {{ font-family: {SANS}; font-size: 20pt; font-weight: 700; letter-spacing: -0.02em; color: {NAVY};
+  line-height: 1.12; margin: 0 0 4pt; border-bottom: 1.5px solid {NAVY}; padding-bottom: 8pt; }}
+.toc-h + .toc-row {{ margin-top: 8pt; }}
+.toc-row {{ display: flex; align-items: baseline; gap: 8pt; padding: 7pt 0; border-bottom: 1px solid {RULE}; }}
+.toc-n {{ font-family: {SANS}; font-size: 9pt; font-weight: 700; color: {TEAL}; width: 22pt; }}
+.toc-t {{ font-family: {SANS}; font-size: 10.5pt; font-weight: 500; color: {NAVY}; flex: 1; }}
+.toc-d {{ font-family: {SANS}; font-size: 8.5pt; color: {FAINT}; }}
 
 /* Lesson */
 .lesson {{ page-break-before: always; }}
-.eyebrow {{ font-family: "Liberation Sans", sans-serif; font-size: 9pt; font-weight: bold; letter-spacing: 0.09em; color: {GOLD}; margin-bottom: 6pt; }}
-.lesson-t {{ font-family: "Liberation Sans", sans-serif; font-size: 21pt; font-weight: bold; color: {NAVY}; line-height: 1.2; margin: 0 0 4pt; }}
-.lesson-d {{ font-family: "Liberation Sans", sans-serif; font-size: 9pt; color: {LIGHT}; margin-bottom: 12pt; }}
-.lede {{ border-left: 3pt solid {GOLD}; padding: 2pt 0 2pt 12pt; margin: 0 0 14pt; }}
-.lede p {{ font-style: italic; font-size: 11pt; color: {MUTED}; margin: 0; }}
+.eyebrow {{ font-family: {SANS}; font-size: 7.4pt; font-weight: 700; letter-spacing: 0.07em; color: {TEAL}; margin-bottom: 6pt; }}
+.lesson-t {{ font-family: {SANS}; font-size: 22pt; font-weight: 700; color: {NAVY}; line-height: 1.1;
+  letter-spacing: -0.02em; margin: 0 0 5pt; }}
+.lesson-d {{ font-family: {SANS}; font-size: 8.5pt; color: {FAINT}; margin-bottom: 14pt; }}
+.lede {{ border-left: 3px solid {TEAL}; padding: 3pt 0 3pt 12pt; margin: 0 0 16pt; }}
+.lede p {{ font-size: 11pt; line-height: 1.5; color: {MUTED}; margin: 0; }}
 
-h3.sub {{ font-family: "Liberation Sans", sans-serif; font-size: 12.5pt; font-weight: bold; color: {NAVY}; margin: 16pt 0 6pt; page-break-after: avoid; }}
+h3.sub {{ font-family: {SANS}; font-size: 12pt; font-weight: 700; color: {NAVY}; letter-spacing: -0.01em;
+  line-height: 1.25; margin: 17pt 0 6pt; page-break-after: avoid; }}
 
-.tier {{ margin: 18pt 0 10pt; border-top: 0.8pt solid {RULE}; page-break-after: avoid; }}
+.tier {{ margin: 20pt 0 10pt; border-top: 1px solid {RULE_STRONG}; page-break-after: avoid; }}
 .tier span {{
-  display: inline-block; font-family: "Liberation Sans", sans-serif; font-size: 7.5pt; font-weight: bold;
-  letter-spacing: 0.12em; text-transform: uppercase; color: {NAVY};
-  background: {PANEL}; border: 0.5pt solid {RULE}; border-radius: 3pt;
-  padding: 2pt 7pt; margin-top: -7pt;
+  display: inline-block; font-family: {SANS}; font-size: 6.8pt; font-weight: 700;
+  letter-spacing: 0.07em; text-transform: uppercase; color: {TEAL};
+  background: {TEAL_SOFT}; border-radius: 99px; padding: 2pt 8pt; margin-top: -6pt;
 }}
 
-.callout {{ background: {PANEL}; border-left: 3pt solid {NAVY}; padding: 9pt 12pt 2pt; margin: 12pt 0; page-break-inside: avoid; }}
-.callout.warn {{ border-left-color: #b45309; }}
-.callout-h {{ font-family: "Liberation Sans", sans-serif; font-size: 8.5pt; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; color: {NAVY}; margin-bottom: 5pt; }}
-.callout p {{ font-size: 10.5pt; color: {MUTED}; }}
+.callout {{ background: {TEAL_SOFT}; border-radius: 9px; padding: 10pt 13pt 3pt; margin: 12pt 0; page-break-inside: avoid; }}
+.callout-h {{ font-family: {SANS}; font-size: 7.2pt; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+  color: {TEAL}; margin-bottom: 4pt; }}
+.callout p {{ font-size: 9.8pt; color: {INK}; }}
+.callout.warn {{ background: {WARN_WASH}; border: 1px solid {WARN_RULE}; }}
+.callout.warn .callout-h {{ color: {WARN_INK}; }}
 
-.highlight {{ background: #fdf8ea; border-left: 3pt solid {GOLD}; padding: 9pt 12pt 2pt; margin: 12pt 0; page-break-inside: avoid; }}
-.highlight p {{ font-size: 10.5pt; color: {BODY}; }}
+.highlight {{ background: {SOFT}; border-left: 3px solid {TEAL}; border-radius: 0 9px 9px 0;
+  padding: 10pt 13pt 3pt; margin: 12pt 0; page-break-inside: avoid; }}
+.highlight p {{ font-size: 10pt; font-weight: 500; color: {NAVY}; }}
 
 ul.bullets {{ margin: 6pt 0 10pt; padding-left: 14pt; }}
-ul.bullets li {{ margin-bottom: 5pt; font-size: 10.5pt; }}
+ul.bullets li {{ margin-bottom: 5pt; font-size: 10pt; }}
+ul.bullets li::marker {{ color: {TEAL}; }}
+ul.bullets ul.bullets {{ list-style-type: "\\2013  "; margin: 4pt 0 2pt; }}  /* en dash: General Sans has no open circle */
+ul.bullets ul.bullets li::marker {{ color: {FAINT}; }}
 
-table {{ width: 100%; border-collapse: collapse; margin: 8pt 0 12pt; font-size: 9pt; page-break-inside: avoid; }}
-th {{ background: {NAVY}; color: #ffffff; font-family: "Liberation Sans", sans-serif; font-size: 8pt; font-weight: bold;
-     letter-spacing: 0.06em; text-transform: uppercase; text-align: left; padding: 6pt 7pt; }}
-td {{ border-bottom: 0.5pt solid {RULE}; padding: 5pt 7pt; vertical-align: top; }}
-tbody tr:nth-child(even) {{ background: {PANEL}; }}
+table {{ width: 100%; border-collapse: collapse; margin: 8pt 0 13pt; font-size: 8.9pt; line-height: 1.4; page-break-inside: avoid; }}
+th {{ font-family: {SANS}; font-size: 7pt; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+  color: {FAINT}; text-align: left; padding: 5pt 7pt; border-bottom: 1.5px solid {NAVY}; vertical-align: bottom; }}
+td {{ border-bottom: 1px solid {RULE}; padding: 5.5pt 7pt; vertical-align: top; }}
+tbody tr:nth-child(even) {{ background: {SOFT}; }}
 
-.formula {{ background: {PANEL}; border: 0.5pt solid {RULE}; border-radius: 3pt; padding: 10pt 12pt 3pt; margin: 10pt 0; page-break-inside: avoid; }}
-.formula-eq {{ font-family: "Liberation Mono", monospace; font-size: 10pt; color: {NAVY};
+.formula {{ background: {SOFT}; border: 1px solid {RULE}; border-radius: 9px; padding: 11pt 13pt 3pt; margin: 10pt 0; page-break-inside: avoid; }}
+.formula-eq {{ font-family: {SANS}; font-size: 10pt; font-weight: 500; color: {NAVY}; line-height: 1.6;
   margin-bottom: 7pt; white-space: pre-wrap; }}  /* formulas carry their own line breaks */
-.formula-x {{ font-size: 10pt; color: {MUTED}; }}
+.formula-x {{ font-size: 9.5pt; color: {MUTED}; }}
 
+.dot {{ display: inline-block; width: 7pt; height: 7pt; border-radius: 50%; margin-right: 3pt; vertical-align: 0; }}
 .stats {{ display: flex; gap: 8pt; margin: 10pt 0 14pt; page-break-inside: avoid; }}
-.stat {{ flex: 1; background: {PANEL}; border-top: 2pt solid {GOLD}; padding: 8pt 9pt; }}
-.stat-v {{ font-family: "Liberation Sans", sans-serif; font-size: 13pt; font-weight: bold; color: {NAVY}; line-height: 1.15; }}
-.stat-l {{ font-family: "Liberation Sans", sans-serif; font-size: 8pt; color: {BODY}; margin-top: 3pt; line-height: 1.3; }}
-.stat-s {{ font-size: 8pt; color: {LIGHT}; margin-top: 2pt; line-height: 1.3; }}
+.stat {{ flex: 1; border: 1px solid {RULE}; border-top: 3px solid {TEAL}; border-radius: 9px; padding: 8pt 9pt; }}
+.stat-v {{ font-family: {SANS}; font-size: 14pt; font-weight: 700; letter-spacing: -0.02em; color: {NAVY}; line-height: 1.1; }}
+.stat-l {{ font-family: {SANS}; font-size: 8pt; font-weight: 500; color: {INK}; margin-top: 3pt; line-height: 1.3; }}
+.stat-s {{ font-size: 7.6pt; color: {FAINT}; margin-top: 2pt; line-height: 1.3; }}
 
 .exps {{ margin: 6pt 0 12pt; }}
-.exp {{ border-left: 2pt solid {RULE}; padding: 0 0 2pt 10pt; margin-bottom: 9pt; page-break-inside: avoid; }}
-.exp-h {{ font-family: "Liberation Sans", sans-serif; font-size: 10pt; font-weight: bold; color: {NAVY}; margin-bottom: 3pt; }}
-.exp-badge {{ font-family: "Liberation Sans", sans-serif; font-size: 7pt; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase;
-  color: {MUTED}; background: {PANEL}; border: 0.5pt solid {RULE}; border-radius: 2pt; padding: 1pt 5pt; margin-left: 6pt; }}
-.exp-sum {{ font-size: 10pt; margin-bottom: 4pt; }}
-.exp-label-sub {{ font-family: "Liberation Sans", sans-serif; font-size: 8.5pt; color: {MUTED}; margin-bottom: 3pt; }}
-.exp-sub {{ font-family: "Liberation Sans", sans-serif; font-size: 9pt; font-weight: bold; color: {MUTED}; margin: 5pt 0 2pt; }}
-.tnote {{ font-size: 9.5pt; color: {MUTED}; font-style: italic; margin: -4pt 0 10pt; }}
-.tsub {{ font-family: "Liberation Sans", sans-serif; font-size: 8pt; color: {LIGHT}; }}
-.figcap {{ font-size: 9.5pt; color: {MUTED}; font-style: italic; margin: 6pt 0 10pt; }}
+.exp {{ border-left: 2px solid {RULE_STRONG}; padding: 0 0 2pt 11pt; margin-bottom: 10pt; page-break-inside: avoid; }}
+.exp-h {{ font-family: {SANS}; font-size: 10pt; font-weight: 700; color: {NAVY}; margin-bottom: 3pt; }}
+.exp-badge {{ font-family: {SANS}; font-size: 6.6pt; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  color: {TEAL}; background: {TEAL_SOFT}; border-radius: 99px; padding: 1pt 6pt; margin-left: 6pt; vertical-align: 1px; }}
+.exp-sum {{ font-size: 9.8pt; margin-bottom: 4pt; }}
+.exp-label-sub {{ font-family: {SANS}; font-size: 8.5pt; color: {MUTED}; margin-bottom: 3pt; }}
+.exp-sub {{ font-family: {SANS}; font-size: 8.6pt; font-weight: 600; color: {NAVY}; margin: 6pt 0 2pt; }}
+.exp-body {{ font-size: 9.6pt; color: {MUTED}; margin-bottom: 3pt; }}
+.tnote {{ font-size: 8.8pt; color: {FAINT}; margin: -5pt 0 11pt; }}
+.tsub {{ font-family: {SANS}; font-size: 7.6pt; font-weight: 400; color: {FAINT}; }}
+.figcap {{ font-size: 8.8pt; color: {FAINT}; margin: 6pt 0 10pt; }}
+table.twocol, table.match {{ border-top: 1px solid {RULE_STRONG}; }}
 table.twocol td {{ vertical-align: top; }}
 table.twocol td:first-child {{ width: 26%; }}
-.exp-body {{ font-size: 10pt; color: {MUTED}; margin-bottom: 3pt; }}
 
-.related {{ background: {PANEL}; border-radius: 3pt; padding: 9pt 12pt; margin: 12pt 0; page-break-inside: avoid; }}
-.related-h {{ font-family: "Liberation Sans", sans-serif; font-size: 8.5pt; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; color: {NAVY}; margin-bottom: 5pt; }}
+.related {{ background: {SOFT}; border-radius: 9px; padding: 10pt 13pt; margin: 12pt 0; page-break-inside: avoid; }}
+.related-h {{ font-family: {SANS}; font-size: 7.2pt; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+  color: {NAVY}; margin-bottom: 5pt; }}
 .related ul {{ margin: 0; padding-left: 13pt; }}
-.related li {{ font-size: 9.5pt; margin-bottom: 3pt; }}
+.related li {{ font-size: 9.3pt; margin-bottom: 3pt; }}
+.related li::marker {{ color: {TEAL}; }}
 .rel-sub {{ color: {MUTED}; }}
 
-.terms {{ background: {PANEL}; border-top: 2.2pt solid {NAVY}; padding: 12pt 14pt 4pt; margin: 16pt 0 0; page-break-inside: avoid; }}
-.terms-h {{ font-family: "Liberation Sans", sans-serif; font-size: 12pt; font-weight: bold; color: {NAVY}; margin-bottom: 9pt; }}
+.terms {{ background: {SOFT}; border-radius: 9px; border-top: 3px solid {TEAL}; padding: 13pt 15pt 5pt; margin: 18pt 0 0; page-break-inside: avoid; }}
+.terms-h {{ font-family: {SANS}; font-size: 12pt; font-weight: 700; letter-spacing: -0.01em; color: {NAVY}; margin-bottom: 9pt; }}
 .kt {{ margin-bottom: 8pt; }}
-.kt-t {{ font-family: "Liberation Sans", sans-serif; font-size: 9.5pt; font-weight: bold; color: {NAVY}; }}
-.kt-d {{ font-size: 9.5pt; color: {MUTED}; }}
+.kt-t {{ font-family: {SANS}; font-size: 9.4pt; font-weight: 700; color: {NAVY}; }}
+.kt-d {{ font-size: 9.3pt; color: {MUTED}; }}
 
 .check {{ page-break-before: always; }}
-.check-h {{ font-family: "Liberation Sans", sans-serif; font-size: 15pt; font-weight: bold; color: {NAVY};
-  border-bottom: 2.2pt solid {NAVY}; padding-bottom: 7pt; margin: 0 0 14pt; }}
-.qblock {{ margin-bottom: 15pt; page-break-inside: avoid; }}
-.q {{ font-family: "Liberation Sans", sans-serif; font-size: 10pt; font-weight: bold; color: {BODY}; margin-bottom: 7pt; }}
-.opt {{ font-size: 10pt; padding: 3pt 6pt; margin-bottom: 2pt; }}
-.opt.ok {{ background: {CORRECT_BG}; color: {CORRECT_FG}; font-weight: bold; }}
-.optwhy {{ font-size: 8.5pt; color: {LIGHT}; margin: 0 0 4pt 18pt; }}
-.q-note {{ font-family: "Liberation Sans", sans-serif; font-size: 7.5pt; font-weight: bold; letter-spacing: 0.08em;
-  text-transform: uppercase; color: {LIGHT}; margin-bottom: 4pt; }}
-ol.order {{ margin: 0 0 6pt; padding-left: 16pt; }}
-ol.order li {{ font-size: 10pt; margin-bottom: 2pt; }}
-table.match {{ font-size: 9.5pt; margin-top: 0; }}
-table.match td {{ background: {PANEL_ALT}; }}
-table.match tbody tr:nth-child(even) td {{ background: {PANEL}; }}
-.why {{ background: {PANEL_ALT}; border-left: 3pt solid {COVER_META}; padding: 8pt 11pt 1pt; margin-top: 7pt; }}
-.why-h {{ font-family: "Liberation Sans", sans-serif; font-size: 7.5pt; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase; color: {MUTED}; margin-bottom: 4pt; }}
-.why p {{ font-size: 9.5pt; color: {MUTED}; }}
+/* The module assessment has no lesson body: keep its questions under its title. */
+.lesson-d + .check {{ page-break-before: auto; }}
+.check-h {{ font-family: {SANS}; font-size: 18pt; font-weight: 700; letter-spacing: -0.02em; color: {NAVY}; line-height: 1.12;
+  border-bottom: 1.5px solid {NAVY}; padding-bottom: 7pt; margin: 0 0 15pt; }}
+.qblock {{ margin-bottom: 16pt; page-break-inside: avoid; }}
+.q {{ font-family: {SANS}; font-size: 10pt; font-weight: 600; color: {NAVY}; line-height: 1.45; margin-bottom: 7pt; }}
+.opt {{ font-size: 9.8pt; padding: 3.5pt 8pt; margin-bottom: 2pt; border-radius: 6px; }}
+.opt.ok {{ background: {SUCCESS_WASH}; color: {SUCCESS_INK}; font-weight: 600; }}
+.opt.ok strong {{ color: {SUCCESS_INK}; }}
+.optwhy {{ font-size: 8.5pt; color: {FAINT}; margin: 0 0 4pt 20pt; }}
+.q-note {{ font-family: {SANS}; font-size: 7pt; font-weight: 700; letter-spacing: 0.07em;
+  text-transform: uppercase; color: {FAINT}; margin-bottom: 4pt; }}
+ol.order {{ margin: 0 0 6pt; padding-left: 18pt; }}
+ol.order li {{ font-size: 9.8pt; margin-bottom: 2pt; }}
+ol.order li::marker {{ color: {TEAL}; font-weight: 700; }}
+table.match {{ font-size: 9.3pt; margin-top: 0; }}
+table.match td {{ background: #ffffff; }}
+table.match tbody tr:nth-child(even) td {{ background: {SOFT}; }}
+.why {{ background: {SOFT}; border-left: 3px solid {TEAL}; border-radius: 0 9px 9px 0; padding: 8pt 12pt 2pt; margin-top: 7pt; }}
+.why-h {{ font-family: {SANS}; font-size: 7pt; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: {TEAL}; margin-bottom: 3pt; }}
+.why p {{ font-size: 9.3pt; color: {MUTED}; }}
 """
 
 
@@ -637,7 +730,7 @@ def main() -> int:
         from weasyprint import HTML  # imported late so --html-only needs no install
 
     for mod in modules:
-        doc = build_html(mod)
+        doc = print_symbols(build_html(mod))
         name = FILENAMES.get(mod["id"], f"module-{mod['id']}.pdf")
         if args.html_only:
             path = os.path.join(args.out, name.replace(".pdf", ".html"))

@@ -110,8 +110,11 @@ Regenerate rasters from these masters; don't hand-edit the PNGs.
 
 ## PDFs (October 2026)
 
-Every PDF Acqlerate hands out uses the real logo, never the name set as text in
-spaced capitals, and carries a faint logo watermark on every page.
+Every PDF Acqlerate hands out looks like one family: the same navy hero cover,
+General Sans throughout, the design-system colours (navy, teal, cyan on navy,
+parchment and stone), the same footer (small lockup, document label,
+"acqlerate.com · page"), the real logo instead of the name in spaced capitals,
+a faint logo watermark on every page, and no em dashes.
 
 | File | Use |
 |---|---|
@@ -120,12 +123,26 @@ spaced capitals, and carries a faint logo watermark on every page.
 | `acqlerate-watermark.png` / `-dark.png` | Those lockups at 7% opacity: the page watermark. |
 | `acqlerate-lockup-light.png` | The 2x lockup the Excel builders size by pixel (`scripts/pack3/make_lockup_png.py`). Leave it. |
 
-- `scripts/brand/make_brand_pngs.py` renders the print lockups and watermarks from
-  `acqlerate-icon.svg` and General Sans Bold.
-- `scripts/brand/pdf_brand.py` stamps the watermark (centred, 56% of page width,
-  above the content, dark variant on navy pages). Every generator calls it:
-  `scripts/generate_lesson_book.py`, `scripts/pack-guides/build_pack_guides.py`,
-  `scripts/pack3/build_pack3_pdfs.py`, `scripts/starter-kit/build_starter_kits.py`.
-- `scripts/brand/fix_legacy_pdfs.py` was the one-time fix for the PDFs with no
-  generator (onboarding playbook, pay guide, the six `examples/`).
+How it is built:
+
+- `scripts/print/acq-print.css` is the one stylesheet for every PDF made in
+  Chromium (tokens, cover, footer, callouts, tables, cards).
+- `scripts/print/render.py` turns a template into a finished PDF: numbers the
+  footers, refuses em dashes and leftover placeholders, stops if text runs into
+  the footer, stamps the watermark, sets the metadata and applies copy
+  protection (print yes, edit or copy no). Builders that use it:
+  `scripts/guides/build_guides.py` (onboarding playbook, pay guide),
+  `scripts/examples/build_examples.py` (the six `examples/`, plus `--previews`
+  for the site thumbnails), `scripts/pack-guides/build_pack_guides.py` (packs 1, 2, 4).
+- `scripts/pack3/build_pack3_pdfs.py` and `scripts/starter-kit/build_starter_kits.py`
+  use the same stylesheet and the same metadata/protection helpers from render.py.
+- `scripts/generate_lesson_book.py` builds the 14 lesson books in WeasyPrint with
+  the same tokens, cover and footer. Emoji never print (status lights become
+  coloured dots); DejaVu Sans covers the few symbols General Sans lacks (arrows).
+- `scripts/brand/make_brand_pngs.py` renders the print lockups and watermarks;
+  `scripts/brand/pdf_brand.py` stamps the watermark (centred, 56% of page width,
+  above the content, dark variant on navy pages).
+- `python3 scripts/print/audit_pdfs.py` checks every PDF in the repo: no em
+  dashes, no "ACQLERATE", brand fonts only, watermark present, footer page
+  numbers correct. Run it after any rebuild.
 - The certificate (`server/certificate.ts`) draws its own lockup and mark watermark.

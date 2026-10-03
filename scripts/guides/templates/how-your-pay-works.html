@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>How Your Pay Works on a Government Contract</title>
+<style>{{CSS}}
+/* Guide-specific additions, on the shared tokens only */
+.cover h1 { font-size: 35pt; }
+.cover .lede { max-width: 6.1in; }
+
+/* The $100 hour: one stacked bar, 2px gaps, labels in text ink below */
+.hour { margin: 6px 0 2px; }
+.hour .bar, .hour .lab, .hour .brk { display: flex; gap: 2px; }
+.hour .bar > div { height: 26px; background: var(--c); }
+.hour .bar > div:first-child { border-radius: 5px 0 0 5px; }
+.hour .bar > div:last-child { border-radius: 0 5px 5px 0; }
+.hour .lab > div { text-align: center; font-size: 7.8pt; color: var(--muted); line-height: 1.25; padding-top: 4px; }
+.hour .lab b { display: block; font-size: 10.5pt; color: var(--navy); }
+.hour .brk { margin-top: 6px; }
+.hour .brk > div { border-top: 1.5px solid var(--rule-strong); padding-top: 3px; text-align: center; font-size: 7.6pt; font-weight: 600; color: var(--navy); }
+.hour .brk > div.you { border-top-color: var(--navy); }
+
+.formula { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-top: 9px; }
+.formula .eq { font-size: 12.5pt; font-weight: 700; color: var(--navy); letter-spacing: -0.01em; }
+.formula .eq span { color: var(--teal); }
+.formula .why { font-size: 9.2pt; color: var(--muted); }
+
+.qa { margin-top: 9px; }
+.qa .q { font-weight: 700; color: var(--navy); font-size: 10pt; display: block; margin-bottom: 2px; }
+
+.outcome h3 { font-size: 10.5pt; margin-bottom: 4px; }
+.outcome p { font-size: 9.2pt; margin: 0; }
+
+.napkin { margin-top: 10px; }
+.napkin .line { font-size: 9.8pt; margin: 3px 0; color: var(--ink); }
+.napkin .small { font-size: 8.4pt; }
+.napkin .blank { display: inline-block; min-width: 0.75in; border-bottom: 1px solid var(--rule-strong); margin: 0 3px; }
+
+.lesson .q { font-size: 7.2pt; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); }
+.lesson h3 { font-size: 10.5pt; margin: 2px 0 3px; }
+.lesson p { font-size: 9pt; margin: 0; color: var(--muted); }
+</style></head>
+<body class="long">
+
+<!-- ═════════════ 1. COVER ═════════════ -->
+<section class="page portrait cover">
+  <div class="masthead">
+    <div class="lockup"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+    <div class="edition"><b>{{EDITION}} edition</b><br>Free guide for contractor employees</div>
+  </div>
+
+  <div class="rule"></div>
+  <div class="eyebrow" style="margin-top:14px">For everyone who bills hours to a contract</div>
+  <h1>How Your Pay Works<br>on a Government Contract</h1>
+  <p class="lede">The honest explanation nobody gave you on day one. What the government pays for your hour, where the rest of that money goes, and the three moments a raise is actually on the table. Plain English, every acronym explained.</p>
+
+  <div class="inside">
+    <h2>Inside</h2>
+    <ol>
+      <li><span class="n">01</span><span class="t">The short version</span><span class="p">2</span></li>
+      <li><span class="n">06</span><span class="t">What the recompete means for you</span><span class="p">7</span></li>
+      <li><span class="n">02</span><span class="t">Your job has a price tag</span><span class="p">3</span></li>
+      <li><span class="n">07</span><span class="t">Life at a subcontractor</span><span class="p">8</span></li>
+      <li><span class="n">03</span><span class="t">Where the rest of your rate goes</span><span class="p">4</span></li>
+      <li><span class="n">08</span><span class="t">Five questions most people never ask</span><span class="p">9</span></li>
+      <li><span class="n">04</span><span class="t">Why raises are harder</span><span class="p">5</span></li>
+      <li><span class="n">09</span><span class="t">Putting it all together</span><span class="p">10</span></li>
+      <li><span class="n">05</span><span class="t">How the contract type shapes your pay</span><span class="p">6</span></li>
+    </ol>
+  </div>
+  <div class="fine"><span>Free to share unaltered, branding intact.</span><span>Educational reference, not legal or financial advice. acqlerate.com</span></div>
+</section>
+
+<!-- ═════════════ 2. THE SHORT VERSION ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">01 · The short version</span></div>
+  <h2 class="big">Your hour has a price tag. Your salary is what's left of it.</h2>
+  <p class="intro">Somewhere in your company's contract there is a price list with your job on it. It says what the government pays, per hour, for someone like you. Most people on a government program have never seen it, which is strange, because it explains almost everything about your paycheck. If you read nothing else, read this page.</p>
+
+  <ol class="steps">
+    <li><b>Your job has a price.</b> Before your company bid on this contract, it listed every job category it would need and priced each one. Your title maps to one of them.</li>
+    <li><b>That price covers a lot more than you.</b> The hourly rate for your category pays for your salary, your benefits, your company's overhead and its profit. The government pays that rate.</li>
+    <li><b>Your salary is what's left.</b> Once the company has covered everything else, the rest is room for your pay. The rate sets what's possible, not what you get.</li>
+    <li><b>Raises come through three doors.</b> The contract gets recompeted and the rates get repriced, you move up to a higher category, or your company negotiates a change to the contract (a modification).</li>
+    <li><b>The recompete matters more than your annual review.</b> If your company wins it with higher rates, you might see a raise. If it loses, you might be job hunting, or wearing the new contractor's badge by Monday.</li>
+  </ol>
+
+  <div class="stats">
+    <div class="stat"><div class="v">45 to 55%</div><div class="l">of a typical billed rate is the salary of the person doing the work</div></div>
+    <div class="stat"><div class="v">1.7 to 2.2</div><div class="l">typical wrap rate: what the government pays per $1 of your salary</div></div>
+    <div class="stat"><div class="v">3</div><div class="l">moments when the rate behind your pay can actually move</div></div>
+    <div class="stat"><div class="v">5</div><div class="l">questions that tell you more than any annual review</div></div>
+  </div>
+
+  <div class="callout tip"><span class="h">How to use this guide</span>The rest of these pages explain each point in depth, including the parts your manager probably doesn't tell you either. Asking for a raise soon? Start on page 5. Recompete coming? Page 7. Working for a subcontractor? Page 8. Then take the five questions on page 9 to your next one-on-one.</div>
+
+  <div class="callout watch"><span class="h">A word about the numbers</span>Every dollar figure in this guide is illustrative. Real rates vary widely by contract, agency and company. The shape of the math is what holds, and the shape is what you need to ask good questions.</div>
+
+  <h3 class="sub" style="margin-top:14px">The words you'll hear, decoded</h3>
+  <div class="gloss two">
+    <div class="g"><b>Labor category (LCAT)</b> A job title on the contract with an hourly price attached.</div>
+    <div class="g"><b>Billed rate</b> What the government pays per hour for a labor category.</div>
+    <div class="g"><b>Wrap rate</b> The billed rate divided by your salary rate. The multiplier.</div>
+    <div class="g"><b>Fringe</b> Your benefits: health insurance, 401(k) match, paid leave, payroll taxes.</div>
+    <div class="g"><b>Overhead</b> The cost of running your part of the company that isn't billed to a contract.</div>
+    <div class="g"><b>G&amp;A</b> General and administrative: the corporate layer, from executives to legal.</div>
+    <div class="g"><b>Fee</b> Profit, by its name on cost-type contracts.</div>
+    <div class="g"><b>Option year</b> A pre-priced extension the government can choose to buy.</div>
+    <div class="g"><b>Recompete</b> The new competition for the work when a contract ends.</div>
+    <div class="g"><b>Prime and sub</b> The company holding the government contract, and the companies working under it.</div>
+  </div>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ 3. LABOR CATEGORY ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">02 · Your job has a price tag</span></div>
+  <h2 class="big">Your offer letter says "Data Scientist." The contract says "Senior Analyst, $95 an hour."</h2>
+  <p class="intro">Welcome to labor categories. On a government contract, every person is assigned to one. You will hear it called a <b>labor category</b>, or LCAT (people say "el-cat"). It sounds technical. It just means a job title with a price the government agreed to pay.</p>
+
+  <p>Before your company ever won this contract, it built a price list of job titles: Junior Analyst, Senior Engineer, Program Manager and so on. Each title got an hourly rate, based on market salary data, the company's own cost structure, and how hard it had to sharpen its pencil to beat the other bidders.</p>
+  <p>Your title at work may not match. "Data Scientist" at your company might be billed as "Senior Analyst." "Staff Engineer" might show up as "Senior Systems Engineer." Someone made that mapping while writing the proposal. It is internal, it is sometimes approximate, and nobody mentions it at onboarding, because there is no natural moment to say "by the way, the government thinks you're a Senior Analyst."</p>
+
+  <div class="an" style="margin-top:8px"><div class="k">The analogy</div><p>A labor category works like a seat on an airplane. The airline sells "Business, $1,200" long before it knows who will sit there. The government bought "Senior Analyst, $95 an hour" the same way. You are the passenger. The price came with the seat.</p></div>
+
+  <h3 class="sub">Worked example: the Senior Analyst category</h3>
+  <table class="t">
+    <tr><th>What</th><th style="width:3.1in">Amount</th></tr>
+    <tr><td class="k">The government pays for the category</td><td>$95 an hour</td></tr>
+    <tr><td class="k">Fringe, overhead, G&amp;A (general and administrative) and profit</td><td>About $45 an hour, roughly 47% of the rate (page 4 breaks it down)</td></tr>
+    <tr><td class="k">Left for salary</td><td>About $50 an hour</td></tr>
+    <tr><td class="k">The wrap rate that implies</td><td>$95 &divide; $50 = 1.9</td></tr>
+    <tr><td class="k">The most this rate could support</td><td>$50 &times; 2,080 paid hours = about $104,000 a year</td></tr>
+    <tr><td class="k">What people in this category often earn</td><td>$85,000 to $95,000</td></tr>
+  </table>
+  <p class="src" style="margin-top:4px">Illustrative numbers. Real rates vary widely by contract, agency and company.</p>
+
+  <p style="margin-top:8px">Look at the last two rows. The rate is a ceiling, not a salary. Your company priced the category, not you, and it decides where you sit under that ceiling. Any raises it gives you over the life of the contract usually have to fit under the same rate, too.</p>
+
+  <div class="callout plain qa"><span class="q">Why doesn't my job title match what's in the contract?</span>Because companies map their internal titles to contract categories when they write the proposal. A "Senior Analyst" on the contract might be what your company calls a "Lead Researcher." If you're curious about your mapping, ask your program manager. It's a normal question, not an interrogation.</div>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ 4. THE WRAP ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">03 · Where the rest of your rate goes</span></div>
+  <h2 class="big">Where the other half of your hour goes</h2>
+  <p class="intro">This is the moment most people do the math and get a little annoyed. The government pays $95 an hour for your category, and your paycheck says nowhere near $95 an hour. Before you draft the angry email, here is where the money goes.</p>
+
+  <div class="an"><div class="k">The analogy</div><p>Ever paid a plumber $150 an hour? The plumber does not take home $150. The van, the insurance, the person answering the phone, the tools and the owner's profit all ride on that hour. Your billed hour works the same way. You are the plumber.</p></div>
+
+  <h3 class="sub" style="margin-top:6px">One illustrative $100 hour</h3>
+  <div class="hour">
+    <div class="bar">
+      <div style="flex:50;--c:var(--blue)"></div>
+      <div style="flex:18;--c:var(--green)"></div>
+      <div style="flex:15;--c:var(--purple)"></div>
+      <div style="flex:10;--c:var(--orange)"></div>
+      <div style="flex:7;--c:var(--magenta)"></div>
+    </div>
+    <div class="lab">
+      <div style="flex:50"><b>$50</b>Your salary</div>
+      <div style="flex:18"><b>$18</b>Fringe</div>
+      <div style="flex:15"><b>$15</b>Overhead</div>
+      <div style="flex:10"><b>$10</b>G&amp;A</div>
+      <div style="flex:7"><b>$7</b>Fee</div>
+    </div>
+    <div class="brk">
+      <div class="you" style="flex:50">Direct labor: the part paid to you</div>
+      <div style="flex:50">The wrap: $50 of benefits, overhead, corporate cost and profit</div>
+    </div>
+  </div>
+
+  <div class="formula card teal">
+    <div class="eq">Wrap rate = billed rate &divide; your salary rate <span>&nbsp;$100 &divide; $50 = 2.0</span></div>
+    <div class="why">Every $1 of your salary costs the government $2 here. Across contractors it typically runs from about $1.70 to $2.20; at the lean end, salary is closer to 60% of the rate. A wrap rate of 1.8 means every $1 of salary bills at $1.80.</div>
+  </div>
+
+  <table class="t tight" style="margin-top:10px">
+    <tr><th style="width:1.45in">Piece</th><th>What it pays for</th><th style="width:1.15in">Typical share of the rate</th></tr>
+    <tr><td class="k">Your salary</td><td>What shows up on your paycheck, before taxes</td><td>45 to 55%</td></tr>
+    <tr><td class="k">Fringe benefits</td><td>Health insurance, your 401(k) match, paid leave, payroll taxes</td><td>18 to 25%</td></tr>
+    <tr><td class="k">Overhead</td><td>Managers and supervisors who aren't billed to a contract, facilities, computers and networks, the security office</td><td>15 to 20%</td></tr>
+    <tr><td class="k">G&amp;A (general and administrative)</td><td>The corporate layer: executives, legal, finance, and the business development team that won this work in the first place</td><td>8 to 12%</td></tr>
+    <tr><td class="k">Profit or fee</td><td>What the company actually earns. On cost-type contracts it is called fee.</td><td>5 to 10%</td></tr>
+  </table>
+  <p class="src" style="margin-top:4px">Typical ranges, not one company's books, so they won't add up to exactly 100% for any single contract.</p>
+  <p style="margin-top:7px"><b>In plain English:</b> if the government pays $100 an hour for your category, roughly $45 to $55 of it is your salary. Your benefits come out of the next slice. The rest keeps the company running and profitable.</p>
+
+  <div class="callout plain qa"><span class="q">Is my company ripping me off?</span>Almost certainly not. This structure is standard, boring and regulated, which is the most reassuring thing about it. The rates are laid out in the company's proposal, and on cost-type contracts the Defense Contract Audit Agency (DCAA) audits whether the costs are real and allowable. A company caught padding its overhead has a much bigger problem than your raise. Every government contractor builds its rates this way.</div>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ 5. RAISES ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">04 · Why raises are harder</span></div>
+  <h2 class="big">Why your manager makes the face when you say "raise"</h2>
+  <p class="intro">You did good work, you asked for a raise, and your manager made the face. It usually isn't about you. The money has a ceiling, it was set before you walked in, and your manager can't raise it by being persuaded.</p>
+
+  <div class="callout watch" style="margin-top:0"><span class="h">The constraint</span>Your company agreed to bill a set rate for your category. If a raise pushes your cost above what that rate can support, the company loses money on you every hour, for the rest of the contract. Every dollar of raise has to come from somewhere.</div>
+
+  <div class="an" style="margin-top:10px"><div class="k">The analogy</div><p>Asking for a raise mid-contract is like haggling with a vending machine. You can be very persuasive. The price was still set before you walked up.</p></div>
+
+  <h3 class="sub" style="margin-top:4px">The three moments the rate behind your pay can move</h3>
+  <div class="mk"><div class="num">1</div><div>
+    <h3>The contract is recompeted (the best time to ask)</h3>
+    <p>When the work comes up for a new competition, or a follow-on contract, your company reprices every category. That's when rates can go up, and when companies often give raises to keep good people heading into the new period. If you've been performing well, this is your best leverage.</p>
+    <div class="fix"><b>Option years are different.</b> An option year is a pre-priced extension the government can choose to buy. When it does, it pays the prices already written into the contract, often with a built-in yearly increase (escalation). Ask what escalation your category already has baked in.</div>
+  </div></div>
+
+  <div class="mk"><div class="num">2</div><div>
+    <h3>You move up to a higher category</h3>
+    <p>If you've grown into a more senior role, your company can start billing you under a higher-rate category. It takes paperwork, because they have to formally reclassify you on the contract, but your billed rate and your salary ceiling both go up.</p>
+  </div></div>
+
+  <div class="mk"><div class="num">3</div><div>
+    <h3>The contract is modified</h3>
+    <p>If the scope of work changes significantly, companies sometimes negotiate new rates as part of the contract modification. Less common, but it happens.</p>
+  </div></div>
+
+  <div class="callout plain"><span class="h">The hard truth</span>On a cost-plus contract, the government pays actual costs, so there is more room for raises without the company eating them. On a fixed-price contract, every raise comes straight out of profit. That's why fixed-price programs tend to run tighter pay. Page 6 covers contract types.</div>
+
+  <div class="callout tip qa"><span class="q">Can I just ask my manager for a raise?</span>Yes. Just know the box they're working in. The raise conversations that work on government programs cover three things: which category you're billed under now, whether a higher category exists on the contract, and when the next recompete or option year lands. Bring those and you're not asking for a favor, you're proposing a plan. And if the answer is no, it is often a timing problem, not a verdict on your work.</div>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ 6. CONTRACT TYPE ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">05 · How the contract type shapes your pay</span></div>
+  <h2 class="big">Same title, same company, very different raise odds</h2>
+  <p class="intro">Not every government contract works the same way. The type your program runs on decides how much room your company has to pay you, and how hard it is squeezing to keep costs down. If you don't know which type you're on, that's worth ten minutes of finding out.</p>
+
+  <div class="cols3">
+    <div class="sys" style="--c:var(--blue)">
+      <div class="q">Price set up front</div>
+      <h3>Firm-Fixed-Price (FFP)</h3>
+      <ul>
+        <li>Your company agreed to do X for $Y.</li>
+        <li>Come in under budget and it keeps the difference. Go over and that's its problem.</li>
+        <li>Every incentive to keep costs lean, salaries included. Efficiency is rewarded.</li>
+        <li>Overspending comes directly out of profit.</li>
+      </ul>
+    </div>
+    <div class="sys" style="--c:var(--green)">
+      <div class="q">Actual costs, plus a fee</div>
+      <h3>Cost-Plus (CPFF, CPIF)</h3>
+      <ul>
+        <li>Cost-Plus-Fixed-Fee or Cost-Plus-Incentive-Fee.</li>
+        <li>The government pays actual costs plus a fee, so there is less pressure to cut, within limits.</li>
+        <li>Government auditors check that the costs are real and allowable.</li>
+        <li>More room for raises, less direct pressure on headcount.</li>
+      </ul>
+    </div>
+    <div class="sys" style="--c:var(--purple)">
+      <div class="q">Hours at set rates</div>
+      <h3>Time and Materials (T&amp;M)</h3>
+      <ul>
+        <li>A fixed hourly rate for each job category, and materials reimbursed.</li>
+        <li>The most flexible type for the company day to day.</li>
+        <li>Less stable for you: the government buys hours, not a commitment, and it can buy fewer of them.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">What this means for your pay</h3>
+  <table class="t">
+    <tr><th style="width:1.6in">Contract type</th><th>Raise flexibility</th><th>Your risk level</th></tr>
+    <tr><td class="k">Fixed-price</td><td>Low: raises come out of profit</td><td>Moderate: lean staffing preferred</td></tr>
+    <tr><td class="k">Cost-plus</td><td>Higher: costs pass through to the government</td><td>Lower: costs are reimbursed</td></tr>
+    <tr><td class="k">Time and materials</td><td>Moderate: tied to the category rates</td><td>Higher: hourly funding, less stability</td></tr>
+  </table>
+
+  <h3 class="sub">So who actually pays for your raise?</h3>
+  <table class="t tight">
+    <tr><th style="width:1.6in">Contract type</th><th>Who covers it</th></tr>
+    <tr><td class="k">Fixed-price</td><td>Your company, out of profit. The price the government pays doesn't move.</td></tr>
+    <tr><td class="k">Cost-plus</td><td>Mostly the government, as long as the pay is reasonable (auditors check) and the contract's funding stretches to cover it.</td></tr>
+    <tr><td class="k">Time and materials</td><td>Your company. Your category's hourly rate doesn't move, so the raise comes out of its margin on every hour you bill.</td></tr>
+  </table>
+
+  <div class="an" style="margin-top:12px;--c:var(--teal)"><div class="k">The analogy: three ways to hire movers</div><p><b>Fixed-price</b> is a flat quote. If the move runs long, the movers eat it. <b>Cost-plus</b> is paying their actual costs plus an agreed fee, and checking the receipts. <b>Time and materials</b> is paying by the hour, which is great for the movers right up until you decide to carry the lamps yourself.</p></div>
+
+  <div class="callout tip"><span class="h">How to find out which one you're on</span>Ask your program manager. It's question 4 on page 9. Bigger programs sometimes mix types, with some work fixed-price and some cost-plus, so ask about the work you actually charge your hours to.</div>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ 7. RECOMPETE ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">06 · What the recompete means for you</span></div>
+  <h2 class="big">Every contract has an expiration date. So does your seat on it.</h2>
+  <p class="intro">This is the section most people don't see coming. When a contract expires, the government usually competes the work again, and your company has to bid against everyone else who wants it. That's the <b>recompete</b>.</p>
+
+  <div class="an"><div class="k">The analogy</div><p>A recompete is like your landlord selling the building. You probably still have somewhere to live. The rent, the rules and the person you call when the heat breaks may all change.</p></div>
+
+  <h3 class="sub">Three ways it can go</h3>
+  <div class="cols3">
+    <div class="card soft outcome"><h3>Your company wins</h3><p>Usually business as usual. Sometimes with updated rates, which is good for raises. Sometimes with tighter rates, if the competition was fierce and your company sharpened its pencil to win.</p></div>
+    <div class="card soft outcome"><h3>A competitor wins</h3><p>The new company may offer you a job, because you bring the knowledge and the clearance. In most cases it doesn't have to match your current pay. It will offer what its own rate structure allows.</p></div>
+    <div class="card soft outcome"><h3>The work goes away</h3><p>Programs get restructured, defunded or absorbed into something else. The contract ends, and the role ends with it.</p></div>
+  </div>
+
+  <div class="callout tip" style="margin-top:12px"><span class="h">The clearance factor</span>If you hold a security clearance, you are worth more to the incoming contractor. Cleared people are expensive to replace: clearing a new person can take 12 to 18 months and cost $15,000 to $50,000. That is real leverage in a transition.</div>
+
+  <div class="callout plain qa"><span class="q">Should I negotiate with the new contractor?</span>Yes. They need you more than they'll admit. Your institutional knowledge, your relationships with the government customer and your active clearance are all worth negotiating for. Don't assume they'll match your current package automatically. Ask, specifically.</div>
+
+  <h3 class="sub">Before the recompete, know these</h3>
+  <ul class="check">
+    <li>When the contract ends or recompetes (question 3 on page 9). Six months out is when to start paying attention.</li>
+    <li>Your labor category and, if you can find out, its rate (question 1).</li>
+    <li>Your clearance level, and whether it is active. It travels with you, so look after it.</li>
+    <li>What you would ask a new contractor for: salary, title, start date, leave. Decide before they call, not during the call.</li>
+  </ul>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ 8. SUBCONTRACTORS ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">07 · Life at a subcontractor</span></div>
+  <h2 class="big">Same work, different deal</h2>
+  <p class="intro">If your badge says one company and your customer's org chart says another, this page is for you. A <b>subcontractor</b> is a smaller company supporting the <b>prime contractor</b>, the company that holds the contract with the government. Working for the sub adds one more layer between the government's money and your paycheck.</p>
+
+  <p>Your company's rates are negotiated with the prime, not with the government. The prime marks up your company's rates before billing the government, which is sometimes called a pass-through. So your company has a ceiling set by the prime, and the prime has a ceiling set by the government.</p>
+
+  <div class="an" style="margin-top:8px"><div class="k">The analogy</div><p>Working for a sub is like subletting an apartment. You pay the tenant, the tenant pays the landlord, and the tenant is not doing this out of the goodness of their heart.</p></div>
+
+  <table class="t">
+    <tr><th style="width:1.55in">Layer</th><th style="width:2.2in">Who pays whom</th><th>What gets taken</th></tr>
+    <tr><td class="k">The government</td><td>Pays the prime contractor</td><td>Nothing. This is where the money starts.</td></tr>
+    <tr><td class="k">Prime contractor</td><td>Bills the government, pays your company</td><td>The prime's overhead, plus its markup on your company's rates</td></tr>
+    <tr><td class="k">Your company (the sub)</td><td>Gets paid by the prime, pays you</td><td>Your company's fringe, overhead, G&amp;A and profit</td></tr>
+    <tr><td class="k">You</td><td>Receive your salary</td><td>Nothing. Your salary is what's left.</td></tr>
+  </table>
+
+  <h3 class="sub">What this means for you</h3>
+  <ul>
+    <li>Two layers of overhead sit between the government's money and your potential pay.</li>
+    <li>Your company's room to raise your salary depends on what the prime will pay it.</li>
+    <li>When the prime wins a recompete or renegotiates rates, your company may or may not see any benefit. It depends on the subcontract terms.</li>
+  </ul>
+  <p style="margin-top:6px">This is also why subcontractor employees often get hired by the prime at some point. It simplifies the contract structure, and it can improve pay for the individual, because there is one layer of overhead instead of two.</p>
+
+  <div class="callout plain qa"><span class="q">Should I try to get hired by the prime?</span>It depends. Primes often pay more, because there is one less layer of markup. But subcontractors sometimes offer faster promotions, more responsibility and closer-knit teams. Weigh the whole picture, not just the salary line.</div>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ 9. FIVE QUESTIONS ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">08 · Five questions most people never ask</span></div>
+  <h2 class="big">What the contract thinks of you</h2>
+  <p class="intro">Annual reviews tell you what your manager thinks of you. These five questions tell you what the contract thinks of you, which is the part that sets your pay. None of them is confrontational. All of them are normal things to ask a program manager. Most people never ask them anyway.</p>
+
+  <div class="mk"><div class="num">1</div><div>
+    <h3>"What labor category am I billed under on this contract?"</h3>
+    <p>Your company should be able to tell you. If the answer is vague, that's a signal. Knowing your category tells you what the government pays for your hour, and how close you are to the ceiling for your level.</p>
+  </div></div>
+  <div class="mk"><div class="num">2</div><div>
+    <h3>"What's the next category up, and what does it require?"</h3>
+    <p>If a higher category exists on the contract, that's your promotion ladder, already written down and already priced. Ask what the qualifications are and how close you are to meeting them.</p>
+  </div></div>
+  <div class="mk"><div class="num">3</div><div>
+    <h3>"When does this contract hit its next option year or recompete?"</h3>
+    <p>That's the best time to talk about a raise or a reclassification. If it's six months out, start the conversation now.</p>
+  </div></div>
+  <div class="mk"><div class="num">4</div><div>
+    <h3>"Is this a fixed-price or a cost-type contract?"</h3>
+    <p>It tells you how much flexibility exists before you ask for anything, and how much pressure your company is under to keep costs down.</p>
+  </div></div>
+  <div class="mk"><div class="num">5</div><div>
+    <h3>"What happens to my position if we lose the recompete?"</h3>
+    <p>A good manager gives you a straight answer. If they dodge, assume the answer is "you'd negotiate with the new contractor." That's the standard answer and not necessarily bad, but plan for it. A dodge is also an answer.</p>
+  </div></div>
+
+  <div class="card soft napkin">
+    <h2>Do the napkin math</h2>
+    <p class="muted" style="margin-bottom:5px">Once question 1 gets you your category's rate, work out the ceiling for your salary in two lines.</p>
+    <div class="line">Low end: billed rate $<span class="blank"></span> &divide; 2.2 = $<span class="blank"></span> an hour</div>
+    <div class="line">High end: billed rate $<span class="blank"></span> &divide; 1.7 = $<span class="blank"></span> an hour</div>
+    <div class="line">Multiply each by 2,080 hours: $<span class="blank"></span> to $<span class="blank"></span> a year</div>
+    <p class="small muted" style="margin-top:5px">Example: $95 &divide; 2.2 is about $43, and $95 &divide; 1.7 is about $56, so roughly $90,000 to $116,000 a year. Near the bottom of your range or under it? Question 2 is your friend. Near the top? Question 3 matters more. No rate yet? The General Services Administration's (GSA) free CALC tool (Contract-Awarded Labor Category) shows hourly rates awarded on GSA schedule contracts. Not your contract, but it shows you the neighborhood.</p>
+  </div>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ 10. PUTTING IT TOGETHER + WHERE NEXT ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">09 · Putting it all together</span></div>
+  <h2 class="big">Everything that shapes your pay, on one page</h2>
+  <p class="intro">Six things decide what you can earn on a government contract. You can influence about half of them. Here they are in one place.</p>
+
+  <table class="t tight">
+    <tr><th style="width:1.55in">What</th><th>Why it matters to your pay</th><th style="width:1.95in">Can you influence it?</th></tr>
+    <tr><td class="k">Your labor category</td><td>Sets the ceiling on what the government pays for your hour</td><td>Yes, by moving up a category</td></tr>
+    <tr><td class="k">The wrap rate</td><td>Decides how much of that rate can become your salary</td><td>No, it's company-wide</td></tr>
+    <tr><td class="k">Contract type</td><td>Decides how hard your company squeezes salaries to stay lean</td><td>No, but know which one you're on</td></tr>
+    <tr><td class="k">Recompete or option-year date</td><td>A recompete reprices every category; option years run at rates already set</td><td>Yes, by timing the conversation</td></tr>
+    <tr><td class="k">Prime or subcontractor</td><td>A sub carries a layer of pass-through that can squeeze your ceiling</td><td>Sometimes, over the long run</td></tr>
+    <tr><td class="k">Your clearance</td><td>Your most portable asset, and real leverage in a transition</td><td>Yes, so keep it current</td></tr>
+  </table>
+
+  <div class="callout lucas"><span class="h">The bottom line</span>None of this is secret. The people who move fastest in defense contracting aren't always the most technically skilled. They're the ones who understand the financial machinery they're standing inside. <b>Now you do too.</b></div>
+
+  <div class="sec" style="margin-top:20px"><span class="n">Where to go next</span></div>
+  <h2 class="big">Your paycheck is one gear. This is the whole machine.</h2>
+  <p class="intro">If this made you curious about how the rest of it works (contracts, source selection, program management, how the Department of Defense, or DoD, actually buys), that is what Acqlerate teaches: 14 modules and 124 short lessons built on real program numbers, each at three depths with a quiz at the end. Two lessons pick up exactly where this guide stops.</p>
+
+  <div class="cols2">
+    <div class="card lesson">
+      <div class="q">The Business of Defense Contracting</div>
+      <h3>Unit Economics of a Billable Hour</h3>
+      <p>One person, one contract, one number: the bill rate, the fully burdened cost, and why a few unbilled hours can quietly erase the margin.</p>
+    </div>
+    <div class="card lesson">
+      <div class="q">Defense Finance and Budgeting</div>
+      <h3>Wrap Rates and Cost Structure</h3>
+      <p>Build a wrap rate from the ground up, layer by layer, and learn how program managers use it to judge whether a proposal's rates hold up.</p>
+    </div>
+  </div>
+
+  <div class="cta">
+    <div><h2>Start with Module 1. It's free.</h2><p>DoD Acquisitions Foundations, no card needed. A lesson fits in a lunch break. And pass this guide to the next person who asks why the rate is twice their salary.</p></div>
+    <div class="url">acqlerate.com</div>
+  </div>
+
+  <p class="src" style="margin-top:10px">Acqlerate is an independent training provider. It is not affiliated with or endorsed by DoD or any government agency. This guide is educational, not legal, tax or financial advice. Every figure in it is illustrative; your contract, your company and your offer letter are the real sources.</p>
+  {{FOOTER}}
+</section>
+
+</body></html>

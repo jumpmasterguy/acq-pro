@@ -22,7 +22,6 @@ the example cycle forward one year and rebuild.
 """
 from __future__ import annotations
 
-import secrets
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -31,6 +30,8 @@ import pikepdf
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "brand"))
 from pdf_brand import stamp as brand_stamp  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "print"))
+from render import brand_metadata, save_protected  # noqa: E402
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -220,7 +221,7 @@ def gantt_svg() -> str:
 
 def render_html(name: str) -> str:
     _, tpl, orient, title, subject = DOCS[name]
-    css = (TPL / "base.css").read_text().replace("{{FONT_DIR}}", FONT_DIR.as_uri())
+    css = (ROOT / "scripts/print/acq-print.css").read_text().replace("{{FONT_DIR}}", FONT_DIR.as_uri())
     html = (TPL / tpl).read_text()
     reps = {
         "{{CSS}}": css,
@@ -240,22 +241,8 @@ def render_html(name: str) -> str:
 
 def protect(src: Path, dst: Path, title: str, subject: str) -> None:
     with pikepdf.open(src) as pdf:
-        pdf.docinfo["/Title"] = title
-        pdf.docinfo["/Subject"] = subject
-        pdf.docinfo["/Author"] = "Acqlerate"
-        pdf.docinfo["/Creator"] = "Acqlerate (acqlerate.com)"
-        pdf.docinfo["/Keywords"] = "Acqlerate, defense acquisition, DoD finance, acqlerate.com, acqlerate-watermark-v1"
-        with pdf.open_metadata() as meta:
-            meta["dc:title"] = title
-            meta["dc:creator"] = ["Acqlerate"]
-            meta["dc:rights"] = "© 2026 Acqlerate. Free to share unaltered with branding intact. acqlerate.com"
-        perms = pikepdf.Permissions(
-            accessibility=True, extract=False,
-            modify_annotation=False, modify_assembly=False, modify_form=False, modify_other=False,
-            print_lowres=True, print_highres=True,
-        )
-        pdf.save(dst, encryption=pikepdf.Encryption(owner=secrets.token_urlsafe(24), user="", R=6,
-                                                     allow=perms))
+        brand_metadata(pdf, title, subject, "Acqlerate, defense acquisition, DoD finance, acqlerate.com")
+        save_protected(pdf, dst)
 
 
 def build(names: list[str], scratch: Path) -> list[Path]:

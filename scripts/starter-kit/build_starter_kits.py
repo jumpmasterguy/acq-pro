@@ -9,7 +9,7 @@ Writes client/public/starter-kit-usg.pdf and starter-kit-contractor.pdf, the
 public URLs the homepage form and the welcome email link to. The download link
 always serves the current file, so rebuilding updates everyone.
 
-Same pipeline and design as the Finance Cheat Sheets (scripts/pack3): headless
+Built on the shared Acqlerate print system (scripts/print/acq-print.css): headless
 Chromium via Playwright, the General Sans brand font, the master SVG icon, a
 logo watermark, and PDF permissions that allow printing but not editing.
 
@@ -26,7 +26,6 @@ threshold), edit the template, bump CHECKED, and rebuild.
 from __future__ import annotations
 
 import json
-import secrets
 import sys
 from pathlib import Path
 
@@ -34,12 +33,14 @@ import pikepdf
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "brand"))
 from pdf_brand import stamp as brand_stamp  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "print"))
+from render import brand_metadata, save_protected  # noqa: E402
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 TPL = HERE / "templates"
-BASE_CSS = ROOT / "scripts/pack3/templates/base.css"
+BASE_CSS = ROOT / "scripts/print/acq-print.css"   # the shared Acqlerate print system
 FONT_DIR = ROOT / "client/public/fonts"
 ICON = ROOT / "brand/acqlerate-icon.svg"
 OUT = ROOT / "client/public"
@@ -67,7 +68,6 @@ FOOTER = """<div class="footer">
 def render_html(name: str) -> str:
     _, tpl, edition_label, title, _ = DOCS[name]
     css = BASE_CSS.read_text().replace("{{FONT_DIR}}", FONT_DIR.as_uri())
-    css += "\n" + (TPL / "kit.css").read_text()
     html = (TPL / tpl).read_text()
     totals = json.loads(TOTALS.read_text())
     reps = {
@@ -83,14 +83,15 @@ def render_html(name: str) -> str:
         "{{CLPS_WHOLE}}": str(totals["clpsWhole"]),
         "{{HOURS}}": str(round(totals["hours"])),
     }
-    for k, v in reps.items():
-        html = html.replace(k, v)
-    # Number the pages: the cover is page 1, so the first footer is page 2.
+    # Number the pages on the bare template, before the stylesheet goes in:
+    # the cover is page 1, so the first footer is page 2.
     pg = 1
     while "{{FOOTER}}" in html:
         pg += 1
         html = html.replace("{{FOOTER}}", FOOTER.format(icon=ICON.as_uri(), edition_label=edition_label,
                                                         edition=EDITION, pg=pg), 1)
+    for k, v in reps.items():
+        html = html.replace(k, v)
     left = [t for t in ("{{",) if t in html]
     if left:
         raise SystemExit(f"{name}: unreplaced placeholder in template")
@@ -119,21 +120,8 @@ OVERFLOW_JS = """
 
 def protect(src: Path, dst: Path, title: str, subject: str) -> None:
     with pikepdf.open(src) as pdf:
-        pdf.docinfo["/Title"] = f"{title} | Acqlerate"
-        pdf.docinfo["/Subject"] = subject
-        pdf.docinfo["/Author"] = "Acqlerate"
-        pdf.docinfo["/Creator"] = "Acqlerate (acqlerate.com)"
-        pdf.docinfo["/Keywords"] = "Acqlerate, defense acquisition, starter kit, acqlerate.com, acqlerate-watermark-v1"
-        with pdf.open_metadata() as meta:
-            meta["dc:title"] = title
-            meta["dc:creator"] = ["Acqlerate"]
-            meta["dc:rights"] = "© 2026 Acqlerate. Free to share unaltered with branding intact. acqlerate.com"
-        perms = pikepdf.Permissions(
-            accessibility=True, extract=False,
-            modify_annotation=False, modify_assembly=False, modify_form=False, modify_other=False,
-            print_lowres=True, print_highres=True,
-        )
-        pdf.save(dst, encryption=pikepdf.Encryption(owner=secrets.token_urlsafe(24), user="", R=6, allow=perms))
+        brand_metadata(pdf, title, subject, "Acqlerate, defense acquisition, starter kit, acqlerate.com")
+        save_protected(pdf, dst)
 
 
 def build(names: list[str], scratch: Path) -> None:

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Example: Contract Funding Page (Section B)</title>
+<style>{{CSS}}
+body { font-size: 9.5pt; line-height: 1.45; }
+.sample { background: var(--navy); color: #fff; font-size: 7.6pt; font-weight: 500; line-height: 1.5; padding: 10px 14px; border-radius: 4px; margin: 0 0 15px; }
+.sample b { color: #fff; font-weight: 700; }
+.dochead { border-bottom: 1px solid var(--rule-strong); padding-bottom: 10px; margin-bottom: 12px; }
+.dochead .eyebrow { margin-bottom: 4px; }
+.dochead h1 { font-size: 21pt; margin: 0 0 4px; }
+.docsub { font-size: 11pt; font-weight: 600; color: var(--teal); line-height: 1.3; margin: 0; }
+h2 { font-size: 12pt; margin: 15px 0 5px; }
+h2.first { margin-top: 0; }
+p { margin: 0 0 6px; }
+table.form { margin: 6px 0 4px; }
+table.form td { font-size: 8.3pt; line-height: 1.35; padding: 5px 7px; }
+table.form th { font-size: 7pt; }
+table.form td.k { font-weight: 700; color: var(--navy); }
+.kv td { padding: 4.5px 8px; }
+.kv .c-k { width: 2.1in; }
+.ucf td { padding: 4.5px 7px; }
+.ucf .c-part { width: 1.55in; }
+.ucf .c-sec { width: 0.5in; white-space: nowrap; }
+.ucf tr.hl td { background: var(--teal-soft); font-weight: 700; color: var(--navy); border-top: 1.5px solid var(--teal); border-bottom: 1.5px solid var(--teal); }
+.ucf tr.hl td:first-child { border-left: 1.5px solid var(--teal); }
+.ucf tr.hl td:last-child { border-right: 1.5px solid var(--teal); }
+.note { font-size: 8.2pt; color: var(--faint); margin: 3px 0 0; line-height: 1.45; }
+.clin td { padding: 9px 8px 10px; }
+.clin .c-item { width: 0.5in; }
+.clin .c-qty { width: 0.72in; }
+.clin .c-unit { width: 0.66in; }
+.clin .c-price { width: 0.88in; }
+.clin .c-amt { width: 1.3in; }
+.clin td.num { text-align: center; }
+.clin .svc p { margin: 0 0 8px; }
+.clin .svc p:last-child { margin: 0; }
+.clin .svc .ttl { font-weight: 700; color: var(--navy); }
+.clin .svc b, .clin .amt b { font-weight: 700; color: var(--navy); }
+.clin .amt p { margin: 0 0 9px; }
+.read { list-style: none; padding: 0; margin: 4px 0 0; }
+.read li { position: relative; padding-left: 13px; margin: 0 0 8px; }
+.read li::before { content: ''; position: absolute; left: 1px; top: 0.6em; width: 4px; height: 4px; border-radius: 50%; background: var(--teal); }
+.callout.lucas { margin-top: 14px; font-size: 9.4pt; line-height: 1.5; padding: 11px 14px; }
+</style></head>
+<body>
+
+<!-- ═════════════ PAGE 1: HEADER AND UCF ═════════════ -->
+<section class="page portrait">
+  <div class="sample"><b>SAMPLE DOCUMENT, FOR EDUCATIONAL PURPOSES ONLY.</b> All names, organizations, contract numbers, dollar figures, and identifying details in this document are entirely fictional. This is a teaching example built to illustrate document structure and does not represent any actual government contract, program, or individual.</div>
+
+  <div class="dochead">
+    <div class="eyebrow">Finance Module · Lesson: Estimate at Completion (EAC)</div>
+    <h1>Contract Funding Page: Example</h1>
+    <p class="docsub">Enterprise Cyber Range Support (ECRS): Task Order TO-0043, Contract N00XXX-25-D-0091</p>
+  </div>
+
+  <table class="form kv">
+    <colgroup><col class="c-k"><col></colgroup>
+    <tbody>
+      <tr><td class="k">Contract / TO Number</td><td>N00XXX-25-D-0091 / TO-0043</td></tr>
+      <tr><td class="k">Contract Type</td><td>Firm-Fixed-Price (FFP)</td></tr>
+      <tr><td class="k">Contractor</td><td>Example Contracting Corp</td></tr>
+      <tr><td class="k">Period of Performance</td><td>01 Oct 2025 – 30 Sep 2026</td></tr>
+      <tr><td class="k">Contracting Officer</td><td>Taylor Brooks</td></tr>
+      <tr><td class="k">COR</td><td>Casey Nguyen</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Contract Structure: The Uniform Contract Format (UCF)</h2>
+  <p>Every negotiated federal contract that uses the Uniform Contract Format (FAR 15.204-1) is built from the same set of lettered sections, grouped into four parts. The funding page you are about to read lives inside <b>Section B</b>, highlighted below, but knowing where it sits relative to the rest of the contract is what turns "reading a table" into "reading a contract."</p>
+  <table class="form ucf">
+    <thead>
+      <tr><th class="c-part">Part</th><th class="c-sec">Sec.</th><th>Title</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>I: The Schedule</td><td>A</td><td>Solicitation / Contract Form</td></tr>
+      <tr class="hl"><td>I: The Schedule</td><td>B</td><td>Supplies or Services and Prices/Costs (this document)</td></tr>
+      <tr><td>I: The Schedule</td><td>C</td><td>Description / Specifications / Statement of Work</td></tr>
+      <tr><td>I: The Schedule</td><td>D</td><td>Packaging and Marking</td></tr>
+      <tr><td>I: The Schedule</td><td>E</td><td>Inspection and Acceptance</td></tr>
+      <tr><td>I: The Schedule</td><td>F</td><td>Deliveries or Performance</td></tr>
+      <tr><td>I: The Schedule</td><td>G</td><td>Contract Administration Data</td></tr>
+      <tr><td>I: The Schedule</td><td>H</td><td>Special Contract Requirements</td></tr>
+      <tr><td>II: Contract Clauses</td><td>I</td><td>Contract Clauses</td></tr>
+    </tbody>
+  </table>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ PAGE 2: UCF CONTINUED ═════════════ -->
+<section class="page portrait">
+  <table class="form ucf">
+    <thead>
+      <tr><th class="c-part">Part</th><th class="c-sec">Sec.</th><th>Title</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>III: Attachments</td><td>J</td><td>List of Attachments</td></tr>
+      <tr><td>IV: Reps &amp; Instructions</td><td>K</td><td>Representations, Certifications &amp; Other Statements</td></tr>
+      <tr><td>IV: Reps &amp; Instructions</td><td>L</td><td>Instructions, Conditions, and Notices to Offerors</td></tr>
+      <tr><td>IV: Reps &amp; Instructions</td><td>M</td><td>Evaluation Factors for Award</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Section B is short on its own (it is mostly a pricing table), but it never stands alone. Section C tells you what the work actually is. Section F tells you when it is due. Section G tells you who administers the money. Section B is simply where the price tag for all of that gets attached, broken out by CLIN.</p>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ PAGE 3: SECTION B, CLINS 0001 AND 0002 ═════════════ -->
+<section class="page portrait">
+  <h2 class="first">Section B: Supplies or Services &amp; Prices/Costs</h2>
+  <p>Each CLIN below is its own funded line item, with the full set of fields a real Section B carries: the SOW reference, Product Service Code, Pricing Arrangement, ACRN, PR Number, and the Contract/Funding Instrument Number (CIN). "Firm Price" is the total negotiated value of that CLIN. "Funded Amount" is the dollar value actually obligated right now, the number a contractor can legally bill against today.</p>
+  <table class="form clin">
+    <thead>
+      <tr><th class="c-item">Item</th><th>Supplies / Services</th><th class="c-qty">Quantity</th><th class="c-unit">Unit</th><th class="c-price">Unit Price</th><th class="c-amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>0001</td>
+        <td class="svc">
+          <p class="ttl">Labor - Firm Fixed Price (FFP): ECRS</p>
+          <p>Program Management &amp; Cyber Range Operations</p>
+          <p>The contractor shall provide labor in accordance with (IAW) the SOW, Attachment 1.</p>
+          <p><b>Product Service Code:</b> R497<br><b>Pricing Arrangement:</b> Firm Fixed Price</p>
+          <p><b>ACRN:</b> AA</p>
+          <p><b>PR Number:</b> N00XXX-26-RC-0091<br><b>PR Line Item Number:</b> 0001</p>
+          <p><b>CIN:</b> 00000000000029481027</p>
+        </td>
+        <td class="num">12</td>
+        <td class="num">Months</td>
+        <td class="num">USD<br>64,300.00</td>
+        <td class="amt">
+          <p><b>Firm Price</b><br>USD 771,600.00</p>
+          <p><b>Funded Amount</b><br>USD 771,600.00</p>
+        </td>
+      </tr>
+      <tr>
+        <td>0002</td>
+        <td class="svc">
+          <p class="ttl">Labor - Firm Fixed Price (FFP): ECRS</p>
+          <p>Range Systems Engineer</p>
+          <p>The contractor shall provide labor in accordance with (IAW) the SOW, Attachment 1.</p>
+          <p><b>Product Service Code:</b> R497<br><b>Pricing Arrangement:</b> Firm Fixed Price</p>
+          <p><b>ACRN:</b> AB</p>
+          <p><b>PR Number:</b> N00XXX-26-RC-0092<br><b>PR Line Item Number:</b> 0001</p>
+          <p><b>CIN:</b> 00000000000029481058</p>
+        </td>
+        <td class="num">12</td>
+        <td class="num">Months</td>
+        <td class="num">USD<br>58,900.00</td>
+        <td class="amt">
+          <p><b>Firm Price</b><br>USD 706,800.00</p>
+          <p><b>Funded Amount</b><br>USD 530,100.00</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ PAGE 4: SECTION B, CLIN 0003 ═════════════ -->
+<section class="page portrait">
+  <table class="form clin">
+    <thead>
+      <tr><th class="c-item">Item</th><th>Supplies / Services</th><th class="c-qty">Quantity</th><th class="c-unit">Unit</th><th class="c-price">Unit Price</th><th class="c-amt">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>0003</td>
+        <td class="svc">
+          <p class="ttl">Travel - Firm Fixed Price (FFP): ECRS</p>
+          <p>Site visits supporting range exercises</p>
+          <p>Government required travel in support of the implementation of the cyber range environment, in accordance with the SOW, Attachment 1. Invoicing approved after completion of each trip.</p>
+          <p><b>Product Service Code:</b> U012<br><b>Pricing Arrangement:</b> Firm Fixed Price</p>
+          <p><b>ACRN:</b> AA</p>
+          <p><b>PR Number:</b> N00XXX-26-RC-0091<br><b>PR Line Item Number:</b> 0002</p>
+          <p><b>CIN:</b> 00000000000029481077</p>
+        </td>
+        <td class="num">18</td>
+        <td class="num">Each</td>
+        <td class="num">USD<br>3,215.00</td>
+        <td class="amt">
+          <p><b>Firm Price</b><br>USD 57,870.00</p>
+          <p><b>Funded Amount</b><br>USD 57,870.00</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note">Figures above are illustrative and rounded for teaching purposes.</p>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ PAGE 5: HOW TO READ IT ═════════════ -->
+<section class="page portrait">
+  <h2 class="first">How to Read This Page</h2>
+  <ul class="read">
+    <li><b>CLIN 0001</b> is fully funded: Firm Price and Funded Amount are identical ($771,600). The full value of this line has been obligated up front.</li>
+    <li><b>CLIN 0002</b> is incrementally funded: Firm Price is $706,800, but only $530,100 has actually been obligated so far, 75.0% of the total. That is not a coincidence for this example: it is deliberately set at the FAR 52.232-22 notification threshold.</li>
+    <li><b>CLIN 0003</b> (Travel) is fully funded like CLIN 0001, showing that funding status is set per CLIN, not per contract.</li>
+    <li><b>ACRN AA</b> covers CLINs 0001 and 0003, meaning they draw from the same funding action. <b>ACRN AB</b> is a separate funding line covering CLIN 0002 only, likely a different fiscal year or a later funding modification.</li>
+  </ul>
+
+  <div class="callout lucas">
+    <span class="h">From Lucas</span>
+    CLIN 0002 is the one to watch on this page. A PM tracking the $706,800 ceiling thinks there's plenty of room left. A PM tracking the real number, the $530,100 Funded Amount, already knows they've hit the 75% threshold. The written Limitation of Funds notification to the CO is due now, not after the money runs out. Ceiling tells you what's possible. Funded Amount tells you what's real. Track funded. Every time.
+  </div>
+  {{FOOTER}}
+</section>
+
+</body></html>

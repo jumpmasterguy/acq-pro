@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Example: Monthly Status Report (MSR)</title>
+<style>{{CSS}}
+body { font-size: 9.5pt; line-height: 1.45; }
+.sample { background: var(--navy); color: #fff; font-size: 7.6pt; font-weight: 500; line-height: 1.5; padding: 10px 14px; border-radius: 4px; margin: 0 0 16px; }
+.sample b { color: #fff; font-weight: 700; }
+.dochead { border-bottom: 1px solid var(--rule-strong); padding-bottom: 11px; margin-bottom: 9px; }
+.dochead .eyebrow { margin-bottom: 4px; }
+.dochead h1 { font-size: 19pt; margin: 0 0 4px; }
+.docsub { font-size: 11pt; font-weight: 600; color: var(--teal); line-height: 1.3; margin: 0; }
+.prepared { font-size: 8.6pt; color: var(--muted); margin: 0 0 4px; }
+h2 { font-size: 12pt; margin: 13px 0 5px; }
+h2.first { margin-top: 0; }
+h3 { font-size: 9.8pt; margin: 0 0 3px; }
+p { margin: 0 0 6px; }
+ul.doc { list-style: none; padding: 0; margin: 0; }
+ul.doc li { margin: 0 0 2px; }
+ul.doc li::before { content: '\2022'; margin-right: 5px; }
+table.form { margin: 6px 0 4px; }
+table.form td { font-size: 8.3pt; line-height: 1.35; padding: 5px 7px; }
+table.form th { font-size: 7pt; }
+.c-cat { width: 1.55in; }
+.c-pos { width: 2.0in; }
+.c-clr { width: 1.3in; }
+.c-ms { width: 2.55in; }
+.c-date { width: 1.05in; }
+.c-act { width: 1.35in; }
+.c-clin { width: 1.25in; }
+.fin td:not(:first-child), .fin th:not(:first-child) { font-variant-numeric: tabular-nums; }
+.note { font-size: 7.6pt; font-style: italic; color: var(--faint); margin: 2px 0 0; }
+.callout.lucas { margin-top: 16px; font-size: 9.4pt; line-height: 1.5; padding: 11px 14px; }
+</style></head>
+<body>
+
+<!-- ═════════════ PAGE 1 ═════════════ -->
+<section class="page portrait">
+  <div class="sample"><b>SAMPLE DOCUMENT, FOR EDUCATIONAL PURPOSES ONLY.</b> All names, organizations, contract numbers, dollar figures, and identifying details in this document are entirely fictional. This is a teaching example built to illustrate document structure and does not represent any actual government contract, program, or individual.</div>
+
+  <div class="dochead">
+    <div class="eyebrow">Contracts Module · Lesson: Monthly Status Reports</div>
+    <h1>Monthly Status Report (MSR)<br>Reporting Period: June 2026</h1>
+    <p class="docsub">Distributed Network Infrastructure (DNI), Task Order DNSO-00XXFA21F0099</p>
+  </div>
+  <p class="prepared">Prepared by: Jordan Blake, Program Manager, Example Contracting Corp | Submitted: July 8, 2026</p>
+
+  <h2>1. Activities During Reporting Period (by TDL)</h2>
+  <h3>TDL 7-014: Distributed Network Infrastructure</h3>
+  <ul class="doc">
+    <li>Ongoing: Continued installation of network infrastructure equipment at Forward Site Bravo (60% complete).</li>
+    <li>New: Initiated Pre-Deployment Site Survey (PDSS) for Forward Site Delta, scheduled for next reporting period.</li>
+    <li>Completed: Delivered updated Platform &amp; System Documentation for Forward Site Alpha equipment (Deliverable 26).</li>
+  </ul>
+
+  <h2>2. Monthly Operational Summary</h2>
+  <table class="form">
+    <thead><tr><th class="c-cat">Category</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td class="k">Performance Highlights</td><td>Forward Site Alpha reached full operational capability three weeks ahead of schedule.</td></tr>
+      <tr><td class="k">Deliverables Submitted</td><td>Deliverable 26 (Platform Documentation), Deliverable 17 (Trip Report: Site Bravo survey).</td></tr>
+      <tr><td class="k">Action Items</td><td>2 open (equipment vendor RFI response pending); 3 closed this period.</td></tr>
+      <tr><td class="k">Personnel Status</td><td>Full staffing on TDL 7-014; 1 Systems Engineer position in backfill (see Section 4).</td></tr>
+      <tr><td class="k">Current/Anticipated Problems</td><td>Vendor lead time on replacement network hardware extended from 4 to 7 weeks; monitoring impact to Site Delta schedule.</td></tr>
+      <tr><td class="k">Next Period Activities</td><td>Complete Site Bravo installation; conduct Site Delta PDSS; submit updated Transition Plan draft.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>3. Problems and Corrective Actions</h2>
+  <p><b>Issue:</b> Extended vendor lead time (from 4 to 7 weeks) on network hardware required for Site Delta installation.<br>
+  <b>Corrective Action:</b> Program office identified an alternate approved vendor with 3-week lead time as a contingency; formal sourcing decision to be made by next reporting period if primary vendor timeline does not improve. No cost or schedule impact anticipated if contingency is executed on time.</p>
+
+  <h2>4. Personnel Gains, Losses, and Status</h2>
+  <table class="form">
+    <thead><tr><th class="c-pos">Position</th><th>Status</th><th class="c-clr">Clearance</th></tr></thead>
+    <tbody>
+      <tr><td>Systems Engineer</td><td>Departed 06/12/2026; backfill candidate in final interview</td><td>TS/SCI required</td></tr>
+      <tr><td>Deployment Coordinator</td><td>No change</td><td>Current TS/SCI</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5. Government Actions Required</h2>
+  <p>Request Government review and approval of the alternate vendor sourcing decision by July 20, 2026 to avoid schedule slip on Site Delta installation.</p>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ PAGE 2 ═════════════ -->
+<section class="page portrait">
+  <h2 class="first">6. Schedule: Major Tasks, Milestones, and Deliverables</h2>
+  <table class="form">
+    <thead><tr><th class="c-ms">Milestone</th><th class="c-date">Planned</th><th class="c-act">Actual</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Site Alpha: Full Operational Capability</td><td>07/01/2026</td><td>06/10/2026</td><td>Complete (ahead of schedule)</td></tr>
+      <tr><td>Site Bravo: Installation Complete</td><td>07/31/2026</td><td>In progress (60%)</td><td>On track</td></tr>
+      <tr><td>Site Delta: PDSS</td><td>08/15/2026</td><td>Not started</td><td>At risk (vendor lead time)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>7. Trip Summary</h2>
+  <p>1 trip this reporting period: Site Bravo installation support (5 personnel, 12 days). Full Trip Report attached as Deliverable 17 per Section F requirements.</p>
+
+  <h2>8. Monthly Financial Status</h2>
+  <table class="form fin">
+    <thead><tr><th class="c-clin">CLIN</th><th>Spend Plan (Mo.)</th><th>Actual Expenditure (Mo.)</th><th>ETC</th><th>EAC</th></tr></thead>
+    <tbody>
+      <tr><td>4001 (Labor)</td><td>$180,000</td><td>$176,400</td><td>$1,973,600</td><td>$2,150,000</td></tr>
+      <tr><td>4003 (ODCs)</td><td>$65,000</td><td>$71,200</td><td>$728,800</td><td>$800,000</td></tr>
+      <tr><td>4004 (Equipment)</td><td>$40,000</td><td>$38,500</td><td>$291,500</td><td>$330,000</td></tr>
+      <tr><td>4005 (Travel)</td><td>$10,000</td><td>$9,400</td><td>$110,600</td><td>$120,000</td></tr>
+    </tbody>
+  </table>
+  <p class="note">ETC = Estimate to Complete. EAC = Estimate at Completion. Figures above are illustrative and rounded for teaching purposes.</p>
+
+  <div class="callout lucas">
+    <span class="h">From Lucas</span>
+    Notice the MSR isn't just a status update. It's a contract deliverable with a due date (the 10th calendar day of the month) tied to Section F. The financial section at the bottom is what your Government customer reads first. Every time. If your ETC and EAC don't move logically month over month, a sharp COR will flag it before their coffee gets cold. Keep your MSR numbers consistent with what you're reporting on your invoice. They should tell the exact same story.
+  </div>
+  {{FOOTER}}
+</section>
+
+</body></html>

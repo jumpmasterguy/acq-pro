@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Example: Award Fee Determination Plan (CPAF)</title>
+<style>{{CSS}}
+body { font-size: 9.5pt; line-height: 1.45; }
+.sample { background: var(--navy); color: #fff; font-size: 7.6pt; font-weight: 500; line-height: 1.5; padding: 10px 14px; border-radius: 4px; margin: 0 0 16px; }
+.sample b { color: #fff; font-weight: 700; }
+.dochead { border-bottom: 1px solid var(--rule-strong); padding-bottom: 11px; margin-bottom: 13px; }
+.dochead .eyebrow { margin-bottom: 4px; }
+.dochead h1 { font-size: 19pt; margin: 0 0 4px; }
+.docsub { font-size: 11pt; font-weight: 600; color: var(--teal); line-height: 1.3; margin: 0; }
+h2 { font-size: 12pt; margin: 15px 0 5px; }
+h2.first { margin-top: 0; }
+p { margin: 0 0 6px; }
+table.form { margin: 6px 0 4px; }
+table.form td { font-size: 8.3pt; line-height: 1.35; padding: 5px 7px; }
+table.form th { font-size: 7pt; }
+.note { font-size: 7.8pt; color: var(--faint); margin: 2px 0 0; }
+.after { margin-top: 8px; }
+.c-clin { width: 1.9in; }
+.c-per { width: 1.1in; }
+.c-method { width: 1.45in; }
+.c-rating { width: 1.5in; }
+.c-pct { width: 0.9in; }
+.c-role { width: 2.55in; }
+.callout.lucas { margin-top: 16px; font-size: 9.4pt; line-height: 1.5; padding: 11px 14px; }
+</style></head>
+<body>
+
+<!-- ═════════════ PAGE 1 ═════════════ -->
+<section class="page portrait">
+  <div class="sample"><b>SAMPLE DOCUMENT, FOR EDUCATIONAL PURPOSES ONLY.</b> All names, organizations, contract numbers, dollar figures, and identifying details in this document are entirely fictional. This is a teaching example built to illustrate document structure and does not represent any actual government contract, program, or individual.</div>
+
+  <div class="dochead">
+    <div class="eyebrow">Finance Module · Lesson: CPAF, Burn Rate &amp; Award Fee</div>
+    <h1>Award Fee Determination Plan (AFDP): Excerpt</h1>
+    <p class="docsub">Example Task Order: Distributed Network Support Operations (DNSO), Evaluation Period 4</p>
+  </div>
+
+  <p>This excerpt is sanitized from a real Cost-Plus-Award-Fee (CPAF) Award Fee Determination Plan. The mechanics (evaluation periods, rating scale, allocation methods) are standard FAR-based structure used across federal CPAF contracts. Names and dollar figures are fictional.</p>
+
+  <h2>Section 1: What This Document Replaces</h2>
+  <p>A Quality Assurance Surveillance Plan (QASP) is required under FAR 46.401 for most service contracts. On a CPAF task order, the AFDP replaces the QASP. It's the rulebook for how the contractor's performance gets converted into a dollar amount of award fee. The Government can revise the AFDP unilaterally, though it will typically give the contractor 15 workdays' notice before a change takes effect.</p>
+
+  <h2>Section 2: Evaluation Periods</h2>
+  <p>The Government evaluates performance every six months. Each CPAF labor CLIN runs on two distinct six-month evaluation windows within a 12-month period.</p>
+  <table class="form">
+    <thead>
+      <tr><th class="c-clin">CLIN(s)</th><th class="c-per">Period</th><th>Evaluation Window</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0001</td><td>1</td><td>Jan 17, 2024 – Jul 16, 2024</td></tr>
+      <tr><td>0001–1001</td><td>2</td><td>Jul 17, 2024 – Mar 16, 2025</td></tr>
+      <tr><td>1001</td><td>3</td><td>Feb 1, 2025 – Jul 31, 2025</td></tr>
+      <tr><td>2001</td><td>4</td><td>Aug 1, 2025 – Jan 31, 2026</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Section 3: Award Fee Pool Allocation Methods</h2>
+  <p>The maximum Award Fee Pool for this example task order over its 5-year life is $12,500,000 (illustrative). There are exactly two allowable methods to determine how much of that pool is available in a given evaluation period:</p>
+  <table class="form">
+    <thead>
+      <tr><th class="c-method">Method</th><th>When Used</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Incurred Cost</td><td>Default for the first evaluation period, and any period with variable/surging levels of effort. Based on actual costs incurred, reported via the contractor's approved Cost Accounting System.</td></tr>
+      <tr><td>Planned Value</td><td>Used only when budget and level of effort are consistent. Requires the AFDP to be incorporated by modification with a pre-agreed planned cost for the period.</td></tr>
+    </tbody>
+  </table>
+  <p class="after">Four methods are explicitly prohibited: Funded Cost, Estimated Cost, Equal Distribution, and Weighted Distribution. Each of these would artificially inflate the effective award fee percentage above what was negotiated at award. That's exactly why the FAR structure locks them out.</p>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ PAGE 2 ═════════════ -->
+<section class="page portrait">
+  <h2 class="first">Section 4: Award Fee Results Reporting (Sample)</h2>
+  <table class="form">
+    <thead>
+      <tr><th>Period</th><th>Cost Incurred</th><th>Fee Pool Allocation</th><th>Earned Fee %</th><th>Earned Fee $</th><th>Unearned Fee $</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>$2,650,000</td><td>$358,000</td><td>91%</td><td>$325,780</td><td>$32,220</td></tr>
+      <tr><td>2</td><td>$7,180,000</td><td>$970,000</td><td>95%</td><td>$921,500</td><td>$48,500</td></tr>
+      <tr><td>3</td><td>$3,760,000</td><td>$508,000</td><td>97%</td><td>$492,760</td><td>$15,240</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Figures are illustrative and rounded for teaching purposes.</p>
+
+  <h2>Section 5: Award Fee Evaluation Ratings</h2>
+  <p>This adjectival scale is the actual heart of CPAF. Every performance category gets graded against this same word-picture standard so every evaluator scores consistently.</p>
+  <table class="form">
+    <thead>
+      <tr><th class="c-rating">Adjectival Rating</th><th class="c-pct">% of Fee</th><th>Definition</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Excellent</td><td>91%–100%</td><td>Exceeded almost all significant award-fee criteria; met overall cost, schedule, and technical performance requirements.</td></tr>
+      <tr><td>Very Good</td><td>76%–90%</td><td>Exceeded most significant award-fee criteria with only minor, easily-corrected shortfalls.</td></tr>
+      <tr><td>Good</td><td>51%–75%</td><td>Exceeded a handful of criteria but showed some notable weaknesses requiring Government follow-up.</td></tr>
+      <tr><td>Satisfactory</td><td>≤50%</td><td>Met overall cost, schedule, and technical performance requirements. Nothing more.</td></tr>
+      <tr><td>Unsatisfactory</td><td>0%</td><td>Failed to meet overall cost, schedule, or technical performance requirements.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Section 6: Who Decides the Fee</h2>
+  <table class="form">
+    <thead>
+      <tr><th class="c-role">Role</th><th>Responsibility</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Award Fee Determination Official (AFDO)</td><td>Final decision-maker. Determines the actual award fee earned each period, based on the AFEB's recommendation.</td></tr>
+      <tr><td>Award Fee Evaluation Board (AFEB)</td><td>Chairperson plus voting members (client reps, COR) who evaluate performance and recommend a fee percentage to the AFDO.</td></tr>
+      <tr><td>Performance Monitors</td><td>Government staff who track day-to-day contractor performance in their assigned technical area and feed scorecards to the AFEB.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout lucas">
+    <span class="h">From Lucas</span>
+    Here's what most people miss about CPAF: the AFDO is not bound by the AFEB's recommendation. The Board advises. The AFDO decides. I've seen contractors build their whole strategy around impressing the day-to-day Performance Monitors and completely ignore that the actual decision sits one level up. Know your AFDO. Know what THEY care about. Usually that's mission outcomes, not paperwork polish.
+  </div>
+  {{FOOTER}}
+</section>
+
+</body></html>

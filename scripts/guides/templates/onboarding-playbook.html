@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>GovCon Onboarding Playbook</title>
+<style>{{CSS}}
+/* Playbook-only additions, built from the shared variables. */
+.flow .ph.w14 { flex: 14; }
+.flow .ph.w7 { flex: 7; }
+.flow .ph.w9 { flex: 9; }
+.lead { font-size: 9.6pt; }
+.cols2.top { align-items: start; }
+.sys p { font-size: 9.1pt; margin: 0; }
+.sys .when { font-size: 8pt; color: var(--faint); margin: -2px 0 5px; }
+.callout ul { margin-top: 2px; }
+.callout li { margin-bottom: 2px; }
+table.t td.n { width: 0.28in; font-weight: 700; color: var(--teal); }
+table.t td .tag { margin-top: 3px; }
+.path { font-weight: 600; color: var(--navy); }
+.mods .g { margin-bottom: 6px; }
+</style></head>
+<body class="long">
+
+<!-- ═════════════ 1. COVER ═════════════ -->
+<section class="page portrait cover">
+  <div class="masthead">
+    <div class="lockup"><img src="{{ICON}}" alt=""><span class="word">Acq<span>lerate</span></span></div>
+    <div class="edition"><b>{{EDITION}} edition</b><br>Facts checked September 2026</div>
+  </div>
+
+  <div class="rule"></div>
+  <div class="eyebrow" style="margin-top:14px">For team leads and hiring managers</div>
+  <h1>The GovCon<br>Onboarding Playbook</h1>
+  <p class="lede">How to get a new hire fluent in defense acquisition in 30 days, instead of letting them absorb it by osmosis over the better part of a year. A week-by-week plan, the checklists, a ten-question Day 30 check and a learning path for every role.</p>
+
+  <div class="inside">
+    <h2>Inside</h2>
+    <ol>
+      <li><span class="n">01</span><span class="t">Why this matters</span><span class="p">2</span></li>
+      <li><span class="n">05</span><span class="t">Week 4: Integration</span><span class="p">6</span></li>
+      <li><span class="n">02</span><span class="t">The 30-day framework</span><span class="p">3</span></li>
+      <li><span class="n">06</span><span class="t">The Day 30 check</span><span class="p">7</span></li>
+      <li><span class="n">03</span><span class="t">Weeks 1 and 2: Foundation</span><span class="p">4</span></li>
+      <li><span class="n">07</span><span class="t">Five mistakes new hires make</span><span class="p">8</span></li>
+      <li><span class="n">04</span><span class="t">Week 3: Application</span><span class="p">5</span></li>
+      <li><span class="n">08</span><span class="t">Learning paths by role</span><span class="p">9</span></li>
+    </ol>
+  </div>
+  <div class="fine"><span>Free to share unaltered, branding intact.</span><span>Educational reference, not official DoD guidance. acqlerate.com</span></div>
+</section>
+
+<!-- ═════════════ 2. WHY THIS MATTERS ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">01 · Why this matters</span></div>
+  <h2 class="big">Osmosis is not an onboarding plan</h2>
+  <p class="intro">We've all watched it happen. A sharp new hire joins a GovCon (government contracting) team, sits in meetings they only half follow, reads contracts they can't quite parse, and slowly pieces together how the Department of Defense (DoD) buys things. It works, eventually. So does learning to swim by falling off the dock.</p>
+  <p>Osmosis is slow. It's inconsistent, because it depends on who the new hire happens to sit next to. And it's expensive, though the time is the cheap part of the bill.</p>
+
+  <h3 class="sub">The expensive part: avoidable mistakes</h3>
+  <div class="cols3">
+    <div class="sys" style="--c:var(--green)">
+      <div class="q">Money</div>
+      <h3>The wrong color of money</h3>
+      <p>A funding document that cites the wrong appropriation. Research, development, test and evaluation (RDT&amp;E) money, operation and maintenance (O&amp;M) money and procurement money each buy different things, and the law cares which is which.</p>
+    </div>
+    <div class="sys" style="--c:var(--purple)">
+      <div class="q">Contracts</div>
+      <h3>Vehicle or task order?</h3>
+      <p>Mixing up the IDIQ (indefinite delivery, indefinite quantity) vehicle with the task order under it, then quoting the wrong scope, ceiling or deliverable to the customer.</p>
+    </div>
+    <div class="sys" style="--c:var(--orange)">
+      <div class="q">Authority</div>
+      <h3>The wrong person said yes</h3>
+      <p>Starting new work because someone without contractual authority asked for it. That is how unauthorized commitments happen, and how invoices end up in a dispute.</p>
+    </div>
+  </div>
+  <p style="margin-top:9px">Each one chips away at customer trust and creates real compliance risk. None of them needs a bad hire. They only need nobody to have explained the rules early.</p>
+
+  <div class="cols2 top" style="margin-top:10px">
+    <div class="callout tip" style="margin-top:0"><span class="h">What a structured 30 days changes</span>
+      <ul>
+        <li>Fewer mistakes in the first 90 days.</li>
+        <li>Better proposal quality from day one.</li>
+        <li>Faster contribution to program execution.</li>
+        <li>A repeatable process, not a one-time lucky hire.</li>
+      </ul>
+    </div>
+    <div class="card soft">
+      <h2>Who this is for</h2>
+      <p style="margin:0">Team leads, program directors and hiring managers who want one repeatable way to bring new program managers (PMs), business development (BD) staff, capture managers and analysts up to speed on DoD acquisition, quickly and the same way every time.</p>
+    </div>
+  </div>
+
+  <h3 class="sub">How it works</h3>
+  <p>You run a week-by-week framework. The new hire takes Acqlerate's short, self-paced lessons alongside it. The goal is practical fluency, meaning they can use what they learned on a real program, not just compliance awareness that evaporates after the training certificate is filed.</p>
+  <p>Your part as the lead fits on a sticky note: a program briefing on day 1, a check-in at day 14, a debrief at day 21 and a sign-off at day 30.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="v">30</div><div class="l">days from "just hired" to working without a chaperone</div></div>
+    <div class="stat"><div class="v">3</div><div class="l">phases: learn it, use it, own it</div></div>
+    <div class="stat"><div class="v">4</div><div class="l">touchpoints for you, the lead</div></div>
+    <div class="stat"><div class="v">10</div><div class="l">questions in the Day 30 check that signs them off</div></div>
+  </div>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ 3. THE FRAMEWORK ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">02 · The 30-day framework</span></div>
+  <h2 class="big">Learn it, use it, own it</h2>
+  <p class="intro">The plan runs in three phases, and each one builds on the last: foundational knowledge first, then hands-on application, then independent operation. It's how most of us learned to drive. The manual, then an empty parking lot, then the highway with you riding shotgun.</p>
+
+  <div class="flow">
+    <div class="node"><i></i><b>Day 1</b></div>
+    <div class="ph w14" style="--c:var(--blue)"><div class="bar"></div><span><b>Foundation.</b> Understand the landscape</span></div>
+    <div class="node"><i></i><b>Day 14</b></div>
+    <div class="ph w7" style="--c:var(--green)"><div class="bar"></div><span><b>Application.</b> Apply it to your program</span></div>
+    <div class="node"><i></i><b>Day 21</b></div>
+    <div class="ph w9" style="--c:var(--purple)"><div class="bar"></div><span><b>Integration.</b> Operate independently</span></div>
+    <div class="node"><i></i><b>Day 30</b></div>
+  </div>
+
+  <table class="t">
+    <tr><th style="width:1.05in">Phase</th><th style="width:1.05in">When</th><th style="width:1.2in">Goal</th><th>Key activities</th><th style="width:1.75in">Your part as the lead</th></tr>
+    <tr><td class="k">1 · Foundation</td><td>Weeks 1 and 2<br>Days 1 to 14</td><td>Understand the landscape</td><td>Core modules, contract review, program briefing</td><td>Day 1 program briefing, day 14 check-in</td></tr>
+    <tr><td class="k">2 · Application</td><td>Week 3<br>Days 15 to 21</td><td>Apply it to your program</td><td>Shadow activities, role-specific learning, first deliverable</td><td>Line up the shadow seat, review the first deliverable, day 21 debrief</td></tr>
+    <tr><td class="k">3 · Integration</td><td>Week 4<br>Days 22 to 30</td><td>Operate independently</td><td>Independent tasks, risk identification, the Day 30 check</td><td>Run the Day 30 check and sign off</td></tr>
+  </table>
+
+  <h3 class="sub">Before day 1: your prep list</h3>
+  <div class="cols2">
+    <ul class="check">
+      <li>Pull the contract or task order they will work under, including the SOW (statement of work).</li>
+      <li>Book a program briefing with the PM or program lead for day 1.</li>
+      <li>Pick the week 3 shadow activity: a contract review, a program review or a proposal session.</li>
+    </ul>
+    <ul class="check">
+      <li>Choose their learning path by role (page 9).</li>
+      <li>Send them the Day 1 checklist (page 4), so day one involves more than waiting for a laptop.</li>
+      <li>Decide who signs off at day 30. Usually it's the PM.</li>
+    </ul>
+  </div>
+
+  <div class="callout tip"><span class="h">The daily rhythm</span>Acqlerate lessons average 22 minutes. Even the longest learning path in this playbook works out to about 40 minutes a workday, roughly two lessons. Short and daily beats a two-day cram session that's forgotten by the following Friday.</div>
+
+  <div class="callout plain"><span class="h">Why three phases and not one big course</span>Knowledge that isn't used fades fast. Each phase forces the new hire to use what the last one taught: vocabulary in weeks 1 and 2 becomes a real contract in week 3, and a real contract becomes independent work in week 4. By the time you run the Day 30 check, they have used every concept on it at least once.</div>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ 4. WEEKS 1 AND 2 ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">03 · Weeks 1 and 2: Foundation</span></div>
+  <h2 class="big">Days 1 to 14: understand the landscape</h2>
+  <p class="intro">The first two weeks build a shared vocabulary and a baseline. Nobody needs to quote the Federal Acquisition Regulation (FAR) by day 14. They do need to stop nodding politely every time someone says "task order" or "color of money" and hoping nobody asks a follow-up question. Four topics get them there.</p>
+
+  <div class="cols2">
+    <div class="sys" style="--c:var(--blue)">
+      <div class="q">Topic 1</div>
+      <h3>What is DoD acquisition?</h3>
+      <ul>
+        <li>The acquisition lifecycle, from requirement to award to execution.</li>
+        <li>The key players: the PM, the contracting officer (CO), the contracting officer's representative (COR) and the Defense Contract Management Agency (DCMA).</li>
+        <li>Common contract types: firm fixed price (FFP), cost plus fixed fee (CPFF), time and materials (T&amp;M), and IDIQ.</li>
+      </ul>
+    </div>
+    <div class="sys" style="--c:var(--purple)">
+      <div class="q">Topic 2</div>
+      <h3>How does the government buy?</h3>
+      <ul>
+        <li>Standalone contracts vs. task orders.</li>
+        <li>IDIQ vehicles and the fair opportunity process for competing orders.</li>
+        <li>The FAR, which is being rewritten under the Revolutionary FAR Overhaul (RFO). Same name, new text, some new clause numbers.</li>
+      </ul>
+    </div>
+    <div class="sys" style="--c:var(--green)">
+      <div class="q">Topic 3</div>
+      <h3>What is color of money?</h3>
+      <ul>
+        <li>Appropriation categories: RDT&amp;E, O&amp;M and procurement.</li>
+        <li>Fiscal year rules: O&amp;M can be put on contract for 1 year, RDT&amp;E for 2, procurement for 3.</li>
+        <li>Why Antideficiency Act (ADA) violations matter.</li>
+      </ul>
+    </div>
+    <div class="sys" style="--c:var(--magenta)">
+      <div class="q">Topic 4</div>
+      <h3>The three career tracks</h3>
+      <ul>
+        <li>Government PM: owns cost, schedule and performance for the program.</li>
+        <li>Contractor PM: delivers the work, and the margin.</li>
+        <li>Contracting officer: the only one who can sign or change the contract.</li>
+        <li>Different roles, different authorities, different incentives.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout tip"><span class="h">Recommended modules</span><b>DoD Acquisitions Foundations</b> (Module 1, free) plus <b>Defense Contracting Fundamentals</b>. About 6.5 hours of lessons in total, so roughly 40 minutes a workday across the two weeks. Module 1 includes the lesson on working while the FAR is being rewritten.</div>
+
+  <div class="cols2 top" style="margin-top:12px">
+    <div class="card">
+      <h2>Day 1 checklist</h2>
+      <ul class="check">
+        <li>Create a free Acqlerate account at acqlerate.com.</li>
+        <li>Finish the first Foundations lesson.</li>
+        <li>Read the Acquisition Starter Kit (Contractor or Government edition, also free).</li>
+        <li>Program context briefing with the PM or program lead.</li>
+        <li>Review the contract or task order they'll work under. The real one, not the slide that summarizes it.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>By day 14</h2>
+      <ul class="check">
+        <li>Foundations module complete and Starter Kit read (aim for day 7).</li>
+        <li>Defense Contracting Fundamentals complete.</li>
+        <li>Contract reviewed, with a written list of questions.</li>
+        <li>Day 14 check-in with you: what's clear, what's still fog.</li>
+      </ul>
+    </div>
+  </div>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ 5. WEEK 3 ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">04 · Week 3: Application</span></div>
+  <h2 class="big">Days 15 to 21: apply it to your program</h2>
+  <p class="intro">Week 3 is where it stops being a course. The vocabulary from weeks 1 and 2 meets your actual contract, your actual customer, and that one deliverable that is somehow always late. The new hire shifts from learning to doing.</p>
+
+  <h3 class="sub" style="margin-top:4px">Four things to do this week</h3>
+  <ol class="steps">
+    <li><b>Shadow one real activity.</b> A contract review, a program review or a proposal session. Watching a concept land in a live meeting beats reading about it three times.</li>
+    <li><b>Complete the module that fits the role.</b> BD and capture staff take Capture Management &amp; Business Development. PMs take Defense Finance &amp; Budgeting or Data Analytics for Program Managers.</li>
+    <li><b>Name one concept they still can't explain, and fix it.</b> The AI Study Assistant inside each Acqlerate lesson will explain it more simply or show how it applies on the job. Then have them explain it to you in two minutes. If they can teach it, they know it.</li>
+    <li><b>Review their first CDRL (Contract Data Requirements List) or deliverable requirement.</b> The CDRL says what is due, in what format, to whom and how often. Somebody on the customer side is counting on it.</li>
+  </ol>
+
+  <h3 class="sub">Role-specific guidance</h3>
+  <div class="cols3">
+    <div class="sys" style="--c:var(--blue)">
+      <div class="q">Contractor PM</div>
+      <h3>Know the contract cold</h3>
+      <ul>
+        <li>Focus on Defense Contracting Fundamentals.</li>
+        <li>Learn EVM (earned value management) basics: planned work, work done and what it cost.</li>
+        <li>Know your task order SOW inside and out.</li>
+      </ul>
+    </div>
+    <div class="sys" style="--c:var(--orange)">
+      <div class="q">BD / Capture</div>
+      <h3>Write to the scorecard</h3>
+      <ul>
+        <li>Complete Capture Management &amp; Business Development.</li>
+        <li>Understand Section L (instructions to offerors) vs. Section M (evaluation criteria).</li>
+        <li>L tells you how to write it. M tells you how it gets scored. Evaluators score against M.</li>
+      </ul>
+    </div>
+    <div class="sys" style="--c:var(--purple)">
+      <div class="q">Proposal analyst</div>
+      <h3>Learn how proposals are judged</h3>
+      <ul>
+        <li>Work through your pricing volume checklist.</li>
+        <li>Study your past performance template.</li>
+        <li>Learn source selection basics: how the government evaluates and picks a winner.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout tip"><span class="h">Make the shadow seat count</span>Spend five minutes before the meeting on what it's for, who's who and what to listen for. Spend five minutes after on what surprised them. With a briefing and a debrief, a meeting is a lesson. Without them it's just another meeting, and new hires already have plenty of those.</div>
+
+  <div class="callout plain"><span class="h">Day 21 milestone</span>Role-specific module done and first deliverable reviewed. Hold the day 21 debrief: what they saw in the shadow seat, what the CDRL asks for, and which concept they fixed this week. Anything still foggy goes on the list for week 4.</div>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ 6. WEEK 4 ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">05 · Week 4: Integration</span></div>
+  <h2 class="big">Days 22 to 30: operate independently</h2>
+  <p class="intro">By the end of week 4 the new hire works with minimal hand-holding. Not zero. Nobody is fully independent at day 30, including a few people who've been on the program for ten years. Here is what "ready" looks like.</p>
+
+  <h3 class="sub" style="margin-top:4px">Ready means they can</h3>
+  <ul class="check lead">
+    <li>Describe the acquisition lifecycle in plain English, from requirements to award to execution.</li>
+    <li>Explain what type of contract their program uses, and why it matters for risk and billing.</li>
+    <li>Name the CO, COR and DCMA representative on their program, and say what each one controls.</li>
+    <li>Say what color of money funds their program and the fiscal year limits that come with it.</li>
+    <li>Identify two or three risks on their program and how each is being mitigated. Bonus points for putting a likelihood and a dollar value on each, the way a risk and opportunity register (R&amp;O) does.</li>
+  </ul>
+
+  <div class="callout tip"><span class="h">The assessment</span>Run the ten-question Day 30 check on the next page. It covers the acquisition lifecycle, contract types, color of money, and roles and authorities. If they pass, they're ready to contribute independently. If not, each miss points to a specific lesson to revisit, so you're fixing gaps, not repeating the whole month.</div>
+
+  <h3 class="sub">The 30-day milestones at a glance</h3>
+  <table class="t">
+    <tr><th style="width:0.65in">Day</th><th>Milestone</th><th style="width:2.35in">Verified by</th></tr>
+    <tr><td class="k">Day 1</td><td>Acqlerate account created, first lesson complete</td><td>They show you their progress dashboard</td></tr>
+    <tr><td class="k">Day 7</td><td>Foundations module complete, Starter Kit read</td><td>Module certificate</td></tr>
+    <tr><td class="k">Day 14</td><td>Defense Contracting Fundamentals complete, contract reviewed</td><td>Team lead check-in</td></tr>
+    <tr><td class="k">Day 21</td><td>Role-specific module done, first deliverable reviewed</td><td>Module certificate and debrief</td></tr>
+    <tr><td class="k">Day 30</td><td>Day 30 check passed, operating independently</td><td>Check result and PM sign-off</td></tr>
+  </table>
+  <p class="small muted" style="margin-top:5px">An Acqlerate module certificate is issued only when every lesson in the module is finished. Each one carries an ID you can check at acqlerate.com/verify, which saves you from taking "yeah, I finished it" on faith.</p>
+
+  <div class="callout plain"><span class="h">Week 4 assignments that build independence</span>Give them one task they own end to end, such as drafting a status report, updating a deliverable tracker or preparing their section of a review. Ask them to bring the two or three risks they found to your next team meeting. Owning something small beats observing something big.</div>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ 7. DAY 30 CHECK ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">06 · The Day 30 check</span></div>
+  <h2 class="big">Ten questions, one coffee, no slides</h2>
+  <p class="intro">Sit down with the new hire for about twenty minutes, notes closed. Ask every question about <b>your</b> program, not in the abstract. You're not grading trivia. You're checking whether they can hold their own when you're not in the room.</p>
+
+  <table class="t tight">
+    <tr><th style="width:0.28in">#</th><th style="width:2.7in">Ask them</th><th>A good answer includes</th></tr>
+    <tr><td class="n">1</td><td>Walk me through how our program got from a need to a contract.<br><span class="tag">Lifecycle</span></td><td>A requirement, money in a budget, a solicitation, an award, then execution. In that order, in plain English.</td></tr>
+    <tr><td class="n">2</td><td>Where is our program in its lifecycle today, and what's the next big event?<br><span class="tag">Lifecycle</span></td><td>The current phase, plus the next option exercise, milestone, review or recompete, and roughly when.</td></tr>
+    <tr><td class="n">3</td><td>What type of contract are we on?<br><span class="tag">Contract type</span></td><td>The type (FFP, CPFF, T&amp;M or a mix) and whether it's a standalone contract or a task order under an IDIQ.</td></tr>
+    <tr><td class="n">4</td><td>Who carries the cost risk on our contract, and how do we bill?<br><span class="tag">Contract type</span></td><td>FFP: the contractor carries it and bills the agreed price. Cost-type: allowable costs reimbursed, plus fee. T&amp;M: hours at fixed rates, plus materials.</td></tr>
+    <tr><td class="n">5</td><td>What's the difference between the IDIQ and our task order?<br><span class="tag">Contract type</span></td><td>The vehicle sets the ceiling and general terms. The order sets our scope, funding and deliverables, and it governs our work.</td></tr>
+    <tr><td class="n">6</td><td>What color of money funds our work, and when does it expire?<br><span class="tag">Money</span></td><td>The appropriation by name and how long it can be put on contract: O&amp;M 1 year, RDT&amp;E 2, procurement 3.</td></tr>
+    <tr><td class="n">7</td><td>Why can't the customer just use leftover O&amp;M money for our development work?<br><span class="tag">Money</span></td><td>Each appropriation buys only what it was appropriated for. Using the wrong one can become an Antideficiency Act violation.</td></tr>
+    <tr><td class="n">8</td><td>Who are our CO, COR and DCMA representative, and what does each one control?<br><span class="tag">Roles</span></td><td>Names, plus: the CO signs and changes the contract, the COR monitors performance, DCMA oversees contractor performance and administers contracts.</td></tr>
+    <tr><td class="n">9</td><td>Someone on the customer side asks for work you don't see in the SOW. What do you do?<br><span class="tag">Roles</span></td><td>"Let me check with the CO," routed through our contracts lead. No work starts on a handshake.</td></tr>
+    <tr><td class="n">10</td><td>What are the top two or three risks on our program, and who's working each one?<br><span class="tag">Risk</span></td><td>Specific risks, a mitigation and an owner for each. Strong answers add a likelihood and a dollar value.</td></tr>
+  </table>
+
+  <div class="cols2 top" style="margin-top:10px">
+    <div class="callout tip" style="margin-top:0"><span class="h">Scoring it</span>Eight or more solid answers: they're ready, so sign them off. Fewer than eight: each miss points to a lesson. Assign it, then ask only those questions again a week later.</div>
+    <div class="callout plain" style="margin-top:0"><span class="h">A second data point</span>Every Acqlerate module ends with an assessment that unlocks the next depth level. Passed assessments plus a good Day 30 conversation is a sign-off you can defend.</div>
+  </div>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ 8. MISTAKES ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">07 · Five mistakes new hires make</span></div>
+  <h2 class="big">Head these off in the first 30 days</h2>
+  <p class="intro">These five come up again and again with new GovCon hires. Catch them in the first month and you save months of course correction, and at least one awkward call with the customer.</p>
+
+  <div class="mk"><div class="num">1</div><div>
+    <h3>Skipping the contract review</h3>
+    <p>The SOW tells you what's actually authorized. Everything you do on a government contract traces back to it: scope, deliverables, period of performance and funding. If you haven't read it, you're guessing. Confidently, and in front of the customer.</p>
+    <div class="fix"><b>Do instead:</b> read it before week 1 ends, and keep a one-page note of scope, deliverables, period of performance and funding where you can find it in a meeting.</div>
+  </div></div>
+
+  <div class="mk"><div class="num">2</div><div>
+    <h3>Confusing the IDIQ with the task order</h3>
+    <p>The vehicle gets you in the door. The task order is your actual contract. Think of the IDIQ as the restaurant menu: it sets the ceiling and the general terms. The task order is what was actually ordered, and it's the only thing anyone is paying for. It defines your specific scope, funding and deliverables.</p>
+    <div class="fix"><b>Do instead:</b> know which one governs your work. When someone quotes a ceiling or a requirement, ask "the vehicle's or the order's?"</div>
+  </div></div>
+
+  <div class="mk"><div class="num">3</div><div>
+    <h3>Ignoring color of money</h3>
+    <p>Appropriations work like gift cards: the coffee shop card doesn't work at the hardware store, however much is left on it. Using O&amp;M money for work that should be RDT&amp;E can become an Antideficiency Act violation. These categories aren't bureaucratic trivia. They're legal limits, and the consequences are personal for the officials involved.</p>
+    <div class="fix"><b>Do instead:</b> know the difference, know which color funds your work, and know when it expires.</div>
+  </div></div>
+
+  <div class="mk"><div class="num">4</div><div>
+    <h3>Treating the COR like a boss</h3>
+    <p>The COR monitors performance. Only the CO can change your contract. The COR checks your work against the blueprint, but only the CO can change the blueprint. Work started because someone without that authority asked for it rests on an unauthorized commitment, and you may never get paid for it.</p>
+    <div class="fix"><b>Do instead:</b> when anyone other than the CO asks for a change, however reasonable and however senior, the answer is "Let me check with the CO."</div>
+  </div></div>
+
+  <div class="mk"><div class="num">5</div><div>
+    <h3>Assuming WarU training equals operational fluency</h3>
+    <p>Compliance training and practical fluency are different things. Courses from WarU (Warfighting Acquisition University, called Defense Acquisition University or DAU until November 2025) cover policy and regulation. Knowing the rules of the road and merging onto the highway at rush hour are related skills. They are not the same skill.</p>
+    <div class="fix"><b>Do instead:</b> build both. Use WarU for the policy and regulation, and Acqlerate for the practical judgment to apply it in real contract and program situations.</div>
+  </div></div>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ 9. LEARNING PATHS ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">08 · Learning paths by role</span></div>
+  <h2 class="big">Everyone starts in the same place, then the paths split</h2>
+  <p class="intro">Every role starts with <b>DoD Acquisitions Foundations</b> (Module 1). It's free, and it gives the whole team one shared vocabulary, which ends a surprising number of meeting arguments. From there, each role takes the path it needs most.</p>
+
+  <table class="t">
+    <tr><th style="width:1.35in">Role</th><th>Modules, in order</th><th style="width:1.1in">Lesson time</th><th style="width:1.95in">After day 30, go deeper with</th></tr>
+    <tr><td class="k">Contractor PM</td><td>Foundations, Contracts, Finance, Data, Operations</td><td>About 15.5 hours</td><td>The Business of Defense Contracting</td></tr>
+    <tr><td class="k">BD / Capture</td><td>Foundations, Capture, Contracts</td><td>About 8 hours</td><td>Small Business in Defense Contracting</td></tr>
+    <tr><td class="k">Proposal analyst</td><td>Foundations, Capture, Contracts</td><td>About 8 hours</td><td>From Need to RFP: The Government Pre-Award Process</td></tr>
+    <tr><td class="k">Contracts manager or CO</td><td>Foundations, Contracts, Finance</td><td>About 11 hours</td><td>The Compliance Stack</td></tr>
+    <tr><td class="k">Financial analyst</td><td>Foundations, Finance, Data</td><td>About 9.5 hours</td><td>The Business of Defense Contracting</td></tr>
+  </table>
+  <p class="small muted" style="margin-top:4px">RFP: request for proposal. Lesson time is the total of the listed modules' lessons. New hire just out of uniform? Add Veteran Transition: From Uniform to Acquisition. Joining a startup or a non-traditional supplier? Add The Startup On-Ramp.</p>
+
+  <div class="callout tip"><span class="h">How to use this table</span>Start every new hire on Foundations. It's free and takes about 2.5 hours. Then assign the role path. Most people finish their track inside the 30 days alongside everything else onboarding throws at them: even the longest, at about 15.5 hours, is roughly 40 minutes a workday. Check progress at your weekly check-in on their dashboard, and use the module certificates as your record.</div>
+
+  <h3 class="sub">What the six core modules cover</h3>
+  <div class="gloss two mods">
+    <div class="g"><b>DoD Acquisitions Foundations (free).</b> The acquisition lifecycle, key players, contract types and career paths, plus working while the FAR is rewritten. The shared language every team member needs.</div>
+    <div class="g"><b>Defense Contracting Fundamentals.</b> IDIQ vehicles, task orders, FAR essentials, reading a SOW, source selection, CDRLs, contract administration, modifications and unauthorized commitments.</div>
+    <div class="g"><b>Defense Finance &amp; Budgeting.</b> Color of money, appropriations law, the budget cycle, EVM basics, estimates at completion, funding documents and staying on the right side of the Antideficiency Act.</div>
+    <div class="g"><b>Capture Management &amp; Business Development.</b> The capture process, competitive analysis, Section L and M, teaming agreements and building a win strategy.</div>
+    <div class="g"><b>Data Analytics for Program Managers.</b> Program data analysis, reporting requirements, CDRLs, earned value reports and the performance metrics that tell you how a program is really doing.</div>
+    <div class="g"><b>Program Operations &amp; Leadership.</b> Day-to-day program execution, risk management, stakeholder communication, subcontractor oversight and government reporting.</div>
+  </div>
+  <p class="small muted" style="margin-top:4px">Eight more modules go deeper once the basics stick, from small business rules and compliance to sustainment, closeout and the history behind the rules. 14 modules and 124 lessons in all.</p>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ 10. WHERE TO GO NEXT ═════════════ -->
+<section class="page portrait">
+  <div class="sec"><span class="n">Where to go next</span></div>
+  <h2 class="big">Ready to build a sharper team?</h2>
+  <p class="intro">Your team doesn't need another multi-day classroom course. They need a structured, self-paced path from "I just got hired" to "I understand how this program works." This playbook is the plan. Acqlerate is the training that runs inside it.</p>
+
+  <div class="cols2 top">
+    <div class="card">
+      <h2>Free for every team member</h2>
+      <ul>
+        <li>Module 1, DoD Acquisitions Foundations: 10 lessons, about 2.5 hours.</li>
+        <li>Both editions of the Acquisition Starter Kit.</li>
+        <li>14 days of full access for every new account.</li>
+        <li>No credit card. No approval chain. Create an account and start.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>What full access adds</h2>
+      <ul>
+        <li>All 14 modules and 124 lessons, each at three depth levels.</li>
+        <li>Quizzes after every lesson and an assessment for each module, with progress tracking.</li>
+        <li>The Debrief, an audio episode for each module, for the commute.</li>
+        <li>A certificate for every finished module, with a verification ID.</li>
+        <li>Team seats include the Acqlerate Coach, which grades how well your people can explain each lesson back.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:5px">The trial ends at day 14, halfway through this plan. For the role modules in weeks 3 and 4, the new hire needs a paid plan or a team seat. Details at acqlerate.com/teams.</p>
+
+  <div class="steps3">
+    <div class="s"><b>Start today</b>Start any team member free at acqlerate.com. Sign-up takes about a minute.</div>
+    <div class="s"><b>No scheduling</b>No classroom dates to book. No per-seat contract negotiations. A lesson fits between meetings.</div>
+    <div class="s"><b>Built to finish</b>Short lessons, a two-minute daily challenge, streaks and XP (experience points). Think Duolingo, for defense acquisition.</div>
+  </div>
+
+  <h3 class="sub">The short version of this whole playbook</h3>
+  <ul class="check lead">
+    <li>Weeks 1 and 2: Foundations and Contracting Fundamentals, the Starter Kit, the real contract.</li>
+    <li>Week 3: a shadow seat, the role module, one fuzzy concept fixed, the first CDRL reviewed.</li>
+    <li>Week 4: owned work, two or three risks named, the Day 30 check, your sign-off.</li>
+  </ul>
+
+  <div class="cta">
+    <div><h2>Start your next hire on Module 1. It's free.</h2><p>Then share this playbook with whoever onboards the hire after that.</p></div>
+    <div class="url">acqlerate.com</div>
+  </div>
+
+  <p class="src" style="margin-top:12px">Acqlerate is an independent training provider. It is not affiliated with or endorsed by DoD, WarU or any government agency, and this playbook is not official guidance. DoD has also used the name Department of War since September 2025; this playbook says DoD. Facts were checked in September 2026. Always confirm contract questions with your contracting officer and the current regulations.</p>
+  {{FOOTER}}
+</section>
+
+</body></html>

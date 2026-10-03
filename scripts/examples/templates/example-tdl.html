@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Example: Technical Direction Letter (TDL)</title>
+<style>{{CSS}}
+body { font-size: 9.5pt; line-height: 1.45; }
+.sample { background: var(--navy); color: #fff; font-size: 7.6pt; font-weight: 500; line-height: 1.5; padding: 10px 14px; border-radius: 4px; margin: 0 0 16px; }
+.sample b { color: #fff; font-weight: 700; }
+.dochead { border-bottom: 1px solid var(--rule-strong); padding-bottom: 11px; margin-bottom: 9px; }
+.dochead .eyebrow { margin-bottom: 4px; }
+.dochead h1 { font-size: 19pt; margin: 0 0 4px; }
+.docsub { font-size: 11pt; font-weight: 600; color: var(--teal); line-height: 1.3; margin: 0; }
+.issued { font-size: 8.6pt; color: var(--muted); margin: 0 0 4px; }
+h2 { font-size: 12pt; margin: 14px 0 5px; }
+h2.first { margin-top: 0; }
+h3 { font-size: 9.8pt; margin: 9px 0 3px; }
+p { margin: 0 0 6px; }
+ul.doc { list-style: none; padding: 0 0 0 12px; margin: 0; }
+ul.doc li { margin: 0 0 2px; }
+ul.doc li::before { content: '\2022'; margin-right: 6px; }
+table.form { margin: 6px 0 4px; }
+table.form td { font-size: 8.3pt; line-height: 1.35; padding: 5px 7px; }
+table.form th { font-size: 7pt; }
+table.kv td.k { width: 2.1in; }
+.c-rev { width: 0.75in; }
+.c-dt { width: 0.85in; }
+.c-para { width: 0.8in; }
+.c-task { width: 1.4in; }
+.c-crit { width: 1.5in; }
+.c-obj { width: 1.85in; }
+.c-msd { width: 2.4in; }
+.c-del { width: 0.75in; }
+.c-dtitle { width: 2.75in; }
+.c-clin { width: 1.25in; }
+.c-desc { width: 1.75in; }
+.rom td:nth-child(n+3), .rom th:nth-child(n+3) { font-variant-numeric: tabular-nums; }
+.rom tr.total td { font-weight: 700; color: var(--navy); background: var(--soft); }
+.note { font-size: 7.6pt; font-style: italic; color: var(--faint); margin: 2px 0 0; }
+.aside { font-size: 8pt; font-style: italic; color: var(--muted); border-left: 2px solid var(--rule-strong); padding: 1px 0 1px 9px; margin: 0 0 8px; }
+.callout.lucas { margin-top: 16px; font-size: 9.4pt; line-height: 1.5; padding: 11px 14px; }
+</style></head>
+<body>
+
+<!-- ═════════════ PAGE 1 ═════════════ -->
+<section class="page portrait">
+  <div class="sample"><b>SAMPLE DOCUMENT, FOR EDUCATIONAL PURPOSES ONLY.</b> All names, organizations, contract numbers, dollar figures, and identifying details in this document are entirely fictional. This is a teaching example built to illustrate document structure and does not represent any actual government contract, program, or individual.</div>
+
+  <div class="dochead">
+    <div class="eyebrow">Contracts Module · Lesson: IAC/MACs, Instrument Hierarchy &amp; TDLs</div>
+    <h1>Technical Direction Letter #7-014</h1>
+    <p class="docsub">Distributed Network Infrastructure (DNI) in support of Allied Forces Command, Meridian Theater (AFC-MT)</p>
+  </div>
+  <p class="issued">Issued under Task Order #00XXFA21F0099, Contract #GS00Q99OAEXMP1</p>
+
+  <table class="form">
+    <thead><tr><th class="c-rev">Rev.</th><th class="c-dt">Date</th><th>Description</th><th class="c-para">Para.</th></tr></thead>
+    <tbody>
+      <tr><td>AMD 01</td><td>12 Mar 25</td><td>Re-obligates prior-year O&amp;M; funds from MIPR F1XX250001EX01.</td><td>12.0</td></tr>
+      <tr><td>AMD 02</td><td>28 Jun 25</td><td>Reallocates $85,000 from CLIN 4004 to CLIN 4003. Updated PM point of contact.</td><td>p.2, 12.0</td></tr>
+    </tbody>
+  </table>
+
+  <table class="form kv" style="margin-top:10px">
+    <tbody>
+      <tr><td class="k">Project Title</td><td>Distributed Network Infrastructure (DNI)</td></tr>
+      <tr><td class="k">Project Number</td><td>7-014</td></tr>
+      <tr><td class="k">Performing Organization</td><td>AFC-MT</td></tr>
+      <tr><td class="k">Performance Monitor</td><td>Alex Rivera, Program Analyst, AFC-MT/A3</td></tr>
+      <tr><td class="k">Performance Monitor Phone / Email</td><td>+1 555-010-2929 / alex.rivera.2@example.mil</td></tr>
+      <tr><td class="k">Funding Organization</td><td>AFC-MT</td></tr>
+      <tr><td class="k">Funding POC</td><td>Morgan Chen, DSN 000-00-9918</td></tr>
+      <tr><td class="k">Prime Contract / TO Number</td><td>GS00Q99OAEXMP1 / 00XXFA21F0099</td></tr>
+      <tr><td class="k">Severable</td><td>Yes</td></tr>
+      <tr><td class="k">Non-Severable</td><td>No</td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:12px">Signatures</h3>
+  <ul class="doc">
+    <li>Alex Rivera, AFC-MT/A3: Program Analyst, Government Site Lead</li>
+    <li>Jordan Blake, Example Contracting Corp: Program Manager</li>
+    <li>Sam Torres, AFC-MT: Technical Point of Contact (TPOC)</li>
+    <li>Casey Nguyen, Contracting Officer's Representative</li>
+    <li>Approved: Taylor Brooks, Contracting Officer</li>
+  </ul>
+
+  <h2>1.0 General Information</h2>
+  <p>TDL 7-014 is a continuation of support from Option Period (OP) 2 of the Distributed Network Support Operations (DNSO) Task Order conducted on TDL 6-014. The objective of this Task Order is to provide reliable, multi-site, cross-domain IT infrastructure capabilities that increase network availability and enhance the supported command's operational posture across the assigned Areas of Responsibility (AORs).</p>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ PAGE 2 ═════════════ -->
+<section class="page portrait">
+  <h2 class="first">2.0 Purpose</h2>
+  <p>This Technical Direction Letter (TDL) provides technical clarification in support of implementing the Distributed Network Support Operations (DNSO) Task Order on behalf of Allied Forces Command, Meridian Theater (AFC-MT).</p>
+
+  <h2>3.0 Project Period and Place of Performance</h2>
+  <p>Forward Operating Site Alpha and various installations throughout the Meridian Theater AOR. On-site personnel will work within the confines of Government installations, when able, and utilize Government property. Period of Performance (PoP) associated with this TDL is from 01 November 2025 through 31 October 2026.</p>
+
+  <h2>4.0 Project Summary</h2>
+  <p>The objective of this TDL is to provide AFC-MT reliable, multi-site, cross-domain network and IT infrastructure capabilities that increase system availability, enhance the supported command's operational posture, increase partnership capacity and interoperability, and foster stability throughout the assigned AORs. This project connects distributed network nodes, data centers, and communications links across all sites to enable reliable command and control at the scale and tempo needed to accomplish commander's intent.</p>
+  <p>This project is broken into the following primary effort: procure and sustain equipment to support the network infrastructure mission, and provide operator training on equipment procured under this task.</p>
+
+  <h2>5.0 Technical Clarification</h2>
+  <p class="aside">Note: real TDLs only include the numbered tasks that apply to that specific TDL. The skipped numbers below (5.2, 5.7, etc.) are intentional, not missing content. A TDL never renumbers the master task list from the Task Order. It just cites the subset it's activating.</p>
+
+  <h3>5.1 Task 1: Program Management (TO Section C.5.1)</h3>
+  <p>The contractor shall provide program management support, including management and oversight of all activities performed by contractor personnel, including subcontractors, to satisfy the requirements identified in this TDL.</p>
+
+  <h3>5.3 Task 3: Deployed Site Support and Logistics (TO Section C.5.3)</h3>
+  <p>The contractor shall provide deployed site support and logistics services across four forward locations within the AFC-MT AOR: Forward Site Alpha, Forward Site Bravo, Forward Site Charlie, and Forward Site Delta. This task area includes conducting Pre-Deployment Site Surveys (PDSS) (Section F, Deliverable 22) and coordinating logistics for equipment shipping/receiving with the military distribution system.</p>
+
+  <h3>5.4 Task 4: IT Infrastructure and Systems (TO Section C.5.4)</h3>
+  <p>The contractor shall provide research, design, development, engineering, installation, integration, testing, upgrades, and maintenance services in support of network infrastructure systems, including network switching, satellite communications, data links, and lifecycle maintenance of IT equipment (Section F, Deliverable 26).</p>
+  {{FOOTER}}
+</section>
+
+<!-- ═════════════ PAGE 3 ═════════════ -->
+<section class="page portrait">
+  <p class="aside">Sections 7.0, 8.0, and 11.0 (Deployment, Training/Exercises, and Special Requirements) are omitted from this excerpt. They don't apply to this particular TDL.</p>
+
+  <h2>6.0 Performance Metrics</h2>
+  <table class="form">
+    <thead><tr><th class="c-task">Performance Task</th><th class="c-crit">Evaluation Criteria</th><th class="c-obj">Objective</th><th>Award Fee Scoring</th></tr></thead>
+    <tbody>
+      <tr><td>Program Management (Task&nbsp;1)</td><td>Program Management (Criteria&nbsp;3)</td><td>All deliverables provided, no more than 1 resubmission per deliverable.</td><td>Pass: all documentation delivered on time.<br>Fail: 1+ item late or 2+ resubmissions.</td></tr>
+      <tr><td>IT Infrastructure &amp; Systems (Task&nbsp;4)</td><td>Technical Effectiveness (Criteria&nbsp;2)</td><td>Maximize network system operational uptime during designated exercise windows.</td><td>Excellent: 95–100%<br>Very Good: 85–&lt;95%<br>Good: 75–&lt;85%<br>Satisfactory: 60–&lt;75%<br>Unsatisfactory: &lt;60%</td></tr>
+    </tbody>
+  </table>
+
+  <h2>9.0 Project Milestones</h2>
+  <table class="form">
+    <thead><tr><th>Milestone Description</th><th class="c-msd">Milestone Date</th></tr></thead>
+    <tbody>
+      <tr><td>Employees start work (Theater Location A)</td><td>Within 15 workdays of country clearance approval</td></tr>
+    </tbody>
+  </table>
+
+  <h2>10.0 Deliverables</h2>
+  <table class="form">
+    <thead><tr><th class="c-del">TO DEL #</th><th class="c-dtitle">Title</th><th>Estimated Due Date / Frequency</th></tr></thead>
+    <tbody>
+      <tr><td>13</td><td>Monthly Status Report</td><td>Monthly (10th calendar day of the month)</td></tr>
+      <tr><td>17</td><td>Trip Reports</td><td>Within 10 workdays following completion of each trip</td></tr>
+      <tr><td>22</td><td>Pre-Deployment Site Survey (PDSS)</td><td>As required</td></tr>
+      <tr><td>26</td><td>Platform &amp; System Documentation</td><td>Due when equipment has been delivered</td></tr>
+    </tbody>
+  </table>
+
+  <h2>12.0 Capability Estimate (ROM)</h2>
+  <table class="form rom">
+    <thead><tr><th class="c-clin">CLIN</th><th class="c-desc">Description</th><th>Cost</th><th>Fee</th><th>Total</th></tr></thead>
+    <tbody>
+      <tr><td>4001 (Labor)</td><td>TDL + PMO labor</td><td>$2,150,000</td><td>$290,000</td><td>$2,440,000</td></tr>
+      <tr><td>4003 (ODCs)</td><td>Other direct costs</td><td>$800,000</td><td>$0</td><td>$800,000</td></tr>
+      <tr><td>4004 (Equipment)</td><td>Equipment &amp; materials</td><td>$330,000</td><td>$0</td><td>$330,000</td></tr>
+      <tr><td>4005 (Travel)</td><td>Long-distance travel</td><td>$120,000</td><td>$0</td><td>$120,000</td></tr>
+      <tr class="total"><td>Total Estimate</td><td></td><td>$3,400,000</td><td>$290,000</td><td>$3,690,000</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Figures above are illustrative and rounded for teaching purposes.</p>
+
+  <div class="callout lucas">
+    <span class="h">From Lucas</span>
+    This is the real shape of a TDL. Notice it doesn't create new scope or add funding on its own. It clarifies HOW you execute against work that's already inside the Task Order. If a TDL tries to add brand-new tasking you can't trace back to a TO section, that's a red flag: scope creep on official letterhead. Compare this to the IAC, MAC and GWAC hierarchy chart in this lesson. The TDL lives at the very bottom of that chain, directing execution within an existing task order's boundaries.
+  </div>
+  {{FOOTER}}
+</section>
+
+</body></html>
